@@ -471,7 +471,8 @@ class EditFragment: Fragment() {
     interface OnFileChooserListenerForEdit {
         fun onFileChooserListenerForEdit(
             onDirectoryPick: Boolean,
-            insertEditText: EditText
+            insertEditText: EditText,
+            initialPath: String,
         )
     }
 
@@ -515,13 +516,6 @@ class EditFragment: Fragment() {
     interface OnGetPermissionListenerForEdit {
         fun onGetPermissionForEdit(
             permissionStr: String
-        )
-    }
-
-    interface OnGetFileListenerForEdit {
-        fun onGetFileforEdit(
-            parentDirPathSrc: String,
-            onDirectoryPickSrc: Boolean = false
         )
     }
 }

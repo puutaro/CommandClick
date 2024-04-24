@@ -178,7 +178,7 @@ class UrlHistoryButtonEvent(
                 tabReplaceStr
             ).lastOrNull()
                 ?.let {
-                    ScriptPreWordReplacer.settingValreplace(
+                    ScriptPreWordReplacer.settingValReplace(
                         it,
                         currentAppDirPath
                     )

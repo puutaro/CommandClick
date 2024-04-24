@@ -1,13 +1,11 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import androidx.activity.result.contract.ActivityResultContracts
 import com.anggrayudi.storage.SimpleStorageHelper
+import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.variant.RequestCode
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
@@ -16,11 +14,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.URLDecoder
 
 class GetFileListForEdit (
     private val activity: MainActivity,
@@ -30,61 +24,43 @@ class GetFileListForEdit (
     private var onDirectoryPick = false
     private var parentDirPath = String()
     private var prefixSuffixSeparator = "&"
-    private var filterPrefixListCon = String()
-    private var filterSuffixListCon = String()
-    private var filterShellCon = String()
-
-    private val getFile = activity.registerForActivityResult(
-        ActivityResultContracts.OpenDocument()) { uri ->
-        if (
-            uri == null
-            || uri.toString() == String()
-        ) return@registerForActivityResult
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "getFileList_actiivty0.txt").absolutePath,
-//            listOf(
-//                "indexListMap ${ListIndexForEditAdapter.indexListMap}",
-//            ).joinToString("\n\n\n")
-//        )
-        val srcFileOrDirList = makeFileOrDirPathList(uri)
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "getFileList_actiivty1.txt").absolutePath,
-//            listOf(
-//                "indexListMap ${ListIndexForEditAdapter.indexListMap}",
-//            ).joinToString("\n\n\n")
-//        )
-        registerFileHandler(srcFileOrDirList)
-    }
 
     fun get(
         parentDirPathSrc: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
         filterShellCon: String,
+        initialPath: String,
         onDirectoryPickSrc: Boolean = false,
     ){
         onDirectoryPick = onDirectoryPickSrc
         parentDirPath =
             parentDirPathSrc
-        this.filterPrefixListCon = filterPrefixListCon
-        this.filterSuffixListCon = filterSuffixListCon
-        this.filterShellCon = filterSuffixListCon
-        when(Build.VERSION.SDK_INT < 30){
-            true -> getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
-            else -> getFileOverSdk30(
-                filterPrefixListCon,
-                filterSuffixListCon,
-                filterShellCon,
-            )
-        }
+        execGetFileList(
+            filterPrefixListCon,
+            filterSuffixListCon,
+            filterShellCon,
+            initialPath,
+        )
     }
 
-    private fun getFileOverSdk30(
+    private fun execGetFileList(
         filterPrefixListCon: String,
         filterSuffixListCon: String,
         filterShellCon: String,
+        initialPath: String,
     ){
-        storageHelper.openFolderPicker()
+        when(initialPath.isEmpty()){
+            true -> storageHelper.openFolderPicker()
+            else -> storageHelper.openFolderPicker(
+                    RequestCode.FOLDER_PICKER_FOR_GET_FILE_LIST.code,
+                    FileFullPath(
+                        activity,
+                        initialPath
+                    )
+                )
+        }
+
         storageHelper.onFolderSelected = {
                 requestCode, folder ->
             val srcDirPath = folder.getAbsolutePath(activity)
@@ -179,51 +155,6 @@ class GetFileListForEdit (
             currentFannelName,
             currentFannelState
         )
-    }
-
-    private fun makeFileOrDirPathList(
-        uri: Uri?
-    ): List<String> {
-        val pathSource = runBlocking {
-            val prefixRegex = Regex("^content.*fileprovider/root/storage")
-            File(
-                withContext(Dispatchers.IO) {
-                    URLDecoder.decode(
-                        uri.toString(), Charsets.UTF_8.name()
-                    )
-                }.replace(prefixRegex, "/storage")
-            )
-        }
-        val parentDirPath = pathSource.parent
-            ?: return emptyList()
-        return when(onDirectoryPick) {
-            true -> FileSystems.showDirList(
-                parentDirPath
-            ).filter {
-                FilterPathTool.isFilterByDir(
-                    it,
-                    parentDirPath,
-                    filterPrefixListCon,
-                    filterSuffixListCon,
-                    prefixSuffixSeparator,
-                )
-            }
-            else -> {
-                FileSystems.sortedFiles(
-                    parentDirPath
-                ).filter {
-                    FilterPathTool.isFilterByFile(
-                        it,
-                        parentDirPath,
-                        filterPrefixListCon,
-                        filterSuffixListCon,
-                        prefixSuffixSeparator,
-                    )
-                }
-            }
-        }.map {
-            File(parentDirPath, it).absolutePath
-        }
     }
 
     private fun registerFileHandler(

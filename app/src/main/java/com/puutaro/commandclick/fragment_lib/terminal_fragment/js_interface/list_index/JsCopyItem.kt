@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lis
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFile
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileHere
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyPath
@@ -44,7 +45,8 @@ class JsCopyItem(
     @JavascriptInterface
     fun copyFile_S(
         selectedItem: String,
-        listIndexPosition: Int
+        listIndexPosition: Int,
+        initialPath: String,
     ){
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
@@ -52,10 +54,14 @@ class JsCopyItem(
             currentFannelName,
             currentFannelState
         ) ?: return
+        val filterMap = mapOf(
+            EditSettingExtraArgsTool.ExtraKey.INITIAL_PATH.key to initialPath,
+        )
         ExecCopyFile.copyFile(
             editFragment,
             selectedItem,
             listIndexPosition,
+            filterMap,
         )
     }
 

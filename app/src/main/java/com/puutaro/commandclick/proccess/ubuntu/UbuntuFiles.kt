@@ -13,7 +13,7 @@ class UbuntuFiles(
     private val symlinker: Symlinker = Symlinker(),
 ) {
     companion object {
-        val downloadDirPath = Environment.getExternalStorageDirectory().absolutePath +
+        val downloadDirPath = UsePath.emulatedPath +
                 "/${Environment.DIRECTORY_DOWNLOADS}"
         val rootfsTarGzName = "rootfs.tar.gz"
         val downloadRootfsTarGzPath = "$downloadDirPath/$rootfsTarGzName"

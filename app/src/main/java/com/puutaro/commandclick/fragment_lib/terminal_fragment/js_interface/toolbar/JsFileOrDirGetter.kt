@@ -62,6 +62,9 @@ class JsFileOrDirGetter(
             EditSettingExtraArgsTool.makeShellCon(
                 filterMap
             )
+        val initialPath = filterMap.get(
+            EditSettingExtraArgsTool.ExtraKey.INITIAL_PATH.key,
+        ) ?: String()
         val listener =
             context as? TerminalFragment.OnGetFileListenerForTerm
                 ?: return
@@ -71,6 +74,7 @@ class JsFileOrDirGetter(
             filterFilterPrefixListCon,
             filterFilterSuffixListCon,
             filterShellPathCon,
+            initialPath,
         )
     }
 }

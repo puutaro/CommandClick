@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
-import com.anggrayudi.storage.file.getAbsolutePath
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
@@ -32,6 +31,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandl
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecUpdateNoSaveUrlPaths
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecWifiSet
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
+import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecFileChooser
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
@@ -508,22 +508,16 @@ class MainActivity:
 
     override fun onFileChooserListenerForEdit(
         onDirectoryPick: Boolean,
-        insertEditText: EditText
+        insertEditText: EditText,
+        initialPath: String,
     ) {
-        if (onDirectoryPick) {
-            storageHelper.openFolderPicker()
-            storageHelper.onFolderSelected = {
-                    requestCode, folder ->
-                val absolutePath = folder.getAbsolutePath(this)
-                insertEditText.setText(absolutePath)
-            }
-            return
-        }
-        storageHelper.openFilePicker()
-        storageHelper.onFileSelected = { requestCode, file ->
-            val absolutePath = file.getOrNull(0)?.getAbsolutePath(this)
-            insertEditText.setText(absolutePath)
-        }
+        ExecFileChooser.exec(
+            this,
+            storageHelper,
+            onDirectoryPick,
+            insertEditText,
+            initialPath,
+        )
     }
 
     override fun onEditTextUpdateForTermFragment(
@@ -713,13 +707,15 @@ class MainActivity:
         onDirectoryPickSrc: Boolean,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
-        filterShellCon: String
+        filterShellCon: String,
+        initialPath: String,
     ) {
         getFileForEdit.get(
             parentDirPathSrc,
             filterPrefixListCon,
             filterSuffixListCon,
             filterShellCon,
+            initialPath,
             onDirectoryPickSrc
         )
     }
@@ -729,13 +725,15 @@ class MainActivity:
         onDirectoryPickSrc: Boolean,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
-        filterShellCon: String
+        filterShellCon: String,
+        initialPath: String,
     ) {
         getFileListForEdit.get(
             parentDirPathSrc,
             filterPrefixListCon,
             filterSuffixListCon,
             filterShellCon,
+            initialPath,
             onDirectoryPickSrc,
         )
     }

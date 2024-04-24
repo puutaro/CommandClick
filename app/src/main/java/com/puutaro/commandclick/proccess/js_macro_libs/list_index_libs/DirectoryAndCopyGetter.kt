@@ -1,84 +1,35 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import android.app.Activity
-import android.content.Intent
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.documentfile.provider.DocumentFile
+import com.anggrayudi.storage.SimpleStorageHelper
+import com.anggrayudi.storage.file.FileFullPath
+import com.anggrayudi.storage.file.getAbsolutePath
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.RequestCode
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.ItemPathMaker
-import com.puutaro.commandclick.proccess.edit.lib.GetFileEditTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
-import kotlinx.coroutines.runBlocking
 import java.io.File
 
 class DirectoryAndCopyGetter(
     private val editFragment: EditFragment,
 ) {
-    private var parentDirPath = String()
-    private var selectedItemForCopy = String()
-//    private val prefixRegex = Regex("^content.*fileprovider/root/storage")
-
-    private val getDirectoryAndCopy = editFragment.registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (
-            result.resultCode != Activity.RESULT_OK
-        ) return@registerForActivityResult
-        result.data?.data?.let { uri ->
-            if (
-                uri.toString() == String()
-            ) return@registerForActivityResult
-            if(
-                NoFileChecker.isNoFile(
-                    parentDirPath,
-                    selectedItemForCopy,
-                )
-            ) return@registerForActivityResult
-            val pathSource = runBlocking {
-                GetFileEditTool.makeGetName(
-                    uri
-                )
-            }
-            val targetDirectoryPath =
-                pathSource.parent ?: String()
-            val sourceScriptFilePath = "${parentDirPath}/${selectedItemForCopy}"
-            val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
-            val targetScriptFilePath = when(
-                targetScriptFilePathSource == sourceScriptFilePath
-            ) {
-                true -> "${targetDirectoryPath}/" +
-                        "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
-                else -> targetScriptFilePathSource
-            }
-            val insertFilePath = FileSystems.execCopyFileWithDir(
-                File(sourceScriptFilePath),
-                File(targetScriptFilePath),
-            )
-            ExecAddForListIndexAdapter.sortInAddFile(
-                editFragment,
-                insertFilePath,
-            )
-            ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                editFragment,
-                ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                    editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
-                )
-            )
-            ToastUtils.showLong("copy file ok")
-        }
-    }
+    private val context = editFragment.context
+    private val storageHelper = SimpleStorageHelper(editFragment)
     fun get(
         selectedItem: String,
         listIndexPosition: Int,
+        initialPath: String,
     ){
+        if(
+            context == null
+        ) return
         val copySrcFilePath = ItemPathMaker.make(
             editFragment,
             selectedItem,
@@ -87,16 +38,70 @@ class DirectoryAndCopyGetter(
         val copySrcFilePathObj = File(copySrcFilePath)
         val copySrcFileParentDirPath = copySrcFilePathObj.parent
             ?: return
-        parentDirPath = copySrcFileParentDirPath
+        val parentDirPath = copySrcFileParentDirPath
         val srcFileName = copySrcFilePathObj.name
-        selectedItemForCopy = srcFileName
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"  // Set the MIME type to filter files
+        val selectedItemForCopy = srcFileName
+        if(
+            NoFileChecker.isNoFile(
+                parentDirPath,
+                selectedItemForCopy,
+            )
+        ) return
+        when(initialPath.isEmpty()){
+            true -> storageHelper.openFolderPicker()
+            else -> storageHelper.openFolderPicker(
+                RequestCode.FOLDER_PICKER_FOR_DIR_AND_COPY.code,
+                FileFullPath(
+                    context,
+                    initialPath,
+                )
+            )
         }
-        getDirectoryAndCopy.launch(
-            intent
+        storageHelper.onFolderSelected = {
+                requestCode, folder ->
+            execCopy(
+                parentDirPath,
+                selectedItemForCopy,
+                folder
+            )
+        }
+    }
+
+    private fun execCopy(
+        parentDirPath: String,
+        selectedItemForCopy: String,
+        folder: DocumentFile
+    ){
+        if(
+            context == null
+        ) return
+        val targetDirectoryPath = folder.getAbsolutePath(context)
+        val sourceScriptFilePath = "${parentDirPath}/${selectedItemForCopy}"
+        val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
+        val targetScriptFilePath = when(
+            targetScriptFilePathSource == sourceScriptFilePath
+        ) {
+            true -> "${targetDirectoryPath}/" +
+                    "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
+            else -> targetScriptFilePathSource
+        }
+        val insertFilePath = FileSystems.execCopyFileWithDir(
+            File(sourceScriptFilePath),
+            File(targetScriptFilePath),
         )
+        ExecAddForListIndexAdapter.sortInAddFile(
+            editFragment,
+            insertFilePath,
+        )
+        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+            editFragment,
+            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                editFragment,
+                ListIndexForEditAdapter.indexListMap,
+                ListIndexForEditAdapter.listIndexTypeKey
+            )
+        )
+        ToastUtils.showLong("copy file ok")
     }
 
 }

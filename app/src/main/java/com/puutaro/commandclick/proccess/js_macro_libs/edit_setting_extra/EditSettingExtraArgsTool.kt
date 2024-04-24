@@ -18,6 +18,7 @@ object EditSettingExtraArgsTool {
         REMOVE_SUFFIX("removeSuffix"),
         FILTER_PREFIX("prefix"),
         FILTER_SUFFIX("suffix"),
+        INITIAL_PATH("initialPath"),
         SHELL_PATH("shellPath"),
         SHELL_CON("shellCon"),
         MACRO("macro"),

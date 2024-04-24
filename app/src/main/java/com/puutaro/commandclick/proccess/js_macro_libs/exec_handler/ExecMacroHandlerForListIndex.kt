@@ -78,12 +78,17 @@ object ExecMacroHandlerForListIndex {
                     selectedItem,
                     listIndexPosition,
                 )
-            JsPathMacroForListIndex.COPY_FILE ->
+            JsPathMacroForListIndex.COPY_FILE -> {
+                val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
+                    jsActionMap
+                ) ?: emptyMap()
                 ExecCopyFile.copyFile(
                     editFragment,
                     selectedItem,
                     listIndexPosition,
+                    argsMap
                 )
+            }
             JsPathMacroForListIndex.COPY_FILE_HERE ->
                 ExecCopyFileHere.copyFileHere(
                     editFragment,

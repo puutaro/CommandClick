@@ -422,7 +422,8 @@ class TerminalFragment: Fragment() {
             onDirectoryPickSrc: Boolean = false,
             filterPrefixListCon: String,
             filterSuffixListCon: String,
-            filterShellCon: String
+            filterShellCon: String,
+            initialPath: String,
         )
     }
 
@@ -433,6 +434,7 @@ class TerminalFragment: Fragment() {
             filterPrefixListCon: String,
             filterSuffixListCon: String,
             filterShellPathCon: String,
+            initialPath: String,
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util
 
+import android.os.Environment
 import com.puutaro.commandclick.common.variable.path.UsePath
 
 object ScriptPreWordReplacer {
@@ -9,6 +10,8 @@ object ScriptPreWordReplacer {
     private val currentAppDirPathMark = "\${01}"
     private val fannelDirNameMark = "\${001}"
     private val currentScriptNameMark = "\${02}"
+    private val storagePathMark = "\${STORAGE}"
+    private val storagePath = UsePath.emulatedPath
 
     fun makeTsvTable(
         currentAppDirPath: String,
@@ -54,6 +57,7 @@ object ScriptPreWordReplacer {
             .replace(currentAppDirPathMark, currentAppDirPath)
             .replace(fannelDirNameMark, fannelDirName)
             .replace(currentScriptNameMark, currentScriptName)
+            .replace(storagePathMark, storagePath)
     }
 
     fun replaceForQr(
@@ -65,7 +69,7 @@ object ScriptPreWordReplacer {
             .replace(currentAppDirPathMark, currentAppDirPath)
     }
 
-    fun settingValreplace(
+    fun settingValReplace(
         tergetString: String,
         currentAppDirPath: String,
     ): String {

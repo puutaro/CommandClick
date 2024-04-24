@@ -24,7 +24,6 @@ class JsFileOrDirListGetter(
     private val currentFannelState = SharePrefTool.getCurrentStateName(
         readSharePreferenceMap
     )
-//    private val fileOrDirGetterForSettingButton = terminalFragment.fileOrDirGetterForSettingButton
     private val filterMapSeparator = '|'
 
     @JavascriptInterface
@@ -53,13 +52,15 @@ class JsFileOrDirListGetter(
             filterMapCon,
             filterMapSeparator,
         ).toMap()
-        val filterFILTERPrefixListCon = filterMap.get(
+        val filterFilterPrefixListCon = filterMap.get(
             EditSettingExtraArgsTool.ExtraKey.FILTER_PREFIX.key,
         ) ?: String()
-        val filterFILTERSuffixListCon = filterMap.get(
+        val filterFilterSuffixListCon = filterMap.get(
             EditSettingExtraArgsTool.ExtraKey.FILTER_SUFFIX.key,
         ) ?: String()
-
+        val initialPath = filterMap.get(
+            EditSettingExtraArgsTool.ExtraKey.INITIAL_PATH.key,
+        ) ?: String()
         val filterShellPathCon =
             EditSettingExtraArgsTool.makeShellCon(
                 filterMap
@@ -70,13 +71,10 @@ class JsFileOrDirListGetter(
         listener.onGetFileListForTerm(
             parentDirPath,
             onDirectoryPick,
-            filterFILTERPrefixListCon,
-            filterFILTERSuffixListCon,
+            filterFilterPrefixListCon,
+            filterFilterSuffixListCon,
             filterShellPathCon,
+            initialPath
         )
-//        fileOrDirGetterForSettingButton?.get(
-//            parentDirPath,
-//            onDirectoryPick
-//        )
     }
 }
