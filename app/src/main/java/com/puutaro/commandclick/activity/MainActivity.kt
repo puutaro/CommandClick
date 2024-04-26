@@ -509,14 +509,14 @@ class MainActivity:
     override fun onFileChooserListenerForEdit(
         onDirectoryPick: Boolean,
         insertEditText: EditText,
-        initialPath: String,
+        chooserMap: Map<String, String>?
     ) {
         ExecFileChooser.exec(
             this,
             storageHelper,
             onDirectoryPick,
             insertEditText,
-            initialPath,
+            chooserMap,
         )
     }
 

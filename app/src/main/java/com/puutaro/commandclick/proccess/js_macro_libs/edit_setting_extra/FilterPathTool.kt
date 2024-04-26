@@ -56,7 +56,7 @@ object FilterPathTool {
                 && isDir
     }
 
-    fun judgeByPrefix(
+    private fun judgeByPrefix(
         targetStr: String,
         filterPrefixListCon: String,
         separator: String,
@@ -69,7 +69,7 @@ object FilterPathTool {
         }
     }
 
-    fun judgeBySuffix(
+    private fun judgeBySuffix(
         targetStr: String,
         filterSuffixListCon: String,
         separator: String,

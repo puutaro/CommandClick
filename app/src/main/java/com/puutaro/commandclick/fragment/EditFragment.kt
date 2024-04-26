@@ -472,7 +472,7 @@ class EditFragment: Fragment() {
         fun onFileChooserListenerForEdit(
             onDirectoryPick: Boolean,
             insertEditText: EditText,
-            initialPath: String,
+            chooserMap: Map<String, String>?,
         )
     }
 

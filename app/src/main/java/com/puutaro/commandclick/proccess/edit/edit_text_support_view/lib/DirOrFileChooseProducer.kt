@@ -3,15 +3,23 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object DirOrFileChooseProducer {
 
     fun make(
         editFragment: EditFragment,
+        editParameters: EditParameters,
         onDirectoryPick: Boolean,
         insertEditText: EditText,
+        currentComponentIndex: Int,
         weight: Float,
     ): Button {
         val context = editFragment.context
@@ -27,13 +35,16 @@ object DirOrFileChooseProducer {
             insertButtonView,
             mapOf()
         )
-
+        val chooserMap = getChooserMap(
+            editParameters,
+            currentComponentIndex
+        )
         insertButtonView.setOnClickListener { view ->
             val listener = context as? EditFragment.OnFileChooserListenerForEdit
             listener?.onFileChooserListenerForEdit(
                 onDirectoryPick,
                 insertEditText,
-                String()
+                chooserMap
             )
         }
         val insertButtonViewParam = LinearLayout.LayoutParams(
@@ -43,5 +54,36 @@ object DirOrFileChooseProducer {
         insertButtonViewParam.weight = weight
         insertButtonView.layoutParams = insertButtonViewParam
         return insertButtonView
+    }
+
+    private fun getChooserMap(
+        editParameters: EditParameters,
+        currentComponentIndex: Int
+    ): Map<String, String>? {
+        val currentSetVariableMap = editParameters.setVariableMap
+        val readSharePreferenceMap = editParameters.readSharePreffernceMap
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
+            readSharePreferenceMap
+        )
+        val currentScriptName = SharePrefTool.getCurrentFannelName(
+            readSharePreferenceMap
+        )
+        return currentSetVariableMap?.get(
+            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        )?.split('|')
+            ?.getOrNull(currentComponentIndex)
+            ?.let {
+                SetReplaceVariabler.execReplaceByReplaceVariables(
+                    it,
+                    editParameters.setReplaceVariableMap,
+                    currentAppDirPath,
+                    currentScriptName,
+                )
+            }?.let {
+                CmdClickMap.createMap(
+                    it,
+                    '?'
+                )
+            }?.toMap()
     }
 }

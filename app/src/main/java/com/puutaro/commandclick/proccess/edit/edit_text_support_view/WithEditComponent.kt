@@ -286,8 +286,10 @@ class WithEditComponent(
                 EditTextSupportViewName.FILE_PICKER.str -> {
                     val fileChooser = DirOrFileChooseProducer.make(
                         editFragment,
+                        editParameters,
                         false,
                         insertEditText,
+                        currentComponentIndex,
                         otherComponentWeight,
                     )
                     horizontalLinearLayout.addView(fileChooser)
@@ -295,8 +297,10 @@ class WithEditComponent(
                 EditTextSupportViewName.DIRECTORY_PICKER.str -> {
                     val dirChooser = DirOrFileChooseProducer.make(
                         editFragment,
+                        editParameters,
                         true,
                         insertEditText,
+                        currentComponentIndex,
                         otherComponentWeight,
                     )
                     horizontalLinearLayout.addView(dirChooser)
