@@ -27,7 +27,7 @@ object FilterPathTool {
             filterPrefixListCon,
             targetFileName,
         )
-        val okSuffix =  judgeBySuffix(
+        val okSuffix = judgeBySuffix(
             targetFileNameOrPath,
             filterSuffixListCon,
             separator
@@ -42,7 +42,7 @@ object FilterPathTool {
                 || File(targetFileNameOrPath).isFile
         val onFileNotFoundToast = !isFile && onFilterToast
         if(onFileNotFoundToast){
-            ToastUtils.showShort("Dir not found: ${targetFileNameOrPath}")
+            ToastUtils.showShort("File not found: ${targetFileNameOrPath}")
         }
         return okPrefix
                 && okSuffix

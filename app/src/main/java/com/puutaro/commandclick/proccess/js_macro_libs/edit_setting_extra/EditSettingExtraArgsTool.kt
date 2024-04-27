@@ -22,6 +22,7 @@ object EditSettingExtraArgsTool {
         SHELL_PATH("shellPath"),
         SHELL_CON("shellCon"),
         MACRO("macro"),
+        TAG("tag"),
     }
 
     fun getParentDirPath(

@@ -60,6 +60,7 @@ import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
+import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
@@ -509,7 +510,9 @@ class MainActivity:
     override fun onFileChooserListenerForEdit(
         onDirectoryPick: Boolean,
         insertEditText: EditText,
-        chooserMap: Map<String, String>?
+        chooserMap: Map<String, String>?,
+        fannelName: String,
+        currentVariableName: String,
     ) {
         ExecFileChooser.exec(
             this,
@@ -517,6 +520,8 @@ class MainActivity:
             onDirectoryPick,
             insertEditText,
             chooserMap,
+            fannelName,
+            currentVariableName,
         )
     }
 
@@ -709,6 +714,9 @@ class MainActivity:
         filterSuffixListCon: String,
         filterShellCon: String,
         initialPath: String,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ) {
         getFileForEdit.get(
             parentDirPathSrc,
@@ -716,25 +724,32 @@ class MainActivity:
             filterSuffixListCon,
             filterShellCon,
             initialPath,
-            onDirectoryPickSrc
+            onDirectoryPickSrc,
+            pickerMacro,
+            currentFannelName,
+            tag,
         )
     }
 
     override fun onGetFileListForTerm(
-        parentDirPathSrc: String,
         onDirectoryPickSrc: Boolean,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
         filterShellCon: String,
         initialPath: String,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ) {
         getFileListForEdit.get(
-            parentDirPathSrc,
             filterPrefixListCon,
             filterSuffixListCon,
             filterShellCon,
             initialPath,
             onDirectoryPickSrc,
+            pickerMacro,
+            currentFannelName,
+            tag,
         )
     }
 

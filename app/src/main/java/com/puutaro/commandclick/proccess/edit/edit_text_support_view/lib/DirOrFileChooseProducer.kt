@@ -37,12 +37,20 @@ object DirOrFileChooseProducer {
             editParameters,
             currentComponentIndex
         )
+        val fannelName = SharePrefTool.getCurrentFannelName(
+            editFragment.readSharePreferenceMap
+        )
+        val currentVariableName =
+            editParameters.currentVariableName
+                ?: String()
         insertButtonView.setOnClickListener { view ->
             val listener = context as? EditFragment.OnFileChooserListenerForEdit
             listener?.onFileChooserListenerForEdit(
                 onDirectoryPick,
                 insertEditText,
-                chooserMap
+                chooserMap,
+                fannelName,
+                currentVariableName
             )
         }
         val insertButtonViewParam = LinearLayout.LayoutParams(

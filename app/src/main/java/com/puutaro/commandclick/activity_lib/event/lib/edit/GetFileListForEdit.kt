@@ -8,6 +8,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variant.RequestCode
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -21,34 +22,17 @@ class GetFileListForEdit (
     private val storageHelper: SimpleStorageHelper
 ) {
 
-    private var onDirectoryPick = false
-    private var parentDirPath = String()
-    private var prefixSuffixSeparator = "&"
+    private val prefixSuffixSeparator = "&"
 
     fun get(
-        parentDirPathSrc: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
         filterShellCon: String,
         initialPath: String,
-        onDirectoryPickSrc: Boolean = false,
-    ){
-        onDirectoryPick = onDirectoryPickSrc
-        parentDirPath =
-            parentDirPathSrc
-        execGetFileList(
-            filterPrefixListCon,
-            filterSuffixListCon,
-            filterShellCon,
-            initialPath,
-        )
-    }
-
-    private fun execGetFileList(
-        filterPrefixListCon: String,
-        filterSuffixListCon: String,
-        filterShellCon: String,
-        initialPath: String,
+        onDirectoryPick: Boolean = false,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ){
         when(initialPath.isEmpty()){
             true -> storageHelper.openFolderPicker()
@@ -64,6 +48,12 @@ class GetFileListForEdit (
         storageHelper.onFolderSelected = {
                 requestCode, folder ->
             val srcDirPath = folder.getAbsolutePath(activity)
+            FilePickerTool.registerRecentDir(
+                currentFannelName,
+                tag,
+                pickerMacro,
+                srcDirPath,
+            )
             val  srcFirOrDirList = when(onDirectoryPick){
                 true -> showDirNameList(
                     srcDirPath,
@@ -80,7 +70,10 @@ class GetFileListForEdit (
             }.map {
                 File(srcDirPath, it).absolutePath
             }
-            registerFileHandler(srcFirOrDirList)
+            registerFileHandler(
+                onDirectoryPick,
+                srcFirOrDirList
+            )
         }
     }
 
@@ -160,6 +153,7 @@ class GetFileListForEdit (
     }
 
     private fun registerFileHandler(
+        onDirectoryPick: Boolean,
         srcFileOrDirList: List<String>
     ){
         val editFragment = getEditFragment()

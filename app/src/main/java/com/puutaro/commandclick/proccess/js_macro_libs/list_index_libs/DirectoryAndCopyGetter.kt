@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
@@ -12,6 +11,7 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAdd
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.ItemPathMaker
+import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
@@ -26,6 +26,9 @@ class DirectoryAndCopyGetter(
         selectedItem: String,
         listIndexPosition: Int,
         initialPath: String,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ){
         if(
             context == null
@@ -59,10 +62,17 @@ class DirectoryAndCopyGetter(
         }
         storageHelper.onFolderSelected = {
                 requestCode, folder ->
+            val targetDirectoryPath = folder.getAbsolutePath(context)
+            FilePickerTool.registerRecentDir(
+                currentFannelName,
+                tag,
+                pickerMacro,
+                targetDirectoryPath,
+            )
             execCopy(
                 parentDirPath,
                 selectedItemForCopy,
-                folder
+                targetDirectoryPath
             )
         }
     }
@@ -70,12 +80,11 @@ class DirectoryAndCopyGetter(
     private fun execCopy(
         parentDirPath: String,
         selectedItemForCopy: String,
-        folder: DocumentFile
+        targetDirectoryPath: String
     ){
         if(
             context == null
         ) return
-        val targetDirectoryPath = folder.getAbsolutePath(context)
         val sourceScriptFilePath = "${parentDirPath}/${selectedItemForCopy}"
         val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
         val targetScriptFilePath = when(

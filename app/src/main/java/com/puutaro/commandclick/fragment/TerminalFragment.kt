@@ -32,6 +32,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -424,17 +425,22 @@ class TerminalFragment: Fragment() {
             filterSuffixListCon: String,
             filterShellCon: String,
             initialPath: String,
+            pickerMacro: FilePickerTool.PickerMacro?,
+            currentFannelName: String,
+            tag: String,
         )
     }
 
     interface OnGetFileListListenerForTerm {
         fun onGetFileListForTerm(
-            parentDirPathSrc: String,
             onDirectoryPickSrc: Boolean = false,
             filterPrefixListCon: String,
             filterSuffixListCon: String,
             filterShellPathCon: String,
             initialPath: String,
+            pickerMacro: FilePickerTool.PickerMacro?,
+            currentFannelName: String,
+            tag: String,
         )
     }
 }

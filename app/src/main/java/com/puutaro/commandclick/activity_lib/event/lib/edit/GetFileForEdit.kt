@@ -8,6 +8,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variant.RequestCode
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -27,26 +28,10 @@ class GetFileForEdit(
         filterSuffixListCon: String,
         filterShellCon: String,
         initialPath: String,
-        onDirectoryPick: Boolean = false
-    ){
-
-        getFileByPicker(
-            parentDirPath,
-            filterPrefixListCon,
-            filterSuffixListCon,
-            filterShellCon,
-            initialPath,
-            onDirectoryPick
-        )
-    }
-
-    private fun getFileByPicker(
-        parentDirPath: String,
-        filterPrefixListCon: String,
-        filterSuffixListCon: String,
-        filterShellCon: String,
-        initialPath: String,
-        onDirectoryPick: Boolean
+        onDirectoryPick: Boolean = false,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ){
         when (onDirectoryPick) {
             true -> execGetDir(
@@ -55,6 +40,9 @@ class GetFileForEdit(
                 filterSuffixListCon,
                 filterShellCon,
                 initialPath,
+                pickerMacro,
+                currentFannelName,
+                tag,
             )
             else -> execGetFile(
                 parentDirPath,
@@ -62,6 +50,9 @@ class GetFileForEdit(
                 filterSuffixListCon,
                 filterShellCon,
                 initialPath,
+                pickerMacro,
+                currentFannelName,
+                tag,
             )
         }
     }
@@ -72,6 +63,9 @@ class GetFileForEdit(
         filterSuffixListCon: String,
         filterShellCon: String,
         initialPath: String,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ){
         when(initialPath.isEmpty()){
             true -> storageHelper.openFolderPicker()
@@ -97,6 +91,12 @@ class GetFileForEdit(
                         prefixSuffixSeparator,
                     )
                 }.firstOrNull() ?: String()
+            FilePickerTool.registerRecentDir(
+                currentFannelName,
+                tag,
+                pickerMacro,
+                absolutePath,
+            )
             registerFileHandler(
                 absolutePath,
                 true,
@@ -110,6 +110,9 @@ class GetFileForEdit(
         filterSuffixListCon: String,
         filterShellCon: String,
         initialPath: String,
+        pickerMacro: FilePickerTool.PickerMacro?,
+        currentFannelName: String,
+        tag: String,
     ){
         when(initialPath.isEmpty()){
             true ->
@@ -140,6 +143,12 @@ class GetFileForEdit(
                         prefixSuffixSeparator,
                     )
                 }?.firstOrNull()?.let {
+                    FilePickerTool.registerRecentDir(
+                        currentFannelName,
+                        tag,
+                        pickerMacro,
+                        it,
+                    )
                     registerFileHandler(
                         it,
                         false,

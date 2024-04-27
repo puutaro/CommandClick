@@ -473,6 +473,8 @@ class EditFragment: Fragment() {
             onDirectoryPick: Boolean,
             insertEditText: EditText,
             chooserMap: Map<String, String>?,
+            fannelName: String,
+            currentVariableName: String,
         )
     }
 
