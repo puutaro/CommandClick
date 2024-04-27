@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
-import com.blankj.utilcode.util.ToastUtils
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -29,6 +29,7 @@ object ExecUpdateNoSaveUrlPaths {
             && indexTerminalFragment.isVisible
         ){
             execSave(
+                activity,
                 indexTerminalFragment,
                 currentAppDirPath,
                 fannelName
@@ -45,6 +46,7 @@ object ExecUpdateNoSaveUrlPaths {
             && editExecuteTerminalFragment.isVisible
         ){
             execSave(
+                activity,
                 editExecuteTerminalFragment,
                 currentAppDirPath,
                 fannelName,
@@ -54,18 +56,20 @@ object ExecUpdateNoSaveUrlPaths {
     }
 
     private fun execSave(
+        activity: MainActivity?,
         terminalFragment: TerminalFragment,
         currentAppDirPath: String,
         fannelName: String,
     ){
         val domain =
-            makeDomain(terminalFragment)
+            makeDomain(
+                activity,
+                terminalFragment
+            )
                 ?: return
 
-        val currentFannelName = if(
-            fannelName.isEmpty()
-        ) UsePath.cmdclickStartupJsName
-        else fannelName
+        val currentFannelName =
+            fannelName.ifEmpty { UsePath.cmdclickStartupJsName }
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
             currentAppDirPath,
@@ -86,10 +90,15 @@ object ExecUpdateNoSaveUrlPaths {
             noScrollSaveUrlsFileCon
         )
         terminalFragment.noScrollSaveUrls = noScrollSaveUrlsFileCon.split("\n")
-        ToastUtils.showShort("save ok")
+        Toast.makeText(
+            activity,
+            "save ok",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun makeDomain(
+        activity: MainActivity?,
         terminalFragment: TerminalFragment,
     ): String? {
         val url = terminalFragment.binding.terminalWebView.url
@@ -98,7 +107,11 @@ object ExecUpdateNoSaveUrlPaths {
                 || url.startsWith(WebUrlVariables.httpPrefix)
                 || url.startsWith(WebUrlVariables.httpsPrefix)
         if(!isUrl) {
-            ToastUtils.showShort("no url")
+            Toast.makeText(
+                activity,
+                "no url",
+                Toast.LENGTH_SHORT
+            ).show()
             return null
         }
         if(

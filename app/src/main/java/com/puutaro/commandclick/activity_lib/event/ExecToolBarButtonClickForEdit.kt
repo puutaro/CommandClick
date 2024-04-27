@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.activity_lib.event
 
 
-import com.blankj.utilcode.util.ToastUtils
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCommandEdit
@@ -67,8 +67,11 @@ object ExecToolBarButtonClickForEdit {
             ToolbarButtonBariantForEdit.CANCEL -> {
                 activity.supportFragmentManager.popBackStackImmediate()
             }
-            else ->
-                ToastUtils.showShort("now implementing")
+            else -> Toast.makeText(
+                activity,
+                "now implementing",
+                Toast.LENGTH_SHORT
+            ).show()
 
         }
     }

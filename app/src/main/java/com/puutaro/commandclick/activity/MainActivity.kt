@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,6 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
@@ -494,7 +494,11 @@ class MainActivity:
             contentIntent.addCategory(Intent.CATEGORY_OPENABLE)
             getFile.launch(contentIntent)
         } catch (e: Exception) {
-            ToastUtils.showLong("Cannot Open File Chooser")
+            Toast.makeText(
+                this,
+                "Cannot Open File Chooser",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -735,7 +739,7 @@ class MainActivity:
         onDirectoryPickSrc: Boolean,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
-        filterShellCon: String,
+        filterShellPathCon: String,
         initialPath: String,
         pickerMacro: FilePickerTool.PickerMacro?,
         currentFannelName: String,
@@ -744,7 +748,7 @@ class MainActivity:
         getFileListForEdit.get(
             filterPrefixListCon,
             filterSuffixListCon,
-            filterShellCon,
+            filterShellPathCon,
             initialPath,
             onDirectoryPickSrc,
             pickerMacro,
