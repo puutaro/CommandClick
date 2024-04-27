@@ -108,6 +108,7 @@ object ExecFileChooser {
                         String(),
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         prefixSuffixSeparator,
                     )
                 }?.firstOrNull()
@@ -163,6 +164,7 @@ object ExecFileChooser {
                         String(),
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         prefixSuffixSeparator,
                     )
                 } ?: String()

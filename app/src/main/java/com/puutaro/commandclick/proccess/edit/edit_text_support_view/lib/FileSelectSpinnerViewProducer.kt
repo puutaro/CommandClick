@@ -187,6 +187,7 @@ object FileSelectSpinnerViewProducer {
                 filterDir,
                 filterPrefixListCon,
                 filterSuffixListCon,
+                true,
                 "&"
             )
 //            it.startsWith(filterPrefixListCon)
@@ -199,6 +200,7 @@ object FileSelectSpinnerViewProducer {
                 filterDir,
                 filterPrefixListCon,
                 filterSuffixListCon,
+                true,
                 "&"
             )
 //            it.startsWith(filterPrefixListCon)

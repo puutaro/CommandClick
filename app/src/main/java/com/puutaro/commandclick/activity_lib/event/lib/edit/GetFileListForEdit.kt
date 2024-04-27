@@ -97,6 +97,7 @@ class GetFileListForEdit (
                 srcDirPath,
                 filterPrefixListCon,
                 filterSuffixListCon,
+                true,
                 prefixSuffixSeparator,
             )
         }
@@ -115,6 +116,7 @@ class GetFileListForEdit (
                 srcDirPath,
                 filterPrefixListCon,
                 filterSuffixListCon,
+                true,
                 prefixSuffixSeparator,
             )
         }

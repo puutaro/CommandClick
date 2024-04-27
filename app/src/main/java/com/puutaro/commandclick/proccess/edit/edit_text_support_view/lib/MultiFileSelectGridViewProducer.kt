@@ -221,6 +221,7 @@ object MultiFileSelectGridViewProducer {
                         filterDir,
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         "&"
                     )
 //                    it.startsWith(filterPrefixListCon)
@@ -236,6 +237,7 @@ object MultiFileSelectGridViewProducer {
                     filterDir,
                     filterPrefixListCon,
                     filterSuffixListCon,
+                    true,
                     "&"
                 )
 //                it.startsWith(filterPrefixListCon)

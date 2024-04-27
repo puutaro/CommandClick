@@ -271,6 +271,7 @@ object ListSettingsForListIndex  {
                     filterDir,
                     filterPrefixListCon,
                     filterSuffixListCon,
+                    false,
                     "&"
                 )
             }.map {

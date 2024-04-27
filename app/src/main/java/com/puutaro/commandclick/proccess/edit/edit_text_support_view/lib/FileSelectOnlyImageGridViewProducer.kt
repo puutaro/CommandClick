@@ -244,6 +244,7 @@ object FileSelectOnlyImageGridViewProducer {
                         filterDir,
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         "&"
                     )
 //                    it.startsWith(filterPrefixListCon)
@@ -259,6 +260,7 @@ object FileSelectOnlyImageGridViewProducer {
                     filterDir,
                     filterPrefixListCon,
                     filterSuffixListCon,
+                    true,
                     "&"
                 )
 //                it.startsWith(filterPrefixListCon)

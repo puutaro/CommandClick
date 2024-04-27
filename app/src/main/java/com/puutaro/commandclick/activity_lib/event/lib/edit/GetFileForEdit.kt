@@ -93,6 +93,7 @@ class GetFileForEdit(
                         parentDirPath,
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         prefixSuffixSeparator,
                     )
                 }.firstOrNull() ?: String()
@@ -135,6 +136,7 @@ class GetFileForEdit(
                         parentDirPath,
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         prefixSuffixSeparator,
                     )
                 }?.firstOrNull()?.let {

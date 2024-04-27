@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 
+import com.blankj.utilcode.util.ToastUtils
 import java.io.File
 
 object FilterPathTool {
@@ -7,50 +8,86 @@ object FilterPathTool {
     private const val noExtend = "NoExtend"
 
     fun isFilterByFile(
-        targetFileName: String,
+        targetFileNameOrPath: String,
         dirPath: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
-        separator: String
+        onFilterToast: Boolean,
+        separator: String,
     ): Boolean {
         val okPrefix = judgeByPrefix(
-            targetFileName,
+            targetFileNameOrPath,
             filterPrefixListCon,
             separator
         )
-        val okSuffix =  judgeBySuffix(
+        val targetFileName = File(targetFileNameOrPath).name
+        prefixFilterToast(
+            okPrefix,
+            onFilterToast,
+            filterPrefixListCon,
             targetFileName,
+        )
+        val okSuffix =  judgeBySuffix(
+            targetFileNameOrPath,
             filterSuffixListCon,
             separator
         )
-        val isFile = File("${dirPath}/$targetFileName").isFile
-                || File(targetFileName).isFile
+        suffixFilterToast(
+            okSuffix,
+            onFilterToast,
+            filterSuffixListCon,
+            targetFileName,
+        )
+        val isFile = File("${dirPath}/$targetFileNameOrPath").isFile
+                || File(targetFileNameOrPath).isFile
+        val onFileNotFoundToast = !isFile && onFilterToast
+        if(onFileNotFoundToast){
+            ToastUtils.showShort("Dir not found: ${targetFileNameOrPath}")
+        }
         return okPrefix
                 && okSuffix
                 && isFile
     }
 
     fun isFilterByDir(
-        targetDirName: String,
+        targetDirNameOrPath: String,
         dirPath: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
+        onFilterToast: Boolean,
         separator: String
     ): Boolean {
         val okPrefix = judgeByPrefix(
-            targetDirName,
+            targetDirNameOrPath,
             filterPrefixListCon,
             separator
         )
-        val okSuffix =  judgeBySuffix(
+        val targetDirName = File(targetDirNameOrPath).name
+        prefixFilterToast(
+            okPrefix,
+            onFilterToast,
+            filterPrefixListCon,
             targetDirName,
+        )
+        val okSuffix =  judgeBySuffix(
+            targetDirNameOrPath,
             filterSuffixListCon,
             separator
         )
+        suffixFilterToast(
+            okSuffix,
+            onFilterToast,
+            filterSuffixListCon,
+            targetDirName,
+        )
         val isDir = File(
-            "${dirPath}/$targetDirName"
+            "${dirPath}/$targetDirNameOrPath"
         ).isDirectory
-                || File(targetDirName).isDirectory
+                || File(targetDirNameOrPath).isDirectory
+        val onDirNotFoundToast = !isDir && onFilterToast
+        if(onDirNotFoundToast){
+            ToastUtils.showShort("Dir not found: ${targetDirNameOrPath}")
+        }
         return okPrefix
                 && okSuffix
                 && isDir
@@ -80,6 +117,32 @@ object FilterPathTool {
             }
         }
         return !Regex("\\..*$").containsMatchIn(targetStr)
+    }
+
+    private fun prefixFilterToast(
+        okPrefix: Boolean,
+        onFilterToast: Boolean,
+        filterPrefixListCon: String,
+        targetDirOrFileName: String,
+    ){
+        val onToast = okPrefix || !onFilterToast
+        if(
+            onToast
+        ) return
+        ToastUtils.showShort("Prefix must be ${filterPrefixListCon}: ${targetDirOrFileName}")
+    }
+
+    private fun suffixFilterToast(
+        okSuffix: Boolean,
+        onFilterToast: Boolean,
+        filterSuffixListCon: String,
+        targetDirName: String,
+    ){
+        val onToast = okSuffix || !onFilterToast
+        if(
+            onToast
+        ) return
+        ToastUtils.showShort("Suffix must be ${filterSuffixListCon}: ${targetDirName}")
     }
 
     private fun makeNameForComparePrefix(

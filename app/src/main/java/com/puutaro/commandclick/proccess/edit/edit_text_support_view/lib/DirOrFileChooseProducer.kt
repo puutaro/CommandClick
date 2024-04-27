@@ -8,7 +8,6 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 
@@ -23,10 +22,9 @@ object DirOrFileChooseProducer {
         weight: Float,
     ): Button {
         val context = editFragment.context
-        val chooseButtonStr = if(onDirectoryPick) {
-            "dir"
-        } else {
-            "file"
+        val chooseButtonStr = when(onDirectoryPick) {
+            true -> "dir"
+            else -> "file"
         }
         val insertButtonView = Button(context)
         insertButtonView.text = chooseButtonStr

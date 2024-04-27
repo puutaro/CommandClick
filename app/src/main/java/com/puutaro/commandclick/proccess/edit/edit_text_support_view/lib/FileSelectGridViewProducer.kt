@@ -265,6 +265,7 @@ object FileSelectGridViewProducer {
                         filterDir,
                         filterPrefixListCon,
                         filterSuffixListCon,
+                        true,
                         "&"
                     )
 //                    val okSuffix = FilterPathTool.judgeBySuffix(it, filterSuffixListCon, "&")
@@ -282,6 +283,7 @@ object FileSelectGridViewProducer {
                     filterDir,
                     filterPrefixListCon,
                     filterSuffixListCon,
+                    true,
                     "&"
                 )
 //                it.startsWith(filterPrefixListCon)
