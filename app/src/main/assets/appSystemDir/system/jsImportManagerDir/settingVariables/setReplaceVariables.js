@@ -3,6 +3,7 @@
 LIST_DIR_PATH=listDir,
 LIST_PREFIX=prefix,
 LIST_SUFFIX=suffix,
+JS_SUFFIX=".js",
 
 
 // setting
