@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
@@ -476,27 +477,26 @@ fun checkIndexNum(
                     QuoteTool.splitBySurroundedIgnore(
                         currentSetVariableValue,
                         '|'
-                    ).size
+                    ).filter {
+                       it.trim().isNotEmpty()
+                    }.size
                 } ?: 0
-//                currentSetVariableValue?.split("|")
-//                    ?.size ?: 0
             }
-        val existVariableTypeIsIndexList =
-            variableTypeIsIndexList.joinToString(":").trim().isNotEmpty()
-        val existCurrentVariableName =
-            !currentVariableName.isNullOrEmpty()
+        val notExistCurrentVariableName =
+            currentVariableName.isNullOrEmpty()
         if (
             variableTypeIsIndexListSize == currentSetVariableValueIndexSize
-            || existVariableTypeIsIndexList
-            || existCurrentVariableName
+            || notExistCurrentVariableName
         ) return@launch
         withContext(Dispatchers.IO) {
-            LogSystems.stdWarn(
+            LogSystems.stdErr(
+                editParameters.context,
                 "not match ${currentVariableName} ${CommandClickScriptVariable.SET_VARIABLE_TYPE}; " +
                         "options / values -> " +
                         "$variableTypeIsIndexListSize / $currentSetVariableValueIndexSize -> " +
                         "( ${variableTypeIsIndexList.joinToString(":")} ) / " +
-                        "( ${currentSetVariableValue} )"
+                        "( ${currentSetVariableValue} )",
+                notiLevelSrc = BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
             )
         }
     }
