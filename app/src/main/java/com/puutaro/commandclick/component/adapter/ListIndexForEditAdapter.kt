@@ -15,6 +15,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
+import com.puutaro.commandclick.custom_view.MagicTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
@@ -121,7 +122,7 @@ class ListIndexForEditAdapter(
                 com.puutaro.commandclick.R.id.list_index_edit_adapter_contents
             )
         val qrLogoImageCaptionTextView =
-            view.findViewById<AppCompatTextView>(
+            view.findViewById<MagicTextView>(
                 com.puutaro.commandclick.R.id.list_index_edit_adapter_image_caption
             )
 
