@@ -18,6 +18,7 @@ enum class CmdClickIcons(
     FILE("file", R.drawable.icons8_file),
     FOLDA("folda", R.drawable.icons8_folda),
     HISTORY("history", R.drawable.icons8_history),
+    GALLERY("gallery", R.drawable.icons8_image_gallery),
     INFO("info", R.drawable.icons8_info),
     INTERNET("internet", R.drawable.internet),
     LAUNCH("launch", R.drawable.icons8_launch),
