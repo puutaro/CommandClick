@@ -148,7 +148,7 @@ get it on belllow link
 --------
 
 By edge, webview javascript feature is limted.  
-So, javascript not working, recomend to install [webview canary](https://play.google.com/store/apps/details?id=com.google.android.webview.canary&hl=ja&gl=US)
+So, javascript not working, recomend to install [webview canary](https://play.google.com/store/apps/details?id=com.google.android.webview.canary&hl=ja&gl=US) or other.
 
 
 
