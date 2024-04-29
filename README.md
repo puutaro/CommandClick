@@ -144,6 +144,14 @@ get it on belllow link
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
 
+[Recomend] Install WebView Canary
+--------
+
+By edge, webview javascript feature is limted.  
+So, javascript not working, recomend to install [webview canary](https://play.google.com/store/apps/details?id=com.google.android.webview.canary&hl=ja&gl=US)
+
+
+
 Setup Ubuntu addon
 ------
 
