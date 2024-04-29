@@ -563,7 +563,10 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 Generally TroubleShooting  
 -----------------
 
-- App not working -> [**kill all process**](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#kill)
+- Javascript err -> [[Recommend] Install WebView Canary](https://github.com/puutaro/CommandClick/blob/master/README.md#recomend-install-webview-canary)
+    - Probably js not working 
+
+- App not working -> [**kill this app**](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#kill)
     - Although this is frequently, incident is unknown
   　　 
 
