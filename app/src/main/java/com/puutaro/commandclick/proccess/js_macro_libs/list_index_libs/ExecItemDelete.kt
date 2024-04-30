@@ -62,6 +62,30 @@ object ExecItemDelete {
         parentDirPath: String,
         selectedItem: String,
     ){
+        val removeTargetPathPbj = File(
+            parentDirPath,
+            selectedItem
+        )
+        when(true){
+            removeTargetPathPbj.isFile
+            -> deleteFile(
+                editFragment,
+                parentDirPath,
+                selectedItem,
+            )
+            removeTargetPathPbj.isDirectory
+            -> FileSystems.removeDir(
+                removeTargetPathPbj.absolutePath
+            )
+            else -> {}
+        }
+    }
+
+    private fun deleteFile(
+        editFragment: EditFragment,
+        parentDirPath: String,
+        selectedItem: String,
+    ){
         FileSystems.removeFiles(
             File(
                 parentDirPath,
