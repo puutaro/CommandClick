@@ -219,8 +219,15 @@ class WebViewJsDialog(
     }
 
     fun dismiss(){
-        val webViewDialog = terminalFragment.webViewDialogInstance
-        webViewDialog?.dismiss()
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                delay(200)
+            }
+            withContext(Dispatchers.Main) {
+                val webViewDialog = terminalFragment.webViewDialogInstance
+                webViewDialog?.dismiss()
+            }
+        }
     }
 
     private fun stopWebView(webView: WebView){
