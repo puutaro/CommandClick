@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 object LogSystems {
 
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val sysLogFileName = UsePath.cmdClickMonitorFileName_2
+    private const val sysLogFileName = UsePath.cmdClickMonitorFileName_2
     val logPrefix = LogTool.logPrefix
 
 
@@ -65,7 +65,7 @@ object LogSystems {
                     true -> BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
                     else -> notiLevelSrc
                 }
-                sendDebugNoti(
+                JsDebugger.sendDebugNoti(
                     context,
                     debugNotiJanre,
                     notiLevel,
@@ -91,7 +91,7 @@ object LogSystems {
                 )
             }
             withContext(Dispatchers.IO){
-                sendDebugNoti(
+                JsDebugger.sendDebugNoti(
                     context,
                     BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR.type,
                     BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level,
@@ -118,43 +118,6 @@ object LogSystems {
         }
     }
 
-    private fun sendDebugNoti(
-        context: Context?,
-        debugNotiJanreStr: String,
-        notiLevelStr: String,
-    ){
-        if(
-            context == null
-        ) return
-        val notiLevel =
-            BroadCastIntentExtraForJsDebug.NotiLevelType.values().firstOrNull {
-                it.level == notiLevelStr
-            } ?: BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH
-        val debugNotiJanre =
-            BroadCastIntentExtraForJsDebug.DebugGenre.values().firstOrNull {
-                it.type == debugNotiJanreStr
-            } ?: BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR
-        val notiDatetime = LocalDateTime.now().toString()
-        val jsDebugExtraPairList =
-            listOf(
-                BroadCastIntentExtraForJsDebug.BroadcastSchema.DATETIME.scheme
-                        to notiDatetime,
-                BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme
-                        to notiLevel.level,
-                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme
-                        to debugNotiJanre.type,
-            )
-        JsDebugger.putStockLogMap(
-            notiDatetime,
-            notiLevel.level,
-            debugNotiJanre.type
-        )
-        BroadcastSender.normalSend(
-            context,
-            BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,
-            jsDebugExtraPairList
-        )
-    }
 
     fun stdWarn(
         errContents: String,

@@ -13,6 +13,7 @@ enum class CmdClickIcons(
     DOWN("down", R.drawable.ic_down_allow),
     DOWNLOAD("download", android.R.drawable.stat_sys_download),
     DOWNLOAD_COMP("download_done", android.R.drawable.stat_sys_download_done),
+    DEBUG("debug", R.drawable.icon_debug),
     EDIT("edit", R.drawable.icons8_edit),
     EDIT_FRAME("edit_frame", R.drawable.icons8_edit_frame),
     FILE("file", R.drawable.icons8_file),

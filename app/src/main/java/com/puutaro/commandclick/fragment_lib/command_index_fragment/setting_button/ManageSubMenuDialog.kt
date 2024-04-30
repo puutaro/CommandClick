@@ -7,9 +7,11 @@ import android.widget.ImageButton
 import android.widget.ListView
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
@@ -99,36 +101,46 @@ object ManageSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-            when(selectedSubMenu){
-                ManageSubMenuEnums.KILL.itemName -> {
+            val manageSubMenuEnums = ManageSubMenuEnums.values().firstOrNull {
+                it.itemName == selectedSubMenu
+            } ?: return@setOnItemClickListener
+            when(manageSubMenuEnums){
+                ManageSubMenuEnums.KILL -> {
                     AppProcessManager.killDialogForCmdIndex(
                         cmdIndexFragment,
                         currentAppDirPath,
                         String(),
                     )
                 }
-                ManageSubMenuEnums.RESTART_UBUNTU.itemName -> {
+                ManageSubMenuEnums.RESTART_UBUNTU -> {
                     UbuntuServiceManager.launch(
                         cmdIndexFragment.activity
                     )
                 }
-                ManageSubMenuEnums.SELECT_MONITOR.itemName -> {
+                ManageSubMenuEnums.SELECT_MONITOR -> {
                     SelectTermDialog.launch(cmdIndexFragment)
                 }
-                ManageSubMenuEnums.ADD.itemName -> {
+                ManageSubMenuEnums.ADD -> {
                     AddScriptHandler(
                         cmdIndexFragment,
                         currentAppDirPath,
                     ).handle()
                 }
-                ManageSubMenuEnums.JS_IMPORT.itemName -> {
+                ManageSubMenuEnums.LAUNCH_DEBUGGER -> {
+                    JsDebugger.sendDebugNoti(
+                        cmdIndexFragment.context,
+                        BroadCastIntentExtraForJsDebug.DebugGenre.JS_DEBUG.type,
+                        BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level,
+                    )
+                }
+                ManageSubMenuEnums.JS_IMPORT -> {
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
                         UsePath.jsImportManagerFannelName
                     )
                 }
-                ManageSubMenuEnums.REFRESH_MONITOR.itemName -> {
+                ManageSubMenuEnums.REFRESH_MONITOR -> {
                     TermRefresh.refresh(
                         terminalViewModel.currentMonitorFileName
                     )
@@ -145,6 +157,7 @@ object ManageSubMenuDialog {
         REFRESH_MONITOR("refresh monitor", R.drawable.icons8_refresh),
         SELECT_MONITOR("select monitor", R.drawable.icons8_file),
         RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
+        LAUNCH_DEBUGGER("launch debugger", R.drawable.icon_debug),
         JS_IMPORT("js import manager", R.drawable.icons8_folda),
         ADD("add", R.drawable.icons8_plus),
     }

@@ -17,6 +17,8 @@ object BroadCastIntentExtraForJsDebug {
         HIGH("high"),
     }
 
+    private val clickBellowButtonMsg = "click bellow button"
+
     enum class DebugGenre(
         val type: String,
         val label: String,
@@ -24,7 +26,8 @@ object BroadCastIntentExtraForJsDebug {
     ){
         JS_ERR("js","JS ERR", "jsLog"),
         SYS_ERR("sys","SYS ERR", "sysLog"),
-        ERR("err","ERR", "click bellow button"),
+        ERR("err","ERR", clickBellowButtonMsg),
+        JS_DEBUG("debug","DEBUG", clickBellowButtonMsg),
     }
 }
 

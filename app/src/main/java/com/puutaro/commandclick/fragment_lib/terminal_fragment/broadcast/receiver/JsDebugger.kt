@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 
 import android.R
 import android.app.NotificationChannel
+import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -40,7 +41,45 @@ object JsDebugger {
         DEBUG_LEVEL(BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme)
     }
 
-    fun putStockLogMap(
+    fun sendDebugNoti(
+        context: Context?,
+        debugNotiJanreStr: String,
+        notiLevelStr: String,
+    ){
+        if(
+            context == null
+        ) return
+        val notiLevel =
+            BroadCastIntentExtraForJsDebug.NotiLevelType.values().firstOrNull {
+                it.level == notiLevelStr
+            } ?: BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH
+        val debugNotiJanre =
+            BroadCastIntentExtraForJsDebug.DebugGenre.values().firstOrNull {
+                it.type == debugNotiJanreStr
+            } ?: BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR
+        val notiDatetime = LocalDateTime.now().toString()
+        val jsDebugExtraPairList =
+            listOf(
+                BroadCastIntentExtraForJsDebug.BroadcastSchema.DATETIME.scheme
+                        to notiDatetime,
+                BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme
+                        to notiLevel.level,
+                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme
+                        to debugNotiJanre.type,
+            )
+        putStockLogMap(
+            notiDatetime,
+            notiLevel.level,
+            debugNotiJanre.type
+        )
+        BroadcastSender.normalSend(
+            context,
+            BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,
+            jsDebugExtraPairList
+        )
+    }
+
+    private fun putStockLogMap(
         notiDatetime: String,
         notiLevelStr: String,
         debugNotiJanreStr: String,
@@ -152,7 +191,7 @@ object JsDebugger {
             context,
             notificationIdToImportance.id
         )
-            .setSmallIcon(com.puutaro.commandclick.R.drawable.icons8_file)
+            .setSmallIcon(com.puutaro.commandclick.R.drawable.icon_debug)
             .setAutoCancel(true)
             .setContentTitle("[${debugGenre.label}] ${notiDatetime} ")
             .setContentText("Click ${debugGenre.buttonName}")
