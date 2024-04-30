@@ -90,15 +90,18 @@ object SettingSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-            when(selectedSubMenu){
-                SettingSubMenuEnums.APP_DIR_MANAGER.itemName -> {
+            val settingSubMenuEnums = SettingSubMenuEnums.values().firstOrNull {
+                it.itemName == selectedSubMenu
+            } ?: return@setOnItemClickListener
+            when(settingSubMenuEnums){
+                SettingSubMenuEnums.APP_DIR_MANAGER -> {
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
                         UsePath.appDirManagerFannelName
                     )
                 }
-                SettingSubMenuEnums.SHORTCUT.itemName -> {
+                SettingSubMenuEnums.SHORTCUT -> {
                     val listener =
                         cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
@@ -108,12 +111,8 @@ object SettingSubMenuDialog {
                             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                         )
                     )
-//                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-//                    listener?.onToolbarMenuCategories(
-//                        ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
-//                    )
                 }
-                SettingSubMenuEnums.TERMUX_SETUP.itemName -> {
+                SettingSubMenuEnums.TERMUX_SETUP -> {
                     val listener =
                         cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
@@ -123,12 +122,8 @@ object SettingSubMenuDialog {
                             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                         )
                     )
-//                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-//                    listener?.onToolbarMenuCategories(
-//                        ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
-//                    )
                 }
-                SettingSubMenuEnums.CONFIG.itemName -> {
+                SettingSubMenuEnums.CONFIG -> {
                     ConfigEdit.edit(cmdIndexFragment)
                 }
             }
