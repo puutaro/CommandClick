@@ -65,7 +65,10 @@ import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePrefTool
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -293,18 +296,20 @@ class MainActivity:
         SpecialSearchSwitch: Boolean
     ){
         if(!isVisible) return
-        if(SpecialSearchSwitch) {
-            WrapFragmentManager.changeFragmentByKeyBoardVisibleChange(
+        CoroutineScope(Dispatchers.Main).launch {
+            if (SpecialSearchSwitch) {
+                WrapFragmentManager.changeFragmentByKeyBoardVisibleChange(
+                    isKeyboardShowing,
+                    supportFragmentManager,
+                    getString(R.string.index_terminal_fragment),
+                )
+                return@launch
+            }
+            ExecCmdIndexSizingInTermShort.execCmdIndexSizingInTermShort(
+                this@MainActivity,
                 isKeyboardShowing,
-                supportFragmentManager,
-                getString(R.string.index_terminal_fragment),
             )
-            return
         }
-        ExecCmdIndexSizingInTermShort.execCmdIndexSizingInTermShort(
-            this,
-            isKeyboardShowing,
-        )
 
     }
 
@@ -313,13 +318,19 @@ class MainActivity:
         isKeyboardShowing: Boolean,
         isVisible: Boolean
     ) {
-        if(!isVisible) return
-        if(!isKeyboardShowing) currentFocus?.clearFocus()
-        WrapFragmentManager.changeFragmentByKeyBoardVisibleChange(
-            isKeyboardShowing,
-            supportFragmentManager,
-            getString(R.string.edit_terminal_fragment),
-        )
+        if(
+            !isVisible
+        ) return
+        CoroutineScope(Dispatchers.Main).launch {
+            if (
+                !isKeyboardShowing
+            ) currentFocus?.clearFocus()
+            WrapFragmentManager.changeFragmentByKeyBoardVisibleChange(
+                isKeyboardShowing,
+                supportFragmentManager,
+                getString(R.string.edit_terminal_fragment),
+            )
+        }
     }
 
     override fun onToolBarVisibleChange(
