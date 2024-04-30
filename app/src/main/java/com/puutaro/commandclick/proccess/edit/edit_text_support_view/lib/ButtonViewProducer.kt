@@ -47,9 +47,6 @@ object ButtonViewProducer {
     private const val buttoLabelThis = "this"
     private var consecutiveJob: Job? = null
     const val doubleColon = "::"
-//    private val backStackMacro = doubleColon +
-//            SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
-//            doubleColon
     private val termOutMacro = doubleColon +
             SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
             doubleColon
