@@ -173,13 +173,6 @@ class ListIndexForEditAdapter(
         ) return
         initListProperty(listIndexPosition)
         CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Main) {
-//                delay(200)
-////                val backstackCount = TitleImageAndViewSetter.makeBackstackCount(editFragment)
-////                if (backstackCount == 0) {
-////                    delay(100)
-////                }
-//            }
             withContext(Dispatchers.Main) {
                 ListIndexEditConfig.setCheckToMaterialCardView(
                     holder.materialCardView,
@@ -456,7 +449,6 @@ class ListIndexForEditAdapter(
                         filterDir,
                         holder.fileName,
                         holder.fileContentsQrLogoView,
-//                        holder.fileContentsQrLogoLinearLayout,
                     )
                 }
                 withContext(Dispatchers.Main) {
