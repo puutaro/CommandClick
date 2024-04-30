@@ -51,6 +51,7 @@ object ExecMacroHandlerForListIndex {
                     editFragment,
                     filterDir,
                     selectedItem,
+                    listIndexPosition,
                 )
             }
             JsPathMacroForListIndex.SIMPLE_DELETE -> {
