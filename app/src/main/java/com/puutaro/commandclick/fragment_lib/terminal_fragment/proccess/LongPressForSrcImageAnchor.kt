@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -44,6 +45,17 @@ class LongPressForSrcImageAnchor(
         if(
             !File(srcImageAnchorMenuFilePath).isFile
         ) return
+        if(
+            srcImageAnchorMenuFilePath.endsWith(UsePath.JS_FILE_SUFFIX)
+        ){
+            execJsFile(
+                srcImageAnchorMenuFilePath,
+                longPressLinkUrl,
+                longPressImageUrl,
+                currentUrl,
+            )
+            return
+        }
         val longPressScriptList = LongPressMenuTool.makeLongPressScriptList(
             terminalFragment,
             srcImageAnchorLongPressMenuDirPath,

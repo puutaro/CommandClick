@@ -21,6 +21,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -215,6 +216,11 @@ class WebViewJsDialog(
                 longPressMenuMapListStr
             )
         }
+    }
+
+    fun dismiss(){
+        val webViewDialog = terminalFragment.webViewDialogInstance
+        webViewDialog?.dismiss()
     }
 
     private fun stopWebView(webView: WebView){
@@ -737,13 +743,19 @@ class WebViewJsDialog(
                 listType
             ) ?: String()
         val commentOutMark = JavaScriptLoadUrl.commentOutMark
-        return ReadText(
-            menuFilePath
-        ).textToList().filter {
-            val timeLine = it.trim()
-            !timeLine.startsWith(commentOutMark)
-                    && !timeLine.startsWith("#")
-                    && timeLine.isNotEmpty()
+        val isJsPath = menuFilePath.endsWith(UsePath.JS_FILE_SUFFIX)
+        return when(isJsPath){
+            true -> listOf(
+                "${menuFilePath}\t${menuFilePath}"
+            )
+            else -> ReadText(
+                menuFilePath
+            ).textToList().filter {
+                val timeLine = it.trim()
+                !timeLine.startsWith(commentOutMark)
+                        && !timeLine.startsWith("#")
+                        && timeLine.isNotEmpty()
+            }
         }
     }
 
