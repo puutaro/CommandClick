@@ -6,20 +6,17 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 object ExecSimpleDelete {
 
@@ -37,8 +34,8 @@ object ExecSimpleDelete {
             false -> removeItem(
                 editFragment,
                 listIndexForEditAdapter,
-                listIndexPosition,
                 selectedItem,
+                listIndexPosition,
             )
             else -> DeleteConfirmDialog.launch(
                 editFragment,
@@ -53,8 +50,8 @@ object ExecSimpleDelete {
     private fun removeItem(
         editFragment: EditFragment,
         listIndexForEditAdapter: ListIndexForEditAdapter,
-        listIndexPosition: Int,
         selectedItem: String,
+        listIndexPosition: Int,
     ){
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -68,14 +65,15 @@ object ExecSimpleDelete {
                 ExecRemoveForListIndexAdapter.removeCon(
                     editFragment,
                     ListIndexForEditAdapter.listIndexTypeKey,
-                    removeItemLine
+                    removeItemLine,
                 )
             }
             withContext(Dispatchers.IO) {
                 execRemoveItemHandler(
                     editFragment,
                     selectedItem,
-                    removeItemLine
+                    removeItemLine,
+                    listIndexPosition,
                 )
             }
         }
@@ -85,6 +83,7 @@ object ExecSimpleDelete {
         editFragment: EditFragment,
         selectedItem: String,
         removeItemLine: String,
+        listIndexPosition: Int,
     ){
         when(ListIndexForEditAdapter.listIndexTypeKey){
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
@@ -94,7 +93,7 @@ object ExecSimpleDelete {
                     ListIndexForEditAdapter.indexListMap,
                     ListIndexForEditAdapter.listIndexTypeKey
                 )
-                ExecItemDelete.execDeleteAfterConfirm(
+                ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
                     editFragment,
                     filterDir,
                     selectedItem,
@@ -106,6 +105,11 @@ object ExecSimpleDelete {
                     listOf(removeItemLine),
                 )
         }
+        DeleteSettingsForListIndex.doWithJsAction(
+            editFragment,
+            selectedItem,
+            listIndexPosition,
+        )
     }
 
     private object DeleteConfirmDialog {
@@ -183,8 +187,8 @@ object ExecSimpleDelete {
                 removeItem(
                     editFragment,
                     listIndexForEditAdapter,
-                    listIndexPosition,
                     selectedItem,
+                    listIndexPosition,
                 )
             }
             getPermissionConfirmDialog?.window?.setLayout(

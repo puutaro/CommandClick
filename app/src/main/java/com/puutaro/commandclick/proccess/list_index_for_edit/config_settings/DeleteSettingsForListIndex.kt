@@ -1,5 +1,9 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexReplacer
+import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 
 object DeleteSettingsForListIndex {
 
@@ -8,6 +12,7 @@ object DeleteSettingsForListIndex {
     ){
         DISABLE_DELETE_CONFIRM("disableDeleteConfirm"),
         ON_DELETE_CON_FILE("onDeleteConFile"),
+        WITH_JS_ACTION("withJsAction"),
     }
 
     enum class OnDeleteConFileValue {
@@ -33,6 +38,32 @@ object DeleteSettingsForListIndex {
         return deleteConfigMap?.get(
             DeleteKey.ON_DELETE_CON_FILE.key
         ) != OnDeleteConFileValue.OFF.name
+    }
+
+    fun doWithJsAction(
+        editFragment: EditFragment,
+        selectedItem: String,
+        listIndexListPosition: Int,
+    ){
+        val jsActionConSrcBeforeReplace = ListIndexForEditAdapter.deleteConfigMap.get(
+            DeleteKey.WITH_JS_ACTION.key
+        )
+        val jsActionCon = ListIndexReplacer.replace(
+            editFragment,
+            jsActionConSrcBeforeReplace,
+            selectedItem,
+            listIndexListPosition,
+        )
+        if(
+            jsActionCon.isNullOrEmpty()
+        ) return
+        JsActionHandler.handle(
+            editFragment,
+            editFragment.readSharePreferenceMap,
+            String(),
+            editFragment.setReplaceVariableMap,
+            jsActionCon
+        )
     }
 
 }

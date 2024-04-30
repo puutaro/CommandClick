@@ -45,16 +45,19 @@ object ExecRemoveForListIndexAdapter {
         val onDeleteConFile = DeleteSettingsForListIndex.howOnDeleteConFileValue(
             ListIndexForEditAdapter.deleteConfigMap
         )
-        if(!onDeleteConFile) return
+        if(
+            !onDeleteConFile
+        ) return
         val removeTitleConList = removeItemLine.split("\t")
-        if(removeTitleConList.size != 2) return
+        if(
+            removeTitleConList.size != 2
+        ) return
         val filePath = removeTitleConList.last()
-//        FileSystems.removeFiles(filePath)
         val filePathObj = File(filePath)
+        val fileName = filePathObj.name
         val parentDirPath = filePathObj.parent
             ?: return
-        val fileName = filePathObj.name
-        ExecItemDelete.execDeleteAfterConfirm(
+        ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
             editFragment,
             parentDirPath,
             fileName,

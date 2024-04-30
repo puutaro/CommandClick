@@ -36,10 +36,16 @@ class JsDeleteItem(
             currentFannelName,
             currentFannelState
         ) ?: return
+        val binding = editFragment.binding
+        val listIndexForEditAdapter =
+            binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+        val listIndexPosition =
+            listIndexForEditAdapter.listIndexList.indexOf(selectedItem)
         ExecItemDelete.execItemDelete(
             editFragment,
             parentDirPath,
             selectedItem,
+            listIndexPosition,
         )
     }
 
