@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class JsCurl(
@@ -130,8 +131,9 @@ class JsCurl(
     @JavascriptInterface
     fun getImage(
         url: String
-    ){
+    ): String {
         val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
+        var downloadImagePath = String()
         runBlocking{
             withContext(Dispatchers.IO) {
                 ImageTempDownloader.download(
@@ -147,10 +149,22 @@ class JsCurl(
                     )
                     if(
                         tempFileList.isNotEmpty()
-                    ) break
+                    ) {
+                        val downloadImageName =
+                            tempFileList.getOrNull(0)
+                                ?: String()
+                        downloadImagePath =
+                            File(
+                                cmdclickTempDownloadDirPath,
+                                downloadImageName
+                            ).absolutePath
+
+                        break
+                    }
                 }
             }
         }
+        return downloadImagePath
     }
 
     @JavascriptInterface
