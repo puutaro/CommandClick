@@ -5,6 +5,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexReplacer
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.MacroHandlerForQrAndListIndex
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 
@@ -55,35 +56,14 @@ object JsPathHandlerForQrAndListIndex {
         if(
             jsActionMap.isNullOrEmpty()
         ) return
-        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
-        )
-        val selectedFileNameOrPath =
-            selectedItem
-                .split("\t")
-                .lastOrNull()
-                ?: String()
-        val selectedTitle =
-            selectedItem
-                .split("\t")
-                .firstOrNull()
-                ?: String()
-        val jsConSrc = jsActionMap.get(
+        val jsConSrcBeforeReplace = jsActionMap.get(
             JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
-        )?.replace(
-            "\${ITEM_TITLE}",
-            selectedTitle,
-        )?.replace(
-            "\${ITEM_NAME}",
-            selectedFileNameOrPath,
-        )?.replace(
-            "\${INDEX_LIST_DIR_PATH}",
-            filterDir,
-        )?.replace(
-            "\${POSITION}",
-            listIndexListPosition.toString()
+        )
+        val jsConSrc = ListIndexReplacer.replace(
+            editFragment,
+            jsConSrcBeforeReplace,
+            selectedItem,
+            listIndexListPosition,
         ) ?: return
         val jsCon = jsConSrc
             .replace(Regex("\n[ \t]*//.*"), "")
