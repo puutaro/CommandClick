@@ -30,12 +30,23 @@ object TsvTool {
         tsvPath: String?,
         removeItemLineList: List<String>,
     ){
-        if(tsvPath.isNullOrEmpty()) return
+        if(
+            tsvPath.isNullOrEmpty()
+        ) return
         val tsvPathObj = File(tsvPath)
         if(!tsvPathObj.isFile) return
-        val removeTsvCon = ReadText(tsvPath,).textToList().filter {
+        val removeTsvCon = ReadText(tsvPath).textToList().filter {
             !removeItemLineList.contains(it.trim())
         }.joinToString("\n")
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "remove.txt").absolutePath,
+//            listOf(
+//                "removeItemLineList: ${removeItemLineList}",
+//                "tsvPath: ${tsvPath}",
+//                "tsvCon: ${ReadText(tsvPath).readText()}",
+//                "removeTsvCon: ${removeTsvCon}"
+//            ).joinToString("\n\n")
+//        )
         FileSystems.writeFile(
             tsvPath,
             removeTsvCon
