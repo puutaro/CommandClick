@@ -14,13 +14,16 @@ import androidx.fragment.app.activityViewModels
 import com.bachors.img2ascii.Img2Ascii
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -34,10 +37,12 @@ class AsciiArtJsDialog(
     val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var spannableDialogObj: Dialog? = null
+    private val asciiArtMapSeparator = '|'
 
     fun create(
         title: String,
-        imagePath: String
+        imagePath: String,
+        asciiArtMapCon: String,
     ){
         terminalViewModel.onDialog = true
         runBlocking {
@@ -46,10 +51,15 @@ class AsciiArtJsDialog(
                     imagePath,
                 )
             }
+            val asciiArtMap = CmdClickMap.createMap(
+                asciiArtMapCon,
+                asciiArtMapSeparator
+            ).toMap()
             withContext(Dispatchers.Main) {
                 execCreate(
                     title,
-                    asciiArtSpannable
+                    asciiArtSpannable,
+                    asciiArtMap
                 )
             }
             withContext(Dispatchers.IO) {
@@ -64,6 +74,7 @@ class AsciiArtJsDialog(
     private fun execCreate(
         title: String,
         spannable: Spannable?,
+        asciiArtMap: Map<String, String>
     ){
         if(
             context == null
@@ -110,6 +121,23 @@ class AsciiArtJsDialog(
         )
         spannableDialogObj?.window?.setGravity(Gravity.BOTTOM)
         spannableDialogObj?.show()
+        CoroutineScope(Dispatchers.IO).launch{
+            val savePath = withContext(Dispatchers.IO){
+                asciiArtMap.get(AsciiArtMapKey.SAVE_PATH.key)
+            }
+            if(
+                savePath.isNullOrEmpty()
+            ) return@launch
+            val spannableImagePathObj =
+                withContext(Dispatchers.IO) {
+                    makeSpannableImageFromView()
+                } ?: return@launch
+            FileSystems.copyFile(
+                spannableImagePathObj.absolutePath,
+                savePath
+            )
+
+        }
     }
 
     private fun setShareButton(){
@@ -117,23 +145,41 @@ class AsciiArtJsDialog(
             com.puutaro.commandclick.R.id.spannable_dialog_share
         )
         shareButton?.setOnClickListener {
-            FileSystems.removeAndCreateDir(
-                UsePath.cmdclickTempCreateDirPath
+            CoroutineScope(Dispatchers.IO).launch {
+                val spannableImagePathObj =
+                    withContext(Dispatchers.IO) {
+                        makeSpannableImageFromView()
+                    } ?: return@launch
+
+                IntentVariant.sharePngImage(
+                    spannableImagePathObj,
+                    context,
+                    activity
+                )
+            }
+        }
+    }
+
+    private suspend fun makeSpannableImageFromView(): File? {
+        FileSystems.removeAndCreateDir(
+            UsePath.cmdclickTempCreateDirPath
+        )
+        val spannableContents = withContext(Dispatchers.Main) {
+            spannableDialogObj?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.spannable_dialog_contents
             )
-            val spannableContents =
-                spannableDialogObj?.findViewById<AppCompatTextView>(
-                    com.puutaro.commandclick.R.id.spannable_dialog_contents
-                ) ?: return@setOnClickListener
-            val bitmap =
-                BitmapTool.getScreenShotFromView(spannableContents)
-                    ?: return@setOnClickListener
-            val imageName = BitmapTool.hash(
-                bitmap
-            ) + ".png"
-            val file = File(
-                UsePath.cmdclickTempCreateDirPath,
-                imageName
-            )
+        }?: return null
+        val bitmap =
+            BitmapTool.getScreenShotFromView(spannableContents)
+                ?: return null
+        val imageName = BitmapTool.hash(
+            bitmap
+        ) + ".png"
+        val file = File(
+            UsePath.cmdclickTempCreateDirPath,
+            imageName
+        )
+        withContext(Dispatchers.IO) {
             FileOutputStream(file).use { stream ->
                 bitmap.compress(
                     Bitmap.CompressFormat.PNG,
@@ -141,12 +187,8 @@ class AsciiArtJsDialog(
                     stream
                 )
             }
-            IntentVariant.sharePngImage(
-                file,
-                context,
-                activity
-            )
         }
+        return file
     }
 
     private suspend fun makeAsciiArt(
@@ -192,5 +234,11 @@ class AsciiArtJsDialog(
             }
         }
     return htmlSpannableStr
+    }
+
+    private enum class AsciiArtMapKey(
+        val key: String
+    ){
+        SAVE_PATH("savePath")
     }
 }
