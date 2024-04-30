@@ -279,14 +279,16 @@ class JsDialog(
     @JavascriptInterface
     fun asciiArtDialog(
         title: String,
-        imagePath: String
+        imagePath: String,
+        asciiArtMapCon: String,
     ){
         if(
             imagePath.trim().isEmpty()
         ) return
        asciiArtJsDialog.create(
            title,
-           imagePath
+           imagePath,
+           asciiArtMapCon,
        )
     }
 
@@ -314,6 +316,11 @@ class JsDialog(
             menuMapStrListStr,
             longPressMenuMapListStr
         )
+    }
+
+    @JavascriptInterface
+    fun webViewDismiss_S(){
+        webViewJsDialog.dismiss()
     }
 
     @JavascriptInterface
