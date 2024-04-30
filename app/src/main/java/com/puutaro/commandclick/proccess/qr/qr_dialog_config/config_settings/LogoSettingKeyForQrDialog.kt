@@ -318,11 +318,13 @@ object QrLogoSettingsForQrDialog {
                 ImageMacro.IMAGE_PATH.id -> setImagePath(
                     context,
                     fannelContentsQrLogoView,
+                    fileContentsQrLogoLinearLayout,
                     listIndexTypeKey,
                     qrLogoConfigMap,
                     filterDir,
                     itemName,
                     textImagePngBitMap,
+                    iconNameColorConfigMap,
                 )
                 else -> setIconOrQr(
                     context,
@@ -338,11 +340,13 @@ object QrLogoSettingsForQrDialog {
         private fun setImagePath(
             context: Context,
             fannelContentsQrLogoView: AppCompatImageView?,
+            fileContentsQrLogoLinearLayout: RelativeLayout?,
             listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
             qrLogoConfigMap: Map<String, String>,
             filterDir: String,
             itemName: String,
             textImagePngBitMap: Bitmap,
+            iconNameColorConfigMap: Map<String, String>?
         ) {
             val itemPath = when(listIndexTypeKey){
                 TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
@@ -366,6 +370,16 @@ object QrLogoSettingsForQrDialog {
             )
 
             fannelContentsQrLogoView?.setImageBitmap(myBitmap)
+//            getIconColor(iconNameColorConfigMap).let {
+//                fannelContentsQrLogoView?.imageTintList =
+//                    context.getColorStateList(it)
+//            }
+            getBkColor(
+                iconNameColorConfigMap
+            ).let {
+                fileContentsQrLogoLinearLayout?.backgroundTintList =
+                    context.getColorStateList(it)
+            }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "logo.txt").absolutePath,
 //                listOf(
