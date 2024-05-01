@@ -12,7 +12,7 @@ object ServiceChannelNum {
     val gitDownload = 9
     val rsyncDownloader = 10
     val jsDebugger = 11
-    val musicPlayer = 11
+    val musicPlayer = 12
     val cmdYouTuber = 20
     val cmdMusicPlayer = 21
     val newsSpeacherPlayer = 22
