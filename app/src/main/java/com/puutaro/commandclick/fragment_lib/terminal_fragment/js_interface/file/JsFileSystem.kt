@@ -284,10 +284,10 @@ class JsFileSystem(
             dirPath,
         ).filter {
             fileName ->
-            val isPrefix = prefixList.all {
+            val isPrefix = prefixList.any {
                 fileName.startsWith(it)
             } || prefixList.isEmpty()
-            val isSuffix = suffixList.all {
+            val isSuffix = suffixList.any {
                 fileName.endsWith(it)
             } || suffixList.isEmpty()
             val isExclude =
@@ -327,10 +327,10 @@ class JsFileSystem(
             dirPath,
         ).filter {
                 dirName ->
-            val isPrefix = prefixList.all {
+            val isPrefix = prefixList.any {
                 dirName.startsWith(it)
             } || prefixList.isEmpty()
-            val isSuffix = suffixList.all {
+            val isSuffix = suffixList.any {
                 dirName.endsWith(it)
             } || suffixList.isEmpty()
             val isExclude =
@@ -341,7 +341,7 @@ class JsFileSystem(
                     && isSuffix
         }.map {
             File(dirPath, it).absolutePath
-        }.joinToString("\t")
+        }.joinToString("\n")
     }
 
     private enum class FullFileOrDirListKey(
@@ -358,7 +358,7 @@ class JsFileSystem(
     ): String {
         return FileSystems.showDirList(
             dirPath
-        ).joinToString("\t")
+        ).joinToString("\n")
     }
 
     @JavascriptInterface

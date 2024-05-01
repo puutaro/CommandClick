@@ -7,6 +7,7 @@ import android.text.Spannable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
@@ -38,15 +39,17 @@ class AsciiArtJsDialog(
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var spannableDialogObj: Dialog? = null
     private val asciiArtMapSeparator = '|'
+    private var isSuccess = false
 
     fun create(
         title: String,
         imagePath: String,
         asciiArtMapCon: String,
-    ){
+    ): Boolean {
+        isSuccess = false
         terminalViewModel.onDialog = true
         runBlocking {
-            val asciiArtSpannable =  withContext(Dispatchers.IO){
+            val asciiArtSpannable = withContext(Dispatchers.IO){
                 makeAsciiArt(
                     imagePath,
                 )
@@ -69,6 +72,7 @@ class AsciiArtJsDialog(
                 }
             }
         }
+        return isSuccess
     }
 
     private fun execCreate(
@@ -103,18 +107,36 @@ class AsciiArtJsDialog(
             com.puutaro.commandclick.R.id.spannable_dialog_contents
         )
         spannableTextView?.text = spannable
-        setShareButton()
-        val cancelButton = spannableDialogObj?.findViewById<ImageButton>(
-            com.puutaro.commandclick.R.id.spannable_dialog_ok
+        val shareButton = setShareButton()
+        val cancelButton = spannableDialogObj?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.spannable_dialog_cancel
         )
         cancelButton?.setOnClickListener {
-            terminalViewModel.onDialog = false
-            spannableDialogObj?.dismiss()
+            exitDialog(false)
+        }
+        val okButton = spannableDialogObj?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.spannable_dialog_ok
+        )
+        okButton?.setOnClickListener {
+            exitDialog(true)
         }
         spannableDialogObj?.setOnCancelListener {
-            terminalViewModel.onDialog = false
-            spannableDialogObj?.dismiss()
+            exitDialog(false)
         }
+        val hideButtonMap = mapOf(
+            HideDialogButton.HideButtonType.SHARE.type
+                    to shareButton,
+            HideDialogButton.HideButtonType.CANCEL.type
+                    to cancelButton,
+            HideDialogButton.HideButtonType.OK.type
+                    to okButton,
+        )
+        HideDialogButton.buttonVisualHandler(
+            spannableDialogObj,
+            asciiArtMap,
+            hideButtonMap,
+            3,
+        )
         spannableDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -123,7 +145,7 @@ class AsciiArtJsDialog(
         spannableDialogObj?.show()
         CoroutineScope(Dispatchers.IO).launch{
             val savePath = withContext(Dispatchers.IO){
-                asciiArtMap.get(AsciiArtMapKey.SAVE_PATH.key)
+                asciiArtMap.get(JsDialogButtonMapKey.SAVE_PATH.key)
             }
             if(
                 savePath.isNullOrEmpty()
@@ -136,12 +158,17 @@ class AsciiArtJsDialog(
                 spannableImagePathObj.absolutePath,
                 savePath
             )
-
         }
     }
 
-    private fun setShareButton(){
-        val shareButton = spannableDialogObj?.findViewById<ImageButton>(
+    private fun exitDialog(isOk: Boolean){
+        isSuccess = isOk
+        terminalViewModel.onDialog = false
+        spannableDialogObj?.dismiss()
+    }
+
+    private fun setShareButton(): AppCompatImageButton?  {
+        val shareButton = spannableDialogObj?.findViewById<AppCompatImageButton>(
             com.puutaro.commandclick.R.id.spannable_dialog_share
         )
         shareButton?.setOnClickListener {
@@ -158,6 +185,7 @@ class AsciiArtJsDialog(
                 )
             }
         }
+        return shareButton
     }
 
     private suspend fun makeSpannableImageFromView(): File? {
@@ -236,9 +264,4 @@ class AsciiArtJsDialog(
     return htmlSpannableStr
     }
 
-    private enum class AsciiArtMapKey(
-        val key: String
-    ){
-        SAVE_PATH("savePath")
-    }
 }

@@ -281,11 +281,11 @@ class JsDialog(
         title: String,
         imagePath: String,
         asciiArtMapCon: String,
-    ){
+    ): Boolean {
         if(
             imagePath.trim().isEmpty()
-        ) return
-       asciiArtJsDialog.create(
+        ) return false
+       return asciiArtJsDialog.create(
            title,
            imagePath,
            asciiArtMapCon,
@@ -295,11 +295,13 @@ class JsDialog(
     @JavascriptInterface
     fun imageDialog(
         title: String,
-        imageSrcFilePath: String
-    ){
-        imageJsDialog.create(
+        imageSrcFilePath: String,
+        imageDialogMapCon: String,
+    ): Boolean {
+        return imageJsDialog.create(
             title,
-            imageSrcFilePath
+            imageSrcFilePath,
+            imageDialogMapCon
         )
     }
 

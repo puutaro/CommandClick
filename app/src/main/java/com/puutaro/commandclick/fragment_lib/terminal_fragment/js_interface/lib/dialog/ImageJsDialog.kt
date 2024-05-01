@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
@@ -17,6 +17,7 @@ import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,26 +34,36 @@ class ImageJsDialog(
     val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var imageDialogObj: Dialog? = null
+    private val imageDialogMapSeparator = '|'
+    private var isSuccess = false
 
     fun create(
         title: String,
-        imageSrcFilePath: String
-    ){
+        imageSrcFilePath: String,
+        imageDialogMapCon: String
+    ): Boolean {
         if(
             !File(imageSrcFilePath).isFile
         ) {
             ToastUtils.showShort("no image file\n ${imageSrcFilePath}")
-            return
+            return false
         }
+        isSuccess = false
         terminalViewModel.onDialog = true
+        val imageDialogMap = CmdClickMap.createMap(
+            imageDialogMapCon,
+            imageDialogMapSeparator
+        ).toMap()
         runBlocking {
             withContext(Dispatchers.Main) {
                 try {
                     execCreate(
                         title,
-                        imageSrcFilePath
+                        imageSrcFilePath,
+                        imageDialogMap,
                     )
                 } catch (e: Exception){
+                    isSuccess = false
                     LogSystems.stdErr(
                         context,
                         e.toString()
@@ -66,11 +77,13 @@ class ImageJsDialog(
                 }
             }
         }
+        return isSuccess
     }
 
     private fun execCreate(
         title: String,
-        imageSrcFilePath: String
+        imageSrcFilePath: String,
+        imageDialogMap: Map<String, String>?,
     ){
 
         if(
@@ -103,20 +116,38 @@ class ImageJsDialog(
         )
         imageContentsView
             ?.setImageBitmap(myBitmap)
-        setShareButton(
+        val shareButton = setShareButton(
             myBitmap
         )
-        val cancelButton = imageDialogObj?.findViewById<ImageButton>(
-            com.puutaro.commandclick.R.id.image_dialog_ok
+        val cancelButton = imageDialogObj?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.image_dialog_cancel
         )
         cancelButton?.setOnClickListener {
-            terminalViewModel.onDialog = false
-            imageDialogObj?.dismiss()
+            exitDialog(false)
+        }
+        val okButton = imageDialogObj?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.image_dialog_ok
+        )
+        okButton?.setOnClickListener {
+            exitDialog(true)
         }
         imageDialogObj?.setOnCancelListener {
-            terminalViewModel.onDialog = false
-            imageDialogObj?.dismiss()
+            exitDialog(false)
         }
+        val hideButtonMap = mapOf(
+            HideDialogButton.HideButtonType.SHARE.type
+                    to shareButton,
+            HideDialogButton.HideButtonType.CANCEL.type
+                    to cancelButton,
+            HideDialogButton.HideButtonType.OK.type
+                    to okButton,
+        )
+        HideDialogButton.buttonVisualHandler(
+            imageDialogObj,
+            imageDialogMap,
+            hideButtonMap,
+            3,
+        )
         imageDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -125,10 +156,16 @@ class ImageJsDialog(
         imageDialogObj?.show()
     }
 
+    private fun exitDialog(isOk: Boolean){
+        isSuccess = isOk
+        terminalViewModel.onDialog = false
+        imageDialogObj?.dismiss()
+    }
+
     private fun setShareButton(
         myBitmap: Bitmap
-    ){
-        val shareButton = imageDialogObj?.findViewById<ImageButton>(
+    ): AppCompatImageButton? {
+        val shareButton = imageDialogObj?.findViewById<AppCompatImageButton>(
             com.puutaro.commandclick.R.id.image_dialog_share
         )
         shareButton?.setOnClickListener {
@@ -154,5 +191,6 @@ class ImageJsDialog(
                 activity
             )
         }
+        return shareButton
     }
 }
