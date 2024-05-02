@@ -193,7 +193,6 @@ private object EditTextMaker {
                     extraRepValMap
                 )
             }
-//                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
             else -> {
                 val envMap = extraRepValMap +
                         (setReplaceVariableMap ?: mapOf())
