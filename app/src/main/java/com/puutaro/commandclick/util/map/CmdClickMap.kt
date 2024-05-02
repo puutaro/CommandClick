@@ -1,8 +1,11 @@
 package com.puutaro.commandclick.util.map
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 object CmdClickMap {
      fun createMap(
@@ -104,6 +107,16 @@ object CmdClickMap {
                         "`${holderMark}`",
                         repValue
                     )
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "repHolder.txt").absolutePath,
+//                        listOf(
+//                            "repCon: ${repCon}",
+//                            "holderMark: ${holderMark}",
+//                            "repValueSrc: ${repValueSrc}",
+//                            "isNoQuote: ${isNoQuote}",
+//                            "repValue: ${repValue}",
+//                        ).joinToString("\n\n") + "\n---\n"
+//                    )
                 }
                 else -> repCon = repCon.replace(
                     holderMark,
