@@ -31,4 +31,15 @@ class JsListTsvUpdater(
             updateListIndexTsv
         )
     }
+
+    @JavascriptInterface
+    fun updateTsvByKey(
+        tsvPath: String?,
+        updateTsvConListCon: String,
+    ){
+        TsvTool.updateTsvByKey(
+            tsvPath,
+            updateTsvConListCon.split("\n")
+        )
+    }
 }
