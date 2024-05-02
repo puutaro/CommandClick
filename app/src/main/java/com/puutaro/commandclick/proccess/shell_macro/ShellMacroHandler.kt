@@ -44,6 +44,7 @@ object ShellMacroHandler {
                 JudgeTsv.getStrByJudgeTsvValue(concatRepValMap)
             ShellMacro.JUDGE_LIST_DIR ->
                 JudgeTsv.getStrByListDirValue(concatRepValMap)
+
         }
     }
 
@@ -157,8 +158,14 @@ object ShellMacroHandler {
                 true -> File(playPath).name
                 else -> playTitle
             }
-
         }
+    }
+
+    private enum class CommonKeyArgs (
+        val args: String,
+        val defaultVal: String,
+    ){
+        ALTER_CON("alterCon", "no display"),
     }
 
     private object JudgeTsv {
@@ -169,16 +176,16 @@ object ShellMacroHandler {
             TSV_PATH("tsvPath"),
             TSV_KEY("tsvKey"),
             TSV_VALUE("tsvValue"),
-            ALTER_CON("alterCon"),
+            ALTER_CON(CommonKeyArgs.ALTER_CON.args),
         }
+
+        private val alterConDefaultValue = CommonKeyArgs.ALTER_CON.defaultVal
 
         private enum class JudgeTsvKey(
             val str: String
         ){
             LIST_DIR(ListSettingsForListIndex.ListSettingKey.LIST_DIR.key)
         }
-
-        private const val alterConDefaultValue = "no display"
 
         fun getStrByListDirValue(
             extraRepValMap: Map<String, String>?
@@ -226,9 +233,6 @@ object ShellMacroHandler {
         }
     }
 
-
-
-
     private fun getOutputByShell(
         busyboxExecutor: BusyboxExecutor?,
         shellPath: String,
@@ -270,7 +274,6 @@ object ShellMacroHandler {
             )
         }
     }
-
 
     private object ArgsManager {
 
