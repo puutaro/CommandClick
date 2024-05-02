@@ -17,7 +17,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -167,6 +166,20 @@ object JsActionTool {
             keyToSubKeyCon,
             jsActionMap
         )
+        val isErr = LogTool.SyntaxCheck.checkJsAcSyntax(
+            fragment.context,
+            jsActionMap?.get(JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key)
+        )
+        if(isErr){
+            return mapOf(
+                JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
+                        to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
+                JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
+            )
+        }
+//        JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+//        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", errMessage);" +
+//                "jsFileSystem.errJsLog(errMessage);" +
         return jsActionMap
     }
 
@@ -879,27 +892,6 @@ private object PairToMapInList {
         return jsMainKeyName to jsKeyCon
     }
 
-    private fun makeArgsForJsPathMacro(
-        keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>,
-        index: Int,
-    ): String {
-        val nextKeyToSubCon = keyToSubKeyConListWithoutAfterSubKey.getOrNull(
-            index + 1
-        ) ?: return String()
-        val nextMainKeyName = nextKeyToSubCon.first
-        if (
-            nextMainKeyName != argsSubKeyName
-        ) return String()
-        val jsSubKeySeparator = '?'
-        val argsConSrc = nextKeyToSubCon.second
-
-        return QuoteTool.replaceBySurroundedIgnore(
-            argsConSrc,
-            jsSubKeySeparator,
-            "&"
-        )
-    }
-
 
     private fun toJsFuncForJsCon(
         jsCon: String,
@@ -919,6 +911,8 @@ private object VarShortSyntaxToJsFunc {
     private val varSubKeyName = JsActionKeyManager.JsSubKey.VAR.key
     private val jsMainKeyName = JsActionKeyManager.JsActionsKey.JS.key
     private val varValueSubKeyName = JsActionKeyManager.JsSubKey.VAR_VALUE.key
+    private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
+    private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
     private val suggerIf = JsActionKeyManager.JsSubKey.IF.key
     private const val jsSubKeySeparator = '?'
     fun toJsFunc(
@@ -933,26 +927,30 @@ private object VarShortSyntaxToJsFunc {
             jsVarMainKeyName
         ) ?: return String() to mapOf()
         val nextIndex = 1
-        val valueOrIfConList = makeVarElementsForJsVarMacro(
+        val valueOrIfConList = makeVarKeyToConPairListForJsVarMacro(
             varMapConPairList,
             nextIndex
         )
-        val firstValueStr = extractFirstValue(
+        val valueOrFuncMapToSeedIndex = extractFirstValueOrFuncMap(
             valueOrIfConList,
         )
-        val nextNextIndex = nextIndex + 1
-        val nextValueOrIfConList = makeVarElementsForJsVarMacro(
+        val valueOrFuncMap = valueOrFuncMapToSeedIndex.first
+        val seedIndex = valueOrFuncMapToSeedIndex.second
+        val nextNextIndex =
+            nextIndex + seedIndex
+
+        val nextVarKeyToConPairList = makeVarKeyToConPairListForJsVarMacro(
             varMapConPairList,
             nextNextIndex
         )
-        val jsKeyCon = mapOf(
+        val jsKeyConMapSrc = mapOf(
             varSubKeyName to jsVarName,
-            JsActionKeyManager.JsSubKey.VAR_VALUE.key to firstValueStr,
-            makeAfterJsConForVar(
+        ) + valueOrFuncMap +
+            extractAfterJsConForVar(
                 jsVarName,
-                nextValueOrIfConList
+                nextVarKeyToConPairList
             )
-        ).filterKeys { it.isNotEmpty() }
+        val jsKeyConMap = jsKeyConMapSrc.filterKeys { it.isNotEmpty() }
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "var.txt").absolutePath,
 //            listOf(
@@ -969,23 +967,79 @@ private object VarShortSyntaxToJsFunc {
 //                "jsKeyCon: ${jsKeyCon}"
 //            ).joinToString("\n\n\n")
 //        )
-        return jsMainKeyName to jsKeyCon
+        return jsMainKeyName to jsKeyConMap
     }
 
-    private fun extractFirstValue(
+    private fun extractFirstValueOrFuncMap(
         valueOrIfConList: List<Pair<String, String>>?,
-    ): String {
+    ): Pair<Map<String, String>, Int> {
+        val seedIndex = 1
+        val defaultBlankMap = emptyMap<String, String>()
         if(
             valueOrIfConList.isNullOrEmpty()
-        ) return String()
-        return CmdClickMap.getFirst(
-            valueOrIfConList,
-            varValueSubKeyName
-        )?.let {
-            QuoteTool.trimBothEdgeQuote(it)
-        } ?: String()
+        ) return defaultBlankMap to seedIndex
+        val firstPair =
+            valueOrIfConList.firstOrNull()
+                ?: return defaultBlankMap to seedIndex
+        val subKey = firstPair.first
+        val valOrFuncCon = firstPair.second
+        return when(subKey){
+            varValueSubKeyName ->
+                mapOf(
+                    varValueSubKeyName to QuoteTool.trimBothEdgeQuote(valOrFuncCon)
+                ) to seedIndex
+            funcSubKeyName ->
+                extractFuncMap(
+                    valueOrIfConList,
+                    valOrFuncCon
+                )
+            else -> defaultBlankMap to seedIndex
+        }
+//        val varValueEntry = CmdClickMap.getFirst(
+//            valueOrIfConList,
+//            varValueSubKeyName
+//        )?.let {
+//            QuoteTool.trimBothEdgeQuote(it)
+//        }
+//        if(
+//            varValueEntry != null
+//        ) return varSubKeyName to varValueEntry
+//        val funcEntry =  CmdClickMap.getFirst(
+//            valueOrIfConList,
+//            funcSubKeyName
+//        )?.let {
+//            QuoteTool.trimBothEdgeQuote(it)
+//        }
+//        if(
+//            funcEntry.isNullOrEmpty()
+//        ) return defaultBlankMap
+
     }
-    private fun makeVarElementsForJsVarMacro(
+
+    private fun extractFuncMap(
+        valueOrIfConList: List<Pair<String, String>>?,
+        funcCon: String
+    ): Pair<Map<String, String>, Int> {
+        val seedIndex = 1
+        val seedToSeedIndex = 2
+        val funcSubKeyToConMap = mapOf(
+            funcSubKeyName to QuoteTool.trimBothEdgeQuote(funcCon)
+        )
+        val argsPair = valueOrIfConList?.getOrNull(1)
+        val argsSubKeyEntry = argsPair?.first
+        if(
+            argsSubKeyEntry != argsSubKeyName
+        ) return funcSubKeyToConMap to seedIndex
+        val argsArgsEntry = argsPair.second
+        if(
+            argsArgsEntry.isEmpty()
+        ) return funcSubKeyToConMap to seedIndex
+        return funcSubKeyToConMap + mapOf(
+            argsSubKeyName to argsArgsEntry
+        ) to seedToSeedIndex
+
+    }
+    private fun makeVarKeyToConPairListForJsVarMacro(
         keyToSubKeyCon: List<Pair<String, String>>?,
         nextNextIndex: Int
     ): List<Pair<String, String>>? {
@@ -996,32 +1050,44 @@ private object VarShortSyntaxToJsFunc {
         return keyToSubKeyCon.filterIndexed { index, _ -> index >= nextNextIndex  }
     }
 
-
-    private fun makeAfterJsConForVar(
+    private fun extractAfterJsConForVar(
         varName: String,
-        nextValueOrIfConList: List<Pair<String, String>>?
-    ): Pair<String, String> {
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?
+    ): Map<String, String> {
+        val defaultBlankMap = emptyMap<String, String>()
         if(
-            nextValueOrIfConList.isNullOrEmpty()
-        ) return String() to String()
+            nextValueOrFuncOrIfConList.isNullOrEmpty()
+        ) return defaultBlankMap
         val jsAfterConSeparator =
             JsActionKeyManager.AfterJsConMaker.afterJsConSeparator
-        val afterJsCon = nextValueOrIfConList.mapIndexed {
+        val afterJsCon = nextValueOrFuncOrIfConList.mapIndexed {
                 index, keyToCon ->
-            val varKey = keyToCon.first
+            val varOrFuncSubKey = keyToCon.first
             if(
-                varKey != varValueSubKeyName
+                varOrFuncSubKey != varValueSubKeyName
+                && varOrFuncSubKey != funcSubKeyName
             ) return@mapIndexed String()
-            val varSentence = makeVarSentence(
-                varName,
-                keyToCon
-            )
+            val varSentence = when(varOrFuncSubKey) {
+                varValueSubKeyName -> makeVarSentence(
+                    varName,
+                    keyToCon,
+                    nextValueOrFuncOrIfConList,
+                    index,
+                )
+                funcSubKeyName -> makeFuncSentence(
+                    varName,
+                    keyToCon,
+                    nextValueOrFuncOrIfConList,
+                    index,
+                )
+                else -> return@mapIndexed String()
+            }
             val ifIndexSrc = index - 1
             if(
                 ifIndexSrc < 0
             ) return@mapIndexed varSentence
             val ifEntryKeyToCon =
-                nextValueOrIfConList.getOrNull(ifIndexSrc)
+                nextValueOrFuncOrIfConList.getOrNull(ifIndexSrc)
                     ?: return@mapIndexed varSentence
             val isNotIfKey = ifEntryKeyToCon.first != suggerIf
             if(
@@ -1039,12 +1105,95 @@ private object VarShortSyntaxToJsFunc {
             .joinToString(
                 jsAfterConSeparator.toString()
             ).replace("\n", "")
-        return JsActionKeyManager.JsSubKey.AFTER_JS_CON.key to afterJsCon
+        return mapOf(
+            JsActionKeyManager.JsSubKey.AFTER_JS_CON.key
+                    to afterJsCon
+        )
+    }
+
+    private fun addIfSentence(
+        varOrFuncSentence: String,
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        index: Int,
+    ): String {
+        val jsAfterConSeparator =
+            JsActionKeyManager.AfterJsConMaker.afterJsConSeparator
+        val ifIndexSrc = index - 1
+        if(
+            ifIndexSrc < 0
+        ) return varOrFuncSentence
+        val ifEntryKeyToCon =
+            nextValueOrFuncOrIfConList?.getOrNull(ifIndexSrc)
+                ?: return varOrFuncSentence
+        val isNotIfKey = ifEntryKeyToCon.first != suggerIf
+        if(
+            isNotIfKey
+        ) return varOrFuncSentence
+        val ifAfterSentence = listOf(
+            JsActionKeyManager.AfterJsConMaker.ifSentence,
+            "`${ifEntryKeyToCon.second}`"
+        ).joinToString("=")
+        return listOf(
+            ifAfterSentence,
+            varOrFuncSentence,
+        ).joinToString(jsAfterConSeparator.toString())
+    }
+
+    private fun makeFuncSentence(
+        varName: String,
+        keyToCon: Pair<String, String>,
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        index: Int,
+    ): String {
+        val funcConSrc =
+            QuoteTool.trimBothEdgeQuote(keyToCon.second)
+        if(
+            funcConSrc.isEmpty()
+        ) return String()
+        val argsIndex = index + 1
+        val funcSentence = execMakeFuncSentence(
+            varName,
+            funcConSrc,
+            nextValueOrFuncOrIfConList,
+            argsIndex,
+        )
+        return addIfSentence(
+            funcSentence,
+            nextValueOrFuncOrIfConList,
+            index,
+        )
+    }
+
+    private fun execMakeFuncSentence(
+        varName: String,
+        funcConSrc: String,
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        argsIndex: Int,
+    ): String {
+        val funcSentenceTemplate = listOf(
+            varName,
+            "`${funcConSrc}(%s)`"
+        ).joinToString("=")
+        val argsNameToCon = nextValueOrFuncOrIfConList?.getOrNull(argsIndex)
+            ?: return funcSentenceTemplate.format(String())
+        val argsKeyEntry = argsNameToCon.first
+        if(
+            argsKeyEntry != argsSubKeyName
+        ) return funcSentenceTemplate.format(String())
+        val argsCon = argsNameToCon.second
+        val argsOnlyJsMap =  mapOf(
+            argsSubKeyName to argsCon
+        )
+        val varargsStr =
+            JsActionKeyManager.ArgsManager.makeVarArgs(argsOnlyJsMap)
+        return funcSentenceTemplate.format(varargsStr)
     }
 
     private fun makeVarSentence(
         varName: String,
-        keyToCon: Pair<String, String>
+        keyToCon: Pair<String, String>,
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        index: Int,
     ): String {
         val noQuotePrefix = JsActionKeyManager.noQuotePrefix
         val jsConSrc = QuoteTool.trimBothEdgeQuote(keyToCon.second)
@@ -1058,11 +1207,15 @@ private object VarShortSyntaxToJsFunc {
                     jsConSrc,
                 ).joinToString(String())
         }
-
-        return listOf(
+        val varSentence = listOf(
             varName,
             "`${varValue}`"
         ).joinToString("=")
+        return addIfSentence(
+            varSentence,
+            nextValueOrFuncOrIfConList,
+            index,
+        )
     }
 }
 

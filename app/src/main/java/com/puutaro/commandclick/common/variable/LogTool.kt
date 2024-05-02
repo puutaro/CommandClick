@@ -1,10 +1,12 @@
 package com.puutaro.commandclick.common.variable
 
+import android.content.Context
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import java.io.File
 
 object LogTool {
     val logPrefix = "### "
@@ -232,7 +234,10 @@ object LogTool {
 //            )
             if(
                 errWord.isNullOrEmpty()
-            ) return con
+            ) return putColorByErrMsg(
+                con,
+                errMessage,
+            )
             val errWordWithRedSpan =
                 execMakeSpanTagHolder(errRedCode, errWord)
             return con.replace(
@@ -296,6 +301,77 @@ object LogTool {
                 || errWordResultSrc == errCon.trim()
             ) return null
             return errWordResult
+        }
+
+        fun putColorByErrMsg(
+            con: String,
+            errMessage: String,
+        ): String {
+            val msgToExtractRegexList = listOf(
+                SyntaxCheck.CheckEnums.BRACKET_CHECK.msg
+                        to SyntaxCheck.CheckEnums.BRACKET_CHECK.extractRegex,
+
+                )
+            var putColorCon = con
+            msgToExtractRegexList.forEach {
+                val msg = it.first
+                val extractRegex = it.second
+                val isNotBracketErr = !errMessage.contains(msg)
+                if(
+                    isNotBracketErr
+                ) return@forEach
+                putColorCon = putColorCon.replace(
+                    extractRegex,
+                    "<span style=\"color:${errRedCode};\">$1</span>"
+                )
+            }
+            return putColorCon
+        }
+    }
+
+    object SyntaxCheck {
+
+        enum class CheckEnums(
+            val msg: String,
+            val regex: Regex,
+            val extractRegex: Regex,
+        ){
+            BRACKET_CHECK(
+                "Func must not use in bracket for readable code",
+                Regex("\\$\\{[^{}]?[a-zA-Z0-9_.]+\\([^()]*\\)[^}]*?\\}"),
+                Regex("(\\$\\{[^{}]?[a-zA-Z0-9_.]+\\([^()]*\\)[^}]*?\\})"),
+            )
+        }
+
+        fun checkJsAcSyntax(
+            context: Context?,
+            jsCon: String?
+        ): Boolean {
+            if (
+                jsCon.isNullOrEmpty()
+            ) return false
+            val irregularList = CheckEnums.values().map {
+                it.msg to it.regex
+            }.toMap()
+            irregularList.forEach {
+                val errName = it.key
+                val errRegex = it.value
+                val isSyntaxErr = errRegex.containsMatchIn(jsCon)
+                if (isSyntaxErr) {
+                    saveErrLogCon(
+                        errName,
+                        UsePath.jsDebugReportPath,
+                    )
+                    LogSystems.stdErr(
+                        context,
+                        errName,
+                        debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
+                    )
+                    return true
+                }
+            }
+            return false
+
         }
     }
 
