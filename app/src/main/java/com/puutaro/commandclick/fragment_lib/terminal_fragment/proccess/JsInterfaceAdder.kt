@@ -74,6 +74,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsKeyboard
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSharePref
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsStateChange
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddGmailCon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddToUrlHistory
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddUrlCon
@@ -404,6 +405,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsKeyboard(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsStateChange(terminalFragment)
         )
     }
 
