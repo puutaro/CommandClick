@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.tsv
 
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
 object TsvTool {
@@ -24,6 +25,66 @@ object TsvTool {
             tsvPath,
             saveTsvCon
         )
+    }
+
+    fun updateTsvByKey(
+        tsvPath: String?,
+        updateTsvConList: List<String>,
+    ){
+        if(
+            tsvPath.isNullOrEmpty()
+        ) return
+        var updateTsvCon =
+            ReadText(tsvPath).readText()
+        updateTsvConList.forEach {
+            val keyValueList = it.split("\t")
+            val keyName = keyValueList.firstOrNull()
+            if(
+                keyName.isNullOrEmpty()
+            ) return@forEach
+            val value = keyValueList.getOrNull(1)
+                ?: String()
+            val tempUpdateTsvCon = execUpdateTsvByKey(
+                updateTsvCon,
+                keyName,
+                value
+            )
+            if(
+                tempUpdateTsvCon.isNullOrEmpty()
+            ) return@forEach
+            updateTsvCon = tempUpdateTsvCon
+        }
+        if(
+            updateTsvCon.isEmpty()
+        ) return
+        FileSystems.writeFile(
+            tsvPath,
+            updateTsvCon
+        )
+    }
+
+    private fun execUpdateTsvByKey(
+        updateTsvCon: String,
+        key: String,
+        value: String,
+    ): String? {
+        val curTsvConMap = updateTsvCon
+            .replace("\t", "=")
+            .let {
+                CmdClickMap.createMap(
+                    it,
+                    '\n'
+                )
+            }.toMap()
+        val updateTsvConMap =
+            curTsvConMap + mapOf(key to value)
+        if(
+            curTsvConMap == updateTsvConMap
+        ) return null
+        return updateTsvConMap.map {
+            "${it.key}\t${it.value}"
+        }.joinToString("\n")
+
     }
 
     fun updateTsvByRemove(
