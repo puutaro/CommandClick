@@ -32,6 +32,7 @@ object JsActionKeyManager {
     ) {
         FUNC("func"),
         METHOD("method"),
+        METHOD_ARGS("methodArgs"),
         OVERRIDE("override"),
         ID("id"),
         ARGS("args"),
@@ -48,11 +49,30 @@ object JsActionKeyManager {
         EXIT_TOAST("exitToast"),
         START_TOAST("startToast"),
         END_TOAST("endToast"),
-        ON_LOG("onLog")
+        ON_LOG("onLog"),
     }
 
-    val noQuotePrefix = "NO_QUOTE:"
+    const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
+
+    object MethodManager {
+
+        fun makeMethod(
+            jsMap: Map<String, String>
+        ): String {
+            val method =
+                jsMap.get(JsSubKey.METHOD.key)
+            val methodVarArgs = ArgsManager.makeVarArgs(
+                jsMap,
+                JsSubKey.METHOD_ARGS.key,
+            )
+            val isBlank = method.isNullOrEmpty()
+            return when(isBlank){
+                true -> String()
+                else -> ".${method}(${methodVarArgs})"
+            }
+        }
+    }
 
     object OverrideManager {
         enum class NoOverrideJsSubKey(val key: String){
@@ -97,20 +117,16 @@ object JsActionKeyManager {
         }
 
         fun makeVarArgs(
-            jsMap: Map<String, String>
+            jsMap: Map<String, String>,
+            argsKey: String,
         ): String {
-            val noQuotePrefix =
-                ARGS_SETTING.NO_QUOTE_PREFIX.str
             val argsSeparator = '&'
             val argList = CmdClickMap.createMap(
-                jsMap.get(JsSubKey.ARGS.key),
+                jsMap.get(argsKey),
                 argsSeparator
             ).map{
                 val argSrc = it.second
-                if(
-                    argSrc.startsWith(noQuotePrefix)
-                ) return@map argSrc.removePrefix(noQuotePrefix)
-                "`${argSrc}`"
+                NoQuoteHandler.make(argSrc)
             }.filter { it.isNotEmpty() }
             return argList.joinToString(",")
         }
@@ -127,6 +143,10 @@ object JsActionKeyManager {
     }
 
     enum class OnReturnValue {
+        ON
+    }
+
+    enum class OnExitValue {
         ON
     }
 
@@ -190,20 +210,37 @@ object JsActionKeyManager {
         }
     }
 
+    object NoQuoteHandler {
+        fun make(str: String): String {
+            val noQuotePrefix =
+                ArgsManager.ARGS_SETTING.NO_QUOTE_PREFIX.str
+            return when(str.startsWith(noQuotePrefix)){
+                true -> str.removePrefix(noQuotePrefix)
+                else -> "`${str}`"
+            }
+        }
+
+        fun makeForVarReturn(str: String): String {
+            val noQuotePrefix =
+                ArgsManager.ARGS_SETTING.NO_QUOTE_PREFIX.str
+            return when(str.startsWith(noQuotePrefix)){
+                true -> "return ${str.removePrefix(noQuotePrefix)}"
+                else -> "return `${str}`"
+            }
+        }
+    }
+
     object JsVarManager {
 
         fun makeVarValue(
             jsMap: Map<String, String>
         ): String {
-            val noQuotePrefix =
-                ArgsManager.ARGS_SETTING.NO_QUOTE_PREFIX.str
             val varValue = QuoteTool.trimBothEdgeQuote(
                 jsMap.get(JsSubKey.VAR_VALUE.key)
             )
-            return when(varValue.startsWith(noQuotePrefix)){
-                true -> varValue.removePrefix(noQuotePrefix)
-                else -> "`${varValue}`"
-            }
+            return NoQuoteHandler.make(
+                varValue
+            )
         }
     }
 
@@ -465,6 +502,103 @@ object JsActionKeyManager {
             |""".trimMargin()
 
             else -> "%s"
+        }
+    }
+
+    object OnlySubKeyMapForShortSyntax {
+
+        const val firstIfSubKeyForVar = "firstIf"
+
+        private val subKeyForCommon = listOf(
+            JsSubKey.ID.key,
+            JsSubKey.LOOP_ARG_NAMES.key,
+            JsSubKey.AFTER.key,
+            JsSubKey.DESC.key,
+            JsSubKey.EXIT_JUDGE.key,
+            JsSubKey.EXIT_TOAST.key,
+            JsSubKey.START_TOAST.key,
+            JsSubKey.END_TOAST.key,
+            JsSubKey.ON_LOG.key,
+            JsSubKey.METHOD.key,
+            JsSubKey.METHOD_ARGS.key,
+        )
+
+        private val subKeyListForVar =
+            subKeyForCommon + listOf(firstIfSubKeyForVar)
+
+
+        private val subKeyListForFunc = subKeyForCommon + listOf(
+            JsSubKey.ON_RETURN.key,
+            JsSubKey.IF.key,
+        )
+
+        fun createOnlyIfMapByFirstIf(
+            onlySubKeyMap: Map<String, String>
+        ): Map<String, String> {
+            val firstIfCondition = onlySubKeyMap.get(
+                firstIfSubKeyForVar
+            )
+            if(
+                firstIfCondition.isNullOrEmpty()
+            ) return emptyMap()
+            return mapOf(
+                JsSubKey.IF.key
+                        to firstIfCondition
+            )
+        }
+
+        fun extractForVar(
+            subKeyToConPairList: List<Pair<String, String>>?,
+        ): Pair<
+                Map<String, String>,
+                List<Pair<String, String>>?
+                > {
+            return extractOnlySubKeyPair(
+                subKeyToConPairList,
+                subKeyListForVar
+            )
+        }
+
+        fun extractForFunc(
+            subKeyToConPairList: List<Pair<String, String>>?,
+        ): Pair<
+                Map<String, String>,
+                List<Pair<String, String>>?
+                > {
+            return extractOnlySubKeyPair(
+                subKeyToConPairList,
+                subKeyListForFunc
+            )
+        }
+
+
+        private fun extractOnlySubKeyPair(
+            subKeyToConPairList: List<Pair<String, String>>?,
+            targetSubKeyList: List<String>
+        ): Pair<
+                Map<String, String>,
+                List<Pair<String, String>>?
+                > {
+            val defaultBlankMap = emptyMap<String, String>()
+            if(
+                subKeyToConPairList.isNullOrEmpty()
+            ) return defaultBlankMap to subKeyToConPairList
+            val targetSubKeyToConMap = subKeyToConPairList.filter {
+                    keyToCon ->
+                val subKeyName = keyToCon.first
+                if (
+                    targetSubKeyList.contains(subKeyName)
+                ) return@filter true
+               false
+            }.toMap()
+            if(
+                targetSubKeyToConMap.isEmpty()
+            ) return defaultBlankMap to subKeyToConPairList
+            val subKeyToConPairListWithoutAfter = subKeyToConPairList.filter {
+                val subKeyName = it.first
+                !targetSubKeyToConMap.containsKey(subKeyName)
+            }
+            return targetSubKeyToConMap to subKeyToConPairListWithoutAfter
         }
     }
 }
