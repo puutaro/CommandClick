@@ -200,7 +200,7 @@ object LogTool {
             QuoteTool.replaceBySurroundedIgnore(
                 it,
                 '?',
-                "\n !"
+                "\n ?"
             )
         }.let {
             QuoteTool.replaceBySurroundedIgnore(
@@ -256,6 +256,8 @@ object LogTool {
                 Regex("SyntaxError: Unexpected token '(.*)'"),
                 Regex("SyntaxError: Missing (.*) in template expression"),
                 Regex("SyntaxError: missing (.*) after argument list"),
+                Regex("Uncaught SyntaxError: Unexpected identifier '(.*)'"),
+                Regex("Cannot read properties of undefined \\(reading '(.*)'\\)")
             )
             errWordExtractRegexList.forEach {
                 try {
