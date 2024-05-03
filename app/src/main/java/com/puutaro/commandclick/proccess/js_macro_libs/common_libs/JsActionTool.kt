@@ -851,23 +851,27 @@ private object PairToMapInList {
             jsPathConPairList,
             argsSubKeyName
         ) ?: String()
-        val isJsInterface = JsActionKeyManager.JsPathManager.isJsInterface(
-            jsPathCon
-        )
-        val isMacro = macroValueList.contains(jsPathCon)
+//        val isJsInterface = JsActionKeyManager.JsPathManager.isJsInterface(
+//            jsPathCon
+//        )
+//        val isMacro = macroValueList.contains(jsPathCon)
+        val jsPathStr = QuoteTool.trimBothEdgeQuote(jsPathCon)
+        val isJsPathCon = File(jsPathStr).isFile
         return when (true) {
-            isMacro,
-            isJsInterface
-            -> macroOrJsInterToJsFuncForJsPath(
-                jsPathCon,
+            isJsPathCon -> toJsFuncForPath(
+                jsPathStr,
+                argsMapCon,
+            )
+            else -> macroOrJsInterToJsFuncForJsPath(
+                jsPathStr,
                 argsMapCon,
                 onlySubKeyMap
             )
-
-            else -> toJsFuncForPath(
-                jsPathCon,
-                argsMapCon,
-            )
+//
+//            else -> toJsFuncForPath(
+//                jsPathCon,
+//                argsMapCon,
+//            )
         }
     }
 
@@ -1726,7 +1730,6 @@ private object JsConPutter {
             jsMap.get(JsActionKeyManager.JsSubKey.FUNC.key)
         val method =
             JsActionKeyManager.MethodManager.makeMethod(jsMap)
-//            jsMap.get(JsActionKeyManager.JsSubKey.METHOD.key)
         val isOnlyVar = howVarOnly(jsMap)
         val funcConSrc = when(true){
             isOnlyVar ->
