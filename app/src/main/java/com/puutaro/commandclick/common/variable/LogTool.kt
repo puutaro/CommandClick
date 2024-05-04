@@ -305,27 +305,98 @@ object LogTool {
             return errWordResult
         }
 
-        fun putColorByErrMsg(
-            con: String,
+        private enum class NoKeyWordJsErrCheck(
+            val msg: String,
+            val findRegex: Regex,
+        ){
+            METHOD_NOT_FOUND(
+                "Method not found",
+                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?\\([^)]*?\\)")
+            )
+        }
+
+        private fun putColorByErrMsg(
+            srcJsCon: String,
             errMessage: String,
         ): String {
-            val msgToExtractRegexList = listOf(
-                SyntaxCheck.CheckEnums.BRACKET_CHECK.msg
-                        to SyntaxCheck.CheckEnums.BRACKET_CHECK.extractRegex,
-
+            val putColorConBySyntaxCheckEnum =
+                makePutColorConBySyntaxCheckEnum(
+                    srcJsCon,
+                    srcJsCon,
+                    errMessage,
                 )
-            var putColorCon = con
-            msgToExtractRegexList.forEach {
-                val msg = it.first
-                val extractRegex = it.second
+            val putColorConByNoKeyWordJsErrCheck =
+                makePutColorConByNoKeyWordJsErrCheck(
+                    srcJsCon,
+                    putColorConBySyntaxCheckEnum,
+                    errMessage,
+                )
+            return putColorConByNoKeyWordJsErrCheck
+        }
+
+        private fun makePutColorConBySyntaxCheckEnum(
+            srcJsCon: String,
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            var putColorCon = curPutColorCon
+            SyntaxCheck.CheckEnums.values().forEach {
+                val msg = it.msg
+                val escapeStrRegex = it.escapeStrRegex
+                val findRegex = it.findRegex
+
                 val isNotBracketErr = !errMessage.contains(msg)
-                if(
+                if (
                     isNotBracketErr
                 ) return@forEach
-                putColorCon = putColorCon.replace(
-                    extractRegex,
-                    "<span style=\"color:${errRedCode};\">$1</span>"
-                )
+                val putColorConForFind = escapeStrRegex?.let {
+                    srcJsCon.replace(
+                        escapeStrRegex,
+                        String()
+                    )
+                } ?: srcJsCon
+                val findRegexResult = findRegex.findAll(putColorConForFind)
+                findRegexResult.forEach {
+                    val hitStr = it.value
+                    putColorCon = putColorCon.replace(
+                        hitStr,
+                        "<span style=\"color:${errRedCode};\">${hitStr}</span>"
+                    )
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "regext.txt").absolutePath,
+//                        listOf(
+//                            "srcJsCon: ${srcJsCon}",
+//                            "putColorConForFind: ${putColorConForFind}",
+//                            "hitStr: ${hitStr}"
+//                        ).joinToString("\n\n")
+//                    )
+                }
+            }
+            return putColorCon
+        }
+
+        private fun makePutColorConByNoKeyWordJsErrCheck(
+            srcJsCon: String,
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            var putColorCon = curPutColorCon
+            NoKeyWordJsErrCheck.values().forEach {
+                val msg = it.msg
+                val findRegex = it.findRegex
+
+                val isNotBracketErr = !errMessage.contains(msg)
+                if (
+                    isNotBracketErr
+                ) return@forEach
+                val findRegexResult = findRegex.findAll(srcJsCon)
+                findRegexResult.forEach {
+                    val hitStr = it.value
+                    putColorCon = putColorCon.replace(
+                        hitStr,
+                        "<span style=\"color:${errRedCode};\">${hitStr}</span>"
+                    )
+                }
             }
             return putColorCon
         }
@@ -335,13 +406,18 @@ object LogTool {
 
         enum class CheckEnums(
             val msg: String,
-            val regex: Regex,
-            val extractRegex: Regex,
+            val escapeStrRegex: Regex?,
+            val findRegex: Regex,
         ){
             BRACKET_CHECK(
                 "Func must not use in bracket for readable code",
+                null,
                 Regex("\\$\\{[^{}]?[a-zA-Z0-9_.]+\\([^()]*\\)[^}]*?\\}"),
-                Regex("(\\$\\{[^{}]?[a-zA-Z0-9_.]+\\([^()]*\\)[^}]*?\\})"),
+            ),
+            IRREGULAR_METHOD_CHECK(
+                "Method name must be half-width alphanumeric characters",
+                Regex("`[^\n]*[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()]+?[^\n]*?\\([^)]*?\\)[^\n]*`"),
+                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()]+?[^\n]*?\\([^)\n]*?\\)"),
             )
         }
 
@@ -352,13 +428,35 @@ object LogTool {
             if (
                 jsCon.isNullOrEmpty()
             ) return false
-            val irregularList = CheckEnums.values().map {
-                it.msg to it.regex
-            }.toMap()
-            irregularList.forEach {
-                val errName = it.key
-                val errRegex = it.value
-                val isSyntaxErr = errRegex.containsMatchIn(jsCon)
+            if (
+                jsCon.replace("\n", String()).trim().isEmpty()
+            ) return false
+            val noLogJsCon = jsCon.split("\n").filter {
+                val isNotCommentOut = !it.trim().startsWith("//")
+                isNotCommentOut
+            }.joinToString("\n")
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcCheck.txt").absolutePath,
+//                listOf(
+//                    "jsCon: ${jsCon}",
+//                    "noLogJsCon: ${noLogJsCon}",
+//                    "jsCon: ${noLogJsCon.replace(
+//                        CheckEnums.IRREGULAR_METHOD_CHECK.extractRegex,
+//                        "#### $1 ####"
+//                    )}"
+//                ).joinToString("\n\n")
+//            )
+            CheckEnums.values().forEach {
+                val errName = it.msg
+                val escapeStrRegex = it.escapeStrRegex
+                val errRegex = it.findRegex
+                val escapedNoLogJsCon = escapeStrRegex?.let {
+                    noLogJsCon.replace(
+                        it,
+                        String()
+                    )
+                } ?: noLogJsCon
+                val isSyntaxErr = errRegex.containsMatchIn(escapedNoLogJsCon)
                 if (isSyntaxErr) {
                     saveErrLogCon(
                         errName,
