@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
@@ -49,6 +50,14 @@ class JsStateChange(
         val enableAddToBackStackValue = extraMap.get(
             ExtraMapKey.ENABLE_ADD_TO_BACKSTACK.key
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsState.txt").absolutePath,
+//            listOf(
+//                "extraMap: ${extraMap}",
+//                "key: ${ExtraMapKey.ENABLE_ADD_TO_BACKSTACK.key}",
+//                "enableAddToBackStackValue: ${enableAddToBackStackValue}",
+//            ).joinToString("\n\n")
+//        )
         StageChanger.change(
             terminalFragment,
             stateName,
@@ -104,16 +113,6 @@ class JsStateChange(
                 )
                 return null
             }
-//            val listDirOrTsvPathObj = File(listDirOrTsvPath)
-//            if(
-//                listDirOrTsvPathObj.isFile
-//                || listDirOrTsvPathObj.isDirectory
-//            ) {
-//                ToastUtils.showShort(
-//                    "${listDirOrTsvPathKey} is not exist: ${listDirOrTsvPathKey}"
-//                )
-//                return null
-//            }
             return listDirOrTsvPath
         }
     }
@@ -188,7 +187,8 @@ class JsStateChange(
             stateName: String,
             enableAddToBackStackValue: String?,
         ){
-            val disableAddToBackStack = enableAddToBackStackValue != enableAddToBackStackOn
+            val disableAddToBackStack =
+                enableAddToBackStackValue != enableAddToBackStackOn
             JsCmdValFrag(terminalFragment).stateChange_S(
                 stateName,
                 disableAddToBackStack
@@ -224,6 +224,6 @@ private enum class ExtraMapKey(
     ON_INFO_SAVE("onInfoSave"),
     SAVE_INFO_PATH("saveInfoPath"),
     EXTRA_SAVE_INFO("extraSaveInfo"),
-    ENABLE_ADD_TO_BACKSTACK("disableAddToBackStack"),
+    ENABLE_ADD_TO_BACKSTACK("enableAddToBackStack"),
     LIST_DIR_VALUE("listDirValue"),
 }
