@@ -18,7 +18,7 @@ class JsStateChange(
     private val extraMapSeparator = '|'
 
     @JavascriptInterface
-    fun change(
+    fun change_S(
         stateName: String,
         extraMapCon: String,
     ){
