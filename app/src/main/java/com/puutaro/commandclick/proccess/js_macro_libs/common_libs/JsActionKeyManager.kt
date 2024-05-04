@@ -2,9 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import java.io.File
 
 
 object JsActionKeyManager {
@@ -505,7 +503,6 @@ object JsActionKeyManager {
 
     object OnlySubKeyMapForShortSyntax {
 
-        const val firstIfSubKeyForVar = "firstIf"
 
         private val subKeyForCommon = listOf(
             JsSubKey.ID.key,
@@ -521,28 +518,47 @@ object JsActionKeyManager {
             JsSubKey.METHOD_ARGS.key,
         )
 
-        private val subKeyListForVar =
-            subKeyForCommon + listOf(firstIfSubKeyForVar)
+        private val onlySubKeyListForVar =
+            subKeyForCommon
+        private val useKeyListForVar =
+            onlySubKeyListForVar + listOf(
+                JsActionsKey.JS_VAR.key,
+                JsSubKey.IF.key,
+                JsSubKey.VAR.key,
+                JsSubKey.VAR_VALUE.key,
+                JsSubKey.FUNC.key,
+                JsSubKey.ARGS.key,
+            )
 
 
-        private val subKeyListForFunc = subKeyForCommon + listOf(
+        private val onlySubKeyListForFunc = subKeyForCommon + listOf(
             JsSubKey.ON_RETURN.key,
             JsSubKey.IF.key,
         )
+        private val useKeyListForFunc = onlySubKeyListForFunc + listOf(
+            JsActionsKey.JS_PATH.key,
+            JsSubKey.IF.key,
+            JsSubKey.FUNC.key,
+            JsSubKey.ARGS.key,
+        )
 
-        fun createOnlyIfMapByFirstIf(
-            onlySubKeyMap: Map<String, String>
-        ): Map<String, String> {
-            val firstIfCondition = onlySubKeyMap.get(
-                firstIfSubKeyForVar
-            )
-            if(
-                firstIfCondition.isNullOrEmpty()
-            ) return emptyMap()
-            return mapOf(
-                JsSubKey.IF.key
-                        to firstIfCondition
-            )
+        fun filterForVar(
+            subKeyToConPairList: List<Pair<String, String>>?,
+        ): List<Pair<String, String>>? {
+            return subKeyToConPairList?.filter {
+                val subKeyName = it.first
+                useKeyListForVar.contains(subKeyName)
+            }
+        }
+
+
+        fun filterForFunc(
+            subKeyToConPairList: List<Pair<String, String>>?,
+        ): List<Pair<String, String>>? {
+            return subKeyToConPairList?.filter {
+                val subKeyName = it.first
+                useKeyListForFunc.contains(subKeyName)
+            }
         }
 
         fun extractForVar(
@@ -553,7 +569,7 @@ object JsActionKeyManager {
                 > {
             return extractOnlySubKeyPair(
                 subKeyToConPairList,
-                subKeyListForVar
+                onlySubKeyListForVar
             )
         }
 
@@ -565,7 +581,7 @@ object JsActionKeyManager {
                 > {
             return extractOnlySubKeyPair(
                 subKeyToConPairList,
-                subKeyListForFunc
+                onlySubKeyListForFunc
             )
         }
 

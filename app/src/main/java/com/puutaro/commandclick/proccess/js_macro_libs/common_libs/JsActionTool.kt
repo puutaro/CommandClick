@@ -831,10 +831,21 @@ private object PairToMapInList {
     private fun convertJsPathToJsFunc(
         jsPathMapConSrc: String,
     ): Pair<String, Map<String, String>> {
-        val jsPathConPairListSrc = CmdClickMap.createMap(
+        val jsPathConPairListSrcBeforeFilter = CmdClickMap.createMap(
             "${jsPathMainKeyName}=${jsPathMapConSrc}",
             '?'
         )
+        val jsPathConPairListSrc = JsActionKeyManager.OnlySubKeyMapForShortSyntax.filterForFunc(
+            jsPathConPairListSrcBeforeFilter
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAcFunc.txt").absolutePath,
+//            listOf(
+//                "jsPathMapConSrc: ${jsPathMapConSrc}",
+//                "jsPathConPairListSrcBeforeFilter: ${jsPathConPairListSrcBeforeFilter}",
+//                "jsPathConPairListSrc: ${jsPathConPairListSrc}",
+//            ).joinToString("\n\n")
+//        )
         val onlySubKeyMapToJsPathConPairList =
             JsActionKeyManager.OnlySubKeyMapForShortSyntax.extractForFunc(
                 jsPathConPairListSrc
@@ -935,28 +946,35 @@ private object VarShortSyntaxToJsFunc {
     fun toJsFunc(
         varMapConSrc: String,
     ): Pair<String, Map<String, String>> {
-        val varMapConPairListSrc = CmdClickMap.createMap(
+        val varMapConPairListSrcBeforeFilter = CmdClickMap.createMap(
             "${jsVarMainKeyName}=${varMapConSrc}",
             jsSubKeySeparator
+        )
+        val varMapConPairListSrc = JsActionKeyManager.OnlySubKeyMapForShortSyntax.filterForVar(
+            varMapConPairListSrcBeforeFilter
         )
         val onlySubKeyMapToVarMapConPairList =
             JsActionKeyManager.OnlySubKeyMapForShortSyntax.extractForVar(
                 varMapConPairListSrc
             )
         val onlySubKeyMap = onlySubKeyMapToVarMapConPairList.first
+        val varMapConPairListBeforeExcludeFirstIf = onlySubKeyMapToVarMapConPairList.second
+            ?: emptyList()
+        val onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey = extractFirstInExcludePairList(
+            varMapConPairListBeforeExcludeFirstIf
+        )
         val onlyIfMap =
-            JsActionKeyManager.OnlySubKeyMapForShortSyntax.createOnlyIfMapByFirstIf(
-                onlySubKeyMap
-            )
-
+            onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.first
         val varMapConPairList =
-            onlySubKeyMapToVarMapConPairList.second
-                ?: emptyList()
+            onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.second
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAc.txt").absolutePath,
 //            listOf(
 //                "varMapConSrc: ${varMapConSrc}",
+//                "varMapConPairListSrcBeforeFilter: ${varMapConPairListSrcBeforeFilter}",
 //                "varMapConPairListSrc: ${varMapConPairListSrc}",
+//                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
+//                "onlyIfMap: ${onlyIfMap}",
 //                "onlySubKeyMapToVarMapConPairList: ${onlySubKeyMapToVarMapConPairList}",
 //                "onlySubKeyMap: ${onlySubKeyMap}",
 //                "varMapConPairList: ${varMapConPairList}"
@@ -1009,6 +1027,53 @@ private object VarShortSyntaxToJsFunc {
 //            ).joinToString("\n\n\n")
 //        )
         return jsMainKeyName to jsKeyConMap
+    }
+
+    private fun filterUseJsSubKey(
+        varMapConPairListBeforeExcludeFirstIf: List<Pair<String, String>>
+    ){
+
+    }
+
+    private fun extractFirstInExcludePairList(
+        varMapConPairListSrc: List<Pair<String, String>>
+    ): Pair<
+            Map<String, String>,
+            List<Pair<String, String>>
+            >{
+        val untilSubKeyList = listOf(
+            varValueSubKeyName,
+            funcSubKeyName,
+        )
+        val untilSubKeyIndex = varMapConPairListSrc.indexOfFirst {
+            val subKeyName = it.first
+            untilSubKeyList.contains(subKeyName)
+        }
+        val ifSubKeyContainEntryPairList =
+            varMapConPairListSrc.take(untilSubKeyIndex)
+        val defaultEmptyMap = emptyMap<String, String>()
+        val firstIfPair = ifSubKeyContainEntryPairList.firstOrNull {
+            val subKeyName = it.first
+            subKeyName == suggerIf
+        } ?: return defaultEmptyMap to varMapConPairListSrc
+        val firstIfCondition = firstIfPair.second
+        if(
+            firstIfCondition.isEmpty()
+        ) return defaultEmptyMap to varMapConPairListSrc
+        var firstMatch = true
+        val varMapConPairListExcludeFirstIf = varMapConPairListSrc.filter {
+            if(
+                firstIfPair == it
+                && firstMatch
+            ) {
+                firstMatch = false
+                return@filter false
+            }
+            true
+        }
+        return mapOf(
+            firstIfPair
+        ) to varMapConPairListExcludeFirstIf
     }
 
     private fun extractFirstValueOrFuncMap(
