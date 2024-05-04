@@ -344,18 +344,17 @@ object LogTool {
                 val msg = it.msg
                 val escapeStrRegex = it.escapeStrRegex
                 val findRegex = it.findRegex
-
-                val isNotBracketErr = !errMessage.contains(msg)
+                val isNotErr = !errMessage.contains(msg)
                 if (
-                    isNotBracketErr
+                    isNotErr
                 ) return@forEach
-                val putColorConForFind = escapeStrRegex?.let {
+                val srcJsConForFind = escapeStrRegex?.let {
                     srcJsCon.replace(
                         escapeStrRegex,
                         String()
                     )
                 } ?: srcJsCon
-                val findRegexResult = findRegex.findAll(putColorConForFind)
+                val findRegexResult = findRegex.findAll(srcJsConForFind)
                 findRegexResult.forEach {
                     val hitStr = it.value
                     putColorCon = putColorCon.replace(
@@ -384,10 +383,9 @@ object LogTool {
             NoKeyWordJsErrCheck.values().forEach {
                 val msg = it.msg
                 val findRegex = it.findRegex
-
-                val isNotBracketErr = !errMessage.contains(msg)
+                val isNotErr = !errMessage.contains(msg)
                 if (
-                    isNotBracketErr
+                    isNotErr
                 ) return@forEach
                 val findRegexResult = findRegex.findAll(srcJsCon)
                 findRegexResult.forEach {
@@ -456,19 +454,20 @@ object LogTool {
                         String()
                     )
                 } ?: noLogJsCon
-                val isSyntaxErr = errRegex.containsMatchIn(escapedNoLogJsCon)
-                if (isSyntaxErr) {
-                    saveErrLogCon(
-                        errName,
-                        UsePath.jsDebugReportPath,
-                    )
-                    LogSystems.stdErr(
-                        context,
-                        errName,
-                        debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
-                    )
-                    return true
-                }
+                val isNotSyntaxErr = !errRegex.containsMatchIn(escapedNoLogJsCon)
+                if (
+                    isNotSyntaxErr
+                ) return@forEach
+                saveErrLogCon(
+                    errName,
+                    UsePath.jsDebugReportPath,
+                )
+                LogSystems.stdErr(
+                    context,
+                    errName,
+                    debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
+                )
+                return true
             }
             return false
 
