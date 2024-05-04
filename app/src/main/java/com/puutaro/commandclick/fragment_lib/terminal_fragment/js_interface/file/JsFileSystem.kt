@@ -290,10 +290,10 @@ class JsFileSystem(
             val isSuffix = suffixList.any {
                 fileName.endsWith(it)
             } || suffixList.isEmpty()
-            val isExclude =
+            val isNotExclude =
                 !excludeFileNameList.contains(fileName)
             File("$dirPath/$fileName").isFile
-                    && isExclude
+                    && isNotExclude
                     && isPrefix
                     && isSuffix
         }.map {
