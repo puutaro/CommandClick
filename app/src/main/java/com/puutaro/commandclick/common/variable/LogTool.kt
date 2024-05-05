@@ -4,9 +4,9 @@ import android.content.Context
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object LogTool {
     val logPrefix = "### "
@@ -171,7 +171,7 @@ object LogTool {
                 "${it.key}: ${it.value}",
             )
         }?.joinToString("\n")
-        val displayJsAcSrc = makeDisplayJsAcSrc(
+        val displayJsAcSrc = DisplayJsAcSrc.make(
             jsAcKeyToSubKeyCon
         )
         val colorStrPair = makeColorCode(times)
@@ -179,6 +179,17 @@ object LogTool {
             colorStrPair,
             "src: ${displayJsAcSrc}"
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAcLog.txt").absolutePath,
+//            listOf(
+//                "jsActionMap: ${jsActionMap}",
+//                "srcLog: ${listOf(
+//                    "[JsAction]\n",
+//                    jsActionMapLogCon,
+//                    srcPreTag,
+//                ).joinToString("\n")}"
+//            ).joinToString("\n\n") + "\n----------\n"
+//        )
         FileSystems.writeFile(
             UsePath.jsDebugReportPath,
             listOf(
@@ -189,25 +200,34 @@ object LogTool {
         )
     }
 
-    private fun makeDisplayJsAcSrc(
-        jsActionMapLogCon: String?
-    ): String {
-        return QuoteTool.replaceBySurroundedIgnore(
-            jsActionMapLogCon ?: String(),
-            '|',
-            "\n\n>|"
-        ).let {
-            QuoteTool.replaceBySurroundedIgnore(
-                it,
-                '?',
-                "\n ?"
+    object DisplayJsAcSrc {
+        fun make(
+            jsAcKeyToSubKeyCon: String?
+        ): String {
+            if (
+                jsAcKeyToSubKeyCon.isNullOrEmpty()
+            ) return String()
+            val jsAcKeyToSubKeyConWithLogSepa =
+                toSepa(jsAcKeyToSubKeyCon)
+            return jsAcKeyToSubKeyConWithLogSepa
+        }
+
+        private fun toSepa(
+            jsAcKeyToSubKeyCon: String
+        ): String {
+            val separatorPairForLog = listOf(
+                '|' to "\n\n>|",
+                '?' to "\n ?",
+                '&' to "\n  &",
             )
-        }.let {
-            QuoteTool.replaceBySurroundedIgnore(
-                it,
-                '&',
-                "\n  &"
-            )
+            var jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyCon
+            separatorPairForLog.forEach {
+                jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyConForJs.replace(
+                    it.first.toString(),
+                    it.second,
+                )
+            }
+            return jsAcKeyToSubKeyConForJs
         }
     }
 
@@ -240,10 +260,68 @@ object LogTool {
             )
             val errWordWithRedSpan =
                 execMakeSpanTagHolder(errRedCode, errWord)
-            return con.replace(
+            val tagRegex = Regex("<[^>]*>[^>]*?<[^>]*>")
+            val tagRegexResultList = tagRegex.findAll(con).map {
+                it.value
+            }
+            val repConAndTagStrToMarkList = replaceTag(
+                con,
+                tagRegexResultList
+            )
+            val repConWithTagStr = repConAndTagStrToMarkList.first
+            val repConWithErrWord = repConWithTagStr.replace(
                 errWord,
                 errWordWithRedSpan
             )
+            val tagStrToMarkList = repConAndTagStrToMarkList.second
+            return replaceWithTagMark(
+                repConWithErrWord,
+                tagStrToMarkList
+            )
+        }
+
+        private fun replaceTag(
+            srcCon: String,
+            tagRegexResultList: Sequence<String>
+        ): Pair<String, List<Pair<String, String>>> {
+            val tagStrToMarkList = mutableListOf<Pair<String, String>>()
+            val tagTempMarkBase = "CMCCLICK_HTML_TAG"
+            var markNo = 0
+            var repCon = srcCon
+            tagRegexResultList.forEach {
+                    tagStr ->
+                val tagTempMark = "${tagTempMarkBase}${markNo}"
+                val isAlreadyRepTagStr =
+                    tagStrToMarkList.map{
+                        it.first
+                    }.contains(tagStr)
+                if(
+                    isAlreadyRepTagStr
+                ) return@forEach
+                repCon = repCon.replace(
+                    tagStr,
+                    tagTempMark
+                )
+                tagStrToMarkList.add(tagStr to tagTempMark)
+                markNo++
+            }
+            return repCon to tagStrToMarkList
+        }
+
+        private fun replaceWithTagMark(
+            repConWithErrWord: String,
+            tagStrToMarkList: List<Pair<String, String>>
+        ): String {
+            var repCon = repConWithErrWord
+            tagStrToMarkList.forEach {
+                val tagMark = it.second
+                val tagStr = it.first
+                repCon = repCon.replace(
+                    tagMark,
+                    tagStr
+                )
+            }
+            return repCon
         }
 
         private fun errExtractHandler(
@@ -311,7 +389,8 @@ object LogTool {
         ){
             METHOD_NOT_FOUND(
                 "Method not found",
-                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?\\([^)]*?\\)")
+                Regex("\\.[a-zA-Z0-9_]+?\\([^)]*?\\)")
+//                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?\\([^)]*?\\)")
             )
         }
 

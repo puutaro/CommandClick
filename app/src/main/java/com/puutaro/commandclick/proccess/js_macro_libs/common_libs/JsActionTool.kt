@@ -1829,10 +1829,7 @@ private object JsConPutter {
         if(
             functionName.isNullOrEmpty()
         ) return String()
-        val prefix =
-            jsMap.get(JsActionKeyManager.JsSubKey.PREFIX.key)
-                ?: String()
-        return "${prefix}${functionName}(${varargsStr})"
+        return "${functionName}(${varargsStr})"
     }
 
     private fun makeVarArgsForLoopMethod(
