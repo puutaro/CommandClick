@@ -1,10 +1,8 @@
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
@@ -185,12 +183,39 @@ object TsvImportManager {
                         fanneName,
                     )
                 }.let {
-                    CmdClickMap.replaceForTsv(
+                    replaceForTsvImportAsPhrase(
                         it,
                         asPhaseMap
                     )
                 }
             }.distinct()
+    }
+
+    private fun replaceForTsvImportAsPhrase(
+        targetCon: String,
+        repMap: Map<String, String>?
+    ): String {
+        if(
+            repMap.isNullOrEmpty()
+        ) return targetCon
+        var repCon = targetCon
+        val continueCurrentKeyMark = "~"
+        repMap.forEach {
+            val keyNameWithTab = "${it.key}\t"
+            val changeKeyName = it.value.trim()
+            if(
+                changeKeyName == continueCurrentKeyMark
+            ) return@forEach
+            val valueWithTab = "${it.value}\t"
+            repCon = repCon.replace(
+                Regex("^${keyNameWithTab}"),
+                valueWithTab
+            ).replace(
+                Regex("\n${keyNameWithTab}"),
+                "\n${valueWithTab}"
+            )
+        }
+        return repCon
     }
 
     fun removeTsvImport(
