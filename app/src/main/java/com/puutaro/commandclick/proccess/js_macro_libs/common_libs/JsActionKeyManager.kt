@@ -36,7 +36,6 @@ object JsActionKeyManager {
         OVERRIDE("override"),
         ID("id"),
         ARGS("args"),
-        PREFIX("prefix"),
         LOOP_ARG_NAMES("loopArgNames"),
         ON_RETURN("onReturn"),
         IF("if"),
