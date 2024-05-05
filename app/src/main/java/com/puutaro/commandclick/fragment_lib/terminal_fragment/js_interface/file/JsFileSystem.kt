@@ -280,7 +280,7 @@ class JsFileSystem(
             extraMap.get(FullFileOrDirListKey.EXCLUDE_FILES.key)
                 ?.split(separator)
                 ?: emptyList()
-        return FileSystems.sortedFiles(
+        val fileNameList = FileSystems.sortedFiles(
             dirPath,
         ).filter {
             fileName ->
@@ -296,9 +296,12 @@ class JsFileSystem(
                     && isNotExclude
                     && isPrefix
                     && isSuffix
-        }.map {
-            File(dirPath, it).absolutePath
-        }.joinToString("\n")
+        }
+        return nameOrFullPathHandler(
+            extraMap,
+            fileNameList,
+            dirPath,
+        )
     }
 
     @JavascriptInterface
@@ -323,7 +326,7 @@ class JsFileSystem(
             extraMap.get(FullFileOrDirListKey.EXCLUDE_FILES.key)
                 ?.split(separator)
                 ?: emptyList()
-        return FileSystems.showDirList(
+        val dirNameList = FileSystems.showDirList(
             dirPath,
         ).filter {
                 dirName ->
@@ -339,7 +342,27 @@ class JsFileSystem(
                     && isExclude
                     && isPrefix
                     && isSuffix
-        }.map {
+        }
+        return nameOrFullPathHandler(
+            extraMap,
+            dirNameList,
+            dirPath,
+        )
+    }
+
+    private fun nameOrFullPathHandler(
+        extraMap: Map<String, String>,
+        nameList: List<String>,
+        dirPath: String,
+    ): String {
+        val isOutputAsNames =
+            extraMap.get(
+                FullFileOrDirListKey.ON_OUTPUT_AS_NAME.key
+            ) == onOutputNameListOn
+        if(
+            isOutputAsNames
+        ) return nameList.joinToString("\n")
+        return nameList.map {
             File(dirPath, it).absolutePath
         }.joinToString("\n")
     }
@@ -349,8 +372,11 @@ class JsFileSystem(
     ) {
         PREFIX(EditSettingExtraArgsTool.ExtraKey.FILTER_PREFIX.key),
         SUFFIX(EditSettingExtraArgsTool.ExtraKey.FILTER_SUFFIX.key),
-        EXCLUDE_FILES("excludeFiles")
+        EXCLUDE_FILES("excludeFiles"),
+        ON_OUTPUT_AS_NAME("onOutputAsName"),
     }
+
+    private val onOutputNameListOn = "ON"
 
     @JavascriptInterface
     fun showDirList(
