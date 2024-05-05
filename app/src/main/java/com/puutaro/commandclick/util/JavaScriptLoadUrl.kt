@@ -185,12 +185,6 @@ object JavaScriptLoadUrl {
         jsConBeforeJsImport: String,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-//        val readSharedPreferences = when(fragment){
-//            is EditFragment -> fragment.readSharePreferenceMap
-//            is CommandIndexFragment -> fragment.readSharePreferenceMap
-//            is TerminalFragment -> fragment.readSharePreferenceMap
-//            else -> emptyMap()
-//        }
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
@@ -198,16 +192,6 @@ object JavaScriptLoadUrl {
             readSharePreferenceMap
         )
         val currentFannelPath = File(currentAppDirPath, currentFannelName).absolutePath
-//        val setReplaceVariableMap = setReplaceVariableMapSrc.null when(fragment){
-//            is EditFragment -> fragment.setReplaceVariableMap
-//            is CommandIndexFragment -> {
-//                SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-//                    currentFannelPath
-//                )
-//            }
-//            is TerminalFragment -> fragment.setReplaceVariableMap
-//            else -> emptyMap()
-//        }
         val jsConBeforeJsImportCompNewLine = "\n${jsConBeforeJsImport}"
         val setReplaceVariableMapByConcat =
             TsvImportManager.concatRepValMapWithTsvImportFromContents(
