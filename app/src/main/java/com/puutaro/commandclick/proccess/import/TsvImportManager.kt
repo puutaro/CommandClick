@@ -88,19 +88,19 @@ object TsvImportManager {
             .distinct()
             .joinToString("\n")
             .split("\n")
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "tsvImportResult.txt").absolutePath,
-            listOf(
-                "tsvKeyValueListSrc: ${tsvKeyValueListSrc}",
-                "tsvKeyValueList: ${tsvKeyValueList}",
-                "resultMap: ${tsvKeyValueList.map {
-                    CcScript.makeKeyValuePairFromSeparatedString(
-                        it,
-                        "\t"
-                    )
-                }.toMap()}",
-            ).joinToString("\n\n") + "\n----\n"
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "tsvImportResult.txt").absolutePath,
+//            listOf(
+//                "tsvKeyValueListSrc: ${tsvKeyValueListSrc}",
+//                "tsvKeyValueList: ${tsvKeyValueList}",
+//                "resultMap: ${tsvKeyValueList.map {
+//                    CcScript.makeKeyValuePairFromSeparatedString(
+//                        it,
+//                        "\t"
+//                    )
+//                }.toMap()}",
+//            ).joinToString("\n\n") + "\n----\n"
+//        )
         return tsvKeyValueList.map {
             CcScript.makeKeyValuePairFromSeparatedString(
                 it,
@@ -158,15 +158,15 @@ object TsvImportManager {
                         tsvImportPreWord
                     ).trim()
                 )
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "tsvImport.txt").absolutePath,
-                    listOf(
-                        "matchResult: ${matchResult}",
-                        "tsvImportLine: ${tsvImportLine}",
-                        "asPhaseMap: ${asPhaseMap}",
-                        "tsvImportPath: ${tsvImportPath}",
-                    ).joinToString("\n") + "\n----\n"
-                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "tsvImport.txt").absolutePath,
+//                    listOf(
+//                        "matchResult: ${matchResult}",
+//                        "tsvImportLine: ${tsvImportLine}",
+//                        "asPhaseMap: ${asPhaseMap}",
+//                        "tsvImportPath: ${tsvImportPath}",
+//                    ).joinToString("\n") + "\n----\n"
+//                )
                 val tsvImportPathObj = File(tsvImportPath)
                 if(!tsvImportPathObj.isFile) {
                     LogSystems.stdWarn(
@@ -197,17 +197,17 @@ object TsvImportManager {
     ):List<String> {
         val tsvImportRegexForRemove =
             "${tsvImportRegexStr}[;]*".toRegex()
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "tsvImportRemove.txt").absolutePath,
-            listOf(
-                "src: ${jsList.joinToString("\n")}",
-                "after: ${jsList.joinToString("\n")
-                    .replace(
-                        tsvImportRegexForRemove,
-                        String()
-                    )}"
-            ).joinToString("\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "tsvImportRemove.txt").absolutePath,
+//            listOf(
+//                "src: ${jsList.joinToString("\n")}",
+//                "after: ${jsList.joinToString("\n")
+//                    .replace(
+//                        tsvImportRegexForRemove,
+//                        String()
+//                    )}"
+//            ).joinToString("\n\n")
+//        )
         return jsList.joinToString("\n")
             .replace(
                 tsvImportRegexForRemove,
