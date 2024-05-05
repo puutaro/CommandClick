@@ -138,10 +138,11 @@ object TsvImportManager {
                                 index > 0
                                         && isNotCommentOut
                                         && isNotOnlyComma
-                            }.map {
-                                it.trim().removePrefix(tsvImportAsPhrase).trim()
-                            }.joinToString(String()).trim()
-                                .removePrefix("(")
+                            }.joinToString(String())
+                                .replace(
+                                    Regex("^[ \t]*${tsvImportAsPhrase}[ \t]*\\("),
+                                    String()
+                                ).trim()
                                 .removeSuffix(")")
                                 .split(",")
                                 .joinToString("\n")
