@@ -11,6 +11,7 @@ import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtr
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
@@ -222,7 +223,9 @@ object JsDebugger {
     ){
         val execDebugJsPath = UsePath.jsDebugReportPath
         val launchUrlCon =
-            WevViewDialogUriPrefix.TEXT_CON.prefix + execDebugJsPath
+            makeTxtHtmlUrlForDebug(
+                execDebugJsPath,
+            )
         launchLogDialog(
             terminalFragment,
             launchUrlCon
@@ -240,12 +243,25 @@ object JsDebugger {
             editDebugLogPath,
             sysOrErrLogCon
         )
-        val launchUrlCon =
-            WevViewDialogUriPrefix.TEXT_CON.prefix + editDebugLogPath
+        val launchUrlCon = makeTxtHtmlUrlForDebug(
+            editDebugLogPath,
+        )
         launchLogDialog(
             terminalFragment,
             launchUrlCon
         )
+    }
+
+    private fun makeTxtHtmlUrlForDebug(
+        logPath: String,
+    ): String {
+        return WevViewDialogUriPrefix.TEXT_CON.prefix +
+                logPath +
+                TxtHtmlDescriber.searchQuerySuffix +
+                listOf(
+                    TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
+                    TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
+                ).joinToString("=")
     }
 
     private fun launchLogDialog(
