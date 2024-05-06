@@ -5,23 +5,47 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object TxtHtmlDescriber {
 
     private val indexDirName = "index"
+    val searchQuerySuffix = "?q="
+    private val qerySeparator = '&'
     fun make(
         urlStr: String,
         terminalFragment: TerminalFragment
     ): String {
         val sharePref = terminalFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         FileSystems.createDirs(UsePath.cmdclickScrollPosiDirPath)
-        val filePath = urlStr.removePrefix(
+        val basePath = urlStr.removePrefix(
             WebUrlVariables.filePrefix
         )
+        val pathAndQueryMapCon = basePath.split(searchQuerySuffix)
+        val filePath = pathAndQueryMapCon.firstOrNull()
+            ?: return String()
+        val queryMapCon = pathAndQueryMapCon.lastOrNull()
+        val queryMap = CmdClickMap.createMap(
+            queryMapCon,
+            qerySeparator
+        ).toMap()
+        val disableScroll = DisableScroll.how(queryMap)
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "txtHtml.txt").absolutePath,
+//            listOf(
+//                "basePath: ${basePath}",
+//                "pathAndQueryMapCon: ${pathAndQueryMapCon}",
+//                "filePath: ${filePath}",
+//                "queryMapCon: ${queryMapCon}",
+//                "queryMap: ${queryMap}",
+//                "disableScroll: ${disableScroll}"
+//            ).joinToString("\n\n")
+//        )
         val contents = ReadText(
             filePath
         ).readText()
@@ -41,8 +65,7 @@ object TxtHtmlDescriber {
         val fileName = fileObj.name
         val htmlPosiFilePath =
             "${currentFannelHtmlPosiDirPath}/${fileName}"
-        val insertContents =
-            contents
+        val insertContents = contents
 //                .replace("<", "&lt;")
 //                .replace(">", "&gt;")
 //                .replace(" ", "&nbsp;")
@@ -83,6 +106,7 @@ object TxtHtmlDescriber {
         var STORAGE_KEY = "scrollY";
         const title = document.title;
         function checkOffset(){
+            if(${disableScroll}) return;
             positionY = window.pageYOffset;
             jsFileSystem.writeLocalFile(
                 "${htmlPosiFilePath}",
@@ -97,6 +121,7 @@ object TxtHtmlDescriber {
         
         
         function execScroll(){
+            if(${disableScroll}) return;
             positionYEntry = jsFileSystem.readLocalFile(
                 "${htmlPosiFilePath}"
             );
@@ -104,11 +129,33 @@ object TxtHtmlDescriber {
             if(
                 isNaN(positionYEntry)
             ) return;
-            positionY =  Number(positionYEntry);
+            positionY = Number(positionYEntry);
             scrollTo(0, positionY);
         };
         </script>
         </html>
         """.trimMargin()
     }
+
+    enum class TxtHtmlQueryKey(
+        val key: String
+    ) {
+        DISABLE_SCROLL("disableScroll")
+    }
+
+    object DisableScroll {
+
+        const val disableScrollMemoryOn = "ON"
+        fun how(
+            queryMap: Map<String, String>
+        ): Boolean{
+            return QuoteTool.trimBothEdgeQuote(
+                queryMap.get(
+                    TxtHtmlQueryKey.DISABLE_SCROLL.key
+                )
+            ) == disableScrollMemoryOn
+        }
+    }
+
+
 }
