@@ -222,6 +222,16 @@ object JsDebugger {
         intent: Intent
     ){
         val execDebugJsPath = UsePath.jsDebugReportPath
+        val debugConSrc = ReadText(
+            execDebugJsPath,
+        ).readText()
+        val debugConWithDetailTag = debugConSrc.let {
+            LogTool.DetailTagManager.replace(it)
+        }
+        FileSystems.writeFile(
+            execDebugJsPath,
+            debugConWithDetailTag,
+        )
         val launchUrlCon =
             makeTxtHtmlUrlForDebug(
                 execDebugJsPath,
@@ -338,10 +348,6 @@ object JsDebugger {
                     colorStr,
                     body.trim().trim('\n')
                 )
-//                spanTagHolder.format(
-//                    colorStr,
-//                    body.trim().trim('\n')
-//                )
             ).joinToString("\n") + "\n\n"
         }.joinToString("\n").replace(
             errMark,
@@ -349,10 +355,6 @@ object JsDebugger {
                 LogTool.errRedCode,
                 errMark
             )
-//            spanTagHolder.format(
-//                LogTool.errRedCode,
-//                errMark
-//            )
         ).replace(
             "\n{4,}".toRegex(),
             "\n\n\n"

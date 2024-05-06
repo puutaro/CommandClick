@@ -20,7 +20,6 @@ object LogTool {
     val logBlackPair = "#000000" to "#0e6266"
     val leadLogBlackPair = "#545454" to "#4f574d"
 
-
     fun saveErrLogCon(
         errCon: String,
         bodyPath: String,
@@ -81,22 +80,12 @@ object LogTool {
         val preTagHolder = "<pre style=\"color:%s;\">%s</pre>"
         return preTagHolder.format(color, con)
     }
+
     private fun makePreTagHolder(
-        colorPair: Pair<String, String>,
         conSrc: String,
     ): String {
         val preTagHolder = "<pre>%s</pre>"
-        val con = conSrc.split("\n").mapIndexed {
-            index, line ->
-            val colorStr = when(
-                index % 2 == 0
-            ){
-                true -> colorPair.first
-                else -> colorPair.second
-            }
-            execMakeSpanTagHolder(colorStr, line)
-        }.joinToString("\n")
-        return preTagHolder.format(con)
+        return preTagHolder.format(conSrc)
     }
 
     fun makeSpanTagHolder(
@@ -158,10 +147,13 @@ object LogTool {
     }
 
     private enum class DisplayGanre(
-        val ganre: String
+        val ganre: String,
+        val order: Int,
     ){
-        GENERATED("Generated"),
-        SRC("Src"),
+        TYPE(JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key, 0),
+        JS_CON(JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key, 1),
+        GENERATED("Generated", 2),
+        SRC("Src", 3),
     }
 
     fun jsActionLog(
@@ -170,41 +162,19 @@ object LogTool {
         keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
         jsActionMapToJsConOnlyReplace: Pair<Map<String, String>, String?>?
     ){
-        var times = 0
         val logJsActionMap =
             LogJsActionMapMaker.makeLogJsActionMap(
                 jsActionMapToJsConOnlyReplace
             )
-        val jsActionMapLogCon = logJsActionMap?.filterKeys {
-            it.isNotEmpty()
-        }?.map {
-            val colorStrPair = makeColorCode(times)
-            times++
-            val displayGenre =
-                it.key.replaceFirstChar { it.uppercase() }
-            val displayGenreCon = it.value
-            makePreTagHolder(
-                colorStrPair,
-                "${displayGenre}:\n ${displayGenreCon}",
-            )
-        }?.joinToString("\n")
-        val displayJsAcGeneratedCon = DisplayJsAcGenerate.make(
+        val typeLogConWithTag = makeTypeWithTag(logJsActionMap)
+        val jsConLogConWithTag = makeJsConWithTag(logJsActionMap)
+
+        val generatedDetailTagCon = generatedWithTagCon(
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
         )
-        val colorStrPairForGenerated = makeColorCode(times)
-        val generatedPreTag = makePreTagHolder(
-            colorStrPairForGenerated,
-            "${DisplayGanre.GENERATED.ganre}:\n ${displayJsAcGeneratedCon}"
-        )
-        val displayJsAcSrc = DisplayJsAcSrc.make(
-            jsAcKeyToSubKeyCon
-        )
-        val colorStrPair = makeColorCode(times + 1)
-        val srcPreTag = makePreTagHolder(
-            colorStrPair,
-            "${DisplayGanre.SRC.ganre}:\n ${displayJsAcSrc}"
-        )
+        val srcPreTagCon =
+            makeSrcConWithTag(jsAcKeyToSubKeyCon)
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAcLog.txt").absolutePath,
 //            listOf(
@@ -220,12 +190,154 @@ object LogTool {
             UsePath.jsDebugReportPath,
             listOf(
                 "[JsAction]\n",
-                jsActionMapLogCon,
-                generatedPreTag,
-                srcPreTag,
+                typeLogConWithTag,
+                srcPreTagCon,
+                generatedDetailTagCon,
+                jsConLogConWithTag,
             ).joinToString("\n")
         )
     }
+
+    private fun makeTypeWithTag (
+        logJsActionMap: Map<String, String>?
+    ): String? {
+        val typeKeyName = JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
+        return logJsActionMap?.get(
+            typeKeyName
+        )?.let {
+            val spanTagCon = makeWithTagConForType(
+                JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key,
+                DisplayGanre.TYPE.order,
+                it,
+            )
+            makePreTagHolder(spanTagCon)
+        }
+    }
+
+    private fun makeJsConWithTag(
+        logJsActionMap: Map<String, String>?
+    ): String? {
+        val jsConKeyName = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+        return logJsActionMap?.get(
+            jsConKeyName
+        )?.let {
+            val spanTagCon = makeWithTagCon(
+                jsConKeyName,
+                DisplayGanre.JS_CON.order,
+                it,
+            )
+            generateDetailTagHolder(spanTagCon)
+        }
+    }
+
+    private fun makeWithTagCon(
+        keyName: String,
+        order: Int,
+        body: String,
+    ): String {
+        val colorStrPair = makeColorCode(order)
+        val displayGenre =
+            keyName.replaceFirstChar { it.uppercase() }
+                .trim()
+        val displayGenreCon = body.replace(
+            Regex("([ \t]*\n)+"),
+            "\n"
+        )
+        return makeSpanTagHolder(
+            colorStrPair,
+            "${displayGenre}: \n ${displayGenreCon}",
+        )
+    }
+
+    private fun makeWithTagConForType(
+        keyName: String,
+        order: Int,
+        body: String,
+    ): String {
+        val colorStrPair = makeColorCode(order)
+        val displayGenre =
+            keyName.replaceFirstChar { it.uppercase() }
+                .trim()
+        return makeSpanTagHolder(
+            colorStrPair,
+            "${displayGenre}: ${body}",
+        )
+    }
+
+    private fun generatedWithTagCon(
+        keyToSubKeyMapListWithoutAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+        keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+    ): String {
+        val displayJsAcGeneratedCon = DisplayJsAcGenerate.make(
+            keyToSubKeyMapListWithoutAfterSubKey,
+            keyToSubKeyMapListWithAfterSubKey,
+        )
+        val colorStrPairForGenerated = makeColorCode(DisplayGanre.GENERATED.order)
+        val generatedSpanTagCon =
+            makeSpanTagHolder(
+                colorStrPairForGenerated,
+                "${DisplayGanre.GENERATED.ganre}:\n ${displayJsAcGeneratedCon}"
+            )
+        return generateDetailTagHolder(
+            generatedSpanTagCon
+        )
+    }
+    private fun generateDetailTagHolder(
+        spanTagCon: String
+    ): String {
+        val spanTagConList = spanTagCon.split("\n")
+        val displayGenrePreTagCon =
+            spanTagConList.firstOrNull()
+                ?: String()
+        val bodyPreTagCon =
+            when(spanTagConList.size > 0) {
+                true -> spanTagConList.filterIndexed { index, c ->
+                    index > 0
+                }.joinToString("\n")
+                else -> String()
+            }
+//        return "${displayGenrePreTagCon}: \n${bodyPreTagCon}"
+        return DetailTagManager.putHolder(
+            displayGenrePreTagCon,
+            bodyPreTagCon
+        )
+    }
+
+    private fun generateDetailOpenTagHolder(
+        spanTagCon: String
+    ): String {
+        val spanTagConList = spanTagCon.split("\n")
+        val displayGenrePreTagCon =
+            spanTagConList.firstOrNull()
+                ?: String()
+        val bodyPreTagCon =
+            when(spanTagConList.size > 0) {
+                true -> spanTagConList.filterIndexed { index, c ->
+                    index > 0
+                }.joinToString("\n")
+                else -> String()
+            }
+//        return "${displayGenrePreTagCon}: \n${bodyPreTagCon}"
+        return DetailTagManager.putOpenHolder(
+            displayGenrePreTagCon,
+            bodyPreTagCon
+        )
+    }
+
+    private fun makeSrcConWithTag(
+        jsAcKeyToSubKeyCon: String?,
+    ): String {
+        val displayJsAcSrc = DisplayJsAcSrc.make(
+            jsAcKeyToSubKeyCon
+        )
+        val colorStrPair = makeColorCode(DisplayGanre.SRC.order)
+        val srcSpanTagCon = makeSpanTagHolder(
+            colorStrPair,
+            "${DisplayGanre.SRC.ganre}:\n ${displayJsAcSrc}"
+        )
+        return generateDetailOpenTagHolder(srcSpanTagCon)
+    }
+
 
     object DisplayJsAcGenerate {
         fun make(
@@ -361,6 +473,18 @@ object LogTool {
                 errWordWithRedSpan
             )
             val tagStrToMarkList = repConAndTagStrToMarkList.second
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath,"debug.txt").absolutePath,
+//                listOf(
+//                    "con: ${con}",
+//                    "repConWithTagStr: ${repConWithTagStr}",
+//                    "repConWithErrWord: ${repConWithErrWord}",
+//                    "replaceWithTagMark: ${replaceWithTagMark(
+//                        repConWithErrWord,
+//                        tagStrToMarkList
+//                    )}",
+//                ).joinToString("\n\n")
+//            )
             return replaceWithTagMark(
                 repConWithErrWord,
                 tagStrToMarkList
@@ -377,7 +501,7 @@ object LogTool {
             var repCon = srcCon
             tagRegexResultList.forEach {
                     tagStr ->
-                val tagTempMark = "${tagTempMarkBase}${markNo}"
+                val tagTempMark = "\${${tagTempMarkBase}${markNo}}"
                 val isAlreadyRepTagStr =
                     tagStrToMarkList.map{
                         it.first
@@ -702,6 +826,70 @@ object LogTool {
                     tsvImportSentence
                 }.joinToString("\n")
             }
+        }
+    }
+
+    object DetailTagManager {
+
+        enum class DetailTagToHolder(
+            val tag: String,
+            val holderMark: String
+        ){
+            DETAIL_TAG_SATRT(
+                "<details>",
+                "\${CMDCLICK_DETAIL_TAG_SATRT}"
+            ),
+            DETAIL_TAG_SATRT_OPEN(
+                "<details open>",
+                "\${CMDCLICK_DETAIL_TAG_SATRT_OPEN}"
+            ),
+            DETAIL_TAG_END(
+                "</details>",
+                "\${CMDCLICK_DETAIL_TAG_END}"
+            ),
+            DETAIL_SUMMARY_TAG_START(
+                "<summary>",
+                "\${CMDCLICK_SUMMARY_TAG_START}"
+            ),
+            DETAIL_SUMMARY_TAG_END(
+                "</summary>",
+                "\${CMDCLICK_SUMMARY_TAG_END}"
+            )
+        }
+        fun putHolder(
+            title: String,
+            spanTagCon: String,
+        ): String {
+            return listOf(
+                DetailTagToHolder.DETAIL_TAG_SATRT.holderMark,
+                "${DetailTagToHolder.DETAIL_SUMMARY_TAG_START.holderMark}${title}${DetailTagToHolder.DETAIL_SUMMARY_TAG_END.holderMark}",
+                makePreTagHolder(spanTagCon),
+                DetailTagToHolder.DETAIL_TAG_END.holderMark,
+            ).joinToString("\n")
+        }
+
+        fun putOpenHolder(
+            title: String,
+            spanTagCon: String,
+        ): String {
+            return listOf(
+                DetailTagToHolder.DETAIL_TAG_SATRT_OPEN.holderMark,
+                "${DetailTagToHolder.DETAIL_SUMMARY_TAG_START.holderMark}${title}${DetailTagToHolder.DETAIL_SUMMARY_TAG_END.holderMark}",
+                makePreTagHolder(spanTagCon),
+                DetailTagToHolder.DETAIL_TAG_END.holderMark,
+            ).joinToString("\n")
+        }
+        fun replace(
+            detailHolderCon: String,
+        ): String {
+            var replaceDetailTagCon = detailHolderCon
+            DetailTagToHolder.values().forEach {
+                replaceDetailTagCon = replaceDetailTagCon.replace(
+                    it.holderMark,
+                    it.tag,
+                )
+            }
+            return replaceDetailTagCon
         }
     }
 }
