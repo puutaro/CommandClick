@@ -154,7 +154,7 @@ object JsActionTool {
                 keyToSubKeyCon,
                 null,
                 null,
-                macroDataMap,
+                macroDataMap to null,
             )
             return macroDataMap
         }
@@ -167,17 +167,11 @@ object JsActionTool {
             jsRepValHolderMap,
         )
         val jsActionMap = jsActionMapToJsConOnlyReplace?.first
-        val jsConWithReplace = jsActionMapToJsConOnlyReplace?.second
-        val jsConKey = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
-        val logJsActionMap = makeLogJsActionMap(
-            jsActionMap,
-            jsConWithReplace
-        )
         LogTool.jsActionLog(
             keyToSubKeyCon,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
-            logJsActionMap,
+            jsActionMapToJsConOnlyReplace
         )
         val isErr = LogTool.SyntaxCheck.checkJsAcSyntax(
             fragment.context,
@@ -191,20 +185,6 @@ object JsActionTool {
             )
         }
         return jsActionMap
-    }
-
-    private fun makeLogJsActionMap(
-        jsActionMap: Map<String, String>?,
-        jsConWithReplace: String?
-    ): Map<String, String>? {
-        val jsConKey = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
-        return jsActionMap?.map {
-            val keyName = it.key
-            if(
-                keyName == jsConKey
-            ) return@map keyName to (jsConWithReplace ?: String())
-            keyName to it.value
-        }?.toMap()
     }
 
     private fun makeRepValHolderMap(

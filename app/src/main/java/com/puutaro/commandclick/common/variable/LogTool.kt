@@ -3,7 +3,10 @@ package com.puutaro.commandclick.common.variable
 import android.content.Context
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.import.JsImportManager
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 
@@ -154,21 +157,35 @@ object LogTool {
         }
     }
 
+    private enum class DisplayGanre(
+        val ganre: String
+    ){
+        GENERATED("Generated"),
+        SRC("Src"),
+    }
+
     fun jsActionLog(
         jsAcKeyToSubKeyCon: String?,
         keyToSubKeyMapListWithoutAfterSubKey:  List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
-        jsActionMap: Map<String, String>?,
+        jsActionMapToJsConOnlyReplace: Pair<Map<String, String>, String?>?
     ){
         var times = 0
-        val jsActionMapLogCon = jsActionMap?.filterKeys {
+        val logJsActionMap =
+            LogJsActionMapMaker.makeLogJsActionMap(
+                jsActionMapToJsConOnlyReplace
+            )
+        val jsActionMapLogCon = logJsActionMap?.filterKeys {
             it.isNotEmpty()
         }?.map {
             val colorStrPair = makeColorCode(times)
             times++
+            val displayGenre =
+                it.key.replaceFirstChar { it.uppercase() }
+            val displayGenreCon = it.value
             makePreTagHolder(
                 colorStrPair,
-                "${it.key}:\n ${it.value}",
+                "${displayGenre}:\n ${displayGenreCon}",
             )
         }?.joinToString("\n")
         val displayJsAcGeneratedCon = DisplayJsAcGenerate.make(
@@ -178,7 +195,7 @@ object LogTool {
         val colorStrPairForGenerated = makeColorCode(times)
         val generatedPreTag = makePreTagHolder(
             colorStrPairForGenerated,
-            "generated:\n ${displayJsAcGeneratedCon}"
+            "${DisplayGanre.GENERATED.ganre}:\n ${displayJsAcGeneratedCon}"
         )
         val displayJsAcSrc = DisplayJsAcSrc.make(
             jsAcKeyToSubKeyCon
@@ -186,7 +203,7 @@ object LogTool {
         val colorStrPair = makeColorCode(times + 1)
         val srcPreTag = makePreTagHolder(
             colorStrPair,
-            "src:\n ${displayJsAcSrc}"
+            "${DisplayGanre.SRC.ganre}:\n ${displayJsAcSrc}"
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAcLog.txt").absolutePath,
@@ -282,7 +299,6 @@ object LogTool {
             jsAcKeyToSubKeyCon: String
         ): String {
             val separatorPairForLog = listOf(
-                '|' to "\n\n>|",
                 '?' to "\n ?",
                 '&' to "\n  &",
             )
@@ -293,7 +309,12 @@ object LogTool {
                     it.second,
                 )
             }
-            return jsAcKeyToSubKeyConForJs
+            return QuoteTool.splitBySurroundedIgnore(
+                jsAcKeyToSubKeyConForJs,
+                '|'
+            ).map {
+                ">|${it}"
+            }.joinToString("\n")
         }
     }
 
@@ -615,8 +636,72 @@ object LogTool {
                 return true
             }
             return false
-
         }
     }
 
+
+    private object LogJsActionMapMaker {
+
+        fun makeLogJsActionMap(
+            jsActionMapToJsConOnlyReplace: Pair<Map<String, String>, String?>?
+        ): Map<String, String>? {
+            val srcJsActionMap = jsActionMapToJsConOnlyReplace?.first
+            val jsConWithReplace = jsActionMapToJsConOnlyReplace?.second
+            val jsConKey =
+                JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+            val importCon =
+                makeImportCon(jsConWithReplace)
+            return srcJsActionMap?.map {
+                val keyName = it.key
+                if(
+                    keyName == jsConKey
+                ) {
+                    val jsCon = it.value
+                    return@map keyName to listOf(
+                        importCon,
+                        jsCon
+                    ).joinToString("\n")
+                }
+                keyName to it.value
+            }?.toMap()
+        }
+
+        private fun makeImportCon(
+            jsConWithReplace: String?,
+        ): String {
+            val tsvImportRegex = TsvImportManager.tsvImportRegex
+            val tsvImportSentences = extractImportCon(
+                jsConWithReplace,
+                tsvImportRegex,
+            )
+            val jsImportRegex = Regex(
+                "\n[ \t]*${JsImportManager.jsImportPreWord}[^\n]+"
+            )
+            val jsImportSentences = extractImportCon(
+                jsConWithReplace,
+                jsImportRegex,
+            )
+            return listOf(
+                tsvImportSentences,
+                jsImportSentences
+            ).joinToString("\n")
+        }
+        private fun extractImportCon(
+            jsConWithReplace: String?,
+            importRegex: Regex,
+        ): String {
+            if (
+                jsConWithReplace.isNullOrEmpty()
+            ) return String()
+
+            return jsConWithReplace.let {
+                importRegex.findAll(
+                    "\n${it}"
+                ).map {
+                    val tsvImportSentence = it.value.trim()
+                    tsvImportSentence
+                }.joinToString("\n")
+            }
+        }
+    }
 }
