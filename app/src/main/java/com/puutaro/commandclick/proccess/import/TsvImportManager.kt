@@ -15,7 +15,7 @@ object TsvImportManager {
     const val tsvImportUsePhrase = "use"
     private val tsvImportRegexStr =
         "\n[ \t]*${tsvImportPreWord}[^\n]+(\n${tsvImportUsePhrase}[ \t]*\\([^)]*\\))*"
-    private val tsvImportRegex = tsvImportRegexStr.toRegex()
+    val tsvImportRegex = tsvImportRegexStr.toRegex()
     const val changePhrase = "=>"
 
 //        "\n${tsvImportPreWord}[^\n]+\nas".toRegex()
