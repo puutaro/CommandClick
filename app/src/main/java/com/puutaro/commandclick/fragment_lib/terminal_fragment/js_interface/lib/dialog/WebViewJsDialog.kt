@@ -233,6 +233,8 @@ class WebViewJsDialog(
     private fun stopWebView(webView: WebView){
         webView.onPause()
         webView.isVisible = false
+        webView.destroy()
+        positionHashMap.clear()
         terminalFragment.webViewDialogInstance?.dismiss()
     }
 
