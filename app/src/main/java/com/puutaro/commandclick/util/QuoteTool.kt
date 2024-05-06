@@ -9,8 +9,10 @@ object QuoteTool {
     fun trimBothEdgeQuote(
         targetStr: String?,
     ): String {
-        return targetStr
-            ?.trim()
+//        val targetStrWithCompOneSideQuote = compOneSideQuote(
+//            targetStr
+//        )
+        return targetStr?.trim()
             .let {
             execTrim(
                 it,
@@ -143,6 +145,9 @@ object QuoteTool {
         targetSeparator: Char,
         wantRepStr: String,
     ): String {
+//        val targetConWithCompOneSideQuote = compOneSideQuote(
+//            targetCon
+//        ) ?: return targetCon
         return surroundSeparatorReplace(
             targetCon,
             targetSeparator,
@@ -292,5 +297,48 @@ object QuoteTool {
                 cmdClickBackspaceQuote,
                 backSlachDoubleQuote
             )
+    }
+
+    fun compOneSideQuote(
+        targetStr: String?
+    ): String? {
+        val trimTargetStr =
+            targetStr?.trim()
+        if(
+            trimTargetStr.isNullOrEmpty()
+        ) return trimTargetStr
+        val targetQuoteList = listOf(
+            '\"',
+            '\'',
+            '`',
+        )
+        targetQuoteList.forEach {
+            val compStr = execCompOneSideQuote(
+                trimTargetStr,
+                it
+            )
+            if(
+                compStr != trimTargetStr
+            ) return compStr
+        }
+        return trimTargetStr
+    }
+
+    private fun execCompOneSideQuote(
+        targetStr: String,
+        compQuote: Char
+    ): String {
+        val isBothQuote = targetStr.startsWith(compQuote)
+                && targetStr.endsWith(compQuote)
+        if(
+            isBothQuote
+        ) return targetStr
+        if(
+            targetStr.startsWith(compQuote)
+        ) return "${targetStr}${compQuote}"
+        if(
+            targetStr.endsWith(compQuote)
+        ) return "${compQuote}${targetStr}"
+        return targetStr
     }
 }

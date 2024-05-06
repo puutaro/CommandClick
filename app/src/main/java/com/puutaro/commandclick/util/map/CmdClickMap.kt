@@ -33,6 +33,49 @@ object CmdClickMap {
          }
     }
 
+    fun recreateMapWithoutQuoteInKey(
+        srcMap: Map<String, String>,
+    ): Map<String, String> {
+
+        val checkQuote = listOf(
+            "`",
+            "\"",
+            "'"
+        )
+        val mapKeyList = srcMap.keys
+        val irregularQuoteList = checkQuote.filter {
+            quote ->
+            mapKeyList.any {
+                it.endsWith(quote)
+            }
+        }
+        return srcMap.map {
+            val cleanKey =  removeIrregularQuote(
+                irregularQuoteList,
+                it.key
+            )
+            val cleanValue = QuoteTool.compOneSideQuote(
+                it.value
+            ) ?: String()
+            cleanKey to cleanValue
+        }.toMap()
+    }
+
+    private fun removeIrregularQuote(
+        irregularQuoteList: List<String>,
+        targetCon: String,
+    ): String {
+        var updateCon = targetCon
+        irregularQuoteList.forEach {
+            updateCon = updateCon.replace(
+                it,
+                String()
+            )
+        }
+        return updateCon
+
+    }
+
     fun createMapFromTsv(
         mapEntryStr: String?,
         separator: Char
