@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.import.JsImportManager
@@ -151,11 +152,13 @@ object JsActionTool {
         ) {
             LogTool.jsActionLog(
                 keyToSubKeyCon,
-                macroDataMap
+                null,
+                null,
+                macroDataMap,
             )
             return macroDataMap
         }
-        val jsActionMap = extractJsDataMap(
+        val jsActionMapToJsConOnlyReplace = extractJsDataMap(
             fragment,
             readSharePreferenceMap,
             setReplaceVariableMap,
@@ -163,9 +166,18 @@ object JsActionTool {
             keyToSubKeyMapListWithAfterSubKey,
             jsRepValHolderMap,
         )
+        val jsActionMap = jsActionMapToJsConOnlyReplace?.first
+        val jsConWithReplace = jsActionMapToJsConOnlyReplace?.second
+        val jsConKey = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+        val logJsActionMap = makeLogJsActionMap(
+            jsActionMap,
+            jsConWithReplace
+        )
         LogTool.jsActionLog(
             keyToSubKeyCon,
-            jsActionMap
+            keyToSubKeyMapListWithoutAfterSubKey,
+            keyToSubKeyMapListWithAfterSubKey,
+            logJsActionMap,
         )
         val isErr = LogTool.SyntaxCheck.checkJsAcSyntax(
             fragment.context,
@@ -178,10 +190,21 @@ object JsActionTool {
                 JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
             )
         }
-//        JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
-//        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", errMessage);" +
-//                "jsFileSystem.errJsLog(errMessage);" +
         return jsActionMap
+    }
+
+    private fun makeLogJsActionMap(
+        jsActionMap: Map<String, String>?,
+        jsConWithReplace: String?
+    ): Map<String, String>? {
+        val jsConKey = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+        return jsActionMap?.map {
+            val keyName = it.key
+            if(
+                keyName == jsConKey
+            ) return@map keyName to (jsConWithReplace ?: String())
+            keyName to it.value
+        }?.toMap()
     }
 
     private fun makeRepValHolderMap(
@@ -204,8 +227,8 @@ object JsActionTool {
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
         jsRepValHolderMap: Map<String, String>?,
-    ): Map<String, String>? {
-        val jsCon = convertJsCon(
+    ): Pair<Map<String, String>, String?>? {
+        val jsConToJsConOnlyReplace = convertJsCon(
             fragment,
             readSharePreferenceMap,
             setReplaceVariableMap,
@@ -213,12 +236,14 @@ object JsActionTool {
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
         )
+        val jsCon = jsConToJsConOnlyReplace.first
+        val jsConOnlyReplace = jsConToJsConOnlyReplace.second
         if(
             jsCon.isNullOrEmpty()
         ) return null
         return makeJsDataMap(
             jsCon,
-        )
+        ) to jsConOnlyReplace
     }
 
     private fun extractMacroDataMap(
@@ -526,13 +551,11 @@ object JsActionTool {
         jsRepValHolderMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
-    ): String? {
+    ): Pair<String?, String?> {
         if(
             keyToSubKeyMapListWithoutAfterSubKey.isNullOrEmpty()
-        ) return null
-        val tsvImportCon = ImportConMaker.make(
-            JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
-                    to TsvImportManager.tsvImportPreWord,
+        ) return null to null
+        val tsvImportCon = TsvImportConMaker.make(
             keyToSubKeyMapListWithoutAfterSubKey
         )
         val jsImportCon = ImportConMaker.make(
@@ -562,6 +585,7 @@ object JsActionTool {
                 jsRepValHolderMap,
             )
         }
+
 //        FileSystems.writeFile(
 //            File(
 //                UsePath.cmdclickDefaultAppDirPath,
@@ -584,12 +608,19 @@ object JsActionTool {
 //                )}"
 //            ).joinToString("\n\n\n")
 //        )
-        return JavaScriptLoadUrl.makeRawJsConFromContents(
+        val jsCon = JavaScriptLoadUrl.makeRawJsConFromContents(
             fragment,
             readSharePreferenceMap,
             jsConBeforeJsImport,
             setReplaceVariableMap,
         )
+        val jsConOnlyReplace = SetReplaceVariabler.execReplaceByReplaceVariables(
+            jsConBeforeJsImport,
+            setReplaceVariableMap,
+            SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap),
+            SharePrefTool.getCurrentFannelName(readSharePreferenceMap),
+        )
+        return jsCon to jsConOnlyReplace
     }
 
     private fun makeJsMapList(
@@ -612,7 +643,6 @@ object JsActionTool {
         WITH_AFTER,
         WITH_OTHER,
     }
-
 }
 
 
@@ -808,7 +838,18 @@ private object PairToMapInList {
                     mapConSrc,
                 )
 
-                JsActionKeyManager.JsActionsKey.TSV_IMPORT,
+                JsActionKeyManager.JsActionsKey.TSV_IMPORT -> {
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "tsvComp.txt").absolutePath,
+//                        listOf(
+//                            "mapConSrc: ${mapConSrc}",
+//                            "comp: ${QuoteTool.trimBothEdgeQuote(mapConSrc)}"
+//                        ).joinToString("\n\n") + "\n\n-------\n\n"
+//                    )
+                    convertToTsvImportMap(
+                        QuoteTool.trimBothEdgeQuote(mapConSrc),
+                    )
+                }
                 JsActionKeyManager.JsActionsKey.JS_IMPORT ->
                     convertToImportMap(
                         mainKey,
@@ -817,15 +858,85 @@ private object PairToMapInList {
             }
         }
     }
+    private fun convertToTsvImportMap(
+        mapConSrc: String,
+    ): Pair<String, Map<String, String>> {
+        val commonKeysRegex =
+            JsActionKeyManager.CommonPathKey.values().map {
+                it.key
+            }.joinToString("|")
+        val regexStr = "[?|&](${commonKeysRegex})="
+        val compMapConSrc = compSrcMapCon(
+            mapConSrc,
+            regexStr,
+        )
+        val tsvImportKey =
+            JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+        val tsvImportMapCon = listOf(
+            JsActionKeyManager.CommonPathKey.PATH.key,
+            compMapConSrc
+        ).joinToString("=")
+
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "tsvImpotJsac.txt").absolutePath,
+//            listOf(
+//                "mapConSrc: ${mapConSrc}",
+//                "compMapConSrc: ${compMapConSrc}",
+//                "tsvImportMap: ${CmdClickMap.createMap(
+//                    tsvImportMapCon,
+//                    jsSubKeySeparator
+//                ).toMap()}",
+//            ).joinToString("\n\n") + "\n---\n"
+//        )
+        return tsvImportKey to CmdClickMap.createMap(
+            tsvImportMapCon,
+            jsSubKeySeparator
+        ).toMap()
+    }
+
+    private fun compSrcMapCon(
+        mapConSrc: String,
+        regexStr: String,
+    ): String {
+        val checkQuote = listOf(
+            "`",
+            "\"",
+            "'"
+        )
+        checkQuote.forEach {
+            val curRegexStr = "${it}${regexStr}${it}"
+            val curRegex = curRegexStr.toRegex()
+            val isNotBoth = !mapConSrc.startsWith(it)
+                    && !mapConSrc.endsWith(it)
+            val isHit = curRegex.containsMatchIn(mapConSrc)
+            val isCorrect = !(isHit && isNotBoth)
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "tsvImpotJsacComp.txt").absolutePath,
+//                listOf(
+//                    "it: ${it}",
+//                    "mapConSrc: ${mapConSrc}",
+//                    "curRegexStr: ${curRegexStr}",
+//                    "isNotBoth: ${isNotBoth}",
+//                    "isHit: ${isHit}",
+//                    "isIrregular: ${isCorrect}"
+//                ).joinToString("\n\n") + "\n---\n"
+//            )
+            if(
+                isCorrect
+            ) return@forEach
+            return "${it}${mapConSrc}${it}"
+        }
+        return mapConSrc
+    }
 
     private fun convertToImportMap(
         jsActionMainKey: JsActionKeyManager.JsActionsKey,
         importListCon: String,
     ): Pair<String, Map<String, String>> {
-        val importMsp = mapOf(
+        val importMap = mapOf(
             JsActionKeyManager.CommonPathKey.PATH.key to importListCon
         )
-        return jsActionMainKey.key to importMsp
+        return jsActionMainKey.key to importMap
     }
 
     private fun convertJsPathToJsFunc(
@@ -1027,12 +1138,6 @@ private object VarShortSyntaxToJsFunc {
 //            ).joinToString("\n\n\n")
 //        )
         return jsMainKeyName to jsKeyConMap
-    }
-
-    private fun filterUseJsSubKey(
-        varMapConPairListBeforeExcludeFirstIf: List<Pair<String, String>>
-    ){
-
     }
 
     private fun extractFirstInExcludePairList(
@@ -1390,6 +1495,78 @@ private object VarShortSyntaxToJsFunc {
     }
 }
 
+private object TsvImportConMaker {
+
+    fun make(
+        keyToSubKeyMapList: List<Pair<String, Map<String, String>>>,
+    ): String {
+        val tsvImportKeyName = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+
+        val keyToSubKeyMapListOnlyImport = keyToSubKeyMapList.filter {
+                keyToSubKeyPair ->
+            val mainJsKeyName = keyToSubKeyPair.first
+            mainJsKeyName == tsvImportKeyName
+        }
+        val tsvImportPreWord = TsvImportManager.tsvImportPreWord
+        return  keyToSubKeyMapListOnlyImport.map {
+                keyToSubKeyMap ->
+            execPut(
+                tsvImportPreWord,
+                keyToSubKeyMap
+            )
+        }.joinToString("\n")
+    }
+    private fun execPut(
+        importPreWord: String,
+        keyToSubKeyMap: Pair<String, Map<String, String>>,
+    ): String {
+        val tsvImportMap =
+            CmdClickMap.recreateMapWithoutQuoteInKey(
+                keyToSubKeyMap.second
+            )
+        val importPath = tsvImportMap.get(
+            JsActionKeyManager.CommonPathKey.PATH.key
+        ) ?: return String()
+        val importMainSentence = listOf(
+            importPreWord,
+            importPath
+        ).joinToString(" ")
+        val useMapCon = tsvImportMap.get(
+            JsActionKeyManager.CommonPathKey.USE.key
+        )?.replace("|", "\n")
+        val changePhrase = TsvImportManager.changePhrase
+        val useMap = TsvImportManager.createMapByStrSepa(
+            useMapCon,
+            changePhrase,
+        ).toMap()
+        val tsvImportUsePhrase = TsvImportManager.tsvImportUsePhrase
+        val useSentence = useMap.map {
+            val key = it.key.trim()
+            if(
+                key.isEmpty()
+            ) return@map String()
+            val changeKey = it.value.trim()
+            "\t${key} ${changePhrase} ${changeKey}"
+        }.joinToString(",\n")
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "tsvUseMap.txt").absolutePath,
+//            listOf(
+//                "useCon: ${tsvImportMap.get(
+//                    JsActionKeyManager.CommonPathKey.USE.key
+//                )}",
+//                "useMap: ${useMap}",
+//                "useSentence: ${useSentence}",
+//            ).joinToString("\n\n")
+//        )
+        return listOf(
+            importMainSentence,
+            "${tsvImportUsePhrase} (",
+            useSentence,
+            ")"
+        ).joinToString("\n")
+    }
+}
+
 private object ImportConMaker {
 
     fun make(
@@ -1412,7 +1589,7 @@ private object ImportConMaker {
         }.joinToString("\n")
     }
 
-    fun execPut(
+    private fun execPut(
         importPreWord: String,
         keyToSubKeyMap: Pair<String, Map<String, String>>,
     ): String {
@@ -1955,6 +2132,16 @@ private fun makeReplaceVariableTsv(
     }
 }
 
+private fun trimBothEdgeQuoteForJsAc(
+    targetStr: String
+): String {
+    val trimCon = QuoteTool.trimBothEdgeQuote(targetStr)
+    val subKeyRegex = "[`\"']([|?&]as)['`\"]"
+    return trimCon.replace(
+        subKeyRegex,
+        "$1"
+    )
+}
 
 private fun howMacroFunc(
     firstFuncName: String?,

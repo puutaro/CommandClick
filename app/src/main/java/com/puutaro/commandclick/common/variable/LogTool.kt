@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import java.io.File
 
 object LogTool {
     val logPrefix = "### "
@@ -157,27 +156,37 @@ object LogTool {
 
     fun jsActionLog(
         jsAcKeyToSubKeyCon: String?,
-        jsActionMap: Map<String, String>?
+        keyToSubKeyMapListWithoutAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+        keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+        jsActionMap: Map<String, String>?,
     ){
         var times = 0
         val jsActionMapLogCon = jsActionMap?.filterKeys {
             it.isNotEmpty()
         }?.map {
-            val colorStrPair =
-                makeColorCode(times)
+            val colorStrPair = makeColorCode(times)
             times++
             makePreTagHolder(
                 colorStrPair,
-                "${it.key}: ${it.value}",
+                "${it.key}:\n ${it.value}",
             )
         }?.joinToString("\n")
+        val displayJsAcGeneratedCon = DisplayJsAcGenerate.make(
+            keyToSubKeyMapListWithoutAfterSubKey,
+            keyToSubKeyMapListWithAfterSubKey,
+        )
+        val colorStrPairForGenerated = makeColorCode(times)
+        val generatedPreTag = makePreTagHolder(
+            colorStrPairForGenerated,
+            "generated:\n ${displayJsAcGeneratedCon}"
+        )
         val displayJsAcSrc = DisplayJsAcSrc.make(
             jsAcKeyToSubKeyCon
         )
-        val colorStrPair = makeColorCode(times)
+        val colorStrPair = makeColorCode(times + 1)
         val srcPreTag = makePreTagHolder(
             colorStrPair,
-            "src: ${displayJsAcSrc}"
+            "src:\n ${displayJsAcSrc}"
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAcLog.txt").absolutePath,
@@ -195,9 +204,66 @@ object LogTool {
             listOf(
                 "[JsAction]\n",
                 jsActionMapLogCon,
+                generatedPreTag,
                 srcPreTag,
             ).joinToString("\n")
         )
+    }
+
+    object DisplayJsAcGenerate {
+        fun make(
+            keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
+        ): String {
+            val normalCon = makeKeyToSubKeyCon(keyToSubKeyMapListWithoutAfterSubKey)
+            val afterCon = makeKeyToSubKeyCon(keyToSubKeyMapListWithAfterSubKey).replace(
+                Regex("^"),
+                " "
+            ).replace(
+                Regex("\n"),
+                " "
+            )
+            val jsAcConGenerated = listOf(
+                "normal -> ",
+                normalCon,
+                " after -> ",
+                afterCon
+            ).joinToString("\n")
+            return jsAcConGenerated
+        }
+
+        private fun makeKeyToSubKeyCon(
+            keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
+        ): String {
+            if(
+                keyToSubKeyMapList.isNullOrEmpty()
+            ) return String()
+            return keyToSubKeyMapList.map {
+                val mainKeyName = "\n\n>|${it.first}"
+                val subKeyMap = it.second
+                val formatSubKeyCon = toSepa(subKeyMap)
+                listOf(
+                    mainKeyName,
+                    formatSubKeyCon
+                ).joinToString("\n")
+            }.joinToString("\n").replace(
+                Regex("[\n]+"),
+                "\n"
+            )
+        }
+
+        private fun toSepa(
+            subKeyMap: Map<String, String>
+        ): String {
+            return subKeyMap.map {
+                val subKey = " ?${it.key}"
+                val subKeyValue = it.value
+                listOf(
+                    subKey,
+                    subKeyValue
+                ).joinToString("=")
+            }.joinToString("\n")
+        }
     }
 
     object DisplayJsAcSrc {
