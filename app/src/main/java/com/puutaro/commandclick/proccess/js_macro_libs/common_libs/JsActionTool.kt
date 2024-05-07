@@ -629,6 +629,7 @@ object JsActionTool {
 private object KeyToSubKeyMapListMaker {
 
     private const val keySeparator = '|'
+    private const val jsActionEndComma = ','
     val jsActionsKeyPlusList =
 //        listOf(
 //            JsActionKeyManager.JsSubKey.ARGS.key,
@@ -711,22 +712,21 @@ private object KeyToSubKeyMapListMaker {
     ): String {
         val subKeyCon = keyToSubKeyMap.second
         val importPath = QuoteTool.trimBothEdgeQuote(subKeyCon)
-        return QuoteTool.replaceBySurroundedIgnore(
+        return QuoteTool.splitBySurroundedIgnore(
             SettingFile.read(
                 importPath,
                 File(currentAppDirPath, currentFannelName).absolutePath,
                 setReplaceVariableMap,
             ),
-            ',',
-            "\n"
-        ).let {
+            jsActionEndComma,
+        ).firstOrNull()?.let {
             ListSettingVariableListMaker.execRemoveMultipleNewLinesAndReplace(
                 it,
                 setReplaceVariableMap,
                 currentAppDirPath,
                 currentFannelName,
             )
-        }
+        } ?: String()
     }
 
 
