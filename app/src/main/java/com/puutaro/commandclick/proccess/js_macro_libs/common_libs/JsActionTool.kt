@@ -709,24 +709,17 @@ private object KeyToSubKeyMapListMaker {
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMap: Pair<String, String>,
     ): String {
-        val jsActionsPathSeparator = '?'
         val subKeyCon = keyToSubKeyMap.second
-        return QuoteTool.splitBySurroundedIgnore(
-            subKeyCon,
-            jsActionsPathSeparator
-        )
-            .map {
-            val importPath = QuoteTool.trimBothEdgeQuote(it)
-            QuoteTool.replaceBySurroundedIgnore(
-                SettingFile.read(
-                    importPath,
-                    File(currentAppDirPath, currentFannelName).absolutePath,
-                    setReplaceVariableMap,
-                ),
-                ',',
-                "\n"
-            )
-        }.joinToString("\n").let {
+        val importPath = QuoteTool.trimBothEdgeQuote(subKeyCon)
+        return QuoteTool.replaceBySurroundedIgnore(
+            SettingFile.read(
+                importPath,
+                File(currentAppDirPath, currentFannelName).absolutePath,
+                setReplaceVariableMap,
+            ),
+            ',',
+            "\n"
+        ).let {
             ListSettingVariableListMaker.execRemoveMultipleNewLinesAndReplace(
                 it,
                 setReplaceVariableMap,
