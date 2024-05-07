@@ -3,6 +3,8 @@ package com.puutaro.commandclick.common.variable
 import android.content.Context
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsFileSystem
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
@@ -10,6 +12,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object LogTool {
     val logPrefix = "### "
@@ -22,16 +25,16 @@ object LogTool {
     val leadLogBlackPair = "#545454" to "#4f574d"
 
     fun saveErrLogCon(
-        errCon: String,
+        errMsg: String,
         bodyPath: String,
     ){
-        val errConWithLabel = "\n[${errMark}]\n\n${errCon}\n"
+        val errConWithLabel = "\n[${errMark}]\n\n${errMsg}\n"
         val errEvidenceSrc = makeTopPreTagLogTagHolder(
             errRedCode,
             errConWithLabel
         )
         val errLogCon = execMakeErrorLogCon(
-            errCon,
+            errMsg,
             errEvidenceSrc,
             bodyPath,
         )
@@ -51,13 +54,13 @@ object LogTool {
     }
 
     private fun execMakeErrorLogCon(
-        errCon: String,
+        errMsg: String,
         errEvidenceSrc: String,
         bodyPath: String,
     ): String {
         val srcConWithRed = ErrWord.replace(
             ReadText(bodyPath).readText(),
-            errCon,
+            errMsg,
         )
         val isErrMarkFirst3Line = srcConWithRed.take(3).contains(errMark)
         val errEvidence = when(isErrMarkFirst3Line){
@@ -347,8 +350,8 @@ object LogTool {
             val deepLikeBlue = "#1f68de"
             val replaceActionImportVirtualSubKeyToColor =
                 "?${JsActionKeyManager.actionImportVirtualSubKey}=" to deepLikeBlue
-            val normalCon = makeKeyToSubKeyCon(keyToSubKeyMapListWithoutAfterSubKey)
-            val afterCon = makeKeyToSubKeyCon(keyToSubKeyMapListWithAfterSubKey).replace(
+            val normalCon = KeyToSubKeyConTool.makeCon(keyToSubKeyMapListWithoutAfterSubKey)
+            val afterCon = KeyToSubKeyConTool.makeCon(keyToSubKeyMapListWithAfterSubKey).replace(
                 Regex("^"),
                 " "
             ).replace(
@@ -369,39 +372,6 @@ object LogTool {
 
             )
             return jsAcConGenerated
-        }
-
-        private fun makeKeyToSubKeyCon(
-            keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
-        ): String {
-            if(
-                keyToSubKeyMapList.isNullOrEmpty()
-            ) return String()
-            return keyToSubKeyMapList.map {
-                val mainKeyName = "\n\n>|${it.first}"
-                val subKeyMap = it.second
-                val formatSubKeyCon = toSepa(subKeyMap)
-                listOf(
-                    mainKeyName,
-                    formatSubKeyCon
-                ).joinToString("\n")
-            }.joinToString("\n").replace(
-                Regex("[\n]+"),
-                "\n"
-            )
-        }
-
-        private fun toSepa(
-            subKeyMap: Map<String, String>
-        ): String {
-            return subKeyMap.map {
-                val subKey = " ?${it.key}"
-                val subKeyValue = it.value
-                listOf(
-                    subKey,
-                    subKeyValue
-                ).joinToString("=")
-            }.joinToString("\n")
         }
     }
 
@@ -436,6 +406,53 @@ object LogTool {
                 '|'
             ).map {
                 ">|${it}"
+            }.joinToString("\n")
+        }
+    }
+
+    object KeyToSubKeyConTool {
+
+//        fun makeMap(
+//            keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
+//        ): List<Map<String, String>> {
+//            if (
+//                keyToSubKeyMapList.isNullOrEmpty()
+//            ) return emptyList()
+//            return keyToSubKeyMapList.map {
+//                val subKeyMap = it.second
+//                subKeyMap
+//            }
+//        }
+        fun makeCon(
+            keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
+        ): String {
+            if (
+                keyToSubKeyMapList.isNullOrEmpty()
+            ) return String()
+            return keyToSubKeyMapList.map {
+                val mainKeyName = "\n\n>|${it.first}"
+                val subKeyMap = it.second
+                val formatSubKeyCon = toSepa(subKeyMap)
+                listOf(
+                    mainKeyName,
+                    formatSubKeyCon
+                ).joinToString("\n")
+            }.joinToString("\n").replace(
+                Regex("[\n]+"),
+                "\n"
+            )
+        }
+
+        private fun toSepa(
+            subKeyMap: Map<String, String>
+        ): String {
+            return subKeyMap.map {
+                val subKey = " ?${it.key}"
+                val subKeyValue = it.value
+                listOf(
+                    subKey,
+                    subKeyValue
+                ).joinToString("=")
             }.joinToString("\n")
         }
     }
@@ -611,8 +628,7 @@ object LogTool {
             METHOD_NOT_FOUND(
                 "Method not found",
                 Regex("\\.[a-zA-Z0-9_]+?\\([^)]*?\\)")
-//                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?\\([^)]*?\\)")
-            )
+            ),
         }
 
         private fun putColorByErrMsg(
@@ -631,7 +647,11 @@ object LogTool {
                     putColorConBySyntaxCheckEnum,
                     errMessage,
                 )
-            return putColorConByNoKeyWordJsErrCheck
+            val putColorConByOneTimesVarWord = VarNotUse.makePutColorConByOneTimesVarWord(
+                putColorConByNoKeyWordJsErrCheck,
+                errMessage,
+            )
+            return putColorConByOneTimesVarWord
         }
 
         private fun makePutColorConBySyntaxCheckEnum(
@@ -700,6 +720,141 @@ object LogTool {
         }
     }
 
+    object VarNotUse {
+
+//        private val varName = JsActionKeyManager.JsActionsKey.JS_VAR.key
+//        private val matchRegex = Regex("\b${varName}\b[ \t]*=\b[a-zA-Z0-9_]+\b")
+        private const val varNotUseErrMessagePrefix = "Not use var "
+        private const val varNotUseErrMessage = "${varNotUseErrMessagePrefix}'%s'"
+        private val messageExtractRegex = Regex("${varNotUseErrMessagePrefix}'(.*)'")
+
+
+        fun makePutColorConByOneTimesVarWord(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.contains(varNotUseErrMessagePrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val onTimesVarWord = errMessage.replace(
+                messageExtractRegex,
+                "$1"
+            )
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "jsLogColorCon.txt").absolutePath,
+                listOf(
+                    "onTimesVarWord: ${onTimesVarWord}",
+                    "curPutColorCon: ${curPutColorCon}",
+                ).joinToString("\n")
+            )
+            return curPutColorCon.replace(
+                Regex("([^a-zA-Z0-9])${onTimesVarWord}([^a-zA-Z0-9])"),
+                "$1<span style=\"color:${errRedCode};\">${onTimesVarWord}</span>$2"
+            )
+        }
+        fun checkJsAsSyntaxForVarNotUse(
+            context: Context?,
+            jsCon: String?,
+//            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
+//            keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
+//            keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+        ): Boolean {
+            val isOneWord = !checkOneTimesVarName(
+                context,
+                jsCon,
+//                keyToSubKeyMapListWithReplace,
+//                keyToSubKeyMapListWithoutAfterSubKey,
+//                keyToSubKeyMapListWithAfterSubKey,
+            ).isNullOrEmpty()
+            return isOneWord
+        }
+        private fun checkOneTimesVarName(
+            context: Context?,
+            jsCon: String?,
+//            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
+//            keyToSubKeyMapListWithoutAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+//            keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+        ): String? {
+            if(
+                jsCon.isNullOrEmpty()
+            ) return null
+            val oneVarName = findOneTimesVarName(jsCon)
+            val errMessage = varNotUseErrMessage.format(oneVarName)
+            if(
+                oneVarName.isNullOrEmpty()
+            ) return null
+            saveErrLogCon(
+                errMessage,
+                UsePath.jsDebugReportPath,
+            )
+            LogSystems.stdErr(
+                context,
+                errMessage,
+                debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
+            )
+
+            return varNotUseErrMessage.format(oneVarName)
+        }
+
+        private fun findOneTimesVarName(
+            jsCon: String,
+        ): String? {
+            val jsConNoCommentOut = jsCon.split("\n").filter {
+                val trimLine = it.trim()
+                val isNotCommentOut = !trimLine.startsWith("//")
+                val jsFileSystemClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                    JsFileSystem::class.java.simpleName
+                )
+                val isNotLog = !trimLine.startsWith("${jsFileSystemClassName}.stdLog")
+                isNotCommentOut&& isNotLog
+            }.joinToString("\n").let { "|${it}|" }
+            val varKeyName = JsActionKeyManager.JsActionsKey.JS_VAR.key
+            val varDefinitionRegex = Regex("${varKeyName}[ \t]+[a-zA-Z0-9]+[ \t]*=[^\n]*")
+            val oneTimesDefinition = varDefinitionRegex.findAll(jsConNoCommentOut).firstOrNull {
+                val varDefinition = it.value.trim()
+                val varName = extractVarName(varDefinition)
+                val jsConRemoveDefinition = jsConNoCommentOut.replace(
+                    Regex("${varKeyName}[ \t]+${varName}[ \t]*=[^\n]*"),
+                    String()
+                )
+                val varNameRegex = Regex("[^a-zA-Z0-9_]${varName}[^a-zA-Z0-9_]")
+                val isZero = varNameRegex.findAll(
+                    jsConRemoveDefinition
+                ).count() == 0
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "jsAcOnTimes.txt").absolutePath,
+//                    listOf(
+//                        "varDefinition: ${varDefinition}",
+//                        "jsConNoCommentOut: ${jsConNoCommentOut}",
+//                        "jsConRemoveDefinition: ${jsConRemoveDefinition}",
+//                        "varName: AA${varName}AA",
+//                        "cout: ${varNameRegex.findAll(
+//                            jsConRemoveDefinition
+//                        ).count()}"
+//                    ).joinToString("\n\n")
+//                )
+                isZero
+            }?.value ?: return null
+            return extractVarName(oneTimesDefinition)
+        }
+
+        private fun extractVarName(
+            varDefinition: String,
+        ): String {
+            val varKeyName = JsActionKeyManager.JsActionsKey.JS_VAR.key
+            return varDefinition
+                .removePrefix(varKeyName)
+                .split("=")
+                .firstOrNull()
+                ?.trim()
+                ?: String()
+
+        }
+
+
+    }
+
     object SyntaxCheck {
 
         enum class CheckEnums(
@@ -716,7 +871,7 @@ object LogTool {
                 "Method name must be half-width alphanumeric characters",
                 Regex("`[^\n]*[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()]+?[^\n]*?\\([^)]*?\\)[^\n]*`"),
                 Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()]+?[^\n]*?\\([^)\n]*?\\)"),
-            )
+            ),
         }
 
         fun checkJsAcSyntax(

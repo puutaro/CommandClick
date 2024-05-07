@@ -107,8 +107,11 @@ object JsActionTool {
             keyToSubKeyCon,
             setReplaceVariableMap,
         ) ?: return null
+        val keyToSubKeyMapListWithReplace = keyToSubMapTypeMap.get(
+            KeyToSubConType.WITH_REPLACE
+        )
         val jsRepValHolderMap = makeRepValHolderMap(
-            keyToSubMapTypeMap
+            keyToSubKeyMapListWithReplace
         )
 
         val keyToSubKeyMapListWithAfterSubKey = keyToSubMapTypeMap.get(
@@ -173,11 +176,27 @@ object JsActionTool {
             keyToSubKeyMapListWithAfterSubKey,
             jsActionMapToJsConOnlyReplace
         )
-        val isErr = LogTool.SyntaxCheck.checkJsAcSyntax(
-            fragment.context,
-            jsActionMap?.get(JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key)
+        val context = fragment.context
+        val checkJsCon = jsActionMap?.get(JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key)
+        val isSyntaxErr = LogTool.SyntaxCheck.checkJsAcSyntax(
+            context,
+            checkJsCon
         )
-        if(isErr){
+        if(isSyntaxErr){
+            return mapOf(
+                JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
+                        to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
+                JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
+            )
+        }
+        val isVarNotUseErr = LogTool.VarNotUse.checkJsAsSyntaxForVarNotUse(
+            context,
+            checkJsCon
+//            keyToSubKeyMapListWithReplace,
+//            keyToSubKeyMapListWithoutAfterSubKey,
+//            keyToSubKeyMapListWithAfterSubKey,
+        )
+        if(isVarNotUseErr){
             return mapOf(
                 JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
                         to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
@@ -188,11 +207,9 @@ object JsActionTool {
     }
 
     private fun makeRepValHolderMap(
-        keyToSubConTypeMap:  Map<KeyToSubConType, List<Pair<String, Map<String, String>>>?>
+        keyToSubKeyMapListWithReplace:   List<Pair<String, Map<String, String>>>?
     ): Map<String, String>? {
-        return keyToSubConTypeMap.get(
-            KeyToSubConType.WITH_REPLACE
-        )?.map {
+        return keyToSubKeyMapListWithReplace?.map {
             it.second.map{
                     repValMapSrc ->
                 repValMapSrc.key to repValMapSrc.value
