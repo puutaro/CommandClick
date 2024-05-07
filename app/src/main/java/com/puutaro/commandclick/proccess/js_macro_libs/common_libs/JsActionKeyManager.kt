@@ -55,6 +55,69 @@ object JsActionKeyManager {
 
     const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
+    const val actionImportVirtualSubKey = "actionImportCon"
+
+
+    object ActionImportManager {
+
+        private const val mainKeySeparator = '|'
+        private const val subKeySeparator = '?'
+        fun putActionImportSubKey(mainAndSubKeyCon: String): String {
+            return QuoteTool.splitBySurroundedIgnore(
+                mainAndSubKeyCon,
+                mainKeySeparator
+            ).map {
+                val subKeyToConList = QuoteTool.splitBySurroundedIgnore(
+                    it,
+                    subKeySeparator
+                )
+                val acImportMark = "${subKeySeparator}${actionImportVirtualSubKey}="
+                val firstCon = subKeyToConList.firstOrNull()?: String()
+                val firstConWithAcImportMark = "${firstCon}${acImportMark}"
+                val secondLaterConList = when(subKeyToConList.size > 0){
+                    true -> subKeyToConList.filterIndexed { index, s ->
+                        index > 0
+                    }
+                    else -> emptyList()
+                }
+                listOf(
+                    listOf(firstConWithAcImportMark),
+                    secondLaterConList
+                ).flatten().joinToString(subKeySeparator.toString())
+            }.joinToString(mainKeySeparator.toString())
+        }
+
+//        fun extractActionImportMarkPair(
+//            subKeyToConPairList: List<Pair<String, String>>?,
+//        ): Pair<
+//                Map<String, String>,
+//                List<Pair<String, String>>?
+//                > {
+//            val defaultBlankMap = emptyMap<String, String>()
+//            if(
+//                subKeyToConPairList.isNullOrEmpty()
+//            ) return defaultBlankMap to subKeyToConPairList
+//            val actionImportSubKeyToConMap = subKeyToConPairList.filter {
+//                    keyToCon ->
+//                val subKeyName = keyToCon.first
+//                if (
+//                    subKeyName == actionImportMarkSubKey
+//                ) return@filter true
+//                false
+//            }.toMap()
+//            if(
+//                actionImportSubKeyToConMap.isEmpty()
+//            ) return defaultBlankMap to subKeyToConPairList
+//            val subKeyToConPairListWithoutAfter = subKeyToConPairList.filter {
+//                val subKeyName = it.first
+//                val isNotActinImportMarkKey =
+//                    subKeyName == actionImportMarkSubKey
+//                isNotActinImportMarkKey
+//            }
+//            return actionImportSubKeyToConMap to subKeyToConPairListWithoutAfter
+//        }
+
+    }
 
     object MethodManager {
 
@@ -517,6 +580,7 @@ object JsActionKeyManager {
             JsSubKey.ON_LOG.key,
             JsSubKey.METHOD.key,
             JsSubKey.METHOD_ARGS.key,
+            actionImportVirtualSubKey,
         )
 
         private val onlySubKeyListForVar =

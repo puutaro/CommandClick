@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtr
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
@@ -296,7 +297,6 @@ object LogTool {
                 }.joinToString("\n")
                 else -> String()
             }
-//        return "${displayGenrePreTagCon}: \n${bodyPreTagCon}"
         return DetailTagManager.putHolder(
             displayGenrePreTagCon,
             bodyPreTagCon
@@ -317,7 +317,6 @@ object LogTool {
                 }.joinToString("\n")
                 else -> String()
             }
-//        return "${displayGenrePreTagCon}: \n${bodyPreTagCon}"
         return DetailTagManager.putOpenHolder(
             displayGenrePreTagCon,
             bodyPreTagCon
@@ -340,10 +339,14 @@ object LogTool {
 
 
     object DisplayJsAcGenerate {
+
         fun make(
             keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
             keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
         ): String {
+            val deepLikeBlue = "#1f68de"
+            val replaceActionImportVirtualSubKeyToColor =
+                "?${JsActionKeyManager.actionImportVirtualSubKey}=" to deepLikeBlue
             val normalCon = makeKeyToSubKeyCon(keyToSubKeyMapListWithoutAfterSubKey)
             val afterCon = makeKeyToSubKeyCon(keyToSubKeyMapListWithAfterSubKey).replace(
                 Regex("^"),
@@ -357,7 +360,14 @@ object LogTool {
                 normalCon,
                 " after -> ",
                 afterCon
-            ).joinToString("\n")
+            ).joinToString("\n").replace(
+                replaceActionImportVirtualSubKeyToColor.first,
+                execMakeSpanTagHolder(
+                    replaceActionImportVirtualSubKeyToColor.second,
+                    replaceActionImportVirtualSubKeyToColor.first,
+                )
+
+            )
             return jsAcConGenerated
         }
 
