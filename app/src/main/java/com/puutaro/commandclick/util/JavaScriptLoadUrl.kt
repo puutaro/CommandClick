@@ -3,7 +3,6 @@ package com.puutaro.commandclick.util
 import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
