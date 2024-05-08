@@ -359,7 +359,7 @@ object JavaScriptLoadUrl {
                         "const errMessage = error.message;" +
                         "if(errMessage.includes(\"exitZero\")){return;};" +
                         "jsToast.errLog(`ERROR ${'$'}{errMessage}`);" +
-                        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", errMessage);" +
+                        "jsFileSystem.revUpdateFile(errMessage);" +
                         "jsFileSystem.errJsLog(errMessage);" +
                     "};" +
                 "})();"

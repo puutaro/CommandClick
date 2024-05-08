@@ -200,12 +200,10 @@ class JsFileSystem(
 
     @JavascriptInterface
     fun revUpdateFile(
-        bodyPath: String,
         errCon: String,
     ){
         LogTool.saveErrLogCon(
             errCon,
-            bodyPath,
         )
     }
 

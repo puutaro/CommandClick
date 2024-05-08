@@ -131,11 +131,7 @@ object WebChromeClientSetter {
                         )
                     }
                     withContext(Dispatchers.IO) {
-                        val execDebugJsPath = UsePath.jsDebugReportPath
-                        LogTool.saveErrLogCon(
-                            errOutput,
-                            execDebugJsPath,
-                        )
+                        LogTool.saveErrLogCon(errOutput)
                     }
                     withContext(Dispatchers.IO) {
                         LogSystems.stdErr(

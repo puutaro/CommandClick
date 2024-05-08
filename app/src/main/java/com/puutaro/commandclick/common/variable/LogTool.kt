@@ -11,7 +11,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyMa
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object LogTool {
@@ -23,10 +22,19 @@ object LogTool {
     val leadLogGreenPair = "#04b017" to "#077814"
     val logBlackPair = "#000000" to "#0e6266"
     val leadLogBlackPair = "#545454" to "#4f574d"
+    private var debugReportCon = String()
+
+    fun writeDebugReportCon(srcCon: String){
+        debugReportCon = srcCon
+    }
+
+    fun readDebugReportCon(): String {
+        return debugReportCon
+    }
+
 
     fun saveErrLogCon(
         errMsg: String,
-        bodyPath: String,
     ){
         val errConWithLabel = "\n[${errMark}]\n\n${errMsg}\n"
         val errEvidenceSrc = makeTopPreTagLogTagHolder(
@@ -36,7 +44,6 @@ object LogTool {
         val errLogCon = execMakeErrorLogCon(
             errMsg,
             errEvidenceSrc,
-            bodyPath,
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "err_revUdate.txt").absolutePath,
@@ -47,19 +54,16 @@ object LogTool {
 //                "saveCon: ${errLogCon}",
 //            ).joinToString("\n\n\n")
 //        )
-        FileSystems.writeFile(
-            bodyPath,
-            errLogCon
-        )
+        writeDebugReportCon(errLogCon)
     }
 
     private fun execMakeErrorLogCon(
         errMsg: String,
         errEvidenceSrc: String,
-        bodyPath: String,
     ): String {
         val srcConWithRed = ErrWord.replace(
-            ReadText(bodyPath).readText(),
+            readDebugReportCon(),
+//            ReadText(UsePath.jsDebugReportPath).readText(),
             errMsg,
         )
         val isErrMarkFirst3Line = srcConWithRed.take(3).contains(errMark)
@@ -190,8 +194,7 @@ object LogTool {
 //                ).joinToString("\n")}"
 //            ).joinToString("\n\n") + "\n----------\n"
 //        )
-        FileSystems.writeFile(
-            UsePath.jsDebugReportPath,
+        writeDebugReportCon(
             listOf(
                 "[JsAction]\n",
                 typeLogConWithTag,
@@ -200,6 +203,16 @@ object LogTool {
                 jsConLogConWithTag,
             ).joinToString("\n")
         )
+//        FileSystems.writeFile(
+//            UsePath.jsDebugReportPath,
+//            listOf(
+//                "[JsAction]\n",
+//                typeLogConWithTag,
+//                srcPreTagCon,
+//                generatedDetailTagCon,
+//                jsConLogConWithTag,
+//            ).joinToString("\n")
+//        )
     }
 
     private fun makeTypeWithTag (
@@ -786,7 +799,6 @@ object LogTool {
             ) return null
             saveErrLogCon(
                 errMessage,
-                UsePath.jsDebugReportPath,
             )
             LogSystems.stdErr(
                 context,
@@ -915,7 +927,6 @@ object LogTool {
                 ) return@forEach
                 saveErrLogCon(
                     errName,
-                    UsePath.jsDebugReportPath,
                 )
                 LogSystems.stdErr(
                     context,

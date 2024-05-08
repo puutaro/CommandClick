@@ -221,13 +221,12 @@ object JsDebugger {
         terminalFragment: TerminalFragment,
         intent: Intent
     ){
-        val execDebugJsPath = UsePath.jsDebugReportPath
-        val debugConSrc = ReadText(
-            execDebugJsPath,
-        ).readText()
+
+        val debugConSrc = LogTool.readDebugReportCon()
         val debugConWithDetailTag = debugConSrc.let {
             LogTool.DetailTagManager.replace(it)
         }
+        val execDebugJsPath = UsePath.jsDebugReportPath
         FileSystems.writeFile(
             execDebugJsPath,
             debugConWithDetailTag,
@@ -304,7 +303,6 @@ object JsDebugger {
         val logPrefixRegex = Regex(
             "^${LogSystems.logPrefix}"
         )
-//        val spanTagHolder = LogTool.spanTagHolder
         val errMark = LogTool.errMark
         var times = 0
         val sysLogCon = ReadText(
@@ -340,10 +338,6 @@ object JsDebugger {
                     leadColorStr,
                     lead
                 ),
-//                spanTagHolder.format(
-//                    leadColorStr,
-//                    lead
-//                ),
                 LogTool.makeSpanTagHolder(
                     colorStr,
                     body.trim().trim('\n')
