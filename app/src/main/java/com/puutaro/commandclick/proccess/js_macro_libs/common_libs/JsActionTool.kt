@@ -35,7 +35,7 @@ object JsActionTool {
     private val replaceMainKeyName = JsActionKeyManager.JsActionsKey.REPLACE.key
     private val overrideMainKeyName = JsActionKeyManager.JsActionsKey.OVERRIDE.key
     private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_PATH.key
-    private val jsConKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
+//    private val jsConKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val afterSubKeyName = JsActionKeyManager.JsSubKey.AFTER.key
 
@@ -542,7 +542,7 @@ object JsActionTool {
             keyToSubKeyMapListWithoutAfterSubKey.isNullOrEmpty()
         ) return null to null
         val tsvImportCon = TsvImportConMaker.make(
-            keyToSubKeyMapListWithoutAfterSubKey
+            keyToSubKeyMapListWithoutAfterSubKey,
         )
         val jsImportCon = ImportConMaker.make(
             JsActionKeyManager.JsActionsKey.JS_IMPORT.key
@@ -723,26 +723,18 @@ private object KeyToSubKeyMapListMaker {
             File(currentAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
         )
-        return QuoteTool.splitBySurroundedIgnore(
+        return QuoteTool.replaceBySurroundedIgnore(
             importConSrc,
             jsActionEndComma,
-        ).firstOrNull()?.let {
-            val importConSrcWithMark =
-                JsActionKeyManager.ActionImportManager.putActionImportSubKey(it)
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "jsImport.txt").absolutePath,
-                listOf(
-                    "importConSrc: ${importConSrc}",
-                    "importConSrcWithMark: ${importConSrcWithMark}",
-                ).joinToString("\n")
-            )
+            "\n"
+        ).let {
             ListSettingVariableListMaker.execRemoveMultipleNewLinesAndReplace(
-                importConSrcWithMark,
+                it,
                 setReplaceVariableMap,
                 currentAppDirPath,
                 currentFannelName,
             )
-        } ?: String()
+        }
     }
 
 
@@ -817,8 +809,8 @@ private object PairToMapInList {
                     mapConSrc
                 )
 
-                JsActionKeyManager.JsActionsKey.JS_CON
-                -> String() to emptyMap()
+//                JsActionKeyManager.JsActionsKey.JS_CON
+//                -> String() to emptyMap()
 //                    toJsFuncForJsCon(
 //                    mapConSrc
 //                )
