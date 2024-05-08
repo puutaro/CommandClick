@@ -214,7 +214,7 @@ object TsvImportManager {
     ): String {
         if(
             useKeyMap.isNullOrEmpty()
-        ) return targetCon
+        ) return String()
         return targetCon.split("\n").map {
             val keyAndValueList = it.split("\t")
             val key = keyAndValueList.firstOrNull()
@@ -228,22 +228,6 @@ object TsvImportManager {
                 ?: String()
             "${changedKey}\t${value}"
         }.joinToString("\n")
-//        useKeyMap.forEach {
-//            val keyNameWithTab = "${it.key}\t"
-//            val changeKeyName = it.value.trim()
-//            if(
-//                changeKeyName == continueCurrentKeyMark
-//            ) return@forEach
-//            val valueWithTab = "${it.value}\t"
-//            repCon = repCon.replace(
-//                Regex("^${keyNameWithTab}"),
-//                valueWithTab
-//            ).replace(
-//                Regex("\n${keyNameWithTab}"),
-//                "\n${valueWithTab}"
-//            )
-//        }
-//        return repCon
     }
 
     fun removeTsvImport(
