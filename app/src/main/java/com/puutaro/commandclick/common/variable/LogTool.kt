@@ -203,16 +203,6 @@ object LogTool {
                 jsConLogConWithTag,
             ).joinToString("\n")
         )
-//        FileSystems.writeFile(
-//            UsePath.jsDebugReportPath,
-//            listOf(
-//                "[JsAction]\n",
-//                typeLogConWithTag,
-//                srcPreTagCon,
-//                generatedDetailTagCon,
-//                jsConLogConWithTag,
-//            ).joinToString("\n")
-//        )
     }
 
     private fun makeTypeWithTag (
@@ -735,8 +725,6 @@ object LogTool {
 
     object VarNotUse {
 
-//        private val varName = JsActionKeyManager.JsActionsKey.JS_VAR.key
-//        private val matchRegex = Regex("\b${varName}\b[ \t]*=\b[a-zA-Z0-9_]+\b")
         private const val varNotUseErrMessagePrefix = "Not use var "
         private const val varNotUseErrMessage = "${varNotUseErrMessagePrefix}'%s'"
         private val messageExtractRegex = Regex("${varNotUseErrMessagePrefix}'(.*)'")
@@ -750,20 +738,20 @@ object LogTool {
             if (
                 isNotErr
             ) return curPutColorCon
-            val onTimesVarWord = errMessage.replace(
+            val oneTimesVarWord = errMessage.replace(
                 messageExtractRegex,
                 "$1"
             )
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "jsLogColorCon.txt").absolutePath,
-                listOf(
-                    "onTimesVarWord: ${onTimesVarWord}",
-                    "curPutColorCon: ${curPutColorCon}",
-                ).joinToString("\n")
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsLogColorCon.txt").absolutePath,
+//                listOf(
+//                    "onTimesVarWord: ${onTimesVarWord}",
+//                    "curPutColorCon: ${curPutColorCon}",
+//                ).joinToString("\n")
+//            )
             return curPutColorCon.replace(
-                Regex("([^a-zA-Z0-9])${onTimesVarWord}([^a-zA-Z0-9])"),
-                "$1<span style=\"color:${errRedCode};\">${onTimesVarWord}</span>$2"
+                Regex("([^a-zA-Z0-9_])${oneTimesVarWord}([^a-zA-Z0-9_])"),
+                "$1<span style=\"color:${errRedCode};\">${oneTimesVarWord}</span>$2"
             )
         }
         fun checkJsAsSyntaxForVarNotUse(
