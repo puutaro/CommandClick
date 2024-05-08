@@ -15,6 +15,7 @@ function launchWebview(launchUrlString){
     const tsvCon = [
         `urlConSaveParentDirPath\t${EXTERNAL_EXEC_REPLACE_TXT3}`,
         `compSuffix\t${EXTERNAL_EXEC_REPLACE_TXT4}`,
+        `onSaveUrlHistory\t${EXTERNAL_EXEC_REPLACE_TXT5}`,
     ].join("\n");
     jsFileSystem.writeLocalFile(
         `${saveWebConArgsTsvPath}`,

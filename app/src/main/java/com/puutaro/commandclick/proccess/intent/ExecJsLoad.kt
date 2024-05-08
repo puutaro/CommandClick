@@ -10,7 +10,7 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.history.JsFilePathToHistory
+import com.puutaro.commandclick.proccess.history.UrlHistoryRegister
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.util.*
@@ -168,7 +168,7 @@ object ExecJsLoad {
             tempOnDisplayUpdate,
         )
 
-        JsFilePathToHistory.insert(
+        UrlHistoryRegister.insertJsPath(
             recentAppDirPath,
             selectedJsFileName,
         )

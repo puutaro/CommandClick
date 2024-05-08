@@ -4,7 +4,6 @@ import android.webkit.ValueCallback
 import android.webkit.WebView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -12,14 +11,12 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
+import com.puutaro.commandclick.proccess.history.UrlHistoryRegister
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.*
-import java.io.File
 
 
 object WrapWebHistoryUpdater {
@@ -144,26 +141,10 @@ object WrapWebHistoryUpdater {
         if(
             searchViewText.isEmpty()
         ) return
-
-        val appUrlSystemDirPath =
-            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-        val cmdclickUrlHistoryFileName =
-            UsePath.cmdclickUrlHistoryFileName
-        val takeHistoryNum = 500
-        val updatingHistory =
-            "${ulrTitle}\t${webViewUrl}\n" + ReadText(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlHistoryFileName
-                ).absolutePath
-        ).textToList().take(takeHistoryNum).joinToString("\n")
-        FileSystems.writeFile(
-            File(
-                appUrlSystemDirPath,
-                cmdclickUrlHistoryFileName,
-            ).absolutePath,
-            updatingHistory
+        UrlHistoryRegister.insert(
+            currentAppDirPath,
+            ulrTitle,
+            webViewUrl,
         )
-
     }
 }

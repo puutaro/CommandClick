@@ -13,7 +13,7 @@ object JsActionKeyManager {
     ) {
         JS("js"),
         JS_VAR("var"),
-        JS_CON("jsCon"),
+//        JS_CON("jsCon"),
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
         TSV_IMPORT("tsvImport"),
