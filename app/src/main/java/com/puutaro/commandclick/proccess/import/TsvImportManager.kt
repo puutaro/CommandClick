@@ -14,14 +14,9 @@ object TsvImportManager {
     const val tsvImportPreWord = "tsvimport"
     const val tsvImportUsePhrase = "use"
     private val tsvImportRegexStr =
-        "\n[ \t]*${tsvImportPreWord}[^\n]+(\n${tsvImportUsePhrase}[ \t]*\\([^)]*\\))*"
+        "\n[ \t]*${tsvImportPreWord}[^\n]+(\n[ \t]*${tsvImportUsePhrase}[ \t]*\\([^)]*\\))*"
     val tsvImportRegex = tsvImportRegexStr.toRegex()
     const val changePhrase = "=>"
-
-//        "\n${tsvImportPreWord}[^\n]+\nas".toRegex()
-//    [ \t]+[^ ]+
-//    const val tsvImportAsPreWord = "tsvimportAs"
-//    private val tsvImportRegex = "\n${tsvImportPreWord}[^\n]*".toRegex()
 
     fun concatRepValWithTsvImport(
         scriptPath: String,
@@ -39,8 +34,7 @@ object TsvImportManager {
             recentAppDirPath,
             scriptFileName
         )
-//        val tsvImportRegex = "\n${tsvImportPreWord}([^\n]+as[ \t]+[^\n])+".toRegex()
-        val result = tsvImportRegex.findAll(jsConForTsv)
+        val result = tsvImportRegex.findAll("\n$jsConForTsv")
 
         val tsvKeyValueMap = makeTsvKeyValueMap(
             result,
@@ -58,13 +52,20 @@ object TsvImportManager {
         jsConForTsv: String,
         setReplaceVariableCompleteMap: Map<String, String>? = null
     ): Map<String, String> {
-        val result = tsvImportRegex.findAll(jsConForTsv)
+        val result = tsvImportRegex.findAll("\n$jsConForTsv")
         val tsvKeyValueMap = makeTsvKeyValueMap(
             result,
             setReplaceVariableCompleteMap,
             String(),
             String()
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "tsvimportRepVal.txt").absolutePath,
+//            listOf(
+//                "jsConForTsv: ${jsConForTsv}",
+//                "tsvKeyValueMap: ${tsvKeyValueMap}",
+//            ).joinToString("\n\n")
+//        )
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
             true -> tsvKeyValueMap
             else ->  setReplaceVariableCompleteMap + tsvKeyValueMap
