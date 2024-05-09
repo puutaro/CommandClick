@@ -1,11 +1,11 @@
 
 longClick=
-	jsPath=MENU
+	func=MENU
 	?args=
 		menuPath=`${JS_IMPORT_MANAGER_MENU_PATH}`
 		&onHideFooter=,
 click=
-	jsPath=MENU
+	func=MENU
 	?args=
 		menuPath=`${JS_IMPORT_MANAGER_MENU_PATH}`
 		&onHideFooter=,

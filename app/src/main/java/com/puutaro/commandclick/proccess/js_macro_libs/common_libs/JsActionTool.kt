@@ -4,7 +4,6 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,7 +17,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -34,7 +32,7 @@ object JsActionTool {
     private val jsKeyName = JsActionKeyManager.JsActionsKey.JS.key
     private val replaceMainKeyName = JsActionKeyManager.JsActionsKey.REPLACE.key
     private val overrideMainKeyName = JsActionKeyManager.JsActionsKey.OVERRIDE.key
-    private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_PATH.key
+    private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_FUNC.key
 //    private val jsConKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val afterSubKeyName = JsActionKeyManager.JsSubKey.AFTER.key
@@ -779,7 +777,7 @@ private object KeyToSubKeyMapListMaker {
 private object PairToMapInList {
 
     private val jsMainKeyName = JsActionKeyManager.JsActionsKey.JS.key
-    private val jsPathMainKeyName = JsActionKeyManager.JsActionsKey.JS_PATH.key
+    private val jsFuncMainKeyName = JsActionKeyManager.JsActionsKey.JS_FUNC.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
     private const val jsSubKeySeparator = '?'
@@ -815,9 +813,13 @@ private object PairToMapInList {
 //                    mapConSrc
 //                )
 
+                JsActionKeyManager.JsActionsKey.JS_FUNC
+                -> convertFuncToJsFunc(
+                    mapConSrc,
+                )
                 JsActionKeyManager.JsActionsKey.JS_PATH
                 -> convertJsPathToJsFunc(
-                    mapConSrc,
+                    mapConSrc
                 )
 
                 JsActionKeyManager.JsActionsKey.TSV_IMPORT -> {
@@ -921,15 +923,15 @@ private object PairToMapInList {
         return jsActionMainKey.key to importMap
     }
 
-    private fun convertJsPathToJsFunc(
+    private fun convertFuncToJsFunc(
         jsPathMapConSrc: String,
     ): Pair<String, Map<String, String>> {
-        val jsPathConPairListSrcBeforeFilter = CmdClickMap.createMap(
-            "${jsPathMainKeyName}=${jsPathMapConSrc}",
+        val funcConPairListSrcBeforeFilter = CmdClickMap.createMap(
+            "${jsFuncMainKeyName}=${jsPathMapConSrc}",
             '?'
         )
-        val jsPathConPairListSrc = JsActionKeyManager.OnlySubKeyMapForShortSyntax.filterForFunc(
-            jsPathConPairListSrcBeforeFilter
+        val funcConPairListSrc = JsActionKeyManager.OnlySubKeyMapForShortSyntax.filterForFunc(
+            funcConPairListSrcBeforeFilter
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAcFunc.txt").absolutePath,
@@ -941,7 +943,7 @@ private object PairToMapInList {
 //        )
         val onlySubKeyMapToJsPathConPairList =
             JsActionKeyManager.OnlySubKeyMapForShortSyntax.extractForFunc(
-                jsPathConPairListSrc
+                funcConPairListSrc
             )
         val onlySubKeyMapSrc = onlySubKeyMapToJsPathConPairList.first
         val actionImportVirtualSubKey = JsActionKeyManager.actionImportVirtualSubKey
@@ -957,35 +959,93 @@ private object PairToMapInList {
                 subKey != actionImportVirtualSubKey
             isNotActionImportVirtualSubKey
         }
-        val jsPathConPairList =
+        val funcConPairList =
             onlySubKeyMapToJsPathConPairList.second
+                ?: emptyList()
+        val funcCon = CmdClickMap.getFirst(
+            funcConPairList,
+            jsFuncMainKeyName
+        ) ?: return String() to mapOf()
+        val argsMapCon = CmdClickMap.getFirst(
+            funcConPairList,
+            argsSubKeyName
+        ) ?: String()
+        val jsFuncCon = QuoteTool.trimBothEdgeQuote(funcCon)
+        return macroOrJsInterToJsFuncForFunc(
+            jsFuncCon,
+            argsMapCon,
+            jsActionImportMarkMap,
+            onlySubKeyMap
+        )
+//        val isJsPathCon = File(jsFuncCon).isFile
+//        return when (true) {
+//            isJsPathCon -> toJsFuncForPath(
+//                jsFuncCon,
+//                argsMapCon,
+//                onlySubKeyMap
+//            )
+//            else ->
+//        }
+    }
+
+    private fun convertJsPathToJsFunc(
+        jsPathMapConSrc: String,
+    ): Pair<String, Map<String, String>> {
+        val jsPathPairListSrcBeforeFilter = CmdClickMap.createMap(
+            "${jsFuncMainKeyName}=${jsPathMapConSrc}",
+            '?'
+        )
+        val jsPathConPairListSrc = JsActionKeyManager.OnlySubKeyMapForShortSyntax.filterForFunc(
+            jsPathPairListSrcBeforeFilter
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAcFunc.txt").absolutePath,
+//            listOf(
+//                "jsPathMapConSrc: ${jsPathMapConSrc}",
+//                "jsPathConPairListSrcBeforeFilter: ${jsPathConPairListSrcBeforeFilter}",
+//                "jsPathConPairListSrc: ${jsPathConPairListSrc}",
+//            ).joinToString("\n\n")
+//        )
+        val onlySubKeyMapToJsPathPairList =
+            JsActionKeyManager.OnlySubKeyMapForShortSyntax.extractForFunc(
+                jsPathConPairListSrc
+            )
+        val onlySubKeyMapSrc = onlySubKeyMapToJsPathPairList.first
+        val actionImportVirtualSubKey = JsActionKeyManager.actionImportVirtualSubKey
+        val jsActionImportMarkMap = onlySubKeyMapSrc.filterKeys {
+                subKey ->
+            val isActionImportVirtualSubKey =
+                subKey == actionImportVirtualSubKey
+            isActionImportVirtualSubKey
+        }
+        val onlySubKeyMap = onlySubKeyMapSrc.filterKeys {
+                subKey ->
+            val isNotActionImportVirtualSubKey =
+                subKey != actionImportVirtualSubKey
+            isNotActionImportVirtualSubKey
+        }
+        val jsPathConPairList =
+            onlySubKeyMapToJsPathPairList.second
                 ?: emptyList()
         val jsPathCon = CmdClickMap.getFirst(
             jsPathConPairList,
-            jsPathMainKeyName
+            jsFuncMainKeyName
         ) ?: return String() to mapOf()
         val argsMapCon = CmdClickMap.getFirst(
             jsPathConPairList,
             argsSubKeyName
         ) ?: String()
-        val jsPathStr = QuoteTool.trimBothEdgeQuote(jsPathCon)
-        val isJsPathCon = File(jsPathStr).isFile
-        return when (true) {
-            isJsPathCon -> toJsFuncForPath(
-                jsPathStr,
-                argsMapCon,
-                onlySubKeyMap
-            )
-            else -> macroOrJsInterToJsFuncForJsPath(
-                jsPathStr,
-                argsMapCon,
-                jsActionImportMarkMap,
-                onlySubKeyMap
-            )
-        }
+        val jsFuncCon = QuoteTool.trimBothEdgeQuote(jsPathCon)
+        return toJsFuncForPath(
+            jsFuncCon,
+            argsMapCon,
+            onlySubKeyMap,
+            jsActionImportMarkMap
+
+        )
     }
 
-    private fun macroOrJsInterToJsFuncForJsPath(
+    private fun macroOrJsInterToJsFuncForFunc(
         jsPathCon: String,
         argsMapCon: String,
         jsActionImportMarkMap: Map<String, String>,
@@ -1001,6 +1061,7 @@ private object PairToMapInList {
     private fun toJsFuncForPath(
         jsPathCon: String,
         argsMapCon: String,
+        onlySubKeyMap: Map<String, String>,
         jsActionImportMarkMap: Map<String, String>,
     ): Pair<String, Map<String, String>> {
         val repMapPrefix = "repMapCon"
@@ -1015,21 +1076,21 @@ private object PairToMapInList {
             funcSubKeyName to "jsUrl.loadJsPath",
             JsActionKeyManager.JsSubKey.ARGS.key to argsCon,
             JsActionKeyManager.JsSubKey.DESC.key to "path: ${jsPathCon}",
-        )
+        ) + onlySubKeyMap
         return jsMainKeyName to jsKeyCon
     }
 
 
-    private fun toJsFuncForJsCon(
-        jsCon: String,
-    ): Pair<String, Map<String, String>> {
-        val jsConPrefix = JsActionKeyManager.JsConManager.Flag.JS_CON_PREFIX.flag
-        val jsConWithPrefix = "${jsConPrefix}${jsCon}"
-        val jsMap = mapOf(
-            funcSubKeyName to jsConWithPrefix,
-        )
-        return jsMainKeyName to jsMap
-    }
+//    private fun toJsFuncForJsCon(
+//        jsCon: String,
+//    ): Pair<String, Map<String, String>> {
+//        val jsConPrefix = JsActionKeyManager.JsConManager.Flag.JS_CON_PREFIX.flag
+//        val jsConWithPrefix = "${jsConPrefix}${jsCon}"
+//        val jsMap = mapOf(
+//            funcSubKeyName to jsConWithPrefix,
+//        )
+//        return jsMainKeyName to jsMap
+//    }
 }
 
 private object VarShortSyntaxToJsFunc {

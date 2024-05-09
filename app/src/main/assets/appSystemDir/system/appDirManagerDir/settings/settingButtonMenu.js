@@ -1,4 +1,4 @@
 
 name=create app dir
 |icon=plus
-|jsPath=ADD_APP_DIR,
+|func=ADD_APP_DIR,

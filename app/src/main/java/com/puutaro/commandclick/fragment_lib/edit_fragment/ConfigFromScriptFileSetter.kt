@@ -21,13 +21,11 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonI
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePrefTool
-import java.io.File
 
 object ConfigFromScriptFileSetter {
 
@@ -604,7 +602,7 @@ object ConfigFromScriptFileSetter {
             true -> mapOf(
                 SettingButtonConfigMapKey.CLICK.key to
                         listOf(
-                            JsActionKeyManager.JsActionsKey.JS_PATH.key,
+                            JsActionKeyManager.JsActionsKey.JS_FUNC.key,
                             MacroForToolbarButton.Macro.OK.name
                         ).joinToString("=")
             )

@@ -2,11 +2,11 @@
 
 name=Delete
 |icon=delete
-|jsPath=DELETE,
+|func=DELETE,
 
 name=Write
 |icon=edit
-|jsPath=WRITE,
+|func=WRITE,
 
 name=Copy
 |icon=copy,
@@ -14,7 +14,7 @@ name=Copy
 name=Copy file
 |parentName=Copy
 |icon=folda
-|jsPath=COPY_FILE
+|func=COPY_FILE
 ?args=
     &initialPath="${00}/AppDir"
     &macro=FROM_RECENT_DIR
@@ -23,4 +23,4 @@ name=Copy file
 name=Copy path
 |parentName=Copy
 |icon=copy
-|jsPath=COPY_PATH,
+|func=COPY_PATH,

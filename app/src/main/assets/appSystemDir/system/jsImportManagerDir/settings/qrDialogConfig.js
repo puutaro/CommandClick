@@ -1,3 +1,3 @@
 
 click=
-    jsPath=CON,
+    func=CON,

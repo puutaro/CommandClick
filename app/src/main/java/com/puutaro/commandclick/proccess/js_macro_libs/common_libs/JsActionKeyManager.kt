@@ -14,6 +14,7 @@ object JsActionKeyManager {
         JS("js"),
         JS_VAR("var"),
 //        JS_CON("jsCon"),
+        JS_FUNC("func"),
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
         TSV_IMPORT("tsvImport"),
@@ -601,7 +602,7 @@ object JsActionKeyManager {
             JsSubKey.IF.key,
         )
         private val useKeyListForFunc = onlySubKeyListForFunc + listOf(
-            JsActionsKey.JS_PATH.key,
+            JsActionsKey.JS_FUNC.key,
             JsSubKey.IF.key,
             JsSubKey.FUNC.key,
             JsSubKey.ARGS.key,

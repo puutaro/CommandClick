@@ -1,4 +1,4 @@
 
 name=sync
 |icon=launch
-|jsPath=SYNC,
+|func=SYNC,

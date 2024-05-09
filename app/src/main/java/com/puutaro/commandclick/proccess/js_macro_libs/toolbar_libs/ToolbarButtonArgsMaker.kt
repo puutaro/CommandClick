@@ -228,7 +228,7 @@ private fun makeSettingMenuDefaultConForEdit(): String {
     val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key
     val iconKey = MenuSettingTool.MenuSettingKey.ICON.key
     val parentMenuKey = MenuSettingTool.MenuSettingKey.PARENT_NAME.key
-    val jsPathKey = JsActionKeyManager.JsActionsKey.JS_PATH.key
+    val jsPathKey = JsActionKeyManager.JsActionsKey.JS_FUNC.key
     return """
         ${menuNameKey}=kill
             |${iconKey}=cancel

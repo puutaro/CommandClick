@@ -23,7 +23,6 @@ function registerUrlHistory(){
     if(!url) return;
     const title = document.title;
     if(!title) return;
-    jsToast.short(`${onSaveUrlHistory}\n\n`);
     jsUrlHistory.save(
         title,
         url,

@@ -1,13 +1,13 @@
 
 name=Delete
 |icon=delete
-|jsPath=DELETE,
+|func=DELETE,
 
 
 name=Copy app dir
 |icon=folda
-|jsPath=COPY_APP_DIR,
+|func=COPY_APP_DIR,
 
 name=Rename app dir
 |icon=file
-|jsPath=RENAME_APP_DIR,
+|func=RENAME_APP_DIR,

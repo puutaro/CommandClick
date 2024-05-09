@@ -1,8 +1,8 @@
 
 click=
-    jsPath=DESC,
+    func=DESC,
 longClick=
-    jsPath=DESC,
+    func=DESC,
 logo=
     oneSideLength=110
     |mode=fannelRepo,

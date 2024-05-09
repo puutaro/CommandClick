@@ -1,5 +1,5 @@
 
 click=
-    jsPath=EDIT_LOGO,
+    func=EDIT_LOGO,
 longClick=
-    jsPath=EDIT_LOGO,
+    func=EDIT_LOGO,
