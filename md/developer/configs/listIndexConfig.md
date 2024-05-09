@@ -72,13 +72,13 @@ echo "${EDIT_TARGET_CONTENTS}" | ${b} awk '{print $0}'
 ```js.js
 name=sync
 |icon=update
-|jsPath=SYNC
-|extra=
+|func=SYNC
+|args=
 	broadcastAction=`${UPDATE_LIST_INDEX_BROADCAST_ACTION}`,
 name=add app dir
 |icon=plus
-|jsPath=ADD_APP_DIR
-|extra=
+|func=ADD_APP_DIR
+|args=
 	!broadcastAction=`${UPDATE_LIST_INDEX_BROADCAST_ACTION}`,
 
 ```

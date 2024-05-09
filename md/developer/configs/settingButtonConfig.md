@@ -31,7 +31,7 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 
 | Key name | Description | 
 | --------- | --------- | 
-| `jsPath` | execute js path macro | 
+| `func` | execute js path macro | 
 | `menuPath` | menu config path |
 | `onHideFooter` | hide footer in menu |
 
@@ -44,11 +44,11 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 
 ```js.js
 longClick=
-	jsPath=MENU
+	func=MENU
 	|menuPath=`${setting button menu config js path1}`
 	|onHideFooter=,
 click=
-	jsPath=MENU
+	func=MENU
 	|menuPath=`${setting button menu config js path1}`
 	|onHideFooter=,
 icon=plus,
