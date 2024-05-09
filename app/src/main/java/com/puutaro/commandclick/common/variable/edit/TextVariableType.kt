@@ -15,6 +15,7 @@ object TypeVariable {
         EditTextSupportViewName.COLOR.str,
         EditTextSupportViewName.DATE.str,
         EditTextSupportViewName.TIME.str,
+        EditTextSupportViewName.LIST_INDEX.str,
     )
     val textAndLabelList =
         textTypeList +
