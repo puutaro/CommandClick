@@ -137,16 +137,18 @@ object HtmlLauncher{
         if(
             onDialog == "true"
         ) {
-            val iconName = WebViewMenuMapType.iconName.name
+            val label = WebViewMenuMapType.label.name
             val dismissType = WebViewMenuMapType.dismissType.name
+            val cancelStr = "❌"
             val menuMapStrListStr= listOf(
-                    "${dismissType}=click!${iconName}=cancel"
+                    "${dismissType}=click!${label}=${cancelStr}"
             ).joinToString("?")
             JsDialog(terminalFragment).webView_S(
                 htmlFilePath,
                 String(),
                 menuMapStrListStr,
                 String(),
+                String()
             )
         } else binding.terminalWebView.loadUrl(htmlFilePath)
     }

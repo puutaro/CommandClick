@@ -310,13 +310,15 @@ class JsDialog(
         urlStr: String,
         currentFannelPath: String,
         menuMapStrListStr: String,
-        longPressMenuMapListStr: String
+        longPressMenuMapListStr: String,
+        extraMapCon: String,
     ){
         webViewJsDialog.create(
             urlStr,
             currentFannelPath,
             menuMapStrListStr,
-            longPressMenuMapListStr
+            longPressMenuMapListStr,
+            extraMapCon,
         )
     }
 

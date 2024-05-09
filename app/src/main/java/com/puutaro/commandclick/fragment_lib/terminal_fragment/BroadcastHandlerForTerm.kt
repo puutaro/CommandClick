@@ -9,6 +9,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorBroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewUrlLoader
 
 object BroadcastHandlerForTerm {
     fun handle(
@@ -64,6 +65,11 @@ object BroadcastHandlerForTerm {
             -> JsDebugger.close(
                 terminalFragment,
                 intent
+            )
+            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL
+            -> PocketWebViewUrlLoader.load(
+                terminalFragment,
+                intent.getStringExtra(termBroadcastType.scheme),
             )
         }
     }

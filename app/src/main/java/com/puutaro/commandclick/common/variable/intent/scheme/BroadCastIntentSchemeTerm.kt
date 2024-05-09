@@ -43,5 +43,9 @@ enum class BroadCastIntentSchemeTerm(
     DEBUGGER_CLOSE(
     "com.puutaro.commandclick.js_debug.close",
     "debugger_close"
+    ),
+    POCKET_WEBVIEW_LOAD_URL(
+        "com.puutaro.commandclick.pocket_webview_loadurl.load",
+        "url"
     )
 }

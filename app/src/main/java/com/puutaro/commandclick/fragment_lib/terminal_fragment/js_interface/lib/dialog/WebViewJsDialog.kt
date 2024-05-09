@@ -13,18 +13,19 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.button.MaterialButton
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -70,11 +71,53 @@ class WebViewJsDialog(
     private val clickMenuGroupId = 120000
     private val positionHashMap = hashMapOf<String, Int>()
 
+    companion object {
+        fun loadUrlHandler(
+            terminalFragment: TerminalFragment,
+            webView: WebView,
+            urlCon: String,
+        ){
+            val textConWevViewDialogUriPrefix = WevViewDialogUriPrefix.TEXT_CON.prefix
+            val mdConWevViewDialogUriPrefix = WevViewDialogUriPrefix.MD_CON.prefix
+            val trimUrlCon = urlCon.trim()
+            when(true){
+                trimUrlCon.startsWith(textConWevViewDialogUriPrefix) -> {
+                    val textUrl = WevViewDialogUriPrefix.TEXT_CON.url
+                    val removePrefixCon = trimUrlCon.removePrefix(textConWevViewDialogUriPrefix)
+                    webView.loadDataWithBaseURL(
+                        textUrl,
+                        TxtHtmlDescriber.make(
+                            removePrefixCon,
+                            terminalFragment
+                        ),
+                        "text/html",
+                        "utf-8",
+                        textUrl
+                    )
+                }
+                trimUrlCon.startsWith(mdConWevViewDialogUriPrefix) -> {
+                    val mdUrl = WevViewDialogUriPrefix.MD_CON.url
+                    val removePrefixCon = trimUrlCon.removePrefix(mdConWevViewDialogUriPrefix)
+                    webView.loadDataWithBaseURL(
+                        mdUrl,
+                        removePrefixCon,
+                        "text/html",
+                        "utf-8",
+                        mdUrl
+                    )
+                }
+                else -> webView.loadUrl(trimUrlCon)
+            }
+        }
+    }
 
-    private object UrlToFinishJs {
+    private class UrlToFinishJs {
 
         private var pageFinishJs = String()
-        private val autoFocusGgleSearchUrl = "https://www.google.co.id/search?q=%20"
+
+        companion object {
+            private const val autoFocusGgleSearchUrl = "https://www.google.co.id/search?q=%20"
+        }
         private enum class UrlMacro(
             val macro: String,
             val url: String,
@@ -137,11 +180,13 @@ class WebViewJsDialog(
         currentScriptPath: String,
         menuMapStrListStr: String,
         longPressMenuMapListStr: String,
+        extraMapCon: String,
     ) {
         positionHashMap.clear()
-        val urlToFinishJs = UrlToFinishJs.makePair(urlStrSrc)
-        UrlToFinishJs.setFinishJs(urlToFinishJs.second)
-        val madeUrl = urlToFinishJs.first
+        val urlToFinishJs = UrlToFinishJs()
+        val urlToFinishJsPair = urlToFinishJs.makePair(urlStrSrc)
+        urlToFinishJs.setFinishJs(urlToFinishJsPair.second)
+        val madeUrl = urlToFinishJsPair.first
         val urlStr = if(
             madeUrl.startsWith(WebUrlVariables.slashPrefix)
             || madeUrl.startsWith(WebUrlVariables.filePrefix)
@@ -167,6 +212,7 @@ class WebViewJsDialog(
                 webView
             )
             loadUrlHandler(
+                terminalFragment,
                 webView,
                 urlStr,
             )
@@ -186,25 +232,33 @@ class WebViewJsDialog(
                 menuMapStrListStr,
                 '|'
             )
-//                menuMapStrListStr.split("|")
             val btnWeight = culcBtnWeight(menuMapStrList)
             val firstBottomLinearLayout = terminalFragment.webViewDialogInstance?.findViewById<LinearLayout>(
                 R.id.first_bottom_linearlayout
             ) ?: return@launch
+            val webViewDialogExtraMapManager = WebViewDialogExtraMapManager(
+                menuMapStrList,
+                extraMapCon,
+                firstBottomLinearLayout,
+            )
             menuMapStrList.forEach {
                 val btnMenuMap = makeBtnOptionMap(
                     currentScriptPath,
                     it
                 )
-                val imageButton = webViewBtnSetter(
+                val bottomButton = webViewBottomBtnSetter(
                     webView,
                     btnMenuMap,
                     btnWeight,
-                    currentScriptPath
+                    currentScriptPath,
+                    webViewDialogExtraMapManager,
                 )
-                firstBottomLinearLayout.addView(imageButton)
+                firstBottomLinearLayout.addView(bottomButton)
             }
-            webViewClientSetter(webView)
+            webViewClientSetter(
+                webView,
+                urlToFinishJs
+            )
             WebChromeClientSetter.set(
                 terminalFragment,
                 webView,
@@ -260,15 +314,17 @@ class WebViewJsDialog(
         )
     }
 
-    private fun webViewBtnSetter(
+    private fun webViewBottomBtnSetter(
         webView: WebView,
         targetMenuMap: Map<String, String>?,
         culcBtnWeight: Float,
         currentScriptPath: String,
-    ): ImageButton {
-        val targetBtn = makeImageButton(
+        webViewDialogExtraMapManager: WebViewDialogExtraMapManager,
+    ): MaterialButton {
+        val targetBtn = makeBottomButton(
             targetMenuMap,
-            culcBtnWeight
+            culcBtnWeight,
+            webViewDialogExtraMapManager
         )
         val clickMenuList = makeMenu(
             targetMenuMap,
@@ -290,6 +346,11 @@ class WebViewJsDialog(
                 clickMenuGroupId,
                 currentScriptPath
             )
+            webViewDialogExtraMapManager.trigger(
+                context,
+                false,
+                targetMenuMap?.get(WebViewMenuMapType.tag.name),
+            )
         }
         targetBtn.setOnLongClickListener{
             val btnContext = it.context
@@ -303,6 +364,11 @@ class WebViewJsDialog(
                 longpressMenuGroupId,
                 currentScriptPath
             )
+            webViewDialogExtraMapManager.trigger(
+                context,
+                true,
+                targetMenuMap?.get(WebViewMenuMapType.tag.name),
+            )
             true
         }
         return targetBtn
@@ -310,7 +376,7 @@ class WebViewJsDialog(
 
     private fun btnActionHandler(
         contextSrc: Context?,
-        targetBtn: ImageButton,
+        targetBtn: MaterialButton,
         btnOptionMap: Map<String, String>?,
         menuList: List<String>,
         webView: WebView,
@@ -367,7 +433,7 @@ class WebViewJsDialog(
 
     private fun launchMenu(
         contextSrc: Context?,
-        webViewSearchBtn: ImageButton,
+        webViewSearchBtn: MaterialButton,
         menuList: List<String>,
         webView: WebView,
         menuGroupId: Int,
@@ -443,9 +509,9 @@ class WebViewJsDialog(
         selectedMenuStr: String,
         menuList: List<String>,
     ): String {
-        val selectedMenuLine =  menuList.filter {
+        val selectedMenuLine = menuList.firstOrNull {
             it.split("\t").firstOrNull() == selectedMenuStr
-        }.firstOrNull() ?: return String()
+        } ?: return String()
         return getJsPathFromMenuSrc(selectedMenuLine)
     }
 
@@ -468,6 +534,7 @@ class WebViewJsDialog(
 
     private fun webViewClientSetter(
         webView: WebView,
+        urlToFinishJs: UrlToFinishJs?
     ){
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
@@ -526,7 +593,7 @@ class WebViewJsDialog(
                         webView.scrollY = it
                     }
                 }
-                UrlToFinishJs.execPageFinishJs(
+                urlToFinishJs?.execPageFinishJs(
                     context,
                     webView,
                     url,
@@ -570,7 +637,7 @@ class WebViewJsDialog(
         currentScriptPath: String,
         longPressMenuMapListStr: String,
     ){
-        webView.setOnLongClickListener() { view ->
+        webView.setOnLongClickListener { view ->
             val lContext = view.context
             val hitTestResult = webView.hitTestResult
             val title = webView.title
@@ -685,40 +752,46 @@ class WebViewJsDialog(
         }
     }
 
-    private fun setIcon(
-        imageButton: ImageButton?,
-        btnOptionMap:  Map<String, String>?,
-    ){
-        val iconName = btnOptionMap
-            ?.get(
-                WebViewMenuMapType.iconName.name
-            ) ?: String()
-        val iconId = CmdClickIcons.values().filter {
-            val curIconName = it.str
-            curIconName == iconName
-        }.firstOrNull()?.id ?: return
-        imageButton?.setImageResource(iconId)
-    }
-
-    private fun makeImageButton(
+    private fun makeBottomButton(
         menuBtnMap: Map<String, String>?,
         buttonWeight: Float,
-    ): ImageButton {
-        val imageButton = ImageButton(context)
-        imageButton.imageTintList = context?.getColorStateList(R.color.web_icon_color)
-        imageButton.backgroundTintList = context?.getColorStateList(R.color.white)
+        webViewDialogExtraMapManager: WebViewDialogExtraMapManager,
+    ): MaterialButton {
+        val btnContext = context as Context
+        val button = MaterialButton(btnContext)
+        val label = menuBtnMap
+            ?.get(
+                WebViewMenuMapType.label.name
+            ) ?: "exec"
+        button.text = label
+        button.textSize = 20f
+        button.stateListAnimator = null
+        button.setTextColor(context.getColor(CmdClickColor.BLUE.id))
+        button.backgroundTintList = context.getColorStateList(CmdClickColor.WHITE.id)
+        button.background = AppCompatResources.getDrawable(
+            context,
+            R.drawable.edit_button_layout_no_stroke
+        )
+        button.insetTop = 0
+        button.insetBottom = 0
+        val tag = menuBtnMap
+            ?.get(
+                WebViewMenuMapType.tag.name
+            ) ?: "exec"
+        button.tag = tag
+        webViewDialogExtraMapManager.setDefaultFocus(
+            context,
+            button,
+            tag,
+        )
         val linearLayoutForImageButtonParam = LinearLayout.LayoutParams(
             0,
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
         linearLayoutForImageButtonParam.weight = buttonWeight
         linearLayoutForImageButtonParam.gravity = Gravity.CENTER
-        imageButton.layoutParams = linearLayoutForImageButtonParam
-        setIcon(
-            imageButton,
-            menuBtnMap
-        )
-        return imageButton
+        button.layoutParams = linearLayoutForImageButtonParam
+        return button
 
     }
 
@@ -843,43 +916,6 @@ class WebViewJsDialog(
         webView.goBack()
     }
 
-    private fun loadUrlHandler(
-        webView: WebView,
-        urlCon: String,
-    ){
-        val textConWevViewDialogUriPrefix = WevViewDialogUriPrefix.TEXT_CON.prefix
-        val mdConWevViewDialogUriPrefix = WevViewDialogUriPrefix.MD_CON.prefix
-        val trimUrlCon = urlCon.trim()
-        when(true){
-            trimUrlCon.startsWith(textConWevViewDialogUriPrefix) -> {
-                val textUrl = WevViewDialogUriPrefix.TEXT_CON.url
-                val removePrefixCon = trimUrlCon.removePrefix(textConWevViewDialogUriPrefix)
-                webView.loadDataWithBaseURL(
-                    textUrl,
-                    TxtHtmlDescriber.make(
-                        removePrefixCon,
-                        terminalFragment
-                    ),
-                    "text/html",
-                    "utf-8",
-                    textUrl
-                )
-            }
-            trimUrlCon.startsWith(mdConWevViewDialogUriPrefix) -> {
-                val mdUrl = WevViewDialogUriPrefix.MD_CON.url
-                val removePrefixCon = trimUrlCon.removePrefix(mdConWevViewDialogUriPrefix)
-                webView.loadDataWithBaseURL(
-                    mdUrl,
-                    removePrefixCon,
-                    "text/html",
-                    "utf-8",
-                    mdUrl
-                )
-            }
-            else -> webView.loadUrl(trimUrlCon)
-        }
-    }
-
     private fun assetsCopy(
         webView: WebView,
     ){
@@ -901,7 +937,8 @@ enum class WebViewMenuMapType {
     longPressMenuFilePath,
     dismissType,
     dismissDelayMiliTime,
-    iconName,
+    label,
+    tag,
 }
 
 private enum class WebDialogLongPressType {
@@ -929,4 +966,160 @@ enum class WevViewDialogUriPrefix(
 ) {
     TEXT_CON("textCon://", "${WebUrlVariables.filePrefix}///textCon.txt"),
     MD_CON("mdCon://", "${WebUrlVariables.filePrefix}///descMd.txt"),
+}
+
+private class WebViewDialogExtraMapManager(
+    menuMapStrList: List<String>,
+    extraMapCon: String,
+    private val firstBottomLinearLayout: LinearLayout?
+) {
+    private var extraMap = emptyMap<String, String>()
+    private var focusMap = emptyMap<String, String>()
+
+    companion object {
+        private const val keySeparator = '|'
+        private var bottomBtnTagList = emptyList<String>()
+
+        private enum class MainKeys(
+            val key: String
+        ) {
+            FOCUS("focus")
+        }
+
+        object FocusManager {
+
+            const val focusKeySeparator = '?'
+            val focusColorId = CmdClickColor.LIGHT_GREEN.id
+
+            enum class FocusKey(
+                val key: String,
+            ){
+                TRIGGERS("triggers"),
+                DEFAULT_TAG("defaultTag"),
+            }
+
+            enum class TriggerType(
+                val type: String
+            ) {
+                LONG_CLICK("longClick"),
+                CLICK("click")
+
+            }
+        }
+    }
+
+    init {
+        init(
+            extraMapCon,
+            menuMapStrList
+        )
+    }
+    private fun init(
+        extraMapCon: String,
+        menuMapStrList: List<String>
+    ){
+        setExtraMap(extraMapCon)
+        setFocusMap(extraMap)
+        makeBottomButtonTagList(menuMapStrList)
+    }
+
+    private fun setExtraMap(extraMapCon: String) {
+        extraMap = CmdClickMap.createMap(
+            extraMapCon,
+            keySeparator,
+        ).toMap()
+    }
+
+    private fun makeBottomButtonTagList(
+        menuMapStrList: List<String>
+    ) {
+        bottomBtnTagList = menuMapStrList.map {
+            val menuMap = CmdClickMap.createMap(
+                it,
+                '?'
+            ).toMap()
+            menuMap.get(WebViewMenuMapType.tag.name)
+                ?: String()
+        }.filter { it.isNotEmpty() }
+    }
+
+    fun setFocusMap(extraMap: Map<String, String>) {
+        val focusMapCon = extraMap.get(
+            MainKeys.FOCUS.key
+        )
+        focusMap = CmdClickMap.createMap(
+            focusMapCon,
+            FocusManager.focusKeySeparator
+        ).toMap()
+    }
+    fun setDefaultFocus(
+        context: Context?,
+        button: MaterialButton,
+        curTag: String,
+    ){
+        val isNotDefaultTag = focusMap.get(
+            FocusManager.FocusKey.DEFAULT_TAG.key
+        ) != curTag
+        if(
+            isNotDefaultTag
+        ) return
+        setBackground(
+            context,
+            button,
+            FocusManager.focusColorId
+        )
+    }
+
+    fun trigger(
+        context: Context?,
+        isLongClick: Boolean,
+        curTag: String?,
+    ){
+        if(
+            curTag.isNullOrEmpty()
+        ) return
+        val isNotTriggerTag =
+            !bottomBtnTagList.contains(curTag)
+        if(
+            isNotTriggerTag
+        ) return
+        val triggerType = when(isLongClick){
+            true -> FocusManager.TriggerType.LONG_CLICK.type
+            false -> FocusManager.TriggerType.CLICK.type
+        }
+        val triggerList =
+            focusMap.get(FocusManager.FocusKey.TRIGGERS.key)
+                ?.split("&")
+                ?: return
+        val isNotTrigger = !triggerList.contains(triggerType)
+        if(
+            isNotTrigger
+        ) return
+        val button = firstBottomLinearLayout
+            ?.findViewWithTag<MaterialButton>(curTag)
+        setBackground(
+            context,
+            button,
+            FocusManager.focusColorId
+        )
+        bottomBtnTagList.forEach {
+            if(it == curTag) return@forEach
+            val curButton = firstBottomLinearLayout
+                ?.findViewWithTag<MaterialButton>(it)
+            setBackground(
+                context,
+                curButton,
+                CmdClickColor.WHITE.id
+            )
+        }
+    }
+
+    private fun setBackground(
+        context: Context?,
+        button: MaterialButton?,
+        colorId: Int,
+    ){
+        button?.backgroundTintList =
+            context?.getColorStateList(colorId)
+    }
 }
