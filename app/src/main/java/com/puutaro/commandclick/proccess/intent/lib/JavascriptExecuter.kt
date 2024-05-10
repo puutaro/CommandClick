@@ -174,11 +174,11 @@ object JavascriptExecuter {
                     extraRepValMap = extraMapCon
                 ) ?: String()
                 val separator = "----------"
-                val logSrcCon = LogTool.makeSpanTagHolder(
-                    LogTool.logGreenPair,
+                val logSrcCon = LogTool.LogVisualManager.makeSpanTagHolder(
+                    LogTool.LogVisualManager.logGreenPair,
                     execJsCon.replace(";", ";\n"),
                 )
-                LogTool.writeDebugCons(
+                LogTool.DebugMapManager.writeDebugCons(
                     debugTopBoardConArg = listOf(
                         "${LogTool.JsOrActionMark.NORMAL_JS.mark}\n",
                         separator,

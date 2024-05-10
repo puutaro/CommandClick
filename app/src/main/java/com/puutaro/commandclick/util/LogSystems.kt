@@ -60,7 +60,7 @@ object LogSystems {
             }
             withContext(Dispatchers.IO){
                 val notiLevel = when(
-                    LogTool.howEscapeErrMessage(line)
+                    LogTool.EscapeErrMessage.howEscapeErrMessage(line)
                 ){
                     true -> BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
                     else -> notiLevelSrc

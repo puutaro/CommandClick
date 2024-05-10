@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
@@ -60,6 +59,20 @@ object JsActionKeyManager {
     private val jsConPrefix = "con:"
     const val actionImportVirtualSubKey = "actionImportCon"
 
+    object PathExistChecker {
+
+        const val notFoundCode = "CMDCLICK_NOT_FOUND_PATH"
+        fun makeCodeOrPath(jsPathCon: String?): String {
+            if(
+                jsPathCon.isNullOrEmpty()
+            ) return "${notFoundCode}: !${jsPathCon}!"
+            val isJsFile = File(jsPathCon).isFile
+            return when(isJsFile){
+                false -> "${notFoundCode}: !${jsPathCon}!"
+                else -> jsPathCon
+            }
+        }
+    }
 
     object ActionImportManager {
 

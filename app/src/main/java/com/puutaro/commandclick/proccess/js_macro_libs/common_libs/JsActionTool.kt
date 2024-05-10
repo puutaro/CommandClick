@@ -4,7 +4,6 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,7 +17,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -153,7 +151,7 @@ object JsActionTool {
         if(
             !macroDataMap.isNullOrEmpty()
         ) {
-            LogTool.jsActionLog(
+            LogTool.FirstJsActionLogSaver.save(
                 keyToSubKeyCon,
                 null,
                 null,
@@ -170,7 +168,7 @@ object JsActionTool {
             jsRepValHolderMap,
         )
         val jsActionMap = jsActionMapToJsConOnlyReplace?.first
-        LogTool.jsActionLog(
+        LogTool.FirstJsActionLogSaver.save(
             keyToSubKeyCon,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
@@ -178,30 +176,34 @@ object JsActionTool {
         )
         val context = fragment.context
         val checkJsCon = jsActionMap?.get(JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key)
+        val blankActionMap = mapOf(
+            JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
+                    to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
+            JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
+        )
+        val isPathErr = LogTool.PathNotFound.check(
+            context,
+//            checkJsCon
+            keyToSubKeyMapListWithReplace,
+            keyToSubKeyMapListWithoutAfterSubKey,
+            keyToSubKeyMapListWithAfterSubKey,
+        )
+        if(isPathErr){
+            return blankActionMap
+        }
         val isSyntaxErr = LogTool.SyntaxCheck.checkJsAcSyntax(
             context,
             checkJsCon
         )
         if(isSyntaxErr){
-            return mapOf(
-                JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
-                        to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
-                JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
-            )
+            return blankActionMap
         }
         val isVarNotUseErr = LogTool.VarNotUse.checkJsAsSyntaxForVarNotUse(
             context,
             checkJsCon
-//            keyToSubKeyMapListWithReplace,
-//            keyToSubKeyMapListWithoutAfterSubKey,
-//            keyToSubKeyMapListWithAfterSubKey,
         )
         if(isVarNotUseErr){
-            return mapOf(
-                JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
-                        to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
-                JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
-            )
+            return blankActionMap
         }
         return jsActionMap
     }
@@ -634,6 +636,8 @@ object JsActionTool {
 
 private object KeyToSubKeyMapListMaker {
 
+    private val jsMainKey = JsActionKeyManager.JsActionsKey.JS.key
+    private val actionImportVirtualSubKey = JsActionKeyManager.actionImportVirtualSubKey
     private const val keySeparator = '|'
     private const val jsActionEndComma = ','
     val jsActionsKeyPlusList =
@@ -717,12 +721,19 @@ private object KeyToSubKeyMapListMaker {
         keyToSubKeyMap: Pair<String, String>,
     ): String {
         val subKeyCon = keyToSubKeyMap.second
-        val importPath = QuoteTool.trimBothEdgeQuote(subKeyCon)
-        val importConSrc = SettingFile.read(
-            importPath,
-            File(currentAppDirPath, currentFannelName).absolutePath,
-            setReplaceVariableMap,
-        )
+        val importPathSrc = QuoteTool.trimBothEdgeQuote(subKeyCon)
+        val importPath = JsActionKeyManager.PathExistChecker.makeCodeOrPath(importPathSrc)
+        val isNotFoundPrefix =
+            importPath.startsWith(JsActionKeyManager.PathExistChecker.notFoundCode)
+        val importConSrc = when(isNotFoundPrefix){
+            true ->
+                "${jsMainKey}=${actionImportVirtualSubKey}=${importPath}"
+            else -> SettingFile.read(
+                importPath,
+                File(currentAppDirPath, currentFannelName).absolutePath,
+                setReplaceVariableMap,
+            )
+        }
         return QuoteTool.replaceBySurroundedIgnore(
             importConSrc,
             jsActionEndComma,
@@ -809,12 +820,6 @@ private object PairToMapInList {
                     mapConSrc
                 )
 
-//                JsActionKeyManager.JsActionsKey.JS_CON
-//                -> String() to emptyMap()
-//                    toJsFuncForJsCon(
-//                    mapConSrc
-//                )
-
                 JsActionKeyManager.JsActionsKey.JS_FUNC
                 -> convertFuncToJsFunc(
                     mapConSrc,
@@ -856,10 +861,11 @@ private object PairToMapInList {
             mapConSrc,
             regexStr,
         )
+        val pathKey = JsActionKeyManager.CommonPathKey.PATH.key
         val tsvImportKey =
             JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
         val tsvImportMapCon = listOf(
-            JsActionKeyManager.CommonPathKey.PATH.key,
+            pathKey,
             compMapConSrc
         ).joinToString("=")
 
@@ -874,10 +880,23 @@ private object PairToMapInList {
 //                ).toMap()}",
 //            ).joinToString("\n\n") + "\n---\n"
 //        )
-        return tsvImportKey to CmdClickMap.createMap(
+        val tsvImportMapSrc = CmdClickMap.createMap(
             tsvImportMapCon,
             jsSubKeySeparator
         ).toMap()
+        val pathCon = tsvImportMapSrc.get(
+            pathKey,
+        ).let {
+            JsActionKeyManager.PathExistChecker.makeCodeOrPath(it)
+        }
+        val tsvImportMap = tsvImportMapSrc.map {
+            val key = it.key
+            if(
+                key != pathKey
+            ) return@map key to it.value
+            key to pathCon
+        }.toMap()
+        return tsvImportKey to tsvImportMap
     }
 
     private fun compSrcMapCon(
@@ -1070,8 +1089,11 @@ private object PairToMapInList {
         val argsSrc = argsMapCon.ifEmpty {
             "${repMapPrefix}=CMDCLICK_BLANK_ARGS=-"
         }
+        val jsPathStr = JsActionKeyManager.PathExistChecker.makeCodeOrPath(
+            jsPathCon
+        )
         val argsCon = listOf(
-            "path=${jsPathCon}",
+            "path=${jsPathStr}",
             "${repMapPrefix}=${argsSrc}"
         ).joinToString("&")
         val jsKeyCon = jsActionImportMarkMap + mapOf(
@@ -1081,18 +1103,6 @@ private object PairToMapInList {
         ) + onlySubKeyMap
         return jsMainKeyName to jsKeyCon
     }
-
-
-//    private fun toJsFuncForJsCon(
-//        jsCon: String,
-//    ): Pair<String, Map<String, String>> {
-//        val jsConPrefix = JsActionKeyManager.JsConManager.Flag.JS_CON_PREFIX.flag
-//        val jsConWithPrefix = "${jsConPrefix}${jsCon}"
-//        val jsMap = mapOf(
-//            funcSubKeyName to jsConWithPrefix,
-//        )
-//        return jsMainKeyName to jsMap
-//    }
 }
 
 private object VarShortSyntaxToJsFunc {
@@ -2030,11 +2040,6 @@ private object JsConPutter {
             )
         }
         return "${funcConSrc}${method};"
-//        val isJsCon = JsActionKeyManager.JsFuncManager.isJsCon(functionName)
-//        return when(true){
-//            isJsCon -> "${makeJsCon(functionName)};"
-//            else -> "${funcConSrc}${method};"
-//        }
     }
 
     private fun howVarOnly(

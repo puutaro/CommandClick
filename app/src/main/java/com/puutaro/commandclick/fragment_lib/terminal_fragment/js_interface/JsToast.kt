@@ -32,7 +32,7 @@ class JsToast(
         contents: String
     ){
         if(
-            LogTool.howEscapeErrMessage(contents)
+            LogTool.EscapeErrMessage.howEscapeErrMessage(contents)
         ) return
         CoroutineScope(Dispatchers.Main).launch {
             ToastUtils.showShort(contents)

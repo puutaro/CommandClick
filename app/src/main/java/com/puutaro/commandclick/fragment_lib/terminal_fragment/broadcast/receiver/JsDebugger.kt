@@ -23,7 +23,6 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -234,8 +233,8 @@ object JsDebugger {
 //            debugConWithDetailTag,
 //
 //       )
-        val topBoardCon = LogTool.readDebugTopBoardCon()
-        LogTool.readDebugTopBoardCon().contains(LogTool.JsOrActionMark.JS_ACTION.mark)
+        val topBoardCon = LogTool.DebugMapManager.readDebugTopBoardCon()
+        LogTool.DebugMapManager.readDebugTopBoardCon().contains(LogTool.JsOrActionMark.JS_ACTION.mark)
         when(true){
             topBoardCon.contains(LogTool.JsOrActionMark.JS_ACTION.mark) -> {
                 LogTool.FinalSaver.saveForJsAction()
@@ -398,24 +397,24 @@ object JsDebugger {
                 index, s -> index > 0
             }.joinToString("\n")
             val leadColorStr =
-                LogTool.makeLeadColorCode(times)
-            val colorStr = LogTool.makeColorCode(
+                LogTool.LogVisualManager.makeLeadColorCode(times)
+            val colorStr = LogTool.LogVisualManager.makeColorCode(
                 times
             )
             times++
             listOf(
-                LogTool.makeSpanTagHolder(
+                LogTool.LogVisualManager.makeSpanTagHolder(
                     leadColorStr,
                     lead
                 ),
-                LogTool.makeSpanTagHolder(
+                LogTool.LogVisualManager.makeSpanTagHolder(
                     colorStr,
                     body.trim().trim('\n')
                 )
             ).joinToString("\n") + "\n\n"
         }.joinToString("\n").replace(
             errMark,
-            LogTool.makeTopSpanLogTagHolder(
+            LogTool.LogVisualManager.makeTopSpanLogTagHolder(
                 LogTool.errRedCode,
                 errMark
             )

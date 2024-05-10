@@ -202,7 +202,7 @@ class JsFileSystem(
     fun revUpdateFile(
         errCon: String,
     ){
-        LogTool.saveErrLogCon(
+        LogTool.SecondErrLogSaver.saveErrLogCon(
             errCon,
         )
     }
