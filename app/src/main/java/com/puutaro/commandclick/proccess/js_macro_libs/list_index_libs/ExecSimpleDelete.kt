@@ -105,6 +105,7 @@ object ExecSimpleDelete {
                     listOf(removeItemLine),
                 )
         }
+
         DeleteSettingsForListIndex.doWithJsAction(
             editFragment,
             selectedItem,
