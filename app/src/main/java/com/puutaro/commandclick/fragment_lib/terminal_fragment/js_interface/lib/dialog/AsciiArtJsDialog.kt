@@ -154,10 +154,12 @@ class AsciiArtJsDialog(
                 withContext(Dispatchers.IO) {
                     makeSpannableImageFromView()
                 } ?: return@launch
-            FileSystems.copyFile(
-                spannableImagePathObj.absolutePath,
-                savePath
-            )
+            withContext(Dispatchers.IO) {
+                FileSystems.copyFile(
+                    spannableImagePathObj.absolutePath,
+                    savePath
+                )
+            }
         }
     }
 
