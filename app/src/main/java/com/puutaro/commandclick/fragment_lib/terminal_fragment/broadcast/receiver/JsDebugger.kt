@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
@@ -22,6 +23,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -222,23 +224,42 @@ object JsDebugger {
         intent: Intent
     ){
 
-        val debugConSrc = LogTool.readDebugReportCon()
-        val debugConWithDetailTag = debugConSrc.let {
-            LogTool.DetailTagManager.replace(it)
+//        val debugConSrc = LogTool.readDebugReportCon()
+//        val debugConWithDetailTag = debugConSrc.let {
+//            LogTool.DetailTagManager.replace(it)
+//        }
+//        val execDebugJsPath = UsePath.jsDebugReportPath
+//        FileSystems.writeFile(
+//            execDebugJsPath,
+//            debugConWithDetailTag,
+//
+//       )
+        val topBoardCon = LogTool.readDebugTopBoardCon()
+        LogTool.readDebugTopBoardCon().contains(LogTool.JsOrActionMark.JS_ACTION.mark)
+        when(true){
+            topBoardCon.contains(LogTool.JsOrActionMark.JS_ACTION.mark) -> {
+                LogTool.FinalSaver.saveForJsAction()
+                launchJsAcLogDialog(
+                    terminalFragment,
+                )
+            }
+            topBoardCon.contains(LogTool.JsOrActionMark.NORMAL_JS.mark) -> {
+                LogTool.FinalSaver.saveJsConDebugReport()
+//                val disableScrollQueryParameter = listOf(
+//                    TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
+//                    TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
+//                ).joinToString("=")
+                val launchUrlCon = TxtHtmlDescriber.makeTxtHtmlUrl(
+                    UsePath.jsDebugReportPath,
+//                    disableScrollQueryParameter
+                )
+                launchLogDialog(
+                    terminalFragment,
+                    launchUrlCon,
+                )
+            }
+            else -> {}
         }
-        val execDebugJsPath = UsePath.jsDebugReportPath
-        FileSystems.writeFile(
-            execDebugJsPath,
-            debugConWithDetailTag,
-        )
-        val launchUrlCon =
-            makeTxtHtmlUrlForDebug(
-                execDebugJsPath,
-            )
-        launchLogDialog(
-            terminalFragment,
-            launchUrlCon
-        )
     }
 
     fun sysErrWatch(
@@ -266,24 +287,73 @@ object JsDebugger {
     ): String {
         return WevViewDialogUriPrefix.TEXT_CON.prefix +
                 logPath +
-                TxtHtmlDescriber.searchQuerySuffix +
-                listOf(
-                    TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
-                    TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
-                ).joinToString("=")
+                TxtHtmlDescriber.searchQuerySuffix
+//                listOf(
+//                    TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
+//                    TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
+//                ).joinToString("=")
     }
 
-    private fun launchLogDialog(
+    private fun launchJsAcLogDialog(
         terminalFragment: TerminalFragment,
-        launchUrl: String,
     ){
         val context = terminalFragment.context
             ?: return
+        removeScrollPosiFile(
+            terminalFragment.activity,
+            terminalFragment.readSharePreferenceMap
+        )
+//        val disableScrollQueryParameter = listOf(
+//            TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
+//            TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
+//        ).joinToString("=")
+        val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
+            UsePath.jsAcDebugReportPath,
+//            disableScrollQueryParameter,
+        )
+        val menuMapSeparator = '|'
+        val cancelLabel = "❌"
+        val menuMapStrListCon = listOf(
+            "dismissType=both?label=${cancelLabel}?tag=cancel",
+            "label=AC?tag=jsAction?clickMenuFilePath=OPEN_JS_ACTION_REPORT.js",
+            "label=JS?tag=js?clickMenuFilePath=OPEN_JS_REPORT.js",
+        ).joinToString(menuMapSeparator.toString())
+        val extraMapCon = listOf(
+            "focus=defaultTag=jsAction?triggers=click"
+        ).joinToString(menuMapSeparator.toString())
         val jsConSrc = """
             jsDialog.webView_S(
                 "${launchUrl}",
                 "",
-                "dismissType=both?iconName=cancel",
+                "${menuMapStrListCon}",
+                "",
+                "${extraMapCon}",
+            );
+        """.trimIndent()
+        val jsCon = JavaScriptLoadUrl.makeFromContents(
+            context,
+            jsConSrc.split("\n"),
+        ) ?: return
+        terminalFragment.binding.terminalWebView.loadUrl(jsCon)
+
+    }
+    private fun launchLogDialog(
+        terminalFragment: TerminalFragment,
+        launchUrl: String,
+    ){
+        removeScrollPosiFile(
+            terminalFragment.activity,
+            terminalFragment.readSharePreferenceMap
+        )
+        val context = terminalFragment.context
+            ?: return
+        val cancelLabel = "❌"
+        val jsConSrc = """
+            jsDialog.webView_S(
+                "${launchUrl}",
+                "",
+                "dismissType=both?label=${cancelLabel}",
+                "",
                 "",
             );
         """.trimIndent()
@@ -354,6 +424,25 @@ object JsDebugger {
             "\n\n\n"
         )
         return "\n${sysLogCon}"
+    }
+
+    private fun removeScrollPosiFile(
+        activity: FragmentActivity?,
+        readSharePreferenceMap: Map<String, String>
+    ){
+        val currentFannelHtmlPosiDirPath =
+            TxtHtmlDescriber.makeCurrentFannelHtmlPosiDirPath(
+                activity,
+                readSharePreferenceMap,
+            )
+        listOf(
+            UsePath.execJsDebugName,
+            UsePath.execJsAcDebugName,
+            UsePath.execSysDebugFileName
+        ).forEach {
+            val removeFile = File(currentFannelHtmlPosiDirPath, it).absolutePath
+            FileSystems.removeFiles(removeFile)
+        }
     }
 }
 

@@ -22,29 +22,197 @@ object LogTool {
     val leadLogGreenPair = "#04b017" to "#077814"
     val logBlackPair = "#000000" to "#0e6266"
     val leadLogBlackPair = "#545454" to "#4f574d"
-    private var debugReportCon = String()
 
-    fun writeDebugReportCon(srcCon: String){
-        debugReportCon = srcCon
+    enum class JsOrActionMark(
+        val mark: String
+    ){
+        NORMAL_JS("[Normal JS]"),
+        JS_ACTION("[JsAction]"),
+    }
+//    private var debugReportCon = String()
+
+    private enum class DebugMapKey(
+        val key: String
+    ) {
+        ERR_EVIDENCE("errEvidence"),
+        DEBUG_TOP_BOARD("debugTopBoard"),
+        SRC_WITH_PRE_TAG("srcWithPreTag"),
+        GENERATED_WITH_DETAIL_TAG("generatedWithDetailTag"),
+        JS_CON_WITH_DETAIL_TAG("jsConWithDetailTag"),
+    }
+    private val debugMapCon = DebugMapKey.values().map {
+        it.key to String()
+    }.toMap().toMutableMap()
+//    private var debugTopBoardCon = String()
+//    private var srcPreTagCon = String()
+//    private var generatedDetailTagCon = String()
+//    private var jsConWithDetailTag = String()
+//    private var errEvidenceCon = String()
+//    "[JsAction]\n",
+//    typeLogConWithTag,
+//    srcPreTagCon,
+//    generatedDetailTagCon,
+//    jsConLogConWithTag,
+
+//    fun writeDebugReportCon(srcCon: String){
+//        debugReportCon = srcCon
+//    }
+//
+//    fun readDebugReportCon(): String {
+//        return debugReportCon
+//    }
+
+    fun readErrEvidence(): String {
+        return debugMapCon.get(DebugMapKey.ERR_EVIDENCE.key)
+            ?: String()
+    }
+    fun readDebugTopBoardCon(): String {
+        return debugMapCon.get(DebugMapKey.DEBUG_TOP_BOARD.key)
+            ?: String()
+    }
+    fun readSrcPreTagCon(): String {
+        return debugMapCon.get(DebugMapKey.SRC_WITH_PRE_TAG.key)
+            ?: String()
     }
 
-    fun readDebugReportCon(): String {
-        return debugReportCon
+    fun readGeneratedDetailTagCon(): String {
+        return debugMapCon.get(DebugMapKey.GENERATED_WITH_DETAIL_TAG.key)
+            ?: String()
+    }
+
+    fun readJsConWithDetailTag(): String {
+        return debugMapCon.get(DebugMapKey.JS_CON_WITH_DETAIL_TAG.key)
+            ?: String()
+    }
+
+    fun writeDebugCons(
+        errEvidenceArg: String? = null,
+        debugTopBoardConArg: String? = null,
+        srcPreTagConArg: String? = null,
+        generatedDetailTagConArg: String? = null,
+        jsConWithDetailTagArg: String? = null,
+    ){
+        errEvidenceArg?.let {
+            debugMapCon[DebugMapKey.ERR_EVIDENCE.key] = it
+        }
+        debugTopBoardConArg?.let {
+            debugMapCon[DebugMapKey.DEBUG_TOP_BOARD.key] = it
+        }
+        srcPreTagConArg?.let {
+            debugMapCon[DebugMapKey.SRC_WITH_PRE_TAG.key] = it
+        }
+        generatedDetailTagConArg?.let {
+            debugMapCon[DebugMapKey.GENERATED_WITH_DETAIL_TAG.key] = it
+        }
+        jsConWithDetailTagArg?.let {
+            debugMapCon[DebugMapKey.JS_CON_WITH_DETAIL_TAG.key] = it
+        }
+//        debugTopBoardCon = debugTopBoardConArg
+//        srcPreTagCon = srcPreTagConArg
+//        generatedDetailTagCon = generatedDetailTagConArg
+//        jsConWithDetailTag = jsConWithDetailTagArg
+    }
+
+    object FinalSaver {
+
+        fun saveForJsAction(){
+            saveJsActionDebugReport()
+            saveJsConDebugReport()
+        }
+
+
+        private fun saveJsActionDebugReport() {
+            val jsAcDebugCon = listOf(
+                readSrcPreTagCon(),
+                readGeneratedDetailTagCon(),
+            ).joinToString("\n")
+            saveDebugReportCon(
+                UsePath.jsAcDebugReportPath,
+                jsAcDebugCon
+            )
+        }
+
+        fun saveJsConDebugReport() {
+            val jsDebugCon = listOf(
+                readJsConWithDetailTag(),
+            ).joinToString("\n")
+            saveDebugReportCon(
+                UsePath.jsDebugReportPath,
+                jsDebugCon
+            )
+        }
+
+        private fun saveDebugReportCon(
+            path: String,
+            con: String,
+        ) {
+            val topBoardCon = listOf(
+                readErrEvidence(),
+                readDebugTopBoardCon()
+            ).joinToString("\n")
+            val conWithTopBoard = listOf(
+                topBoardCon,
+                con,
+            ).joinToString("\n")
+            val saveCon =
+                DetailTagManager.replace(conWithTopBoard)
+            FileSystems.writeFile(
+                path,
+                saveCon,
+            )
+        }
     }
 
 
     fun saveErrLogCon(
         errMsg: String,
     ){
+
+        val debugTopBoardCon = ErrWord.replace(
+            readDebugTopBoardCon(),
+//            ReadText(UsePath.jsDebugReportPath).readText(),
+            errMsg,
+        )
+
         val errConWithLabel = "\n[${errMark}]\n\n${errMsg}\n"
         val errEvidenceSrc = makeTopPreTagLogTagHolder(
             errRedCode,
             errConWithLabel
         )
-        val errLogCon = execMakeErrorLogCon(
-            errMsg,
+        val errEvidence = makeErrEvidence(
             errEvidenceSrc,
+            debugTopBoardCon,
         )
+        val srcPreTagCon = ErrWord.replace(
+            readSrcPreTagCon(),
+//            ReadText(UsePath.jsDebugReportPath).readText(),
+            errMsg,
+        )
+        val generatedDetailTagCon = ErrWord.replace(
+            readGeneratedDetailTagCon(),
+//            ReadText(UsePath.jsDebugReportPath).readText(),
+            errMsg,
+        )
+        val jsConWithDetailTag = ErrWord.replace(
+            readJsConWithDetailTag(),
+//            ReadText(UsePath.jsDebugReportPath).readText(),
+            errMsg,
+        )
+        writeDebugCons(
+            errEvidenceArg = errEvidence,
+            debugTopBoardConArg = debugTopBoardCon,
+            srcPreTagConArg = srcPreTagCon,
+            generatedDetailTagConArg = generatedDetailTagCon,
+            jsConWithDetailTagArg = jsConWithDetailTag,
+        )
+//        val errLogCon = errEvidence + srcConWithRed
+//        val errLogCon = execMakeErrorLogCon(
+//            errMsg,
+//            errEvidenceSrc,
+//        )
+
+
+
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "err_revUdate.txt").absolutePath,
 //            listOf(
@@ -54,24 +222,35 @@ object LogTool {
 //                "saveCon: ${errLogCon}",
 //            ).joinToString("\n\n\n")
 //        )
-        writeDebugReportCon(errLogCon)
+//        writeDebugReportCon(errLogCon)
     }
 
-    private fun execMakeErrorLogCon(
-        errMsg: String,
+//    private fun execMakeErrorLogCon(
+//        errMsg: String,
+//        errEvidenceSrc: String,
+//    ): String {
+//        val srcConWithRed = ErrWord.replace(
+//            readDebugReportCon(),
+////            ReadText(UsePath.jsDebugReportPath).readText(),
+//            errMsg,
+//        )
+//        val isErrMarkFirst3Line = srcConWithRed.take(3).contains(errMark)
+//        val errEvidence = when(isErrMarkFirst3Line){
+//            true -> String()
+//            else -> errEvidenceSrc
+//        }
+//       return errEvidence + srcConWithRed
+//    }
+
+    private fun makeErrEvidence(
         errEvidenceSrc: String,
+        debugTopBoardCon: String,
     ): String {
-        val srcConWithRed = ErrWord.replace(
-            readDebugReportCon(),
-//            ReadText(UsePath.jsDebugReportPath).readText(),
-            errMsg,
-        )
-        val isErrMarkFirst3Line = srcConWithRed.take(3).contains(errMark)
-        val errEvidence = when(isErrMarkFirst3Line){
+        val isErrMarkFirst3Line = debugTopBoardCon.contains(errMark)
+        return when(isErrMarkFirst3Line){
             true -> String()
             else -> errEvidenceSrc
         }
-       return errEvidence + srcConWithRed
     }
     fun makeTopSpanLogTagHolder(
         color: String,
@@ -194,15 +373,25 @@ object LogTool {
 //                ).joinToString("\n")}"
 //            ).joinToString("\n\n") + "\n----------\n"
 //        )
-        writeDebugReportCon(
-            listOf(
-                "[JsAction]\n",
-                typeLogConWithTag,
-                srcPreTagCon,
-                generatedDetailTagCon,
-                jsConLogConWithTag,
-            ).joinToString("\n")
+        val debugTopBoardConArg = listOf(
+            "${JsOrActionMark.JS_ACTION.mark}\n",
+            typeLogConWithTag,
+        ).joinToString("\n")
+        writeDebugCons(
+            debugTopBoardConArg = debugTopBoardConArg,
+            srcPreTagConArg = srcPreTagCon,
+            generatedDetailTagConArg = generatedDetailTagCon,
+            jsConWithDetailTagArg = jsConLogConWithTag ?: String(),
         )
+//        writeDebugReportCon(
+//            listOf(
+//                "[JsAction]\n",
+//                typeLogConWithTag,
+//                srcPreTagCon,
+//                generatedDetailTagCon,
+//                jsConLogConWithTag,
+//            ).joinToString("\n")
+//        )
     }
 
     private fun makeTypeWithTag (
@@ -233,7 +422,8 @@ object LogTool {
                 DisplayGanre.JS_CON.order,
                 it,
             )
-            generateDetailTagHolder(spanTagCon)
+            spanTagCon
+//            generateDetailTagHolder(spanTagCon)
         }
     }
 
@@ -285,7 +475,7 @@ object LogTool {
                 colorStrPairForGenerated,
                 "${DisplayGanre.GENERATED.ganre}:\n ${displayJsAcGeneratedCon}"
             )
-        return generateDetailTagHolder(
+        return generateDetailOpenTagHolder(
             generatedSpanTagCon
         )
     }
@@ -489,25 +679,26 @@ object LogTool {
             )
             val errWordWithRedSpan =
                 execMakeSpanTagHolder(errRedCode, errWord)
-            val tagRegex = Regex("<[^>]*>[^>]*?<[^>]*>")
-            val tagRegexResultList = tagRegex.findAll(con).map {
-                it.value
-            }
-            val repConAndTagStrToMarkList = replaceTag(
-                con,
-                tagRegexResultList
-            )
-            val repConWithTagStr = repConAndTagStrToMarkList.first
-            val repConWithErrWord = repConWithTagStr.replace(
+            val repConAndStartTagStrToMarkList = replaceStartTag(con)
+            val repConWithStartTagStr = repConAndStartTagStrToMarkList.first
+            val startTagStrToMarkList = repConAndStartTagStrToMarkList.second
+            val repConAndEndTagStrToMarkList = replaceEndTag(repConWithStartTagStr)
+            val repConWithEndTagStr = repConAndEndTagStrToMarkList.first
+            val endTagStrToMarkList = repConAndEndTagStrToMarkList.second
+            val tagStrToMarkList = startTagStrToMarkList + endTagStrToMarkList
+
+            val repConWithErrWord = repConWithEndTagStr.replace(
                 errWord,
                 errWordWithRedSpan
             )
-            val tagStrToMarkList = repConAndTagStrToMarkList.second
-//            FileSystems.writeFile(
+
+
+//            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath,"debug.txt").absolutePath,
 //                listOf(
+//                    "errWord: ${errWord}",
 //                    "con: ${con}",
-//                    "repConWithTagStr: ${repConWithTagStr}",
+//                    "repConWithTagStr: ${repConWithStartTagStr}",
 //                    "repConWithErrWord: ${repConWithErrWord}",
 //                    "replaceWithTagMark: ${replaceWithTagMark(
 //                        repConWithErrWord,
@@ -521,17 +712,47 @@ object LogTool {
             )
         }
 
+        private fun replaceStartTag(
+            con: String,
+        ): Pair<String, List<Pair<String, String>>> {
+            val startTagRegex = Regex("<[^>]*>")
+            val startTagRegexResultList = startTagRegex.findAll(con).map {
+                it.value
+            }
+            val startTagTempMarkBase = "CMCCLICK_HTML_START_TAG"
+            return replaceTag(
+                con,
+                startTagRegexResultList,
+                startTagTempMarkBase
+            )
+        }
+
+        private fun replaceEndTag(
+            con: String,
+        ): Pair<String, List<Pair<String, String>>> {
+            val endTagRegex = Regex("<[^>]*>")
+            val endTagRegexResultList = endTagRegex.findAll(con).map {
+                it.value
+            }
+            val endTagTempMarkBase = "CMCCLICK_HTML_END_TAG"
+            return replaceTag(
+                con,
+                endTagRegexResultList,
+                endTagTempMarkBase
+            )
+        }
+
         private fun replaceTag(
             srcCon: String,
-            tagRegexResultList: Sequence<String>
+            tagRegexResultList: Sequence<String>,
+            startOrEndTagTempMarkBase: String,
         ): Pair<String, List<Pair<String, String>>> {
             val tagStrToMarkList = mutableListOf<Pair<String, String>>()
-            val tagTempMarkBase = "CMCCLICK_HTML_TAG"
             var markNo = 0
             var repCon = srcCon
             tagRegexResultList.forEach {
                     tagStr ->
-                val tagTempMark = "\${${tagTempMarkBase}${markNo}}"
+                val tagTempMark = "\${${startOrEndTagTempMarkBase}${markNo}}"
                 val isAlreadyRepTagStr =
                     tagStrToMarkList.map{
                         it.first

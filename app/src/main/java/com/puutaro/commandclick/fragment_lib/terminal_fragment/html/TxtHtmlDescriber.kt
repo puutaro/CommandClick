@@ -1,10 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
 import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -17,11 +20,25 @@ object TxtHtmlDescriber {
     private val indexDirName = "index"
     val searchQuerySuffix = "?q="
     private val qerySeparator = '&'
+
+    fun makeTxtHtmlUrl(
+        txtPath: String,
+        queryConWithNewline: String? = null,
+    ): String {
+        val queryParameter = when(queryConWithNewline.isNullOrEmpty()){
+            true -> String()
+            else -> searchQuerySuffix + queryConWithNewline.replace("\n", qerySeparator.toString())
+        }
+        return listOf(
+            WevViewDialogUriPrefix.TEXT_CON.prefix,
+            txtPath,
+            queryParameter,
+        ).joinToString(String())
+    }
     fun make(
         urlStr: String,
         terminalFragment: TerminalFragment
     ): String {
-        val sharePref = terminalFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         FileSystems.createDirs(UsePath.cmdclickScrollPosiDirPath)
         val basePath = urlStr.removePrefix(
             WebUrlVariables.filePrefix
@@ -49,17 +66,8 @@ object TxtHtmlDescriber {
         val contents = ReadText(
             filePath
         ).readText()
-        val fannelRawName = SharePrefTool.getStringFromSharePref(
-                sharePref,
-                SharePrefferenceSetting.current_fannel_name
-            ).replace(
-            Regex("\\.[a-zA-Z0-9]*$"),
-            ""
-        )
-        val currentFannelHtmlPosiDirPath = if(
-            fannelRawName.isEmpty()
-        ) indexDirName
-        else "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}"
+        val currentFannelHtmlPosiDirPath =
+            makeCurrentFannelHtmlPosiDirPath(terminalFragment.activity)
         FileSystems.createDirs(currentFannelHtmlPosiDirPath)
         val fileObj = File(filePath)
         val fileName = fileObj.name
@@ -106,7 +114,6 @@ object TxtHtmlDescriber {
         var STORAGE_KEY = "scrollY";
         const title = document.title;
         function checkOffset(){
-            if(${disableScroll}) return;
             positionY = window.pageYOffset;
             jsFileSystem.writeLocalFile(
                 "${htmlPosiFilePath}",
@@ -154,6 +161,28 @@ object TxtHtmlDescriber {
                     TxtHtmlQueryKey.DISABLE_SCROLL.key
                 )
             ) == disableScrollMemoryOn
+        }
+    }
+
+    fun makeCurrentFannelHtmlPosiDirPath(
+        activity: FragmentActivity?,
+        readSharePrefMap: Map<String, String>? = null
+    ): String {
+        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val fannelRawName = when(readSharePrefMap.isNullOrEmpty()) {
+            true -> SharePrefTool.getStringFromSharePref(
+                sharePref,
+                SharePrefferenceSetting.current_fannel_name
+            )
+            else -> SharePrefTool.getCurrentFannelName(readSharePrefMap)
+        }.let {
+            CcPathTool.trimAllExtend(it)
+        }
+        return when(
+            fannelRawName.isEmpty()
+        ) {
+            true -> indexDirName
+            else -> "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}"
         }
     }
 

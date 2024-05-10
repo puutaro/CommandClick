@@ -178,12 +178,12 @@ object JavascriptExecuter {
                     LogTool.logGreenPair,
                     execJsCon.replace(";", ";\n"),
                 )
-                LogTool.writeDebugReportCon(
-                    listOf(
-                        "[Normal JS]\n",
+                LogTool.writeDebugCons(
+                    debugTopBoardConArg = listOf(
+                        "${LogTool.JsOrActionMark.NORMAL_JS.mark}\n",
                         separator,
-                        logSrcCon
-                    ).joinToString("\n")
+                    ).joinToString("\n"),
+                    jsConWithDetailTagArg = logSrcCon,
                 )
                 jsUrlLaunchHandler(
                     fragment,
