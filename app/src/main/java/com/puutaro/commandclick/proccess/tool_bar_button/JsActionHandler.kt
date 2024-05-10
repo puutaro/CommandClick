@@ -33,25 +33,18 @@ object JsActionHandler {
             ',',
             "\n"
         )
-//        val setReplaceVariableMapSrc = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-//            fragment.context,
-//            mainOrSubFannelPath
-//        )
-//            SharePrefTool.getReplaceVariableMap(
-//            fragment,
-//            mainOrSubFannelPath
-//        )
         val setReplaceVariableMap = CmdClickMap.concatRepValMap(
             setReplaceVariableMapSrc,
             extraRepValMap,
         )
-        val jsActionMap = JsActionTool.makeJsActionMap(
-            fragment,
-            readSharePreferenceMap,
-            jsAcKeyToSubKeyCon,
-            setReplaceVariableMap,
-            mainOrSubFannelPath,
-        )
+        val jsActionMap =
+            JsActionTool.makeJsActionMap(
+                fragment,
+                readSharePreferenceMap,
+                jsAcKeyToSubKeyCon,
+                setReplaceVariableMap,
+                mainOrSubFannelPath,
+            )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAC.txt").absolutePath,
 //            listOf(

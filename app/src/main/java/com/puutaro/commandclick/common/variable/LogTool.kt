@@ -821,14 +821,14 @@ object LogTool {
             srcJsCon: String,
             errMessage: String,
         ): String {
-            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
-                srcJsCon,
-                errMessage,
-            )
+//            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+//                srcJsCon,
+//                errMessage,
+//            )
             val putColorConBySyntaxCheckEnum =
                 makePutColorConBySyntaxCheckEnum(
                     srcJsCon,
-                    putColorConByPathNotFound,
+                    srcJsCon,
                     errMessage,
                 )
             val putColorConByNoKeyWordJsErrCheck =
