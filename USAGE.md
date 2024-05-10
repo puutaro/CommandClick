@@ -492,6 +492,7 @@ This mode enable speedy search and derailment search.
 1. Highlight text in website
 2. Click internet button
 
+- When not working, [install webview cannary](https://github.com/puutaro/CommandClick?tab=readme-ov-file#recommend-install-webview-canary)   
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/bb4824ea-da17-43a8-bfc9-c1443d031b92" width="400">  
 
@@ -509,7 +510,7 @@ More precisely, thanks to shortcut button power.
   
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/b8a9dc77-f533-469a-8d63-59cb5b4ecfd1" width="400">  
 
-
+- When not working, [install webview cannary](https://github.com/puutaro/CommandClick?tab=readme-ov-file#recommend-install-webview-canary)   
 
 
 ### Auto exec script
