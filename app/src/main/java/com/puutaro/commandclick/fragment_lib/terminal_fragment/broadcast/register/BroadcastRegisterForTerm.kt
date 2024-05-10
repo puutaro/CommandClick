@@ -21,6 +21,7 @@ object BroadcastRegisterForTerm {
                 BroadCastIntentSchemeTerm.DEBUGGER_JS_WATCH.action,
                 BroadCastIntentSchemeTerm.DEBUGGER_SYS_WATCH.action,
                 BroadCastIntentSchemeTerm.DEBUGGER_CLOSE.action,
+                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
             )
         )
     }
