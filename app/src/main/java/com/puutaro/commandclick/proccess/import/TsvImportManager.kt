@@ -107,7 +107,7 @@ object TsvImportManager {
                 it,
                 "\t"
             )
-        }.toMap().filterValues { it.isNotEmpty() }
+        }.toMap().filterKeys { it.isNotEmpty() }
     }
 
     private fun makeTsvKeyValueListSrc(
