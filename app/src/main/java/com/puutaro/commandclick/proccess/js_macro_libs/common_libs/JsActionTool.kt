@@ -4,6 +4,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -17,6 +18,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -941,11 +943,11 @@ private object PairToMapInList {
 //                "jsPathConPairListSrc: ${jsPathConPairListSrc}",
 //            ).joinToString("\n\n")
 //        )
-        val onlySubKeyMapToJsPathConPairList =
+        val onlySubKeyMapToFuncConPairList =
             JsActionKeyManager.OnlySubKeyMapForShortSyntax.extractForFunc(
                 funcConPairListSrc
             )
-        val onlySubKeyMapSrc = onlySubKeyMapToJsPathConPairList.first
+        val onlySubKeyMapSrc = onlySubKeyMapToFuncConPairList.first
         val actionImportVirtualSubKey = JsActionKeyManager.actionImportVirtualSubKey
         val jsActionImportMarkMap = onlySubKeyMapSrc.filterKeys {
                 subKey ->
@@ -960,7 +962,7 @@ private object PairToMapInList {
             isNotActionImportVirtualSubKey
         }
         val funcConPairList =
-            onlySubKeyMapToJsPathConPairList.second
+            onlySubKeyMapToFuncConPairList.second
                 ?: emptyList()
         val funcCon = CmdClickMap.getFirst(
             funcConPairList,
