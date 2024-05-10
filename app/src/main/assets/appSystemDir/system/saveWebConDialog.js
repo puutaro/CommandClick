@@ -26,6 +26,7 @@ function launchWebview(launchUrlString){
         "${0}",
         menuMapStrListStr,
         "",
+        ""
     );
 };
 
@@ -48,14 +49,14 @@ function makeMenuMapStr(){
     switch(true){
         case onSearchBtn === "OFF":
             return [
-                `clickMenuFilePath=${leftMenuListFilePath}?longPressMenuFilePath=${leftLongPressMenuListFilePath}?dismissType=longpress?iconName=back`,
-                `clickMenuFilePath=${rightMenuListFilePath}?iconName=download_done`,
+                `clickMenuFilePath=${leftMenuListFilePath}?longPressMenuFilePath=${leftLongPressMenuListFilePath}?dismissType=longpress?label=⬅`,
+                `clickMenuFilePath=${rightMenuListFilePath}?label=⬇︎️`,
             ].join("|");
         default:
             return [
-                `clickMenuFilePath=${leftMenuListFilePath}?longPressMenuFilePath=${leftLongPressMenuListFilePath}?dismissType=longpress?iconName=back`,
-                `clickMenuFilePath=${centerMenuListFilePath}?longPressMenuFilePath=${centerLongPressMenuListFilePath}?iconName=search`,
-                `clickMenuFilePath=${rightMenuListFilePath}?iconName=download_done`,
+                `clickMenuFilePath=${leftMenuListFilePath}?longPressMenuFilePath=${leftLongPressMenuListFilePath}?dismissType=longpress?label=⬅`,
+                `clickMenuFilePath=${centerMenuListFilePath}?longPressMenuFilePath=${centerLongPressMenuListFilePath}?label=🔎️`,
+                `clickMenuFilePath=${rightMenuListFilePath}?label=⬇︎️`,
             ].join("|");
     }
 }
