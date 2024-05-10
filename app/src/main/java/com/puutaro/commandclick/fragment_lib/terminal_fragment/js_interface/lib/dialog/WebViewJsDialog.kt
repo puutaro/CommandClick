@@ -22,6 +22,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -37,6 +38,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.file.AssetsFileManager
@@ -82,7 +84,7 @@ class WebViewJsDialog(
             val trimUrlCon = urlCon.trim()
             when(true){
                 trimUrlCon.startsWith(textConWevViewDialogUriPrefix) -> {
-                    val textUrl = WevViewDialogUriPrefix.TEXT_CON.url
+                    val textUrl = WevViewDialogUriPrefix.TEXT_CON.virtualUrl
                     val removePrefixCon = trimUrlCon.removePrefix(textConWevViewDialogUriPrefix)
                     webView.loadDataWithBaseURL(
                         textUrl,
@@ -96,7 +98,7 @@ class WebViewJsDialog(
                     )
                 }
                 trimUrlCon.startsWith(mdConWevViewDialogUriPrefix) -> {
-                    val mdUrl = WevViewDialogUriPrefix.MD_CON.url
+                    val mdUrl = WevViewDialogUriPrefix.MD_CON.virtualUrl
                     val removePrefixCon = trimUrlCon.removePrefix(mdConWevViewDialogUriPrefix)
                     webView.loadDataWithBaseURL(
                         mdUrl,
@@ -854,26 +856,81 @@ class WebViewJsDialog(
         jsPath: String,
         webView: WebView,
     ){
-        when(jsPath){
-            JsMacroType.GO_BACK_JS.str
-            -> execGoBack(webView)
-            JsMacroType.HIGHLIGHT_SCH_JS.str -> highLightSearch(
-                context,
-                webView
-            )
-            JsMacroType.LAUNCH_LOCAL_JS.str
-            -> launchUrlAtLocal(
-                webView,
-            )
-            JsMacroType.HIGHLIGHT_COPY_JS.str
-            -> assetsCopy(
-                webView
-            )
-            else
-            -> execLoadJs(
+        val macro = JsMacroType.values().firstOrNull {
+            it.str == jsPath
+        }
+        if(macro == null){
+            execLoadJs(
                 currentScriptPath,
                 jsPath,
                 webView,
+            )
+            return
+        }
+        when(macro){
+            JsMacroType.GO_BACK_JS
+            -> execGoBack(webView)
+            JsMacroType.HIGHLIGHT_SCH_JS -> highLightSearch(
+                context,
+                webView
+            )
+            JsMacroType.LAUNCH_LOCAL_JS
+            -> launchUrlAtLocal(
+                webView,
+            )
+            JsMacroType.HIGHLIGHT_COPY_JS
+            -> assetsCopy(
+                webView
+            )
+            JsMacroType.OPEN_JS_ACTION_REPORT
+            -> DebugReport.openJsActionReport(terminalFragment)
+            JsMacroType.OPEN_JS_REPORT
+            -> DebugReport.openJsReport(terminalFragment)
+
+        }
+    }
+
+
+    private object DebugReport {
+        fun openJsActionReport(
+            terminalFragment: TerminalFragment,
+        ) {
+            openDebugReport(
+                terminalFragment,
+                UsePath.jsAcDebugReportPath
+            )
+        }
+
+
+        fun openJsReport(
+            terminalFragment: TerminalFragment
+        ) {
+            openDebugReport(
+                terminalFragment,
+                UsePath.jsDebugReportPath
+            )
+        }
+
+        private fun openDebugReport(
+            terminalFragment: TerminalFragment,
+            debugPath: String,
+        ) {
+//            val disableScrollQueryParameter = listOf(
+//                TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
+//                TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
+//            ).joinToString("=")
+            val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
+                debugPath,
+//                disableScrollQueryParameter,
+            )
+            val extraStrPairList = listOf(
+                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.scheme
+                        to launchUrl
+            )
+            BroadcastSender.normalSend(
+                terminalFragment.context,
+                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
+                extraStrPairList,
             )
         }
     }
@@ -957,12 +1014,14 @@ enum class JsMacroType(val str: String,) {
     HIGHLIGHT_SCH_JS("HIGHLIGHT_SCH.js"),
     GO_BACK_JS("GO_BACK.js"),
     LAUNCH_LOCAL_JS("LAUNCH_LOCAL.js"),
-    HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js")
+    HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js"),
+    OPEN_JS_ACTION_REPORT("OPEN_JS_ACTION_REPORT.js"),
+    OPEN_JS_REPORT("OPEN_JS_REPORT.js"),
 }
 
 enum class WevViewDialogUriPrefix(
     val prefix: String,
-    val url: String,
+    val virtualUrl: String,
 ) {
     TEXT_CON("textCon://", "${WebUrlVariables.filePrefix}///textCon.txt"),
     MD_CON("mdCon://", "${WebUrlVariables.filePrefix}///descMd.txt"),
@@ -989,7 +1048,7 @@ private class WebViewDialogExtraMapManager(
         object FocusManager {
 
             const val focusKeySeparator = '?'
-            val focusColorId = CmdClickColor.LIGHT_GREEN.id
+            val focusColorId = CmdClickColor.LIGHT_AO.id
 
             enum class FocusKey(
                 val key: String,
