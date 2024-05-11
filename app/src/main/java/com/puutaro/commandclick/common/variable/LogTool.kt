@@ -1312,9 +1312,9 @@ object LogTool {
 
     object QuoteNumCheck {
 
-        private val errMessagePrefix = "Back and double quote must be even num: "
-        private val errMessageTemplate = "${errMessagePrefix}'%s'"
-        private val extractRegexForErrMessage = Regex("${errMessagePrefix}'([`\"])'")
+        private val errMessagePrefix = " quote must be even num:\n "
+        private val errMessageTemplate = "'%s'${errMessagePrefix}%s"
+        private val extractRegexForErrMessage = Regex("'([\"`])'${errMessagePrefix}(.*)")
 
         fun makePutColorCon(
             curPutColorCon: String,
@@ -1324,10 +1324,24 @@ object LogTool {
             if (
                 isNotErr
             ) return curPutColorCon
-            val targetQuote = errMessage.replace(
+            val quoteAndSentenceSeparator = "CMDCLICK_QUOTE_AND_SENTENCE_SEPARATOR"
+            val quoteAndTargetSentence = errMessage.replace(
                 extractRegexForErrMessage,
-                "$1"
+                "$1${quoteAndSentenceSeparator}$2"
+            ).split(quoteAndSentenceSeparator)
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "quoteErr.txt").absolutePath,
+                listOf(
+                    "quoteAndTargetSentence: ${quoteAndTargetSentence}"
+                ).joinToString("\n\n")
             )
+            val targetQuote =
+                quoteAndTargetSentence.firstOrNull()
+                    ?: return curPutColorCon
+            val targetSentence =
+                quoteAndTargetSentence.lastOrNull()
+
+
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
 //                listOf(
@@ -1340,10 +1354,18 @@ object LogTool {
 //                ).joinToString("\n\n")
 //
 //            )
-            return curPutColorCon.replace(
-                    targetQuote,
-                    "<span style=\"color:${errRedCode};\">${targetQuote}</span>",
+            return when(
+                targetSentence.isNullOrEmpty()
+            ){
+                true -> curPutColorCon
+                else -> curPutColorCon.replace(
+                    targetSentence,
+                    "<span style=\"color:${errRedCode};\">${targetSentence}</span>",
                 )
+            }.replace(
+                targetQuote,
+                "<span style=\"color:${errRedCode};\">${targetQuote}</span>",
+            )
         }
 
         fun check(
@@ -1362,11 +1384,14 @@ object LogTool {
                 keyToSubKeyMapListWithoutAfterSubKey
             ).let {
                 if(
-                    it.isNullOrEmpty()
+                    it == null
                 ) return@let
                 saveFirstLog(
                     context,
-                    errMessageTemplate.format(it)
+                    errMessageTemplate.format(
+                        it.first.toString(),
+                        it.second
+                    )
                 )
                 return true
             }
@@ -1374,11 +1399,14 @@ object LogTool {
                 keyToSubKeyMapListWithAfterSubKey
             ).let {
                 if(
-                    it.isNullOrEmpty()
+                    it == null
                 ) return@let
                 saveFirstLog(
                     context,
-                    errMessageTemplate.format(it)
+                    errMessageTemplate.format(
+                        it.first.toString(),
+                        it.second
+                    )
                 )
                 return true
             }
@@ -1386,11 +1414,14 @@ object LogTool {
                 keyToSubKeyMapListWithReplace
             ).let {
                 if(
-                    it.isNullOrEmpty()
+                    it == null
                 ) return@let
                 saveFirstLog(
                     context,
-                    errMessageTemplate.format(it)
+                    errMessageTemplate.format(
+                        it.first.toString(),
+                        it.second
+                    )
                 )
                 return true
             }
@@ -1399,7 +1430,7 @@ object LogTool {
 
         private fun checkKeyTSubKeyMapList(
             keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
-        ): String? {
+        ): Pair<Char, String>? {
             KeyToSubKeyConTool.makeMap(
                 keyToSubKeyMapList
             ).forEach {
@@ -1407,7 +1438,7 @@ object LogTool {
                     it.keys
                 ).let {
                     if(
-                        it.isNullOrEmpty()
+                        it == null
                     ) return@let
                     return it
                 }
@@ -1415,7 +1446,7 @@ object LogTool {
                     it.values
                 ).let {
                     if(
-                        it.isNullOrEmpty()
+                        it == null
                     ) return@let
                     return it
                 }
@@ -1425,11 +1456,11 @@ object LogTool {
 
         private fun howOdd(
             colls: Collection<String>,
-        ): String? {
+        ): Pair<Char, String>? {
             colls.forEach {
                 checkQuoteNum(it).let {
                     if(
-                        it.isNullOrEmpty()
+                        it == null
                     ) return@let
                     return it
                 }
@@ -1437,24 +1468,24 @@ object LogTool {
             return null
         }
 
-        fun checkQuoteNum(
-            con: String,
-        ): String? {
+        private fun checkQuoteNum(
+            el: String,
+        ): Pair<Char, String>? {
             val backQuote = '`'
             countQuoteNum(
-                con,
+                el,
                 backQuote
             ).let {
                 if(it) return@let
-                return backQuote.toString()
+                return backQuote to el
             }
             val doubleQuote = '"'
             countQuoteNum(
-                con,
+                el,
                 doubleQuote
             ).let {
                 if(it) return@let
-                return doubleQuote.toString()
+                return doubleQuote to el
             }
             return null
         }
@@ -1472,7 +1503,7 @@ object LogTool {
                 String()
             ).length
             val isEven =
-                (countSrcStr.length - conByRemoveTargetQuote) % 2== 0
+                (countSrcStr.length - conByRemoveTargetQuote) % 2 == 0
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "nQuoteNumCount.txt").absolutePath,
 //                listOf(
