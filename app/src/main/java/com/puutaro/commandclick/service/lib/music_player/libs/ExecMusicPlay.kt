@@ -136,6 +136,7 @@ object ExecMusicPlay {
                     execPlay(
                         musicPlayerService,
                         it,
+                        playList,
                     )
                 }
             }
@@ -173,6 +174,7 @@ object ExecMusicPlay {
                     execPlay(
                         musicPlayerService,
                         uri,
+                        playList
                     )
                 } catch (e: Exception) {
                     LogSystems.stdWarn(e.toString())
@@ -184,6 +186,7 @@ object ExecMusicPlay {
     private suspend fun execPlay(
         musicPlayerService: MusicPlayerService,
         uri: String,
+        playList: List<String>,
     ){
         if(
             musicPlayerService.mediaPlayer == null
@@ -203,7 +206,11 @@ object ExecMusicPlay {
 //                ).joinToString("\n")
 //            )
             withContext(Dispatchers.IO) {
-                MusicPlayerMaker.stop(musicPlayerService)
+                MusicPlayerMaker.releaseMediaPlayer(musicPlayerService)
+                musicPlayerService.mediaPlayer = MusicPlayerMaker.make(
+                    musicPlayerService,
+                    playList
+                )
                 MusicPlayerMaker.setDatasource(
                     musicPlayerService,
                     uri

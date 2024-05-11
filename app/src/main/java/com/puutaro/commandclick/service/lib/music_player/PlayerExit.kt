@@ -6,20 +6,10 @@ object PlayerExit {
     fun exit(
         musicPlayerService: MusicPlayerService,
     ){
-        releaseMediaPlayer(musicPlayerService,)
+        MusicPlayerMaker.releaseMediaPlayer(musicPlayerService)
         musicPlayerService.madiaPlayerPosiUpdateJob?.cancel()
         musicPlayerService.execPlayJob?.cancel()
 
     }
 
-    private fun releaseMediaPlayer(
-        musicPlayerService: MusicPlayerService,
-    ){
-        if(
-            musicPlayerService.mediaPlayer == null
-        ) return
-        MusicPlayerMaker.stop(musicPlayerService)
-        musicPlayerService.mediaPlayer?.release()
-        musicPlayerService.mediaPlayer = null
-    }
 }
