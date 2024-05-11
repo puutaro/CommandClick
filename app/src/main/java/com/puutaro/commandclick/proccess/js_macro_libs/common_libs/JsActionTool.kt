@@ -181,6 +181,16 @@ object JsActionTool {
                     to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
             JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
         )
+        val isQuoteErr = LogTool.QuoteNumCheck.check(
+            context,
+            keyToSubKeyMapListWithoutAfterSubKey,
+            keyToSubKeyMapListWithAfterSubKey,
+            keyToSubKeyMapListWithReplace
+        )
+        if(isQuoteErr){
+            return blankActionMap
+        }
+
         val isPathErr = LogTool.PathNotFound.check(
             context,
             keyToSubKeyMapListWithoutAfterSubKey,

@@ -139,6 +139,7 @@ object LogTool {
                 typeLogConWithTag,
             ).joinToString("\n")
             DebugMapManager.writeDebugCons(
+                errEvidenceArg = String(),
                 debugTopBoardConArg = debugTopBoardConArg,
                 srcPreTagConArg = srcPreTagCon,
                 generatedDetailTagConArg = generatedDetailTagCon,
@@ -637,28 +638,29 @@ object LogTool {
 ////                    )}",
 //                ).joinToString("\n\n\n")
 //            )
+            val repConWithRepTagToTagStrToMarkList = makeConWithReplaceTag(
+                con,
+            )
+            val repConWithEndTagStr = repConWithRepTagToTagStrToMarkList.first
+            val tagStrToMarkList = repConWithRepTagToTagStrToMarkList.second
             if(
                 errWord.isNullOrEmpty()
-            ) return putColorByErrMsg(
-                con,
-                errMessage,
-            )
+            ) {
+                 val repConWithLogMark = putColorByErrMsg(
+                    repConWithEndTagStr,
+                    errMessage,
+                )
+                return replaceWithTagMark(
+                    repConWithLogMark,
+                    tagStrToMarkList
+                )
+            }
             val errWordWithRedSpan =
                 LogVisualManager.execMakeSpanTagHolder(errRedCode, errWord)
-            val repConAndStartTagStrToMarkList = replaceStartTag(con)
-            val repConWithStartTagStr = repConAndStartTagStrToMarkList.first
-            val startTagStrToMarkList = repConAndStartTagStrToMarkList.second
-            val repConAndEndTagStrToMarkList = replaceEndTag(repConWithStartTagStr)
-            val repConWithEndTagStr = repConAndEndTagStrToMarkList.first
-            val endTagStrToMarkList = repConAndEndTagStrToMarkList.second
-            val tagStrToMarkList = startTagStrToMarkList + endTagStrToMarkList
-
             val repConWithErrWord = repConWithEndTagStr.replace(
                 errWord,
                 errWordWithRedSpan
             )
-
-
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath,"debug.txt").absolutePath,
 //                listOf(
@@ -677,6 +679,28 @@ object LogTool {
                 tagStrToMarkList
             )
         }
+
+        private fun makeConWithReplaceTag(
+            con: String,
+        ): Pair<String, List<Pair<String, String>>> {
+            val repConAndStartTagStrToMarkList =
+                replaceStartTag(con)
+            val repConWithStartTagStr =
+                repConAndStartTagStrToMarkList.first
+            val startTagStrToMarkList =
+                repConAndStartTagStrToMarkList.second
+            val repConAndEndTagStrToMarkList =
+                replaceEndTag(repConWithStartTagStr)
+            val repConWithEndTagStr =
+                repConAndEndTagStrToMarkList.first
+            val endTagStrToMarkList =
+                repConAndEndTagStrToMarkList.second
+            val tagStrToMarkList =
+                startTagStrToMarkList + endTagStrToMarkList
+            return repConWithEndTagStr to tagStrToMarkList
+        }
+
+
 
         private fun replaceStartTag(
             con: String,
@@ -826,8 +850,12 @@ object LogTool {
             srcJsCon: String,
             errMessage: String,
         ): String {
-            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+            val putColorConByQuoteOdd = QuoteNumCheck.makePutColorCon(
                 srcJsCon,
+                errMessage
+            )
+            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+                putColorConByQuoteOdd,
                 errMessage,
             )
             val putColorConBySyntaxCheckEnum =
@@ -1280,21 +1308,186 @@ object LogTool {
                 importPath
             }.firstOrNull { !it.isNullOrEmpty() }
         }
+    }
 
-        private fun saveFirstLog(
-            context: Context?,
+    object QuoteNumCheck {
+
+        private val errMessagePrefix = "Back and double quote must be even num: "
+        private val errMessageTemplate = "${errMessagePrefix}'%s'"
+        private val extractRegexForErrMessage = Regex("${errMessagePrefix}'([`\"])'")
+
+        fun makePutColorCon(
+            curPutColorCon: String,
             errMessage: String,
-        ){
-            SecondErrLogSaver.saveErrLogCon(
-                errMessage,
+        ): String {
+            val isNotErr = !errMessage.contains(errMessagePrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val targetQuote = errMessage.replace(
+                extractRegexForErrMessage,
+                "$1"
             )
-            LogSystems.stdErr(
-                context,
-                errMessage,
-                debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
+//                listOf(
+//                    "errMessage: ${errMessage}",
+//                    "targetQuote: ${targetQuote}",
+//                    "curPutColorCon: ${curPutColorCon.replace(
+//                        targetQuote,
+//                        "<span style=\"color:${errRedCode};\">${targetQuote}</span>",
+//                    )}"
+//                ).joinToString("\n\n")
+//
+//            )
+            return curPutColorCon.replace(
+                    targetQuote,
+                    "<span style=\"color:${errRedCode};\">${targetQuote}</span>",
+                )
         }
 
+        fun check(
+            context: Context?,
+            keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
+        ): Boolean {
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "qRep.txt").absolutePath,
+//                listOf(
+//                    "keyToSubKeyMapListWithReplace: ${keyToSubKeyMapListWithReplace}"
+//                ).joinToString("\n")
+//            )
+            checkKeyTSubKeyMapList(
+                keyToSubKeyMapListWithoutAfterSubKey
+            ).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                saveFirstLog(
+                    context,
+                    errMessageTemplate.format(it)
+                )
+                return true
+            }
+            checkKeyTSubKeyMapList(
+                keyToSubKeyMapListWithAfterSubKey
+            ).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                saveFirstLog(
+                    context,
+                    errMessageTemplate.format(it)
+                )
+                return true
+            }
+            checkKeyTSubKeyMapList(
+                keyToSubKeyMapListWithReplace
+            ).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                saveFirstLog(
+                    context,
+                    errMessageTemplate.format(it)
+                )
+                return true
+            }
+            return false
+        }
+
+        private fun checkKeyTSubKeyMapList(
+            keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
+        ): String? {
+            KeyToSubKeyConTool.makeMap(
+                keyToSubKeyMapList
+            ).forEach {
+                howOdd(
+                    it.keys
+                ).let {
+                    if(
+                        it.isNullOrEmpty()
+                    ) return@let
+                    return it
+                }
+                howOdd(
+                    it.values
+                ).let {
+                    if(
+                        it.isNullOrEmpty()
+                    ) return@let
+                    return it
+                }
+            }
+            return null
+        }
+
+        private fun howOdd(
+            colls: Collection<String>,
+        ): String? {
+            colls.forEach {
+                checkQuoteNum(it).let {
+                    if(
+                        it.isNullOrEmpty()
+                    ) return@let
+                    return it
+                }
+            }
+            return null
+        }
+
+        fun checkQuoteNum(
+            con: String,
+        ): String? {
+            val backQuote = '`'
+            countQuoteNum(
+                con,
+                backQuote
+            ).let {
+                if(it) return@let
+                return backQuote.toString()
+            }
+            val doubleQuote = '"'
+            countQuoteNum(
+                con,
+                doubleQuote
+            ).let {
+                if(it) return@let
+                return doubleQuote.toString()
+            }
+            return null
+        }
+
+        private fun countQuoteNum(
+            con: String,
+            quote: Char,
+        ): Boolean {
+            val countSrcStr = con.replace(
+                "\\${quote}",
+                String()
+            )
+            val conByRemoveTargetQuote = countSrcStr.replace(
+                quote.toString(),
+                String()
+            ).length
+            val isEven =
+                (countSrcStr.length - conByRemoveTargetQuote) % 2== 0
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "nQuoteNumCount.txt").absolutePath,
+//                listOf(
+//                    "countSrcStr: ${countSrcStr}",
+//                    "countSrcStr.length: ${countSrcStr.length}",
+//                    "countSrcStrRep: ${countSrcStr.replace(
+//                        quote.toString(),
+//                        String()
+//                    )}",
+//                    "countSrcStr: ${countSrcStr}",
+//                    "isEven: ${isEven}",
+//                ).joinToString("\n\n")
+//            )
+            return isEven
+        }
     }
 
     object SyntaxCheck {
@@ -1497,5 +1690,20 @@ object LogTool {
             }
             return replaceDetailTagCon
         }
+    }
+
+
+    private fun saveFirstLog(
+        context: Context?,
+        errMessage: String,
+    ){
+        SecondErrLogSaver.saveErrLogCon(
+            errMessage,
+        )
+        LogSystems.stdErr(
+            context,
+            errMessage,
+            debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
+        )
     }
 }
