@@ -155,7 +155,7 @@ class AsciiArtJsDialog(
                     makeSpannableImageFromView()
                 } ?: return@launch
             withContext(Dispatchers.IO) {
-                delay(200)
+                delay(500)
                 FileSystems.copyFile(
                     spannableImagePathObj.absolutePath,
                     savePath
