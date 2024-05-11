@@ -16,6 +16,8 @@ object JsImportManager {
 
     val jsImportPreWord = "jsimport"
     private val assetsPrefix = "/android_asset/"
+    val jsImportFindRegex =
+        "\n[ \t]*${jsImportPreWord}[^\n]+"
 
     fun import(
         context: Context?,

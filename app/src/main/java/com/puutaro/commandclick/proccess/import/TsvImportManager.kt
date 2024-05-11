@@ -154,11 +154,8 @@ object TsvImportManager {
                     }
                     else -> null
                 }
-                val tsvImportPath = QuoteTool.trimBothEdgeQuote(
-                    tsvImportLine.trim().trim(';').removePrefix(
-                        tsvImportPreWord
-                    ).trim()
-                )
+                val tsvImportPath =
+                    extractPathFromImportLine(tsvImportLine)
                 val tsvImportPathObj = File(tsvImportPath)
                 if(!tsvImportPathObj.isFile) {
                     LogSystems.stdWarn(
@@ -206,6 +203,16 @@ object TsvImportManager {
                     )
                 }
             }.distinct()
+    }
+
+    fun extractPathFromImportLine(
+        tsvImportLine: String
+    ): String {
+        return QuoteTool.trimBothEdgeQuote(
+            tsvImportLine.trim().trim(';').removePrefix(
+                tsvImportPreWord
+            ).trim()
+        )
     }
 
     private fun replaceAndFilterForTsvImportUsePhrase(

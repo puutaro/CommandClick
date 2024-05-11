@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.common.variable
 
+import TsvImportManager
 import android.content.Context
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -11,6 +12,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyMa
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
 object LogTool {
@@ -568,13 +570,16 @@ object LogTool {
         }
 
         fun makeEvaluateAcCon(
-            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
             keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            jsRepValHolderMap: Map<String, String>?,
         ): String {
-            return makeCon(keyToSubKeyMapListWithReplace) +
-                    makeCon(keyToSubKeyMapListWithoutAfterSubKey) +
-                    makeCon(keyToSubKeyMapListWithAfterSubKey)
+            val evaluateAcConSrc = makeCon(keyToSubKeyMapListWithAfterSubKey,) +
+                    makeCon(keyToSubKeyMapListWithoutAfterSubKey)
+            return CmdClickMap.replaceHolderForJsAction(
+                evaluateAcConSrc,
+                jsRepValHolderMap
+            )
         }
 
         fun makeCon(
@@ -821,14 +826,14 @@ object LogTool {
             srcJsCon: String,
             errMessage: String,
         ): String {
-//            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
-//                srcJsCon,
-//                errMessage,
-//            )
+            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+                srcJsCon,
+                errMessage,
+            )
             val putColorConBySyntaxCheckEnum =
                 makePutColorConBySyntaxCheckEnum(
                     srcJsCon,
-                    srcJsCon,
+                    putColorConByPathNotFound,
                     errMessage,
                 )
             val putColorConByNoKeyWordJsErrCheck =
@@ -1036,8 +1041,10 @@ object LogTool {
         private const val errMessageTemplate = "${errMessagePrefix}'%s'"
         private val extractPathRegex = Regex("${errMessagePrefix}'(.*)'")
         private const val errCodePrefix =
-            "${JsActionKeyManager.PathExistChecker.notFoundCode}:"
+            "${JsActionKeyManager.PathExistChecker.notFoundCodePrefix}:"
         private val findRegex = Regex("${errCodePrefix} ![^!]+!")
+        private val errCodeTemplate = JsActionKeyManager.PathExistChecker.notFoundCodeTemplate
+        private val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
 
         fun makePutColorCon(
             curPutColorCon: String,
@@ -1054,21 +1061,14 @@ object LogTool {
             val errCodeExtractRegex =
                 Regex("${errCodePrefix} !${notFountPath}!")
 //            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "jsLogColorCon.txt").absolutePath,
+//                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
 //                listOf(
-//                    "onTimesVarWord: ${onTimesVarWord}",
-//                    "curPutColorCon: ${curPutColorCon}",
-//                ).joinToString("\n")
+//                    "errMessage: ${errMessage}",
+//                    "notFountPath: ${notFountPath}",
+//                    "curPutColorCon: ${curPutColorCon}"
+//                ).joinToString("\n\n")
+//
 //            )
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
-                listOf(
-                    "errMessage: ${errMessage}",
-                    "notFountPath: ${notFountPath}",
-                    "curPutColorCon: ${curPutColorCon}"
-                ).joinToString("\n\n")
-
-            )
             return curPutColorCon
                 .replace(
                     errCodeExtractRegex,
@@ -1079,33 +1079,212 @@ object LogTool {
                     "<span style=\"color:${errRedCode};\">${notFountPath}</span>",
                 )
         }
+
         fun check(
             context: Context?,
-            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
             keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            keyToSubKeyMapListWithAfterSubKey:  List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyCon: String?,
+            jsRepValHolderMap: Map<String, String>?,
         ): Boolean {
-            val evaluateAcCon =
+            checkJsAcGeneCon(
+                context,
+                keyToSubKeyMapListWithoutAfterSubKey,
+                keyToSubKeyMapListWithAfterSubKey,
+                jsRepValHolderMap,
+            ).let {
+                if(it) return true
+            }
+            checkJsAcSrcCon(
+                context,
+                keyToSubKeyCon,
+                jsRepValHolderMap,
+            ).let {
+                if(it) return true
+            }
+            return false
+        }
+        private fun checkJsAcGeneCon(
+            context: Context?,
+            keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            jsRepValHolderMap: Map<String, String>?,
+        ): Boolean {
+            val evaluateGeneCon =
                 KeyToSubKeyConTool.makeEvaluateAcCon(
-                    keyToSubKeyMapListWithReplace,
                     keyToSubKeyMapListWithoutAfterSubKey,
-                    keyToSubKeyMapListWithAfterSubKey
+                    keyToSubKeyMapListWithAfterSubKey,
+                    jsRepValHolderMap
                 )
             if(
-                evaluateAcCon.isEmpty()
+                evaluateGeneCon.isEmpty()
             ) return false
-            val errPath =
+            findAcImportNotFoundPath(evaluateGeneCon).let{
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            findImportNotExistPathForGene(evaluateGeneCon).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            return false
+        }
+
+        private fun findAcImportNotFoundPath(evaluateAcCon: String): String? {
+            return try {
                 findRegex.findAll(evaluateAcCon).firstOrNull()
                     ?.value
                     ?.removePrefix(errCodePrefix)
                     ?.trim()
                     ?.trim('!')
                     ?.trim()
-            val isNotErr = errPath.isNullOrEmpty()
+            } catch (e: Exception){
+                null
+            }
+        }
+
+        private fun findImportNotExistPathForGene(
+            evaluateAcGeneCon: String
+        ): String? {
+            val importPrefix = "${importPathKey}="
+            val findJsImportRegex = Regex(
+                "\\?${importPrefix}[^\n|?&]*"
+            )
+            return findImportNotExistPath(
+                evaluateAcGeneCon,
+                findJsImportRegex,
+                "?${importPrefix}",
+            )
+        }
+
+        private fun checkJsAcSrcCon(
+            context: Context?,
+            keyToSubKeyCon: String?,
+            jsRepValHolderMap: Map<String, String>?,
+        ): Boolean {
             if(
-                isNotErr
+                keyToSubKeyCon.isNullOrEmpty()
             ) return false
-            val errMessage = errMessageTemplate.format(errPath)
+            val evaluateSrcCon =
+                CmdClickMap.replaceHolderForJsAction(
+                    keyToSubKeyCon,
+                    jsRepValHolderMap,
+                )
+            if(
+                evaluateSrcCon.isEmpty()
+            ) return false
+            findTsvImportNotExistPath(evaluateSrcCon).let{
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            findJsImportNotExistPath(evaluateSrcCon).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "notfound.txt").absolutePath,
+//                listOf(
+//                    "evaluateSrcCon: ${evaluateSrcCon}",
+////                    "errPath: ${errPath}",
+////                    "isNotErr: ${isNotErr}",
+//                ).joinToString("\n\n")
+//            )
+            return false
+        }
+
+        private fun findJsImportNotExistPath(
+            evaluateAcGeneCon: String
+        ): String? {
+            val jsImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.JS_IMPORT.key}="
+            val findTsvImportRegex = Regex(
+                "${jsImportKeyPrefix}[^\n|?&]*"
+            )
+            return findImportNotExistPath(
+                evaluateAcGeneCon,
+                findTsvImportRegex,
+                jsImportKeyPrefix
+            )
+        }
+
+        private fun findTsvImportNotExistPath(
+            evaluateAcCon: String
+        ): String? {
+            val tsvImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.TSV_IMPORT.key}="
+            val findTsvImportRegex = Regex(
+                "${tsvImportKeyPrefix}[^\n|?&]*"
+            )
+            return findImportNotExistPath(
+                evaluateAcCon,
+                findTsvImportRegex,
+                tsvImportKeyPrefix,
+            )
+        }
+
+        private fun findImportNotExistPath(
+            evaluateAcCon: String,
+            findRegex: Regex,
+            removePrefix: String,
+        ): String? {
+            val matchResult = try {
+                findRegex.findAll(
+                    evaluateAcCon
+                )
+            } catch(e: Exception){
+                return null
+            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "notfound_findImportNotExistPath.txt").absolutePath,
+//                listOf(
+//                    "match: ${matchResult.map { it.value }.joinToString("---")}",
+////                    "isNotErr: ${isNotErr}",
+//                ).joinToString("\n\n")
+//            )
+            return matchResult.map {
+                val jsImportLine = it.value
+                val importPath =
+                    QuoteTool.trimBothEdgeQuote(
+                        jsImportLine.removePrefix(removePrefix)
+                    )
+                val isExistPath = File(importPath).isFile
+                if(
+                    isExistPath
+                ) return@map null
+                importPath
+            }.firstOrNull { !it.isNullOrEmpty() }
+        }
+
+        private fun saveFirstLog(
+            context: Context?,
+            errMessage: String,
+        ){
             SecondErrLogSaver.saveErrLogCon(
                 errMessage,
             )
@@ -1114,8 +1293,8 @@ object LogTool {
                 errMessage,
                 debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
             )
-            return true
         }
+
     }
 
     object SyntaxCheck {

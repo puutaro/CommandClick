@@ -27,7 +27,7 @@ object JsActionKeyManager {
     enum class CommonPathKey(
         val key: String
     ) {
-        PATH("path"),
+        IMPORT_PATH("importPath"),
         USE(TsvImportManager.tsvImportUsePhrase),
     }
 
@@ -61,14 +61,15 @@ object JsActionKeyManager {
 
     object PathExistChecker {
 
-        const val notFoundCode = "CMDCLICK_NOT_FOUND_PATH"
+        const val notFoundCodePrefix = "CMDCLICK_NOT_FOUND_PATH"
+        const val notFoundCodeTemplate = "${notFoundCodePrefix}: !%s!"
         fun makeCodeOrPath(jsPathCon: String?): String {
             if(
                 jsPathCon.isNullOrEmpty()
-            ) return "${notFoundCode}: !${jsPathCon}!"
+            ) return notFoundCodeTemplate.format(jsPathCon)
             val isJsFile = File(jsPathCon).isFile
             return when(isJsFile){
-                false -> "${notFoundCode}: !${jsPathCon}!"
+                false -> notFoundCodeTemplate.format(jsPathCon)
                 else -> jsPathCon
             }
         }
