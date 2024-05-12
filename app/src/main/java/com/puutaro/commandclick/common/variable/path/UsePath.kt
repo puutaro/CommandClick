@@ -138,11 +138,6 @@ object UsePath {
     val cmdclickConfigFileName = "cmdclickConfig$JS_FILE_SUFFIX"
     private val cmdclickConfigFileRelativePath = "$cmdclickSystemAppRelativePath/$cmdclickConfigFileName"
     val cmdclickConfigFilePath = "$rootPath/$cmdclickConfigFileRelativePath"
-    val cmdclickConfigFannelDirName =  "cmdclickConfigDir"
-    private val cmdclickConfigFannelDirRelativePath =
-        "$cmdclickSystemAppRelativePath/$cmdclickConfigFannelDirName"
-    val cmdclickConfigFannelDirPath =
-        "$rootPath/$cmdclickConfigFannelDirRelativePath"
     private val settingVariablesDirName = "settingVariables"
     val fannelSettingVariablsDirPath = "\${01}/\${001}/${settingVariablesDirName}"
     val replaceVariablesTsv = "replaceVariablesTable.tsv"
@@ -187,7 +182,6 @@ object UsePath {
     val cmdclickSiteScrollPosiFileName = "scrollPosi$tsvExtend"
     val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi$tsvExtend"
     val cmdclickMonitorScrollPosiFileName = "monitorScrollPosi$tsvExtend"
-    const val assetsFannelsReplacePrefix = "fannels/startUp"
     const val cmdclickStartupJsName = "cmdclickStartup.js"
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
