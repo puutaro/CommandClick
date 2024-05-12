@@ -42,6 +42,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMusic
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsVar
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsDiff
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsDistinct
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
@@ -249,6 +251,10 @@ object JsInterfaceAdder {
             terminalFragment,
             webView,
         )
+        collectionAdder(
+            terminalFragment,
+            webView,
+        )
     }
 
     private fun dialogAdder(
@@ -258,6 +264,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsDialog(terminalFragment),
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsDistinct(terminalFragment),
         )
     }
 
@@ -548,6 +558,16 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsBeforeInfo(terminalFragment)
+        )
+    }
+
+    private fun collectionAdder(
+        terminalFragment: TerminalFragment,
+        webView: WebView,
+    ){
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsDiff(terminalFragment)
         )
     }
 }
