@@ -1329,12 +1329,12 @@ object LogTool {
                 extractRegexForErrMessage,
                 "$1${quoteAndSentenceSeparator}$2"
             ).split(quoteAndSentenceSeparator)
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "quoteErr.txt").absolutePath,
-                listOf(
-                    "quoteAndTargetSentence: ${quoteAndTargetSentence}"
-                ).joinToString("\n\n")
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "quoteErr.txt").absolutePath,
+//                listOf(
+//                    "quoteAndTargetSentence: ${quoteAndTargetSentence}"
+//                ).joinToString("\n\n")
+//            )
             val targetQuote =
                 quoteAndTargetSentence.firstOrNull()
                     ?: return curPutColorCon
@@ -1534,9 +1534,9 @@ object LogTool {
                 Regex("\\$\\{[^{}]?[a-zA-Z0-9_.]+\\([^()]*\\)[^}]*?\\}"),
             ),
             IRREGULAR_METHOD_CHECK(
-                "Method name must be half-width alphanumeric characters",
-                Regex("`[^\n]*[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()]+?[^\n]*?\\([^)]*?\\)[^\n]*`"),
-                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()]+?[^\n]*?\\([^)\n]*?\\)"),
+                "Method name must be alphanumeric characters",
+                Regex("`[^\n]*[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()\"`]+?[^\n]*?\\([^)\n]*?\\)[^\n]*`"),
+                Regex("[a-zA-Z0-9_]+?\\.[a-zA-Z0-9_]+?[^a-zA-Z0-9_;()\"`]+?[^\n]*?\\([^)\n]*?\\)"),
             ),
         }
 
