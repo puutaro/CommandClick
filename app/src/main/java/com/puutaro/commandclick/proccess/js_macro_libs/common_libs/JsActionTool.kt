@@ -4,6 +4,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -17,6 +18,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -743,13 +745,17 @@ private object KeyToSubKeyMapListMaker {
                 importPath,
                 File(currentAppDirPath, currentFannelName).absolutePath,
                 setReplaceVariableMap,
-            )
+            ).let {
+                QuoteTool.replaceBySurroundedIgnore(
+                    it,
+                    jsActionEndComma,
+                    "\n"
+                ).split("\n").map {
+                    JsActionKeyManager.ActionImportManager.putActionImportSubKey(it)
+                }.joinToString("\n")
+            }
         }
-        return QuoteTool.replaceBySurroundedIgnore(
-            importConSrc,
-            jsActionEndComma,
-            "\n"
-        ).let {
+        return importConSrc.let {
             ListSettingVariableListMaker.execRemoveMultipleNewLinesAndReplace(
                 it,
                 setReplaceVariableMap,
@@ -757,6 +763,18 @@ private object KeyToSubKeyMapListMaker {
                 currentFannelName,
             )
         }
+//        return QuoteTool.replaceBySurroundedIgnore(
+//            importConSrc,
+//            jsActionEndComma,
+//            "\n"
+//        ).let {
+//            ListSettingVariableListMaker.execRemoveMultipleNewLinesAndReplace(
+//                it,
+//                setReplaceVariableMap,
+//                currentAppDirPath,
+//                currentFannelName,
+//            )
+//        }
     }
 
 
@@ -1124,8 +1142,8 @@ private object VarShortSyntaxToJsFunc {
     private val varValueSubKeyName = JsActionKeyManager.JsSubKey.VAR_VALUE.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
-    private const val varReturnSubKeyName = "varReturn"
-    private const val exitSubKeyName = "exit"
+    private val varReturnSubKeyName = JsActionKeyManager.OnlyVarSubKey.VAR_RETURN.key
+    private val exitSubKeyName = JsActionKeyManager.OnlyVarSubKey.EXIT.key
     private val suggerIf = JsActionKeyManager.JsSubKey.IF.key
     private const val jsSubKeySeparator = '?'
     fun toJsFunc(
@@ -1152,19 +1170,19 @@ private object VarShortSyntaxToJsFunc {
             onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.first
         val varMapConPairList =
             onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.second
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc.txt").absolutePath,
-//            listOf(
-//                "varMapConSrc: ${varMapConSrc}",
-//                "varMapConPairListSrcBeforeFilter: ${varMapConPairListSrcBeforeFilter}",
-//                "varMapConPairListSrc: ${varMapConPairListSrc}",
-//                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
-//                "onlyIfMap: ${onlyIfMap}",
-//                "onlySubKeyMapToVarMapConPairList: ${onlySubKeyMapToVarMapConPairList}",
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "jsAc.txt").absolutePath,
+            listOf(
+                "varMapConSrc: ${varMapConSrc}",
+                "varMapConPairListSrcBeforeFilter: ${varMapConPairListSrcBeforeFilter}",
+                "varMapConPairListSrc: ${varMapConPairListSrc}",
+                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
+                "onlyIfMap: ${onlyIfMap}",
+                "onlySubKeyMapToVarMapConPairList: ${onlySubKeyMapToVarMapConPairList}",
 //                "onlySubKeyMap: ${onlySubKeyMap}",
-//                "varMapConPairList: ${varMapConPairList}"
-//            ).joinToString("\n\n")
-//        )
+                "varMapConPairList: ${varMapConPairList}"
+            ).joinToString("\n\n")
+        )
         val jsVarName = CmdClickMap.getFirst(
             varMapConPairList,
             jsVarMainKeyName
@@ -1208,22 +1226,22 @@ private object VarShortSyntaxToJsFunc {
                     nextVarKeyToConPairList
                 )
         val jsKeyConMap = jsKeyConMapSrc.filterKeys { it.isNotEmpty() }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "var.txt").absolutePath,
-//            listOf(
-//                "varMapConPairList: ${varMapConPairList}",
-//                "valueOrIfConList: ${valueOrIfConList}",
-//                "nextValueOrIfConList: ${nextValueOrIfConList}",
-//                "firstValueStr: ${firstValueStr}",
-//                "jsVarName: ${jsVarName}",
-//                "firstValueStr: ${firstValueStr}",
-//                "afterJsCon: ${makeAfterJsConForVar(
-//                    jsVarName,
-//                    nextValueOrIfConList
-//                )}",
-//                "jsKeyCon: ${jsKeyCon}"
-//            ).joinToString("\n\n\n")
-//        )
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "jsAc2.txt").absolutePath,
+            listOf(
+                "varMapConSrc: ${varMapConSrc}",
+                "varMapConPairListSrcBeforeFilter: ${varMapConPairListSrcBeforeFilter}",
+                "varMapConPairListSrc: ${varMapConPairListSrc}",
+                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
+                "onlyIfMap: ${onlyIfMap}",
+                "onlySubKeyMapToVarMapConPairList: ${onlySubKeyMapToVarMapConPairList}",
+                "onlySubKeyMap: ${onlySubKeyMap}",
+                "varMapConPairList: ${varMapConPairList}",
+                "valueOrIfConList: ${valueOrIfConList}",
+                "nextVarKeyToConPairList: ${nextVarKeyToConPairList}",
+                "jsKeyConMapSrc: ${jsKeyConMapSrc}"
+            ).joinToString("\n\n") + "\n---\n"
+        )
         return jsMainKeyName to jsKeyConMap
     }
 
@@ -1461,7 +1479,8 @@ private object VarShortSyntaxToJsFunc {
     private fun execMakeReturnSentence(
         returnValueSrc: String,
     ): String {
-        val varReturnSentence = JsActionKeyManager.NoQuoteHandler.makeForVarReturn(returnValueSrc)
+        val varReturnSentence =
+            JsActionKeyManager.NoQuoteHandler.makeForVarReturn(returnValueSrc)
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
 //            listOf(

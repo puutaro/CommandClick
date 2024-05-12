@@ -55,6 +55,14 @@ object JsActionKeyManager {
         ON_LOG("onLog"),
     }
 
+    enum class OnlyVarSubKey(
+        val key: String
+    ){
+        EXIT("exit"),
+        VAR_RETURN("varReturn"),
+    }
+
+
     const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
     const val actionImportVirtualSubKey = "actionImportCon"
@@ -610,6 +618,8 @@ object JsActionKeyManager {
                 JsSubKey.VAR_VALUE.key,
                 JsSubKey.FUNC.key,
                 JsSubKey.ARGS.key,
+                OnlyVarSubKey.VAR_RETURN.key,
+                OnlyVarSubKey.EXIT.key,
             )
 
 
