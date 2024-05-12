@@ -92,6 +92,17 @@ class EditModeHandler(
         editTextProducerForEdit.adds(
         true
         )
+        if(editFragment.isToolbarBtnCustomInSettingSelects) {
+            buttonCreate(
+                ToolbarButtonBariantForEdit.EDIT,
+            )
+            buttonCreate(
+                ToolbarButtonBariantForEdit.SETTING,
+            )
+            buttonCreate(
+                ToolbarButtonBariantForEdit.EXTRA,
+            )
+        }
     }
 
     private fun buttonCreate(
