@@ -21,21 +21,25 @@ object RecordNumToMapNameValueInHolderMaker {
                 editFragment.settingSectionEnd,
                 true,
             )
-        return when(
-            IsCmdEdit.judge(editFragment)
-        ) {
-            false -> {
-//                editSettingVariable()
-                filterRecordNumToMapNameValueInHolderByHideVariable(
-                    editFragment,
-                    recordNumToMapNameValueInSettingHolderSrc
-                )
-            }
-            else -> {
-//                editCommandVariable()
-                recordNumToMapNameValueInSettingHolderSrc
-            }
-        }
+        return filterRecordNumToMapNameValueInHolderByHideVariable(
+            editFragment,
+            recordNumToMapNameValueInSettingHolderSrc
+        )
+//        return when(
+//            IsCmdEdit.judge(editFragment)
+//        ) {
+//            false -> {
+////                editSettingVariable()
+//                filterRecordNumToMapNameValueInHolderByHideVariable(
+//                    editFragment,
+//                    recordNumToMapNameValueInSettingHolderSrc
+//                )
+//            }
+//            else -> {
+////                editCommandVariable()
+//                recordNumToMapNameValueInSettingHolderSrc
+//            }
+//        }
     }
 
     fun makeForCmdHolder(
@@ -48,21 +52,25 @@ object RecordNumToMapNameValueInHolderMaker {
                 editFragment.commandSectionStart,
                 editFragment.commandSectionEnd
             )
-        return when(
-            IsCmdEdit.judge(editFragment)
-        ) {
-            false -> {
-//                editSettingVariable()
-                recordNumToMapNameValueInCommandHolderSrc
-            }
-            else -> {
-//                editCommandVariable()
-                filterRecordNumToMapNameValueInHolderByHideVariable(
-                    editFragment,
-                    recordNumToMapNameValueInCommandHolderSrc
-                )
-            }
-        }
+        return filterRecordNumToMapNameValueInHolderByHideVariable(
+            editFragment,
+            recordNumToMapNameValueInCommandHolderSrc
+        )
+//        return when(
+//            IsCmdEdit.judge(editFragment)
+//        ) {
+//            false -> {
+////                editSettingVariable()
+//                recordNumToMapNameValueInCommandHolderSrc
+//            }
+//            else -> {
+////                editCommandVariable()
+//                filterRecordNumToMapNameValueInHolderByHideVariable(
+//                    editFragment,
+//                    recordNumToMapNameValueInCommandHolderSrc
+//                )
+//            }
+//        }
     }
 
     private fun filterRecordNumToMapNameValueInHolderByHideVariable(
