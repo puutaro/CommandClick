@@ -106,6 +106,7 @@ object CommandClickScriptVariable {
     val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
     val SETTING_IMPORT = "settingImport"
     val IMPORT_DISABLE_VAL_LIST = "importDisableValList"
+    val ON_TOOLBAR_BTN_CUSTOM_IN_SETTING = "onToolbarBtnCustomInSetting"
     val jsActionShiban = "js/action"
     val CMDCLICK_LONG_PRESS_LINK_URL = "LONG_PRESS_LINK_URL"
     val CMDCLICK_LONG_PRESS_IMAGE_URL = "LONG_PRESS_IMAGE_URL"

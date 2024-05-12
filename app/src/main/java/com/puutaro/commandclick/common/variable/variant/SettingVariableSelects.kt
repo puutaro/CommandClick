@@ -13,12 +13,6 @@ object SettingVariableSelects {
         ALWAYS
     }
 
-//    enum class TerminalSizeTypeSelects {
-//        OFF,
-//        SHORT,
-//        LONG,
-//    }
-
     enum class AutoExecSelects {
         OFF,
         ON,
@@ -48,12 +42,6 @@ object SettingVariableSelects {
         ON,
         OFF,
     }
-
-    enum class OnHistoryUrlTitle {
-        ON,
-        OFF,
-    }
-
     enum class OnUrlLaunchMacroSelects {
         OFF,
         RECENT,
@@ -106,5 +94,9 @@ object SettingVariableSelects {
     enum class UbuntuExecModeSelects {
         foreground,
         background,
+    }
+
+    enum class ToolbarBtnCustomInSettingSelects {
+        ON
     }
 }
