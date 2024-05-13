@@ -53,6 +53,7 @@ object JsActionKeyManager {
         START_TOAST("startToast"),
         END_TOAST("endToast"),
         ON_LOG("onLog"),
+        DELETE_VAR("deleteVar"),
     }
 
     enum class OnlyVarSubKey(
@@ -60,9 +61,8 @@ object JsActionKeyManager {
     ){
         EXIT("exit"),
         VAR_RETURN("varReturn"),
+        USE_VAR("useVar"),
     }
-
-
     const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
     const val actionImportVirtualSubKey = "actionImportCon"
@@ -605,6 +605,7 @@ object JsActionKeyManager {
             JsSubKey.ON_LOG.key,
             JsSubKey.METHOD.key,
             JsSubKey.METHOD_ARGS.key,
+            JsSubKey.DELETE_VAR.key,
             actionImportVirtualSubKey,
         )
 
@@ -620,7 +621,25 @@ object JsActionKeyManager {
                 JsSubKey.ARGS.key,
                 OnlyVarSubKey.VAR_RETURN.key,
                 OnlyVarSubKey.EXIT.key,
+                OnlyVarSubKey.USE_VAR.key,
             )
+
+        enum class  UseKeyForAfterJsConForVar(
+            val key: String
+        ) {
+            VAR_VALUE(JsSubKey.VAR_VALUE.key),
+            FUNC(JsSubKey.FUNC.key),
+            VAR_RETURN(OnlyVarSubKey.VAR_RETURN.key),
+            EXIT(OnlyVarSubKey.EXIT.key),
+            USE_VAR(OnlyVarSubKey.USE_VAR.key),
+        }
+
+        enum class  UseVarKeyForAfterJsConForVar(
+            val key: String
+        ) {
+            VAR_VALUE(JsSubKey.VAR_VALUE.key),
+            FUNC(JsSubKey.FUNC.key),
+        }
 
 
         private val onlySubKeyListForFunc = subKeyForCommon + listOf(
