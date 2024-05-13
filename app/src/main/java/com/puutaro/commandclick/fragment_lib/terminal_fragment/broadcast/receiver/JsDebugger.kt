@@ -222,17 +222,6 @@ object JsDebugger {
         terminalFragment: TerminalFragment,
         intent: Intent
     ){
-
-//        val debugConSrc = LogTool.readDebugReportCon()
-//        val debugConWithDetailTag = debugConSrc.let {
-//            LogTool.DetailTagManager.replace(it)
-//        }
-//        val execDebugJsPath = UsePath.jsDebugReportPath
-//        FileSystems.writeFile(
-//            execDebugJsPath,
-//            debugConWithDetailTag,
-//
-//       )
         val topBoardCon = LogTool.DebugMapManager.readDebugTopBoardCon()
         LogTool.DebugMapManager.readDebugTopBoardCon().contains(LogTool.JsOrActionMark.JS_ACTION.mark)
         when(true){
@@ -244,13 +233,8 @@ object JsDebugger {
             }
             topBoardCon.contains(LogTool.JsOrActionMark.NORMAL_JS.mark) -> {
                 LogTool.FinalSaver.saveJsConDebugReport()
-//                val disableScrollQueryParameter = listOf(
-//                    TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
-//                    TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
-//                ).joinToString("=")
                 val launchUrlCon = TxtHtmlDescriber.makeTxtHtmlUrl(
                     UsePath.jsDebugReportPath,
-//                    disableScrollQueryParameter
                 )
                 launchLogDialog(
                     terminalFragment,
@@ -302,13 +286,8 @@ object JsDebugger {
             terminalFragment.activity,
             terminalFragment.readSharePreferenceMap
         )
-//        val disableScrollQueryParameter = listOf(
-//            TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
-//            TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
-//        ).joinToString("=")
         val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
             UsePath.jsAcDebugReportPath,
-//            disableScrollQueryParameter,
         )
         val menuMapSeparator = '|'
         val cancelLabel = "❌"
