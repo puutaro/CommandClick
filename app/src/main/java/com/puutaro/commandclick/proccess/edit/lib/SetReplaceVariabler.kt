@@ -12,7 +12,6 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object SetReplaceVariabler {
@@ -101,6 +100,7 @@ object SetReplaceVariabler {
         context: Context?,
         setReplaceVariableMapBeforeRecursiveReplace : Map<String, String>?
     ): Map<String, String>? {
+        val emulatedPath = UsePath.emulatedPath
         val firstSetVariableMapStringList = setReplaceVariableMapBeforeRecursiveReplace
             ?.map { "${it.key}\t${it.value}"}
             ?: return null
@@ -112,7 +112,18 @@ object SetReplaceVariabler {
                 LogSystems.stdErr(
                     context,
                     "not found '=': " +
-                            lastSetVariableMapStringList.joinToString("\t")
+                            valRepList.joinToString("=")
+                )
+                return null
+            }
+            val varValueLikePath = valRepList.lastOrNull() ?: String()
+            val isIrregularPath =
+                varValueLikePath.contains(emulatedPath)
+                        && varValueLikePath.contains("=")
+            if(isIrregularPath) {
+                LogSystems.stdErr(
+                    context,
+                    "found '=' in path or key: ${valRepList.joinToString("=")}"
                 )
                 return null
             }
