@@ -882,8 +882,10 @@ class WebViewJsDialog(
             -> assetsCopy(
                 webView
             )
-            JsMacroType.OPEN_JS_ACTION_REPORT
-            -> DebugReport.openJsActionReport(terminalFragment)
+            JsMacroType.OPEN_SRC_JS_ACTION_REPORT
+            -> DebugReport.openSrcJsActionReport(terminalFragment)
+            JsMacroType.OPEN_GENERATED_JS_ACTION_REPORT
+            -> DebugReport.openGenJsActionReport(terminalFragment)
             JsMacroType.OPEN_JS_REPORT
             -> DebugReport.openJsReport(terminalFragment)
 
@@ -892,12 +894,21 @@ class WebViewJsDialog(
 
 
     private object DebugReport {
-        fun openJsActionReport(
+        fun openSrcJsActionReport(
             terminalFragment: TerminalFragment,
         ) {
             openDebugReport(
                 terminalFragment,
-                UsePath.jsAcDebugReportPath
+                UsePath.jsSrcAcDebugReportPath
+            )
+        }
+
+        fun openGenJsActionReport(
+            terminalFragment: TerminalFragment,
+        ) {
+            openDebugReport(
+                terminalFragment,
+                UsePath.jsGenAcDebugReportPath
             )
         }
 
@@ -1015,7 +1026,8 @@ enum class JsMacroType(val str: String,) {
     GO_BACK_JS("GO_BACK.js"),
     LAUNCH_LOCAL_JS("LAUNCH_LOCAL.js"),
     HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js"),
-    OPEN_JS_ACTION_REPORT("OPEN_JS_ACTION_REPORT.js"),
+    OPEN_SRC_JS_ACTION_REPORT("OPEN_SRC_JS_ACTION_REPORT.js"),
+    OPEN_GENERATED_JS_ACTION_REPORT("OPEN_GENERATED_JS_ACTION_REPORT.js"),
     OPEN_JS_REPORT("OPEN_JS_REPORT.js"),
 }
 

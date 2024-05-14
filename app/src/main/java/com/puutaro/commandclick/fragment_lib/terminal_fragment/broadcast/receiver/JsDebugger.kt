@@ -287,17 +287,18 @@ object JsDebugger {
             terminalFragment.readSharePreferenceMap
         )
         val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
-            UsePath.jsAcDebugReportPath,
+            UsePath.jsSrcAcDebugReportPath,
         )
         val menuMapSeparator = '|'
         val cancelLabel = "❌"
         val menuMapStrListCon = listOf(
             "dismissType=both?label=${cancelLabel}?tag=cancel",
-            "label=AC?tag=jsAction?clickMenuFilePath=OPEN_JS_ACTION_REPORT.js",
+            "label=AC?tag=jsSrcAction?clickMenuFilePath=OPEN_SRC_JS_ACTION_REPORT.js",
+            "label=GAC?tag=jsGenAction?clickMenuFilePath=OPEN_GENERATED_JS_ACTION_REPORT.js",
             "label=JS?tag=js?clickMenuFilePath=OPEN_JS_REPORT.js",
         ).joinToString(menuMapSeparator.toString())
         val extraMapCon = listOf(
-            "focus=defaultTag=jsAction?triggers=click"
+            "focus=defaultTag=jsSrcAction?triggers=click"
         ).joinToString(menuMapSeparator.toString())
         val jsConSrc = """
             jsDialog.webView_S(
@@ -415,7 +416,8 @@ object JsDebugger {
             )
         listOf(
             UsePath.execJsDebugName,
-            UsePath.execJsAcDebugName,
+            UsePath.execJsSrcAcDebugName,
+            UsePath.execJsGenAcDebugName,
             UsePath.execSysDebugFileName
         ).forEach {
             val removeFile = File(currentFannelHtmlPosiDirPath, it).absolutePath

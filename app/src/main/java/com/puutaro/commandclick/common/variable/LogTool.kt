@@ -163,23 +163,6 @@ object LogTool {
             }
         }
 
-        private fun makeJsConWithTag(
-            logJsActionMap: Map<String, String>?
-        ): String? {
-            val jsConKeyName = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
-            return logJsActionMap?.get(
-                jsConKeyName
-            )?.let {
-                val spanTagCon = makeWithTagCon(
-                    jsConKeyName,
-                    DisplayGenre.JS_CON.order,
-                    it,
-                )
-                spanTagCon
-//            generateDetailTagHolder(spanTagCon)
-            }
-        }
-
         private fun makeWithTagCon(
             keyName: String,
             order: Int,
@@ -199,19 +182,19 @@ object LogTool {
             )
         }
 
-        private fun makeWithTagConForType(
-            keyName: String,
-            order: Int,
-            body: String,
+        private fun makeSrcConWithTag(
+            jsAcKeyToSubKeyCon: String?,
         ): String {
-            val colorStrPair = LogVisualManager.makeColorCode(order)
-            val displayGenre =
-                keyName.replaceFirstChar { it.uppercase() }
-                    .trim()
-            return LogVisualManager.makeSpanTagHolder(
-                colorStrPair,
-                "${displayGenre}: ${body}",
+            val displayJsAcSrc = DisplayJsAcSrc.make(
+                jsAcKeyToSubKeyCon
             )
+            val colorStrPair = LogVisualManager.makeColorCode(DisplayGenre.SRC.order)
+            val srcSpanTagCon = LogVisualManager.makeSpanTagHolder(
+                colorStrPair,
+                "${DisplayGenre.SRC.genre}:\n ${displayJsAcSrc}"
+            )
+            return srcSpanTagCon
+//            return makeDetailOpenTagHolder(srcSpanTagCon)
         }
 
         private fun generatedWithTagCon(
@@ -228,12 +211,45 @@ object LogTool {
                     colorStrPairForGenerated,
                     "${DisplayGenre.GENERATED.genre}:\n ${displayJsAcGeneratedCon}"
                 )
-            return generateDetailOpenTagHolder(
-                generatedSpanTagCon
+            return generatedSpanTagCon
+//            return makeDetailOpenTagHolder(
+//                generatedSpanTagCon
+//            )
+        }
+
+        private fun makeJsConWithTag(
+            logJsActionMap: Map<String, String>?
+        ): String? {
+            val jsConKeyName = JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+            return logJsActionMap?.get(
+                jsConKeyName
+            )?.let {
+                val spanTagCon = makeWithTagCon(
+                    jsConKeyName,
+                    DisplayGenre.JS_CON.order,
+                    it,
+                )
+                spanTagCon
+//            makeDetailTagHolder(spanTagCon)
+            }
+        }
+
+        private fun makeWithTagConForType(
+            keyName: String,
+            order: Int,
+            body: String,
+        ): String {
+            val colorStrPair = LogVisualManager.makeColorCode(order)
+            val displayGenre =
+                keyName.replaceFirstChar { it.uppercase() }
+                    .trim()
+            return LogVisualManager.makeSpanTagHolder(
+                colorStrPair,
+                "${displayGenre}: ${body}",
             )
         }
 
-        private fun generateDetailTagHolder(
+        private fun makeDetailTagHolder(
             spanTagCon: String
         ): String {
             val spanTagConList = spanTagCon.split("\n")
@@ -253,7 +269,7 @@ object LogTool {
             )
         }
 
-        private fun generateDetailOpenTagHolder(
+        private fun makeDetailOpenTagHolder(
             spanTagCon: String
         ): String {
             val spanTagConList = spanTagCon.split("\n")
@@ -272,20 +288,6 @@ object LogTool {
                 displayGenrePreTagCon,
                 bodyPreTagCon
             )
-        }
-
-        private fun makeSrcConWithTag(
-            jsAcKeyToSubKeyCon: String?,
-        ): String {
-            val displayJsAcSrc = DisplayJsAcSrc.make(
-                jsAcKeyToSubKeyCon
-            )
-            val colorStrPair = LogVisualManager.makeColorCode(DisplayGenre.SRC.order)
-            val srcSpanTagCon = LogVisualManager.makeSpanTagHolder(
-                colorStrPair,
-                "${DisplayGenre.SRC.genre}:\n ${displayJsAcSrc}"
-            )
-            return generateDetailOpenTagHolder(srcSpanTagCon)
         }
     }
 
@@ -353,16 +355,26 @@ object LogTool {
     object FinalSaver {
 
         fun saveForJsAction(){
-            saveJsActionDebugReport()
+            saveJsSrcActionDebugReport()
+            saveJsGenActionDebugReport()
             saveJsConDebugReport()
         }
-        private fun saveJsActionDebugReport() {
+        private fun saveJsSrcActionDebugReport() {
             val jsAcDebugCon = listOf(
                 DebugMapManager.readSrcPreTagCon(),
+            ).joinToString("\n")
+            saveDebugReportCon(
+                UsePath.jsSrcAcDebugReportPath,
+                jsAcDebugCon
+            )
+        }
+
+        private fun saveJsGenActionDebugReport() {
+            val jsAcDebugCon = listOf(
                 DebugMapManager.readGeneratedDetailTagCon(),
             ).joinToString("\n")
             saveDebugReportCon(
-                UsePath.jsAcDebugReportPath,
+                UsePath.jsGenAcDebugReportPath,
                 jsAcDebugCon
             )
         }
@@ -858,10 +870,14 @@ object LogTool {
                 putColorConByQuoteOdd,
                 errMessage,
             )
+            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
+                putColorConByPathNotFound,
+                errMessage,
+            )
             val putColorConBySyntaxCheckEnum =
                 makePutColorConBySyntaxCheckEnum(
                     srcJsCon,
-                    putColorConByPathNotFound,
+                    putColorConByIrregularFuncValue,
                     errMessage,
                 )
             val putColorConByNoKeyWordJsErrCheck =
@@ -1110,16 +1126,13 @@ object LogTool {
 
         fun check(
             context: Context?,
-            keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
+            evaluateGeneCon: String,
             keyToSubKeyCon: String?,
             jsRepValHolderMap: Map<String, String>?,
         ): Boolean {
             checkJsAcGeneCon(
                 context,
-                keyToSubKeyMapListWithoutAfterSubKey,
-                keyToSubKeyMapListWithAfterSubKey,
-                jsRepValHolderMap,
+                evaluateGeneCon,
             ).let {
                 if(it) return true
             }
@@ -1134,16 +1147,8 @@ object LogTool {
         }
         private fun checkJsAcGeneCon(
             context: Context?,
-            keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            jsRepValHolderMap: Map<String, String>?,
+            evaluateGeneCon: String,
         ): Boolean {
-            val evaluateGeneCon =
-                KeyToSubKeyConTool.makeEvaluateAcCon(
-                    keyToSubKeyMapListWithoutAfterSubKey,
-                    keyToSubKeyMapListWithAfterSubKey,
-                    jsRepValHolderMap
-                )
             if(
                 evaluateGeneCon.isEmpty()
             ) return false
@@ -1310,6 +1315,131 @@ object LogTool {
         }
     }
 
+
+    object IrregularFuncValue {
+
+        private const val errMessagePrefix = "Func name is only alphanumeric chars, '_' and '.': "
+        private const val errMessageTemplate = "${errMessagePrefix}'%s'"
+        private val extractIrregularRegex = Regex("${errMessagePrefix}'(.*)'")
+        private val funcKey = JsActionKeyManager.JsSubKey.FUNC.key
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.contains(errMessagePrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val irregularFuncValue = errMessage.replace(
+                extractIrregularRegex,
+                "$1"
+            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
+//                listOf(
+//                    "errMessage: ${errMessage}",
+//                    "notFountPath: ${notFountPath}",
+//                    "curPutColorCon: ${curPutColorCon}"
+//                ).joinToString("\n\n")
+//
+//            )
+            return curPutColorCon
+                .replace(
+                    irregularFuncValue,
+                    "<span style=\"color:${errRedCode};\">${irregularFuncValue}</span>",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            evaluateGeneCon: String,
+        ): Boolean {
+            checkJsAcGeneCon(
+                context,
+                evaluateGeneCon,
+            ).let {
+                if(it) return true
+            }
+            return false
+        }
+        private fun checkJsAcGeneCon(
+            context: Context?,
+            evaluateGeneCon: String,
+        ): Boolean {
+//            val evaluateGeneCon =
+//                KeyToSubKeyConTool.makeEvaluateAcCon(
+//                    keyToSubKeyMapListWithoutAfterSubKey,
+//                    keyToSubKeyMapListWithAfterSubKey,
+//                    jsRepValHolderMap
+//                )
+            if(
+                evaluateGeneCon.isEmpty()
+            ) return false
+            findIrregularFuncValue(evaluateGeneCon).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            return false
+        }
+
+        private fun findIrregularFuncValue(
+            evaluateAcGeneCon: String
+        ): String? {
+            val funcPrefix = "${funcKey}="
+            val findFuncRegex = Regex(
+                "\\?${funcPrefix}[^\n|?&]*"
+            )
+            return execFindIrregularFuncValue(
+                evaluateAcGeneCon,
+                findFuncRegex,
+                "?${funcPrefix}",
+            )
+        }
+
+        private fun execFindIrregularFuncValue(
+            evaluateAcCon: String,
+            findRegex: Regex,
+            removePrefix: String,
+        ): String? {
+            val matchResult = try {
+                findRegex.findAll(
+                    evaluateAcCon
+                )
+            } catch(e: Exception){
+                return null
+            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "notfound_findImportNotExistPath.txt").absolutePath,
+//                listOf(
+//                    "match: ${matchResult.map { it.value }.joinToString("---")}",
+////                    "isNotErr: ${isNotErr}",
+//                ).joinToString("\n\n")
+//            )
+            val irregularFuncValueRegex = Regex("[^a-zA-Z0-9_.]")
+            return matchResult.map {
+                val jsImportLine = it.value
+                val funcValue =
+                    QuoteTool.trimBothEdgeQuote(
+                        jsImportLine.removePrefix(removePrefix)
+                    )
+
+                val isNotIrregularFuncValue = !irregularFuncValueRegex.containsMatchIn(funcValue)
+                if(
+                    isNotIrregularFuncValue
+                ) return@map null
+                funcValue
+            }.firstOrNull { !it.isNullOrEmpty() }
+        }
+    }
+
     object QuoteNumCheck {
 
         private val errMessagePrefix = " quote must be even num:\n "
@@ -1380,7 +1510,7 @@ object LogTool {
 //                    "keyToSubKeyMapListWithReplace: ${keyToSubKeyMapListWithReplace}"
 //                ).joinToString("\n")
 //            )
-            checkKeyTSubKeyMapList(
+            checkKeyToSubKeyMapList(
                 keyToSubKeyMapListWithoutAfterSubKey
             ).let {
                 if(
@@ -1395,7 +1525,7 @@ object LogTool {
                 )
                 return true
             }
-            checkKeyTSubKeyMapList(
+            checkKeyToSubKeyMapList(
                 keyToSubKeyMapListWithAfterSubKey
             ).let {
                 if(
@@ -1410,7 +1540,7 @@ object LogTool {
                 )
                 return true
             }
-            checkKeyTSubKeyMapList(
+            checkKeyToSubKeyMapList(
                 keyToSubKeyMapListWithReplace
             ).let {
                 if(
@@ -1428,7 +1558,7 @@ object LogTool {
             return false
         }
 
-        private fun checkKeyTSubKeyMapList(
+        private fun checkKeyToSubKeyMapList(
             keyToSubKeyMapList: List<Pair<String, Map<String, String>>>?,
         ): Pair<Char, String>? {
             KeyToSubKeyConTool.makeMap(

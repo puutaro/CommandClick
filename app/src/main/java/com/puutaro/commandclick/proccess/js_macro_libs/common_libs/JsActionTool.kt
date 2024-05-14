@@ -183,39 +183,61 @@ object JsActionTool {
                     to JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON.key,
             JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key to String()
         )
-        val isQuoteErr = LogTool.QuoteNumCheck.check(
+        LogTool.QuoteNumCheck.check(
             context,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
             keyToSubKeyMapListWithReplace
-        )
-        if(isQuoteErr){
-            return blankActionMap
+        ).let {
+                isQuoteErr ->
+            if(
+                isQuoteErr
+            ) return blankActionMap
         }
-
-        val isPathErr = LogTool.PathNotFound.check(
+        val evaluateGeneCon =
+            LogTool.KeyToSubKeyConTool.makeEvaluateAcCon(
+                keyToSubKeyMapListWithoutAfterSubKey,
+                keyToSubKeyMapListWithAfterSubKey,
+                jsRepValHolderMap
+            )
+       LogTool.PathNotFound.check(
             context,
-            keyToSubKeyMapListWithoutAfterSubKey,
-            keyToSubKeyMapListWithAfterSubKey,
+            evaluateGeneCon,
             keyToSubKeyCon,
             jsRepValHolderMap,
-        )
-        if(isPathErr){
-            return blankActionMap
+        ).let {
+           isErrPath ->
+            if(
+                isErrPath
+            ) return blankActionMap
         }
-        val isSyntaxErr = LogTool.SyntaxCheck.checkJsAcSyntax(
+
+        LogTool.IrregularFuncValue.check(
+            context,
+            evaluateGeneCon,
+        ).let {
+            isIrregularFuncValue ->
+            if(
+                isIrregularFuncValue
+            ) return blankActionMap
+        }
+        LogTool.SyntaxCheck.checkJsAcSyntax(
             context,
             checkJsCon
-        )
-        if(isSyntaxErr){
-            return blankActionMap
+        ).let {
+                isSyntaxErr ->
+            if(
+                isSyntaxErr
+            ) return blankActionMap
         }
-        val isVarNotUseErr = LogTool.VarNotUse.checkJsAsSyntaxForVarNotUse(
+        LogTool.VarNotUse.checkJsAsSyntaxForVarNotUse(
             context,
             checkJsCon
-        )
-        if(isVarNotUseErr){
-            return blankActionMap
+        ).let {
+                isVarNotUseErr ->
+            if(
+                isVarNotUseErr
+            ) return blankActionMap
         }
         return jsActionMap
     }
