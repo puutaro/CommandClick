@@ -44,6 +44,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMu
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsVar
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsDiff
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsDistinct
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsToListFilter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsToListMap
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
@@ -568,6 +570,14 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsDiff(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsToListFilter(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsToListMap(terminalFragment)
         )
     }
 }
