@@ -62,7 +62,22 @@ object JsActionKeyManager {
         EXIT("exit"),
         VAR_RETURN("varReturn"),
         USE_VAR("useVar"),
+        COLLECTION_METHOD_START("collMethodStart"),
+        COLLECTION_METHOD_ARGS("collMethodArgs"),
+        COLLECTION_METHOD_END_RETURN("collMethodEndReturn"),
     }
+
+    object CollectionMethodManager {
+        enum class EnableCollectionMethod(
+            val method: String
+        ){
+            FILTER("filter"),
+            FOR_EACH("forEach"),
+            MAP("map"),
+        }
+    }
+
+
     const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
     const val actionImportVirtualSubKey = "actionImportCon"
@@ -622,6 +637,9 @@ object JsActionKeyManager {
                 OnlyVarSubKey.VAR_RETURN.key,
                 OnlyVarSubKey.EXIT.key,
                 OnlyVarSubKey.USE_VAR.key,
+                OnlyVarSubKey.COLLECTION_METHOD_START.key,
+                OnlyVarSubKey.COLLECTION_METHOD_ARGS.key,
+                OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key,
             )
 
         enum class  UseKeyForAfterJsConForVar(
@@ -632,6 +650,8 @@ object JsActionKeyManager {
             VAR_RETURN(OnlyVarSubKey.VAR_RETURN.key),
             EXIT(OnlyVarSubKey.EXIT.key),
             USE_VAR(OnlyVarSubKey.USE_VAR.key),
+            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
+            COLLECTION_METHOD_END_RETURN(OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key),
         }
 
         enum class  UseVarKeyForAfterJsConForVar(
@@ -639,6 +659,7 @@ object JsActionKeyManager {
         ) {
             VAR_VALUE(JsSubKey.VAR_VALUE.key),
             FUNC(JsSubKey.FUNC.key),
+            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
         }
 
 

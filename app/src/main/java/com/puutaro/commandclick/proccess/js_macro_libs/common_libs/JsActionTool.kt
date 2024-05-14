@@ -4,7 +4,6 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,7 +17,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -102,11 +100,13 @@ object JsActionTool {
             setReplaceVariableMap,
             mainOrSubFannelPath,
         )
-        val keyToSubMapTypeMap = createKeyToSubMapTypeMap(
+        val keyToSubMapTypeMapToKeyToSubKeyConListByValidKey = createKeyToSubMapTypeMap(
             readSharePreferenceMap,
             keyToSubKeyCon,
             setReplaceVariableMap,
         ) ?: return null
+        val keyToSubMapTypeMap = keyToSubMapTypeMapToKeyToSubKeyConListByValidKey.first
+        val actionImportedKeyToSubKeyConList = keyToSubMapTypeMapToKeyToSubKeyConListByValidKey.second
         val keyToSubKeyMapListWithReplace = keyToSubMapTypeMap.get(
             KeyToSubConType.WITH_REPLACE
         )
@@ -150,11 +150,16 @@ object JsActionTool {
 //                }",
 //            ).joinToString("\n\n")
 //        )
+        val displayActionImportedAcCon = LogTool.DisplayActionImportedJsAcSrc.make(
+            actionImportedKeyToSubKeyConList,
+            jsRepValHolderMap
+        )
         if(
             !macroDataMap.isNullOrEmpty()
         ) {
             LogTool.FirstJsActionLogSaver.save(
                 keyToSubKeyCon,
+                displayActionImportedAcCon,
                 null,
                 null,
                 macroDataMap to null,
@@ -172,6 +177,7 @@ object JsActionTool {
         val jsActionMap = jsActionMapToJsConOnlyReplace?.first
         LogTool.FirstJsActionLogSaver.save(
             keyToSubKeyCon,
+            displayActionImportedAcCon,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
             jsActionMapToJsConOnlyReplace
@@ -203,7 +209,8 @@ object JsActionTool {
        LogTool.PathNotFound.check(
             context,
             evaluateGeneCon,
-            keyToSubKeyCon,
+           actionImportedKeyToSubKeyConList,
+//            keyToSubKeyCon,
             jsRepValHolderMap,
         ).let {
            isErrPath ->
@@ -237,6 +244,15 @@ object JsActionTool {
                 isVarNotUseErr ->
             if(
                 isVarNotUseErr
+            ) return blankActionMap
+        }
+        LogTool.MisMatchCollectionMethodStartAndEnd.check(
+            context,
+            displayActionImportedAcCon
+        ).let {
+                isMisMatchCollMethodStartAndEnd ->
+            if(
+                isMisMatchCollMethodStartAndEnd
             ) return blankActionMap
         }
         return jsActionMap
@@ -364,12 +380,17 @@ object JsActionTool {
         readSharePreferenceMap: Map<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMap: Map<String, String>?,
-    ): Map<KeyToSubConType, List<Pair<String, Map<String, String>>>?>? {
-        val keyToSubKeyMapList = KeyToSubKeyMapListMaker.make(
+    ): Pair<
+            Map<KeyToSubConType, List<Pair<String, Map<String, String>>>?>,
+            List<Pair<String, String>>
+            >? {
+        val keyToSubKeyMapListToKeyToSubKeyConListByValidKey = KeyToSubKeyMapListMaker.make(
             keyToSubKeyCon,
             readSharePreferenceMap,
             setReplaceVariableMap,
         )
+        val keyToSubKeyMapList = keyToSubKeyMapListToKeyToSubKeyConListByValidKey.first
+        val actionImportedKeyToSubKeyConList = keyToSubKeyMapListToKeyToSubKeyConListByValidKey.second
         if (
             keyToSubKeyMapList.isEmpty()
         ) return null
@@ -437,7 +458,7 @@ object JsActionTool {
                     to null,
             KeyToSubConType.WITH_OTHER
                     to listOf(keyToSubKeyMapListForMacro),
-        )
+        ) to actionImportedKeyToSubKeyConList
         return mapOf(
             KeyToSubConType.WITH_REPLACE
                     to replaceKeyToSubKeyMapList,
@@ -447,7 +468,7 @@ object JsActionTool {
                     to makeKeyToSubKeyConListUntilFirstUnPipAble(
                 keyToSubKeyMapListWithoutAfterSubKey
             ),
-        )
+        ) to actionImportedKeyToSubKeyConList
     }
 
     private fun makeOverrideMapList(
@@ -688,7 +709,7 @@ private object KeyToSubKeyMapListMaker {
         keyToSubKeyCon: String?,
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
-    ): List<Pair<String, Map<String, String>>> {
+    ): Pair<List<Pair<String, Map<String, String>>>, List<Pair<String, String>>> {
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
@@ -736,7 +757,7 @@ private object KeyToSubKeyMapListMaker {
             filterByValidKey(keyToSubKeyConList)
         return PairToMapInList.convert(
             keyToSubKeyConListByValidKey
-        )
+        ) to keyToSubKeyConListByValidKey
     }
 
     private fun filterByValidKey(
@@ -1497,6 +1518,18 @@ private object VarShortSyntaxToJsFunc {
                     index + 1,
                 )
             }
+            JsActionKeyManager.OnlySubKeyMapForShortSyntax.UseKeyForAfterJsConForVar.COLLECTION_METHOD_START
+            -> makeCollectionMethodStartSentence(
+                varName,
+                keyToCon,
+                nextValueOrFuncOrIfConList,
+                index,
+            )
+            JsActionKeyManager.OnlySubKeyMapForShortSyntax.UseKeyForAfterJsConForVar.COLLECTION_METHOD_END_RETURN
+            -> makeCollectionMethodEndSentence(
+                index,
+                keyToCon,
+            )
         }
     }
 
@@ -1528,6 +1561,13 @@ private object VarShortSyntaxToJsFunc {
                 nextValueOrFuncOrIfConList,
                 index,
                 ifBaseIndex
+            )
+            JsActionKeyManager.OnlySubKeyMapForShortSyntax.UseVarKeyForAfterJsConForVar.COLLECTION_METHOD_START
+            -> makeCollectionMethodStartSentence(
+                varName,
+                curKeyToCon,
+                nextValueOrFuncOrIfConList,
+                index,
             )
             else -> String() to index + 1
         }
@@ -1593,6 +1633,178 @@ private object VarShortSyntaxToJsFunc {
             ifBaseIndex,
         ) to futureIndex
     }
+
+    private fun makeCollectionMethodEndSentence(
+        index: Int,
+        keyToCon: Pair<String, String>,
+    ): Pair<String, Int> {
+        val futureIndex = index + 1
+        val returnValue = JsActionKeyManager.NoQuoteHandler.make(
+            QuoteTool.trimBothEdgeQuote(keyToCon.second)
+        )
+        return listOf(
+            "end collection method",
+            "return ${returnValue}; });"
+        ).joinToString("=") to futureIndex
+    }
+
+    private fun makeCollectionMethodStartSentence(
+        varName: String,
+        keyToCon: Pair<String, String>,
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        index: Int,
+    ): Pair<String, Int> {
+        val editVarNameDotCollectionMethodNameSrc =
+            QuoteTool.trimBothEdgeQuote(keyToCon.second)
+        val collectionMethodNameSrc = editVarNameDotCollectionMethodNameSrc
+            .split(".")
+            .lastOrNull()
+            ?: return String() to index + 1
+        if(
+            editVarNameDotCollectionMethodNameSrc.isEmpty()
+        ) return String() to index + 1
+        val enableCollectionMethod =
+            JsActionKeyManager.CollectionMethodManager.EnableCollectionMethod.values()
+                .firstOrNull {
+                    it.method == collectionMethodNameSrc
+                } ?: return String() to index + 1
+
+        val argsIndex = index + 1
+        val collMethodStartSentenceToFutureIndex = execMakeCollectionMethodStartSentence(
+            varName,
+            enableCollectionMethod,
+            editVarNameDotCollectionMethodNameSrc,
+            nextValueOrFuncOrIfConList,
+            argsIndex,
+        )
+        return collMethodStartSentenceToFutureIndex
+//        val collMethodStartSentence = collMethodStartSentenceToFutureIndex.first
+//        val futureIndex = collMethodStartSentenceToFutureIndex.second
+//        val ifBaseIndex = makeIfBaseIndex(
+//            ifBaseIndexSrc,
+//            index,
+//        )
+//        return addIfSentence(
+//            collMethodStartSentence,
+//            nextValueOrFuncOrIfConList,
+//            ifBaseIndex,
+//        ) to futureIndex
+    }
+
+
+    private fun execMakeCollectionMethodStartSentence(
+        varName: String,
+        enableCollectionMethod: JsActionKeyManager.CollectionMethodManager.EnableCollectionMethod,
+        editVarNameDotCollectionMethodName: String,
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        argsIndex: Int,
+    ): Pair<String, Int> {
+
+        val collMethodArgsNameListToFutureIndex = makeCollMethodArgsList(
+            nextValueOrFuncOrIfConList,
+            argsIndex,
+        )
+        val collMethodArgsNameList = collMethodArgsNameListToFutureIndex.first
+        val futureIndex = collMethodArgsNameListToFutureIndex.second
+
+        val elementValName = getCollMethodArgName(
+            collMethodArgsNameList,
+            0,
+            JsActionKeyManager.JsFuncManager.DefaultLoopArgsName.EL.default
+        )
+        val elementArgName = elementValName + "Src"
+        val indexArgName = getCollMethodArgName(
+            collMethodArgsNameList,
+            1,
+            JsActionKeyManager.JsFuncManager.DefaultLoopArgsName.INDEX.default
+        )
+        val collMethodStartCon = when(enableCollectionMethod) {
+            JsActionKeyManager.CollectionMethodManager.EnableCollectionMethod.FILTER -> {
+                val boolValName = getCollMethodArgName(
+                    collMethodArgsNameList,
+                    2,
+                    JsActionKeyManager.JsFuncManager.DefaultLoopArgsName.BOOL.default
+                )
+                listOf(
+                    listOf("${editVarNameDotCollectionMethodName}(function(${elementArgName}, ${indexArgName}){"),
+                    listOf(
+                        "var ${elementValName} = ${elementArgName};",
+                        "var ${boolValName} = true;",
+                    ).map { "\t${it}" },
+//                    listOf("})${method};"),
+                ).flatten().joinToString("\n")
+            }
+            JsActionKeyManager.CollectionMethodManager.EnableCollectionMethod.MAP -> {
+                listOf(
+                    listOf("${editVarNameDotCollectionMethodName}(function(${elementArgName}, ${indexArgName}){"),
+                    listOf(
+                        "var ${elementValName} = ${elementArgName};",
+                    ).map { "\t${it}" },
+//                    listOf("})${method};")
+                ).flatten().joinToString("\n")
+            }
+            JsActionKeyManager.CollectionMethodManager.EnableCollectionMethod.FOR_EACH -> {
+                listOf(
+                    listOf("${editVarNameDotCollectionMethodName}(function(${elementArgName}, ${indexArgName}){"),
+                    listOf(
+                        "var ${elementValName} = ${elementArgName};",
+                    ).map { "\t${it}" },
+//                    listOf("});")
+                ).flatten().joinToString("\n")
+            }
+        }
+        val collMethodStartConWithVar = listOf(
+            varName,
+            collMethodStartCon
+        ).joinToString("=")
+        return collMethodStartConWithVar to futureIndex
+    }
+
+
+    private fun makeCollMethodArgsList(
+        nextValueOrFuncOrIfConList: List<Pair<String, String>>?,
+        argsIndex: Int,
+    ): Pair<List<String>, Int> {
+        val argsSeparator = '&'
+        val defaultCollMethodArgs =
+            listOf("el", "index", "bool")
+        val defaultCollMethodArgsToIndex = defaultCollMethodArgs to argsIndex
+        val argsNameToCon = nextValueOrFuncOrIfConList?.getOrNull(argsIndex)
+            ?: return defaultCollMethodArgsToIndex
+
+        val argsKeyEntry = argsNameToCon.first
+        if(
+            argsKeyEntry != JsActionKeyManager.OnlyVarSubKey.COLLECTION_METHOD_ARGS.key
+        ) return defaultCollMethodArgsToIndex
+        val argsCon = argsNameToCon.second
+        val collMethodArgsList = CmdClickMap.createMap(
+            argsCon,
+            argsSeparator,
+        ).map { it.second }
+        val futureIndex = argsIndex + 1
+        return defaultCollMethodArgs.mapIndexed {
+            index, arg ->
+            val curArg = collMethodArgsList.getOrNull(index)
+            when(curArg.isNullOrEmpty()){
+                true -> arg
+                else -> curArg
+            }
+        } to futureIndex
+    }
+
+    private fun getCollMethodArgName(
+        loopArgsNameList: List<String>,
+        index: Int,
+        defaultArgName: String
+    ): String {
+        return loopArgsNameList.getOrNull(index).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let defaultArgName
+            it
+        }
+    }
+
 
     private fun makeVarReturnSentence(
         keyToCon: Pair<String, String>,
