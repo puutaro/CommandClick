@@ -61,10 +61,10 @@ object JsActionKeyManager {
     ){
         EXIT("exit"),
         VAR_RETURN("varReturn"),
-        USE_VAR("useVar"),
-        COLLECTION_METHOD_START("collMethodStart"),
-        COLLECTION_METHOD_ARGS("collMethodArgs"),
-        COLLECTION_METHOD_END_RETURN("collMethodEndReturn"),
+//        USE_VAR("useVar"),
+//        COLLECTION_METHOD_START("collMethodStart"),
+//        COLLECTION_METHOD_ARGS("collMethodArgs"),
+//        COLLECTION_METHOD_END_RETURN("collMethodEndReturn"),
     }
 
     object CollectionMethodManager {
@@ -76,11 +76,18 @@ object JsActionKeyManager {
             MAP("map"),
         }
     }
+    const val prevPronoun = "prev"
+    const val noDefinitionBeforeVarNameByPrev = "NO_DIFINITION_BEFORE_VAR_NAME_BY_${prevPronoun}"
 
 
     const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
-    const val actionImportVirtualSubKey = "actionImportCon"
+    enum class VirtualSubKey(
+        val key: String
+    ){
+        ACTION_IMPORT_CON("actionImportCon"),
+        VAR_NOT_INIT("varNotInit"),
+    }
 
     object PathExistChecker {
 
@@ -111,7 +118,7 @@ object JsActionKeyManager {
                     it,
                     subKeySeparator
                 )
-                val acImportMark = "${subKeySeparator}${actionImportVirtualSubKey}="
+                val acImportMark = "${subKeySeparator}${VirtualSubKey.ACTION_IMPORT_CON.key}="
                 val firstCon = subKeyToConList.firstOrNull()?: String()
                 val firstConWithAcImportMark = "${firstCon}${acImportMark}"
                 val secondLaterConList = when(subKeyToConList.size > 0){
@@ -621,7 +628,7 @@ object JsActionKeyManager {
             JsSubKey.METHOD.key,
             JsSubKey.METHOD_ARGS.key,
             JsSubKey.DELETE_VAR.key,
-            actionImportVirtualSubKey,
+            VirtualSubKey.ACTION_IMPORT_CON.key,
         )
 
         private val onlySubKeyListForVar =
@@ -636,10 +643,10 @@ object JsActionKeyManager {
                 JsSubKey.ARGS.key,
                 OnlyVarSubKey.VAR_RETURN.key,
                 OnlyVarSubKey.EXIT.key,
-                OnlyVarSubKey.USE_VAR.key,
-                OnlyVarSubKey.COLLECTION_METHOD_START.key,
-                OnlyVarSubKey.COLLECTION_METHOD_ARGS.key,
-                OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key,
+//                OnlyVarSubKey.USE_VAR.key,
+//                OnlyVarSubKey.COLLECTION_METHOD_START.key,
+//                OnlyVarSubKey.COLLECTION_METHOD_ARGS.key,
+//                OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key,
             )
 
         enum class  UseKeyForAfterJsConForVar(
@@ -649,9 +656,9 @@ object JsActionKeyManager {
             FUNC(JsSubKey.FUNC.key),
             VAR_RETURN(OnlyVarSubKey.VAR_RETURN.key),
             EXIT(OnlyVarSubKey.EXIT.key),
-            USE_VAR(OnlyVarSubKey.USE_VAR.key),
-            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
-            COLLECTION_METHOD_END_RETURN(OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key),
+//            USE_VAR(OnlyVarSubKey.USE_VAR.key),
+//            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
+//            COLLECTION_METHOD_END_RETURN(OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key),
         }
 
         enum class  UseVarKeyForAfterJsConForVar(
@@ -659,7 +666,7 @@ object JsActionKeyManager {
         ) {
             VAR_VALUE(JsSubKey.VAR_VALUE.key),
             FUNC(JsSubKey.FUNC.key),
-            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
+//            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
         }
 
 

@@ -505,7 +505,7 @@ object LogTool {
         ): String {
             val deepLikeBlue = "#1f68de"
             val replaceActionImportVirtualSubKeyToColor =
-                "?${JsActionKeyManager.actionImportVirtualSubKey}=" to deepLikeBlue
+                "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=" to deepLikeBlue
             return con.replace(
                 replaceActionImportVirtualSubKeyToColor.first,
                 execMakeSpanTagHolder(
@@ -962,8 +962,16 @@ object LogTool {
                 putColorConByQuoteOdd,
                 errMessage,
             )
-            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
+            val putColorConByPrevNotExist = PrevNotExist.makePutColorCon(
                 putColorConByPathNotFound,
+                errMessage,
+            )
+            val putColorConByVarNotInit = VarNotInit.makePutColorCon(
+                putColorConByPrevNotExist,
+                errMessage,
+            )
+            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
+                putColorConByVarNotInit,
                 errMessage,
             )
             val putColorConBySyntaxCheckEnum =
@@ -982,11 +990,11 @@ object LogTool {
                 putColorConByNoKeyWordJsErrCheck,
                 errMessage,
             )
-            val putColorConByMisMatchCollMethodStartAndEnd = MisMatchCollectionMethodStartAndEnd.makePutColorCon(
-                putColorConByOneTimesVarWord,
-                errMessage,
-            )
-            return putColorConByMisMatchCollMethodStartAndEnd
+//            val putColorConByMisMatchCollMethodStartAndEnd = MisMatchCollectionMethodStartAndEnd.makePutColorCon(
+//                putColorConByOneTimesVarWord,
+//                errMessage,
+//            )
+            return putColorConByOneTimesVarWord
         }
 
         private fun makePutColorConBySyntaxCheckEnum(
@@ -1541,52 +1549,60 @@ object LogTool {
         }
     }
 
-    object MisMatchCollectionMethodStartAndEnd {
 
-        private const val displayErrMessage =
-            "Mismatch collection method start and end return"
-//        private const val errMessageTemplate = "${errMessage}'%s'"
-//        private val extractIrregularRegex = Regex("${errMessage}'(.*)'")
-        private val collMethodStartKey = JsActionKeyManager.OnlyVarSubKey.COLLECTION_METHOD_START.key
-        private val collMethodEndReturnKey = JsActionKeyManager.OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key
+    object VarNotInit {
+
+        private const val errMessagePrefix = "Var must be init by value or func key:\n "
+        private const val errMessageTemplate = "${errMessagePrefix}'%s'"
+        private val extractNotInitVarNameRegex = Regex("${errMessagePrefix}'(.*)'")
+        private val varKey = JsActionKeyManager.JsSubKey.VAR.key
+        private val varNotInitVirtualKey = JsActionKeyManager.VirtualSubKey.VAR_NOT_INIT.key
 
         fun makePutColorCon(
             curPutColorCon: String,
             errMessage: String,
         ): String {
-            val isNotErr = !errMessage.contains(displayErrMessage)
+            val isNotErr = !errMessage.contains(errMessagePrefix)
             if (
                 isNotErr
             ) return curPutColorCon
-            val collMethodStartKeyRegex = Regex("\\?(${collMethodStartKey}=[^?|&\n]+)")
-            val collMethodEndReturnKeyRegex = Regex("\\?(${collMethodEndReturnKey}=[^?|&\n]*)")
+            val notInitVarName = errMessage.replace(
+                extractNotInitVarNameRegex,
+                "$1"
+            )
 //            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsErrNotInit.txt").absolutePath,
 //                listOf(
 //                    "errMessage: ${errMessage}",
-//                    "notFountPath: ${notFountPath}",
-//                    "curPutColorCon: ${curPutColorCon}"
-//                ).joinToString("\n\n")
-//
+//                    "notInitVarName: ${notInitVarName}"
+//                ).joinToString("\n")
 //            )
+            val varNotInitVirtualKeyValue =
+                "?${varNotInitVirtualKey}=${notInitVarName}"
+            val varDefinitionKeyValue =
+                "?${varKey}=${notInitVarName}"
+            val varDefinitionStr =
+                "var ${notInitVarName} ="
             return curPutColorCon
                 .replace(
-                    collMethodStartKeyRegex,
-                    "<span style=\"color:${errRedCode};\">?$1</span>",
-                )
-                .replace(
-                    collMethodEndReturnKeyRegex,
-                    "<span style=\"color:${errRedCode};\">?$1</span>",
+                    varNotInitVirtualKeyValue,
+                    String()
+                ).replace(
+                    varDefinitionKeyValue,
+                    "<span style=\"color:${errRedCode};\">${varDefinitionKeyValue}</span>",
+                ).replace(
+                    varDefinitionStr,
+                    "<span style=\"color:${errRedCode};\">${varDefinitionStr}</span>",
                 )
         }
 
         fun check(
             context: Context?,
-            displayActionImportedAcCon: String,
+            evaluateGeneCon: String,
         ): Boolean {
             checkJsAcGeneCon(
                 context,
-                displayActionImportedAcCon,
+                evaluateGeneCon,
             ).let {
                 if(it) return true
             }
@@ -1594,27 +1610,40 @@ object LogTool {
         }
         private fun checkJsAcGeneCon(
             context: Context?,
-            displayActionImportedAcCon: String,
+            evaluateGeneCon: String,
         ): Boolean {
             if(
-                displayActionImportedAcCon.isEmpty()
+                evaluateGeneCon.isEmpty()
             ) return false
-            val collMethodStartKeyRegex = Regex("\\?${collMethodStartKey}=")
-            val collMethodEndReturnKeyRegex = Regex("\\?${collMethodEndReturnKey}=")
-            val collMethodStartKeyNum = collMethodStartKeyRegex.findAll(displayActionImportedAcCon).count()
-            val collMethodEndReturnKeyNum = collMethodEndReturnKeyRegex.findAll(displayActionImportedAcCon).count()
-            val isNotMismatch =
-                collMethodStartKeyNum == collMethodEndReturnKeyNum
-            if(isNotMismatch) return false
-            saveFirstLog(
-                context,
-                displayErrMessage,
-            )
-           return true
+            findVarNotInitVirtualKey(evaluateGeneCon).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            return false
         }
 
+        private fun findVarNotInitVirtualKey(
+            evaluateAcGeneCon: String
+        ): String? {
+            val varNotInitPrefix = "${varNotInitVirtualKey}="
+            val findFuncRegex = Regex(
+                "\\?${varNotInitPrefix}[^\n|?&]*"
+            )
+            return execFindVarNotInitVirtualKey(
+                evaluateAcGeneCon,
+                findFuncRegex,
+                "?${varNotInitPrefix}",
+            )
+        }
 
-        private fun execFindIrregularFuncValue(
+        private fun execFindVarNotInitVirtualKey(
             evaluateAcCon: String,
             findRegex: Regex,
             removePrefix: String,
@@ -1626,6 +1655,9 @@ object LogTool {
             } catch(e: Exception){
                 return null
             }
+            if(
+                matchResult.count() == 0
+            ) return null
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "notfound_findImportNotExistPath.txt").absolutePath,
 //                listOf(
@@ -1633,22 +1665,185 @@ object LogTool {
 ////                    "isNotErr: ${isNotErr}",
 //                ).joinToString("\n\n")
 //            )
-            val irregularFuncValueRegex = Regex("[^a-zA-Z0-9_.]")
-            return matchResult.map {
-                val jsImportLine = it.value
-                val funcValue =
+            matchResult.forEach {
+                val varNotInitKeyValueLine = it.value
+                val notInitVarName =
                     QuoteTool.trimBothEdgeQuote(
-                        jsImportLine.removePrefix(removePrefix)
+                        varNotInitKeyValueLine.removePrefix(removePrefix)
                     )
-
-                val isNotIrregularFuncValue = !irregularFuncValueRegex.containsMatchIn(funcValue)
-                if(
-                    isNotIrregularFuncValue
-                ) return@map null
-                funcValue
-            }.firstOrNull { !it.isNullOrEmpty() }
+                return notInitVarName
+            }
+            return null
         }
     }
+
+    object PrevNotExist {
+
+        private const val prevNotExistErrMessage = "Prev var not exist"
+        private val prevPronoun = JsActionKeyManager.prevPronoun
+        private val noDefinitionBeforeVarNameByPrev =
+            JsActionKeyManager.noDefinitionBeforeVarNameByPrev
+        private val varKey = JsActionKeyManager.JsSubKey.VAR.key
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.contains(prevNotExistErrMessage)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val varDifinitionWithErrSignalOnJsAcRepPair =
+                "${varKey}=${noDefinitionBeforeVarNameByPrev}" to
+                        "${varKey}=${prevPronoun}"
+            val varDifinitionWithErrSignalOnJsRepPair =
+                "${varKey} ${noDefinitionBeforeVarNameByPrev} =" to
+                        "${varKey} ${prevPronoun} ="
+            return curPutColorCon
+                .replace(errMessage, String())
+                .replace(
+                    varDifinitionWithErrSignalOnJsAcRepPair.first,
+                    "<span style=\"color:${errRedCode};\">${varDifinitionWithErrSignalOnJsAcRepPair.second}</span>",
+                )
+                .replace(
+                    varDifinitionWithErrSignalOnJsRepPair.first,
+                    "<span style=\"color:${errRedCode};\">${varDifinitionWithErrSignalOnJsRepPair.second}</span>",
+                )
+                .replace(
+                    Regex("([^a-zA-Z0-9_])(${prevPronoun})([^a-zA-Z0-9_])"),
+                    "$1<span style=\"color:${errRedCode};\">$2</span>$3",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            jsCon: String?,
+        ): Boolean {
+            if(
+                jsCon.isNullOrEmpty()
+            ) return false
+            val isNotPrevNotExist = !jsCon.contains(
+                noDefinitionBeforeVarNameByPrev
+            )
+            if(
+                isNotPrevNotExist
+            ) return false
+            saveFirstLog(
+                context,
+                prevNotExistErrMessage,
+            )
+            return true
+        }
+    }
+
+//    object MisMatchCollectionMethodStartAndEnd {
+//
+//        private const val displayErrMessage =
+//            "Mismatch collection method start and end return"
+////        private const val errMessageTemplate = "${errMessage}'%s'"
+////        private val extractIrregularRegex = Regex("${errMessage}'(.*)'")
+//        private val collMethodStartKey = JsActionKeyManager.OnlyVarSubKey.COLLECTION_METHOD_START.key
+//        private val collMethodEndReturnKey = JsActionKeyManager.OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key
+//
+//        fun makePutColorCon(
+//            curPutColorCon: String,
+//            errMessage: String,
+//        ): String {
+//            val isNotErr = !errMessage.contains(displayErrMessage)
+//            if (
+//                isNotErr
+//            ) return curPutColorCon
+//            val collMethodStartKeyRegex = Regex("\\?(${collMethodStartKey}=[^?|&\n]+)")
+//            val collMethodEndReturnKeyRegex = Regex("\\?(${collMethodEndReturnKey}=[^?|&\n]*)")
+////            FileSystems.writeFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
+////                listOf(
+////                    "errMessage: ${errMessage}",
+////                    "notFountPath: ${notFountPath}",
+////                    "curPutColorCon: ${curPutColorCon}"
+////                ).joinToString("\n\n")
+////
+////            )
+//            return curPutColorCon
+//                .replace(
+//                    collMethodStartKeyRegex,
+//                    "<span style=\"color:${errRedCode};\">?$1</span>",
+//                )
+//                .replace(
+//                    collMethodEndReturnKeyRegex,
+//                    "<span style=\"color:${errRedCode};\">?$1</span>",
+//                )
+//        }
+//
+//        fun check(
+//            context: Context?,
+//            displayActionImportedAcCon: String,
+//        ): Boolean {
+//            checkJsAcGeneCon(
+//                context,
+//                displayActionImportedAcCon,
+//            ).let {
+//                if(it) return true
+//            }
+//            return false
+//        }
+//        private fun checkJsAcGeneCon(
+//            context: Context?,
+//            displayActionImportedAcCon: String,
+//        ): Boolean {
+//            if(
+//                displayActionImportedAcCon.isEmpty()
+//            ) return false
+//            val collMethodStartKeyRegex = Regex("\\?${collMethodStartKey}=")
+//            val collMethodEndReturnKeyRegex = Regex("\\?${collMethodEndReturnKey}=")
+//            val collMethodStartKeyNum = collMethodStartKeyRegex.findAll(displayActionImportedAcCon).count()
+//            val collMethodEndReturnKeyNum = collMethodEndReturnKeyRegex.findAll(displayActionImportedAcCon).count()
+//            val isNotMismatch =
+//                collMethodStartKeyNum == collMethodEndReturnKeyNum
+//            if(isNotMismatch) return false
+//            saveFirstLog(
+//                context,
+//                displayErrMessage,
+//            )
+//           return true
+//        }
+//
+//
+//        private fun execFindIrregularFuncValue(
+//            evaluateAcCon: String,
+//            findRegex: Regex,
+//            removePrefix: String,
+//        ): String? {
+//            val matchResult = try {
+//                findRegex.findAll(
+//                    evaluateAcCon
+//                )
+//            } catch(e: Exception){
+//                return null
+//            }
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "notfound_findImportNotExistPath.txt").absolutePath,
+////                listOf(
+////                    "match: ${matchResult.map { it.value }.joinToString("---")}",
+//////                    "isNotErr: ${isNotErr}",
+////                ).joinToString("\n\n")
+////            )
+//            val irregularFuncValueRegex = Regex("[^a-zA-Z0-9_.]")
+//            return matchResult.map {
+//                val jsImportLine = it.value
+//                val funcValue =
+//                    QuoteTool.trimBothEdgeQuote(
+//                        jsImportLine.removePrefix(removePrefix)
+//                    )
+//
+//                val isNotIrregularFuncValue = !irregularFuncValueRegex.containsMatchIn(funcValue)
+//                if(
+//                    isNotIrregularFuncValue
+//                ) return@map null
+//                funcValue
+//            }.firstOrNull { !it.isNullOrEmpty() }
+//        }
+//    }
 
     object QuoteNumCheck {
 
