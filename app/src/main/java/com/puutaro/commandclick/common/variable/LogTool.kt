@@ -962,8 +962,12 @@ object LogTool {
                 putColorConByQuoteOdd,
                 errMessage,
             )
-            val putColorConByPrevNotExist = PrevNotExist.makePutColorCon(
+            val putColorConByLoopMethodOrArgsNotExist = LoopMethodOrArgsNotExist.makePutColorCon(
                 putColorConByPathNotFound,
+                errMessage
+            )
+            val putColorConByPrevNotExist = PrevNotExist.makePutColorCon(
+                putColorConByLoopMethodOrArgsNotExist,
                 errMessage,
             )
             val putColorConByVarNotInit = VarNotInit.makePutColorCon(
@@ -1735,6 +1739,114 @@ object LogTool {
             return true
         }
     }
+
+
+    object LoopMethodOrArgsNotExist {
+
+        private const val loopMethodOrArgsNotExistMsgPrefix =
+            "Loop method definition err:\n"
+        private const val loopMethodOrArgsNotExistMsgTemplate =
+            "${loopMethodOrArgsNotExistMsgPrefix}%s"
+        private const val loopArgsDefinitionErrMarkPrefix =
+            JsActionKeyManager.JsFuncManager.loopArgsDefinitionErrMarkPrefix
+        private val funcKey =
+            JsActionKeyManager.JsSubKey.FUNC.key
+
+        private enum class ErrSchema(
+            val schema: String
+        ){
+            FUNC("${JsActionKeyManager.JsSubKey.FUNC.key}:"),
+            DETAIL("detail:"),
+        }
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.startsWith(loopMethodOrArgsNotExistMsgPrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val funcNameToDetail = extractFuncAndDetailPair(
+                errMessage
+            )
+            val funcName = funcNameToDetail.first.trim()
+            val loopMethod = funcName.split(".").lastOrNull()
+                ?: String()
+            val itPronoun = JsActionKeyManager.JsVarManager.itPronoun
+            val varItFuncDifinition = "${funcKey}=${itPronoun}.${loopMethod}"
+            val varFuncDefinition = "${funcKey}=${funcName}"
+            return curPutColorCon
+                .replace(
+                    varFuncDefinition,
+                    "<span style=\"color:${errRedCode};\">${varFuncDefinition}</span>",
+                ).replace(
+                    Regex("(${loopArgsDefinitionErrMarkPrefix}[^\n<>]+)"),
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                )
+                .replace(
+                    Regex("(${varItFuncDifinition}[^\n<>]+)"),
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            jsCon: String?,
+        ): Boolean {
+            if(
+                jsCon.isNullOrEmpty()
+            ) return false
+            val isNotPrevNotExist = !jsCon.contains(
+                loopArgsDefinitionErrMarkPrefix
+            )
+            if(
+                isNotPrevNotExist
+            ) return false
+            val extractErrConRegex = Regex("${loopArgsDefinitionErrMarkPrefix}[^\n]+")
+            val displayErrDetail = extractErrConRegex.findAll(jsCon).firstOrNull()?.let  {
+                val errLine = it.value
+                makeErrMsg(errLine)
+            } ?: return false
+            saveFirstLog(
+                context,
+                loopMethodOrArgsNotExistMsgTemplate.format(displayErrDetail),
+            )
+            return true
+        }
+
+        private fun makeErrMsg(
+            errLine: String
+        ): String {
+            val funcConAndErrConList = errLine
+                .removePrefix(loopArgsDefinitionErrMarkPrefix).split(
+                    JsActionKeyManager.JsFuncManager.errConSeparator
+                )
+            val funcCon = funcConAndErrConList.firstOrNull() ?: String()
+            val errCon = funcConAndErrConList.getOrNull(1) ?: String()
+            return listOf(
+                " ${ErrSchema.FUNC.schema} ${funcCon}",
+                " ${ErrSchema.DETAIL.schema} ${errCon}",
+            ).joinToString("\n")
+        }
+
+        private fun extractFuncAndDetailPair(
+            errMsg: String
+        ): Pair<String, String> {
+            val errConLines =
+                errMsg.removePrefix(loopMethodOrArgsNotExistMsgPrefix).split("\n")
+            val funcSchema = ErrSchema.FUNC.schema
+            val funcName = errConLines.firstOrNull {
+                it.trim().startsWith(funcSchema)
+            } ?: String()
+            val detailSchema = ErrSchema.DETAIL.schema
+            val detailName = errConLines.firstOrNull {
+                it.trim().startsWith(detailSchema)
+            } ?: String()
+            return funcName to detailName
+        }
+    }
+
 
 //    object MisMatchCollectionMethodStartAndEnd {
 //

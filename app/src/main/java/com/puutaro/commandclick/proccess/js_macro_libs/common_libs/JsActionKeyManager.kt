@@ -67,15 +67,15 @@ object JsActionKeyManager {
 //        COLLECTION_METHOD_END_RETURN("collMethodEndReturn"),
     }
 
-    object CollectionMethodManager {
-        enum class EnableCollectionMethod(
-            val method: String
-        ){
-            FILTER("filter"),
-            FOR_EACH("forEach"),
-            MAP("map"),
-        }
-    }
+//    object CollectionMethodManager {
+//        enum class EnableCollectionMethod(
+//            val method: String
+//        ){
+//            FILTER("filter"),
+//            FOR_EACH("forEach"),
+//            MAP("map"),
+//        }
+//    }
     const val prevPronoun = "prev"
     const val noDefinitionBeforeVarNameByPrev = "NO_DIFINITION_BEFORE_VAR_NAME_BY_${prevPronoun}"
 
@@ -188,7 +188,7 @@ object JsActionKeyManager {
     object OverrideManager {
         enum class NoOverrideJsSubKey(val key: String){
             ID(JsSubKey.ID.key),
-            AFTER(JsSubKey.AFTER.key),
+//            AFTER(JsSubKey.AFTER.key),
 //            OVERRIDE(JsSubKey.OVERRIDE.key),
         }
 
@@ -259,20 +259,49 @@ object JsActionKeyManager {
 
     object JsFuncManager {
 
+
         enum class LoopMethodFlag(
             val flag: String
         ) {
             JS_INTERFACE_PREFIX("js"),
-            FILTER_METHOD_SUFFIX_(".filter"),
-            MAP_METHOD_SUFFIX_(".map"),
-            FOR_EACH_METHOD_SUFFIX_(".forEach"),
             JS_CON_PREFIX(jsConPrefix)
         }
 
-        private enum class PipUnableFuncSuffix(
+        const val loopArgsDefinitionErrMarkPrefix = "LOOP_METHOD_ARGS_DIFINITION_ERR: "
+        const val errConSeparator = "\t"
+
+        enum class EnableLoopMethodType(
             val suffix: String
         ){
-            MACRO("_S"),
+            FILTER_METHOD_TYPE(".filter"),
+            MAP_METHOD_TYPE(".map"),
+            FOR_EACH_METHOD_TYPE(".forEach"),
+        }
+
+        enum class LoopMethodArgNameIndexToErrMsg(
+            val index: Int,
+            val errMsg: String,
+        ){
+            LOOP_ARG_NAMES(-1, "${JsSubKey.LOOP_ARG_NAMES.key} not difinition"),
+            ELEMENT(0, "Element var name not difinition"),
+            INDEX(1, "Index var name not difinition"),
+            BOOL(2, "Bool var name not difinition"),
+        }
+
+//        private enum class PipUnableFuncSuffix(
+//            val suffix: String
+//        ){
+//            MACRO("_S"),
+//        }
+
+        fun makeLoopArgsDefinitionErrMark(
+            functionName: String?,
+            con: String,
+        ): String {
+            return listOf(
+                loopArgsDefinitionErrMarkPrefix,
+                "${functionName}${errConSeparator}${con}"
+            ).joinToString(String())
         }
 
 //        fun howPipAbleFunc(
@@ -297,15 +326,20 @@ object JsActionKeyManager {
             ) == true
         }
 
-        fun isLoopMethod(
+        fun howLoopMethod(
             functionName: String?,
-            loopMethodSuffix: String,
-        ): Boolean {
-            val isNotJsInterFace =
-                functionName?.startsWith(LoopMethodFlag.JS_INTERFACE_PREFIX.flag) != true
-            val isLoopMethodStr =
-                functionName?.endsWith(loopMethodSuffix) == true
-            return isNotJsInterFace && isLoopMethodStr
+        ): EnableLoopMethodType? {
+            val isJsInterFace =
+                functionName?.startsWith(LoopMethodFlag.JS_INTERFACE_PREFIX.flag) == true
+            if(
+                isJsInterFace
+            ) return null
+            return EnableLoopMethodType.values().firstOrNull {
+                functionName?.endsWith(it.suffix) == true
+            }
+//            val isLoopMethodStr =
+//                functionName?.endsWith(loopMethodSuffix) == true
+//            return isNotJsInterFace && isLoopMethodStr
         }
 
         enum class DefaultLoopArgsName(
@@ -349,32 +383,34 @@ object JsActionKeyManager {
                 varValue
             )
         }
+
+        const val itPronoun = "it"
     }
 
-    object JsConManager {
-        enum class Flag(
-            val flag: String
-        ) {
-            JS_CON_PREFIX(jsConPrefix),
-        }
-    }
+//    object JsConManager {
+//        enum class Flag(
+//            val flag: String
+//        ) {
+//            JS_CON_PREFIX(jsConPrefix),
+//        }
+//    }
 
 
-    object JsPathManager {
-        enum class Flag(
-            val flag: String
-        ) {
-            JS_INTERFACE_PREFIX("js"),
-        }
-
-        fun isJsInterface(
-            jsPathCon: String
-        ): Boolean {
-            return jsPathCon.startsWith(
-                Flag.JS_INTERFACE_PREFIX.flag
-            )
-        }
-    }
+//    object JsPathManager {
+//        enum class Flag(
+//            val flag: String
+//        ) {
+//            JS_INTERFACE_PREFIX("js"),
+//        }
+//
+//        fun isJsInterface(
+//            jsPathCon: String
+//        ): Boolean {
+//            return jsPathCon.startsWith(
+//                Flag.JS_INTERFACE_PREFIX.flag
+//            )
+//        }
+//    }
 
     object AfterJsConMaker {
 
@@ -614,6 +650,11 @@ object JsActionKeyManager {
 
     object OnlySubKeyMapForShortSyntax {
 
+        enum class CommonOnlySubKey(
+            val key: String
+        ){
+            WHEN("when"),
+        }
 
         private val subKeyForCommon = listOf(
             JsSubKey.ID.key,
@@ -628,6 +669,7 @@ object JsActionKeyManager {
             JsSubKey.METHOD.key,
             JsSubKey.METHOD_ARGS.key,
             JsSubKey.DELETE_VAR.key,
+            CommonOnlySubKey.WHEN.key,
             VirtualSubKey.ACTION_IMPORT_CON.key,
         )
 
@@ -676,7 +718,7 @@ object JsActionKeyManager {
         )
         private val useKeyListForFunc = onlySubKeyListForFunc + listOf(
             JsActionsKey.JS_FUNC.key,
-            JsSubKey.IF.key,
+//            JsSubKey.IF.key,
             JsSubKey.FUNC.key,
             JsSubKey.ARGS.key,
         )
@@ -689,7 +731,6 @@ object JsActionKeyManager {
                 useKeyListForVar.contains(subKeyName)
             }
         }
-
 
         fun filterForFunc(
             subKeyToConPairList: List<Pair<String, String>>?,

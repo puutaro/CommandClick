@@ -5,7 +5,6 @@ import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -19,7 +18,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -36,9 +34,7 @@ object JsActionTool {
     private val replaceMainKeyName = JsActionKeyManager.JsActionsKey.REPLACE.key
     private val overrideMainKeyName = JsActionKeyManager.JsActionsKey.OVERRIDE.key
     private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_FUNC.key
-//    private val jsConKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
-    private val afterSubKeyName = JsActionKeyManager.JsSubKey.AFTER.key
 
 
     fun judgeJsAction(
@@ -256,15 +252,6 @@ object JsActionTool {
                 isErrPath
             ) return true
         }
-        LogTool.PrevNotExist.check(
-            context,
-            checkJsCon
-        ).let {
-                isPrevNotExist ->
-            if(
-                isPrevNotExist
-            ) return true
-        }
         LogTool.VarNotInit.check(
             context,
             evaluateGeneCon
@@ -282,6 +269,24 @@ object JsActionTool {
                 isIrregularFuncValue ->
             if(
                 isIrregularFuncValue
+            ) return true
+        }
+        LogTool.LoopMethodOrArgsNotExist.check(
+            context,
+            checkJsCon
+        ).let {
+                isLoopMethodOrArgsNotExist ->
+            if(
+                isLoopMethodOrArgsNotExist
+            ) return true
+        }
+        LogTool.PrevNotExist.check(
+            context,
+            checkJsCon
+        ).let {
+                isPrevNotExist ->
+            if(
+                isPrevNotExist
             ) return true
         }
         LogTool.SyntaxCheck.checkJsAcSyntax(
@@ -1096,9 +1101,20 @@ private object PairToMapInList {
             "${jsFuncMainKeyName}=${jsPathMapConSrc}",
             '?'
         )
+        val whenOnlySubKeyName =
+            JsActionKeyManager.OnlySubKeyMapForShortSyntax.CommonOnlySubKey.WHEN.key
+        val ifSubKeyName =
+            JsActionKeyManager.JsSubKey.IF.key
         val funcConPairListSrc = JsActionKeyManager.OnlySubKeyMapForShortSyntax.filterForFunc(
             funcConPairListSrcBeforeFilter
-        )
+        )?.map {
+                subKeyToCon ->
+            val key = subKeyToCon.first
+            when(key == whenOnlySubKeyName){
+                true -> ifSubKeyName to subKeyToCon.second
+                else -> subKeyToCon.first to subKeyToCon.second
+            }
+        }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAcFunc.txt").absolutePath,
 //            listOf(
@@ -1260,9 +1276,11 @@ private object VarShortSyntaxToJsFunc {
     private val varValueSubKeyName = JsActionKeyManager.JsSubKey.VAR_VALUE.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
-    private val suggerIf = JsActionKeyManager.JsSubKey.IF.key
+    private val ifSubKeyName = JsActionKeyManager.JsSubKey.IF.key
+    private val whenOnlySubKeyName =
+        JsActionKeyManager.OnlySubKeyMapForShortSyntax.CommonOnlySubKey.WHEN.key
     private const val jsSubKeySeparator = '?'
-    private const val itPronoun = "it"
+    private const val itPronoun = JsActionKeyManager.JsVarManager.itPronoun
     private const val prevPronoun = JsActionKeyManager.prevPronoun
     private val itSuggerVarRegex = Regex("([^a-zA-Z0-9_])${itPronoun}([^a-zA-Z0-9_])")
     private val itSuggerVarRegexEndVer = Regex("([^a-zA-Z0-9_])${itPronoun}$")
@@ -1298,28 +1316,35 @@ private object VarShortSyntaxToJsFunc {
             JsActionKeyManager.OnlySubKeyMapForShortSyntax.extractForVar(
                 varMapConPairListSrc
             )
-        val onlySubKeyMapSrc = onlySubKeyMapToVarMapConPairList.first
-        val varMapConPairListBeforeExcludeFirstIf = onlySubKeyMapToVarMapConPairList.second
+        val onlySubKeyMapSrc = onlySubKeyMapToVarMapConPairList.first.map {
+            onlyMapEntry ->
+            val key = onlyMapEntry.key
+            when(key == whenOnlySubKeyName){
+                true -> ifSubKeyName to onlyMapEntry.value
+                else -> onlyMapEntry.key to onlyMapEntry.value
+            }
+        }.toMap()
+        val varMapConPairList = onlySubKeyMapToVarMapConPairList.second
             ?: emptyList()
-        val onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey = extractFirstInExcludePairList(
-            varMapConPairListBeforeExcludeFirstIf
-        )
-        val onlyIfMap =
-            onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.first
-        val varMapConPairList =
-            onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.second
+//        val onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey = extractFirstInExcludePairList(
+//            varMapConPairListBeforeExcludeFirstIf
+//        )
+//        val onlyIfMap =
+//            onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.first
+//        val varMapConPairList =
+//            onlyIfSubKeyMapToVarMapConPairListExcludeIfSubKey.second
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAc.txt").absolutePath,
 //            listOf(
 //                "varMapConSrc: ${varMapConSrc}",
 //                "varMapConPairListSrcBeforeFilter: ${varMapConPairListSrcBeforeFilter}",
 //                "varMapConPairListSrc: ${varMapConPairListSrc}",
-//                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
-//                "onlyIfMap: ${onlyIfMap}",
+////                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
+////                "onlyIfMap: ${onlyIfMap}",
 //                "onlySubKeyMapToVarMapConPairList: ${onlySubKeyMapToVarMapConPairList}",
-////                "onlySubKeyMap: ${onlySubKeyMap}",
+//                "onlySubKeyMapSrc: ${onlySubKeyMapSrc}",
 //                "varMapConPairList: ${varMapConPairList}"
-//            ).joinToString("\n\n")
+//            ).joinToString("\n\n") + "\n--------\n"
 //        )
         val jsVarName = CmdClickMap.getFirst(
             varMapConPairList,
@@ -1364,7 +1389,7 @@ private object VarShortSyntaxToJsFunc {
                 subKey != actionImportVirtualSubKey
             isNotActionImportVirtualSubKey
         }
-        val jsKeyConMapSrc = jsActionImportMarkMap + onlyIfMap + mapOf(
+        val jsKeyConMapSrc = jsActionImportMarkMap + mapOf(
             varSubKeyName to jsVarName,
         ) + valueOrFuncMap +
                 onlySubKeyMap +
@@ -1380,8 +1405,8 @@ private object VarShortSyntaxToJsFunc {
 //                "varMapConSrc: ${varMapConSrc}",
 //                "varMapConPairListSrcBeforeFilter: ${varMapConPairListSrcBeforeFilter}",
 //                "varMapConPairListSrc: ${varMapConPairListSrc}",
-//                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
-//                "onlyIfMap: ${onlyIfMap}",
+////                "varMapConPairListBeforeExcludeFirstIf: ${varMapConPairListBeforeExcludeFirstIf}",
+////                "onlyIfMap: ${onlyIfMap}",
 //                "onlySubKeyMapToVarMapConPairList: ${onlySubKeyMapToVarMapConPairList}",
 //                "onlySubKeyMap: ${onlySubKeyMap}",
 //                "varMapConPairList: ${varMapConPairList}",
@@ -1393,49 +1418,49 @@ private object VarShortSyntaxToJsFunc {
         return (jsMainKeyName to jsKeyConMap) to varName
     }
 
-    private fun extractFirstInExcludePairList(
-        varMapConPairListSrc: List<Pair<String, String>>
-    ): Pair<
-            Map<String, String>,
-            List<Pair<String, String>>
-            >{
-        val untilSubKeyList = listOf(
-            varValueSubKeyName,
-            funcSubKeyName,
-        )
-        val untilSubKeyIndex = varMapConPairListSrc.indexOfFirst {
-            val subKeyName = it.first
-            untilSubKeyList.contains(subKeyName)
-        }
-        val defaultNoExistIfMap = emptyMap<String, String>()
-        if(
-            untilSubKeyIndex < 0
-        ) return defaultNoExistIfMap to varMapConPairListSrc
-        val ifSubKeyContainEntryPairList =
-            varMapConPairListSrc.take(untilSubKeyIndex)
-        val firstIfPair = ifSubKeyContainEntryPairList.firstOrNull {
-            val subKeyName = it.first
-            subKeyName == suggerIf
-        } ?: return defaultNoExistIfMap to varMapConPairListSrc
-        val firstIfCondition = firstIfPair.second
-        if(
-            firstIfCondition.isEmpty()
-        ) return defaultNoExistIfMap to varMapConPairListSrc
-        var firstMatch = true
-        val varMapConPairListExcludeFirstIf = varMapConPairListSrc.filter {
-            if(
-                firstIfPair == it
-                && firstMatch
-            ) {
-                firstMatch = false
-                return@filter false
-            }
-            true
-        }
-        return mapOf(
-            firstIfPair
-        ) to varMapConPairListExcludeFirstIf
-    }
+//    private fun extractFirstInExcludePairList(
+//        varMapConPairListSrc: List<Pair<String, String>>
+//    ): Pair<
+//            Map<String, String>,
+//            List<Pair<String, String>>
+//            >{
+//        val untilSubKeyList = listOf(
+//            varValueSubKeyName,
+//            funcSubKeyName,
+//        )
+//        val untilSubKeyIndex = varMapConPairListSrc.indexOfFirst {
+//            val subKeyName = it.first
+//            untilSubKeyList.contains(subKeyName)
+//        }
+//        val defaultNoExistIfMap = emptyMap<String, String>()
+//        if(
+//            untilSubKeyIndex < 0
+//        ) return defaultNoExistIfMap to varMapConPairListSrc
+//        val ifSubKeyContainEntryPairList =
+//            varMapConPairListSrc.take(untilSubKeyIndex)
+//        val firstIfPair = ifSubKeyContainEntryPairList.firstOrNull {
+//            val subKeyName = it.first
+//            subKeyName == whenOnlySubKeyName
+//        } ?: return defaultNoExistIfMap to varMapConPairListSrc
+//        val firstIfCondition = firstIfPair.second
+//        if(
+//            firstIfCondition.isEmpty()
+//        ) return defaultNoExistIfMap to varMapConPairListSrc
+//        var firstMatch = true
+//        val varMapConPairListExcludeFirstIf = varMapConPairListSrc.filter {
+//            if(
+//                firstIfPair == it
+//                && firstMatch
+//            ) {
+//                firstMatch = false
+//                return@filter false
+//            }
+//            true
+//        }
+//        return mapOf(
+//            firstIfPair
+//        ) to varMapConPairListExcludeFirstIf
+//    }
 
     private fun extractFirstValueOrFuncMap(
         valueOrIfConList: List<Pair<String, String>>?,
@@ -1689,7 +1714,7 @@ private object VarShortSyntaxToJsFunc {
         val ifEntryKeyToCon =
             nextValueOrFuncOrIfConList?.getOrNull(ifIndexSrc)
                 ?: return varOrFuncSentence
-        val isNotIfKey = ifEntryKeyToCon.first != suggerIf
+        val isNotIfKey = ifEntryKeyToCon.first != whenOnlySubKeyName
         if(
             isNotIfKey
         ) return varOrFuncSentence
@@ -2208,19 +2233,24 @@ private object JsConPutter {
         ) LogSystems.stdSys(
             "func name is null: ${jsMap}"
         )
-        val funcTemplate =
-            makeFuncTemplate(jsMap)
-        val loopMethodTemplate =
-            makeLoopMethodTemplate(jsMap)
-
-
-        val insertFuncCon = when(loopMethodTemplate.isNullOrEmpty()){
-            false -> makeInsertLoopMethodCon(
-                jsMap,
-                jsMapListOnlyAfter,
-                loopMethodTemplate,
-                loopIndex,
-            )
+        val funcTemplate = makeFuncTemplate(jsMap)
+        val enableLoopMethodType = JsActionKeyManager.JsFuncManager.howLoopMethod(
+            functionName,
+        )
+        val insertFuncCon = when(enableLoopMethodType == null){
+            false -> {
+                val loopMethodTemplate =
+                    makeLoopMethodTemplate(
+                        jsMap,
+                        enableLoopMethodType,
+                    )
+                makeInsertLoopMethodCon(
+                    jsMap,
+                    jsMapListOnlyAfter,
+                    loopMethodTemplate,
+                    loopIndex,
+                )
+            }
             else -> makeInsertFuncCon(
                 jsMap,
                 jsMapListOnlyAfter,
@@ -2238,6 +2268,9 @@ private object JsConPutter {
         loopMethodTemplate: String,
         loopIndex: Int,
     ): String {
+        if(
+            loopMethodTemplate.isEmpty()
+        ) return String()
         val loopMethodTemplateWithVar = makeFuncConWithVarOrReturn(
             jsMap,
             loopMethodTemplate,
@@ -2491,55 +2524,52 @@ private object JsConPutter {
 
     private fun makeLoopMethodTemplate(
         jsMap: Map<String, String>,
-    ): String? {
-        val jsInterfacePrefix =
-            JsActionKeyManager.JsFuncManager.LoopMethodFlag.JS_INTERFACE_PREFIX.flag
-        val filterMethodSuffix =
-            JsActionKeyManager.JsFuncManager.LoopMethodFlag.FILTER_METHOD_SUFFIX_.flag
-        val mapMethodSuffix =
-            JsActionKeyManager.JsFuncManager.LoopMethodFlag.MAP_METHOD_SUFFIX_.flag
-        val forEachMethodSuffix =
-            JsActionKeyManager.JsFuncManager.LoopMethodFlag.FOR_EACH_METHOD_SUFFIX_.flag
+        enableLoopMethodType: JsActionKeyManager.JsFuncManager.EnableLoopMethodType,
+    ): String {
         val functionName =
             jsMap.get(JsActionKeyManager.JsSubKey.FUNC.key)
-        val isJsInterface =
-            functionName?.startsWith(jsInterfacePrefix) == true
-        if(isJsInterface) return null
-        val isFilterMethod = JsActionKeyManager.JsFuncManager.isLoopMethod(
-            functionName,
-            filterMethodSuffix
-        )
-        val isMapMethod = JsActionKeyManager.JsFuncManager.isLoopMethod(
-            functionName,
-            mapMethodSuffix,
-        )
-        val isForEachMethod = JsActionKeyManager.JsFuncManager.isLoopMethod(
-            functionName,
-            forEachMethodSuffix
-        )
         val loopArgsNameList = makeVarArgsForLoopMethod(
             jsMap
-        )
-        val elementValName = getLoopArgName(
-            loopArgsNameList,
-            0,
-            JsActionKeyManager.JsFuncManager.DefaultLoopArgsName.EL.default
-        )
+        ).ifEmpty {
+            return JsActionKeyManager.JsFuncManager.makeLoopArgsDefinitionErrMark(
+                functionName,
+                JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.LOOP_ARG_NAMES.errMsg
+            )
+        }
+        val elementValName =
+            getLoopArgName(
+                loopArgsNameList,
+                JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.ELEMENT.index,
+        ).ifEmpty {
+                return JsActionKeyManager.JsFuncManager.makeLoopArgsDefinitionErrMark(
+                    functionName,
+                    JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.ELEMENT.errMsg
+                )
+            }
+
         val elementArgName = elementValName + "Src"
         val indexArgName = getLoopArgName(
             loopArgsNameList,
-            1,
-            JsActionKeyManager.JsFuncManager.DefaultLoopArgsName.INDEX.default
-        )
-        return when(true) {
-            isFilterMethod -> {
+            JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.INDEX.index,
+        ).ifEmpty {
+            return JsActionKeyManager.JsFuncManager.makeLoopArgsDefinitionErrMark(
+                functionName,
+                JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.INDEX.errMsg
+            )
+        }
+        return when(enableLoopMethodType) {
+            JsActionKeyManager.JsFuncManager.EnableLoopMethodType.FILTER_METHOD_TYPE -> {
                 val method =
                     JsActionKeyManager.MethodManager.makeMethod(jsMap)
                 val boolValName = getLoopArgName(
                     loopArgsNameList,
-                    2,
-                    JsActionKeyManager.JsFuncManager.DefaultLoopArgsName.BOOL.default
-                )
+                    JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.BOOL.index,
+                ).ifEmpty {
+                    return JsActionKeyManager.JsFuncManager.makeLoopArgsDefinitionErrMark(
+                        functionName,
+                        JsActionKeyManager.JsFuncManager.LoopMethodArgNameIndexToErrMsg.BOOL.errMsg
+                    )
+                }
                 listOf(
                     listOf("${functionName}(function(${elementArgName}, ${indexArgName}){"),
                     listOf(
@@ -2551,7 +2581,7 @@ private object JsConPutter {
                     listOf("})${method};"),
                 ).flatten().joinToString("\n")
             }
-            isMapMethod -> {
+            JsActionKeyManager.JsFuncManager.EnableLoopMethodType.MAP_METHOD_TYPE -> {
                 val method =
                     JsActionKeyManager.MethodManager.makeMethod(jsMap)
                 listOf(
@@ -2564,7 +2594,7 @@ private object JsConPutter {
                     listOf("})${method};")
                 ).flatten().joinToString("\n")
             }
-            isForEachMethod -> {
+            JsActionKeyManager.JsFuncManager.EnableLoopMethodType.FOR_EACH_METHOD_TYPE -> {
                 listOf(
                     listOf("${functionName}(function(${elementArgName}, ${indexArgName}){"),
                     listOf(
@@ -2574,21 +2604,22 @@ private object JsConPutter {
                     listOf("});")
                 ).flatten().joinToString("\n")
             }
-            else -> null
         }
     }
 
     private fun getLoopArgName(
         loopArgsNameList: List<String>,
         index: Int,
-        defaultArgName: String
+//        defaultArgName: String
     ): String {
-        return loopArgsNameList.getOrNull(index).let {
-            if(
-                it.isNullOrEmpty()
-            ) return@let defaultArgName
-            it
-        }
+        return loopArgsNameList.getOrNull(index)
+            ?: String()
+//            .let {
+//            if(
+//                it.isNullOrEmpty()
+//            ) return@let defaultArgName
+//            it
+//        }
     }
 
     private fun makeFuncCon(
