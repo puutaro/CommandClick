@@ -21,7 +21,7 @@ object JsActionKeyManager {
         TSV_IMPORT("tsvImport"),
         ACTION_IMPORT("actionImport"),
         OVERRIDE("override"),
-        REPLACE("replace")
+        REPLACE("replace"),
     }
 
     enum class CommonPathKey(
@@ -30,6 +30,7 @@ object JsActionKeyManager {
         IMPORT_PATH("importPath"),
         USE(TsvImportManager.tsvImportUsePhrase),
     }
+
 
     enum class JsSubKey(
         val key: String
@@ -54,6 +55,8 @@ object JsActionKeyManager {
         END_TOAST("endToast"),
         ON_LOG("onLog"),
         DELETE_VAR("deleteVar"),
+        IF_BRACKET_START("ifBracketStart"),
+        IF_BRACKET_END("ifBracketEnd"),
     }
 
     enum class OnlyVarSubKey(
@@ -109,7 +112,19 @@ object JsActionKeyManager {
 
         private const val mainKeySeparator = '|'
         private const val subKeySeparator = '?'
+
+        enum class ActionImportKey(
+            val key: String,
+        ){
+            IMPORT_PATH(CommonPathKey.IMPORT_PATH.key),
+            REPLACE("replace"),
+            USE_VAR("useVar"),
+            WHEN("when")
+        }
+
         fun putActionImportSubKey(mainAndSubKeyCon: String): String {
+            if(mainAndSubKeyCon.isEmpty()
+            ) return String()
             return QuoteTool.splitBySurroundedIgnore(
                 mainAndSubKeyCon,
                 mainKeySeparator
@@ -119,8 +134,11 @@ object JsActionKeyManager {
                     subKeySeparator
                 )
                 val acImportMark = "${subKeySeparator}${VirtualSubKey.ACTION_IMPORT_CON.key}="
-                val firstCon = subKeyToConList.firstOrNull()?: String()
-                val firstConWithAcImportMark = "${firstCon}${acImportMark}"
+                val firstCon = subKeyToConList.firstOrNull()
+                val firstConWithAcImportMark = when(firstCon.isNullOrEmpty()) {
+                    true -> String()
+                    else -> "${firstCon}${acImportMark}"
+                }
                 val secondLaterConList = when(subKeyToConList.size > 0){
                     true -> subKeyToConList.filterIndexed { index, s ->
                         index > 0
