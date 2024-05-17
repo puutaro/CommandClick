@@ -12,7 +12,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyMa
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
 object LogTool {
@@ -127,7 +126,6 @@ object LogTool {
             val srcPreTagCon =
                 makeSrcConWithTag(
                     displayActionImportedAcCon,
-//                    jsAcKeyToSubKeyCon
                 ).let {
                     LogVisualManager.putColorJsActionImportConSubKey(it)
                 }
@@ -192,7 +190,7 @@ object LogTool {
 
         private fun makeSrcConWithTag(
 //            actionImportedKeyToSubKeyConList: List<Pair<String, String>>,?
-            displayActionImportedAcCon: String,
+            displayActionImportedAcConSrc: String,
 //            jsAcKeyToSubKeyCon: String?,
         ): String {
 //            val displayJsAcSrc =
@@ -202,6 +200,10 @@ object LogTool {
 //                DisplayJsAcSrc.make(
 //                jsAcKeyToSubKeyCon
 //            )
+            val displayActionImportedAcCon =
+                displayActionImportedAcConSrc.split("\n").filter {
+                    it.trim().isNotEmpty()
+                }.joinToString("\n")
             val colorStrPair = LogVisualManager.makeColorCode(DisplayGenre.SRC.order)
             val srcSpanTagCon = LogVisualManager.makeSpanTagHolder(
                 colorStrPair,
@@ -535,34 +537,20 @@ object LogTool {
             keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
             keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
         ): String {
-//            val deepLikeBlue = "#1f68de"
-//            val replaceActionImportVirtualSubKeyToColor =
-//                "?${JsActionKeyManager.actionImportVirtualSubKey}=" to deepLikeBlue
             val normalCon = KeyToSubKeyConTool.makeCon(keyToSubKeyMapListWithoutAfterSubKey)
             val afterCon = KeyToSubKeyConTool.makeCon(keyToSubKeyMapListWithAfterSubKey).replace(
                 Regex("^"),
                 " "
             ).replace(
                 Regex("\n"),
-                " "
+                "\n "
             )
             val jsAcConGenerated = listOf(
                 "normal -> ",
                 normalCon,
-                " after -> ",
+                "\n after -> ",
                 afterCon
             ).joinToString("\n")
-//                .let {
-//                LogVisualManager.putColorJsActionImportConSubKey(it)
-//            }
-//                .replace(
-//                replaceActionImportVirtualSubKeyToColor.first,
-//                LogVisualManager.execMakeSpanTagHolder(
-//                    replaceActionImportVirtualSubKeyToColor.second,
-//                    replaceActionImportVirtualSubKeyToColor.first,
-//                )
-//
-//            )
             return jsAcConGenerated
         }
     }
@@ -570,18 +558,12 @@ object LogTool {
     object DisplayActionImportedJsAcSrc {
         fun make(
             actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
-            jsRepValHolderMap: Map<String, String>?,
         ): String {
             if (
                 actionImportedKeyToSubKeyConList.isEmpty()
             ) return String()
             val jsAcKeyToSubKeyConWithLogSepa =
-                toSepa(actionImportedKeyToSubKeyConList).let{
-                    CmdClickMap.replaceHolderForJsAction(
-                        it,
-                        jsRepValHolderMap
-                    )
-                }
+                toSepa(actionImportedKeyToSubKeyConList)
             return jsAcKeyToSubKeyConWithLogSepa
         }
 
@@ -609,19 +591,6 @@ object LogTool {
                     displaySubKeyCon
                 ).joinToString("\n")
             }.joinToString("\n")
-//            var jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyCon
-//            separatorPairForLog.forEach {
-//                jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyConForJs.replace(
-//                    it.first.toString(),
-//                    it.second,
-//                )
-//            }
-//            return QuoteTool.splitBySurroundedIgnore(
-//                jsAcKeyToSubKeyConForJs,
-//                '|'
-//            ).map {
-//                ">|${it}"
-//            }.joinToString("\n")
         }
     }
 
@@ -677,14 +646,15 @@ object LogTool {
         fun makeEvaluateAcCon(
             keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
             keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            jsRepValHolderMap: Map<String, String>?,
+//            jsRepValHolderMap: Map<String, String>?,
         ): String {
             val evaluateAcConSrc = makeCon(keyToSubKeyMapListWithAfterSubKey,) +
                     makeCon(keyToSubKeyMapListWithoutAfterSubKey)
-            return CmdClickMap.replaceHolderForJsAction(
-                evaluateAcConSrc,
-                jsRepValHolderMap
-            )
+            return evaluateAcConSrc
+//            return CmdClickMap.replaceHolderForJsAction(
+//                evaluateAcConSrc,
+//                jsRepValHolderMap
+//            )
         }
 
         fun makeCon(
@@ -710,7 +680,9 @@ object LogTool {
         private fun toSepa(
             subKeyMap: Map<String, String>
         ): String {
-            return subKeyMap.map {
+            return subKeyMap.filter {
+                it.value.trim().isNotEmpty()
+            }.map {
                 val subKey = " ?${it.key}"
                 val subKeyValue = it.value
                 listOf(
@@ -735,11 +707,6 @@ object LogTool {
 //                listOf(
 //                    "con: ${con}",
 //                    "errWord: ${errWord}",
-////                    "errWordWithRedSpan: ${errWordWithRedSpan}",
-////                    "conRep: ${con.replace(
-////                        errWord,
-////                        errWordWithRedSpan
-////                    )}",
 //                ).joinToString("\n\n\n")
 //            )
             val repConWithRepTagToTagStrToMarkList = makeConWithReplaceTag(
@@ -884,25 +851,38 @@ object LogTool {
             errCon: String
         ): String? {
             val errWordExtractRegexList = listOf(
-                Regex("([^ \t]+?) is not defined"),
-                Regex("(.*) is not a function"),
+                Regex("([^ \t\n]+?) is not defined"),
+                Regex("([^\n]*) is not a function"),
                 Regex("SyntaxError: Missing initializer in (const) declaration"),
-                Regex("SyntaxError: Unexpected token '(.*)'"),
-                Regex("SyntaxError: Missing (.*) in template expression"),
-                Regex("SyntaxError: missing (.*) after argument list"),
-                Regex("Uncaught SyntaxError: Unexpected identifier '(.*)'"),
-                Regex("Cannot read properties of undefined \\(reading '(.*)'\\)")
+                Regex("SyntaxError: Unexpected token '([^\n]*)'"),
+                Regex("SyntaxError: Missing ([^\n]*) in template expression"),
+                Regex("SyntaxError: missing ([^\n]*) after argument list"),
+                Regex("Uncaught SyntaxError: Unexpected identifier '([^\n]*)'"),
+                Regex("Cannot read properties of undefined \\(reading '([^\n]*)'\\)")
             )
+            val errConFirstLine = errCon.split("\n")
+                .firstOrNull()
+                ?: String()
             errWordExtractRegexList.forEach {
                 regex ->
                 try {
                     execExtractErrWord(
-                        errCon,
+                        errConFirstLine,
                         regex,
                     ).let {
                         if (
                             !it.isNullOrEmpty()
-                        ) return it.trim()
+                        ) {
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
+//                                listOf(
+//                                    "errCon: ${errCon}",
+//                                    "regex: ${regex}",
+//                                    "errWord: ${it}",
+//                                ).joinToString("\n\n") + "\n----------\n"
+//                            )
+                            return it.trim()
+                        }
                     }
                 } catch(e: Exception){
                     return@forEach
@@ -919,7 +899,8 @@ object LogTool {
                 errRegexStr,
                 "$1"
             )
-            val errWordResult = errWordResultSrc.trim().replace(Regex("[\n ]"), "\t")
+            val errWordResult = errWordResultSrc.trim()
+                .replace(Regex("[\n ]"), "\t")
                 .trim().split("\t").lastOrNull()
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
@@ -958,8 +939,12 @@ object LogTool {
                 srcJsCon,
                 errMessage
             )
-            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+            val putColorConByNotCorrespondToUseAfter = NotCorrespondToUseAfter.makePutColorCon(
                 putColorConByQuoteOdd,
+                errMessage,
+            )
+            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+                putColorConByNotCorrespondToUseAfter,
                 errMessage,
             )
             val putColorConByLoopMethodOrArgsNotExist = LoopMethodOrArgsNotExist.makePutColorCon(
@@ -1237,7 +1222,7 @@ object LogTool {
             evaluateGeneCon: String,
             actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
 //            keyToSubKeyCon: String?,
-            jsRepValHolderMap: Map<String, String>?,
+//            jsRepValHolderMap: Map<String, String>?,
         ): Boolean {
             checkJsAcGeneCon(
                 context,
@@ -1249,7 +1234,7 @@ object LogTool {
                 context,
                 actionImportedKeyToSubKeyConList,
 //                keyToSubKeyCon,
-                jsRepValHolderMap,
+//                jsRepValHolderMap,
             ).let {
                 if(it) return true
             }
@@ -1318,7 +1303,7 @@ object LogTool {
             context: Context?,
             actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
 //            keyToSubKeyCon: String?,
-            jsRepValHolderMap: Map<String, String>?,
+//            jsRepValHolderMap: Map<String, String>?,
         ): Boolean {
             if(
                 actionImportedKeyToSubKeyConList.isEmpty()
@@ -1326,16 +1311,16 @@ object LogTool {
 //            if(
 //                keyToSubKeyCon.isNullOrEmpty()
 //            ) return false
-            val actionImportedKeyToSubKeyCon = actionImportedKeyToSubKeyConList.map {
+            val evaluateSrcCon = actionImportedKeyToSubKeyConList.map {
                 val mainKey = it.first
                 val subKeyCon = it.second
                 "|${mainKey}=${subKeyCon}"
             }.joinToString("\n")
-            val evaluateSrcCon =
-                CmdClickMap.replaceHolderForJsAction(
-                    actionImportedKeyToSubKeyCon,
-                    jsRepValHolderMap,
-                )
+//            val evaluateSrcCon =
+//                CmdClickMap.replaceHolderForJsAction(
+//                    actionImportedKeyToSubKeyCon,
+//                    jsRepValHolderMap,
+//                )
             if(
                 evaluateSrcCon.isEmpty()
             ) return false
@@ -1740,6 +1725,123 @@ object LogTool {
         }
     }
 
+    object NotCorrespondToUseAfter {
+
+        private const val notCorrespondSrcAfterToUseAfterErrMessagePart =
+            "Not correspond srcAfter to useAfter:"
+        private const val notCorrespondSrcAfterToUseAfterErrMessagePrefix =
+            "${notCorrespondSrcAfterToUseAfterErrMessagePart}\n"
+        private const val notCorrespondSrcAfterToUseAfterErrMessageTemplate =
+            "${notCorrespondSrcAfterToUseAfterErrMessagePrefix}%s"
+        private val notCorrespondSrcAfterToUseAfterErrMarkKeyEqual =
+            "${JsActionKeyManager.ActionImportManager.ActionImportKey.NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER.key}="
+        private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
+        private val useAfterKey =
+            JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key
+
+        private enum class ErrSchema(
+            val schema: String
+        ){
+            SRC_AFTER("srcAfter:"),
+            USE_AFTER("useAfter:"),
+        }
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.contains(notCorrespondSrcAfterToUseAfterErrMessagePart)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val srcAfterToUseAfter = extractSrcAfterAndUseAfterPair(
+                errMessage
+            )
+            val srcAfter = srcAfterToUseAfter.first.trim()
+            val useAfter = srcAfterToUseAfter.second.trim()
+            val useAfterAllow = JsActionKeyManager.ActionImportManager.useAfterAllow
+            val notCorrespondToUseAfterErrMarkKeyEqualLineRegex =
+                Regex("(${notCorrespondSrcAfterToUseAfterErrMarkKeyEqual}[^\n<>]+)")
+            return curPutColorCon
+                .replace(
+                    notCorrespondToUseAfterErrMarkKeyEqualLineRegex,
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                ).replace(
+                    Regex("(\\?${afterKey}=[\"` ]*${srcAfter}[\"` ]*)"),
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                ).replace(
+                    Regex("(\\?${useAfterKey}=[`\" ]*[a-zA-Z0-9_]+ ${useAfterAllow} [a-zA-Z0-9_]+[`\" ]*[^\n><]*)"),
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                ).replace(
+                    Regex("(\\?${useAfterKey}=[`\" ]*[a-zA-Z0-9_]+[`\" ]*[^\n><]*)"),
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            evaluateGeneCon: String?,
+        ): Boolean {
+            if(
+                evaluateGeneCon.isNullOrEmpty()
+            ) return false
+            val isNotPrevNotExist = !evaluateGeneCon.contains(
+                notCorrespondSrcAfterToUseAfterErrMarkKeyEqual
+            )
+            if(
+                isNotPrevNotExist
+            ) return false
+            val extractErrConRegex =
+                Regex("${notCorrespondSrcAfterToUseAfterErrMarkKeyEqual}[^\n]+")
+            val displayErrDetail =
+                extractErrConRegex.findAll(evaluateGeneCon).firstOrNull()?.let  {
+                val errLine = it.value
+                makeErrMsg(errLine)
+            } ?: return false
+            saveFirstLog(
+                context,
+                notCorrespondSrcAfterToUseAfterErrMessageTemplate.format(displayErrDetail),
+            )
+            return true
+        }
+
+        private fun makeErrMsg(
+            errLine: String
+        ): String {
+            val funcConAndErrConList = errLine
+                .removePrefix(notCorrespondSrcAfterToUseAfterErrMarkKeyEqual).split(
+                    JsActionKeyManager.ActionImportManager.errConSeparator
+                )
+            val srcAfter = funcConAndErrConList
+                .firstOrNull()
+                ?.split(JsActionKeyManager.ActionImportManager.errConSuffix)
+                ?.firstOrNull() ?: String()
+            val useAfter = funcConAndErrConList.getOrNull(1) ?: String()
+            return listOf(
+                " ${ErrSchema.SRC_AFTER.schema} ${srcAfter}",
+                " ${ErrSchema.USE_AFTER.schema} ${useAfter}",
+            ).joinToString("\n")
+        }
+
+        private fun extractSrcAfterAndUseAfterPair(
+            errMsg: String
+        ): Pair<String, String> {
+            val errConLines =
+                errMsg.removePrefix(
+                    notCorrespondSrcAfterToUseAfterErrMessagePrefix
+                ).split("\n")
+            val srcAfterSchema = ErrSchema.SRC_AFTER.schema
+            val srcAfterId = errConLines.firstOrNull {
+                it.trim().startsWith(srcAfterSchema)
+            }?.trim()?.removePrefix(srcAfterSchema)?.trim() ?: String()
+            val useAfterSchema = ErrSchema.USE_AFTER.schema
+            val useAfterId = errConLines.firstOrNull {
+                it.trim().startsWith(useAfterSchema)
+            }?.trim()?.removePrefix(useAfterSchema)?.trim() ?: String()
+            return srcAfterId to useAfterId
+        }
+    }
+
 
     object LoopMethodOrArgsNotExist {
 
@@ -2019,7 +2121,7 @@ object LogTool {
             context: Context?,
             keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
             keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
-            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
+//            keyToSubKeyMapListWithReplace: List<Pair<String, Map<String, String>>>?,
         ): Boolean {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "qRep.txt").absolutePath,
@@ -2057,21 +2159,21 @@ object LogTool {
                 )
                 return true
             }
-            checkKeyToSubKeyMapList(
-                keyToSubKeyMapListWithReplace
-            ).let {
-                if(
-                    it == null
-                ) return@let
-                saveFirstLog(
-                    context,
-                    errMessageTemplate.format(
-                        it.first.toString(),
-                        it.second
-                    )
-                )
-                return true
-            }
+//            checkKeyToSubKeyMapList(
+//                keyToSubKeyMapListWithReplace
+//            ).let {
+//                if(
+//                    it == null
+//                ) return@let
+//                saveFirstLog(
+//                    context,
+//                    errMessageTemplate.format(
+//                        it.first.toString(),
+//                        it.second
+//                    )
+//                )
+//                return true
+//            }
             return false
         }
 

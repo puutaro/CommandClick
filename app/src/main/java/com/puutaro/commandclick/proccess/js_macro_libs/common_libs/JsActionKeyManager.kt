@@ -21,7 +21,7 @@ object JsActionKeyManager {
         TSV_IMPORT("tsvImport"),
         ACTION_IMPORT("actionImport"),
         OVERRIDE("override"),
-        REPLACE("replace"),
+//        REPLACE("replace"),
     }
 
     enum class CommonPathKey(
@@ -112,6 +112,7 @@ object JsActionKeyManager {
 
         private const val mainKeySeparator = '|'
         private const val subKeySeparator = '?'
+        const val useAfterAllow = "=>"
 
         enum class ActionImportKey(
             val key: String,
@@ -119,8 +120,12 @@ object JsActionKeyManager {
             IMPORT_PATH(CommonPathKey.IMPORT_PATH.key),
             REPLACE("replace"),
             USE_VAR("useVar"),
-            WHEN("when")
+            USE_AFTER("useAfter"),
+            WHEN("when"),
+            NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER("NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER"),
         }
+        const val errConSeparator = " to "
+        const val errConSuffix = " to"
 
         fun putActionImportSubKey(mainAndSubKeyCon: String): String {
             if(mainAndSubKeyCon.isEmpty()
