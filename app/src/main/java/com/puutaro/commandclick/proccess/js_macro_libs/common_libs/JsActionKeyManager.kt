@@ -122,7 +122,8 @@ object JsActionKeyManager {
             USE_VAR("useVar"),
             USE_AFTER("useAfter"),
             WHEN("when"),
-            NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER("NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER"),
+            NOT_MATCH_SRC_AFTER_TO_USE_AFTER("NOT_MATCH_SRC_AFTER_TO_USE_AFTER"),
+            MISS_AFTER_KEY("MISS_AFTER_KEY"),
         }
         const val errConSeparator = " to "
         const val errConSuffix = " to"
@@ -144,7 +145,7 @@ object JsActionKeyManager {
                     true -> String()
                     else -> "${firstCon}${acImportMark}"
                 }
-                val secondLaterConList = when(subKeyToConList.size > 0){
+                val secondLaterConList = when(subKeyToConList.isNotEmpty()){
                     true -> subKeyToConList.filterIndexed { index, s ->
                         index > 0
                     }
@@ -694,6 +695,7 @@ object JsActionKeyManager {
             JsSubKey.DELETE_VAR.key,
             CommonOnlySubKey.WHEN.key,
             VirtualSubKey.ACTION_IMPORT_CON.key,
+            ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key,
         )
 
         private val onlySubKeyListForVar =

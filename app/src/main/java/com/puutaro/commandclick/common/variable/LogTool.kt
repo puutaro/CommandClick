@@ -681,7 +681,7 @@ object LogTool {
             subKeyMap: Map<String, String>
         ): String {
             return subKeyMap.filter {
-                it.value.trim().isNotEmpty()
+                it.key.trim().isNotEmpty()
             }.map {
                 val subKey = " ?${it.key}"
                 val subKeyValue = it.value
@@ -939,12 +939,16 @@ object LogTool {
                 srcJsCon,
                 errMessage
             )
-            val putColorConByNotCorrespondToUseAfter = NotCorrespondToUseAfter.makePutColorCon(
+            val putColorConByMissAfterKeyErr = MissAfterKeyErr.makePutColorCon(
                 putColorConByQuoteOdd,
                 errMessage,
             )
+            val putColorConByNotMatchToUseAfter = NotMatchToUseAfter.makePutColorCon(
+                putColorConByMissAfterKeyErr,
+                errMessage,
+            )
             val putColorConByPathNotFound = PathNotFound.makePutColorCon(
-                putColorConByNotCorrespondToUseAfter,
+                putColorConByNotMatchToUseAfter,
                 errMessage,
             )
             val putColorConByLoopMethodOrArgsNotExist = LoopMethodOrArgsNotExist.makePutColorCon(
@@ -1725,16 +1729,16 @@ object LogTool {
         }
     }
 
-    object NotCorrespondToUseAfter {
+    object NotMatchToUseAfter {
 
-        private const val notCorrespondSrcAfterToUseAfterErrMessagePart =
-            "Not correspond srcAfter to useAfter:"
-        private const val notCorrespondSrcAfterToUseAfterErrMessagePrefix =
-            "${notCorrespondSrcAfterToUseAfterErrMessagePart}\n"
-        private const val notCorrespondSrcAfterToUseAfterErrMessageTemplate =
-            "${notCorrespondSrcAfterToUseAfterErrMessagePrefix}%s"
-        private val notCorrespondSrcAfterToUseAfterErrMarkKeyEqual =
-            "${JsActionKeyManager.ActionImportManager.ActionImportKey.NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER.key}="
+        private const val notMatchSrcAfterToUseAfterErrMessagePart =
+            "Not match srcAfter to useAfter:"
+        private const val notMatchSrcAfterToUseAfterErrMessagePrefix =
+            "${notMatchSrcAfterToUseAfterErrMessagePart}\n"
+        private const val notMatchSrcAfterToUseAfterErrMessageTemplate =
+            "${notMatchSrcAfterToUseAfterErrMessagePrefix}%s"
+        private val notMatchSrcAfterToUseAfterErrMarkKeyEqual =
+            "${JsActionKeyManager.ActionImportManager.ActionImportKey.NOT_MATCH_SRC_AFTER_TO_USE_AFTER.key}="
         private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
         private val useAfterKey =
             JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key
@@ -1750,26 +1754,28 @@ object LogTool {
             curPutColorCon: String,
             errMessage: String,
         ): String {
-            val isNotErr = !errMessage.contains(notCorrespondSrcAfterToUseAfterErrMessagePart)
+            val isNotErr = !errMessage.contains(notMatchSrcAfterToUseAfterErrMessagePart)
             if (
                 isNotErr
             ) return curPutColorCon
-            val srcAfterToUseAfter = extractSrcAfterAndUseAfterPair(
-                errMessage
-            )
-            val srcAfter = srcAfterToUseAfter.first.trim()
-            val useAfter = srcAfterToUseAfter.second.trim()
+//            val srcAfterToUseAfter = extractSrcAfterAndUseAfterPair(
+//                errMessage
+//            )
+//            val srcAfter = srcAfterToUseAfter.first.trim()
+//            val useAfter = srcAfterToUseAfter.second.trim()
             val useAfterAllow = JsActionKeyManager.ActionImportManager.useAfterAllow
-            val notCorrespondToUseAfterErrMarkKeyEqualLineRegex =
-                Regex("(${notCorrespondSrcAfterToUseAfterErrMarkKeyEqual}[^\n<>]+)")
+            val notMatchToUseAfterErrMarkKeyEqualLineRegex =
+                Regex("(${notMatchSrcAfterToUseAfterErrMarkKeyEqual}[^\n<>]+)")
             return curPutColorCon
                 .replace(
-                    notCorrespondToUseAfterErrMarkKeyEqualLineRegex,
+                    notMatchToUseAfterErrMarkKeyEqualLineRegex,
                     "<span style=\"color:${errRedCode};\">$1</span>",
-                ).replace(
-                    Regex("(\\?${afterKey}=[\"` ]*${srcAfter}[\"` ]*)"),
-                    "<span style=\"color:${errRedCode};\">$1</span>",
-                ).replace(
+                )
+//                .replace(
+//                    Regex("(\\?${afterKey}=[\"` ]*${srcAfter}[\"` ]*)"),
+//                    "<span style=\"color:${errRedCode};\">$1</span>",
+//                )
+                .replace(
                     Regex("(\\?${useAfterKey}=[`\" ]*[a-zA-Z0-9_]+ ${useAfterAllow} [a-zA-Z0-9_]+[`\" ]*[^\n><]*)"),
                     "<span style=\"color:${errRedCode};\">$1</span>",
                 ).replace(
@@ -1786,13 +1792,13 @@ object LogTool {
                 evaluateGeneCon.isNullOrEmpty()
             ) return false
             val isNotPrevNotExist = !evaluateGeneCon.contains(
-                notCorrespondSrcAfterToUseAfterErrMarkKeyEqual
+                notMatchSrcAfterToUseAfterErrMarkKeyEqual
             )
             if(
                 isNotPrevNotExist
             ) return false
             val extractErrConRegex =
-                Regex("${notCorrespondSrcAfterToUseAfterErrMarkKeyEqual}[^\n]+")
+                Regex("${notMatchSrcAfterToUseAfterErrMarkKeyEqual}[^\n]+")
             val displayErrDetail =
                 extractErrConRegex.findAll(evaluateGeneCon).firstOrNull()?.let  {
                 val errLine = it.value
@@ -1800,7 +1806,7 @@ object LogTool {
             } ?: return false
             saveFirstLog(
                 context,
-                notCorrespondSrcAfterToUseAfterErrMessageTemplate.format(displayErrDetail),
+                notMatchSrcAfterToUseAfterErrMessageTemplate.format(displayErrDetail),
             )
             return true
         }
@@ -1809,7 +1815,7 @@ object LogTool {
             errLine: String
         ): String {
             val funcConAndErrConList = errLine
-                .removePrefix(notCorrespondSrcAfterToUseAfterErrMarkKeyEqual).split(
+                .removePrefix(notMatchSrcAfterToUseAfterErrMarkKeyEqual).split(
                     JsActionKeyManager.ActionImportManager.errConSeparator
                 )
             val srcAfter = funcConAndErrConList
@@ -1828,7 +1834,7 @@ object LogTool {
         ): Pair<String, String> {
             val errConLines =
                 errMsg.removePrefix(
-                    notCorrespondSrcAfterToUseAfterErrMessagePrefix
+                    notMatchSrcAfterToUseAfterErrMessagePrefix
                 ).split("\n")
             val srcAfterSchema = ErrSchema.SRC_AFTER.schema
             val srcAfterId = errConLines.firstOrNull {
@@ -1839,6 +1845,72 @@ object LogTool {
                 it.trim().startsWith(useAfterSchema)
             }?.trim()?.removePrefix(useAfterSchema)?.trim() ?: String()
             return srcAfterId to useAfterId
+        }
+    }
+
+    object MissAfterKeyErr {
+
+        private val missAfterKeyErrMarkKeyEqual =
+            "${JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key}="
+        private val actionImportKey = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
+        private val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+        private val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
+        private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
+        private val missAfterKeyErrMessagePrefix =
+            "Miss '${afterKey}' key in ${actionImportKey} file\n" +
+                    " bellow section without '${missAfterKeyErrMarkKeyEqual}'" +
+                    " exclude ${tsvImportKey} and ${jsImportKey}"
+        private val useAfterKey =
+            JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key
+
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.startsWith(missAfterKeyErrMessagePrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val missAfterKeyErrMarkKeyEqualLineRegex =
+                Regex("(${missAfterKeyErrMarkKeyEqual}[^\n<>]+)")
+            return curPutColorCon
+                .replace(
+                    missAfterKeyErrMarkKeyEqualLineRegex,
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                )
+//                .replace(
+//                    Regex("(\\?${afterKey}=)"),
+//                    "<span style=\"color:${errRedCode};\">$1</span>",
+//                ).replace(
+//                    Regex("(\\?${useAfterKey}=)"),
+//                    "<span style=\"color:${errRedCode};\">$1</span>",
+//                )
+        }
+
+        fun check(
+            context: Context?,
+            actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
+        ): Boolean {
+            if(
+                actionImportedKeyToSubKeyConList.isEmpty()
+            ) return false
+            val actionImportedCon = actionImportedKeyToSubKeyConList.map {
+                val mainKey = it.first
+                val subKeyCon = it.second
+                "|${mainKey}=${subKeyCon}"
+            }.joinToString("\n")
+            val isNotMissAfterErrMarkKeyEqual = !actionImportedCon.contains(
+                missAfterKeyErrMarkKeyEqual
+            )
+            if(
+                isNotMissAfterErrMarkKeyEqual
+            ) return false
+            saveFirstLog(
+                context,
+                missAfterKeyErrMessagePrefix
+            )
+            return true
         }
     }
 

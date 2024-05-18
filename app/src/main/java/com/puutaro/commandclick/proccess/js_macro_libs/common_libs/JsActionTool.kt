@@ -123,34 +123,31 @@ object JsActionTool {
             keyToSubMapTypeMap.get(
                 KeyToSubConType.WITH_OTHER
             ) ?: emptyList()
-
         val macroDataMap =
             extractMacroDataMap(keyToSubKeyMapListWithoutAfterSubKey)
-//        FileSystems.writeFile(
-//            File(
-//                UsePath.cmdclickDefaultAppDirPath,
-//                "js_makeJsActionMap.txt").absolutePath,
-//            listOf(
-//                "keyToSubKeyCon: ${keyToSubKeyCon}",
-//                "setReplaceVariableMap: ${setReplaceVariableMap}",
-//                "keyToSubMapTypeMap: ${keyToSubMapTypeMap}",
-//                "jsRepValHolderMap: ${jsRepValHolderMap}",
-//                "keyToSubKeyMapListWithAfterSubKey: ${keyToSubKeyMapListWithAfterSubKey}",
-//                "keyToSubKeyMapListWithoutAfterSubKey: ${keyToSubKeyMapListWithoutAfterSubKey}",
-//                "macroDataMap: ${macroDataMap}",
-//                "onExtract: ${!macroDataMap.isNullOrEmpty()}",
-//                "extractJsDataMap: ${
-//                    extractJsDataMap(
-//                        fragment,
-//                        readSharePreferenceMap,
-//                        setReplaceVariableMap,
-//                        keyToSubKeyMapListWithoutAfterSubKey,
-//                        keyToSubKeyMapListWithAfterSubKey,
-//                        jsRepValHolderMap,
-//                    )
-//                }",
-//            ).joinToString("\n\n")
-//        )
+        FileSystems.writeFile(
+            File(
+                UsePath.cmdclickDefaultAppDirPath,
+                "js_makeJsActionMap.txt").absolutePath,
+            listOf(
+                "keyToSubKeyCon: ${keyToSubKeyCon}",
+                "setReplaceVariableMap: ${setReplaceVariableMap}",
+                "keyToSubMapTypeMap: ${keyToSubMapTypeMap}",
+                "keyToSubKeyMapListWithAfterSubKey: ${keyToSubKeyMapListWithAfterSubKey}",
+                "keyToSubKeyMapListWithoutAfterSubKey: ${keyToSubKeyMapListWithoutAfterSubKey}",
+                "macroDataMap: ${macroDataMap}",
+                "onExtract: ${!macroDataMap.isNullOrEmpty()}",
+                "extractJsDataMap: ${
+                    extractJsDataMap(
+                        fragment,
+                        readSharePreferenceMap,
+                        setReplaceVariableMap,
+                        keyToSubKeyMapListWithoutAfterSubKey,
+                        keyToSubKeyMapListWithAfterSubKey,
+                    )
+                }",
+            ).joinToString("\n\n")
+        )
         val displayActionImportedAcCon = LogTool.DisplayActionImportedJsAcSrc.make(
             actionImportedKeyToSubKeyConList,
         )
@@ -241,10 +238,24 @@ object JsActionTool {
                 keyToSubKeyMapListWithAfterSubKey,
 //                jsRepValHolderMap
             )
-        LogTool.NotCorrespondToUseAfter.check(
+        LogTool.MissAfterKeyErr.check(
+            context,
+            actionImportedKeyToSubKeyConList,
+        ).let {
+                isMissAfterKeyErr ->
+            if(
+                isMissAfterKeyErr
+            ) return true
+        }
+        LogTool.NotMatchToUseAfter.check(
             context,
             evaluateGeneCon
-        )
+        ).let {
+                isNotMatchToUseAfter ->
+            if(
+                isNotMatchToUseAfter
+            ) return true
+        }
         LogTool.PathNotFound.check(
             context,
             evaluateGeneCon,
@@ -750,16 +761,11 @@ object JsActionTool {
 
 private object KeyToSubKeyMapListMaker {
 
-    private val jsMainKey = JsActionKeyManager.JsActionsKey.JS.key
-    private val actionImportVirtualSubKey =
-        JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key
     private const val keySeparator = '|'
-    private const val jsActionEndComma = ','
     val jsActionsKeyPlusList =
         JsActionKeyManager.JsActionsKey.values().map {
             it.key
         }
-    val beforeActionImportMap = mutableMapOf<String, String>()
 
     fun make(
         keyToSubKeyCon: String?,
@@ -780,7 +786,7 @@ private object KeyToSubKeyMapListMaker {
         val jsActionImportKeyName = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
         val jsActionImportSignal = "${jsActionImportKeyName}="
         var keyToSubKeyConList = keyToSubKeyConListSrc
-        beforeActionImportMap.clear()
+        ActionImportPutter.initBeforeActionImportMap()
         for( i in 1..importRoopLimit) {
             keyToSubKeyConList = keyToSubKeyConList.map {
                     keyToSubKeyPair ->
@@ -789,7 +795,7 @@ private object KeyToSubKeyMapListMaker {
                     mainKeyName != jsActionImportKeyName
                 ) return@map listOf(keyToSubKeyPair)
                 val putKeyToSubKeyCon =
-                    putJsActionsImport(
+                    ActionImportPutter.put(
                         currentAppDirPath,
                         currentFannelName,
                         setReplaceVariableMap,
@@ -826,7 +832,69 @@ private object KeyToSubKeyMapListMaker {
         }
     }
 
-    private fun putJsActionsImport(
+    private fun makeKeyToSubConPairListByValidKey(
+        keyToSubKeyCon: String?,
+    ): List<Pair<String, String>> {
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsMakePaier.txt").absolutePath,
+//            listOf(
+//                "keyToSubKeyCon: ${keyToSubKeyCon}",
+//                "map: ${CmdClickMap.createMap(
+//                    keyToSubKeyCon,
+//                    keySeparator
+//                )}",
+//                "filterMap: ${CmdClickMap.createMap(
+//                    keyToSubKeyCon,
+//                    keySeparator
+//                ).filter {
+//                    val mainKey = it.first
+//                    jsActionsKeyPlusList.contains(mainKey)
+//                }.map {
+//                    val mainKey = it.first
+//                    val subKeyAfterStr = it.second
+//                    mainKey to subKeyAfterStr
+//                }}"
+//            ).joinToString("\n\n")
+//        )
+        return CmdClickMap.createMap(
+            keyToSubKeyCon,
+            keySeparator
+        ).filter {
+            val mainKey = it.first
+            jsActionsKeyPlusList.contains(mainKey)
+        }.map {
+            val mainKey = it.first
+            val subKeyAfterStr = it.second
+            mainKey to subKeyAfterStr
+        }
+    }
+}
+
+private object ActionImportPutter {
+
+    private val jsMainKey = JsActionKeyManager.JsActionsKey.JS.key
+    private const val jsActionEndComma = ','
+
+    private val actionImportVirtualSubKey =
+        JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key
+    private val missAfterKey =
+        JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key
+    private val useAfterKey =
+        JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key
+    private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
+    private val beforeActionImportMap = mutableMapOf<String, String>()
+    private val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+    private val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
+
+    private enum class ActionImportErrType{
+        NOT_MATCH_SRC_AFTER_TO_USE_AFTER,
+        MISS_AFTER_KEY,
+    }
+
+    fun initBeforeActionImportMap(){
+        beforeActionImportMap.clear()
+    }
+    fun put(
         currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
@@ -876,7 +944,7 @@ private object KeyToSubKeyMapListMaker {
                     importSrcConBeforeReplace,
                     repMap
                 )
-                val importConWithFormatList = makeActionImportFormatList (
+                val importConWithFormatList = makeActionImportFormatList(
                     importSrcCon,
                 )
                 val whenCondition = QuoteTool.trimBothEdgeQuote(
@@ -885,9 +953,7 @@ private object KeyToSubKeyMapListMaker {
                     )
                 )
                 val useAfterValue = QuoteTool.trimBothEdgeQuote(
-                    actionImportMap.get(
-                        JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key
-                    )
+                    actionImportMap.get(useAfterKey)
                 )
                 putIfBracketByWhen(
                     importConWithFormatList,
@@ -970,6 +1036,209 @@ private object KeyToSubKeyMapListMaker {
             compQuoteSubKeyCon,
             subKeySeparator
         ).toMap()
+    }
+
+    private fun putIfBracketByWhen(
+        importConWithFormatList: List<String>,
+        whenCondition: String?,
+        useAfterValue: String?,
+    ): List<String> {
+        if(
+            whenCondition.isNullOrEmpty()
+        ) return importConWithFormatList
+        val afterKeyConRegex = Regex("\\?${afterKey}=[^?\n]+")
+        val useAfterKeyConToErrType = makeUseAfterKeyConToSrcAfterKeyCon(
+            importConWithFormatList,
+            useAfterValue,
+            afterKeyConRegex,
+        )
+        val useAfterKeyCon = useAfterKeyConToErrType.first
+        val errType = useAfterKeyConToErrType.second
+        val updateImportConWithFormatList = updateImportConWithFormatList(
+            useAfterKeyCon,
+            errType,
+            importConWithFormatList,
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsImoprtafterPhrase.txt").absolutePath,
+//            listOf(
+//                "firstorNull: ${importConWithFormatList.firstOrNull()}",
+//                "importConWithFormatList: ${importConWithFormatList}",
+//                "useAfterValue: ${useAfterValue}",
+//                "useAfterKeyCon: ${useAfterKeyCon}",
+//                "importConWithFormatList: ${importConWithFormatList}",
+//                "importConWithFormatListByUpdateAfter: ${importConWithFormatListByUpdateAfter}"
+//            ).joinToString("\n\n") + "\n-------\n"
+//        )
+        return listOf(
+            listOf(
+                "|${JsActionKeyManager.JsActionsKey.JS.key}=",
+                "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=",
+                "?${JsActionKeyManager.JsSubKey.IF_BRACKET_START.key}=",
+                useAfterKeyCon,
+                "?${JsActionKeyManager.JsSubKey.IF.key}=`${whenCondition}`"
+            ).joinToString(String())
+        ) + updateImportConWithFormatList +
+                listOf(
+                    listOf(
+                        "|${JsActionKeyManager.JsActionsKey.JS.key}=",
+                        "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=",
+                        "?${JsActionKeyManager.JsSubKey.IF_BRACKET_END.key}=",
+                        useAfterKeyCon,
+                    ).joinToString(String())
+                )
+
+    }
+
+    private fun updateImportConWithFormatList(
+        useAfterKeyCon: String,
+        errType: ActionImportErrType?,
+        importConWithFormatList: List<String>,
+    ): List<String> {
+        val afterKeyConRegex = Regex("\\?${afterKey}=[^?\n]+")
+        return when(errType){
+            ActionImportErrType.NOT_MATCH_SRC_AFTER_TO_USE_AFTER,
+            null -> importConWithFormatList.map {
+                it.replace(
+                    afterKeyConRegex,
+                    useAfterKeyCon
+                )
+            }
+            ActionImportErrType.MISS_AFTER_KEY -> {
+                importConWithFormatList.map {
+                    val judgeCon = "|${it.trim()}"
+                    val hasNotTsvImport = !judgeCon.contains("|${tsvImportKey}=")
+                    val hasNotJsImport = !judgeCon.contains("|${jsImportKey}=")
+                    val hasAfterKey = judgeCon.contains("?${afterKey}=")
+                    val isUpdate = hasNotTsvImport
+                            && hasNotJsImport
+                            && hasAfterKey
+                    when(isUpdate){
+                        true -> "${it}?${missAfterKey}="
+                        else -> it
+                    }
+                }
+            }
+        }
+    }
+
+    private fun makeUseAfterKeyConToSrcAfterKeyCon(
+        importConWithFormatList: List<String>,
+        useAfterValue: String?,
+        afterKeyConRegex: Regex,
+    ): Pair<String, ActionImportErrType?> {
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeUseAfterKeyConToSrcAfterKeyCon.txt").absolutePath,
+//            listOf(
+//                "importConWithFormatList: ${importConWithFormatList}",
+//                "jsKeyConList: ${jsKeyConList}",
+//                "jsKeyConListSize: ${jsKeyConList.size}",
+//                "afterNum: ${afterNum}",
+//                "useAfterNum: ${useAfterNum}",
+//                "importConWithFormatList.size: ${importConWithFormatList.size}",
+//                "isNotEveryHasAfterKey: ${isNotEveryHasAfterKey}"
+//            ).joinToString("\n\n") + "\n-------------\n\n"
+//        )
+        val afterIdWithQuote =
+            Regex("\\?${afterKey}=[^?\n]+").find(
+                importConWithFormatList.firstOrNull() ?: String()
+            )?.value?.removePrefix(
+                "?${afterKey}="
+            )
+        val afterId = QuoteTool.trimBothEdgeQuote(afterIdWithQuote)
+        if(
+            afterId.isEmpty()
+        ) return String() to null
+        val errConSeparator = JsActionKeyManager.ActionImportManager.errConSeparator
+        val notMatchSrcAfterToUseAfter =
+            JsActionKeyManager.ActionImportManager.ActionImportKey.NOT_MATCH_SRC_AFTER_TO_USE_AFTER.key
+        val useAfterMap = makeUseAfterMap(useAfterValue)
+            ?: let {
+                val notMatchSrcAfterToUseAfterKeyCon =
+                    "?${notMatchSrcAfterToUseAfter}=${afterId}${errConSeparator}"
+                val insertAfterCon = listOf(
+                    notMatchSrcAfterToUseAfterKeyCon,
+                    "?${afterKey}=${afterId}",
+                    "?${useAfterKey}=${useAfterValue}"
+                ).joinToString(String())
+                return insertAfterCon to ActionImportErrType.NOT_MATCH_SRC_AFTER_TO_USE_AFTER
+            }
+
+        val useCurAfterId = useAfterMap.keys.joinToString(String())
+        val useDestiAfterId = useAfterMap.get(afterId)
+            ?: let {
+                val notMatchSrcAfterToUseAfterKeyCon =
+                    "?${notMatchSrcAfterToUseAfter}=${afterId}${errConSeparator}${useCurAfterId}"
+                val insertAfterCon = listOf(
+                    notMatchSrcAfterToUseAfterKeyCon,
+                    "?${afterKey}=${afterId}",
+                    "?${useAfterKey}=${useAfterValue}"
+                ).joinToString(String())
+                return insertAfterCon to ActionImportErrType.NOT_MATCH_SRC_AFTER_TO_USE_AFTER
+            }
+        val isNotHasAllAfterKey = isNotMatchAfterKeyNum(
+            afterKeyConRegex,
+            importConWithFormatList
+        )
+        if(
+            isNotHasAllAfterKey
+        ) {
+            return listOf(
+                "?${afterKey}=${afterId}",
+                "?${useAfterKey}=${useAfterValue}"
+            ).joinToString(String()) to ActionImportErrType.MISS_AFTER_KEY
+        }
+        return "?${afterKey}=${useDestiAfterId}" to null
+    }
+
+    private fun isNotMatchAfterKeyNum(
+        afterKeyConRegex: Regex,
+        importConWithFormatList: List<String>
+    ): Boolean {
+        val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+        val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
+        val useAfterKeyConRegex = Regex(
+            "\\?${JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key}=[^?\n]+"
+        )
+        val afterNum = afterKeyConRegex.findAll(
+            importConWithFormatList.joinToString("\n")
+        ).count()
+        val useAfterNum = useAfterKeyConRegex.findAll(
+            importConWithFormatList.joinToString("\n")
+        ).count()
+        val totalAfterNum = afterNum + useAfterNum
+        val jsKeyConList = importConWithFormatList.joinToString(String()).let {
+            QuoteTool.splitBySurroundedIgnore(
+                it,
+                '|'
+            ).filter {
+                val trimLine = it.trim()
+                val isNotEscapeKey =
+                    !trimLine.startsWith(tsvImportKey)
+                            && !trimLine.startsWith(jsImportKey)
+                isNotEscapeKey && it.isNotEmpty()
+            }
+        }
+        return totalAfterNum != jsKeyConList.size
+    }
+
+    private fun makeUseAfterMap(
+        useAfterValue: String?
+    ): Map<String, String>? {
+        val useAfterSeparator =
+            JsActionKeyManager.ActionImportManager.useAfterAllow
+        return useAfterValue
+            ?.split(useAfterSeparator)
+            ?.map {
+                it.trim()
+            }?.let {
+                    keyValueList ->
+                val key = keyValueList.firstOrNull()
+                    ?: return@let emptyMap<String, String>()
+                val value = keyValueList.getOrNull(1)
+                    ?: key
+                mapOf(key to value)
+            }
     }
 
     private fun extractEndsQuote(
@@ -1065,161 +1334,6 @@ private object KeyToSubKeyMapListMaker {
         }
     }
 
-    private fun putIfBracketByWhen(
-        importConWithFormatList: List<String>,
-        whenCondition: String?,
-        useAfterValue: String?,
-    ): List<String> {
-        if(
-            whenCondition.isNullOrEmpty()
-        ) return importConWithFormatList
-        val useAfterKeyCon = makeUseAfterKeyConToSrcAfterKeyCon(
-            importConWithFormatList,
-            useAfterValue
-        )
-        val afterKeyConRegex = Regex("\\?${JsActionKeyManager.JsSubKey.AFTER.key}=[^?\n]+")
-        val importConWithFormatListByUpdateAfter = importConWithFormatList.map{
-            it.replace(
-                afterKeyConRegex,
-                useAfterKeyCon
-            )
-        }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsImoprtafterPhrase.txt").absolutePath,
-//            listOf(
-//                "firstorNull: ${importConWithFormatList.firstOrNull()}",
-//                "importConWithFormatList: ${importConWithFormatList}",
-//                "useAfterValue: ${useAfterValue}",
-//                "useAfterKeyCon: ${useAfterKeyCon}",
-//                "importConWithFormatList: ${importConWithFormatList}",
-//                "importConWithFormatListByUpdateAfter: ${importConWithFormatListByUpdateAfter}"
-//            ).joinToString("\n\n") + "\n-------\n"
-//        )
-        return listOf(
-            listOf(
-                "|${JsActionKeyManager.JsActionsKey.JS.key}=",
-                "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=",
-                "?${JsActionKeyManager.JsSubKey.IF_BRACKET_START.key}=",
-                useAfterKeyCon,
-                "?${JsActionKeyManager.JsSubKey.IF.key}=`${whenCondition}`"
-            ).joinToString(String())
-        ) + importConWithFormatListByUpdateAfter +
-            listOf(
-                listOf(
-                    "|${JsActionKeyManager.JsActionsKey.JS.key}=",
-                    "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=",
-                    "?${JsActionKeyManager.JsSubKey.IF_BRACKET_END.key}=",
-                    useAfterKeyCon,
-                ).joinToString(String())
-            )
-    }
-
-    private fun makeUseAfterKeyConToSrcAfterKeyCon(
-        importConWithFormatList: List<String>,
-        useAfterValue: String?,
-    ): String {
-        val afterIdWithQuote =
-            Regex("\\?${JsActionKeyManager.JsSubKey.AFTER.key}=[^?\n]+").find(
-                importConWithFormatList.firstOrNull() ?: String()
-            )?.value?.removePrefix(
-                "?${JsActionKeyManager.JsSubKey.AFTER.key}="
-            )
-        val afterId = QuoteTool.trimBothEdgeQuote(afterIdWithQuote)
-        if(
-            afterId.isEmpty()
-        ) return String()
-        val errConSeparator = JsActionKeyManager.ActionImportManager.errConSeparator
-        val useAfterMap = makeUseAfterMap(useAfterValue)
-            ?: let {
-                val notCorrespondSrcAfterToUseAfterKeyCon =
-                    "?${JsActionKeyManager.ActionImportManager.ActionImportKey.NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER.key}=${afterId}${errConSeparator}"
-                return listOf(
-                    notCorrespondSrcAfterToUseAfterKeyCon,
-                    "?${JsActionKeyManager.JsSubKey.AFTER.key}=${afterId}",
-                    "?${JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key}=${useAfterValue}"
-                ).joinToString(String())
-//                to
-//                        notCorrespondSrcAfterToUseAfterKeyCon
-            }
-
-        val useCurAfterId = useAfterMap.keys.joinToString(String())
-        val useDestiAfterId = useAfterMap.get(afterId)
-            ?: let {
-                val notCorrespondSrcAfterToUseAfterKeyCon =
-                    "?${JsActionKeyManager.ActionImportManager.ActionImportKey.NOT_CORRESPOND_SRC_AFTER_TO_USE_AFTER.key}=${afterId}${errConSeparator}${useCurAfterId}"
-                return listOf(
-                    notCorrespondSrcAfterToUseAfterKeyCon,
-                    "?${JsActionKeyManager.JsSubKey.AFTER.key}=${afterId}",
-                    "?${JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key}=${useAfterValue}"
-                ).joinToString(String())
-//                to listOf(
-//                    notCorrespondSrcAfterToUseAfterKeyCon,
-//                    "?${JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key}=`${useAfterValue}`"
-//                ).joinToString(String())
-            }
-        return "?${JsActionKeyManager.JsSubKey.AFTER.key}=${useDestiAfterId}"
-//        to
-//                "?${JsActionKeyManager.JsSubKey.AFTER.key}=${useDestiAfterId}"
-
-
-    }
-
-    private fun makeUseAfterMap(
-        useAfterValue: String?
-    ): Map<String, String>? {
-        val useAfterSeparator =
-                JsActionKeyManager.ActionImportManager.useAfterAllow
-        return useAfterValue
-            ?.split(useAfterSeparator)
-            ?.map {
-                it.trim()
-            }?.let {
-                    keyValueList ->
-                val key = keyValueList.firstOrNull()
-                    ?: return@let emptyMap<String, String>()
-                val value = keyValueList.getOrNull(1)
-                    ?: key
-                mapOf(key to value)
-            }
-    }
-
-
-    private fun makeKeyToSubConPairListByValidKey(
-        keyToSubKeyCon: String?,
-    ): List<Pair<String, String>> {
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsMakePaier.txt").absolutePath,
-//            listOf(
-//                "keyToSubKeyCon: ${keyToSubKeyCon}",
-//                "map: ${CmdClickMap.createMap(
-//                    keyToSubKeyCon,
-//                    keySeparator
-//                )}",
-//                "filterMap: ${CmdClickMap.createMap(
-//                    keyToSubKeyCon,
-//                    keySeparator
-//                ).filter {
-//                    val mainKey = it.first
-//                    jsActionsKeyPlusList.contains(mainKey)
-//                }.map {
-//                    val mainKey = it.first
-//                    val subKeyAfterStr = it.second
-//                    mainKey to subKeyAfterStr
-//                }}"
-//            ).joinToString("\n\n")
-//        )
-        return CmdClickMap.createMap(
-            keyToSubKeyCon,
-            keySeparator
-        ).filter {
-            val mainKey = it.first
-            jsActionsKeyPlusList.contains(mainKey)
-        }.map {
-            val mainKey = it.first
-            val subKeyAfterStr = it.second
-            mainKey to subKeyAfterStr
-        }
-    }
 }
 
 private object PairToMapInList {
@@ -1230,6 +1344,7 @@ private object PairToMapInList {
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
     private val afterSubKeyName = JsActionKeyManager.JsSubKey.AFTER.key
     private const val jsSubKeySeparator = '?'
+
     fun convert(
         keyToSubKeyConListByValidKey: List<Pair<String, String>>
     ): List<Pair<String, Map<String, String>>> {
