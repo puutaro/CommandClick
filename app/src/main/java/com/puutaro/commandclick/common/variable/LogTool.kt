@@ -947,8 +947,12 @@ object LogTool {
                 putColorConByMissAfterKeyErr,
                 errMessage,
             )
-            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+            val putColorConByIrregularAfterIdErr = IrregularAfterIdErr.makePutColorCon(
                 putColorConByNotMatchToUseAfter,
+                errMessage,
+            )
+            val putColorConByPathNotFound = PathNotFound.makePutColorCon(
+                putColorConByIrregularAfterIdErr,
                 errMessage,
             )
             val putColorConByLoopMethodOrArgsNotExist = LoopMethodOrArgsNotExist.makePutColorCon(
@@ -1858,8 +1862,7 @@ object LogTool {
         private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
         private val missAfterKeyErrMessagePrefix =
             "Miss '${afterKey}' key in ${actionImportKey} file\n" +
-                    " bellow section without '${missAfterKeyErrMarkKeyEqual}'" +
-                    " exclude ${tsvImportKey} and ${jsImportKey}"
+                    " bellow section with '${missAfterKeyErrMarkKeyEqual}'"
         private val useAfterKey =
             JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key
 
@@ -1909,6 +1912,86 @@ object LogTool {
             saveFirstLog(
                 context,
                 missAfterKeyErrMessagePrefix
+            )
+            return true
+        }
+    }
+
+    object IrregularAfterIdErr {
+
+        private val irregularAfterIdKeyEqual =
+            "${JsActionKeyManager.ActionImportManager.ActionImportKey.IRREGULAR_AFTER_ID.key}="
+        private val actionImportKey = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
+        private val irregularAfterIdErrMessagePrefix =
+            "Irregular afterId in ${actionImportKey} file: "
+        private val irregularAfterIdErrMessageTemplate =
+            "${irregularAfterIdErrMessagePrefix}'%s'"
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.startsWith(irregularAfterIdErrMessagePrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val extractIrregularAfterIdRegex =
+                Regex("${irregularAfterIdErrMessagePrefix}'(.*)'")
+            val irregularAfterId = errMessage.replace(
+                extractIrregularAfterIdRegex,
+                "$1"
+            )
+            val missAfterKeyErrMarkKeyEqualLineRegex =
+                Regex("(${irregularAfterIdKeyEqual}[^\n<>]+)")
+            return curPutColorCon
+                .replace(
+                    missAfterKeyErrMarkKeyEqualLineRegex,
+                    "<span style=\"color:${errRedCode};\">$1</span>",
+                )
+                .replace(
+                    irregularAfterId,
+                    "<span style=\"color:${errRedCode};\">${irregularAfterId}</span>",
+                )
+//                .replace(
+//                    Regex("(\\?${afterKey}=)"),
+//                    "<span style=\"color:${errRedCode};\">$1</span>",
+//                ).replace(
+//                    Regex("(\\?${useAfterKey}=)"),
+//                    "<span style=\"color:${errRedCode};\">$1</span>",
+//                )
+        }
+
+        fun check(
+            context: Context?,
+            actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
+        ): Boolean {
+            if(
+                actionImportedKeyToSubKeyConList.isEmpty()
+            ) return false
+            val actionImportedCon = actionImportedKeyToSubKeyConList.map {
+                val mainKey = it.first
+                val subKeyCon = it.second
+                "|${mainKey}=${subKeyCon}"
+            }.joinToString("\n")
+            val findIrregularAfterIdKeyConRegex =
+                Regex("${irregularAfterIdKeyEqual}[^?\n]+")
+            val irregularAfterId = findIrregularAfterIdKeyConRegex.find(
+                actionImportedCon
+            )?.let {
+                val irregularAfterKeyCon = it.value.removePrefix(
+                    irregularAfterIdKeyEqual
+                )
+                QuoteTool.trimBothEdgeQuote(irregularAfterKeyCon)
+            }
+            val isIrregularAfterIdEqual = !actionImportedCon.contains(
+                irregularAfterIdKeyEqual
+            )
+            if(
+                isIrregularAfterIdEqual
+            ) return false
+            saveFirstLog(
+                context,
+                irregularAfterIdErrMessageTemplate.format(irregularAfterId)
             )
             return true
         }

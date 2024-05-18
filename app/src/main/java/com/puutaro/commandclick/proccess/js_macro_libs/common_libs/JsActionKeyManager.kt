@@ -124,6 +124,7 @@ object JsActionKeyManager {
             WHEN("when"),
             NOT_MATCH_SRC_AFTER_TO_USE_AFTER("NOT_MATCH_SRC_AFTER_TO_USE_AFTER"),
             MISS_AFTER_KEY("MISS_AFTER_KEY"),
+            IRREGULAR_AFTER_ID("IRREGULAR_AFTER_ID")
         }
         const val errConSeparator = " to "
         const val errConSuffix = " to"
@@ -696,6 +697,7 @@ object JsActionKeyManager {
             CommonOnlySubKey.WHEN.key,
             VirtualSubKey.ACTION_IMPORT_CON.key,
             ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key,
+            ActionImportManager.ActionImportKey.IRREGULAR_AFTER_ID.key,
         )
 
         private val onlySubKeyListForVar =
