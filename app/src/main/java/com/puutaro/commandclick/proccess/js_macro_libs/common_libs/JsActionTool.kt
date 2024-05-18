@@ -1132,7 +1132,7 @@ private object ActionImportPutter {
         errType: UseAfterErrType?,
         importConWithFormatList: List<String>,
     ): List<String> {
-        val afterKeyConRegex = Regex("\\?${afterKey}=[^?\n]+")
+        val afterKeyConRegex = Regex("\\?${afterKey}=[^?|\n]+")
         return when(errType){
             UseAfterErrType.NOT_MATCH_SRC_AFTER_TO_USE_AFTER,
             null -> ordinaryUpdateImportConList(
@@ -1329,7 +1329,7 @@ private object ActionImportPutter {
         importConWithFormatList: List<String>,
         useAfterValue: String?,
     ): Pair<String, UseAfterErrType?> {
-        val afterKeyConRegex = Regex("\\?${afterKey}=[^?\n]+")
+        val afterKeyConRegex = Regex("\\?${afterKey}=[^?|\n]+")
         val firstJsElement = importConWithFormatList.joinToString("|").let {
             QuoteTool.splitBySurroundedIgnore(
                 it,
@@ -1435,17 +1435,17 @@ private object ActionImportPutter {
                 || hasJsImportKey
                 || jsKeyCon.isEmpty()
             ) {
-                FileSystems.updateFile(
-                    File(
-                        UsePath.cmdclickDefaultAppDirPath,
-                        "jsAc_extractAfterIdToNotMatchAfterId00.txt"
-                    ).absolutePath,
-                    listOf(
-                        "judgeJsKeyCon: ${judgeJsKeyCon}",
-                        "importConWithFormatList: ${importConWithFormatList}",
-                        "afterId: ${afterId}",
-                    ).joinToString("\n\n") + "\n-------------\n\n"
-                )
+//                FileSystems.updateFile(
+//                    File(
+//                        UsePath.cmdclickDefaultAppDirPath,
+//                        "jsAc_extractAfterIdToNotMatchAfterId00.txt"
+//                    ).absolutePath,
+//                    listOf(
+//                        "judgeJsKeyCon: ${judgeJsKeyCon}",
+//                        "importConWithFormatList: ${importConWithFormatList}",
+//                        "afterId: ${afterId}",
+//                    ).joinToString("\n\n") + "\n-------------\n\n"
+//                )
                 return@map String() to String()
             }
             val hasActionImportKey =
@@ -1462,18 +1462,18 @@ private object ActionImportPutter {
             if(afterId.isEmpty()){
                 afterId = useAfterId
             }
-            FileSystems.updateFile(
-                File(
-                    UsePath.cmdclickDefaultAppDirPath,
-                "jsAc_extractAfterIdToNotMatchAfterId.txt"
-                ).absolutePath,
-            listOf(
-                "judgeJsKeyCon: ${judgeJsKeyCon}",
-                "importConWithFormatList: ${importConWithFormatList}",
-                "afterId: ${afterId}",
-                "useAfterId: ${useAfterId}",
-            ).joinToString("\n\n") + "\n-------------\n\n"
-            )
+//            FileSystems.updateFile(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                "jsAc_extractAfterIdToNotMatchAfterId.txt"
+//                ).absolutePath,
+//            listOf(
+//                "judgeJsKeyCon: ${judgeJsKeyCon}",
+//                "importConWithFormatList: ${importConWithFormatList}",
+//                "afterId: ${afterId}",
+//                "useAfterId: ${useAfterId}",
+//            ).joinToString("\n\n") + "\n-------------\n\n"
+//            )
             when(afterId == useAfterId){
                 true -> String() to String()
                 else -> afterId to useAfterId
@@ -1490,7 +1490,7 @@ private object ActionImportPutter {
         jsImportSubKeyCon: String,
     ): String {
         val useAfterIdWithQuote =
-            Regex("\\?${useAfterKey}=[^?\n]+").find(
+            Regex("\\?${useAfterKey}=[^?|\n]+").find(
                 jsImportSubKeyCon
             )?.value?.removePrefix(
                 "?${useAfterKey}="
@@ -1502,7 +1502,7 @@ private object ActionImportPutter {
         firstJsElement: String,
     ): String? {
         val afterIdWithQuote =
-            Regex("\\?${afterKey}=[^?\n]+").find(
+            Regex("\\?${afterKey}=[^?|\n]+").find(
                 firstJsElement
             )?.value?.removePrefix(
                 "?${afterKey}="
@@ -1525,7 +1525,7 @@ private object ActionImportPutter {
         val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
         val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
         val useAfterKeyConRegex = Regex(
-            "\\?${JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key}=[^?\n]+"
+            "\\?${JsActionKeyManager.ActionImportManager.ActionImportKey.USE_AFTER.key}=[^?|\n]+"
         )
         val afterNum = afterKeyConRegex.findAll(
             importConWithFormatList.joinToString("\n")
