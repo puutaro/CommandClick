@@ -113,6 +113,7 @@ object JsActionKeyManager {
         private const val mainKeySeparator = '|'
         private const val subKeySeparator = '?'
         const val useAfterAllow = "=>"
+        const val useVarAllow = "=>"
 
         enum class ActionImportKey(
             val key: String,
@@ -124,7 +125,9 @@ object JsActionKeyManager {
             WHEN("when"),
             NOT_MATCH_SRC_AFTER_TO_USE_AFTER("NOT_MATCH_SRC_AFTER_TO_USE_AFTER"),
             MISS_AFTER_KEY("MISS_AFTER_KEY"),
-            IRREGULAR_AFTER_ID("IRREGULAR_AFTER_ID")
+            IRREGULAR_AFTER_ID("IRREGULAR_AFTER_ID"),
+            NOT_MATCH_SRC_VAR_TO_USE_VAR("NOT_MATCH_SRC_VAR_TO_USE_VAR"),
+            MISS_VAR_KEY("MISS_VAR_KEY"),
         }
         const val errConSeparator = " to "
         const val errConSuffix = " to"
@@ -698,6 +701,10 @@ object JsActionKeyManager {
             VirtualSubKey.ACTION_IMPORT_CON.key,
             ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key,
             ActionImportManager.ActionImportKey.IRREGULAR_AFTER_ID.key,
+            ActionImportManager.ActionImportKey.NOT_MATCH_SRC_AFTER_TO_USE_AFTER.key,
+            ActionImportManager.ActionImportKey.NOT_MATCH_SRC_VAR_TO_USE_VAR.key,
+            ActionImportManager.ActionImportKey.MISS_VAR_KEY.key,
+            ActionImportManager.ActionImportKey.USE_VAR.key,
         )
 
         private val onlySubKeyListForVar =
