@@ -53,6 +53,7 @@ class AsciiArtJsDialog(
                 makeAsciiArt(
                     imagePath,
                 )
+
             }
             val asciiArtMap = CmdClickMap.createMap(
                 asciiArtMapCon,
@@ -225,20 +226,34 @@ class AsciiArtJsDialog(
     private suspend fun makeAsciiArt(
         imagePath: String,
     ): Spannable? {
+        if(
+            !File(imagePath).isFile
+        ) {
+            return null
+        }
         val beforeResizeBitMap = withContext(
             Dispatchers.IO
         ) {
             BitmapFactory.decodeFile(imagePath)
+        } ?: return null
+        val baseWidth = withContext(Dispatchers.IO) {
+            ScreenSizeCalculator.dpWidth(terminalFragment)
         }
-        val baseWidth = ScreenSizeCalculator.dpWidth(terminalFragment)
-        val resizeScale: Double =
-            (baseWidth / beforeResizeBitMap.width).toDouble()
-        val bitMap = Bitmap.createScaledBitmap(
-            beforeResizeBitMap,
-            (beforeResizeBitMap.width * resizeScale).toInt(),
-            (beforeResizeBitMap.height * resizeScale).toInt(),
-            true
-        )
+        val beforeResizeBitMapWidth = withContext(Dispatchers.IO){
+            beforeResizeBitMap.width
+        }
+        val resizeScale: Double = withContext(Dispatchers.IO
+        ) {
+            (baseWidth / beforeResizeBitMapWidth).toDouble()
+        }
+        val bitMap = withContext(Dispatchers.IO) {
+            Bitmap.createScaledBitmap(
+                beforeResizeBitMap,
+                (beforeResizeBitMapWidth * resizeScale).toInt(),
+                (beforeResizeBitMap.height * resizeScale).toInt(),
+                true
+            )
+        }
         var htmlSpannableStr: Spannable? = null
 
         withContext(Dispatchers.IO) {

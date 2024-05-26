@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dia
 
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.AsciiArtJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.CopyJsDialog
@@ -21,6 +22,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 class JsDialog(
     private val terminalFragment: TerminalFragment
