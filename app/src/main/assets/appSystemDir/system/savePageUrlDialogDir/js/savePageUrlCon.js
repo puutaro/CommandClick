@@ -1,6 +1,4 @@
 
-tsvimport `${savePageUrlConArgsTsvPath}`;
-
 const siteUrl = location.href;
 if(!siteUrl) exitZero();
 

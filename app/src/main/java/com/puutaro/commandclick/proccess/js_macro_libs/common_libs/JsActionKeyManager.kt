@@ -14,14 +14,11 @@ object JsActionKeyManager {
     ) {
         JS("js"),
         JS_VAR("var"),
-//        JS_CON("jsCon"),
         JS_FUNC("func"),
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
         TSV_IMPORT("tsvImport"),
         ACTION_IMPORT("actionImport"),
-        OVERRIDE("override"),
-//        REPLACE("replace"),
     }
 
     enum class CommonPathKey(
@@ -36,9 +33,8 @@ object JsActionKeyManager {
         val key: String
     ) {
         FUNC("func"),
-        METHOD("method"),
-        METHOD_ARGS("methodArgs"),
-        OVERRIDE("override"),
+//        METHOD("method"),
+//        METHOD_ARGS("methodArgs"),
         ID("id"),
         ARGS("args"),
         LOOP_ARG_NAMES("loopArgNames"),
@@ -49,14 +45,12 @@ object JsActionKeyManager {
         AFTER_JS_CON("afterJsCon"),
         AFTER("after"),
         DESC("desc"),
-        EXIT_JUDGE("exitJudge"),
-        EXIT_TOAST("exitToast"),
-        START_TOAST("startToast"),
-        END_TOAST("endToast"),
+        DELAY("delay"),
         ON_LOG("onLog"),
-        DELETE_VAR("deleteVar"),
+//        DELETE_VAR("deleteVar"),
         IF_BRACKET_START("ifBracketStart"),
         IF_BRACKET_END("ifBracketEnd"),
+        FORBIDDEN_JS_KEY_DIRECT_SPECIFY("FORBIDDEN_JS_KEY_DIRECT_SPECIFY")
     }
 
     enum class OnlyVarSubKey(
@@ -64,21 +58,8 @@ object JsActionKeyManager {
     ){
         EXIT("exit"),
         VAR_RETURN("varReturn"),
-//        USE_VAR("useVar"),
-//        COLLECTION_METHOD_START("collMethodStart"),
-//        COLLECTION_METHOD_ARGS("collMethodArgs"),
-//        COLLECTION_METHOD_END_RETURN("collMethodEndReturn"),
     }
 
-//    object CollectionMethodManager {
-//        enum class EnableCollectionMethod(
-//            val method: String
-//        ){
-//            FILTER("filter"),
-//            FOR_EACH("forEach"),
-//            MAP("map"),
-//        }
-//    }
     const val prevPronoun = "prev"
     const val noDefinitionBeforeVarNameByPrev = "NO_DIFINITION_BEFORE_VAR_NAME_BY_${prevPronoun}"
 
@@ -128,6 +109,7 @@ object JsActionKeyManager {
             IRREGULAR_AFTER_ID("IRREGULAR_AFTER_ID"),
             NOT_MATCH_SRC_VAR_TO_USE_VAR("NOT_MATCH_SRC_VAR_TO_USE_VAR"),
             MISS_VAR_KEY("MISS_VAR_KEY"),
+            RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT("RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT"),
         }
         const val errConSeparator = " to "
         const val errConSuffix = " to"
@@ -161,92 +143,26 @@ object JsActionKeyManager {
                 ).flatten().joinToString(subKeySeparator.toString())
             }.joinToString(mainKeySeparator.toString())
         }
+    }
 
-//        fun extractActionImportMarkPair(
-//            subKeyToConPairList: List<Pair<String, String>>?,
-//        ): Pair<
-//                Map<String, String>,
-//                List<Pair<String, String>>?
-//                > {
-//            val defaultBlankMap = emptyMap<String, String>()
-//            if(
-//                subKeyToConPairList.isNullOrEmpty()
-//            ) return defaultBlankMap to subKeyToConPairList
-//            val actionImportSubKeyToConMap = subKeyToConPairList.filter {
-//                    keyToCon ->
-//                val subKeyName = keyToCon.first
-//                if (
-//                    subKeyName == actionImportMarkSubKey
-//                ) return@filter true
-//                false
-//            }.toMap()
-//            if(
-//                actionImportSubKeyToConMap.isEmpty()
-//            ) return defaultBlankMap to subKeyToConPairList
-//            val subKeyToConPairListWithoutAfter = subKeyToConPairList.filter {
-//                val subKeyName = it.first
-//                val isNotActinImportMarkKey =
-//                    subKeyName == actionImportMarkSubKey
-//                isNotActinImportMarkKey
+//    object MethodManager {
+//
+//        fun makeMethod(
+//            jsMap: Map<String, String>
+//        ): String {
+//            val method =
+//                jsMap.get(JsSubKey.METHOD.key)
+//            val methodVarArgs = ArgsManager.makeVarArgs(
+//                jsMap,
+//                JsSubKey.METHOD_ARGS.key,
+//            )
+//            val isBlank = method.isNullOrEmpty()
+//            return when(isBlank){
+//                true -> String()
+//                else -> ".${method}(${methodVarArgs})"
 //            }
-//            return actionImportSubKeyToConMap to subKeyToConPairListWithoutAfter
 //        }
-
-    }
-
-    object MethodManager {
-
-        fun makeMethod(
-            jsMap: Map<String, String>
-        ): String {
-            val method =
-                jsMap.get(JsSubKey.METHOD.key)
-            val methodVarArgs = ArgsManager.makeVarArgs(
-                jsMap,
-                JsSubKey.METHOD_ARGS.key,
-            )
-            val isBlank = method.isNullOrEmpty()
-            return when(isBlank){
-                true -> String()
-                else -> ".${method}(${methodVarArgs})"
-            }
-        }
-    }
-
-    object OverrideManager {
-        enum class NoOverrideJsSubKey(val key: String){
-            ID(JsSubKey.ID.key),
-//            AFTER(JsSubKey.AFTER.key),
-//            OVERRIDE(JsSubKey.OVERRIDE.key),
-        }
-
-        fun makeOverrideMap(
-            overrideMapList: List<Map<String, String>>,
-            id: String,
-        ): Map<String, String> {
-            val idKeyName =
-                JsSubKey.OVERRIDE.key
-            val overrideMapSrc = overrideMapList.lastOrNull { map ->
-                val overrideIdList = map.get(
-                    idKeyName
-                )?.split("&")
-                    ?: return@lastOrNull false
-                overrideIdList.contains(id)
-            } ?: return emptyMap()
-            return overrideMapSrc.map {
-                val keyName = it.key
-                val disableOverride =
-                    JsActionKeyManager.OverrideManager.NoOverrideJsSubKey.values()
-                        .firstOrNull {
-                            it.key == keyName
-                        } != null
-                if(
-                    disableOverride
-                ) return@map String() to String()
-                keyName to it.value
-            }.toMap().filterKeys { it.isNotEmpty() }
-        }
-    }
+//    }
 
     object ArgsManager {
         enum class ARGS_SETTING(
@@ -316,12 +232,6 @@ object JsActionKeyManager {
             BOOL(2, "Bool var name not difinition"),
         }
 
-//        private enum class PipUnableFuncSuffix(
-//            val suffix: String
-//        ){
-//            MACRO("_S"),
-//        }
-
         fun makeLoopArgsDefinitionErrMark(
             functionName: String?,
             con: String,
@@ -331,20 +241,6 @@ object JsActionKeyManager {
                 "${functionName}${errConSeparator}${con}"
             ).joinToString(String())
         }
-
-//        fun howPipAbleFunc(
-//            firstFuncName: String?
-//        ): Boolean {
-//            if(
-//                firstFuncName.isNullOrEmpty()
-//            ) return false
-//            return true
-////            PipUnableFuncSuffix.values().any {
-////                !firstFuncName.endsWith(it.suffix)
-////            }
-//        }
-
-
 
         fun isJsCon(
             functionName: String?
@@ -365,9 +261,6 @@ object JsActionKeyManager {
             return EnableLoopMethodType.values().firstOrNull {
                 functionName?.endsWith(it.suffix) == true
             }
-//            val isLoopMethodStr =
-//                functionName?.endsWith(loopMethodSuffix) == true
-//            return isNotJsInterFace && isLoopMethodStr
         }
 
         enum class DefaultLoopArgsName(
@@ -401,6 +294,9 @@ object JsActionKeyManager {
 
     object JsVarManager {
 
+        const val itPronoun = "it"
+        const val escapeRunPrefix = "run"
+
         fun makeVarValue(
             jsMap: Map<String, String>
         ): String {
@@ -411,34 +307,7 @@ object JsActionKeyManager {
                 varValue
             )
         }
-
-        const val itPronoun = "it"
     }
-
-//    object JsConManager {
-//        enum class Flag(
-//            val flag: String
-//        ) {
-//            JS_CON_PREFIX(jsConPrefix),
-//        }
-//    }
-
-
-//    object JsPathManager {
-//        enum class Flag(
-//            val flag: String
-//        ) {
-//            JS_INTERFACE_PREFIX("js"),
-//        }
-//
-//        fun isJsInterface(
-//            jsPathCon: String
-//        ): Boolean {
-//            return jsPathCon.startsWith(
-//                Flag.JS_INTERFACE_PREFIX.flag
-//            )
-//        }
-//    }
 
     object AfterJsConMaker {
 
@@ -642,7 +511,8 @@ object JsActionKeyManager {
                 else -> String()
             }
             return makeFuncTemplateForIf(
-                ifCondition
+                ifCondition,
+                null
             )
         }
 
@@ -661,18 +531,30 @@ object JsActionKeyManager {
 
 
     fun makeFuncTemplateForIf(
-        ifCondition: String?
+        ifCondition: String?,
+        delayMiliSec: Int?,
     ): String {
+        val insertJsCon =
+            when(delayMiliSec == null){
+            true -> {
+                if(ifCondition.isNullOrEmpty()) "%s"
+                else "\t%s"
+            }
+            else -> """
+                |setTimeout(function(){
+                |    %s
+                |},${delayMiliSec})
+                |""".trimMargin()
+        }
         return when (
             ifCondition.isNullOrEmpty()
         ) {
             false -> """
             |if(${ifCondition}){ 
-            |    %s 
+            |${insertJsCon} 
             |}   
             |""".trimMargin()
-
-            else -> "%s"
+            else -> insertJsCon
         }
     }
 
@@ -689,14 +571,11 @@ object JsActionKeyManager {
             JsSubKey.LOOP_ARG_NAMES.key,
             JsSubKey.AFTER.key,
             JsSubKey.DESC.key,
-            JsSubKey.EXIT_JUDGE.key,
-            JsSubKey.EXIT_TOAST.key,
-            JsSubKey.START_TOAST.key,
-            JsSubKey.END_TOAST.key,
             JsSubKey.ON_LOG.key,
-            JsSubKey.METHOD.key,
-            JsSubKey.METHOD_ARGS.key,
-            JsSubKey.DELETE_VAR.key,
+//            JsSubKey.METHOD.key,
+//            JsSubKey.METHOD_ARGS.key,
+//            JsSubKey.DELETE_VAR.key,
+            JsSubKey.DELAY.key,
             CommonOnlySubKey.WHEN.key,
             VirtualSubKey.ACTION_IMPORT_CON.key,
             ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key,
@@ -719,10 +598,6 @@ object JsActionKeyManager {
                 JsSubKey.ARGS.key,
                 OnlyVarSubKey.VAR_RETURN.key,
                 OnlyVarSubKey.EXIT.key,
-//                OnlyVarSubKey.USE_VAR.key,
-//                OnlyVarSubKey.COLLECTION_METHOD_START.key,
-//                OnlyVarSubKey.COLLECTION_METHOD_ARGS.key,
-//                OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key,
             )
 
         enum class  UseKeyForAfterJsConForVar(
@@ -732,9 +607,6 @@ object JsActionKeyManager {
             FUNC(JsSubKey.FUNC.key),
             VAR_RETURN(OnlyVarSubKey.VAR_RETURN.key),
             EXIT(OnlyVarSubKey.EXIT.key),
-//            USE_VAR(OnlyVarSubKey.USE_VAR.key),
-//            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
-//            COLLECTION_METHOD_END_RETURN(OnlyVarSubKey.COLLECTION_METHOD_END_RETURN.key),
         }
 
         enum class  UseVarKeyForAfterJsConForVar(
@@ -742,7 +614,6 @@ object JsActionKeyManager {
         ) {
             VAR_VALUE(JsSubKey.VAR_VALUE.key),
             FUNC(JsSubKey.FUNC.key),
-//            COLLECTION_METHOD_START(OnlyVarSubKey.COLLECTION_METHOD_START.key),
         }
 
 
@@ -752,7 +623,6 @@ object JsActionKeyManager {
         )
         private val useKeyListForFunc = onlySubKeyListForFunc + listOf(
             JsActionsKey.JS_FUNC.key,
-//            JsSubKey.IF.key,
             JsSubKey.FUNC.key,
             JsSubKey.ARGS.key,
         )
