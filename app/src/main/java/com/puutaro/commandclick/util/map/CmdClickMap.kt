@@ -205,7 +205,7 @@ object CmdClickMap {
         repMap: Map<String, String>?
     ): Map<String, String> {
         val valNameDefaValueRegex =
-            "\\{\\{ [a-zA-Z0-9_-]{1,}:*.*? \\}\\}"
+            "\\{\\{ [a-zA-Z0-9_-]{1,}[:]{0,1}.*? \\}\\}"
         val valNameDefaValueResult =
             Regex(valNameDefaValueRegex)
                 .findAll(targetCon)
