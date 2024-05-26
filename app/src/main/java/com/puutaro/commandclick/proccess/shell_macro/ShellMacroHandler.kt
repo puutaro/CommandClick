@@ -1,13 +1,17 @@
 package com.puutaro.commandclick.proccess.shell_macro
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.JsAcAlterIfTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
@@ -15,6 +19,7 @@ import java.io.File
 object ShellMacroHandler {
 
     fun handle(
+        context: Context?,
         busyboxExecutor: BusyboxExecutor?,
         shellPathOrMacro: String,
         setReplaceVariableMap: Map<String, String>?,
@@ -28,6 +33,13 @@ object ShellMacroHandler {
             setReplaceVariableMap,
             extraRepValMap,
         ) ?: String()
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_extraRepValMap00.txt").absolutePath,
+//            listOf(
+//                "shellPathOrMacro: ${shellPathOrMacro}",
+//                "extraRepValMap: ${extraRepValMap}"
+//            ).joinToString("\n\n")
+//        )
         val concatRepValMap =
             (setReplaceVariableMap ?: mapOf()) +
                     (extraRepValMap ?: mapOf())
@@ -41,9 +53,24 @@ object ShellMacroHandler {
                 String()
             }
             ShellMacro.JUDGE_TSV_VALUE ->
-                JudgeTsv.getStrByJudgeTsvValue(concatRepValMap)
-            ShellMacro.JUDGE_LIST_DIR ->
-                JudgeTsv.getStrByListDirValue(concatRepValMap)
+                JudgeTsv.getStrByJudgeTsvValue(
+                    context,
+                    concatRepValMap
+                )
+            ShellMacro.JUDGE_LIST_DIR -> {
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "jsAc_extraRepValMap11.txt").absolutePath,
+//                    listOf(
+//                        "shellPathOrMacro: ${shellPathOrMacro}",
+//                        "extraRepValMap: ${extraRepValMap}",
+//                        "alterCon: ${extraRepValMap?.get("alterCon")}",
+//                    ).joinToString("\n\n") + "\n----------\n"
+//                )
+                JudgeTsv.getStrByListDirValue(
+                    context,
+                    concatRepValMap
+                )
+            }
 
         }
     }
@@ -188,6 +215,7 @@ object ShellMacroHandler {
         }
 
         fun getStrByListDirValue(
+            context: Context?,
             extraRepValMap: Map<String, String>?
         ): String {
             val updateExtraMap = (extraRepValMap ?: mapOf()) + mapOf(
@@ -195,10 +223,12 @@ object ShellMacroHandler {
                         to JudgeTsvKey.LIST_DIR.str
             )
             return getStrByJudgeTsvValue(
+                context,
                 updateExtraMap,
             )
         }
         fun getStrByJudgeTsvValue(
+            context: Context?,
             extraRepValMap: Map<String, String>,
         ): String {
             val tsvPath = ArgsManager.get(
@@ -217,7 +247,22 @@ object ShellMacroHandler {
             val alterCon = ArgsManager.get(
                 extraRepValMap,
                 JudgeArg.ALTER_CON.arg
-            ) ?: alterConDefaultValue
+            ) ?: let {
+                LogSystems.stdErr(
+                    context,
+                        "'${JudgeArg.ALTER_CON.arg}' not specify " +
+                                "in ${JsAcAlterIfTool.IfShellKey.IF_ARGS.key} " +
+                                "in ${ShellMacro.JUDGE_LIST_DIR.name} or ${ShellMacro.JUDGE_TSV_VALUE.name}"
+                )
+                String()
+            }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcAlter_alterCon.txt").absolutePath,
+//                listOf(
+//                    "extraRepValMap: ${extraRepValMap}",
+//                    "alterCon: ${alterCon}",
+//                ).joinToString("\n\n") + "\n--------\n"
+//            )
             val currentValue = QuoteTool.trimBothEdgeQuote(
                 TsvTool.getKeyValue(
                     tsvPath,

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -82,6 +83,7 @@ object ConfigFromScriptFileSetter {
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
+                editFragment.context,
                 it,
                 editFragment.busyboxExecutor,
                 setReplaceVariableMap
@@ -122,6 +124,7 @@ object ConfigFromScriptFileSetter {
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
+                editFragment.context,
                 it,
                 editFragment.busyboxExecutor,
                 setReplaceVariableMap
@@ -142,11 +145,18 @@ object ConfigFromScriptFileSetter {
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
+                editFragment.context,
                 it,
                 editFragment.busyboxExecutor,
                 setReplaceVariableMap
             )
         }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAcAlter.txt").absolutePath,
+//            listOf(
+//                "qrDialogConfig: ${editFragment.qrDialogConfig}"
+//            ).joinToString("\n")
+//        )
 
 
         editFragment.enableEditExecute =
@@ -481,6 +491,7 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
+                        editFragment.context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -494,6 +505,7 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
+                        editFragment.context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -507,6 +519,7 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
+                        editFragment.context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -519,6 +532,7 @@ object ConfigFromScriptFileSetter {
                     isSettingEdit,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
+                        editFragment.context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -717,17 +731,16 @@ private object AlterToolForSetValType {
     private const val ifArgsSeparator = '?'
 
     fun updateConfigMapByAlter(
+        context: Context?,
         configMap: Map<String, String>,
         busyboxExecutor: BusyboxExecutor?,
         replaceVariableMap: Map<String, String>?
     ): Map<String, String> {
-
         if(
             busyboxExecutor == null
         ) return configMap
         val alterKeyEqualStr = "${alterKeyName}="
         return configMap.map {
-
             val currentConfigKey = it.key
             val currentConfigValue = it.value
             val defaultConfigPair =
@@ -764,6 +777,7 @@ private object AlterToolForSetValType {
 //                ).joinToString("\n\n\n")
 //            )
             val shellIfOutput = JsAcAlterIfTool.getIfOutput(
+                context,
                 busyboxExecutor,
                 alterKeyValuePairList,
                 replaceVariableMap,
@@ -781,7 +795,6 @@ private object AlterToolForSetValType {
             val updateConfigValue = JsAcAlterIfTool.execAlter(
                 currentConfigValueList,
                 alterKeyValuePairList,
-                alterValue,
                 shellIfOutput,
                 mainSeparator
             )

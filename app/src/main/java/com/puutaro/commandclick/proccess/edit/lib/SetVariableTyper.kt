@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
@@ -79,6 +80,7 @@ object SetVariableTyper {
                 equalIndex + 1, currentFetchSetVariableTypeLength
             )
             val variableTypeValue = AlterToolForSetValType.makeVariableTypeValueByAlter(
+                context,
                 variableTypeValueSrc,
                 busyboxExecutor,
                 replaceVariableMap,
@@ -276,6 +278,7 @@ private object AlterToolForSetValType {
     private const val ifArgsSeparator = '&'
 
     fun makeVariableTypeValueByAlter(
+        context: Context?,
         variableTypeValue: String,
         busyboxExecutor: BusyboxExecutor?,
         replaceVariableMap: Map<String, String>?
@@ -310,6 +313,7 @@ private object AlterToolForSetValType {
                 replaceVariableMap
             )
             val ifOutput = JsAcAlterIfTool.getIfOutput(
+                context,
                 busyboxExecutor,
                 alterKeyValuePairList,
                 replaceVariableMap,
@@ -327,7 +331,6 @@ private object AlterToolForSetValType {
             val updateTypeValue = JsAcAlterIfTool.execAlter(
                 typeValueList,
                 alterKeyValuePairList,
-                alterValue,
                 ifOutput,
                 typeSeparator
             )

@@ -1,10 +1,10 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
@@ -31,6 +31,7 @@ object JsAcAlterIfTool {
 
 
     fun getIfOutput(
+        context: Context?,
         busyboxExecutor: BusyboxExecutor,
         alterKeyValuePairList: List<Pair<String, String>>?,
         replaceVariableMap: Map<String, String>?,
@@ -54,6 +55,7 @@ object JsAcAlterIfTool {
                     shellIfConOutput.isNotEmpty()
                 ) return shellIfConOutput
                 val shellIfPathOutput = getFromIfShellPath(
+                    context,
                     busyboxExecutor,
                     alterKeyValuePairList,
                     currentIndex,
@@ -81,12 +83,9 @@ object JsAcAlterIfTool {
     fun execAlter(
         currentConfigValueList: List<String>,
         alterKeyValuePairList: List<Pair<String, String>>,
-        alterValue: String,
         shellIfOutput: String,
         separator: Char,
     ): String {
-        val alterIfShellKeyList =
-            JsAcAlterIfTool.IfShellKey.values().map{ it.key }
         val alterMapSrc = alterKeyValuePairList.toMap()
         val alterMap =
             alterMapSrc +
@@ -94,37 +93,39 @@ object JsAcAlterIfTool {
                         shellIfOutput,
                         separator
                     )
-        val alterMapKeyList = alterMap.keys
+        val alterMapKeyList = (alterMap.keys + setOf(alterKeyName)).filter {
+            it.isNotEmpty()
+        }
         val currentConfigValueListWithAlterKeyRemove =
             currentConfigValueList.map {
                     configValue ->
                 val alterKey = alterMapKeyList.firstOrNull {
                     configValue.startsWith("${it}=")
                 }
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
+//                    listOf(
+//                        "configValue: ${configValue}",
+//                        "alterMapKeyList: ${alterMapKeyList}",
+//                        "alterKey: ${alterKey}",
+//                    ).joinToString("\n\n-------\n") + "^^^^^^"
+//                )
                 if(
                     alterKey.isNullOrEmpty()
                 ) return@map configValue
-                //                FileSystems.updateFile(
-                //                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
-                //                    listOf(
-                //                        "alterMapKeyList: ${alterMapKeyList}",
-                //                        "typeValue: ${typeValue}",
-                //                        "alterKey: ${alterKey}",
-                //                    ).joinToString("\n\n-------\n")
-                //                )
                 String()
+            }.filter{
+                it.trim().isNotEmpty()
             }.joinToString(separator.toString())
-        val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
-            alterValue,
-            separator
-        ).filter {
-            !alterIfShellKeyList.contains(it)
-        }.joinToString(separator.toString())
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "setValMap_currentConfigValueListWithAlterKeyRemove.txt").absolutePath,
+//            listOf(
+//                "currentConfigValueListWithAlterKeyRemove: ${currentConfigValueListWithAlterKeyRemove}",
+//            ).joinToString("\n\n-------\n")+ "^^^^^^"
+//        )
         return listOf(
             currentConfigValueListWithAlterKeyRemove,
-            alterValueExcludeIfKey,
-            shellIfOutput,
-        ).joinToString(separator.toString())
+        ).joinToString(separator.toString()) + shellIfOutput
     }
 
     private fun getFromIfShellCon(
@@ -149,6 +150,7 @@ object JsAcAlterIfTool {
     }
 
     private fun getFromIfShellPath(
+        context: Context?,
         busyboxExecutor: BusyboxExecutor,
         alterKeyValuePairList: List<Pair<String, String>>,
         currentIndex: Int,
@@ -165,13 +167,21 @@ object JsAcAlterIfTool {
             alterKeyValuePairList,
             currentIndex,
         )
-        val extraRepValMap =CmdClickMap.createMap(
+        val extraRepValMap = CmdClickMap.createMap(
             currentAlterIfMap.get(
                 ifArgsKey
             ),
             ifArgsSeparator
         ).toMap()
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAccurrentAlterIfMap.txt").absolutePath,
+//            listOf(
+//                "currentAlterIfMap: ${currentAlterIfMap}",
+//                "extraRepValMap: ${extraRepValMap}",
+//            ).joinToString("\n\n")
+//        )
         return ShellMacroHandler.handle(
+            context,
             busyboxExecutor,
             shellIfPath,
             replaceVariableMap,

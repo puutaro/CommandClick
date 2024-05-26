@@ -185,6 +185,7 @@ private object EditTextMaker {
         ) {
             true -> {
                 ShellMacroHandler.handle(
+                    fragment.context,
                     busyboxExecutor,
                     editTextPropertyMap.get(
                         EditTextSetter.EditTextPropertySettingKey.SHELL_PATH.key

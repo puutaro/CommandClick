@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.menu_tool
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.JsAcAlterIfTool
@@ -34,6 +35,7 @@ object MenuSettingTool {
     }
 
     fun makeMenuPairListForMenuList(
+        context: Context?,
         busyboxExecutor: BusyboxExecutor?,
         settingMenuMapCon: String,
         currentAppDirPath: String,
@@ -56,6 +58,7 @@ object MenuSettingTool {
         return menuPairConListSrc.map {
             currentMenuPairConList ->
             val updateConfigPairList = AlterToolForMenu.makeUpdateConfigPairList(
+                context,
                 busyboxExecutor,
                 currentMenuPairConList,
                 setReplaceVariableMap,
@@ -165,6 +168,7 @@ private object AlterToolForMenu{
     private const val ifArgsSeparator = '?'
 
     fun makeUpdateConfigPairList(
+        context: Context?,
         busyboxExecutor: BusyboxExecutor?,
         currentMenuPairConList: String,
         setReplaceVariableMap: Map<String, String>?,
@@ -209,6 +213,7 @@ private object AlterToolForMenu{
             keySeparator
         )
         val shellIfOutput = JsAcAlterIfTool.getIfOutput(
+            context,
             busyboxExecutor,
             alterKeyValuePairList,
             setReplaceVariableMap,
@@ -235,7 +240,6 @@ private object AlterToolForMenu{
         val updateConfigValue = JsAcAlterIfTool.execAlter(
             currentConfigValueList,
             alterKeyValuePairList,
-            alterValue,
             shellIfOutput,
             keySeparator
         )

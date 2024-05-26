@@ -51,6 +51,7 @@ object ExecShellForTts {
             UbuntuFiles(context),
         )
         ShellMacroHandler.handle(
+            context,
             busyboxExecutor,
             shellPath,
             setReplaceVariableMap,
