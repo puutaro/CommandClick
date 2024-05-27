@@ -3,38 +3,12 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.col
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.libs.FilterAndMapModule
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
 class JsToListFilter(terminalFragment: TerminalFragment) {
-
-    private val extraMapSeparator = '|'
-
-    private enum class ExtraMapBaseKey(
-        val key: String
-    ) {
-        REMOVE_REGEX("removeRegex"),
-        COMP_PREFIX("compPrefix"),
-        COMP_SUFFIX("compSuffix"),
-        MATCH_REGEX("matchRegex"),
-        MATCH_CONDITION("matchCondition"),
-        LINES_MATCH_TYPE("linesMatchType"),
-    }
-
-    private enum class MatchConditionType(
-        val type: String,
-    ){
-        AND("and"),
-        OR("or"),
-    }
-
-    private enum class LinesMatchType(
-        val type: String,
-    ){
-        NORMAL("normal"),
-        DENY("deny"),
-    }
 
     @JavascriptInterface
     fun filter(
@@ -45,25 +19,23 @@ class JsToListFilter(terminalFragment: TerminalFragment) {
     ): String {
         val extraMap = CmdClickMap.createMap(
             extraMapCon,
-            extraMapSeparator,
+            FilterAndMapModule.extraMapSeparator,
         ).toMap().toSortedMap()
-        val removeRegexList = makeTargetValueList(
+        val removeRegexToReplaceKeyList = FilterAndMapModule.makeRemoveRegexToReplaceKeyPairList(
             extraMap,
-            ExtraMapBaseKey.REMOVE_REGEX.key
-        ).map {
-            Regex(it)
-        }
-        val compPrefixList = makeTargetValueList(
-            extraMap,
-            ExtraMapBaseKey.COMP_PREFIX.key
+            FilterAndMapModule.ExtraMapBaseKey.REMOVE_REGEX.key
         )
-        val compSuffixList = makeTargetValueList(
+        val compPrefixList = FilterAndMapModule.makeTargetValueList(
             extraMap,
-            ExtraMapBaseKey.COMP_SUFFIX.key
+            FilterAndMapModule.ExtraMapBaseKey.COMP_PREFIX.key
         )
-        val matchRegexList = makeTargetValueList(
+        val compSuffixList = FilterAndMapModule.makeTargetValueList(
             extraMap,
-            ExtraMapBaseKey.MATCH_REGEX.key
+            FilterAndMapModule.ExtraMapBaseKey.COMP_SUFFIX.key
+        )
+        val matchRegexList = FilterAndMapModule.makeTargetValueList(
+            extraMap,
+            FilterAndMapModule.ExtraMapBaseKey.MATCH_REGEX.key
         ).map {
             Regex(it)
         }
@@ -81,24 +53,28 @@ class JsToListFilter(terminalFragment: TerminalFragment) {
 //            ).joinToString("\n\n\n")
 //        )
         val matchConditionStr = extraMap.toMap().get(
-            ExtraMapBaseKey.MATCH_CONDITION.key
+            FilterAndMapModule.ExtraMapBaseKey.MATCH_CONDITION.key
         )
         val linesMatchTypeStr = extraMap.toMap().get(
-            ExtraMapBaseKey.LINES_MATCH_TYPE.key
+            FilterAndMapModule.ExtraMapBaseKey.LINES_MATCH_TYPE.key
+        )
+        val matchRegexMatchTypeStr = extraMap.toMap().get(
+            FilterAndMapModule.ExtraMapBaseKey.MATCH_REGEX_MATCH_TYPE.key
         )
         val matchLineList = matchLines.split(separator)
 
         val filterLineList = lines.split(separator).filter {
             srcLine ->
-            val lineWithRemove = applyRemoveRegex(
+            val lineWithRemove = FilterAndMapModule.applyRemoveRegex(
                 srcLine,
-                removeRegexList,
+                removeRegexToReplaceKeyList,
+                extraMap,
             )
-            val lineWithCompPrefix = applyCompPrefix(
+            val lineWithCompPrefix = FilterAndMapModule.applyCompPrefix(
                 lineWithRemove,
                 compPrefixList
             )
-            val lineWithCompSuffix = applyCompSuffix(
+            val lineWithCompSuffix = FilterAndMapModule.applyCompSuffix(
                 lineWithCompPrefix,
                 compSuffixList
             )
@@ -123,50 +99,10 @@ class JsToListFilter(terminalFragment: TerminalFragment) {
                 matchConditionStr,
                 matchLineList,
                 linesMatchTypeStr,
+                matchRegexMatchTypeStr,
             )
         }
         return filterLineList.joinToString(separator)
-    }
-
-
-    private fun applyRemoveRegex(
-        srcLine: String,
-        removeRegexList: List<Regex>,
-    ): String {
-        var line = srcLine
-        removeRegexList.forEach {
-            line = line.replace(it, String())
-        }
-        return line
-    }
-
-
-    private fun applyCompPrefix(
-        srcLine: String,
-        compPrefixList: List<String>,
-    ): String {
-        var line = srcLine
-        compPrefixList.forEach {
-            line = when(line.startsWith(it)){
-                true -> line
-                else -> "$it$line"
-            }
-        }
-        return line
-    }
-
-    private fun applyCompSuffix(
-        srcLine: String,
-        compSuffixList: List<String>,
-    ): String {
-        var line = srcLine
-        compSuffixList.forEach {
-            line = when(line.endsWith(it)){
-                true -> line
-                else -> "$line$it"
-            }
-        }
-        return line
     }
 
     private fun matcher(
@@ -175,54 +111,71 @@ class JsToListFilter(terminalFragment: TerminalFragment) {
         matchConditionStr: String?,
         matchLineList: List<String>,
         linesMatchTypeStr: String?,
+        matchRegexMatchTypeStr: String?
     ): Boolean {
-        val matchConditionType = MatchConditionType.values().firstOrNull {
-            it.type == matchConditionStr
-        } ?: MatchConditionType.AND
-
-
-        val linesMatchType = LinesMatchType.values().firstOrNull {
+        val linesMatchType = FilterAndMapModule.LinesMatchType.values().firstOrNull {
             it.type == linesMatchTypeStr
-        } ?: LinesMatchType.NORMAL
-        val matchInLines = when(linesMatchType){
-            LinesMatchType.NORMAL -> matchLineList.contains(srcLine)
-            LinesMatchType.DENY -> !matchLineList.contains(srcLine)
-        }
-        return when(matchConditionType){
-            MatchConditionType.AND -> {
+        } ?: FilterAndMapModule.LinesMatchType.NORMAL
+        val matchInLines = judgeMatchLines(
+            srcLine,
+            matchLineList,
+            linesMatchType,
+        )
+
+        val matchConditionType = FilterAndMapModule.MatchConditionType.values().firstOrNull {
+            it.type == matchConditionStr
+        } ?: FilterAndMapModule.MatchConditionType.AND
+        val matchRegexMatchType = FilterAndMapModule.MatchRegexMatchType.values().firstOrNull {
+            it.type == matchRegexMatchTypeStr
+        } ?: FilterAndMapModule.MatchRegexMatchType.NORMAL
+        val matchRegexListResult =judgeMatchRegexListResult(
+            matchRegexList,
+            matchRegexMatchType,
+            matchConditionType,
+            srcLine,
+        )
+        return matchRegexListResult
+                && matchInLines
+    }
+
+    private fun judgeMatchLines(
+        srcLine: String,
+        matchLineList: List<String>,
+        linesMatchType: FilterAndMapModule.LinesMatchType,
+    ): Boolean {
+        val isEmptyMatchLineList =
+            matchLineList.filter { it.isNotEmpty() }.isEmpty()
+        return when(linesMatchType){
+            FilterAndMapModule.LinesMatchType.NORMAL ->
+                matchLineList.contains(srcLine)
+            FilterAndMapModule.LinesMatchType.DENY ->
+                !matchLineList.contains(srcLine)
+        } || isEmptyMatchLineList
+    }
+
+    private fun judgeMatchRegexListResult(
+        matchRegexList: List<Regex>,
+        matchRegexMatchType: FilterAndMapModule.MatchRegexMatchType,
+        matchConditionType: FilterAndMapModule.MatchConditionType,
+        srcLine: String,
+    ): Boolean {
+        val matchRegexListResultSrc = when(matchConditionType){
+            FilterAndMapModule.MatchConditionType.AND -> {
                 matchRegexList.all {
                     it.containsMatchIn(srcLine)
-                            && matchInLines
                 }
             }
-            MatchConditionType.OR -> {
+            FilterAndMapModule.MatchConditionType.OR -> {
                 matchRegexList.any {
                     it.containsMatchIn(srcLine)
-                            && matchInLines
                 }
             }
         }
-    }
-
-    private fun makeTargetValueList(
-        extraMap: Map<String, String>,
-        removeRegexBaseKey: String,
-    ): List<String> {
-        return extraMap.filter {
-                keyToValue ->
-            val key = keyToValue.key
-            val okPrefix = key.startsWith(removeRegexBaseKey)
-            val okNumSuffix = try {
-                key.removePrefix(removeRegexBaseKey)
-                true
-            } catch(e: Exception){
-                false
-            }
-            okPrefix && okNumSuffix
-        }.map {
-                keyToValue ->
-            keyToValue.value
+        return when(matchRegexMatchType){
+            FilterAndMapModule.MatchRegexMatchType.NORMAL
+            -> matchRegexListResultSrc
+            FilterAndMapModule.MatchRegexMatchType.DENY
+            -> !matchRegexListResultSrc
         }
     }
-
 }

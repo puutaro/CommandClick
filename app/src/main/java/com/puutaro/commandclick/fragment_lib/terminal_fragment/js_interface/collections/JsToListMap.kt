@@ -1,25 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.libs.FilterAndMapModule
 import com.puutaro.commandclick.util.map.CmdClickMap
-import java.io.File
 
 class JsToListMap(
     terminalFragment: TerminalFragment
 ) {
-
-    private val extraMapSeparator = '|'
-
-    private enum class ExtraMapBaseKey(
-        val key: String
-    ) {
-        REMOVE_REGEX("removeRegex"),
-        COMP_PREFIX("compPrefix"),
-        COMP_SUFFIX("compSuffix"),
-    }
 
     @JavascriptInterface
     fun map(
@@ -29,17 +17,16 @@ class JsToListMap(
     ): String {
         val extraMap = CmdClickMap.createMap(
             extraMapCon,
-            extraMapSeparator,
+            FilterAndMapModule.extraMapSeparator,
         ).toMap().toSortedMap()
-        val removeRegexList = makeTargetValueList(
+        val removeRegexToReplaceKeyList =
+            FilterAndMapModule.makeRemoveRegexToReplaceKeyPairList(
+                extraMap,
+                FilterAndMapModule.ExtraMapBaseKey.REMOVE_REGEX.key
+            )
+        val compPrefixList = FilterAndMapModule.makeTargetValueList(
             extraMap,
-            ExtraMapBaseKey.REMOVE_REGEX.key
-        ).map {
-            Regex(it)
-        }
-        val compPrefixList = makeTargetValueList(
-            extraMap,
-            ExtraMapBaseKey.COMP_PREFIX.key
+            FilterAndMapModule.ExtraMapBaseKey.COMP_PREFIX.key
         )
 //       FileSystems.writeFile(
 //           File(UsePath.cmdclickDefaultAppDirPath, "jsToListMap.txt").absolutePath,
@@ -54,21 +41,22 @@ class JsToListMap(
 //               )}"
 //           ).joinToString("\n\n\n")
 //       )
-        val compSuffixList = makeTargetValueList(
+        val compSuffixList = FilterAndMapModule.makeTargetValueList(
             extraMap,
-            ExtraMapBaseKey.COMP_SUFFIX.key
+            FilterAndMapModule.ExtraMapBaseKey.COMP_SUFFIX.key
         )
         val mapLiesList = con.split(separator).map {
                 srcLine ->
-            val lineWithRemove = applyRemoveRegex(
+            val lineWithRemove = FilterAndMapModule.applyRemoveRegex(
                 srcLine,
-                removeRegexList,
+                removeRegexToReplaceKeyList,
+                extraMap,
             )
-            val lineWithCompPrefix = applyCompPrefix(
+            val lineWithCompPrefix = FilterAndMapModule.applyCompPrefix(
                 lineWithRemove,
                 compPrefixList
             )
-            val lineWithCompSuffix = applyCompSuffix(
+            val lineWithCompSuffix = FilterAndMapModule.applyCompSuffix(
                 lineWithCompPrefix,
                 compSuffixList
             )
@@ -77,63 +65,4 @@ class JsToListMap(
         return mapLiesList.joinToString(separator)
     }
 
-
-    private fun applyRemoveRegex(
-        srcLine: String,
-        removeRegexList: List<Regex>,
-    ): String {
-        var line = srcLine
-        removeRegexList.forEach {
-            line = line.replace(it, String())
-        }
-        return line
-    }
-
-
-    private fun applyCompPrefix(
-        srcLine: String,
-        compPrefixList: List<String>,
-    ): String {
-        var line = srcLine
-        compPrefixList.forEach {
-            line = when (line.startsWith(it)) {
-                true -> line
-                else -> "$it$line"
-            }
-        }
-        return line
-    }
-
-    private fun applyCompSuffix(
-        srcLine: String,
-        compSuffixList: List<String>,
-    ): String {
-        var line = srcLine
-        compSuffixList.forEach {
-            line = when (line.endsWith(it)) {
-                true -> line
-                else -> "$it$line"
-            }
-        }
-        return line
-    }
-
-    private fun makeTargetValueList(
-        extraMap: Map<String, String>,
-        removeRegexBaseKey: String,
-    ): List<String> {
-        return extraMap.filter { keyToValue ->
-            val key = keyToValue.key
-            val okPrefix = key.startsWith(removeRegexBaseKey)
-            val okNumSuffix = try {
-                key.removePrefix(removeRegexBaseKey)
-                true
-            } catch (e: Exception) {
-                false
-            }
-            okPrefix && okNumSuffix
-        }.map { keyToValue ->
-            keyToValue.value
-        }
-    }
 }
