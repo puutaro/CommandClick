@@ -67,6 +67,9 @@ class ShortCutManager(
         val currentShellFileName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
+        val currentStateName = SharePrefTool.getCurrentStateName(
+            readSharePreffernceMap
+        )
 
         val execIntent = Intent(activity, activity::class.java)
         execIntent
@@ -80,6 +83,10 @@ class ShortCutManager(
         execIntent.putExtra(
             SharePrefferenceSetting.current_fannel_name.name,
             currentShellFileName
+        )
+        execIntent.putExtra(
+            SharePrefferenceSetting.current_fannel_state.name,
+            currentStateName
         )
         return execIntent
 
