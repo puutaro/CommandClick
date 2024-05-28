@@ -16,6 +16,7 @@ import com.bachors.img2ascii.Img2Ascii
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.Intent.IntentVariant
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
@@ -200,20 +201,27 @@ class AsciiArtJsDialog(
     }
 
     private suspend fun makeSpannableImageFromView(): File? {
-        FileSystems.removeAndCreateDir(
-            UsePath.cmdclickTempCreateDirPath
-        )
+        withContext(Dispatchers.IO) {
+            FileSystems.removeAndCreateDir(
+                UsePath.cmdclickTempCreateDirPath
+            )
+        }
         val spannableContents = withContext(Dispatchers.Main) {
             spannableDialogObj?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.spannable_dialog_contents
             )
         }?: return null
-        val bitmap =
-            BitmapTool.getScreenShotFromView(spannableContents)
-                ?: return null
-        val imageName = BitmapTool.hash(
-            bitmap
-        ) + ".png"
+        val bitmap = withContext(Dispatchers.Main) {
+            BitmapTool.getScreenShotFromView(
+                context,
+                spannableContents
+            )
+        } ?: return null
+        val imageName = withContext(Dispatchers.IO) {
+            BitmapTool.hash(
+                bitmap
+            ) + ".png"
+        }
         val file = File(
             UsePath.cmdclickTempCreateDirPath,
             imageName

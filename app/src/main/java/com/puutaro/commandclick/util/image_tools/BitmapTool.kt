@@ -1,11 +1,13 @@
 package com.puutaro.commandclick.util.image_tools
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import java.nio.ByteBuffer
 import java.util.Arrays
@@ -51,7 +53,10 @@ object BitmapTool {
         )
     }
 
-    fun getScreenShotFromView(v: View): Bitmap? {
+    fun getScreenShotFromView(
+        context: Context?,
+        v: View
+    ): Bitmap? {
         // create a bitmap object
         var screenshot: Bitmap? = null
         try {
@@ -64,6 +69,10 @@ object BitmapTool {
             val canvas = Canvas(screenshot)
             v.draw(canvas)
         } catch (e: Exception) {
+            LogSystems.stdErr(
+                context,
+                "Failure save ascii: ${e}"
+            )
             Log.e("GFG", "Failed to capture screenshot because:" + e.message)
         }
         // return the bitmap
