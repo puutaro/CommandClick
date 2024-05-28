@@ -10,9 +10,10 @@ import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.RegexTool
 import java.io.File
 
 object LogTool {
@@ -1246,7 +1247,6 @@ object LogTool {
         private val extractPathRegex = Regex("${errMessagePrefix}'(.*)'")
         private const val errCodePrefix =
             "${JsActionKeyManager.PathExistChecker.notFoundCodePrefix}:"
-        private val findRegex = Regex("${errCodePrefix} ![^!]+!")
         private val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
 
         fun makePutColorCon(
@@ -1257,27 +1257,25 @@ object LogTool {
             if (
                 isNotErr
             ) return curPutColorCon
-            val notFountPath = errMessage.replace(
-                extractPathRegex,
-                "$1"
-            )
-            val errCodeExtractRegex =
-                Regex("${errCodePrefix} !${notFountPath}!")
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
-//                listOf(
-//                    "errMessage: ${errMessage}",
-//                    "notFountPath: ${notFountPath}",
-//                    "curPutColorCon: ${curPutColorCon}"
-//                ).joinToString("\n\n")
-//
-//            )
-            return curPutColorCon
-                .replace(
-                    errCodeExtractRegex,
-                    notFountPath,
+            val notFountPath = try {
+                errMessage.replace(
+                    extractPathRegex,
+                    "$1"
                 )
-                .replace(
+            } catch(e: Exception){
+                errMessage
+            }
+            val errCodeExtractRegex =
+                RegexTool.convert("${errCodePrefix} [!]${notFountPath}[!]")
+            return try {
+                curPutColorCon
+                    .replace(
+                        errCodeExtractRegex,
+                        notFountPath,
+                    )
+            } catch(e: Exception){
+                curPutColorCon
+            }.replace(
                     notFountPath,
                     "<span style=\"color:${errRedCode};\">${notFountPath}</span>",
                 )
@@ -1335,6 +1333,7 @@ object LogTool {
         }
 
         private fun findAcImportNotFoundPath(evaluateAcCon: String): String? {
+            val findRegex = Regex("${errCodePrefix} [!][^!]+[!]")
             return try {
                 findRegex.find(evaluateAcCon)
                     ?.value
@@ -1581,7 +1580,8 @@ object LogTool {
                         jsImportLine.removePrefix(removePrefix)
                     )
 
-                val isNotIrregularFuncValue = !irregularFuncValueRegex.containsMatchIn(funcValue)
+                val isNotIrregularFuncValue =
+                    !irregularFuncValueRegex.containsMatchIn(funcValue)
                 if(
                     isNotIrregularFuncValue
                 ) return@map null

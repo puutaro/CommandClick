@@ -8,7 +8,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

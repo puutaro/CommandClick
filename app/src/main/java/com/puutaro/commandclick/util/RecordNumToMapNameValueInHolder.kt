@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.util.str.QuoteTool
 
 object RecordNumToMapNameValueInHolder {
 

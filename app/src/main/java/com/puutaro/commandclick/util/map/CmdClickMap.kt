@@ -1,11 +1,8 @@
 package com.puutaro.commandclick.util.map
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
+import com.puutaro.commandclick.util.str.QuoteTool
 
 object CmdClickMap {
      fun createMap(

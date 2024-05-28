@@ -26,7 +26,7 @@ import com.puutaro.commandclick.service.lib.textToSpeech.ExecShellForTts
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.StringLength
+import com.puutaro.commandclick.util.str.StringLength
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.io.File

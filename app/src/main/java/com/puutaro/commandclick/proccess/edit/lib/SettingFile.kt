@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 

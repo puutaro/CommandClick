@@ -7,6 +7,8 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
 

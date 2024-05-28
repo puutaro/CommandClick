@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 
 object ClickSettingsForListIndex {
 

@@ -1,4 +1,6 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.str
+
+import com.puutaro.commandclick.util.LogSystems
 
 
 object QuoteTool {

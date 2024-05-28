@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.str
 
 object StringLength {
     fun count(str: String): Int {

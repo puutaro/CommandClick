@@ -10,7 +10,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.extractValListFromHolder
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import java.io.File

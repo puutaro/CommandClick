@@ -1,7 +1,7 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.str
 
-import android.os.Environment
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.CcPathTool
 
 object ScriptPreWordReplacer {
 

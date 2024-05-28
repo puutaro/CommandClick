@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 
 object ConfigFromStartUpFileSetterForTerm {
 

@@ -4,8 +4,6 @@ import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.CcScript
 
 object VariableLabelAdder {
 

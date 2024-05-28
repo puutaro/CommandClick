@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers

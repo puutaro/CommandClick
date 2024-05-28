@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
 import android.widget.Spinner
-import com.puutaro.commandclick.util.StringLength
+import com.puutaro.commandclick.util.str.StringLength
 
 object SpinnerInstance {
     fun make(

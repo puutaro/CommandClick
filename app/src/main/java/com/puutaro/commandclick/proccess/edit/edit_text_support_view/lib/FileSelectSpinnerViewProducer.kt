@@ -11,10 +11,11 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupp
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
-import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
 

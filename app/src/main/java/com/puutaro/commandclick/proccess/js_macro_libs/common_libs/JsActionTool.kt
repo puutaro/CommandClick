@@ -18,7 +18,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -303,6 +303,15 @@ object JsActionTool {
                 isRunVarPrefixUsedErr ->
             if(
                 isRunVarPrefixUsedErr
+            ) return true
+        }
+        LogTool.NotMatchToUseVar.check(
+            context,
+            actionImportedKeyToSubKeyConList
+        ).let {
+                isNotMatchToUseVar ->
+            if(
+                isNotMatchToUseVar
             ) return true
         }
         LogTool.IrregularFuncValue.check(
@@ -2131,13 +2140,13 @@ private object PairToMapInList {
             val mainKey = JsActionKeyManager.JsActionsKey.values().firstOrNull {
                 it.key == mainJsKeyName
             } ?: return@mapIndexed String() to emptyMap()
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_mapConSrc.txt").absolutePath,
-                listOf(
-                    "mainJsKeyName: ${mainJsKeyName}",
-                    "mapConSrc: ${mapConSrc}"
-                ).joinToString("\n\n") + "\n-----\n"
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_mapConSrc.txt").absolutePath,
+//                listOf(
+//                    "mainJsKeyName: ${mainJsKeyName}",
+//                    "mapConSrc: ${mapConSrc}"
+//                ).joinToString("\n\n") + "\n-----\n"
+//            )
             when (mainKey) {
                 JsActionKeyManager.JsActionsKey.ACTION_IMPORT,
                 -> String() to emptyMap()
@@ -2517,6 +2526,7 @@ private object VarShortSyntaxToJsFunc {
     private const val prevPronoun = JsActionKeyManager.prevPronoun
     private val itSuggerVarRegex = Regex("([^a-zA-Z0-9_])${itPronoun}([^a-zA-Z0-9_])")
     private val itSuggerVarRegexEndVer = Regex("([^a-zA-Z0-9_])${itPronoun}$")
+    private val escapeRunPrefix = JsActionKeyManager.JsVarManager.escapeRunPrefix
     fun toJsFunc(
         varMapConSrc: String,
         beforeVarName: String,
@@ -2529,6 +2539,10 @@ private object VarShortSyntaxToJsFunc {
             true -> beforeVarName
             else -> varNameSrc
         }
+        val updatedBeforeVarName = updateBeforeVarName(
+            varNameSrc,
+            beforeVarName,
+        )
         val varMapCon = varMapConSrc.split(jsSubKeySeparator).mapIndexed {
             index, subKeyCon ->
             if(
@@ -2575,7 +2589,7 @@ private object VarShortSyntaxToJsFunc {
         val jsVarName = CmdClickMap.getFirst(
             varMapConPairList,
             jsVarMainKeyName
-        ) ?: return (String() to mapOf<String, String>()) to varName
+        ) ?: return (String() to mapOf<String, String>()) to updatedBeforeVarName
         val nextIndex = 1
         val valueOrIfConList = makeVarKeyToConPairListForJsVarMacro(
             varMapConPairList,
@@ -2650,7 +2664,20 @@ private object VarShortSyntaxToJsFunc {
 //                "jsKeyConMapSrc: ${jsKeyConMapSrc}"
 //            ).joinToString("\n\n") + "\n---\n"
 //        )
-        return (jsMainKeyName to jsKeyConMap) to varName
+        return (jsMainKeyName to jsKeyConMap) to updatedBeforeVarName
+    }
+
+    private fun updateBeforeVarName(
+        varNameSrc: String,
+        beforeVarName: String,
+    ): String {
+        if(
+            varNameSrc.startsWith(escapeRunPrefix)
+        ) return beforeVarName
+        if(
+            varNameSrc == prevPronoun
+        ) return beforeVarName
+        return  varNameSrc
     }
 
     private fun extractFirstValueOrFuncMap(

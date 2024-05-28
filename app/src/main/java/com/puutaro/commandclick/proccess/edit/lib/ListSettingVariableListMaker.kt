@@ -3,8 +3,8 @@ package com.puutaro.commandclick.proccess.edit.lib
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
-import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool

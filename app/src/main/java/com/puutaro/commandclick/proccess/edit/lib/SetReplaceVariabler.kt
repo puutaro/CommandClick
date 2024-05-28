@@ -9,9 +9,9 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
 object SetReplaceVariabler {

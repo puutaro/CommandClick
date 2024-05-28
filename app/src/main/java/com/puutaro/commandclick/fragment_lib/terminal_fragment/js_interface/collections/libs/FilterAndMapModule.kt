@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.libs
 
+import com.puutaro.commandclick.util.str.RegexTool
+
 object FilterAndMapModule {
 
     const val extraMapSeparator = '|'
@@ -122,13 +124,17 @@ object FilterAndMapModule {
             okPrefix && okNumSuffix
         }.map {
                 keyToValue ->
+            val repSrcRegex = RegexTool.convert(
+                "^${removeAndReplacePair.first}"
+            )
             val replaceKey =
                 keyToValue.key.replace(
-                    Regex("^${removeAndReplacePair.first}"),
+                    repSrcRegex,
                     removeAndReplacePair.second
                 )
             val removeRegexStr = keyToValue.value
-            Regex(removeRegexStr) to replaceKey
+            val removeRegex = RegexTool.convert(removeRegexStr)
+            removeRegex to replaceKey
         }
     }
 

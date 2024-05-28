@@ -25,7 +25,7 @@ import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope

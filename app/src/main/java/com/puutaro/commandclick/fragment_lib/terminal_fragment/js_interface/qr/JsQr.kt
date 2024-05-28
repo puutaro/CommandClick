@@ -30,7 +30,7 @@ import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

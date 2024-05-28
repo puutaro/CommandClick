@@ -10,7 +10,7 @@ import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import java.io.File

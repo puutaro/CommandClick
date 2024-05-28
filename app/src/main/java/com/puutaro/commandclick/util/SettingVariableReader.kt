@@ -2,6 +2,8 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
 object SettingVariableReader {

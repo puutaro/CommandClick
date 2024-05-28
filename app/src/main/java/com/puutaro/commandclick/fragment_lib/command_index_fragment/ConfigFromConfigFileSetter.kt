@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 
 object ConfigFromConfigFileSetter {
     fun set(

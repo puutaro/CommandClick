@@ -6,6 +6,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.libs.FilterAndMapModule
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.RegexTool
 import java.io.File
 
 class JsToListFilter(terminalFragment: TerminalFragment) {
@@ -37,7 +38,7 @@ class JsToListFilter(terminalFragment: TerminalFragment) {
             extraMap,
             FilterAndMapModule.ExtraMapBaseKey.MATCH_REGEX.key
         ).map {
-            Regex(it)
+            RegexTool.convert(it)
         }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsToListFilter.txt").absolutePath,

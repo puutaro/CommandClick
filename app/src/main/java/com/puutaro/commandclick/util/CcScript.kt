@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.util.str.QuoteTool
+
 object CcScript {
 
     fun makeKeyValuePairFromSeparatedString(
