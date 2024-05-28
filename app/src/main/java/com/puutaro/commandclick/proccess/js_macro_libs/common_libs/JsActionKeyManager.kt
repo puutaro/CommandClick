@@ -89,6 +89,46 @@ object JsActionKeyManager {
         }
     }
 
+    object PathNotRegisterInRepValChecker {
+
+        const val notRegisterCodePrefix = "CMDCLICK_NOT_REGISTER_REP_VAL_PATH"
+        const val notRegisterCodeTemplate = "${notRegisterCodePrefix}: !%s!"
+
+        fun echoErrSignal (
+            importPath: String,
+            beforeActionImportMap: Map<String, String>,
+            replaceVariableMapCon: String,
+        ): String? {
+            if(
+                importPath.isEmpty()
+            ) return null
+            val isNotMultiTimesUse =
+                !beforeActionImportMap.contains(importPath)
+            if(
+                isNotMultiTimesUse
+            ) return null
+            val containsReplaceVariableMapCon = replaceVariableMapCon.contains(
+                importPath
+            )
+            if(
+                containsReplaceVariableMapCon
+            ) return importPath
+            return notRegisterCodeTemplate.format(importPath)
+
+
+        }
+        fun makeCodeOrPath(jsPathCon: String?): String {
+            if(
+                jsPathCon.isNullOrEmpty()
+            ) return notRegisterCodeTemplate.format(jsPathCon)
+            val isJsFile = File(jsPathCon).isFile
+            return when(isJsFile){
+                false -> notRegisterCodeTemplate.format(jsPathCon)
+                else -> jsPathCon
+            }
+        }
+    }
+
     object ActionImportManager {
 
         private const val mainKeySeparator = '|'

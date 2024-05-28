@@ -18,8 +18,8 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -280,9 +280,21 @@ object JsActionTool {
             evaluateGeneCon,
             actionImportedKeyToSubKeyConList,
         ).let {
-                isErrPath ->
+                isPathNotFound ->
             if(
-                isErrPath
+                isPathNotFound
+            ) {
+                return true
+            }
+        }
+        LogTool.PathNotRegisterInRepValErr.check(
+            context,
+            evaluateGeneCon,
+            actionImportedKeyToSubKeyConList,
+        ).let {
+                isPathNotRegisterInRepValErr ->
+            if(
+                isPathNotRegisterInRepValErr
             ) {
                 return true
             }
@@ -731,7 +743,9 @@ private object KeyToSubKeyMapListMaker {
         val jsActionImportKeyName = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
         val jsActionImportSignal = "${jsActionImportKeyName}="
         var keyToSubKeyConList = keyToSubKeyConListSrc
-        ActionImportPutter.initBeforeActionImportMap()
+        ActionImportPutter.initBeforeActionImportMap(
+            setReplaceVariableMap
+        )
         var errType: ActionImportPutter.ErrSignal = ActionImportPutter.ErrSignal.NO_ERR
         for( i in 1..importRoopLimit) {
             keyToSubKeyConList = keyToSubKeyConList.map {
@@ -922,6 +936,7 @@ private object ActionImportPutter {
     private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
     private val varKey = JsActionKeyManager.JsSubKey.VAR.key
     private val beforeActionImportMap = mutableMapOf<String, String>()
+    private var replaceVariableMapCon = String()
     private val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
     private val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
     private val afterIdToNotMatchAfterIdSeparator = "\t"
@@ -944,8 +959,23 @@ private object ActionImportPutter {
         IRREGULAR_AFTER_ID,
     }
 
-    fun initBeforeActionImportMap(){
+    fun initBeforeActionImportMap(
+        setReplaceVariableMap: Map<String, String>?
+    ){
         beforeActionImportMap.clear()
+        replaceVariableMapCon =
+            makeSetRepValeMapCon(setReplaceVariableMap)
+    }
+
+    private fun makeSetRepValeMapCon(
+        setReplaceVariableMap: Map<String, String>?
+    ): String {
+        if(
+            setReplaceVariableMap.isNullOrEmpty()
+        ) return String()
+        return setReplaceVariableMap.map {
+            "${it.key}\t${it.value}"
+        }.joinToString("\n") + "\n"
     }
     fun put(
         currentAppDirPath: String,
@@ -978,10 +1008,16 @@ private object ActionImportPutter {
         val importPath = JsActionKeyManager.PathExistChecker.makeCodeOrPath(importPathSrc)
         val isNotFoundPrefix =
             importPath.startsWith(JsActionKeyManager.PathExistChecker.notFoundCodePrefix)
-
-        val importConSrcToErrType = when(isNotFoundPrefix){
-            true ->
-                "${jsMainKey}=${actionImportVirtualSubKey}=${importPath}" to ErrSignal.NO_ERR
+        val pathNotRegisterInRepValErrSignal = JsActionKeyManager.PathNotRegisterInRepValChecker.echoErrSignal(
+            importPath,
+            beforeActionImportMap,
+            replaceVariableMapCon
+        )
+        val importConSrcToErrType = when(true){
+            isNotFoundPrefix ->
+                "${jsMainKey}=?${actionImportVirtualSubKey}=${importPath}" to ErrSignal.NO_ERR
+            !pathNotRegisterInRepValErrSignal.isNullOrEmpty() ->
+                "${jsMainKey}=?${actionImportVirtualSubKey}=${pathNotRegisterInRepValErrSignal}" to ErrSignal.NO_ERR
             else -> {
                 val importSrcConBeforeReplace = makeActionImportSrcCon(
                     importPath,
@@ -2072,9 +2108,7 @@ private object ActionImportPutter {
         val beforeActionImportSrcCon = beforeActionImportMap.get(importPath)
         if(
             !beforeActionImportSrcCon.isNullOrEmpty()
-        ) {
-            return beforeActionImportSrcCon
-        }
+        ) return beforeActionImportSrcCon
         val actionImportSrcCon = SettingFile.read(
             importPath,
             File(currentAppDirPath, currentFannelName).absolutePath,
@@ -2217,9 +2251,13 @@ private object PairToMapInList {
         val hasActionImportPathNotFound = subKeyMap.get(
             JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key
         )?.contains(JsActionKeyManager.PathExistChecker.notFoundCodePrefix) == true
+        val hasActionImportPathNotRegisterInRepVal = subKeyMap.get(
+            JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key
+        )?.contains(JsActionKeyManager.PathNotRegisterInRepValChecker.notRegisterCodePrefix) == true
         if(
             hasIfBracket
             || hasActionImportPathNotFound
+            || hasActionImportPathNotRegisterInRepVal
         ) return jsMainKeyName to subKeyMap
         return jsMainKeyName to subKeyMap + mapOf(
             JsActionKeyManager.JsSubKey.FORBIDDEN_JS_KEY_DIRECT_SPECIFY.key
@@ -2247,51 +2285,6 @@ private object PairToMapInList {
             key to importPath
         }.toMap()
         return JsActionKeyManager.JsActionsKey.TSV_IMPORT.key to tsvImportMap
-//        val commonKeysRegex =
-//            JsActionKeyManager.CommonPathKey.values().map {
-//                it.key
-//            }.joinToString("|")
-//        val regexStr = "[?|&](${commonKeysRegex})="
-//        val compMapConSrc = compSrcMapCon(
-//            mapConSrc,
-//            regexStr,
-//        )
-//        val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
-//        val tsvImportKey =
-//            JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
-//        val tsvImportMapCon = listOf(
-//            importPathKey,
-//            compMapConSrc
-//        ).joinToString("=")
-//
-////        FileSystems.updateFile(
-////            File(UsePath.cmdclickDefaultAppDirPath, "tsvImpotJsac.txt").absolutePath,
-////            listOf(
-////                "mapConSrc: ${mapConSrc}",
-////                "compMapConSrc: ${compMapConSrc}",
-////                "tsvImportMap: ${CmdClickMap.createMap(
-////                    tsvImportMapCon,
-////                    jsSubKeySeparator
-////                ).toMap()}",
-////            ).joinToString("\n\n") + "\n---\n"
-////        )
-//        val tsvImportMap = CmdClickMap.createMap(
-//            tsvImportMapCon,
-//            jsSubKeySeparator
-//        ).toMap()
-////        val pathCon = tsvImportMapSrc.get(
-////            pathKey,
-////        ).let {
-////            JsActionKeyManager.PathExistChecker.makeCodeOrPath(it)
-////        }
-////        val tsvImportMap = tsvImportMapSrc.map {
-////            val key = it.key
-////            if(
-////                key != pathKey
-////            ) return@map key to it.value
-////            key to pathCon
-////        }.toMap()
-//        return tsvImportKey to tsvImportMap
     }
 
     private fun compSrcMapCon(

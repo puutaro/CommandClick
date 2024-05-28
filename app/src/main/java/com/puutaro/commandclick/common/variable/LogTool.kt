@@ -764,10 +764,15 @@ object LogTool {
             }
             val errWordWithRedSpan =
                 LogVisualManager.execMakeSpanTagHolder(errRedCode, errWord)
-            val repConWithErrWord = repConWithEndTagStr.replace(
-                errWord,
-                errWordWithRedSpan
-            )
+            val isEscapeErrWord =
+                Regex("^[{}\$]$").containsMatchIn(errWord)
+            val repConWithErrWord = when(isEscapeErrWord) {
+                true -> repConWithEndTagStr
+                else -> repConWithEndTagStr.replace(
+                    errWord,
+                    errWordWithRedSpan
+                )
+            }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath,"debug.txt").absolutePath,
 //                listOf(
@@ -1007,8 +1012,12 @@ object LogTool {
                 putColorConByNotMatchToUseAfter,
                 errMessage,
             )
-            val putColorConByLoopMethodOrArgsNotExist = LoopMethodOrArgsNotExist.makePutColorCon(
+            val putColorConByPathNotRegisterInRepValErr = PathNotRegisterInRepValErr.makePutColorCon(
                 putColorConByPathNotFound,
+                errMessage,
+            )
+            val putColorConByLoopMethodOrArgsNotExist = LoopMethodOrArgsNotExist.makePutColorCon(
+                putColorConByPathNotRegisterInRepValErr,
                 errMessage
             )
             val putColorConByPrevNotExist = PrevNotExist.makePutColorCon(
@@ -1279,6 +1288,237 @@ object LogTool {
                     notFountPath,
                     "<span style=\"color:${errRedCode};\">${notFountPath}</span>",
                 )
+        }
+
+        fun check(
+            context: Context?,
+            evaluateGeneCon: String,
+            actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
+        ): Boolean {
+            checkJsAcGeneCon(
+                context,
+                evaluateGeneCon,
+            ).let {
+                if(it) return true
+            }
+            checkJsAcSrcCon(
+                context,
+                actionImportedKeyToSubKeyConList,
+            ).let {
+                if(it) return true
+            }
+            return false
+        }
+        private fun checkJsAcGeneCon(
+            context: Context?,
+            evaluateGeneCon: String,
+        ): Boolean {
+            if(
+                evaluateGeneCon.isEmpty()
+            ) return false
+            findAcImportNotFoundPath(evaluateGeneCon).let{
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            findImportNotExistPathForGene(evaluateGeneCon).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            return false
+        }
+
+        private fun findAcImportNotFoundPath(evaluateAcCon: String): String? {
+            val findRegex = Regex("${errCodePrefix} [!][^!]+[!]")
+            return try {
+                findRegex.find(evaluateAcCon)
+                    ?.value
+                    ?.removePrefix(errCodePrefix)
+                    ?.trim()
+                    ?.trim('!')
+                    ?.trim()
+            } catch (e: Exception){
+                null
+            }
+        }
+
+        private fun findImportNotExistPathForGene(
+            evaluateAcGeneCon: String
+        ): String? {
+            val importPrefix = "${importPathKey}="
+            val findJsImportRegex = Regex(
+                "\\?${importPrefix}[^\n|?&\"`]*"
+            )
+            return findImportNotExistPath(
+                evaluateAcGeneCon,
+                findJsImportRegex,
+                "?${importPrefix}",
+            )
+        }
+
+        private fun checkJsAcSrcCon(
+            context: Context?,
+            actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
+        ): Boolean {
+            if(
+                actionImportedKeyToSubKeyConList.isEmpty()
+            ) return false
+            val evaluateSrcCon = actionImportedKeyToSubKeyConList.map {
+                val mainKey = it.first
+                val subKeyCon = it.second
+                "|${mainKey}=${subKeyCon}"
+            }.joinToString("\n")
+            if(
+                evaluateSrcCon.isEmpty()
+            ) return false
+            findTsvImportNotExistPath(evaluateSrcCon).let{
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+            findJsImportNotExistPath(evaluateSrcCon).let {
+                if(
+                    it.isNullOrEmpty()
+                ) return@let
+                val errMessage = errMessageTemplate.format(it)
+                saveFirstLog(
+                    context,
+                    errMessage,
+                )
+                return true
+            }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "notfound.txt").absolutePath,
+//                listOf(
+//                    "evaluateSrcCon: ${evaluateSrcCon}",
+////                    "errPath: ${errPath}",
+////                    "isNotErr: ${isNotErr}",
+//                ).joinToString("\n\n")
+//            )
+            return false
+        }
+
+        private fun findJsImportNotExistPath(
+            evaluateAcGeneCon: String
+        ): String? {
+            val jsImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.JS_IMPORT.key}="
+            val findTsvImportRegex = Regex(
+                "${jsImportKeyPrefix}[^\n|?&\"`]*"
+            )
+            return findImportNotExistPath(
+                evaluateAcGeneCon,
+                findTsvImportRegex,
+                jsImportKeyPrefix
+            )
+        }
+
+        private fun findTsvImportNotExistPath(
+            evaluateAcCon: String
+        ): String? {
+            val tsvImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.TSV_IMPORT.key}="
+            val findTsvImportRegex = Regex(
+                "${tsvImportKeyPrefix}[^\n|?&\"`]*"
+            )
+            return findImportNotExistPath(
+                evaluateAcCon,
+                findTsvImportRegex,
+                tsvImportKeyPrefix,
+            )
+        }
+
+        private fun findImportNotExistPath(
+            evaluateAcCon: String,
+            findRegex: Regex,
+            removePrefix: String,
+        ): String? {
+            val matchResult = try {
+                findRegex.findAll(
+                    evaluateAcCon
+                )
+            } catch(e: Exception){
+                return null
+            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "notfound_findImportNotExistPath.txt").absolutePath,
+//                listOf(
+//                    "match: ${matchResult.map { it.value }.joinToString("---")}",
+////                    "isNotErr: ${isNotErr}",
+//                ).joinToString("\n\n")
+//            )
+            return matchResult.map {
+                val jsImportLine = it.value
+                val importPath =
+                    QuoteTool.trimBothEdgeQuote(
+                        jsImportLine.removePrefix(removePrefix)
+                    )
+                val isExistPath = File(importPath).isFile
+                if(
+                    isExistPath
+                ) return@map null
+                importPath
+            }.firstOrNull { !it.isNullOrEmpty() }
+        }
+    }
+
+    object PathNotRegisterInRepValErr {
+
+        private const val errMessagePrefix =
+            "Multiple use action import path must be register in 'setReplaceVariable' "
+        private const val errMessageTemplate = "${errMessagePrefix}'%s'"
+        private val extractPathRegex = Regex("${errMessagePrefix}'(.*)'")
+        private const val errCodePrefix =
+            "${JsActionKeyManager.PathNotRegisterInRepValChecker.notRegisterCodePrefix}:"
+        private val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.contains(errMessagePrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val notFountPath = try {
+                errMessage.replace(
+                    extractPathRegex,
+                    "$1"
+                )
+            } catch(e: Exception){
+                errMessage
+            }
+            val errCodeExtractRegex =
+                RegexTool.convert("${errCodePrefix} [!]${notFountPath}[!]")
+            return try {
+                curPutColorCon
+                    .replace(
+                        errCodeExtractRegex,
+                        notFountPath,
+                    )
+            } catch(e: Exception){
+                curPutColorCon
+            }.replace(
+                notFountPath,
+                "<span style=\"color:${errRedCode};\">${notFountPath}</span>",
+            )
         }
 
         fun check(
