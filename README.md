@@ -86,7 +86,7 @@ Addon Table
 
 <details>
 
-<summary>Add-ons: <strong><code>Ubuntu</code></strong>, <code>Terminal</code>, <code>QR</code> reader & creator, <code>youtube</code> player, file manager ...</summary>
+<summary>Add-ons: <strong><code>Ubuntu</code></strong>, <code>Terminal</code>, ritch <code>QR</code> reader & creator, <code>youtube</code> player, file manager ...</summary>
 
 <br>
 <br>
