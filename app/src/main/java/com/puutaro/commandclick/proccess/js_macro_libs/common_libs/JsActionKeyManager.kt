@@ -112,7 +112,7 @@ object JsActionKeyManager {
             )
             if(
                 containsReplaceVariableMapCon
-            ) return importPath
+            ) return null
             return notRegisterCodeTemplate.format(importPath)
 
 

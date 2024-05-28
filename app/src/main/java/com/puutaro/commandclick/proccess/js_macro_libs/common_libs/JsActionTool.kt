@@ -1008,11 +1008,12 @@ private object ActionImportPutter {
         val importPath = JsActionKeyManager.PathExistChecker.makeCodeOrPath(importPathSrc)
         val isNotFoundPrefix =
             importPath.startsWith(JsActionKeyManager.PathExistChecker.notFoundCodePrefix)
-        val pathNotRegisterInRepValErrSignal = JsActionKeyManager.PathNotRegisterInRepValChecker.echoErrSignal(
-            importPath,
-            beforeActionImportMap,
-            replaceVariableMapCon
-        )
+        val pathNotRegisterInRepValErrSignal =
+            JsActionKeyManager.PathNotRegisterInRepValChecker.echoErrSignal(
+                importPath,
+                beforeActionImportMap,
+                replaceVariableMapCon
+            )
         val importConSrcToErrType = when(true){
             isNotFoundPrefix ->
                 "${jsMainKey}=?${actionImportVirtualSubKey}=${importPath}" to ErrSignal.NO_ERR
@@ -1061,6 +1062,16 @@ private object ActionImportPutter {
                 importCon to errType
             }
         }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAcImport_put.txt").absolutePath,
+//            listOf(
+//                "importPath: ${importPath}",
+//                "isNotFoundPrefix: ${isNotFoundPrefix}",
+//                "pathNotRegisterInRepValErrSignal: ${pathNotRegisterInRepValErrSignal}",
+//                "!pathNotRegisterInRepValErrSignal.isNullOrEmpty(): ${!pathNotRegisterInRepValErrSignal.isNullOrEmpty()}",
+//                "importConSrcToErrType ${importConSrcToErrType}",
+//            ).joinToString("\n") + "\n-----------------\n"
+//        )
         val importConSrc = importConSrcToErrType.first
         val errType = importConSrcToErrType.second
         if(errType == ErrSignal.ERR){
@@ -2108,7 +2119,16 @@ private object ActionImportPutter {
         val beforeActionImportSrcCon = beforeActionImportMap.get(importPath)
         if(
             !beforeActionImportSrcCon.isNullOrEmpty()
-        ) return beforeActionImportSrcCon
+        ) {
+            return beforeActionImportSrcCon
+        }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath,"jsAcImport_first_makeActionImportSrcCon.txt").absolutePath,
+//            listOf(
+//                "importPath: ${importPath}",
+//                "beforeActionImportSrcCon: ${beforeActionImportSrcCon}",
+//            ).joinToString("\n\n") + "\n-----\n"
+//        )
         val actionImportSrcCon = SettingFile.read(
             importPath,
             File(currentAppDirPath, currentFannelName).absolutePath,
