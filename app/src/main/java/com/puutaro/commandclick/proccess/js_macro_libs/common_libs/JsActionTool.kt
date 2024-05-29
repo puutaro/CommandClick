@@ -939,17 +939,11 @@ private object ActionImportPutter {
     private var replaceVariableMapCon = String()
     private val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
     private val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
-    private val afterIdToNotMatchAfterIdSeparator = "\t"
 
 
     enum class ErrSignal {
         NO_ERR,
         ERR,
-    }
-    enum class UseVarErrType {
-        NOT_MATCH_SRC_VAR_TO_USE_VAR,
-        MISS_VAR_KEY,
-        RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT,
     }
 
 
@@ -1087,73 +1081,6 @@ private object ActionImportPutter {
         }
     }
 
-    private fun makeCompMap2(
-        subKeyCon: String,
-        jsMainKeyPrefix: String,
-    ): Map<String, String> {
-        val subKeySeparator = '?'
-        val subKeyConList = subKeyCon.split(subKeySeparator)
-        val importPathKeyCon = subKeyConList.firstOrNull()
-            ?: String()
-        val importPathKeyPrefix =
-            "${JsActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key}="
-        val endsQuote = extractEndsQuote(
-            importPathKeyCon.removePrefix(importPathKeyPrefix),
-        )
-        if(
-            endsQuote.isNullOrEmpty()
-        ) {
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeActionImportMap1.txt").absolutePath,
-//                listOf(
-//                    "subKeyCon: ${subKeyCon}",
-//                    "importPathKeyCon: ${importPathKeyCon}",
-//                ).joinToString("\n\n")
-//            )
-            return CmdClickMap.createMap(
-                subKeyCon,
-                subKeySeparator
-            ).toMap()
-        }
-        val otherKeyCon = subKeyConList.filterIndexed { index, _ ->
-            index > 0
-        }.joinToString(subKeySeparator.toString())
-        val compImportPathKeyCon = listOf(
-            importPathKeyPrefix,
-            endsQuote,
-            importPathKeyCon.removePrefix(importPathKeyPrefix),
-        ).joinToString(String())
-        val compOtherKeyCon = listOf(
-            otherKeyCon,
-            endsQuote
-        ).joinToString(String())
-        val compQuoteSubKeyCon = listOf(
-            compImportPathKeyCon,
-            subKeySeparator.toString(),
-            compOtherKeyCon
-        ).joinToString(String())
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeActionImportMap2.txt").absolutePath,
-//            listOf(
-//                "subKeyCon: ${subKeyCon}",
-//                "importPathKeyCon: ${importPathKeyCon}",
-//                "compImportPathKeyCon: ${compImportPathKeyCon}",
-//                "importPathKeyPrefix: ${importPathKeyPrefix}",
-//                "otherKeyCon: ${otherKeyCon}",
-//                "compOtherKeyCon: ${compOtherKeyCon}",
-//                "compQuoteSubKeyCon: ${compQuoteSubKeyCon}",
-//                "map: ${CmdClickMap.createMap(
-//                    compQuoteSubKeyCon,
-//                    subKeySeparator
-//                ).toMap()}"
-//            ).joinToString("\n\n")
-//        )
-        return CmdClickMap.createMap(
-            compQuoteSubKeyCon,
-            subKeySeparator
-        ).toMap()
-    }
-
     private fun putIfBracketByWhen(
         importConWithFormatList: List<String>,
         whenCondition: String?,
@@ -1204,83 +1131,22 @@ private object ActionImportPutter {
             if (
                 useVarValue.isNullOrEmpty()
             ) return importConWithFormatList to ErrSignal.NO_ERR
-            val updatedVarKeyValueToErrType = makeVarKeyValueToSrcVarKeyCon(
-                importConWithFormatList,
-                useVarValue,
-                isUseAfterValue,
-            )
-            val errTypeForUseVar = updatedVarKeyValueToErrType.second
-            val updatedVarKeyValue = updatedVarKeyValueToErrType.first
-            val updatedImportConWithFormatList = execUpdateImportConWithFormatListForUseVar(
-                updatedVarKeyValue,
-                errTypeForUseVar,
-                importConWithFormatList,
-                isUseAfterValue,
-            )
-            val errSignal =
-                when (errTypeForUseVar == null) {
-                    true -> ErrSignal.NO_ERR
-                    else -> ErrSignal.ERR
-                }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_varName.txt").absolutePath,
-//            listOf(
-//                "updatedImportConWithFormatList: ${updatedImportConWithFormatList}",
-//                "errTypeForUseVar: ${errTypeForUseVar?.name}",
-//                "errSignal: ${errSignal.name}",
-//            ).joinToString("\n\n") + "\n-------------\n"
-//        )
+            val updatedImportConWithFormatListToErrSignal =
+                updateImportConWithFormatListToErrSignal(
+                    importConWithFormatList,
+                    useVarValue,
+                    isUseAfterValue,
+                )
+            val updatedImportConWithFormatList =
+                updatedImportConWithFormatListToErrSignal.first
+            val errSignal = updatedImportConWithFormatListToErrSignal.second
             return updatedImportConWithFormatList to errSignal
         }
 
-        private fun execUpdateImportConWithFormatListForUseVar(
-            updatedVarKeyValue: String,
-            errType: UseVarErrType?,
-            importConWithFormatList: List<String>,
-            isUseAfterValue: Boolean,
-        ): List<String> {
-//        FileSystems.updateFile(
-//            File(
-//                UsePath.cmdclickDefaultAppDirPath,
-//                "jsAc_execUpdateImportConWithFormatListForUseVar.txt"
-//            ).absolutePath,
-//            listOf(
-//                "updatedVarKeyValue: ${updatedVarKeyValue}",
-//                "errType: ${errType?.name}",
-//            ).joinToString("\n\n")
-//        )
-            return when(errType){
-                null -> updateImportConListByOrdinaryForUseVar(
-                    importConWithFormatList,
-                    updatedVarKeyValue,
-                )
-                UseVarErrType.NOT_MATCH_SRC_VAR_TO_USE_VAR -> {
-                    updateWhenNotMatchSrcVarToUseVar(
-                        importConWithFormatList,
-                        updatedVarKeyValue,
-                        isUseAfterValue
-                    )
-                }
-                UseVarErrType.MISS_VAR_KEY ->{
-                    updateImportConSrcListWhenMissVarKey(
-                        importConWithFormatList,
-                        isUseAfterValue
-                    )
-                }
-                UseVarErrType.RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT -> {
-                    updateWhenRunVarPrefixUseErrInAcImport(
-                        importConWithFormatList,
-                        updatedVarKeyValue,
-                        isUseAfterValue
-                    )
-                }
-            }
-        }
-
         private fun updateImportConListByOrdinaryForUseVar(
-            importConWithFormatList: List<String>,
+            keyCon: String,
             updatedVarKeyValue: String,
-        ): List<String> {
+        ): String {
             val varKeyValueRegex = Regex(
                 "\\|${varKey}=[^|?\n]+"
             )
@@ -1288,73 +1154,87 @@ private object ActionImportPutter {
                 Regex("\\?${useVarKey}=[^?|\n]+")
             val useVarAllow =
                 JsActionKeyManager.ActionImportManager.useVarAllow
-            return importConWithFormatList.reversed().mapIndexed {
-                    index, keyCon ->
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath,
-//                    "jsAc_ordinalyUpdateImportConList001.txt").absolutePath,
-//                listOf(
-//                    "index: ${index}",
-//                    "keyCon: ${keyCon}",
-//                ).joinToString("\n\n")
-//            )
-                if(
-                    index != 0
-                ) return@mapIndexed keyCon
-                val updatedLastKeyCon = keyCon.replace(
-                    varKeyValueRegex,
-                    updatedVarKeyValue
-                )
-                if(updatedLastKeyCon != keyCon){
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "jsAc_ordinalyUpdateImportConList00.txt").absolutePath,
-//                    listOf(
-//                        "keyCon: ${keyCon}",
-//                        "updatedVarKeyValue: ${updatedVarKeyValue}",
-//                        "updatedLastKeyCon: ${updatedLastKeyCon}",
-//                    ).joinToString("\n\n") + "\n-----------\n\n"
-//                )
-                    return@mapIndexed updatedLastKeyCon
-                }
-                val lastUseVarCon = useVarKeyValueRegex.find(
-                    keyCon
-                )?.value?.removePrefix("?${useVarKey}=")?.let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                } ?: return@mapIndexed keyCon
-                val lastUseVarNameSrcToDestiPair = makeUseVarPair(lastUseVarCon)
-                    ?: return@mapIndexed keyCon
-                val lastSrcVarName = lastUseVarNameSrcToDestiPair.first
-                val updatedDestiVarName = updatedVarKeyValue.removeSuffix(
-                    "|${varKey}="
-                ).let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                }
-                val replaceUseVarValue =
-                    "?${useVarKey}=`${lastSrcVarName} ${useVarAllow} ${updatedDestiVarName}`"
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_ordinalyUpdateImportConList11.txt").absolutePath,
-//                listOf(
-//                    "replaceUseVarValue: ${replaceUseVarValue}",
-//                    "updatedkeyCon: ${keyCon.replace(
-//                        useVarKeyValueRegex,
-//                        replaceUseVarValue
-//                    )}",
-//                ).joinToString("\n\n") + "\n-----------\n\n"
-//            )
-                keyCon.replace(
-                    useVarKeyValueRegex,
-                    replaceUseVarValue
-                )
-            }.reversed()
+            val updatedLastKeyCon = keyCon.replace(
+                varKeyValueRegex,
+                updatedVarKeyValue
+            )
+            if(updatedLastKeyCon != keyCon){
+                return updatedLastKeyCon
+            }
+            val lastUseVarCon = useVarKeyValueRegex.find(
+                keyCon
+            )?.value?.removePrefix("?${useVarKey}=")?.let {
+                QuoteTool.trimBothEdgeQuote(it)
+            } ?: return keyCon
+            val lastUseVarNameSrcToDestiPair = makeUseVarPair(lastUseVarCon)
+                ?: return keyCon
+            val lastSrcVarName = lastUseVarNameSrcToDestiPair.first
+            val updatedDestiVarName = updatedVarKeyValue.removeSuffix(
+                "|${varKey}="
+            ).let {
+                QuoteTool.trimBothEdgeQuote(it)
+            }
+            val replaceUseVarValue =
+                "?${useVarKey}=`${lastSrcVarName} ${useVarAllow} ${updatedDestiVarName}`"
+            return keyCon.replace(
+                useVarKeyValueRegex,
+                replaceUseVarValue
+            )
         }
 
         private fun updateWhenNotMatchSrcVarToUseVar(
-            importConWithFormatList: List<String>,
+            keyCon: String,
             notMatchKeyCon: String,
-            isUseAfterValue: Boolean
-        ): List<String> {
+        ): String {
             val varKeyValueRegex = Regex("(\\|${varKey}=[^?|\n]+)")
             val useVarKeyValueRegex = Regex("(\\?${useVarKey}=[^?|\n]+)")
+            return keyCon.replace(
+                varKeyValueRegex,
+                "$1${notMatchKeyCon}?"
+            ).replace(
+                useVarKeyValueRegex,
+                "$1${notMatchKeyCon}?"
+            )
+        }
+
+        private fun updateImportConSrcListWhenMissVarKey(
+            keyCon: String,
+        ): String {
+            val judgeCon = "|${keyCon.trim()}"
+            return "${judgeCon}?${missVarKey}="
+        }
+
+        private fun updateWhenRunVarPrefixUseErrInAcImport(
+            keyCon: String,
+            notMatchKeyCon: String,
+        ): String {
+            val varKeyValueRegex = Regex("(\\|${varKey}=[^?|\n]+)")
+            val useVarKeyValueRegex = Regex("(\\?${useVarKey}=[^?|\n]+)")
+            return keyCon.replace(
+                varKeyValueRegex,
+                "$1${notMatchKeyCon}?"
+            ).replace(
+                useVarKeyValueRegex,
+                "$1${notMatchKeyCon}?"
+            )
+        }
+
+        private fun updateImportConWithFormatListToErrSignal(
+            importConWithFormatList: List<String>,
+            useVarValue: String?,
+            isUseAfterValue: Boolean,
+        ): Pair<List<String>, ErrSignal>
+//                Pair<String, UseVarErrType?>
+        {
+            if(
+                useVarValue.isNullOrEmpty()
+            ) return emptyList<String>() to ErrSignal.NO_ERR
+            val useVarNameSrcToDestiPair = makeUseVarPair(
+                useVarValue
+            ) ?: return emptyList<String>() to ErrSignal.NO_ERR
+            val useSrcVarName =
+                useVarNameSrcToDestiPair.first
+
             val findUseAfterRegex = Regex(
                 "\\?${useAfterKey}=[^?|\n]+"
             )
@@ -1362,9 +1242,9 @@ private object ActionImportPutter {
                 "\\?${afterKey}=[^?|\n]+"
             )
             var isChange = false
-            return importConWithFormatList.reversed().map {
+            var errSignal: ErrSignal = ErrSignal.NO_ERR
+            val updatedImportConWithFormatList = importConWithFormatList.reversed().map {
                     keyCon ->
-//                val judgeCon = "|${keyCon.trim()}"
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "jsAc_updateWhenNotMatchSrcVarToUseVar.txt").absolutePath,
 //                    listOf(
@@ -1384,13 +1264,15 @@ private object ActionImportPutter {
                     isUseAfterValue
                 ) {
                     isChange = true
-                    return@map keyCon.replace(
-                        varKeyValueRegex,
-                        "$1${notMatchKeyCon}?"
-                    ).replace(
-                        useVarKeyValueRegex,
-                        "$1${notMatchKeyCon}?"
+                    val updatedLastKeyConToErrSignal = makeChangeSignalCon(
+                        keyCon,
+                        useVarValue,
+                        useVarNameSrcToDestiPair,
+                        useSrcVarName,
                     )
+                    val updatedLastKeyCon = updatedLastKeyConToErrSignal.first
+                    errSignal = updatedLastKeyConToErrSignal.second
+                    return@map updatedLastKeyCon
                 }
                 val hasUseAfter =
                     findUseAfterRegex.containsMatchIn(keyCon)
@@ -1402,160 +1284,101 @@ private object ActionImportPutter {
                     hasAfterOrUseAfter
                 ) return@map keyCon
                 isChange = true
-                keyCon.replace(
-                    varKeyValueRegex,
-                    "$1${notMatchKeyCon}?"
-                ).replace(
-                    useVarKeyValueRegex,
-                    "$1${notMatchKeyCon}?"
+                val updatedLastKeyConToErrSignal = makeChangeSignalCon(
+                    keyCon,
+                    useVarValue,
+                    useVarNameSrcToDestiPair,
+                    useSrcVarName,
                 )
+                val updatedLastKeyCon = updatedLastKeyConToErrSignal.first
+                errSignal = updatedLastKeyConToErrSignal.second
+                updatedLastKeyCon
             }.reversed()
-//            return importConWithFormatList.reversed().mapIndexed {
-//                    index, keyCon ->
-//                if(
-//                    index != 0
-//                ) return@mapIndexed keyCon
-//                keyCon.replace(
-//                    varKeyValueRegex,
-//                    "$1${notMatchKeyCon}?"
-//                ).replace(
-//                    useVarKeyValueRegex,
-//                    "$1${notMatchKeyCon}?"
-//                )
-//            }.reversed()
+            return updatedImportConWithFormatList to errSignal
+
+
+
+//
+//            val lastJsElement = extractLastEl(
+//                importConWithFormatList,
+//                isUseAfterValue,
+//            ) ?: return String() to null
+////                importConWithFormatList.lastOrNull()
+////                    ?: return String() to null
+//            val varNameByVarKeyOrUseVarKey = getVarNameFromJsEl(lastJsElement)
+//            if(
+//                varNameByVarKeyOrUseVarKey.isNullOrEmpty()
+//            ) {
+//                return listOf(
+//                    "|${varKey}=${varNameByVarKeyOrUseVarKey}",
+//                    "?${useVarKey}=${useVarValue}"
+//                ).joinToString(String()) to
+//                        UseVarErrType.MISS_VAR_KEY
+//            }
+//            val useDestiVarName =
+//                useVarNameSrcToDestiPair.second
+//            val escapeRunPrefix = JsActionKeyManager.JsVarManager.escapeRunPrefix
+//            val isEscapeRunPrefix = useSrcVarName.startsWith(escapeRunPrefix)
+//                    || useDestiVarName.startsWith(escapeRunPrefix)
+//            if(
+//                isEscapeRunPrefix
+//            ){
+//                val runVarPrefixErrConPrefix =
+//                    JsActionKeyManager.ActionImportManager
+//                        .ActionImportKey.RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT.key
+//                val errConSeparator =
+//                    JsActionKeyManager.ActionImportManager.errConSeparator
+//                val runVarPrefixErrCon =
+//                    "?${runVarPrefixErrConPrefix}=${useSrcVarName}${errConSeparator}${useDestiVarName}"
+//                val runVarPrefixErrConInsertCon = listOf(
+//                    runVarPrefixErrCon,
+//                    "?${useVarKey}=${useVarValue}"
+//                ).joinToString(String())
+//                return runVarPrefixErrConInsertCon to UseVarErrType.RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT
+//            }
+//            val varNameByOnlyVarKey = getVarNameFromJsElByOnlyVarKey(
+//                lastJsElement
+//            )
+//            if(
+//                varNameByOnlyVarKey != useSrcVarName
+//                && !varNameByOnlyVarKey.isNullOrEmpty()
+//            ){
+//                val notMatchSrcVarToUseVarKeyCon =
+//                    JsActionKeyManager.ActionImportManager
+//                        .ActionImportKey.NOT_MATCH_SRC_VAR_TO_USE_VAR.key
+//                val errConSeparator =
+//                    JsActionKeyManager.ActionImportManager.errConSeparator
+//                val notMatchSrcAfterToUseAfterKeyCon =
+//                    "?${notMatchSrcVarToUseVarKeyCon}=${varNameByOnlyVarKey}${errConSeparator}${useDestiVarName}"
+//                val insertVarCon = listOf(
+//                    notMatchSrcAfterToUseAfterKeyCon,
+//                    "?${useVarKey}=${useVarValue}"
+//                ).joinToString(String())
+//                return insertVarCon to
+//                        UseVarErrType.NOT_MATCH_SRC_VAR_TO_USE_VAR
+//            }
+//
+//            return "|${varKey}=${useDestiVarName}" to null
         }
 
-        private fun updateImportConSrcListWhenMissVarKey(
-            importConWithFormatList: List<String>,
-            isUseAfterValue: Boolean
-        ): List<String> {
-            val findUseAfterRegex = Regex(
-                "\\?${useAfterKey}=[^?|\n]+"
-            )
-            val findAfterRegex = Regex(
-                "\\?${afterKey}=[^?|\n]+"
-            )
-            var isChange = false
-            return importConWithFormatList.reversed().map {
-                    keyCon ->
-                if(
-                    isChange
-                ) return@map keyCon
-                val judgeCon = "|${keyCon.trim()}"
-                if(
-                    isUseAfterValue
-                ) {
-                    isChange = true
-                    return@map "${judgeCon}?${missVarKey}="
-                }
-                val hasUseAfter =
-                    findUseAfterRegex.containsMatchIn(keyCon)
-                val hasAfter =
-                    findAfterRegex.containsMatchIn(keyCon)
-                val hasAfterOrUseAfter =
-                    hasUseAfter || hasAfter
-                if(
-                    hasAfterOrUseAfter
-                ) return@map judgeCon
-                isChange = true
-                "${judgeCon}?${missVarKey}="
-            }.reversed()
-        }
-
-
-        private fun updateWhenRunVarPrefixUseErrInAcImport(
-            importConWithFormatList: List<String>,
-            notMatchKeyCon: String,
-            isUseAfterValue: Boolean,
-        ): List<String> {
-            val findUseAfterRegex = Regex(
-                "\\?${useAfterKey}=[^?|\n]+"
-            )
-            val findAfterRegex = Regex(
-                "\\?${afterKey}=[^?|\n]+"
-            )
-            var isChange = false
-            val varKeyValueRegex = Regex("(\\|${varKey}=[^?|\n]+)")
-            val useVarKeyValueRegex = Regex("(\\?${useVarKey}=[^?|\n]+)")
-            return importConWithFormatList.reversed().map {
-                    keyCon ->
-                if(
-                    isChange
-                ) return@map keyCon
-                val judgeCon = "|${keyCon.trim()}"
-                if(
-                    isUseAfterValue
-                ) {
-                    isChange = true
-                    return@map keyCon.replace(
-                        varKeyValueRegex,
-                        "$1${notMatchKeyCon}?"
-                    ).replace(
-                        useVarKeyValueRegex,
-                        "$1${notMatchKeyCon}?"
-                    )
-                }
-                val hasUseAfter =
-                    findUseAfterRegex.containsMatchIn(keyCon)
-                val hasAfter =
-                    findAfterRegex.containsMatchIn(keyCon)
-                val hasAfterOrUseAfter =
-                    hasUseAfter || hasAfter
-                if(
-                    hasAfterOrUseAfter
-                ) return@map judgeCon
-                isChange = true
-                keyCon.replace(
-                    varKeyValueRegex,
-                    "$1${notMatchKeyCon}?"
-                ).replace(
-                    useVarKeyValueRegex,
-                    "$1${notMatchKeyCon}?"
-                )
-            }.reversed()
-//            return importConWithFormatList.reversed().mapIndexed {
-//                    index, keyCon ->
-//                if(
-//                    index != 0
-//                ) return@mapIndexed keyCon
-//                keyCon.replace(
-//                    varKeyValueRegex,
-//                    "$1${notMatchKeyCon}?"
-//                ).replace(
-//                    useVarKeyValueRegex,
-//                    "$1${notMatchKeyCon}?"
-//                )
-//            }.reversed()
-        }
-
-        private fun makeVarKeyValueToSrcVarKeyCon(
-            importConWithFormatList: List<String>,
-            useVarValue: String?,
-            isUseAfterValue: Boolean,
-        ): Pair<String, UseVarErrType?> {
-            if(
-                useVarValue.isNullOrEmpty()
-            ) return String() to null
-            val useVarNameSrcToDestiPair = makeUseVarPair(
-                useVarValue
-            ) ?: return String() to null
-            val useSrcVarName =
-                useVarNameSrcToDestiPair.first
-            val lastJsElement = extractLastEl(
-                importConWithFormatList,
-                isUseAfterValue,
-            ) ?: return String() to null
-//                importConWithFormatList.lastOrNull()
-//                    ?: return String() to null
+        private fun makeChangeSignalCon(
+            lastJsElement: String,
+            useVarValue: String,
+            useVarNameSrcToDestiPair: Pair<String, String>,
+            useSrcVarName: String,
+        ): Pair<String, ErrSignal> {
             val varNameByVarKeyOrUseVarKey = getVarNameFromJsEl(lastJsElement)
             if(
                 varNameByVarKeyOrUseVarKey.isNullOrEmpty()
             ) {
-                return listOf(
-                    "|${varKey}=${varNameByVarKeyOrUseVarKey}",
-                    "?${useVarKey}=${useVarValue}"
-                ).joinToString(String()) to
-                        UseVarErrType.MISS_VAR_KEY
+                return updateImportConSrcListWhenMissVarKey(
+                    lastJsElement
+                ) to ErrSignal.ERR
+//                 listOf(
+//                    "|${varKey}=${varNameByVarKeyOrUseVarKey}",
+//                    "?${useVarKey}=${useVarValue}"
+//                ).joinToString(String()) to
+//                        UseVarErrType.MISS_VAR_KEY
             }
             val useDestiVarName =
                 useVarNameSrcToDestiPair.second
@@ -1576,7 +1399,11 @@ private object ActionImportPutter {
                     runVarPrefixErrCon,
                     "?${useVarKey}=${useVarValue}"
                 ).joinToString(String())
-                return runVarPrefixErrConInsertCon to UseVarErrType.RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT
+                return updateWhenRunVarPrefixUseErrInAcImport(
+                    lastJsElement,
+                    runVarPrefixErrConInsertCon
+                ) to ErrSignal.ERR
+//                return runVarPrefixErrConInsertCon to UseVarErrType.RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT
             }
             val varNameByOnlyVarKey = getVarNameFromJsElByOnlyVarKey(
                 lastJsElement
@@ -1596,46 +1423,18 @@ private object ActionImportPutter {
                     notMatchSrcAfterToUseAfterKeyCon,
                     "?${useVarKey}=${useVarValue}"
                 ).joinToString(String())
-                return insertVarCon to
-                        UseVarErrType.NOT_MATCH_SRC_VAR_TO_USE_VAR
+                return updateWhenNotMatchSrcVarToUseVar(
+                    lastJsElement,
+                    insertVarCon,
+                ) to ErrSignal.ERR
+//                return insertVarCon to
+//                        UseVarErrType.NOT_MATCH_SRC_VAR_TO_USE_VAR
             }
 
-            return "|${varKey}=${useDestiVarName}" to null
-        }
-
-        private fun extractLastEl(
-            importConWithFormatList: List<String>,
-            isUseAfterValue: Boolean,
-        ): String? {
-            if(
-                isUseAfterValue
-            ) return importConWithFormatList.lastOrNull()
-            val findUseAfterRegex = Regex(
-                "\\?${useAfterKey}=[^?|\n]+"
-            )
-            val findAfterRegex = Regex(
-                "\\?${afterKey}=[^?|\n]+"
-            )
-            return importConWithFormatList.reversed().firstOrNull {
-                val hasNotUseAfter =
-                    !findUseAfterRegex.containsMatchIn(it)
-                val hasNotAfter =
-                    !findAfterRegex.containsMatchIn(it)
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "jsAc_extractLastElRoop.txt").absolutePath,
-//                    listOf(
-//                        "isUseAfterValue: ${isUseAfterValue}",
-//                        "hasNotUseAfter: ${hasNotUseAfter}",
-//                        "hasNotAfter: ${hasNotAfter}",
-//                        "it: ${it}",
-//                    ).joinToString("\n\n")
-//                )
-                if(
-                    hasNotUseAfter
-                    && hasNotAfter
-                ) return@firstOrNull true
-                false
-            }
+            return updateImportConListByOrdinaryForUseVar(
+                lastJsElement,
+                "|${varKey}=${useDestiVarName}"
+            ) to ErrSignal.NO_ERR
         }
 
         private fun getVarNameFromJsEl(
@@ -1823,7 +1622,6 @@ private object ActionImportPutter {
                     UseAfterErrType.MISS_AFTER_KEY,
                     null
                 )
-
             }
             isMissAfterKeyErr(
                 afterKeyConRegex,
@@ -1851,7 +1649,7 @@ private object ActionImportPutter {
                 val firstAfterId = afterIdToNotMatchAfterId.first
                 val irregularAfterId = afterIdToNotMatchAfterId.second
                 return Triple(
-                    "?${afterKey}=${firstAfterId}${afterIdToNotMatchAfterIdSeparator}${irregularAfterId}",
+                    "?${afterKey}=${firstAfterId}",
                     UseAfterErrType.IRREGULAR_AFTER_ID,
                     mapOf(
                         UseAfterExtraMapKey.IRREGULAR_AFTER_ID to irregularAfterId
@@ -2160,10 +1958,28 @@ private object ActionImportPutter {
             val afterId = QuoteTool.trimBothEdgeQuote(afterIdWithQuote)
             if(
                 afterId.isNotEmpty()
-            ) return afterId
+            ) {
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "jsAc_getAfterIdFromJsEl.txt").absolutePath,
+                    listOf(
+                        "firstJsElement: ${firstJsElement}",
+                        "afterId: ${afterId}",
+                    ).joinToString("\n\n") + "\n---------\n"
+                )
+                return afterId
+            }
             val useAfterValue = getUseAfterKeyFromEl(firstJsElement)
             val useAfterSrcToDestiPair = makeUseAfterPair(
                 useAfterValue
+            )
+            FileSystems.updateFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_getAfterIdFromJsEl.txt").absolutePath,
+                listOf(
+                    "firstJsElement: ${firstJsElement}",
+                    "afterId: ${afterId}",
+                    "useAfterValue: ${useAfterValue}",
+                    "useAfterSrcToDestiPair?.second: ${useAfterSrcToDestiPair?.second}"
+                ).joinToString("\n\n") + "\n---------\n"
             )
             return useAfterSrcToDestiPair?.second
         }
@@ -2235,6 +2051,14 @@ private object ActionImportPutter {
         ) return updatedImportConWithFormatList
         val useAfterKeyValue =
             useAfterKeyValueSrc ?: String()
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath,
+                "jsAc_updateImportConByWhenCondition.txt").absolutePath,
+            listOf(
+                "whenCondition: ${whenCondition}",
+                "useAfterKeyValue: ${useAfterKeyValue}",
+            ).joinToString("\n\n")
+        )
         return listOf(
             listOf(
                 "|${JsActionKeyManager.JsActionsKey.JS.key}=",
@@ -2252,19 +2076,6 @@ private object ActionImportPutter {
                         useAfterKeyValue,
                     ).joinToString(String())
                 )
-    }
-    private fun extractEndsQuote(
-        importPathKeyCon: String,
-    ): String? {
-        val quoteList = listOf("`", "\"")
-        quoteList.forEach {
-            val isOnlyEndQuote = importPathKeyCon.endsWith(it)
-                    && !importPathKeyCon.startsWith(it)
-            if(
-                isOnlyEndQuote
-            ) return it
-        }
-        return null
     }
 
     private fun makeRepValHolderMap(
@@ -2478,41 +2289,6 @@ private object PairToMapInList {
             key to importPath
         }.toMap()
         return JsActionKeyManager.JsActionsKey.TSV_IMPORT.key to tsvImportMap
-    }
-
-    private fun compSrcMapCon(
-        mapConSrc: String,
-        regexStr: String,
-    ): String {
-        val checkQuote = listOf(
-            "`",
-            "\"",
-            "'"
-        )
-        checkQuote.forEach {
-            val curRegexStr = "${it}${regexStr}${it}"
-            val curRegex = curRegexStr.toRegex()
-            val isNotBoth = !mapConSrc.startsWith(it)
-                    && !mapConSrc.endsWith(it)
-            val isHit = curRegex.containsMatchIn(mapConSrc)
-            val isCorrect = !(isHit && isNotBoth)
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "tsvImpotJsacComp.txt").absolutePath,
-//                listOf(
-//                    "it: ${it}",
-//                    "mapConSrc: ${mapConSrc}",
-//                    "curRegexStr: ${curRegexStr}",
-//                    "isNotBoth: ${isNotBoth}",
-//                    "isHit: ${isHit}",
-//                    "isIrregular: ${isCorrect}"
-//                ).joinToString("\n\n") + "\n---\n"
-//            )
-            if(
-                isCorrect
-            ) return@forEach
-            return "${it}${mapConSrc}${it}"
-        }
-        return mapConSrc
     }
 
     private fun convertToImportMap(
@@ -3751,7 +3527,6 @@ private object JsConPutter {
             isOnlyVar ->
                 JsActionKeyManager.JsVarManager.makeVarValue(jsMap)
             else -> makeFuncSignature(
-                jsMap,
                 functionName,
                 varargsStr,
             )
@@ -3770,7 +3545,6 @@ private object JsConPutter {
     }
 
     private fun makeFuncSignature(
-        jsMap: Map<String, String>,
         functionName: String?,
         varargsStr: String,
     ): String {
