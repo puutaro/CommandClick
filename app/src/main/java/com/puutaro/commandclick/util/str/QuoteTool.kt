@@ -193,14 +193,15 @@ object QuoteTool {
 
             val isHitSurroundQuote = char.equals('`')
                     || char.equals('\"')
+            val beforeChar = targetString.getOrNull(index - 1)
             if(
                 quoteType == null
+                && beforeChar != '\\'
                 && isHitSurroundQuote
             ) {
                 quoteType = char
                 return@mapIndexed char
             }
-            val beforeChar = targetString.getOrNull(index - 1)
             if(
                 quoteType != null
                 && beforeChar != '\\'
@@ -342,5 +343,41 @@ object QuoteTool {
             targetStr.endsWith(compQuote)
         ) return "${compQuote}${targetStr}"
         return targetStr
+    }
+
+    fun maskSurroundQuote(
+        targetString: String,
+    ): String {
+
+        var quoteType: Char? = null
+        return targetString.toList().mapIndexed {
+                index, char ->
+            val isHitSurroundQuote = char.equals('`')
+                    || char.equals('\"')
+            val beforeChar = targetString.getOrNull(index - 1)
+            if(
+                quoteType == null
+                && isHitSurroundQuote
+                && beforeChar != '\\'
+            ) {
+                quoteType = char
+                return@mapIndexed char
+            }
+
+            if(
+                quoteType != null
+                && char == quoteType
+                && beforeChar != '\\'
+            ) {
+                quoteType = null
+                return@mapIndexed char
+            }
+            if(
+                quoteType != null
+            ){
+                return@mapIndexed 'a'
+            }
+            char
+        }.joinToString("")
     }
 }

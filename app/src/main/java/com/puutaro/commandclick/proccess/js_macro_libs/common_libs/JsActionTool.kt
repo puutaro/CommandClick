@@ -230,7 +230,43 @@ object JsActionTool {
                 isQuoteErr
             ) return true
         }
-        LogTool.MissVarKeyErr.check(
+        LogTool.NotStartVerticalVarMainKey.check(
+            context,
+            evaluateGeneCon
+        ).let {
+                isNotStartVerticalVarMainKey ->
+            if(
+                isNotStartVerticalVarMainKey
+            ) return true
+        }
+        LogTool.IrregularFuncValue.check(
+            context,
+            evaluateGeneCon,
+        ).let {
+                isIrregularFuncValue ->
+            if(
+                isIrregularFuncValue
+            ) return true
+        }
+        LogTool.VarNotInit.check(
+            context,
+            evaluateGeneCon
+        ).let {
+                isVarNotInit ->
+            if(
+                isVarNotInit
+            ) return true
+        }
+        LogTool.RunVarPrefixUsedAsArgErr.check(
+            context,
+            actionImportedKeyToSubKeyConList,
+        ).let {
+                isRunVarPrefixUsedErr ->
+            if(
+                isRunVarPrefixUsedErr
+            ) return true
+        }
+        LogTool.MissVarKeyErrForUseVar.check(
             context,
             actionImportedKeyToSubKeyConList
         ).let {
@@ -239,7 +275,7 @@ object JsActionTool {
                 isMissVarKeyErr
             ) return true
         }
-        LogTool.MissAfterKeyErr.check(
+        LogTool.MissAfterKeyErrForUseAfter.check(
             context,
             actionImportedKeyToSubKeyConList,
         ).let {
@@ -248,7 +284,7 @@ object JsActionTool {
                 isMissAfterKeyErr
             ) return true
         }
-        LogTool.IrregularAfterIdErr.check(
+        LogTool.IrregularAfterIdErrForUseAfter.check(
             context,
             actionImportedKeyToSubKeyConList,
         ).let {
@@ -287,7 +323,7 @@ object JsActionTool {
                 return true
             }
         }
-        LogTool.PathNotRegisterInRepValErr.check(
+        LogTool.AcImportPathNotRegisterInRepValErr.check(
             context,
             evaluateGeneCon,
             actionImportedKeyToSubKeyConList,
@@ -299,24 +335,6 @@ object JsActionTool {
                 return true
             }
         }
-        LogTool.VarNotInit.check(
-            context,
-            evaluateGeneCon
-        ).let {
-                isVarNotInit ->
-            if(
-                isVarNotInit
-            ) return true
-        }
-        LogTool.RunVarPrefixUsedErr.check(
-            context,
-            actionImportedKeyToSubKeyConList,
-        ).let {
-                isRunVarPrefixUsedErr ->
-            if(
-                isRunVarPrefixUsedErr
-            ) return true
-        }
         LogTool.NotMatchToUseVar.check(
             context,
             actionImportedKeyToSubKeyConList
@@ -326,15 +344,15 @@ object JsActionTool {
                 isNotMatchToUseVar
             ) return true
         }
-        LogTool.IrregularFuncValue.check(
-            context,
-            evaluateGeneCon,
-        ).let {
-                isIrregularFuncValue ->
-            if(
-                isIrregularFuncValue
-            ) return true
-        }
+//        LogTool.IrregularFuncValue.check(
+//            context,
+//            evaluateGeneCon,
+//        ).let {
+//                isIrregularFuncValue ->
+//            if(
+//                isIrregularFuncValue
+//            ) return true
+//        }
         LogTool.LoopMethodOrArgsNotExist.check(
             context,
             checkJsCon

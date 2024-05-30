@@ -987,12 +987,28 @@ object LogTool {
                 srcJsCon,
                 errMessage,
             )
-            val putColorConByQuoteOdd = QuoteNumCheck.makePutColorCon(
+            val putColorConByNotStartVerticalVarMainKey = NotStartVerticalVarMainKey.makePutColorCon(
                 putColorConByForbiddenJsKeyDirectSpecify,
+                errMessage,
+            )
+            val putColorConByQuoteOdd = QuoteNumCheck.makePutColorCon(
+                putColorConByNotStartVerticalVarMainKey,
                 errMessage
             )
-            val putColorConByMissVarKeyErr = MissVarKeyErr.makePutColorCon(
+            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
                 putColorConByQuoteOdd,
+                errMessage,
+            )
+            val putColorConByVarNotInit = VarNotInit.makePutColorCon(
+                putColorConByIrregularFuncValue,
+                errMessage,
+            )
+            val putColorConByRunVarPrefixUsedErr = RunVarPrefixUsedAsArgErr.makePutColorCon(
+                putColorConByVarNotInit,
+                errMessage,
+            )
+            val putColorConByMissVarKeyErr = MissVarKeyErrForUseVar.makePutColorCon(
+                putColorConByRunVarPrefixUsedErr,
                 errMessage,
             )
             val putColorConByRunVarPrefixUseErrInAcImport = RunVarPrefixUseErrInAcImport.makePutColorCon(
@@ -1003,11 +1019,11 @@ object LogTool {
                 putColorConByRunVarPrefixUseErrInAcImport,
                 errMessage
             )
-            val putColorConByMissAfterKeyErr = MissAfterKeyErr.makePutColorCon(
+            val putColorConByMissAfterKeyErr = MissAfterKeyErrForUseAfter.makePutColorCon(
                 putColorConByNotMatchToUseVar,
                 errMessage,
             )
-            val putColorConByIrregularAfterIdErr = IrregularAfterIdErr.makePutColorCon(
+            val putColorConByIrregularAfterIdErr = IrregularAfterIdErrForUseAfter.makePutColorCon(
                 putColorConByMissAfterKeyErr,
                 errMessage,
             )
@@ -1019,7 +1035,7 @@ object LogTool {
                 putColorConByNotMatchToUseAfter,
                 errMessage,
             )
-            val putColorConByPathNotRegisterInRepValErr = PathNotRegisterInRepValErr.makePutColorCon(
+            val putColorConByPathNotRegisterInRepValErr = AcImportPathNotRegisterInRepValErr.makePutColorCon(
                 putColorConByPathNotFound,
                 errMessage,
             )
@@ -1031,22 +1047,10 @@ object LogTool {
                 putColorConByLoopMethodOrArgsNotExist,
                 errMessage,
             )
-            val putColorConByVarNotInit = VarNotInit.makePutColorCon(
-                putColorConByPrevNotExist,
-                errMessage,
-            )
-            val putColorConByRunVarPrefixUsedErr = RunVarPrefixUsedErr.makePutColorCon(
-                putColorConByVarNotInit,
-                errMessage,
-            )
-            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
-                putColorConByRunVarPrefixUsedErr,
-                errMessage,
-            )
             val putColorConBySyntaxCheckEnum =
                 makePutColorConBySyntaxCheckEnum(
                     srcJsCon,
-                    putColorConByIrregularFuncValue,
+                    putColorConByPrevNotExist,
                     errMessage,
                 )
             val putColorConByNoKeyWordJsErrCheck =
@@ -1486,7 +1490,7 @@ object LogTool {
         }
     }
 
-    object PathNotRegisterInRepValErr {
+    object AcImportPathNotRegisterInRepValErr {
 
         private const val errMessagePrefix =
             "Multiple use action import path must be register in 'setReplaceVariable' "
@@ -2024,7 +2028,7 @@ object LogTool {
         }
     }
 
-    object RunVarPrefixUsedErr {
+    object RunVarPrefixUsedAsArgErr {
 
         private const val runVarPrefixUsedErrMessagePrefix =
             "Var name with 'run' prefix is used: "
@@ -2229,7 +2233,82 @@ object LogTool {
         }
     }
 
-    object MissVarKeyErr {
+
+    object NotStartVerticalVarMainKey {
+
+        private const val notStartVerticalVarMainKeyPrefix =
+            "Not start '|' in main key:"
+        private const val notStartVerticalVarMainKeyErrMsgTemplate =
+            "${notStartVerticalVarMainKeyPrefix}'%s'"
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.contains(notStartVerticalVarMainKeyPrefix)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val extractNotStartVerticalVarMainKeyRegex = Regex(
+                "${notStartVerticalVarMainKeyPrefix}'(.*)'"
+            )
+            val notStartVerticalVarMainKey = errMessage.replace(
+                extractNotStartVerticalVarMainKeyRegex,
+                "$1"
+            )
+            if(
+                notStartVerticalVarMainKey.isEmpty()
+            ) return curPutColorCon
+            return curPutColorCon
+                .replace(
+                    Regex("([^|?])(${notStartVerticalVarMainKey})"),
+                    "$1<span style=\"color:${errRedCode};\">$2</span>",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            evaluateGeneCon: String?,
+        ): Boolean {
+            if(
+                evaluateGeneCon.isNullOrEmpty()
+            ) return false
+            val maskSurroundSeparatorCon = QuoteTool.maskSurroundQuote(
+                evaluateGeneCon
+            )
+            val mainKeyOrRegexStr =
+                JsActionKeyManager.JsActionsKey.values().map{
+                    it.key
+                }.joinToString("|")
+            val notStartVerticalVarMainKeyRegex =
+                Regex("[^|?](${mainKeyOrRegexStr})=")
+            val notStartVerticalVarMainKey = notStartVerticalVarMainKeyRegex.find(
+                "|${maskSurroundSeparatorCon}"
+            )?.value?.replace(
+                Regex("^[^|?]"),
+                String()
+            ) ?: return false
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcMask.txt").absolutePath,
+//                listOf(
+//                    "mainKeyOrRegexStr: ${mainKeyOrRegexStr}",
+//                    "maskSurroundSeparatorCon: ${maskSurroundSeparatorCon}",
+//                    "notStartMainKey: ${notStartVerticalVarMainKeyRegex.find(
+//                        maskSurroundSeparatorCon
+//                    )?.value}"
+//                ).joinToString("\n\n")
+//            )
+            saveFirstLog(
+                context,
+                notStartVerticalVarMainKeyErrMsgTemplate.format(
+                    notStartVerticalVarMainKey
+                ),
+            )
+            return true
+        }
+    }
+
+    object MissVarKeyErrForUseVar {
 
         private val missVarKeyErrMarkKeyEqual =
             "${JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_VAR_KEY.key}="
@@ -2561,7 +2640,7 @@ object LogTool {
         }
     }
 
-    object MissAfterKeyErr {
+    object MissAfterKeyErrForUseAfter {
 
         private val missAfterKeyErrMarkKeyEqual =
             "${JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key}="
@@ -2615,7 +2694,7 @@ object LogTool {
         }
     }
 
-    object IrregularAfterIdErr {
+    object IrregularAfterIdErrForUseAfter {
 
         private val irregularAfterIdKeyEqual =
             "${JsActionKeyManager.ActionImportManager.ActionImportKey.IRREGULAR_AFTER_ID.key}="
