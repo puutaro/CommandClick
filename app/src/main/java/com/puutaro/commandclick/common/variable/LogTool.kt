@@ -786,10 +786,17 @@ object LogTool {
 //                    )}",
 //                ).joinToString("\n\n")
 //            )
-            return replaceWithTagMark(
+            val repConWithTag = replaceWithTagMark(
                 repConWithErrWord,
                 tagStrToMarkList
             )
+            return when(isEscapeErrWord){
+                true -> repConWithTag.replace(
+                    errWord,
+                    errWordWithRedSpan
+                )
+                else -> repConWithTag
+            }
         }
 
         private fun makeConWithReplaceTag(
