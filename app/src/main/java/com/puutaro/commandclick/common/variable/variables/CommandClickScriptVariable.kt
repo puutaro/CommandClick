@@ -79,7 +79,7 @@ object CommandClickScriptVariable {
     val ON_ADBLOCK = "onAdBlock"
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT="disableShowToolbarWhenHighlight"
     val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
-    val EDIT_BOX_TITLE = "editBoxTitle"
+    val EDIT_BOX_TITLE_CONFIG = "editBoxTitleConfig"
     val TERMINAL_COLOR = "terminalColor"
     val TERMINAL_FONT_COLOR = "terminalFontColor"
     val HOME_SCRIPT_URLS_PATH = "homeScriptUrlsPath"
@@ -87,7 +87,6 @@ object CommandClickScriptVariable {
     val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
     val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
     val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
-    val EDIT_TITLE_CONFIG = "editTitleConfig"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
@@ -137,7 +136,7 @@ object CommandClickScriptVariable {
         DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
         UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
         CMDCLICK_TERMINAL_FONT_ZOOM,
-        EDIT_BOX_TITLE,
+        EDIT_BOX_TITLE_CONFIG,
         ON_URL_LAUNCH_MACRO,
         EXEC_JS_OR_HTML_PATH,
         ON_URL_HISTORY_REGISTER,
@@ -401,7 +400,7 @@ object CommandClickScriptVariable {
             |#  * [$ON_UPDATE_LAST_MODIFY](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
             |#  * [$IGNORE_HISTORY_PATHS](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
             |#  * [$CMDCLICK_HISTORY_SWITCH](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
-            |#  * [$EDIT_BOX_TITLE](#${replaceLowerAdnBlankDash(EDIT_BOX_TITLE)})
+            |#  * [$EDIT_BOX_TITLE_CONFIG](#${replaceLowerAdnBlankDash(EDIT_BOX_TITLE_CONFIG)})
             |#  * [$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
             replaceLowerAdnBlankDash(
                 SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
@@ -501,7 +500,7 @@ object CommandClickScriptVariable {
             |# | `$historySwitchOff` | no switch |
             |# | `$historySwitchInherit` | inherit config setting (default) |
             |
-            |# ### $EDIT_BOX_TITLE
+            |# ### $EDIT_BOX_TITLE_CONFIG
             |# Edit box title
             |
             |# ### $SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH

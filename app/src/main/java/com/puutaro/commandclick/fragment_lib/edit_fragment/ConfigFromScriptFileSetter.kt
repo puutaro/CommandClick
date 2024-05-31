@@ -75,7 +75,7 @@ object ConfigFromScriptFileSetter {
             )
 
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
-            CommandClickScriptVariable.EDIT_TITLE_CONFIG,
+            CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
             settingVariableList,
             readSharePreferenceMap,
             setReplaceVariableMap,

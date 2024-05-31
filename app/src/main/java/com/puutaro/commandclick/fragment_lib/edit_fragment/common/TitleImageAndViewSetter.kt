@@ -7,6 +7,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrLogo
+import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 
@@ -94,11 +95,9 @@ object TitleImageAndViewSetter {
     fun makeBackstackCount(
         fragment: Fragment
     ): Int {
-        return fragment
-            .activity
-            ?.supportFragmentManager
-            ?.backStackEntryCount
-            ?: 0
+        return execMakeBackstackCount(
+            fragment
+        )
     }
 
     private fun setTitleImage(
@@ -171,33 +170,6 @@ private object EditTextMaker {
         val shellConSrc = editTextPropertyMap.get(
             TitleTextSettingKey.SHELL_CON.key
         )
-        val shellCon = when (
-            shellConSrc.isNullOrEmpty()
-        ) {
-            true ->
-                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
-
-            else -> shellConSrc
-        }.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-                currentAppDirPath,
-                currentFannelName
-            ).replace(
-                "\${defaultEditBoxTitle}",
-                currentVariableValue ?: String(),
-            ).let {
-                SearchBoxSettingsForListIndex.backStackMarkReplace(
-                    editFragment,
-                    it
-                )
-            }
-        }
-//        val busyboxExecutor = BusyboxExecutor(
-//            context,
-//            UbuntuFiles(context),
-//        )
         val repValMap = editTextPropertyMap.get(
             TitleTextSettingKey.ARGS.key
         ).let {
@@ -206,12 +178,76 @@ private object EditTextMaker {
                 '?'
             )
         }.toMap()
-        return busyboxExecutor.getCmdOutput(
+        if(
+            !shellConSrc.isNullOrEmpty()
+        ) return getOutputByShellCon(
+            editFragment,
+            repValMap,
+            shellConSrc,
+            currentAppDirPath,
+            currentFannelName,
+            currentVariableValue
+        )
+        val backstackCountKey =
+            SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText
+        val backstackCountMap = mapOf(
+            backstackCountKey to execMakeBackstackCount(
+                editFragment
+            ).toString()
+        )
+        val updateRepValMap = repValMap + backstackCountMap
+        return ShellMacroHandler.handle(
+            editFragment.context,
+            busyboxExecutor,
+            editTextPropertyMap.get(
+                TitleTextSettingKey.SHELL_PATH.key
+            ) ?: String(),
+            setReplaceVariableMap,
+            updateRepValMap
+        )
+//                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
+    }
+
+    private fun getOutputByShellCon(
+        editFragment: EditFragment,
+        repValMap: Map<String, String>?,
+        shellConSrc: String,
+        currentAppDirPath: String,
+        currentFannelName: String,
+        currentVariableValue: String?
+    ): String? {
+        val shellCon = SetReplaceVariabler.execReplaceByReplaceVariables(
+            shellConSrc,
+            editFragment.setReplaceVariableMap,
+            currentAppDirPath,
+            currentFannelName
+        ).replace(
+            "\${defaultEditBoxTitle}",
+            currentVariableValue ?: String(),
+        ).let {
+            SearchBoxSettingsForListIndex.backStackMarkReplace(
+                editFragment,
+                it
+            )
+        }
+        if(
+            shellCon.isEmpty()
+        ) return null
+        return editFragment.busyboxExecutor?.getCmdOutput(
             shellCon,
             repValMap
         )
-
     }
+}
+
+private fun execMakeBackstackCount(
+    fragment: Fragment
+): Int {
+    return fragment
+        .activity
+        ?.supportFragmentManager
+        ?.backStackEntryCount
+        ?: 0
 }
 
 private enum class EditBoxTitleKey(
