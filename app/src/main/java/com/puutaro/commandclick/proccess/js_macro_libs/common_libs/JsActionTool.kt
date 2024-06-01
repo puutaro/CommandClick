@@ -239,6 +239,15 @@ object JsActionTool {
                 isNotStartVerticalVarMainKey
             ) return true
         }
+        LogTool.IrregularStrKeyCon.check(
+            context,
+            evaluateGeneCon
+        ).let {
+                isIrregularStrKeyCon ->
+            if(
+                isIrregularStrKeyCon
+            ) return true
+        }
         LogTool.IrregularFuncValue.check(
             context,
             evaluateGeneCon,

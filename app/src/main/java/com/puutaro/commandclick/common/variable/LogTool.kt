@@ -750,6 +750,12 @@ object LogTool {
             )
             val repConWithEndTagStr = repConWithRepTagToTagStrToMarkList.first
             val tagStrToMarkList = repConWithRepTagToTagStrToMarkList.second
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcLogTool.txt").absolutePath,
+//                listOf(
+//                    "errWord: ${errWord}"
+//                ).joinToString("\n\n")
+//            )
             if(
                 errWord.isNullOrEmpty()
             ) {
@@ -899,17 +905,17 @@ object LogTool {
             errCon: String
         ): String? {
             val errWordExtractRegexList = listOf(
-                Regex("([^ \t\n]+?) is not defined"),
-                Regex("([^\n]*) is not a function"),
-                Regex("SyntaxError: Missing initializer in (const) declaration"),
-                Regex("SyntaxError: Unexpected token '([^\n]*)'"),
-                Regex("SyntaxError: Missing ([^\n]*) in template expression"),
-                Regex("SyntaxError: missing ([^\n]*) after argument list"),
-                Regex("Uncaught SyntaxError: Unexpected identifier '([^\n]*)'"),
-                Regex("Cannot read properties of undefined \\(reading '([^\n]*)'\\)")
+                Regex("([^ \t\n]+?) is not defined$"),
+                Regex("([^\n]*) is not a function$"),
+                Regex("^SyntaxError: Missing initializer in (const) declaration$"),
+                Regex("^SyntaxError: Unexpected token '([^\n]*)'"),
+                Regex("^SyntaxError: Missing ([^\n]*) in template expression$"),
+                Regex("^SyntaxError: missing ([^\n]*) after argument list$"),
+                Regex("^Uncaught SyntaxError: Unexpected identifier '([^\n]*)'"),
+                Regex("^Cannot read properties of undefined \\(reading '([^\n]*)'\\)")
             )
             val errConFirstLine = errCon.split("\n")
-                .firstOrNull()
+                .firstOrNull()?.trim()
                 ?: String()
             errWordExtractRegexList.forEach {
                 regex ->
@@ -995,8 +1001,12 @@ object LogTool {
                 putColorConByNotStartVerticalVarMainKey,
                 errMessage
             )
-            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
+            val putColorConByIrregularStrKeyCon = IrregularStrKeyCon.makePutColorCon(
                 putColorConByQuoteOdd,
+                errMessage,
+            )
+            val putColorConByIrregularFuncValue = IrregularFuncValue.makePutColorCon(
+                putColorConByIrregularStrKeyCon,
                 errMessage,
             )
             val putColorConByVarNotInit = VarNotInit.makePutColorCon(
@@ -2233,6 +2243,93 @@ object LogTool {
         }
     }
 
+
+    object IrregularStrKeyCon {
+
+        private const val irregularStrKeyConErrMsgPrefix =
+            "Follow keyCon is only alphanumeric chars: \n "
+        private const val irregularStrKeyConErrMsgTemplate =
+            "${irregularStrKeyConErrMsgPrefix}%s"
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr =
+                !errMessage.contains(irregularStrKeyConErrMsgPrefix)
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcLog00.txt").absolutePath,
+//                listOf(
+//                    "irregularStrKeyConErrMsgPrefix: ${irregularStrKeyConErrMsgPrefix}",
+//                    "errMessage: ${errMessage}",
+//                    "isNotErr: ${isNotErr}",
+//                ).joinToString("\n\n")
+//            )
+            if (
+                isNotErr
+            ) return curPutColorCon
+            val irregularStrKeyCon =
+                errMessage.removePrefix(irregularStrKeyConErrMsgPrefix).replace(
+                    Regex("^[a-zA-Z0-9_]+="),
+                    String()
+                )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcLog.txt").absolutePath,
+//                listOf(
+//                    "irregularStrKeyCon: ${irregularStrKeyCon}"
+//                ).joinToString("\n\n")
+//            )
+            if(
+                irregularStrKeyCon.isEmpty()
+            ) return curPutColorCon
+            return curPutColorCon
+                .replace(
+                    irregularStrKeyCon,
+                    "<span style=\"color:${errRedCode};\">${irregularStrKeyCon}</span>",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            evaluateGeneCon: String?,
+        ): Boolean {
+            if(
+                evaluateGeneCon.isNullOrEmpty()
+            ) return false
+            val checkKeyList = listOf(
+                JsActionKeyManager.JsActionsKey.JS_VAR.key,
+                JsActionKeyManager.JsSubKey.ID.key,
+                JsActionKeyManager.JsSubKey.AFTER.key,
+            )
+            val mainKeyOrRegexStr =
+                checkKeyList.joinToString("|")
+            val irregularStrKeyConRegex =
+                Regex("[|?](${mainKeyOrRegexStr})=[^|?\n]*[^a-zA-Z0-9_\n][^|?\n]*")
+            val irregularStrKeyValue = irregularStrKeyConRegex.find(
+                "|${evaluateGeneCon}"
+            )?.value?.replace(
+                Regex("^[|?]"),
+                String()
+            ) ?: return false
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAcMask.txt").absolutePath,
+//                listOf(
+//                    "mainKeyOrRegexStr: ${mainKeyOrRegexStr}",
+//                    "maskSurroundSeparatorCon: ${maskSurroundSeparatorCon}",
+//                    "notStartMainKey: ${notStartVerticalVarMainKeyRegex.find(
+//                        maskSurroundSeparatorCon
+//                    )?.value}"
+//                ).joinToString("\n\n")
+//            )
+            saveFirstLog(
+                context,
+                irregularStrKeyConErrMsgTemplate.format(
+                    irregularStrKeyValue
+                ),
+            )
+            return true
+        }
+    }
 
     object NotStartVerticalVarMainKey {
 
