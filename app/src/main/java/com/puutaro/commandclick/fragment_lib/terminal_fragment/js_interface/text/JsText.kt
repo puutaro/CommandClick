@@ -8,6 +8,37 @@ class JsText(
 ) {
 
     @JavascriptInterface
+    fun trimNewLine(con: String): String{
+        return con.split("\n").map {
+            it.trim()
+        }.filter {
+            it.isNotEmpty()
+        }.joinToString("\n")
+    }
+
+    @JavascriptInterface
+    fun take(
+        con: String,
+        separator: String,
+        takeNum: Int,
+    ): String{
+        return con.split(separator)
+            .take(takeNum)
+            .joinToString(separator)
+    }
+
+    @JavascriptInterface
+    fun distinct(
+        con: String,
+        separator: String,
+    ): String {
+        return con.split(separator)
+            .sorted()
+            .distinct()
+            .joinToString(separator)
+    }
+
+    @JavascriptInterface
     fun trans(
         tsvStr: String
     ): String {

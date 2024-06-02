@@ -1,6 +1,16 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.libs
 
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsToMap
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.RegexTool
+import java.io.File
+import java.time.LocalDateTime
 
 object FilterAndMapModule {
 
@@ -18,6 +28,10 @@ object FilterAndMapModule {
         MATCH_REGEX_MATCH_TYPE("matchRegexMatchType"),
         MATCH_CONDITION("matchCondition"),
         LINES_MATCH_TYPE("linesMatchType"),
+        SHELL_PATH("shellPath"),
+        SHELL_ARGS("shellArgs"),
+        SHELL_OUTPUT("shellOutput"),
+        SHELL_FANNEL_PATH("shellFannelPath"),
     }
 
     enum class MatchConditionType(
@@ -138,5 +152,69 @@ object FilterAndMapModule {
         }
     }
 
+    object ShellResultForToList {
 
+        private enum class ShellPreservedArgs(
+            val key: String
+        ){
+            KEY("key"),
+            VALUE("value"),
+            LINE("line"),
+        }
+
+        private const val keyValueSeparator = '\t'
+
+        fun getResultByShell(
+            busyboxExecutor: BusyboxExecutor?,
+            line: String,
+            shellArgsMapSrc: Map<String, String>,
+            shellCon: String?,
+            shellOutputSrc: String?
+        ): String {
+            if(
+                busyboxExecutor == null
+            ) return line
+            if (
+                shellCon.isNullOrEmpty()
+            ) return line
+            val tsvKey = ShellPreservedArgs.KEY.key
+            val tsvValueKey = ShellPreservedArgs.VALUE.key
+            val tsvLineKey = ShellPreservedArgs.LINE.key
+            val keyAndValue = line.split(keyValueSeparator)
+            val key = keyAndValue.firstOrNull() ?: String()
+            val value = keyAndValue.getOrNull(1) ?: String()
+            val shellPreservedArgsMap = mapOf(
+                tsvKey to key,
+                tsvValueKey to value,
+                tsvLineKey to line,
+            )
+            val shellArgsMap =
+                shellPreservedArgsMap + shellArgsMapSrc
+            val shellOutput = shellOutputSrc?.let {
+                CmdClickMap.replace(
+                    it,
+                    shellArgsMap,
+                )
+            }
+            val resultSrc = busyboxExecutor.getCmdOutput(
+                shellCon,
+                shellArgsMap
+            )
+            FileSystems.writeFileToDirByTimeStamp(
+                File(UsePath.cmdclickDefaultAppDirPath, "jsMap").absolutePath,
+                listOf(
+                    "shellPreservedArgsMap: ${shellPreservedArgsMap}",
+                    "shellCon: ${shellCon}",
+                    "resultSrc: ${resultSrc}"
+                ).joinToString("\n\n")
+            )
+            if (
+                resultSrc.isEmpty()
+            ) return String()
+            return when (shellOutput.isNullOrEmpty()) {
+                true -> resultSrc
+                else -> shellOutput
+            }
+        }
+    }
 }
