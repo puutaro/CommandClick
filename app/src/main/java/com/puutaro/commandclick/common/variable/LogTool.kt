@@ -907,12 +907,12 @@ object LogTool {
             val errWordExtractRegexList = listOf(
                 Regex("([^ \t\n]+?) is not defined$"),
                 Regex("([^\n]*) is not a function$"),
-                Regex("^SyntaxError: Missing initializer in (const) declaration$"),
-                Regex("^SyntaxError: Unexpected token '([^\n]*)'"),
-                Regex("^SyntaxError: Missing ([^\n]*) in template expression$"),
-                Regex("^SyntaxError: missing ([^\n]*) after argument list$"),
-                Regex("^Uncaught SyntaxError: Unexpected identifier '([^\n]*)'"),
-                Regex("^Cannot read properties of undefined \\(reading '([^\n]*)'\\)")
+                Regex("SyntaxError: Missing initializer in (const) declaration$"),
+                Regex("SyntaxError: Unexpected token '([^\n]*)'"),
+                Regex("SyntaxError: Missing ([^\n]*) in template expression$"),
+                Regex("SyntaxError: missing ([^\n]*) after argument list$"),
+                Regex("Uncaught SyntaxError: Unexpected identifier '([^\n]*)'"),
+                Regex("Cannot read properties of undefined \\(reading '([^\n]*)'\\)")
             )
             val errConFirstLine = errCon.split("\n")
                 .firstOrNull()?.trim()
