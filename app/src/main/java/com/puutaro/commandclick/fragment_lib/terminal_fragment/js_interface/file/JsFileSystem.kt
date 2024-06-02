@@ -63,6 +63,18 @@ class JsFileSystem(
     }
 
     @JavascriptInterface
+    fun writeCat(
+        filePath: String,
+        contents: String
+    ): String {
+        writeLocalFile(
+            filePath,
+            contents,
+        )
+        return contents
+    }
+
+    @JavascriptInterface
     fun fileEcho(
         fileName: String,
         outPutOption: String,
