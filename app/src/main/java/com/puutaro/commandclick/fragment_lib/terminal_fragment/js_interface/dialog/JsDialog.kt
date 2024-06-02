@@ -9,6 +9,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ImageJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsConfirm
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DebugJsAlert
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectJsDialog
@@ -84,6 +85,10 @@ class JsDialog(
     )
 
     private val qrScanJsDialog = QrScanJsDialog(
+        terminalFragment
+    )
+
+    private val debugJsAlert = DebugJsAlert(
         terminalFragment
     )
 
@@ -364,6 +369,20 @@ class JsDialog(
         return jsConfirm.create(
             title,
             body,
+        )
+    }
+
+    @JavascriptInterface
+    fun dAlert(
+        title: String,
+        con: String,
+    ): String {
+        if(
+            con.isEmpty()
+        ) return String()
+        return debugJsAlert.create(
+            title,
+            con,
         )
     }
 }

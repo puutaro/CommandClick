@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class JsDAlert(
+class DebugJsAlert(
     terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
@@ -91,10 +91,10 @@ class JsDAlert(
                 com.puutaro.commandclick.R.id.text_simple_dialog_cancel
             )
         cancelImageButton?.setOnClickListener {
-            alertDialogObj?.dismiss()
+            dismissProcess()
         }
         alertDialogObj?.setOnCancelListener {
-            alertDialogObj?.dismiss()
+            dismissProcess()
         }
         alertDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ToastErrMessage
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsText
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.*
 import java.io.File

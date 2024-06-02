@@ -1,13 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tsv
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCon
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsCon
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
-import java.io.File
 
 class JsTsv(
     private val terminalFragment: TerminalFragment,
@@ -114,6 +111,22 @@ class JsTsv(
             path,
             key,
         )
+    }
+
+    @JavascriptInterface
+    fun getKeyValueFromCon(
+        con: String,
+        key: String,
+    ): String {
+        val twoColumnNum = 2
+        return TsvTool.filterByColumnNum(
+            con.split("\n"),
+            twoColumnNum
+        ).firstOrNull {
+            it.startsWith("${key}\t")
+        }?.split("\t")
+            ?.lastOrNull()
+            ?: String()
     }
 
     private fun execGetSecondRowBySortFromThis(

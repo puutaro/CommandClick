@@ -1,12 +1,8 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.libs
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsToMap
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.RegexTool
 import java.io.File
@@ -92,9 +88,10 @@ object FilterAndMapModule {
     ): String {
         var line = srcLine
         compSuffixList.forEach {
-            line = when (line.endsWith(it)) {
+            suffix ->
+            line = when (line.endsWith(suffix)) {
                 true -> line
-                else -> "$it$line"
+                else -> "$line${suffix.replaceFirstChar { it.uppercase() }}"
             }
         }
         return line

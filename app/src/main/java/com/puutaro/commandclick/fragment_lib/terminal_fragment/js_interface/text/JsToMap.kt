@@ -1,12 +1,10 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -17,7 +15,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import java.io.File
-import java.time.LocalDateTime
 
 class JsToMap(
     terminalFragment: TerminalFragment

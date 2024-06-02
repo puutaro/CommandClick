@@ -179,11 +179,11 @@ class JsScript(
     @JavascriptInterface
     fun replaceSettingVariable(
         scriptContents: String,
-        replaceTabList: String,
+        replaceNewlineSepaCon: String,
     ): String {
         return CommandClickVariables.replaceVariableInHolder(
             scriptContents,
-            replaceTabList,
+            replaceNewlineSepaCon,
             settingStartHolder,
             settingEndHolder,
         )
@@ -202,6 +202,30 @@ class JsScript(
         return subCmdVars(
             mainFannelCon
         )
+    }
+
+    @JavascriptInterface
+    fun extractSettingValName(
+        settingValsCon: String
+    ): String {
+        val settingValsRegex = Regex("^[a-zA-Z0-9]+=")
+        return settingValsCon.split("\n").filter {
+            val trimLine = it.trim()
+            val notCommentOut =
+                !trimLine.startsWith("//")
+            val isSettingVal =
+                settingValsRegex.containsMatchIn(trimLine)
+            notCommentOut
+                    && isSettingVal
+                    && trimLine.isNotEmpty()
+        }.map {
+            val trimLine = it.trim()
+            trimLine.split("=")
+                .firstOrNull()
+                ?: String()
+        }.filter {
+            it.isNotEmpty()
+        }.joinToString("\n")
     }
 
 //    @JavascriptInterface

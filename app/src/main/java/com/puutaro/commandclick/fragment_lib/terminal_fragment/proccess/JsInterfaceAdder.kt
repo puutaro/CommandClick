@@ -19,10 +19,10 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsHt
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsIconSelectBox
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsLinux
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCon
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMap
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsCon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsToolbar
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListSelect
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMap
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsNetTool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPdf
@@ -34,7 +34,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsScript
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsSendKey
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsStop
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsTextToSpeech
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUbuntu
@@ -42,10 +42,10 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMusic
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsVar
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsDiff
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsDistinct
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsToListFilter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.collections.JsToListMap
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsDiff
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToListFilter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToListMap
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToMap
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
@@ -266,10 +266,6 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsDialog(terminalFragment),
-        )
-        ExecJsInterfaceAdder.add(
-            webView,
-            JsDistinct(terminalFragment),
         )
     }
 
@@ -578,6 +574,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsToListMap(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsToMap(terminalFragment)
         )
     }
 }

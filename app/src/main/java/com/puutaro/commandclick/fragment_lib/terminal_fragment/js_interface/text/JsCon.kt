@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment

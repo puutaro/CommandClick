@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -17,6 +17,25 @@ class JsText(
     }
 
     @JavascriptInterface
+    fun countLines(
+        lines: String,
+        separator: String,
+    ): Int {
+        return lines.split(separator).size
+    }
+
+    @JavascriptInterface
+    fun reverse(
+        lines: String,
+        separator: String,
+    ): String {
+        return lines
+            .split(separator)
+            .reversed()
+            .joinToString(separator)
+    }
+
+    @JavascriptInterface
     fun take(
         con: String,
         separator: String,
@@ -24,6 +43,18 @@ class JsText(
     ): String{
         return con.split(separator)
             .take(takeNum)
+            .joinToString(separator)
+    }
+
+    @JavascriptInterface
+    fun takeLast(
+        con: String,
+        separator: String,
+        takeLastNum: Int,
+    ): String{
+        return con.split(separator)
+            .reversed()
+            .take(takeLastNum)
             .joinToString(separator)
     }
 
