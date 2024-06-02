@@ -15,6 +15,7 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.DigestInputStream
 import java.security.MessageDigest
+import java.time.LocalDateTime
 
 
 object FileSystems {
@@ -78,6 +79,26 @@ object FileSystems {
         }
     }
 
+    fun writeFileToDirByTimeStamp(
+        dirPath: String,
+        contents: String
+    ) {
+        if(
+            dirPath.isEmpty()
+            || File(dirPath).isFile
+        ) return
+        createDirs(dirPath)
+        val fileName = "${LocalDateTime.now()}.txt"
+        val filePathObj = File(dirPath, fileName)
+        try {
+            filePathObj.writeText(contents)
+        } catch (e: java.lang.Exception){
+            LogSystems.stdErrByNoBroad(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
+            )
+        }
+    }
+
 
     fun removeFiles(
         filePath: String,
@@ -109,7 +130,6 @@ object FileSystems {
             )
         }
     }
-
 
     fun updateLastModified(
         filePath: String
