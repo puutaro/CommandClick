@@ -50,6 +50,9 @@ object JsActionKeyManager {
 //        DELETE_VAR("deleteVar"),
         IF_BRACKET_START("ifBracketStart"),
         IF_BRACKET_END("ifBracketEnd"),
+        FUNC_BRACKET_START("funcBracketStart"),
+        FUNC_BRACKET_END("funcBracketEnd"),
+        FUNC_VAR("funcVar"),
         FORBIDDEN_JS_KEY_DIRECT_SPECIFY("FORBIDDEN_JS_KEY_DIRECT_SPECIFY")
     }
 
@@ -142,14 +145,18 @@ object JsActionKeyManager {
             IMPORT_PATH(CommonPathKey.IMPORT_PATH.key),
             REPLACE("replace"),
             USE_VAR("useVar"),
-            USE_AFTER("useAfter"),
+            AFTER(JsSubKey.AFTER.key),
             WHEN("when"),
-            NOT_MATCH_SRC_AFTER_TO_USE_AFTER("NOT_MATCH_SRC_AFTER_TO_USE_AFTER"),
-            MISS_AFTER_KEY("MISS_AFTER_KEY"),
-            IRREGULAR_AFTER_ID("IRREGULAR_AFTER_ID"),
-            NOT_MATCH_SRC_VAR_TO_USE_VAR("NOT_MATCH_SRC_VAR_TO_USE_VAR"),
-            MISS_VAR_KEY("MISS_VAR_KEY"),
-            RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT("RUN_VAR_PREFIX_USE_ERR_IN_AC_IMPORT"),
+//            NOT_MATCH_SRC_AFTER_TO_USE_AFTER("NOT_MATCH_SRC_AFTER_TO_USE_AFTER"),
+//            MISS_AFTER_KEY("MISS_AFTER_KEY"),
+//            IRREGULAR_AFTER_ID("IRREGULAR_AFTER_ID"),
+//            NOT_MATCH_SRC_VAR_TO_USE_VAR("NOT_MATCH_SRC_VAR_TO_USE_VAR"),
+
+            INVALID_AFTER_IN_AC_IMPORT("INVALID_AFTER_IN_AC_IMPORT"),
+            MISS_LAST_USE_VAR_KEY("MISS_LAST_USE_VAR_KEY"),
+            MISS_LAST_VAR_KEY("MISS_LAST_VAR_KEY"),
+            MISS_LAST_RETURN_KEY("MISS_LAST_RETURN_KEY"),
+//            RETURN_RUN_VAR_PREFIX_FORBIDDEN("RETURN_RUN_VAR_PREFIX_FORBIDDEN"),
         }
         const val errConSeparator = " to "
         const val errConSuffix = " to"
@@ -612,17 +619,13 @@ object JsActionKeyManager {
             JsSubKey.AFTER.key,
             JsSubKey.DESC.key,
             JsSubKey.ON_LOG.key,
-//            JsSubKey.METHOD.key,
-//            JsSubKey.METHOD_ARGS.key,
-//            JsSubKey.DELETE_VAR.key,
             JsSubKey.DELAY.key,
             CommonOnlySubKey.WHEN.key,
             VirtualSubKey.ACTION_IMPORT_CON.key,
-            ActionImportManager.ActionImportKey.MISS_AFTER_KEY.key,
-            ActionImportManager.ActionImportKey.IRREGULAR_AFTER_ID.key,
-            ActionImportManager.ActionImportKey.NOT_MATCH_SRC_AFTER_TO_USE_AFTER.key,
-            ActionImportManager.ActionImportKey.NOT_MATCH_SRC_VAR_TO_USE_VAR.key,
-            ActionImportManager.ActionImportKey.MISS_VAR_KEY.key,
+            ActionImportManager.ActionImportKey.INVALID_AFTER_IN_AC_IMPORT.key,
+            ActionImportManager.ActionImportKey.MISS_LAST_USE_VAR_KEY.key,
+            ActionImportManager.ActionImportKey.MISS_LAST_RETURN_KEY.key,
+            ActionImportManager.ActionImportKey.MISS_LAST_VAR_KEY.key,
             ActionImportManager.ActionImportKey.USE_VAR.key,
         )
 
@@ -658,7 +661,7 @@ object JsActionKeyManager {
 
 
         private val onlySubKeyListForFunc = subKeyForCommon + listOf(
-            JsSubKey.ON_RETURN.key,
+//            JsSubKey.ON_RETURN.key,
             JsSubKey.IF.key,
         )
         private val useKeyListForFunc = onlySubKeyListForFunc + listOf(
@@ -708,7 +711,6 @@ object JsActionKeyManager {
                 onlySubKeyListForFunc
             )
         }
-
 
         private fun extractOnlySubKeyPair(
             subKeyToConPairList: List<Pair<String, String>>?,
