@@ -1397,7 +1397,7 @@ private object ActionImportPutter {
         return CmdClickMap.createMap(
             replaceKeyCon,
             replaceSeparator
-        ).toMap()
+        ).toMap().filterKeys { it.isNotEmpty() }
     }
 
     private fun makeActionImportSrcCon(
@@ -2812,7 +2812,14 @@ private object JsConPutter {
         val argList = CmdClickMap.createMap(
             jsMap.get(JsActionKeyManager.JsSubKey.LOOP_ARG_NAMES.key),
             argsSeparator
-        ).map{ it.second }.filter { it.isNotEmpty() }
+        ).map{
+            val key = it.first
+            if(
+                key.isEmpty()
+            ) return@map String()
+            val valueStr = it.second
+            valueStr
+        }.filter { it.isNotEmpty() }
         return argList
     }
 
