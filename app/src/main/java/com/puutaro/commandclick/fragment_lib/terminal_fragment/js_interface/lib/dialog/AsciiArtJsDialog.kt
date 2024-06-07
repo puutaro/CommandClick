@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.text.Spannable
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -56,10 +55,12 @@ class AsciiArtJsDialog(
                 )
 
             }
-            val asciiArtMap = CmdClickMap.createMap(
-                asciiArtMapCon,
-                asciiArtMapSeparator
-            ).toMap()
+            val asciiArtMap = withContext(Dispatchers.IO) {
+                CmdClickMap.createMap(
+                    asciiArtMapCon,
+                    asciiArtMapSeparator
+                ).toMap()
+            }
             withContext(Dispatchers.Main) {
                 execCreate(
                     title,
@@ -212,10 +213,22 @@ class AsciiArtJsDialog(
             )
         }?: return null
         val bitmap = withContext(Dispatchers.Main) {
-            BitmapTool.getScreenShotFromView(
+            for(i in 1..10) {
+                try {
+                    val bm = BitmapTool.getScreenShotFromView(
+                        spannableContents
+                    )
+                    return@withContext bm
+                } catch (e: Exception) {
+                    delay(100)
+                    continue
+                }
+            }
+            LogSystems.stdErr(
                 context,
-                spannableContents
+                "Cannot save screen shot"
             )
+            null
         } ?: return null
         val imageName = withContext(Dispatchers.IO) {
             BitmapTool.hash(
@@ -243,14 +256,25 @@ class AsciiArtJsDialog(
     ): Spannable? {
         if(
             !File(imagePath).isFile
-        ) {
-            return null
-        }
+        ) return null
         val beforeResizeBitMap = withContext(
             Dispatchers.IO
         ) {
             BitmapFactory.decodeFile(imagePath)
         } ?: return null
+        withContext(Dispatchers.IO){
+            for(i in 1..20){
+                try {
+                    if(
+                        beforeResizeBitMap.width > 0
+                    ) break
+                } catch (e: Exception) {
+                    delay(100)
+                    continue
+                }
+                delay(100)
+            }
+        }
         val baseWidth = withContext(Dispatchers.IO) {
             ScreenSizeCalculator.dpWidth(terminalFragment)
         }

@@ -25,6 +25,7 @@ object WebUrlVariables {
     val base64Prefix = "data:image/"
     val base64JpegPrefix = "${base64Prefix}jpeg;base64"
     val base64PngPrefix = "${base64Prefix}png;base64"
+    val base64WebpPrefix = "${base64Prefix}webp;base64"
 
     fun makeUrlHistoryFile(
         dirPath: String,

@@ -33,6 +33,7 @@ object ImageTempDownloader {
         val onBase64Image =
             url.trim().startsWith(WebUrlVariables.base64JpegPrefix)
                     || url.trim().startsWith(WebUrlVariables.base64PngPrefix)
+                    || url.trim().startsWith(WebUrlVariables.base64WebpPrefix)
         FileSystems.removeAndCreateDir(
             cmdclickTempDownloadDirPath
         )
@@ -79,21 +80,32 @@ object ImageTempDownloader {
             fileContent.isNullOrEmpty()
         ) return
         try {
-            val attachment = parseBase64(fileContent)
-            val extend = fileContent.removePrefix(
-                WebUrlVariables.base64Prefix
-            )
-                .split(";")
-                .first()
+            val attachment = withContext(Dispatchers.IO) {
+                parseBase64(fileContent)
+            }
+            val extend = withContext(Dispatchers.IO) {
+                fileContent.removePrefix(
+                    WebUrlVariables.base64Prefix
+                )
+                    .split(";")
+                    .first()
+            }
 
-            val byteArr: ByteArray = Base64.decode(attachment, Base64.DEFAULT)
-            val crc32: Checksum = CRC32()
-            crc32.update(byteArr, 0, byteArr.size)
-            val imageName = crc32.value
-            val f = File(
-                cmdclickTempDownloadDirPath,
-                "$imageName.$extend"
-            )
+            val byteArr: ByteArray = withContext(Dispatchers.IO) {
+                Base64.decode(
+                    attachment,
+                    Base64.DEFAULT
+                )
+            }
+            val f = withContext(Dispatchers.IO) {
+                val crc32: Checksum = CRC32()
+                crc32.update(byteArr, 0, byteArr.size)
+                val imageName = crc32.value
+                File(
+                    cmdclickTempDownloadDirPath,
+                    "$imageName.$extend"
+                )
+            }
             withContext(Dispatchers.IO) {
                 f.createNewFile()
             }
@@ -106,9 +118,6 @@ object ImageTempDownloader {
             withContext(Dispatchers.IO) {
                 fo.close()
             }
-//            withContext(Dispatchers.Main) {
-//                finishToast(context)
-//            }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }

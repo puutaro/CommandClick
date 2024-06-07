@@ -54,28 +54,17 @@ object BitmapTool {
     }
 
     fun getScreenShotFromView(
-        context: Context?,
         v: View
     ): Bitmap? {
         // create a bitmap object
-        var screenshot: Bitmap? = null
-        try {
-            screenshot = Bitmap.createBitmap(
-                v.measuredWidth,
-                v.measuredHeight,
-                Bitmap.Config.ARGB_8888
-            )
-            // Now draw this bitmap on a canvas
-            val canvas = Canvas(screenshot)
-            v.draw(canvas)
-        } catch (e: Exception) {
-            LogSystems.stdErr(
-                context,
-                "Failure save ascii: ${e}"
-            )
-            Log.e("GFG", "Failed to capture screenshot because:" + e.message)
-        }
-        // return the bitmap
+        val screenshot = Bitmap.createBitmap(
+            v.measuredWidth,
+            v.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        // Now draw this bitmap on a canvas
+        val canvas = Canvas(screenshot)
+        v.draw(canvas)
         return screenshot
     }
 }

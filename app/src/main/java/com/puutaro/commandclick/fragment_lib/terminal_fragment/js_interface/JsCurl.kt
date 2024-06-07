@@ -148,19 +148,17 @@ class JsCurl(
                         cmdclickTempDownloadDirPath
                     )
                     if(
-                        tempFileList.isNotEmpty()
-                    ) {
-                        val downloadImageName =
-                            tempFileList.getOrNull(0)
-                                ?: String()
-                        downloadImagePath =
-                            File(
-                                cmdclickTempDownloadDirPath,
-                                downloadImageName
-                            ).absolutePath
-
-                        break
-                    }
+                        tempFileList.isEmpty()
+                    ) continue
+                    val downloadImageName =
+                        tempFileList.getOrNull(0)
+                            ?: String()
+                    downloadImagePath =
+                        File(
+                            cmdclickTempDownloadDirPath,
+                            downloadImageName
+                        ).absolutePath
+                    break
                 }
             }
         }
