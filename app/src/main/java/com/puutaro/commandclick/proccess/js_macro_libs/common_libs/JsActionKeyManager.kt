@@ -212,7 +212,7 @@ object JsActionKeyManager {
 //    }
 
     object ArgsManager {
-        enum class ARGS_SETTING(
+        enum class ArgsSetting(
             val str: String,
         ) {
             NO_QUOTE_PREFIX(noQuotePrefix),
@@ -227,6 +227,9 @@ object JsActionKeyManager {
                 jsMap.get(argsKey),
                 argsSeparator
             ).map{
+                if(
+                    it.first.isEmpty()
+                ) return@map String()
                 val argSrc = it.second
                 NoQuoteHandler.make(argSrc)
             }.filter { it.isNotEmpty() }
@@ -322,7 +325,7 @@ object JsActionKeyManager {
     object NoQuoteHandler {
         fun make(str: String): String {
             val noQuotePrefix =
-                ArgsManager.ARGS_SETTING.NO_QUOTE_PREFIX.str
+                ArgsManager.ArgsSetting.NO_QUOTE_PREFIX.str
             return when(str.startsWith(noQuotePrefix)){
                 true -> str.removePrefix(noQuotePrefix)
                 else -> "`${str}`"
@@ -331,7 +334,7 @@ object JsActionKeyManager {
 
         fun makeForVarReturn(str: String): String {
             val noQuotePrefix =
-                ArgsManager.ARGS_SETTING.NO_QUOTE_PREFIX.str
+                ArgsManager.ArgsSetting.NO_QUOTE_PREFIX.str
             return when(str.startsWith(noQuotePrefix)){
                 true -> "return ${str.removePrefix(noQuotePrefix)}"
                 else -> "return `${str}`"
