@@ -63,10 +63,6 @@ object JsActionKeyManager {
         VAR_RETURN("varReturn"),
     }
 
-    const val prevPronoun = "prev"
-    const val noDefinitionBeforeVarNameByPrev = "NO_DIFINITION_BEFORE_VAR_NAME_BY_${prevPronoun}"
-
-
     const val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
     enum class VirtualSubKey(
@@ -117,18 +113,6 @@ object JsActionKeyManager {
                 containsReplaceVariableMapCon
             ) return null
             return notRegisterCodeTemplate.format(importPath)
-
-
-        }
-        fun makeCodeOrPath(jsPathCon: String?): String {
-            if(
-                jsPathCon.isNullOrEmpty()
-            ) return notRegisterCodeTemplate.format(jsPathCon)
-            val isJsFile = File(jsPathCon).isFile
-            return when(isJsFile){
-                false -> notRegisterCodeTemplate.format(jsPathCon)
-                else -> jsPathCon
-            }
         }
     }
 
@@ -136,9 +120,6 @@ object JsActionKeyManager {
 
         private const val mainKeySeparator = '|'
         private const val subKeySeparator = '?'
-        const val useAfterAllow = "=>"
-        const val useVarAllow = "=>"
-
         enum class ActionImportKey(
             val key: String,
         ){
@@ -156,10 +137,7 @@ object JsActionKeyManager {
             MISS_LAST_USE_VAR_KEY("MISS_LAST_USE_VAR_KEY"),
             MISS_LAST_VAR_KEY("MISS_LAST_VAR_KEY"),
             MISS_LAST_RETURN_KEY("MISS_LAST_RETURN_KEY"),
-//            RETURN_RUN_VAR_PREFIX_FORBIDDEN("RETURN_RUN_VAR_PREFIX_FORBIDDEN"),
         }
-        const val errConSeparator = " to "
-        const val errConSuffix = " to"
 
         fun putActionImportSubKey(mainAndSubKeyCon: String): String {
             if(mainAndSubKeyCon.isEmpty()
