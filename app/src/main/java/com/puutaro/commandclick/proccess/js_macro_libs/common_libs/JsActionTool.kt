@@ -931,6 +931,7 @@ private object ActionImportPutter {
     private val funcKey =
         JsActionKeyManager.JsSubKey.FUNC.key
     private val varKey = JsActionKeyManager.JsSubKey.VAR.key
+    private val delayKey = JsActionKeyManager.ActionImportManager.ActionImportKey.DELAY.key
     private val beforeActionImportMap = mutableMapOf<String, String>()
     private var replaceVariableMapCon = String()
     private val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
@@ -1089,15 +1090,26 @@ private object ActionImportPutter {
                 JsActionKeyManager.ActionImportManager.ActionImportKey.WHEN.key
             )
         )
-        val useAfterValue = QuoteTool.trimBothEdgeQuote(
+        val afterId = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(afterKey)
         )
+        val delayTime = QuoteTool.trimBothEdgeQuote(
+            actionImportMap.get(delayKey)
+        ).let {
+            if(
+                it.isEmpty()
+            ) return@let null
+            try {it.toInt()} catch(e: Exception){
+                null
+            }
+        }
         return putIfVarFuncBracketToErrType(
             importConWithFormatList,
             whenCondition,
             useVarValue,
-            useAfterValue,
+            afterId,
             idList,
+            delayTime,
         )
     }
 
@@ -1107,6 +1119,7 @@ private object ActionImportPutter {
         useVarValue: String?,
         afterId: String?,
         idList: List<String>,
+        delayTime: Int?,
     ): Pair<List<String>, ErrSignal> {
         val importConWithFormatListByUseVarToUseVarErr =
             ImportConWithFormatListForUseVar.update(
@@ -1132,6 +1145,7 @@ private object ActionImportPutter {
                 whenCondition,
                 useVarValue,
                 afterId,
+                delayTime,
             )
             return updatedImportConByWhenCondition to ErrSignal.ERR
         }
@@ -1152,6 +1166,7 @@ private object ActionImportPutter {
             whenCondition,
             useVarValue,
             afterId,
+            delayTime,
         ) to errType
     }
 
@@ -1325,7 +1340,8 @@ private object ActionImportPutter {
         updatedImportConWithFormatList: List<String>,
         whenCondition: String?,
         funcVarConSrc: String?,
-        afterIdSrc: String?
+        afterIdSrc: String?,
+        delayTime: Int?,
     ): List<String> {
         val ifBracketSatrtKeyValueCon = whenCondition.let{
             if(
@@ -1341,6 +1357,20 @@ private object ActionImportPutter {
                 it.isNullOrEmpty()
             ) return@let String()
             "?${JsActionKeyManager.JsSubKey.IF_BRACKET_END.key}="
+        }
+        val setTimeoutBracketStartKeyValueCon = delayTime.let {
+            if(
+                it == null
+                || it == 0
+            ) return@let String()
+            "?${JsActionKeyManager.JsSubKey.SET_TIMEOUT_START_BRACKET.key}="
+        }
+        val setTimeoutBracketEndKeyValueCon = delayTime.let {
+            if(
+                it == null
+                || it == 0
+            ) return@let String()
+            "?${JsActionKeyManager.JsSubKey.SET_TIMEOUT_END_BRACKET.key}=${it}"
         }
         val funcVarKeyValueCon = funcVarConSrc.let {
             if(
@@ -1368,6 +1398,7 @@ private object ActionImportPutter {
                 "|${JsActionKeyManager.JsActionsKey.JS.key}=",
                 "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=",
                 ifBracketSatrtKeyValueCon,
+                setTimeoutBracketStartKeyValueCon,
                 funcVarKeyValueCon,
                 "?${JsActionKeyManager.JsSubKey.FUNC_BRACKET_START.key}=",
                 afterKeyValueCon,
@@ -1377,6 +1408,7 @@ private object ActionImportPutter {
                     listOf(
                         "|${JsActionKeyManager.JsActionsKey.JS.key}=",
                         "?${JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key}=",
+                        setTimeoutBracketEndKeyValueCon,
                         ifBracketEndKeyValueCon,
                         "?${JsActionKeyManager.JsSubKey.FUNC_BRACKET_END.key}=",
                         afterKeyValueCon,
@@ -1543,6 +1575,11 @@ private object PairToMapInList {
         ) || subKeyMap.containsKey(
             JsActionKeyManager.JsSubKey.IF_BRACKET_END.key
         )
+        val hasSetTimeoutBracket = subKeyMap.containsKey(
+            JsActionKeyManager.JsSubKey.SET_TIMEOUT_START_BRACKET.key
+        ) || subKeyMap.containsKey(
+            JsActionKeyManager.JsSubKey.SET_TIMEOUT_END_BRACKET.key
+        )
         val hasFuncBracket = subKeyMap.containsKey(
             JsActionKeyManager.JsSubKey.FUNC_BRACKET_START.key
         ) || subKeyMap.containsKey(
@@ -1556,6 +1593,7 @@ private object PairToMapInList {
         )?.contains(JsActionKeyManager.PathNotRegisterInRepValChecker.notRegisterCodePrefix) == true
         if(
             hasIfBracket
+            || hasSetTimeoutBracket
             || hasFuncBracket
             || hasActionImportPathNotFound
             || hasActionImportPathNotRegisterInRepVal
@@ -2509,6 +2547,14 @@ private object JsConPutter {
             ) return@let String()
             "var ${it} = "
         }
+        val setTimeoutBracketStartCon = jsMap.containsKey(
+            JsActionKeyManager.JsSubKey.SET_TIMEOUT_START_BRACKET.key
+        ).let {
+            if(
+                !it
+            ) return@let String()
+            "setTimeout(function(){"
+        }
         val ifBracketCon = jsMap.containsKey(
             JsActionKeyManager.JsSubKey.IF_BRACKET_START.key
         ).let {
@@ -2525,6 +2571,7 @@ private object JsConPutter {
         }
         return listOf(
             ifBracketCon,
+            setTimeoutBracketStartCon,
             "${funcVarDifinition}${funcBracketStartCon}"
         ).filter { it.trim().isNotEmpty() }.joinToString("\n")
     }
@@ -2538,7 +2585,20 @@ private object JsConPutter {
         if(
             isNotFuncBracketEnd
         ) return null
-        val funcBracketEndCon = "})();"
+        val setTimeoutBracketEndCon = jsMap.get(
+            JsActionKeyManager.JsSubKey.SET_TIMEOUT_END_BRACKET.key
+        ).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let String()
+            try{
+                it.toInt()
+            }catch(e: Exception){
+                return@let "},0)"
+            }
+            "},${it})"
+        }
+        val funcBracketEndCon = "})()"
         val ifBracketCon = jsMap.containsKey(
             JsActionKeyManager.JsSubKey.IF_BRACKET_END.key
         ).let {
@@ -2549,6 +2609,7 @@ private object JsConPutter {
         }
         return listOf(
             funcBracketEndCon,
+            setTimeoutBracketEndCon,
             ifBracketCon
         ).joinToString("\n")
     }
