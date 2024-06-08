@@ -5,6 +5,7 @@ import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -17,6 +18,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -742,15 +744,15 @@ private object KeyToSubKeyMapListMaker {
             keyToSubKeyCon
         )
         val importRoopLimit = 5
-        var containImport = false
+//        var containImport = false
         val jsActionImportKeyName = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
         val jsActionImportSignal = "${jsActionImportKeyName}="
         var keyToSubKeyConList = keyToSubKeyConListSrc
         ActionImportPutter.initBeforeActionImportMap(
             setReplaceVariableMap
         )
-        var errType: ActionImportPutter.ErrSignal = ActionImportPutter.ErrSignal.NO_ERR
         for( i in 1..importRoopLimit) {
+            var errType: ActionImportPutter.ErrSignal = ActionImportPutter.ErrSignal.NO_ERR
             keyToSubKeyConList = keyToSubKeyConList.map {
                     keyToSubKeyPair ->
                 val mainKeyName = keyToSubKeyPair.first
@@ -766,17 +768,49 @@ private object KeyToSubKeyMapListMaker {
                     )
                 val putKeyToSubKeyCon = putKeyToSubKeyConToErrType.first
                 errType = putKeyToSubKeyConToErrType.second
-                containImport =
-                    putKeyToSubKeyCon.contains(jsActionImportSignal)
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "jsAc_import.txt").absolutePath,
+//                    listOf(
+//                        "putKeyToSubKeyCon: ${putKeyToSubKeyCon}",
+//                        "\n\nupdatePutKeyToSubKeyCon ${makeKeyToSubConPairListByValidKey(
+//                            putKeyToSubKeyCon
+//                        )}",
+//                        "errType: ${errType.name}",
+////                        "containImport: ${containImport}",
+//                        "roopNum: ${i}",
+//                    ).joinToString("\n\n") + "\n--------\n"
+//                )
                 makeKeyToSubConPairListByValidKey(
                     putKeyToSubKeyCon
                 )
             }.flatten()
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_import_flattern_after.txt").absolutePath,
+//                listOf(
+//                    "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                    "errType: ${errType.name}",
+//                    "roopNum: ${i}",
+////                    "containImport: ${containImport}"
+//                ).joinToString("\n\n") + "\n--------\n"
+//            )
             if(errType == ActionImportPutter.ErrSignal.ERR) break
+            val containImport = keyToSubKeyConList.find{
+                val key = it.first
+                key == jsActionImportKeyName
+            } != null
             if(!containImport) break
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_import_flattern__break_after.txt").absolutePath,
+//                listOf(
+//                    "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                    "errType: ${errType.name}",
+//                    "roopNum: ${i}",
+//                    "containImport: ${containImport}",
+//                ).joinToString("\n\n") + "\n--------\n"
+//            )
         }
 //        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsKeyToSubKeyConListMaker.make.txt").absolutePath,
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_impot_total.txt").absolutePath,
 //            listOf(
 //                "keyToSubKeyConListSrc: ${keyToSubKeyConListSrc}",
 //                "keyToSubKeyConList: ${keyToSubKeyConList}",
@@ -801,27 +835,6 @@ private object KeyToSubKeyMapListMaker {
     private fun makeKeyToSubConPairListByValidKey(
         keyToSubKeyCon: String?,
     ): List<Pair<String, String>> {
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsMakePaier.txt").absolutePath,
-//            listOf(
-//                "keyToSubKeyCon: ${keyToSubKeyCon}",
-//                "map: ${CmdClickMap.createMap(
-//                    keyToSubKeyCon,
-//                    keySeparator
-//                )}",
-//                "filterMap: ${CmdClickMap.createMap(
-//                    keyToSubKeyCon,
-//                    keySeparator
-//                ).filter {
-//                    val mainKey = it.first
-//                    jsActionsKeyPlusList.contains(mainKey)
-//                }.map {
-//                    val mainKey = it.first
-//                    val subKeyAfterStr = it.second
-//                    mainKey to subKeyAfterStr
-//                }}"
-//            ).joinToString("\n\n")
-//        )
         return CmdClickMap.createMap(
             keyToSubKeyCon,
             keySeparator
