@@ -2597,8 +2597,12 @@ private object JsConPutter {
                 return@let "},0)"
             }
             "},${it})"
+        } + ";"
+        val funcEnd = when(setTimeoutBracketEndCon.isEmpty()){
+            false -> String()
+            else -> ";"
         }
-        val funcBracketEndCon = "})()"
+        val funcBracketEndCon = "})()${funcEnd}"
         val ifBracketCon = jsMap.containsKey(
             JsActionKeyManager.JsSubKey.IF_BRACKET_END.key
         ).let {
@@ -2611,7 +2615,7 @@ private object JsConPutter {
             funcBracketEndCon,
             setTimeoutBracketEndCon,
             ifBracketCon
-        ).joinToString("\n")
+        ).filter { it.trim().isNotEmpty() }.joinToString("\n")
     }
 
     private fun makeInsertLoopMethodCon(
