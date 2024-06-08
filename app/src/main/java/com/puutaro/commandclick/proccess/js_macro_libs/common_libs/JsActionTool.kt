@@ -2598,11 +2598,7 @@ private object JsConPutter {
             }
             "},${it})"
         } + ";"
-        val funcEnd = when(setTimeoutBracketEndCon.isEmpty()){
-            false -> String()
-            else -> ";"
-        }
-        val funcBracketEndCon = "})()${funcEnd}"
+        val funcBracketEndCon = "})();"
         val ifBracketCon = jsMap.containsKey(
             JsActionKeyManager.JsSubKey.IF_BRACKET_END.key
         ).let {
