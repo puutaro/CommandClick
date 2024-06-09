@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
@@ -20,11 +21,10 @@ object ConfigFromStartUpFileSetterForTerm {
     fun set(
         terminalFragment: TerminalFragment,
     ){
-        CommandClickScriptVariable.makeConfigJsFile(
-            UsePath.cmdclickSystemAppDirPath,
-            UsePath.cmdclickConfigFileName
+        val context = terminalFragment.context
+        CmdClickSystemAppDir.createConfigFannel(
+            context
         )
-
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(

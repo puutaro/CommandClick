@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
+import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.file.AssetsFileManager
@@ -15,10 +17,9 @@ object CmdClickSystemAppDir {
 
     private val appSystemDirName = "appSystemDir"
     fun create(
-        cmdIndexFragment: CommandIndexFragment
+        context: Context?,
     ){
         CoroutineScope(Dispatchers.IO).launch {
-            val context = cmdIndexFragment.context
             withContext(Dispatchers.IO) {
                 val assetsPrefix = "${appSystemDirName}/system"
                 val systemZipPath = assetsPrefix
@@ -31,24 +32,27 @@ object CmdClickSystemAppDir {
                 )
             }
             withContext(Dispatchers.IO){
-                createFannelByVer(
-                    cmdIndexFragment,
-                    "cmdclickConfig",
-                    "1",
-                )
+                createConfigFannel(context)
             }
-
-
         }
+    }
+
+    fun createConfigFannel(
+        context: Context?,
+    ){
+        createFannelByVer(
+            context,
+            "cmdclickConfig",
+            "1",
+        )
     }
 
 
     private fun createFannelByVer(
-        cmdIndexFragment: CommandIndexFragment,
+        context: Context?,
         fannelRawName: String,
         version: String,
     ){
-        val context = cmdIndexFragment.context
         val assetsPrefix = "${appSystemDirName}/version"
         val fannelRawDirAssetsPath =
             AssetsFileManager.concatAssetsPath(

@@ -108,20 +108,13 @@ class CommandIndexFragment: Fragment() {
                 )
             ).absolutePath
         )
-        CmdClickSystemAppDir.create(
-            this
-        )
+        CmdClickSystemAppDir.create(context)
 
         CommandClickScriptVariable.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,
             UsePath.cmdclickDefaultAppDirName +
                     UsePath.JS_FILE_SUFFIX
         )
-
-//        CommandClickScriptVariable.makeConfigJsFile(
-//            UsePath.cmdclickSystemAppDirPath,
-//            UsePath.cmdclickConfigFileName
-//        )
 
         ConfigFromConfigFileSetter.set(this)
 

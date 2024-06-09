@@ -362,24 +362,6 @@ object CommandClickScriptVariable {
         return (1..10000).random().toString() + scriptSuffix
     }
 
-    private fun iconSetForEditButton(
-        editButtonIconValName: String,
-    ): String {
-        val iconSelectBoxArgsKeySeparator = JsPathForEditButton.iconSelectBoxArgsKeySeparator
-        val iconSelectBoxArgsValNameKey = JsPathForEditButton.IconSelectBoxArgsKey.VAL_NAME.key
-        val iconSelectBoxArgslistPathKey = JsPathForEditButton.IconSelectBoxArgsKey.LIST_PATH.key
-        val iconSelectBoxMacro = JsPathForEditButton.JsPathMacroForEditButton.ICON_SELECT_BOX.name
-        val iconSelectBoxArgsMapCon = listOf(
-            "${iconSelectBoxArgsValNameKey}=${editButtonIconValName}",
-            "${iconSelectBoxArgslistPathKey}=${JsPathForEditButton.ListPathMacroForEditButton.ICON_LIST.name}",
-        ).joinToString(iconSelectBoxArgsKeySeparator)
-        return "$buttonCmd=" +
-                listOf(
-                    "jsf ${iconSelectBoxMacro}",
-                    "${iconSelectBoxArgsMapCon}?${buttonLabel}=change",
-                ).joinToString(" ")
-    }
-
     fun makeCopyPrefix(): String {
         return (1..10000).random().toString()
     }
@@ -809,68 +791,6 @@ object CommandClickScriptVariable {
             shellOrJs,
             execJsOrHtmlPathValue
         )
-    }
-
-    fun makeConfigJsFile(
-        dirPath: String,
-        jsScriptName: String,
-    ) {
-        val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
-        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
-        val jsContents = """
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
-        |${makeDescription()}
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |$TERMINAL_DO="${terminalOff}"
-        |$EDIT_EXECUTE="$editExecuteAlways"
-        |$CMDCLICK_HISTORY_SWITCH="$HISTORY_SWITCH_DEFAULT_VALUE"
-        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE"
-        |$ON_ADBLOCK="$onAdBlockOn"
-        |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
-        |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
-        |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
-        |$CMDCLICK_HOME_FANNELS_PATH=""
-        |$CMDCLICK_TERMINAL_FONT_ZOOM="$CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE"
-        |$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF="20"
-        |$TERMINAL_COLOR="$TERMINAL_COLOR_DEFAULT_VALUE"
-        |$TERMINAL_FONT_COLOR="$TERMINAL_FONT_COLOR_DEFAULT_VALUE"
-        |$PASS_CMDVARIABLE_EDIT="$PASS_CMDVARIABLE_EDIT_ON_VALUE"
-        |$HIDE_SETTING_VARIABLES="$TERMINAL_DO"
-        |$HIDE_SETTING_VARIABLES="$EDIT_EXECUTE"
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
-        |dummy=
-        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
-        |
-        |
-        |
-    """.trimMargin().split("\n")
-            .map {
-                it.replace(
-                    Regex("^#"), "//"
-                )
-            }.joinToString("\n")
-        if(!File(dirPath).isDirectory){
-            FileSystems.createDirs(
-                dirPath
-            )
-        }
-        val createFile = File(
-            dirPath,
-            jsScriptName
-        )
-        if(createFile.isFile) return
-        createFile.writeText(jsContents)
     }
 
     private fun makeAutoJsContents(
