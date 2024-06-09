@@ -1193,12 +1193,17 @@ private object ActionImportPutter {
 
     private object ImportConWithFormatListForUseVar {
 
+        private val escapeRunPrefix = JsActionKeyManager.JsVarManager.escapeRunPrefix
+
         fun update(
             importConWithFormatList: List<String>,
             useVarValue: String?,
         ): Pair<List<String>, ErrSignal> {
             if (
                 useVarValue.isNullOrEmpty()
+            ) return importConWithFormatList to ErrSignal.NO_ERR
+            if(
+                useVarValue.startsWith(escapeRunPrefix)
             ) return importConWithFormatList to ErrSignal.NO_ERR
             val updatedImportConWithFormatListToErrSignal =
                 updateImportConWithFormatListToErrSignal(
