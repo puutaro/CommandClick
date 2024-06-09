@@ -1,0 +1,79 @@
+
+
+actionImport=`${cmdclickConfigSettingEditOkBtnDirPath}/getDiffSettingVals.js`
+	?useVar="diffSettingVals"
+
+|var=beforeEditSettingValsCon
+	?func=jsFileSystem.read
+	?args=
+		path=`${cmdclickConfigBeforeEditSettingValsPath}`
+
+|var=editSettingValsCon
+	?func=jsToListFilter.filter
+	?args=
+		lines=`${diffSettingVals}`
+		&separator="\n"
+		&matchLines=`${beforeEditSettingValsCon}`
+		&extraMap=`
+			|removeRegex1="^[\t]*"
+			|removeRegex2="[\t]*$"
+			|removeRegex3="[,]"
+			|removeRegex4="^//.*"
+			|matchRegex1="[a-zA-Z]+"
+			|linesMatchType=deny
+		`
+	?func=jsText.trimNewLine
+	?args=
+		con=`
+		${it}\n
+		${beforeEditSettingValsCon}
+		`
+	?func=jsText.take
+	?args=
+		con=`${it}`
+		&separator="\n"
+		&takeNum=`NO_QUOTE:${freqLimitNum}`
+|var=runSageEditSettingValsCon
+	?func=jsFileSystem.write
+	?args=
+		path=`${cmdclickConfigBeforeEditSettingValsPath}`
+		&con=`${editSettingValsCon}`
+
+|var=factEditHideSettingValsCon
+	?func=jsFileSystem.read
+	?args=
+		path=`${cmdclickConfigEditSettingAllValsPath}`
+	?func=jsToListFilter.filter
+	?args=
+		lines=`${it}`
+		&separator="\n"
+		&matchLines=`${editSettingValsCon}`
+		&extraMap=`
+			|removeRegex1="^[\t]*"
+			|removeRegex2="[\t]*$"
+			|removeRegex3="[,]"
+			|removeRegex4="^//.*"
+			|matchRegex1="[a-zA-Z]+"
+			|linesMatchType=deny
+		`
+	?func=jsToListMap.map
+	?args=
+		lines=`${it}`
+		&separator="\n"
+		&extraMap=`
+			|removeRegex1="^[\t]*"
+			|removeRegex2="[\t]*$"
+			|removeRegex3="[,]"
+			|removeRegex4="^//.*"
+			|compSuffix1=","
+		`
+	?func=jsText.takeLast
+	?args=
+		con=`${it}`
+		&serparator="\n"
+		&takeNum=`NO_QUOTE:${hideValsLimitNum}`
+|var=runSaveFreqSettingValsCon
+	?func=jsFileSystem.write
+	?args=
+		path=`${frequentSettingHideSettingVariblePath}`
+		&con=`${factEditHideSettingValsCon}`

@@ -118,10 +118,10 @@ class CommandIndexFragment: Fragment() {
                     UsePath.JS_FILE_SUFFIX
         )
 
-        CommandClickScriptVariable.makeConfigJsFile(
-            UsePath.cmdclickSystemAppDirPath,
-            UsePath.cmdclickConfigFileName
-        )
+//        CommandClickScriptVariable.makeConfigJsFile(
+//            UsePath.cmdclickSystemAppDirPath,
+//            UsePath.cmdclickConfigFileName
+//        )
 
         ConfigFromConfigFileSetter.set(this)
 

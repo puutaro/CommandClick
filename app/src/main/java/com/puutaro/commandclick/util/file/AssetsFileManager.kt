@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.file
 
 import android.content.Context
 import android.util.Log
+import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -30,15 +31,28 @@ object AssetsFileManager {
     const val cmdListTxt = "$cmdTerminalDirPath/list/cmdList.txt"
     const val extraKeyListTxt = "$cmdTerminalDirPath/list/extraKeyList.txt"
 
+    fun concatAssetsPath(
+        pathList: List<String>
+    ): String {
+        return pathList.joinToString("/").replace(
+            Regex("[/]+"),
+            "/"
+        ).removePrefix("/")
+    }
+
     fun readFromAssets(
         context: Context?,
         assetRelativePath: String,
     ): String {
         val assetsManager = context?.assets
         val fis2: InputStream =
-            assetsManager?.open(
-                assetRelativePath
-            ) ?: return String()
+            try {
+                assetsManager?.open(
+                    assetRelativePath
+                ) ?: return String()
+            } catch(e: Exception){
+                return String()
+            }
         val contents = try {
             fis2.bufferedReader().use {
                 it.readText()
@@ -56,7 +70,8 @@ object AssetsFileManager {
         path: String,
         replacePrefix: String,
         targetDirPath: String,
-        targetFileName: String
+        targetFileName: String,
+        escapeRelativeAssetsPathList: List<String>,
     ){
         if(
             File(
@@ -69,6 +84,7 @@ object AssetsFileManager {
             path,
             replacePrefix,
             targetDirPath,
+            escapeRelativeAssetsPathList,
         )
     }
 
@@ -77,6 +93,7 @@ object AssetsFileManager {
         path: String,
         replacePrefix: String,
         targetDirPath: String,
+        escapeRelativeAssetsPathList: List<String>,
     ) {
         val assetManager = context?.assets
             ?: return
@@ -84,19 +101,24 @@ object AssetsFileManager {
         try {
             assets = assetManager.list(path)
                 ?: return
-            if (
-                assets.size == 0
-            ) {
+            val isFile = assets.isEmpty()
+            if (isFile) {
                 copyFileFromAssets(
                     context,
                     path,
                     replacePrefix,
-                    targetDirPath
+                    targetDirPath,
+                    escapeRelativeAssetsPathList,
                 )
                 return
             }
+            val dirPath =
+                "${targetDirPath}/${path.removePrefix(replacePrefix)}".replace(
+                    Regex("[/]+"),
+                    "/"
+                )
             val dir = File(
-                "${targetDirPath}/${path.removePrefix("${replacePrefix}/")}"
+                dirPath
             )
             if (
                 !dir.exists()
@@ -106,7 +128,8 @@ object AssetsFileManager {
                     context,
                     path + "/" + assets[i],
                     replacePrefix,
-                    targetDirPath
+                    targetDirPath,
+                    escapeRelativeAssetsPathList,
                 )
             }
         } catch (ex: IOException) {
@@ -116,18 +139,40 @@ object AssetsFileManager {
 
     private fun copyFileFromAssets(
         context: Context?,
-        filename: String,
+        assetsFilePath: String,
         replacePrefix: String,
-        targetDirPath: String
+        targetDirPath: String,
+        escapeRelativeAssetsPathList: List<String>,
     ) {
+        val assetsRelativeFilePath = assetsFilePath
+            .removePrefix(replacePrefix)
+            .removePrefix("/")
+        val newFilePathObj = File(
+            targetDirPath,
+            assetsRelativeFilePath
+        )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "cmdclickconfigEscape.txt").absolutePath,
+//            listOf(
+//                "newFilePath: ${newFilePathObj.absolutePath}",
+//                "newFilePathObj.isFile: ${newFilePathObj.isFile}",
+//                "assetsRelativeFilePath : ${assetsRelativeFilePath}",
+//                "escapeRelativeAssetsPathList: ${escapeRelativeAssetsPathList}",
+//                "contain: ${escapeRelativeAssetsPathList.contains(assetsRelativeFilePath)}",
+//            ).joinToString("\n\n") + "\n------\n"
+//        )
+        if(
+            newFilePathObj.isFile
+            && escapeRelativeAssetsPathList.contains(assetsRelativeFilePath)
+        ) return
+        val newFilePath = newFilePathObj.absoluteFile
         val assetManager = context?.getAssets()
             ?: return
         var `in`: InputStream? = null
         var out: OutputStream? = null
         try {
-            `in` = assetManager.open(filename)
-            val newFileName = targetDirPath + "/" + filename.removePrefix("${replacePrefix}/")
-            out = FileOutputStream(newFileName)
+            `in` = assetManager.open(assetsFilePath)
+            out = FileOutputStream(newFilePath)
             val buffer = ByteArray(1024)
             var read: Int
             while (`in`.read(buffer).also { read = it } != -1) {
@@ -153,8 +198,8 @@ object AssetsFileManager {
             assetsClipToHistoryForBookmark
         )
         val fileName = File(assetsFilePath).name
-        val assetsFileObj = File("$targetDirPath/$fileName")
-        if(assetsFileObj.isFile) return
+        val targetFilePathObj = File("$targetDirPath/$fileName")
+        if(targetFilePathObj.isFile) return
         FileSystems.writeFile(
             File(
                 targetDirPath,

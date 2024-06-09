@@ -1,0 +1,1 @@
+cmdclickConfigDir/settings/fannelStateStock.tsv

@@ -178,13 +178,15 @@ object UbuntuSetUp {
                 context,
                 AssetsFileManager.ubunutSupportDirPath,
                 AssetsFileManager.ubuntuSetupDirPath,
-                ubuntuFiles.filesOneRootfs.absolutePath
+                ubuntuFiles.filesOneRootfs.absolutePath,
+                emptyList()
             )
             AssetsFileManager.copyFileOrDirFromAssets(
                 context,
                 AssetsFileManager.ubunutSupportCmdDirPath,
                 AssetsFileManager.ubunutSupportCmdDirPath,
-                ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+                ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath,
+                emptyList()
             )
             val filesOneRootfsSupportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
             FileSystems.writeFile(
@@ -385,7 +387,8 @@ object UbuntuSetUp {
             context,
             AssetsFileManager.ubunutSupportDirPath,
             "ubuntu_setup",
-            ubuntuFiles.supportDir.absolutePath
+            ubuntuFiles.supportDir.absolutePath,
+            emptyList()
         )
         FileSystems.updateFile(
             File(

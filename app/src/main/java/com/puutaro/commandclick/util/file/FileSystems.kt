@@ -326,6 +326,9 @@ object FileSystems {
             !File(sourceShellFilePath).isFile
         ) return
         try {
+            val parentDirPath = File(destiShellFilePath).parent
+                ?: return
+            createDirs(parentDirPath)
             Files.copy(
                 File(sourceShellFilePath).toPath(),
                 File(destiShellFilePath).toPath(),
@@ -333,7 +336,7 @@ object FileSystems {
             )
         } catch (e: Exception) {
             LogSystems.stdErrByNoBroad(
-                "${e.cause}, ${e.message}, ${e.stackTrace}"
+                "${e.cause}, ${e.message}, ${e}"
             )
             return
         }

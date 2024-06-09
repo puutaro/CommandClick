@@ -60,6 +60,10 @@ class ReadText(
         if(
             !targetFile.isFile
         ) return emptyList()
-        return targetFile.readLines()
+        return try {
+            targetFile.readLines()
+        } catch(e: Exception){
+            emptyList()
+        }
     }
 }

@@ -214,7 +214,8 @@ class BusyboxExecutor(
                     context,
                     AssetsFileManager.ubunutSupportCmdDirPath,
                     AssetsFileManager.ubunutSupportCmdDirPath,
-                    ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+                    ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath,
+                    emptyList()
                 )
             }
             withContext(Dispatchers.IO) {
