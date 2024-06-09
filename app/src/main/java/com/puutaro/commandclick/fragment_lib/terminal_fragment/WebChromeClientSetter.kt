@@ -18,7 +18,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
-import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -127,7 +127,7 @@ object WebChromeClientSetter {
                         )
                     }
                     withContext(Dispatchers.IO) {
-                        LogTool.SecondErrLogSaver.saveErrLogCon(errOutput)
+                        CheckTool.SecondErrLogSaver.saveErrLogCon(errOutput)
                     }
                     withContext(Dispatchers.IO) {
                         LogSystems.stdErr(

@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.util
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +17,7 @@ object LogSystems {
 
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private const val sysLogFileName = UsePath.cmdClickMonitorFileName_2
-    val logPrefix = LogTool.logPrefix
+    val logPrefix = CheckTool.logPrefix
 
 
     fun stdSys(
@@ -47,7 +45,7 @@ object LogSystems {
         notiLevelSrc: String = BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level
     ){
         val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${LogTool.errMark}\n${errContents}"
+        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${CheckTool.errMark}\n${errContents}"
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(
@@ -60,7 +58,7 @@ object LogSystems {
             }
             withContext(Dispatchers.IO){
                 val notiLevel = when(
-                    LogTool.EscapeErrMessage.howEscapeErrMessage(line)
+                    CheckTool.EscapeErrMessage.howEscapeErrMessage(line)
                 ){
                     true -> BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
                     else -> notiLevelSrc

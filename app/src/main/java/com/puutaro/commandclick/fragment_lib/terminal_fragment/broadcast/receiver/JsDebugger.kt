@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.FragmentActivity
-import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -222,17 +222,17 @@ object JsDebugger {
         terminalFragment: TerminalFragment,
         intent: Intent
     ){
-        val topBoardCon = LogTool.DebugMapManager.readDebugTopBoardCon()
-        LogTool.DebugMapManager.readDebugTopBoardCon().contains(LogTool.JsOrActionMark.JS_ACTION.mark)
+        val topBoardCon = CheckTool.DebugMapManager.readDebugTopBoardCon()
+        CheckTool.DebugMapManager.readDebugTopBoardCon().contains(CheckTool.JsOrActionMark.JS_ACTION.mark)
         when(true){
-            topBoardCon.contains(LogTool.JsOrActionMark.JS_ACTION.mark) -> {
-                LogTool.FinalSaver.saveForJsAction()
+            topBoardCon.contains(CheckTool.JsOrActionMark.JS_ACTION.mark) -> {
+                CheckTool.FinalSaver.saveForJsAction()
                 launchJsAcLogDialog(
                     terminalFragment,
                 )
             }
-            topBoardCon.contains(LogTool.JsOrActionMark.NORMAL_JS.mark) -> {
-                LogTool.FinalSaver.saveJsConDebugReport()
+            topBoardCon.contains(CheckTool.JsOrActionMark.NORMAL_JS.mark) -> {
+                CheckTool.FinalSaver.saveJsConDebugReport()
                 val launchUrlCon = TxtHtmlDescriber.makeTxtHtmlUrl(
                     UsePath.jsDebugReportPath,
                 )
@@ -352,7 +352,7 @@ object JsDebugger {
         val logPrefixRegex = Regex(
             "^${LogSystems.logPrefix}"
         )
-        val errMark = LogTool.errMark
+        val errMark = CheckTool.errMark
         var times = 0
         val sysLogCon = ReadText(
             File(
@@ -377,25 +377,25 @@ object JsDebugger {
                 index, s -> index > 0
             }.joinToString("\n")
             val leadColorStr =
-                LogTool.LogVisualManager.makeLeadColorCode(times)
-            val colorStr = LogTool.LogVisualManager.makeColorCode(
+                CheckTool.LogVisualManager.makeLeadColorCode(times)
+            val colorStr = CheckTool.LogVisualManager.makeColorCode(
                 times
             )
             times++
             listOf(
-                LogTool.LogVisualManager.makeSpanTagHolder(
+                CheckTool.LogVisualManager.makeSpanTagHolder(
                     leadColorStr,
                     lead
                 ),
-                LogTool.LogVisualManager.makeSpanTagHolder(
+                CheckTool.LogVisualManager.makeSpanTagHolder(
                     colorStr,
                     body.trim().trim('\n')
                 )
             ).joinToString("\n") + "\n\n"
         }.joinToString("\n").replace(
             errMark,
-            LogTool.LogVisualManager.makeTopSpanLogTagHolder(
-                LogTool.errRedCode,
+            CheckTool.LogVisualManager.makeTopSpanLogTagHolder(
+                CheckTool.errRedCode,
                 errMark
             )
         ).replace(

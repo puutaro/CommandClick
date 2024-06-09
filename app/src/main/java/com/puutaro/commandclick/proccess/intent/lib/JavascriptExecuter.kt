@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.intent.lib
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -174,13 +174,13 @@ object JavascriptExecuter {
                     extraRepValMap = extraMapCon
                 ) ?: String()
                 val separator = "----------"
-                val logSrcCon = LogTool.LogVisualManager.makeSpanTagHolder(
-                    LogTool.LogVisualManager.logGreenPair,
+                val logSrcCon = CheckTool.LogVisualManager.makeSpanTagHolder(
+                    CheckTool.LogVisualManager.logGreenPair,
                     execJsCon.replace(";", ";\n"),
                 )
-                LogTool.DebugMapManager.writeDebugCons(
+                CheckTool.DebugMapManager.writeDebugCons(
                     debugTopBoardConArg = listOf(
-                        "${LogTool.JsOrActionMark.NORMAL_JS.mark}\n",
+                        "${CheckTool.JsOrActionMark.NORMAL_JS.mark}\n",
                         separator,
                     ).joinToString("\n"),
                     jsConWithDetailTagArg = logSrcCon,

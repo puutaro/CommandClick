@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.CheckTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class JsToast(
         contents: String
     ){
         if(
-            LogTool.EscapeErrMessage.howEscapeErrMessage(contents)
+            CheckTool.EscapeErrMessage.howEscapeErrMessage(contents)
         ) return
         CoroutineScope(Dispatchers.Main).launch {
             ToastUtils.showShort(contents)

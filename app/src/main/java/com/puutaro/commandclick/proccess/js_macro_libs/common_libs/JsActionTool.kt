@@ -4,8 +4,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.LogTool
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,7 +17,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -144,13 +142,13 @@ object JsActionTool {
 //                }",
 //            ).joinToString("\n\n")
 //        )
-        val displayActionImportedAcCon = LogTool.DisplayActionImportedJsAcSrc.make(
+        val displayActionImportedAcCon = CheckTool.DisplayActionImportedJsAcSrc.make(
             actionImportedKeyToSubKeyConList,
         )
         if(
             !macroDataMap.isNullOrEmpty()
         ) {
-            LogTool.FirstJsActionLogSaver.save(
+            CheckTool.FirstJsActionLogSaver.save(
                 keyToSubKeyConWithReflectRepValDefalt,
                 displayActionImportedAcCon,
                 null,
@@ -167,7 +165,7 @@ object JsActionTool {
             keyToSubKeyMapListWithAfterSubKey,
         )
         val jsActionMap = jsActionMapToJsConOnlyReplace?.first
-        LogTool.FirstJsActionLogSaver.save(
+        CheckTool.FirstJsActionLogSaver.save(
             keyToSubKeyConWithReflectRepValDefalt,
             displayActionImportedAcCon,
             keyToSubKeyMapListWithoutAfterSubKey,
@@ -207,11 +205,26 @@ object JsActionTool {
         val checkJsCon =
             jsActionMap?.get(JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key)
         val evaluateGeneCon =
-            LogTool.KeyToSubKeyConTool.makeEvaluateAcCon(
+            CheckTool.KeyToSubKeyConTool.makeEvaluateAcCon(
                 keyToSubKeyMapListWithoutAfterSubKey,
                 keyToSubKeyMapListWithAfterSubKey,
             )
-        LogTool.ForbiddenJsKeyDirectSpecifyErr.check(
+        val actionImportedCon = actionImportedKeyToSubKeyConList.map {
+            val mainKey = it.first
+            val subKeyCon = it.second
+            "|${mainKey}=${subKeyCon}"
+        }.joinToString("\n")
+        CheckTool.FuncMainKeyTwoOverErr.check(
+            context,
+            actionImportedKeyToSubKeyConList,
+            actionImportedCon
+        ).let {
+                isFuncMainKeyTwoOverErr ->
+            if(
+                isFuncMainKeyTwoOverErr
+            ) return true
+        }
+        CheckTool.ForbiddenJsKeyDirectSpecifyErr.check(
             context,
             evaluateGeneCon
         ).let {
@@ -220,7 +233,7 @@ object JsActionTool {
                 isForbiddenJsKeyDirectSpecifyErr
             ) return true
         }
-        LogTool.QuoteNumCheck.check(
+        CheckTool.QuoteNumCheck.check(
             context,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
@@ -230,7 +243,7 @@ object JsActionTool {
                 isQuoteErr
             ) return true
         }
-        LogTool.IdDuplicateErr.check(
+        CheckTool.IdDuplicateErr.check(
             context,
             evaluateGeneCon
         ).let {
@@ -239,7 +252,7 @@ object JsActionTool {
                 isIdDuplicateErr
             ) return true
         }
-        LogTool.NotStartVerticalVarMainKey.check(
+        CheckTool.NotStartVerticalVarMainKey.check(
             context,
             evaluateGeneCon
         ).let {
@@ -248,7 +261,7 @@ object JsActionTool {
                 isNotStartVerticalVarMainKey
             ) return true
         }
-        LogTool.IrregularStrKeyCon.check(
+        CheckTool.IrregularStrKeyCon.check(
             context,
             evaluateGeneCon
         ).let {
@@ -257,7 +270,7 @@ object JsActionTool {
                 isIrregularStrKeyCon
             ) return true
         }
-        LogTool.IrregularFuncValue.check(
+        CheckTool.IrregularFuncValue.check(
             context,
             evaluateGeneCon,
         ).let {
@@ -266,7 +279,7 @@ object JsActionTool {
                 isIrregularFuncValue
             ) return true
         }
-        LogTool.VarNotInit.check(
+        CheckTool.VarNotInit.check(
             context,
             evaluateGeneCon
         ).let {
@@ -275,7 +288,7 @@ object JsActionTool {
                 isVarNotInit
             ) return true
         }
-        LogTool.RunVarPrefixUsedAsArgErr.check(
+        CheckTool.RunVarPrefixUsedAsArgErr.check(
             context,
             actionImportedKeyToSubKeyConList,
         ).let {
@@ -284,12 +297,7 @@ object JsActionTool {
                 isRunVarPrefixUsedErr
             ) return true
         }
-        val actionImportedCon = actionImportedKeyToSubKeyConList.map {
-            val mainKey = it.first
-            val subKeyCon = it.second
-            "|${mainKey}=${subKeyCon}"
-        }.joinToString("\n")
-        LogTool.MissLastVarKeyErrForUseVar.check(
+        CheckTool.MissLastVarKeyErrForUseVar.check(
             context,
             actionImportedCon
         ).let {
@@ -298,7 +306,7 @@ object JsActionTool {
                 isMissLastVarKeyErrForUseVar
             ) return true
         }
-        LogTool.MissLastReturnKeyErrForAcImport.check(
+        CheckTool.MissLastReturnKeyErrForAcImport.check(
             context,
             actionImportedCon,
         ).let {
@@ -307,7 +315,7 @@ object JsActionTool {
                 isMissLastReturnKeyErrForAcImport
             ) return true
         }
-        LogTool.InvalidAfterIdInAcImportErr.check(
+        CheckTool.InvalidAfterIdInAcImportErr.check(
             context,
             actionImportedCon
         ).let {
@@ -316,7 +324,7 @@ object JsActionTool {
                 isInvalidAfterInAcImportErr
             ) return true
         }
-        LogTool.PathNotFound.check(
+        CheckTool.PathNotFound.check(
             context,
             evaluateGeneCon,
             actionImportedKeyToSubKeyConList,
@@ -328,7 +336,7 @@ object JsActionTool {
                 return true
             }
         }
-        LogTool.AcImportPathNotRegisterInRepValErr.check(
+        CheckTool.AcImportPathNotRegisterInRepValErr.check(
             context,
             evaluateGeneCon,
             actionImportedKeyToSubKeyConList,
@@ -340,7 +348,7 @@ object JsActionTool {
                 return true
             }
         }
-        LogTool.IrregularFuncValue.check(
+        CheckTool.IrregularFuncValue.check(
             context,
             evaluateGeneCon,
         ).let {
@@ -349,7 +357,7 @@ object JsActionTool {
                 isIrregularFuncValue
             ) return true
         }
-        LogTool.LoopMethodOrArgsNotExist.check(
+        CheckTool.LoopMethodOrArgsNotExist.check(
             context,
             checkJsCon
         ).let {
@@ -358,7 +366,7 @@ object JsActionTool {
                 isLoopMethodOrArgsNotExist
             ) return true
         }
-        LogTool.SyntaxCheck.checkJsAcSyntax(
+        CheckTool.SyntaxCheck.checkJsAcSyntax(
             context,
             checkJsCon
         ).let {
@@ -367,7 +375,7 @@ object JsActionTool {
                 isSyntaxErr
             ) return true
         }
-        LogTool.VarNotUse.checkJsAsSyntaxForVarNotUse(
+        CheckTool.VarNotUse.checkJsAsSyntaxForVarNotUse(
             context,
             checkJsCon
         ).let {
