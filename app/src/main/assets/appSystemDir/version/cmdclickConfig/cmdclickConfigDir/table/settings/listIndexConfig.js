@@ -16,7 +16,6 @@ click=
         ?args=
             srcFilePath="${ITEM_NAME}"
             &desitFilePath=`${dynamicHideSettingVariblePath}`
-    // |var=extraMapCon
     |actionImport=
         `${cmdclickConfigChangeStateActionsPath}`
         ?replace=
