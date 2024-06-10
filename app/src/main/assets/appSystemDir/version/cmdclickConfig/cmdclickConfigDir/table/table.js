@@ -10,8 +10,7 @@ playButtonConfig="visible=OFF,disable=ON,color=gray,icon=play"
 editButtonConfig="visible=OFF,disable=ON,color=gray,icon=list"
 settingButtonConfig="visible=OFF,disable=ON,color=gray,icon=list"
 qrDialogConfig=`file://${tableQrDialogConfigPath}`
-hideSettingVariables=`file://${tableHideSettingVariblePath}`
-// settingButtonConfig=`file://${cmdYoutuberSettingButtonConfigPath}`
+hideSettingVariables=`file://${tableHideSettingVariablePath}`
 setVariableTypes=`file://${setVariableTypesForTable}`
 onAutoExec="ON"
 autoExecPath=`file://${cmdclickConfigTableInitActionsPath}`

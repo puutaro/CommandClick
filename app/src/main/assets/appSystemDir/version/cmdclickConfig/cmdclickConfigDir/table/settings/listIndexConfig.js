@@ -15,7 +15,7 @@ click=
         ?func=jsFileSystem.copyFile
         ?args=
             srcFilePath="${ITEM_NAME}"
-            &desitFilePath=`${dynamicHideSettingVariblePath}`
+            &desitFilePath=`${dynamicHideSettingVariablePath}`
     |actionImport=
         `${cmdclickConfigChangeStateActionsPath}`
         ?replace=

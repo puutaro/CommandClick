@@ -1,8 +1,5 @@
 
 
-// setVariableTypesForWebviewSetting=
-//     `${cmdclickConfigWebviewSettingSettingsDirPath}/setVariableTypes.js`
-
 // state fannel
 cmdclickConfigSettingEditFannelPath=
     `${cmdclickConfigSettingEditDirPath}/settingEdit.js`,

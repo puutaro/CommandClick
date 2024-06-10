@@ -6,7 +6,10 @@ SETTING_EDIT=
 
 // setting
 hideValsLimitNum=7,
-freqLimitNum=6,
+recentLimitNum=6,
+iconColor="lightGreen",
+historyIconColor="blue",
+iconBkColor="white",
 
 // dir path
 currentAppDirPath=
@@ -35,20 +38,20 @@ BEFORE_FANNEL_PATH=
     `${cmdclickConfigTempDirPath}/${FANNEL_NANE}`,
 
 // setting file path
-dynamicHideSettingVariblePath=
+dynamicHideSettingVariablePath=
     `${cmdclickConfigTempDirPath}/dynamicHideSettingVarible.js`,
-tableHideSettingVariblePath=
+tableHideSettingVariablePath=
     `${cmdclickConfigHideSettingValsDirPath}/tableHideVals.js`,
-webviewSettingHideSettingVariblePath=
+webviewSettingHideSettingVariablePath=
     `${cmdclickConfigHideSettingValsDirPath}/webviewSettingHideVals.js`,
-webviewExtraSettingHideSettingVariblePath=
+webviewExtraSettingHideSettingVariablePath=
     `${cmdclickConfigHideSettingValsDirPath}/webviewExtraSettingHideVals.js`,
-historySettingHideSettingVariblePath=
+historySettingHideSettingVariablePath=
     `${cmdclickConfigHideSettingValsDirPath}/historySettingHideVals.js`,
-ubuntuSettingHideSettingVariblePath=
+ubuntuSettingHideSettingVariablePath=
     `${cmdclickConfigHideSettingValsDirPath}/ubuntuSettingHideVals.js`,
-frequentSettingHideSettingVariblePath=
-    `${cmdclickConfigHideSettingValsDirPath}/frequentSettingHideVals.js`,
+recentSettingHideSettingVariablePath=
+    `${cmdclickConfigHideSettingValsDirPath}/recentSettingHideVals.js`,
 cmdclickConfigEditSettingAllValsPath=
     `${cmdclickConfigSrcDirPath}/editSettingVals.js`,
 cmdclickConfigBeforeEditSettingValsPath=

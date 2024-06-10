@@ -19,8 +19,6 @@ diffSettingVals
             |removeRegex3="^//.*"
             |matchRegex1="[a-zA-Z0-9]"
         `
-// |func=alert
-//     ?args=msg=`${cmdValCon}`
 |var=runReflectSettingValsByCmdVals
     ?func=jsScript.replaceSettingVariable
     ?args=

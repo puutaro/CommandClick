@@ -24,8 +24,7 @@
 	?func=jsScript.subSettingVars
 	?args=
 		&con=`${it}`
-                            //|func=alert
-                            //?args=msg=`beforeFannelSettingValsCon:\n${beforeFannelSettingValsCon}\n\ncurFannelSettingValsCon:\n${curFannelSettingValsCon}`
+
 |var=diffSettingVals
 	?func=jsDiff.diff
 	?args=

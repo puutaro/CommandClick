@@ -5,6 +5,4 @@ mode=
 logo=
     oneSideLength=60
     |icon=
-        name=setting
-        ?color=lightGreen
-        ?bkColor=white,
+        nameConfigPath=`${cmdclickConfigTableIconNameColorConfigPath}`,

@@ -14,4 +14,5 @@ cmdclickConfigTableTsvPath=
     `${cmdclickConfigTableSettingsDirPath}/table.tsv`,
 cmdclickConfigTableInitTsvPath=
     `${cmdclickConfigTableSettingsDirPath}/initList.tsv`,
-
+cmdclickConfigTableIconNameColorConfigPath=
+    `${cmdclickConfigTableSettingsDirPath}/iconNameColorConfig.tsv`,

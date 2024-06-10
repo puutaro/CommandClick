@@ -1,5 +1,5 @@
-freq setting	${frequentSettingHideSettingVariblePath}
-webview setting	${webviewSettingHideSettingVariblePath}
-webview extra setting	${webviewExtraSettingHideSettingVariblePath}
-history setting	${historySettingHideSettingVariblePath}
-ubuntu setting	${ubuntuSettingHideSettingVariblePath}
+recent setting	${recentSettingHideSettingVariablePath}
+webview setting	${webviewSettingHideSettingVariablePath}
+webview extra setting	${webviewExtraSettingHideSettingVariablePath}
+history setting	${historySettingHideSettingVariablePath}
+ubuntu setting	${ubuntuSettingHideSettingVariablePath}

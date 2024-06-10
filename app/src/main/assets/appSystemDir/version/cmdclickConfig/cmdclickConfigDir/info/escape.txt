@@ -1,1 +1,2 @@
 cmdclickConfigDir/settings/fannelStateStock.tsv
+cmdclickConfigDir/hideSettingVals/recentSettingHideVals.js

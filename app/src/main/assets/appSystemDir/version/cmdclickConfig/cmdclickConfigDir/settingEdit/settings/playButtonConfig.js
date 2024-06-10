@@ -1,17 +1,15 @@
 
 visible=ON,
-// disable=ON,
-// color=gray,
 icon=ok,
 
 click=
     onScriptSave=ON
     |actionImport=
         `${cmdclickConfigSettingEditOkBtnDirPath}
-            /relectSetingValAction.js`
+            /reflectSetingValAction.js`
     |actionImport=
         `${cmdclickConfigSettingEditOkBtnDirPath}
-            /relectFreqSettingVals.js`
+            /reflectRecentSettingVals.js`
     |actionImport=
         `${cmdclickConfigChangeStateActionsPath}`
         ?replace=
