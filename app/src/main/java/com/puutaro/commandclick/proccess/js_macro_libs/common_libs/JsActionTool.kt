@@ -1143,7 +1143,7 @@ private object ActionImportPutter {
         delayTime: Int?,
     ): Pair<List<String>, ErrSignal> {
         val importConWithFormatListByUseVarToUseVarErr =
-            ImportConWithFormatListForUseVar.update(
+            ImportConWithFormatListForUseVar.validate(
                 importConWithFormatList,
                 useVarValue,
             )
@@ -1193,9 +1193,9 @@ private object ActionImportPutter {
 
     private object ImportConWithFormatListForUseVar {
 
-        private val escapeRunPrefix = JsActionKeyManager.JsVarManager.escapeRunPrefix
+        private const val escapeRunPrefix = JsActionKeyManager.JsVarManager.escapeRunPrefix
 
-        fun update(
+        fun validate(
             importConWithFormatList: List<String>,
             useVarValue: String?,
         ): Pair<List<String>, ErrSignal> {
@@ -1205,18 +1205,18 @@ private object ActionImportPutter {
             if(
                 useVarValue.startsWith(escapeRunPrefix)
             ) return importConWithFormatList to ErrSignal.NO_ERR
-            val updatedImportConWithFormatListToErrSignal =
-                updateImportConWithFormatListToErrSignal(
+            val validatedImportConWithFormatListToErrSignal =
+                validateImportConWithFormatListToErrSignal(
                     importConWithFormatList,
                     useVarValue,
                 )
-            val updatedImportConWithFormatList =
-                updatedImportConWithFormatListToErrSignal.first
-            val errSignal = updatedImportConWithFormatListToErrSignal.second
-            return updatedImportConWithFormatList to errSignal
+            val validatedImportConWithFormatList =
+                validatedImportConWithFormatListToErrSignal.first
+            val errSignal = validatedImportConWithFormatListToErrSignal.second
+            return validatedImportConWithFormatList to errSignal
         }
 
-        private fun updateImportConWithFormatListToErrSignal(
+        private fun validateImportConWithFormatListToErrSignal(
             importConWithFormatList: List<String>,
             varNameSrc: String?,
         ): Pair<List<String>, ErrSignal> {
