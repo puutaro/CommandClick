@@ -3,7 +3,7 @@
 /// SETTING_SECTION_START
 terminalDo="OFF"
 editExecute="ALWAYS"
-onUpdateLastModify="ON"
+onUpdateLastModify="OFF"
 onAdBlock="OFF"
 listIndexConfig=`file://${tableListIndexConfigPath}`
 playButtonConfig="visible=OFF,disable=ON,color=gray,icon=play"

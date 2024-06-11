@@ -3,7 +3,7 @@
 /// SETTING_SECTION_START
 terminalDo="OFF"
 editExecute="ALWAYS"
-onUpdateLastModify="ON"
+onUpdateLastModify="OFF"
 onAdBlock="OFF"
 editBoxTitleConfig=`file://${cmdclickConfigSettingEditBoxTitleConfigPath}`
 playButtonConfig=`file://${cmdclickConfigSettingEditPlayButtonConfigPath}`

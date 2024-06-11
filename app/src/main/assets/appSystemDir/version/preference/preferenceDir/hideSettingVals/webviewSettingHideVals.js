@@ -7,8 +7,6 @@ imageLongPressMenuFilePath,
 onUrlLaunchMacro,
 onAutoExec,
 execJsOrHtmlPath,
-// list setting
-onUpdateLastModify,
 // webview extra setting
 defaultMonitorFile,
 disableShowToolbarWhenHighlight,

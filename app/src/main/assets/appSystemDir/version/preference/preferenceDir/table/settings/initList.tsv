@@ -3,5 +3,4 @@ webview setting	${webviewSettingHideSettingVariablePath}
 long press setting	${longPressSettingHideSettingVariablePath}
 history setting	${historySettingHideSettingVariablePath}
 startup setting	${startupSettingHideSettingVariablePath}
-list setting	${listSettingHideSettingVariablePath}
 webview extra setting	${webviewExtraSettingHideSettingVariablePath}

@@ -6,9 +6,9 @@
 /// SETTING_SECTION_START
 terminalDo="OFF"
 editExecute="ALWAYS"
-onUpdateLastModify="ON"
 fannelStateConfig=`file://`
 setReplaceVariables="file://"
+onUpdateLastModify="OFF"
 // webview setting
 onAdBlock="INHERIT"
 terminalFontZoom=""
@@ -24,8 +24,6 @@ imageLongPressMenuFilePath=""
 onUrlLaunchMacro="RECENT"
 onAutoExec="ON"
 execJsOrHtmlPath=""
-// list setting
-onUpdateLastModify="OFF"
 // webview extra setting
 defaultMonitorFile="term_1"
 disableShowToolbarWhenHighlight="OFF"
@@ -56,8 +54,6 @@ imageLongPressMenuFilePath=""
 onUrlLaunchMacro="RECENT"
 onAutoExec="ON"
 execJsOrHtmlPath=""
-// list setting
-onUpdateLastModify="OFF"
 // webview extra setting
 defaultMonitorFile="term_1"
 disableShowToolbarWhenHighlight="OFF"

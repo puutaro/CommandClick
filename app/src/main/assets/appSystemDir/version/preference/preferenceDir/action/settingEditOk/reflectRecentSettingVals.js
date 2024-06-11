@@ -77,3 +77,6 @@ actionImport=`${preferenceSettingEditOkBtnDirPath}/getDiffSettingVals.js`
 	?args=
 		path=`${recentSettingHideSettingVariablePath}`
 		&con=`${factEditHideSettingValsCon}`
+	?func=jsFileSystem.updateWeekPastLastModified
+	?args=
+		path=`${FANNEL_PATH}`

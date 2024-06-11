@@ -410,4 +410,11 @@ class JsFileSystem(
     ): Boolean {
         return File(path).isDirectory
     }
+
+    @JavascriptInterface
+    fun updateWeekPastLastModified(path: String){
+        FileSystems.updateWeekPastLastModified(
+            path
+        )
+    }
 }

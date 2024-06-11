@@ -49,8 +49,6 @@ longPressSettingHideSettingVariablePath=
     `${preferenceHideSettingValsDirPath}/longPressSettingHideVals.js`,
 startupSettingHideSettingVariablePath=
     `${preferenceHideSettingValsDirPath}/startupSettingHideVals.js`,
-listSettingHideSettingVariablePath=
-    `${preferenceHideSettingValsDirPath}/listSettingHideVals.js`,
 recentSettingHideSettingVariablePath=
     `${preferenceHideSettingValsDirPath}/recentSettingHideVals.js`,
 preferenceEditSettingAllValsPath=

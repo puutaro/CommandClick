@@ -14,8 +14,6 @@ imageLongPressMenuFilePath,
 onUrlLaunchMacro,
 onAutoExec,
 execJsOrHtmlPath,
-// list setting
-onUpdateLastModify,
 // history setting
 homeScriptUrlsPath,
 ignoreHistoryPaths,
