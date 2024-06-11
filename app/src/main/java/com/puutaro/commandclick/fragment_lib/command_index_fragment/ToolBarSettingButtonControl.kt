@@ -222,5 +222,3 @@ private enum class MenuEnums(
     MANAGE("manage", R.drawable.icons8_setup),
     SETTING("setting",R.drawable.icons8_setting),
 }
-
-
