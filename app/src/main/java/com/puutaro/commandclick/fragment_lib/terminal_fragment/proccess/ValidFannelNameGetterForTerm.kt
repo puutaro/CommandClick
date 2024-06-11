@@ -16,7 +16,7 @@ object ValidFannelNameGetterForTerm {
                 R.string.index_terminal_fragment
             )
         ) {
-            true -> UsePath.cmdclickStartupJsName
+            true -> UsePath.cmdclickPreferenceJsName
             else -> terminalFragment.currentFannelName
         }
     }

@@ -69,7 +69,7 @@ object ExecUpdateNoSaveUrlPaths {
                 ?: return
 
         val currentFannelName =
-            fannelName.ifEmpty { UsePath.cmdclickStartupJsName }
+            fannelName.ifEmpty { UsePath.cmdclickPreferenceJsName }
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
             currentAppDirPath,

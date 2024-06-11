@@ -235,7 +235,7 @@ private object ShellFilePathToHistory {
         shellFileName: String,
     ) {
         if(
-            shellFileName == UsePath.cmdclickStartupJsName
+            shellFileName == UsePath.cmdclickPreferenceJsName
         ) return
         val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName

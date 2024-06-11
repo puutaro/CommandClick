@@ -51,11 +51,11 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        val startUpAppDirPath = SharePrefTool.getStringFromSharePref(
+        val preferenceAppDirPath = SharePrefTool.getStringFromSharePref(
             startUpPref,
             SharePrefferenceSetting.current_app_dir
         )
-        val startUpScriptFileName = SharePrefTool.getStringFromSharePref(
+        val preferenceScriptFileName = SharePrefTool.getStringFromSharePref(
             startUpPref,
             SharePrefferenceSetting.current_fannel_name
         )
@@ -71,13 +71,13 @@ class InitFragmentManager(
         val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
 
         if (
-            startUpScriptFileName.isEmpty()
-            || startUpScriptFileName == emptyShellFileName
-            || startUpAppDirPath == UsePath.cmdclickAppDirAdminPath
-            || startUpAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
+            preferenceScriptFileName.isEmpty()
+            || preferenceScriptFileName == emptyShellFileName
+            || preferenceAppDirPath == UsePath.cmdclickAppDirAdminPath
+            || preferenceAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
             || allowJudgeSystemFannelIntent(
-                startUpAppDirPath,
-                startUpScriptFileName
+                preferenceAppDirPath,
+                preferenceScriptFileName
             )
             || onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) {
@@ -90,13 +90,13 @@ class InitFragmentManager(
             return
         }
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            startUpAppDirPath,
-            startUpScriptFileName,
+            preferenceAppDirPath,
+            preferenceScriptFileName,
             fannelState,
         )
         val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
-            startUpAppDirPath,
-            startUpScriptFileName,
+            preferenceAppDirPath,
+            preferenceScriptFileName,
             onShortcut,
             fannelState
         )
@@ -184,14 +184,14 @@ class InitFragmentManager(
     }
 
     private fun allowJudgeSystemFannelIntent(
-        startUpAppDirPath: String,
-        startUpScriptFileName: String,
+        preferenceAppDirPath: String,
+        preferenceScriptFileName: String,
     ): Boolean {
         if(
-            startUpAppDirPath != UsePath.cmdclickSystemAppDirPath
+            preferenceAppDirPath != UsePath.cmdclickSystemAppDirPath
         ) return false
         return !SystemFannel.allowIntentSystemFannelList.contains(
-            startUpScriptFileName
+            preferenceScriptFileName
         )
 
     }

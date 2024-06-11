@@ -225,9 +225,9 @@ object CommandClickScriptVariable {
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
-    val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
+    val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
     val fannelDirName = CcPathTool.makeFannelDirName(
-        cmdclickStartupJsName
+        cmdclickPreferenceJsName
     )
     private val homeScriptUrlsFilePath = UsePath.homeScriptUrlsFilePath
     private val homeFannelsFilePath =

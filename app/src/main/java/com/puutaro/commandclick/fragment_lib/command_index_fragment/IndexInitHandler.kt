@@ -5,7 +5,8 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromStartUpFileSetter
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromPreferenceFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
@@ -127,15 +128,15 @@ object IndexInitHandler {
                     )
                 }
             }
-            StartFileMaker.makeForStartupScript(
-                cmdIndexFragment,
-                currentAppDirPath
+            CmdClickSystemAppDir.createPreferenceFannel(
+                context,
+                cmdIndexFragment.readSharePreferenceMap,
             )
 
             StartFileMaker.makeCmdTerminalListFiles(
                 cmdIndexFragment,
             )
-            ConfigFromStartUpFileSetter.set(
+            ConfigFromPreferenceFileSetter.set(
                 cmdIndexFragment,
                 currentAppDirPath,
             )

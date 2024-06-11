@@ -16,7 +16,7 @@ import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 
-object ConfigFromStartUpFileSetterForTerm {
+object ConfigFromPreferenceFileSetterForTerm {
 
     fun set(
         terminalFragment: TerminalFragment,
@@ -121,22 +121,22 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        StartFileMaker.makeForStartupScript(
-            terminalFragment,
-            terminalFragment.currentAppDirPath
+        CmdClickSystemAppDir.createPreferenceFannel(
+            context,
+            readSharedPreferences,
         )
-        val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
+        val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
         val currentScriptFileName = ValidFannelNameGetterForTerm.get(
             terminalFragment
         )
 
         if(
-            currentScriptFileName != cmdclickStartupJsName
+            currentScriptFileName != cmdclickPreferenceJsName
         ){
-            val settingVariableListFromStartup = CommandClickVariables.extractValListFromHolder(
+            val settingVariableListFromPreference = CommandClickVariables.extractValListFromHolder(
                 CommandClickVariables.makeMainFannelConList(
                     terminalFragment.currentAppDirPath,
-                    cmdclickStartupJsName
+                    cmdclickPreferenceJsName
                 ),
                 settingSectionStart,
                 settingSectionEnd
@@ -145,8 +145,8 @@ object ConfigFromStartUpFileSetterForTerm {
                 LongPressPathDecider.decide(
                     terminalFragment,
                     currentAppDirPath,
-                    cmdclickStartupJsName,
-                    settingVariableListFromStartup,
+                    cmdclickPreferenceJsName,
+                    settingVariableListFromPreference,
                     CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
                 )
 
@@ -154,8 +154,8 @@ object ConfigFromStartUpFileSetterForTerm {
                 LongPressPathDecider.decide(
                     terminalFragment,
                     currentAppDirPath,
-                    cmdclickStartupJsName,
-                    settingVariableListFromStartup,
+                    cmdclickPreferenceJsName,
+                    settingVariableListFromPreference,
                     CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
                 )
 
@@ -163,8 +163,8 @@ object ConfigFromStartUpFileSetterForTerm {
                 LongPressPathDecider.decide(
                     terminalFragment,
                     currentAppDirPath,
-                    cmdclickStartupJsName,
-                    settingVariableListFromStartup,
+                    cmdclickPreferenceJsName,
+                    settingVariableListFromPreference,
                     CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
                 )
 
@@ -172,12 +172,12 @@ object ConfigFromStartUpFileSetterForTerm {
                 ScriptPreWordReplacer.replace(
                     UsePath.noScrollSaveUrlsFilePath,
                     terminalFragment.currentAppDirPath,
-                    cmdclickStartupJsName,
+                    cmdclickPreferenceJsName,
                 )
             )
 
             terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
-                settingVariableListFromStartup,
+                settingVariableListFromPreference,
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
@@ -378,7 +378,7 @@ private object LongPressPathDecider {
                 it.isEmpty()
                         || it == CommandClickScriptVariable.EMPTY_STRING
             when(isEmptyFanneName){
-                true -> UsePath.cmdclickStartupJsName
+                true -> UsePath.cmdclickPreferenceJsName
                 else -> it
             }
         }
@@ -426,11 +426,11 @@ private fun makeSettingVariableListForTerm(
         terminalFragment.tag == terminalFragment.context?.getString(
         R.string.index_terminal_fragment
     )
-    val isStartupScript =
-        currentScriptFileName == UsePath.cmdclickStartupJsName
+    val isPreferenceScript =
+        currentScriptFileName == UsePath.cmdclickPreferenceJsName
     if(
         isIndexTerminal
-        || isStartupScript
+        || isPreferenceScript
     ) return CommandClickVariables.extractValListFromHolder(
         fannelContentsList,
         settingSectionStart,

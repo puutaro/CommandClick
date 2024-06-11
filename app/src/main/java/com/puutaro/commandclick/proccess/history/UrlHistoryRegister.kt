@@ -13,7 +13,7 @@ object UrlHistoryRegister {
 //        val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
 //        val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         if(
-            jsFileName == UsePath.cmdclickStartupJsName
+            jsFileName == UsePath.cmdclickPreferenceJsName
         ) return
         val jsFullPath = "${recentAppDirPath}/${jsFileName}"
         val jsFullPathObj = File(jsFullPath)

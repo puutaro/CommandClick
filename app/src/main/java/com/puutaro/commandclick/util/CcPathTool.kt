@@ -249,7 +249,7 @@ object CcPathTool {
             currentScriptFileName.isEmpty()
             || currentScriptFileName == "-"
             || currentScriptFileName == CommandClickScriptVariable.EMPTY_STRING
-        ) return UsePath.cmdclickStartupJsName
+        ) return UsePath.cmdclickPreferenceJsName
         return currentScriptFileName
     }
 

@@ -9,7 +9,6 @@ editExecute="ALWAYS"
 onUpdateLastModify="ON"
 fannelStateConfig=`file://`
 setReplaceVariables="file://"
-hideSettingVariables="file://"
 // webview setting
 onAdBlock="ON"
 terminalFontZoom=""

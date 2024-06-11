@@ -37,33 +37,6 @@ object StartFileMaker {
         )
     }
 
-    fun makeForStartupScript(
-        fragment: Fragment,
-        currentAppDirPath: String
-    ){
-        val context = fragment.context
-        val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
-        CoroutineScope(Dispatchers.IO).launch {
-            val urlFileSystems = UrlFileSystems()
-            withContext(Dispatchers.IO) {
-                urlFileSystems.getFannelList(
-                    context
-                )
-            }
-            val startupFannelRawName =
-                UsePath.cmdclickStartupJsName.removeSuffix(UsePath.JS_FILE_SUFFIX)
-            urlFileSystems.createFile(
-                context,
-                currentAppDirPath,
-                startupFannelRawName
-            )
-        }
-        CommandClickScriptVariable.makeAutoJsFile(
-            currentAppDirPath,
-            cmdclickStartupJsName
-        )
-    }
-
     fun makeForConfig(
         fragment: Fragment,
     ){

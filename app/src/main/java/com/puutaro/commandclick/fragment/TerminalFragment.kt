@@ -183,7 +183,7 @@ class TerminalFragment: Fragment() {
             this,
         )
 
-        ConfigFromStartUpFileSetterForTerm.set(this)
+        ConfigFromPreferenceFileSetterForTerm.set(this)
         MonitorFileManager.switchCurMonitorFile(
             this,
             terminalViewModel

@@ -1,0 +1,3 @@
+${TABLE}	${preferenceTableFannelPath}
+${SETTING_EDIT}	${preferenceSettingEditFannelPath}
+default	${preferenceTableFannelPath}

@@ -1,12 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +41,23 @@ object CmdClickSystemAppDir {
     ){
         createFannelByVer(
             context,
+            UsePath.cmdclickSystemAppDirPath,
             "cmdclickConfig",
+            "1",
+        )
+    }
+
+    fun createPreferenceFannel(
+        context: Context?,
+        readSharePrefMap: Map<String, String>,
+    ){
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
+            readSharePrefMap
+        )
+        createFannelByVer(
+            context,
+            currentAppDirPath,
+            "preference",
             "1",
         )
     }
@@ -50,6 +65,7 @@ object CmdClickSystemAppDir {
 
     private fun createFannelByVer(
         context: Context?,
+        targetAppDirPath: String,
         fannelRawName: String,
         version: String,
     ){
@@ -72,7 +88,7 @@ object CmdClickSystemAppDir {
         val versionTextName = "version.txt"
         val versionFilePath =
             File(
-                UsePath.cmdclickSystemAppDirPath,
+                targetAppDirPath,
                 "${fannelDirName}/${infoDirName}/${versionTextName}"
             ).absolutePath
         val isNotUpdate =
@@ -107,7 +123,7 @@ object CmdClickSystemAppDir {
                 context,
                 fannelRawDirAssetsPath,
                 fannelRawDirAssetsPath,
-                UsePath.cmdclickSystemAppDirPath,
+                targetAppDirPath,
                 escapeFilePathList
             )
         }

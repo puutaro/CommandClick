@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
@@ -9,11 +8,9 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import java.io.File
-import java.nio.file.FileSystem
 
 object AutoExecFireManager {
 
@@ -22,7 +19,7 @@ object AutoExecFireManager {
 
     fun fire(
         terminalFragment: TerminalFragment,
-        cmdclickStartupOrEndShellName: String,
+        cmdclickPreferenceOrEndShellName: String,
     ){
         if(
             terminalFragment.onUrlLaunchIntent
@@ -36,7 +33,7 @@ object AutoExecFireManager {
         val currentSettingFannelPath = makeSettingFannelPath(
             terminalFragment,
             currentAppDirPath,
-            cmdclickStartupOrEndShellName,
+            cmdclickPreferenceOrEndShellName,
             isCmdIndexTerminalFrag
         )
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
@@ -80,7 +77,7 @@ object AutoExecFireManager {
         ExecJsLoad.execJsLoad(
             terminalFragment,
             currentAppDirPath,
-            cmdclickStartupOrEndShellName,
+            cmdclickPreferenceOrEndShellName,
             jsContentsList,
             onAutoExecArg
         )
@@ -98,13 +95,13 @@ object AutoExecFireManager {
     private fun makeSettingFannelPath(
         terminalFragment: TerminalFragment,
         currentAppDirPath: String,
-        cmdclickStartupOrEndShellName: String,
+        cmdclickPreferenceJsName: String,
         isCmdIndexTerminalFrag: Boolean
     ): String {
         return when(isCmdIndexTerminalFrag) {
             true -> File(
                 currentAppDirPath,
-                cmdclickStartupOrEndShellName
+                cmdclickPreferenceJsName
             ).absolutePath
             else -> FannelStateRooterManager.getSettingFannelPath(
                 terminalFragment.readSharePreferenceMap,

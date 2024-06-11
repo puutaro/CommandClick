@@ -13,7 +13,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.ManageSubMenuDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.SettingSubMenuDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -148,10 +148,6 @@ class ToolBarSettingButtonControl(
                     EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                 )
             )
-
-//            listener?.onToolbarMenuCategories(
-//                toolbarMenuCategoriesVariantForCmdIndex
-//            )
         }
         navImageButton.isEnabled = buttonEnable
         val colorId = if(buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
@@ -167,49 +163,50 @@ class ToolBarSettingButtonControl(
             val menuListAdapter =
                 menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
-                MenuEnums.INSTALL_FANNEL.itemName -> {
+                MenuEnums.INSTALL_FANNEL.itemName ->
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
                         UsePath.fannelRepoFannelName
                     )
-                }
-                MenuEnums.QR_SCAN.itemName -> {
+                MenuEnums.QR_SCAN.itemName ->
                     QrScanner(
                         cmdIndexFragment,
                         currentAppDirPath,
                     ).scanFromCamera()
-                }
-                MenuEnums.NO_SCROLL_SAVE_URL.itemName -> {
+                MenuEnums.NO_SCROLL_SAVE_URL.itemName ->
                     NoScrollUrlSaver.save(
                         cmdIndexFragment,
                         currentAppDirPath,
                         String()
                     )
-                }
-                MenuEnums.USAGE.itemName -> {
+                MenuEnums.USAGE.itemName ->
                     UsageDialog.launch(
                         cmdIndexFragment,
                     )
-                }
-                MenuEnums.EDIT_STARTUP.itemName -> {
-                    ScriptFileEdit.edit(
-                        cmdIndexFragment,
-                        currentAppDirPath,
-                        UsePath.cmdclickStartupJsName,
-                    )
-                }
-                MenuEnums.MANAGE.itemName -> {
+                MenuEnums.EDIT_PREFERENCE.itemName ->
+                    preferenceEdit()
+                MenuEnums.MANAGE.itemName ->
                     ManageSubMenuDialog.launch(
                         cmdIndexFragment,
                         currentAppDirPath
                     )
-                }
-                MenuEnums.SETTING.itemName -> {
+                MenuEnums.SETTING.itemName ->
                     SettingSubMenuDialog.launch(cmdIndexFragment)
-                }
             }
         }
+    }
+
+    private fun preferenceEdit(){
+        CmdClickSystemAppDir.createPreferenceFannel(
+            context,
+            cmdIndexFragment.readSharePreferenceMap
+        )
+        SystemFannelLauncher.launch(
+            cmdIndexFragment,
+            currentAppDirPath,
+            UsePath.cmdclickPreferenceJsName,
+        )
     }
 }
 
@@ -218,7 +215,7 @@ private enum class MenuEnums(
     val imageId: Int,
 ) {
     USAGE("Usage", R.drawable.icons8_info),
-    EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
+    EDIT_PREFERENCE("preference", R.drawable.icons8_setup),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
     QR_SCAN("scan QR", R.drawable.icons_qr_code),

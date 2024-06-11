@@ -9,13 +9,13 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 
 
-object ConfigFromStartUpFileSetter {
+object ConfigFromPreferenceFileSetter {
     fun set(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
     ){
 
-        val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
+        val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -32,7 +32,7 @@ object ConfigFromStartUpFileSetter {
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
                 currentAppDirPath,
-                cmdclickStartupJsName
+                cmdclickPreferenceJsName
             ),
             settingSectionStart,
             settingSectionEnd
@@ -83,7 +83,7 @@ object ConfigFromStartUpFileSetter {
             ScriptPreWordReplacer.replace(
                 UsePath.homeScriptUrlsFilePath,
                 currentAppDirPath,
-                cmdclickStartupJsName,
+                cmdclickPreferenceJsName,
             )
         )
         if(
@@ -94,7 +94,7 @@ object ConfigFromStartUpFileSetter {
             ScriptPreWordReplacer.replace(
                 UsePath.homeFannelsFilePath,
                 currentAppDirPath,
-                cmdclickStartupJsName,
+                cmdclickPreferenceJsName,
             )
         )
         if(

@@ -92,6 +92,7 @@ object ShellMacroHandler {
             val key: String
         ){
             FANNEL_PATH("fannelPath"),
+            CORE_TITLE("coreTitle"),
             EXTRA_TITLE("extraTitle"),
             BACKSTACK_COUNT(SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText),
         }
@@ -99,20 +100,29 @@ object ShellMacroHandler {
         fun get(
             concatRepValMap: Map<String, String>
         ): String {
-            val coreTitle = ArgsManager.get(
+            val coreTitleSrc = ArgsManager.get(
                 concatRepValMap,
-                ArgsKey.FANNEL_PATH.key
-            )?.let {
-                CcPathTool.trimAllExtend(
-                    File(it).name
-                )
-            } ?: String()
+                ArgsKey.CORE_TITLE.key
+            )
+            val coreTitle =
+                when(coreTitleSrc.isNullOrEmpty()) {
+                    false -> coreTitleSrc
+                    else -> ArgsManager.get(
+                        concatRepValMap,
+                        ArgsKey.FANNEL_PATH.key
+                    )?.let {
+                        CcPathTool.trimAllExtend(
+                            File(it).name
+                        )
+                    } ?: String()
+            }
             val extraTitle = ArgsManager.get(
                 concatRepValMap,
                 ArgsKey.EXTRA_TITLE.key
             ) ?: String()
-            val backstackCount = concatRepValMap.get(ArgsKey.BACKSTACK_COUNT.key)
-                ?: String()
+            val backstackCount =
+                concatRepValMap.get(ArgsKey.BACKSTACK_COUNT.key)
+                    ?: String()
             return listOf(
                 "(${backstackCount})",
                 "${coreTitle}:",

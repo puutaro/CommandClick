@@ -1,0 +1,2 @@
+preferenceDir/settings/fannelStateStock.tsv
+preferenceDir/hideSettingVals/recentSettingHideVals.js

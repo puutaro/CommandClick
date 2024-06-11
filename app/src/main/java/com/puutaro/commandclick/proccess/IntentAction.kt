@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.StartupOrEditExecuteOnceShell
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.StartupHandler
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +70,7 @@ object IntentAction {
                 }
             }
             withContext(Dispatchers.Main) {
-                StartupOrEditExecuteOnceShell.invoke(
+                StartupHandler.invoke(
                     terminalFragment,
                 )
             }

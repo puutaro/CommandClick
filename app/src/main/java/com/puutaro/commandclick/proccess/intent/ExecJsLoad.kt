@@ -102,7 +102,7 @@ object ExecJsLoad {
 
 
         if(
-            selectedJsFileName == UsePath.cmdclickStartupJsName
+            selectedJsFileName == UsePath.cmdclickPreferenceJsName
             || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
             || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
         ) {

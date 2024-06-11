@@ -5,6 +5,7 @@ SETTING_EDIT=
     "settingEdit",
 
 // setting
+coreTitle="config",
 hideValsLimitNum=7,
 recentLimitNum=6,
 iconColor="lightGreen",
