@@ -4,7 +4,6 @@
 terminalDo="OFF"
 editExecute="ALWAYS"
 onUpdateLastModify="OFF"
-onAdBlock="OFF"
 editBoxTitleConfig=`file://${preferenceSettingEditBoxTitleConfigPath}`
 playButtonConfig=`file://${preferenceSettingEditPlayButtonConfigPath}`
 editButtonConfig=`file://${preferenceSettingEditButtonConfigPath}`

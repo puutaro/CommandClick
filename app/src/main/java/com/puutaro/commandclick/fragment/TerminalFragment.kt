@@ -110,7 +110,6 @@ class TerminalFragment: Fragment() {
     var alertDialogInstance: AlertDialog? = null
     var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
-//    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             BroadcastHandlerForTerm.handle(
@@ -173,7 +172,6 @@ class TerminalFragment: Fragment() {
             setReplaceVariableMap
         )
         editType = EditFragmentArgs.getEditType(arguments)
-//        fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)
 
         ExecDownLoadManager.set(
             this,

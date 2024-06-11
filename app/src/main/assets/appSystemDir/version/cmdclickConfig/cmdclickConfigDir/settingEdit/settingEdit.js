@@ -4,7 +4,6 @@
 terminalDo="OFF"
 editExecute="ALWAYS"
 onUpdateLastModify="OFF"
-onAdBlock="OFF"
 editBoxTitleConfig=`file://${cmdclickConfigSettingEditBoxTitleConfigPath}`
 playButtonConfig=`file://${cmdclickConfigSettingEditPlayButtonConfigPath}`
 editButtonConfig=`file://${cmdclickConfigSettingEditButtonConfigPath}`

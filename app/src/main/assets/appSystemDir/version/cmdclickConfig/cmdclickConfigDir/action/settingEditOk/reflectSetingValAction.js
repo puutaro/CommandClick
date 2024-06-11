@@ -28,4 +28,7 @@ diffSettingVals
     ?args=
         path=`${FANNEL_PATH}`
         &cmdValCon=`${it}`
+    ?func=jsFileSystem.updateWeekPastLastModified
+    ?args=
+        path=`${FANNEL_PATH}`
 

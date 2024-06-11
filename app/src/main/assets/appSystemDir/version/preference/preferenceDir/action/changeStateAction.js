@@ -5,7 +5,7 @@ var=onListDirUpdater
 |var=updateConfigInfoTsvPath
     ?value=
     ?if=`onListDirUpdater == "ON"`
-    ?value=`${ITEM_NAME}`
+    ?value=`${ITEM_TITLE}`
 |var=extraMapCon
     ?value=`
         onListDirUpdater=${onListDirUpdater}

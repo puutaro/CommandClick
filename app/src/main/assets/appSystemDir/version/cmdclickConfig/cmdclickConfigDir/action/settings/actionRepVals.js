@@ -2,6 +2,10 @@
 // init
 cmdclickConfigTableInitActionsPath=
     `${cmdclickConfigActionDirPath}/initAction.js`,
+cmdclickConfigInitAcDirPath=
+    `${cmdclickConfigActionDirPath}/initAc`,
+copyBeforeFileToTempPath=
+    `${cmdclickConfigInitAcDirPath}/copyBeforeFileToTemp.js`,
 
 // change state
 cmdclickConfigChangeStateActionsPath=

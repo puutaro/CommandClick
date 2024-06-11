@@ -4,7 +4,6 @@
 terminalDo="OFF"
 editExecute="ALWAYS"
 onUpdateLastModify="OFF"
-onAdBlock="OFF"
 listIndexConfig=`file://${tableListIndexConfigPath}`
 playButtonConfig="visible=OFF,disable=ON,color=gray,icon=play"
 editButtonConfig="visible=OFF,disable=ON,color=gray,icon=list"

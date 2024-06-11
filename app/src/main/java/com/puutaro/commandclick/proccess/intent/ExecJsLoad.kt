@@ -1,11 +1,13 @@
 package com.puutaro.commandclick.proccess.intent
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -100,9 +102,15 @@ object ExecJsLoad {
             CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
         ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
-
+        val sharePref = currentFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val currentFannelName = SharePrefTool.getStringFromSharePref(
+            sharePref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val isCmdIndex = selectedJsFileName == UsePath.cmdclickPreferenceJsName
+                && currentFannelName != UsePath.cmdclickPreferenceJsName
         if(
-            selectedJsFileName == UsePath.cmdclickPreferenceJsName
+            isCmdIndex
             || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
             || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
         ) {

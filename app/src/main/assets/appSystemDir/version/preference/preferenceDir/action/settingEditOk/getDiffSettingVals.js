@@ -1,7 +1,13 @@
+
 |var=diffFileEditSettingVals
 	?func=jsToListMap.map
 	?args=
-		lines=`homeFannelsPath\t${preferenceHomeFannelsPath}`
+		lines=`
+			homeFannelsPath\t${preferenceHomeFannelsPath}\n
+			srcImageAnchorLongPressMenuFilePath\t${srcImageAnchorLongPressMenuPath}\n
+			srcAnchorLongPressMenuFilePath\t${srcAnchorLongPressMenuPath}\n
+			imageLongPressMenuFilePath\t${imageLongPressMenuPath}\n
+			`
 		&separator="\n"
 		&extraMap=`
 			|shellFannelPath=${FANNEL_PATH}

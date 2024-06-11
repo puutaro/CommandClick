@@ -6,7 +6,7 @@ SETTING_EDIT=
 
 // setting
 coreTitle="preference",
-hideValsLimitNum=20,
+hideValsLimitNum=18,
 recentLimitNum=6,
 iconColor="lightGreen",
 historyIconColor="blue",
@@ -27,6 +27,8 @@ preferenceSrcDirPath=
     `${preferenceDirPath}/src`,
 preferenceShellDirPath=
     `${preferenceDirPath}/shell`,
+preferenceLongPressMenuDirPath=
+    `${preferenceDirPath}/LongPressMenuDir`,
 
 // file path
 FANNEL_NANE=`${02}`,
@@ -59,6 +61,12 @@ preferenceEditInfoPath=
     `${preferenceTempDirPath}/editInfo.txt`,
 preferenceHomeFannelsPath=
     `${preferenceSettingsDirPath}/homeFannelsFilePaths.txt`,
+srcImageAnchorLongPressMenuPath=
+    `${preferenceLongPressMenuDirPath}/srcImageAnchorLongPressMenu.txt`,
+imageLongPressMenuPath=
+    `${preferenceLongPressMenuDirPath}/imageLongPressMenu.txt`,
+srcAnchorLongPressMenuPath=
+    `${preferenceLongPressMenuDirPath}/srcAnchorLongPressMenu.txt`,
 
 
 // table state
