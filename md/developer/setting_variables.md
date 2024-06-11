@@ -45,7 +45,6 @@ Table of Contents
 * [ubuntuSleepDelayMinInScreenOff](#ubuntusleepdelaymininscreenoff)
 * [passCmdVariableEdit](#passcmdvariableedit)
 * [urlHistoryOrButtonExec](#urlhistoryorbuttonexec)
-* [onHistoryUrlTitle](#on_history_url_title)
 * [beforeCommand](#before_command)
 * [afterCommand](#after_command)
 * [terminalDo](#terminal_do)
@@ -347,15 +346,6 @@ Switch [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.m
 | `INHERIT` | Inherit config setting |
 | `URL_HISTORY` | Switch [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) |
 | `BUTTON_EXEC` | Switch url button script exec |
-
-## onHistoryUrlTitle (deprecated) <a id="on_history_url_title"></a>
-
-Switch adding url title to history  
-
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default)  |
-| `NO` | on |
 
 ## beforeCommand (only termux, deprecated) <a id="before_command"></a>
 
