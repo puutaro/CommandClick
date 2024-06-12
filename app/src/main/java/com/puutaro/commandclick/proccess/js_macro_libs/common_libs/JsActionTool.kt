@@ -1655,19 +1655,19 @@ private object PairToMapInList {
             ) return@map key to it.value
             key to importPath
         }.toMap()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "ac_tsvVAls.txt").absolutePath,
-            listOf(
-                "mapConSrc: ${mapConSrc}",
-                "tsvImportMapSrc: ${tsvImportMapSrc}",
-                "importPathKey: ${importPathKey}",
-                "mapConSrc: ${mapConSrc}",
-                "importPath: ${tsvImportMapSrc.get(
-                    importPathKey
-                )}",
-                "tsvImportMap: ${tsvImportMap}"
-            ).joinToString("\n\n") + "\n-------------\n\n"
-        )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "ac_tsvVAls.txt").absolutePath,
+//            listOf(
+//                "mapConSrc: ${mapConSrc}",
+//                "tsvImportMapSrc: ${tsvImportMapSrc}",
+//                "importPathKey: ${importPathKey}",
+//                "mapConSrc: ${mapConSrc}",
+//                "importPath: ${tsvImportMapSrc.get(
+//                    importPathKey
+//                )}",
+//                "tsvImportMap: ${tsvImportMap}"
+//            ).joinToString("\n\n") + "\n-------------\n\n"
+//        )
         return JsActionKeyManager.JsActionsKey.TSV_VARS.key to tsvImportMap
     }
 
