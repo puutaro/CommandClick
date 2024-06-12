@@ -5,6 +5,7 @@ import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -17,6 +18,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -300,13 +302,13 @@ object JsActionTool {
                 isRunVarPrefixUsedErr
             ) return true
         }
-        CheckTool.MissLastVarKeyErrForUseVar.check(
+        CheckTool.MissLastVarKeyErrForAcVar.check(
             context,
             actionImportedCon
         ).let {
-                isMissLastVarKeyErrForUseVar ->
+                isMissLastVarKeyErrForAcVar ->
             if(
-                isMissLastVarKeyErrForUseVar
+                isMissLastVarKeyErrForAcVar
             ) return true
         }
         CheckTool.MissLastReturnKeyErrForAcImport.check(
@@ -756,8 +758,8 @@ private object KeyToSubKeyMapListMaker {
         )
         val importRoopLimit = 5
 //        var containImport = false
-        val jsActionImportKeyName = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
-        val jsActionImportSignal = "${jsActionImportKeyName}="
+        val jsActionVarKeyName = JsActionKeyManager.JsActionsKey.ACTION_VAR.key
+        val jsActionImportSignal = "${jsActionVarKeyName}="
         var keyToSubKeyConList = keyToSubKeyConListSrc
         ActionImportPutter.initBeforeActionImportMap(
             setReplaceVariableMap
@@ -768,7 +770,7 @@ private object KeyToSubKeyMapListMaker {
                     keyToSubKeyPair ->
                 val mainKeyName = keyToSubKeyPair.first
                 if(
-                    mainKeyName != jsActionImportKeyName
+                    mainKeyName != jsActionVarKeyName
                 ) return@map listOf(keyToSubKeyPair)
                 val putKeyToSubKeyConToErrType =
                     ActionImportPutter.put(
@@ -807,7 +809,7 @@ private object KeyToSubKeyMapListMaker {
             if(errType == ActionImportPutter.ErrSignal.ERR) break
             val containImport = keyToSubKeyConList.find{
                 val key = it.first
-                key == jsActionImportKeyName
+                key == jsActionVarKeyName
             } != null
             if(!containImport) break
 //            FileSystems.updateFile(
@@ -946,8 +948,8 @@ private object ActionImportPutter {
     private val jsMainKey = JsActionKeyManager.JsActionsKey.JS.key
     private const val jsActionEndComma = ','
     private val mainKeySeparator = '|'
-    private val actionImportKey =
-        JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
+    private val actionVarKey =
+        JsActionKeyManager.JsActionsKey.ACTION_VAR.key
     private val actionImportVirtualSubKey =
         JsActionKeyManager.VirtualSubKey.ACTION_IMPORT_CON.key
     private val afterKey =
@@ -958,7 +960,7 @@ private object ActionImportPutter {
     private val delayKey = JsActionKeyManager.ActionImportManager.ActionImportKey.DELAY.key
     private val beforeActionImportMap = mutableMapOf<String, String>()
     private var replaceVariableMapCon = String()
-    private val tsvImportKey = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+    private val tsvVarsKey = JsActionKeyManager.JsActionsKey.TSV_VARS.key
     private val jsImportKey = JsActionKeyManager.JsActionsKey.JS_IMPORT.key
     private val idSubKey = JsActionKeyManager.JsSubKey.ID.key
 
@@ -993,12 +995,12 @@ private object ActionImportPutter {
         keyToSubKeyPair: Pair<String, String>,
     ): Pair<String, ErrSignal> {
         val subKeyCon = listOf(
-            JsActionKeyManager.CommonPathKey.IMPORT_PATH.key,
+            actionVarKey,
             keyToSubKeyPair.second
         ).joinToString("=")
         val actionImportMap = ImportMapMaker.comp(
             subKeyCon,
-            "${JsActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key}="
+            "${actionVarKey}="
         )
         val importPathSrc = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
@@ -1104,9 +1106,9 @@ private object ActionImportPutter {
         val importConWithFormatList = makeActionImportFormatList(
             importSrcCon,
         )
-        val useVarValue = QuoteTool.trimBothEdgeQuote(
+        val actionVarValue = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
-                JsActionKeyManager.ActionImportManager.ActionImportKey.USE_VAR.key
+                actionVarKey
             )
         )
         val whenCondition = QuoteTool.trimBothEdgeQuote(
@@ -1130,7 +1132,7 @@ private object ActionImportPutter {
         return putIfVarFuncBracketToErrType(
             importConWithFormatList,
             whenCondition,
-            useVarValue,
+            actionVarValue,
             afterId,
             idList,
             delayTime,
@@ -1140,18 +1142,18 @@ private object ActionImportPutter {
     private fun putIfVarFuncBracketToErrType(
         importConWithFormatList: List<String>,
         whenCondition: String?,
-        useVarValue: String?,
+        actionVarValue: String?,
         afterId: String?,
         idList: List<String>,
         delayTime: Int?,
     ): Pair<List<String>, ErrSignal> {
-        val importConWithFormatListByUseVarToUseVarErr =
-            ImportConWithFormatListForUseVar.validate(
+        val importConWithFormatListByAcVarToAcVarErr =
+            ImportConWithFormatListForAcVar.validate(
                 importConWithFormatList,
-                useVarValue,
+                actionVarValue,
             )
-        val errSignalByUseVar =
-            importConWithFormatListByUseVarToUseVarErr.second
+        val errSignalByAcVar =
+            importConWithFormatListByAcVarToAcVarErr.second
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_errSignalByUseVar.txt").absolutePath,
 //            listOf(
@@ -1160,24 +1162,24 @@ private object ActionImportPutter {
 //            ).joinToString("\n\n")
 //        )
         if(
-            errSignalByUseVar == ErrSignal.ERR)
+            errSignalByAcVar == ErrSignal.ERR)
         {
-            val importConWithFormatListByUseVar =
-                importConWithFormatListByUseVarToUseVarErr.first
+            val importConWithFormatListByAcVar =
+                importConWithFormatListByAcVarToAcVarErr.first
             val updatedImportConByWhenCondition = updateImportConByWhenCondition(
-                importConWithFormatListByUseVar,
+                importConWithFormatListByAcVar,
                 whenCondition,
-                useVarValue,
+                actionVarValue,
                 afterId,
                 delayTime,
             )
             return updatedImportConByWhenCondition to ErrSignal.ERR
         }
-        val importConWithFormatListByUseVar =
-            importConWithFormatListByUseVarToUseVarErr.first
+        val importConWithFormatListByAcVar =
+            importConWithFormatListByAcVarToAcVarErr.first
         val updatedImportConWithFormatListByAfterToErrType =
             ImportConWithFormatListForUseAfter.update(
-                importConWithFormatListByUseVar,
+                importConWithFormatListByAcVar,
                 idList,
                 afterId,
             )
@@ -1188,30 +1190,30 @@ private object ActionImportPutter {
         return updateImportConByWhenCondition(
             updatedImportConWithFormatListByAfter,
             whenCondition,
-            useVarValue,
+            actionVarValue,
             afterId,
             delayTime,
         ) to errType
     }
 
-    private object ImportConWithFormatListForUseVar {
+    private object ImportConWithFormatListForAcVar {
 
         private const val escapeRunPrefix = JsActionKeyManager.JsVarManager.escapeRunPrefix
 
         fun validate(
             importConWithFormatList: List<String>,
-            useVarValue: String?,
+            actionVarValue: String?,
         ): Pair<List<String>, ErrSignal> {
             if (
-                useVarValue.isNullOrEmpty()
+                actionVarValue.isNullOrEmpty()
             ) return importConWithFormatList to ErrSignal.NO_ERR
             if(
-                useVarValue.startsWith(escapeRunPrefix)
+                actionVarValue.startsWith(escapeRunPrefix)
             ) return importConWithFormatList to ErrSignal.NO_ERR
             val validatedImportConWithFormatListToErrSignal =
                 validateImportConWithFormatListToErrSignal(
                     importConWithFormatList,
-                    useVarValue,
+                    actionVarValue,
                 )
             val validatedImportConWithFormatList =
                 validatedImportConWithFormatListToErrSignal.first
@@ -1238,10 +1240,10 @@ private object ActionImportPutter {
                 ) return@map keyCon
                 val trimKeyCon = keyCon.trim().trim('|')
                 val judgeKeyCon = "|${trimKeyCon}"
-                val hasTsvImport = judgeKeyCon.startsWith("|${tsvImportKey}=")
+                val hasTsvVars = judgeKeyCon.startsWith("|${tsvVarsKey}=")
                 val hasJsImport = judgeKeyCon.startsWith("|${jsImportKey}=")
                 val hasAcImportAndAfterKey =
-                    judgeKeyCon.startsWith("|${actionImportKey}=")
+                    judgeKeyCon.startsWith("|${actionVarKey}=")
                 val hasVarAndAfterKey =
                     judgeKeyCon.startsWith("|${varKey}=")
                 val hasAcFuncAndAfterKey =
@@ -1253,7 +1255,7 @@ private object ActionImportPutter {
                         && judgeKeyCon.contains("?${afterKey}=")
                 if (
                     judgeKeyCon.isEmpty()
-                    || hasTsvImport
+                    || hasTsvVars
                     || hasJsImport
                     || hasAfterKey
                 ) return@map keyCon
@@ -1308,26 +1310,26 @@ private object ActionImportPutter {
     private object ImportConWithFormatListForUseAfter {
 
         fun update(
-            importConWithFormatListByUseVar: List<String>,
+            importConWithFormatListByAcVar: List<String>,
             idList: List<String>,
             afterId: String?,
         ): Pair<List<String>, ErrSignal> {
             if (
                 afterId.isNullOrEmpty()
-            ) return importConWithFormatListByUseVar to ErrSignal.NO_ERR
+            ) return importConWithFormatListByAcVar to ErrSignal.NO_ERR
             val afterKeyConRegex = Regex("\\?(${afterKey}=[^?|\n]+)")
             val afterKeyConPrefix = "?${afterKey}="
             val invalidAfterInAcImport =
                 JsActionKeyManager.ActionImportManager.ActionImportKey.INVALID_AFTER_IN_AC_IMPORT.key
             var errSignal = ErrSignal.NO_ERR
-            val updateImportConListByAfter = importConWithFormatListByUseVar.map {
+            val updateImportConListByAfter = importConWithFormatListByAcVar.map {
                     keyCon ->
                 val trimKeyCon = keyCon.trim()
-                val hasTsvImport = trimKeyCon.startsWith("|${tsvImportKey}=")
+                val hasTsvVars = trimKeyCon.startsWith("|${tsvVarsKey}=")
                 val hasJsImport = trimKeyCon.startsWith("|${jsImportKey}=")
                 if (
                     trimKeyCon.isEmpty()
-                    || hasTsvImport
+                    || hasTsvVars
                     || hasJsImport
                 ) return@map trimKeyCon
                 val curAfterId = afterKeyConRegex.find(
@@ -1532,6 +1534,7 @@ private object PairToMapInList {
     private val jsFuncMainKeyName = JsActionKeyManager.JsActionsKey.JS_FUNC.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
+    private val tsvVarsMainKeyName = JsActionKeyManager.JsActionsKey.TSV_VARS.key
     private val afterSubKeyName = JsActionKeyManager.JsSubKey.AFTER.key
     private const val jsSubKeySeparator = '?'
 
@@ -1552,7 +1555,7 @@ private object PairToMapInList {
 //                ).joinToString("\n\n") + "\n-----\n"
 //            )
             when (mainKey) {
-                JsActionKeyManager.JsActionsKey.ACTION_IMPORT,
+                JsActionKeyManager.JsActionsKey.ACTION_VAR,
                 -> String() to emptyMap()
                 JsActionKeyManager.JsActionsKey.JS,
                 -> convertToJsMapOnlyIfBracketOrErrSignal(mapConSrc)
@@ -1568,7 +1571,7 @@ private object PairToMapInList {
                 -> convertJsPathToJsFunc(
                     mapConSrc
                 )
-                JsActionKeyManager.JsActionsKey.TSV_IMPORT -> {
+                JsActionKeyManager.JsActionsKey.TSV_VARS -> {
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "tsvComp.txt").absolutePath,
 //                        listOf(
@@ -1635,11 +1638,11 @@ private object PairToMapInList {
     private fun convertToTsvImportMap(
         mapConSrc: String,
     ): Pair<String, Map<String, String>> {
-        val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
         val tsvImportMapSrc = ImportMapMaker.comp(
-            "${importPathKey}=${mapConSrc}",
-            "${importPathKey}="
+            "${tsvVarsMainKeyName}=${mapConSrc}",
+            "${tsvVarsMainKeyName}="
         )
+        val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
         val importPath = tsvImportMapSrc.get(
             importPathKey
         ).let {
@@ -1652,7 +1655,20 @@ private object PairToMapInList {
             ) return@map key to it.value
             key to importPath
         }.toMap()
-        return JsActionKeyManager.JsActionsKey.TSV_IMPORT.key to tsvImportMap
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "ac_tsvVAls.txt").absolutePath,
+            listOf(
+                "mapConSrc: ${mapConSrc}",
+                "tsvImportMapSrc: ${tsvImportMapSrc}",
+                "importPathKey: ${importPathKey}",
+                "mapConSrc: ${mapConSrc}",
+                "importPath: ${tsvImportMapSrc.get(
+                    importPathKey
+                )}",
+                "tsvImportMap: ${tsvImportMap}"
+            ).joinToString("\n\n") + "\n-------------\n\n"
+        )
+        return JsActionKeyManager.JsActionsKey.TSV_VARS.key to tsvImportMap
     }
 
     private fun convertToImportMap(
@@ -2363,27 +2379,27 @@ private object VarShortSyntaxToJsFunc {
 
 private object TsvImportConMaker {
 
+    private val tsvVars = JsActionKeyManager.JsActionsKey.TSV_VARS.key
+    val tsvImportPreWord = TsvImportManager.tsvImportPreWord
+
     fun make(
         keyToSubKeyMapList: List<Pair<String, Map<String, String>>>,
     ): String {
-        val tsvImportKeyName = JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
+        val tsvVarKeyName = JsActionKeyManager.JsActionsKey.TSV_VARS.key
 
         val keyToSubKeyMapListOnlyImport = keyToSubKeyMapList.filter {
                 keyToSubKeyPair ->
             val mainJsKeyName = keyToSubKeyPair.first
-            mainJsKeyName == tsvImportKeyName
+            mainJsKeyName == tsvVarKeyName
         }
-        val tsvImportPreWord = TsvImportManager.tsvImportPreWord
         return  keyToSubKeyMapListOnlyImport.map {
                 keyToSubKeyMap ->
             execPut(
-                tsvImportPreWord,
                 keyToSubKeyMap
             )
         }.joinToString("\n")
     }
     private fun execPut(
-        importPreWord: String,
         keyToSubKeyMap: Pair<String, Map<String, String>>,
     ): String {
         val tsvImportMap =
@@ -2394,11 +2410,11 @@ private object TsvImportConMaker {
             JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
         ) ?: return String()
         val importMainSentence = listOf(
-            importPreWord,
+            tsvImportPreWord,
             importImportPath
         ).joinToString(" ")
         val useMapCon = tsvImportMap.get(
-            JsActionKeyManager.CommonPathKey.USE.key
+            tsvVars
         )?.replace("|", "\n")
         val changePhrase = TsvImportManager.changePhrase
         val useMap = TsvImportManager.createMapByStrSepa(

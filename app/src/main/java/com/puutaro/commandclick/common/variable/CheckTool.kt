@@ -1043,12 +1043,12 @@ object CheckTool {
 //                putColorConByRunVarPrefixUsedErr,
 //                errMessage,
 //            )
-            val putColorConByMissLastVarKeyErrForUseVar = MissLastVarKeyErrForUseVar.makePutColorCon(
+            val putColorConByMissLastVarKeyErrForAcVar = MissLastVarKeyErrForAcVar.makePutColorCon(
                 putColorConByRunVarPrefixUsedErr,
                 errMessage,
             )
             val putColorConByMissVarKeyErr = MissLastReturnKeyErrForAcImport.makePutColorCon(
-                putColorConByMissLastVarKeyErrForUseVar,
+                putColorConByMissLastVarKeyErrForAcVar,
                 errMessage,
             )
             val putColorConByInvalidAfterInAcImportErr = InvalidAfterIdInAcImportErr.makePutColorCon(
@@ -1474,17 +1474,17 @@ object CheckTool {
             if(
                 evaluateSrcCon.isEmpty()
             ) return false
-            findTsvImportNotExistPath(evaluateSrcCon).let{
-                if(
-                    it.isNullOrEmpty()
-                ) return@let
-                val errMessage = errMessageTemplate.format(it)
-                saveFirstLog(
-                    context,
-                    errMessage,
-                )
-                return true
-            }
+//            findTsvImportNotExistPath(evaluateSrcCon).let{
+//                if(
+//                    it.isNullOrEmpty()
+//                ) return@let
+//                val errMessage = errMessageTemplate.format(it)
+//                saveFirstLog(
+//                    context,
+//                    errMessage,
+//                )
+//                return true
+//            }
             findJsImportNotExistPath(evaluateSrcCon).let {
                 if(
                     it.isNullOrEmpty()
@@ -1521,19 +1521,23 @@ object CheckTool {
             )
         }
 
-        private fun findTsvImportNotExistPath(
-            evaluateAcCon: String
-        ): String? {
-            val tsvImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.TSV_IMPORT.key}="
-            val findTsvImportRegex = Regex(
-                "${tsvImportKeyPrefix}[^\n|?&\"`]*"
-            )
-            return findImportNotExistPath(
-                evaluateAcCon,
-                findTsvImportRegex,
-                tsvImportKeyPrefix,
-            )
-        }
+//        private fun findTsvImportNotExistPath(
+//            evaluateAcCon: String
+//        ): String? {
+//            val tsvVarsKeyPrefix = "${JsActionKeyManager.JsActionsKey.TSV_VARS.key}="
+//            val findTsvVarsKeyRegex = Regex(
+//                "${tsvVarsKeyPrefix}[^\n|?&\"`]*"
+//            )
+//            val importPathKeyPrefix = "${JsActionKeyManager.CommonPathKey.IMPORT_PATH.key}="
+//            val findTsvImportPathRegex = Regex(
+//                "\\?${importPathKeyPrefix}[^\n|?&\"`]*"
+//            )
+//            return findImportNotExistPath(
+//                evaluateAcCon,
+//                findTsvImportPathRegex,
+//                tsvVarsKeyPrefix,
+//            )
+//        }
 
         private fun findImportNotExistPath(
             evaluateAcCon: String,
@@ -1648,17 +1652,17 @@ object CheckTool {
                 )
                 return true
             }
-            findImportNotExistPathForGene(evaluateGeneCon).let {
-                if(
-                    it.isNullOrEmpty()
-                ) return@let
-                val errMessage = errMessageTemplate.format(it)
-                saveFirstLog(
-                    context,
-                    errMessage,
-                )
-                return true
-            }
+//            findImportNotExistPathForGene(evaluateGeneCon).let {
+//                if(
+//                    it.isNullOrEmpty()
+//                ) return@let
+//                val errMessage = errMessageTemplate.format(it)
+//                saveFirstLog(
+//                    context,
+//                    errMessage,
+//                )
+//                return true
+//            }
             return false
         }
 
@@ -1705,17 +1709,17 @@ object CheckTool {
             if(
                 evaluateSrcCon.isEmpty()
             ) return false
-            findTsvImportNotExistPath(evaluateSrcCon).let{
-                if(
-                    it.isNullOrEmpty()
-                ) return@let
-                val errMessage = errMessageTemplate.format(it)
-                saveFirstLog(
-                    context,
-                    errMessage,
-                )
-                return true
-            }
+//            findTsvImportNotExistPath(evaluateSrcCon).let{
+//                if(
+//                    it.isNullOrEmpty()
+//                ) return@let
+//                val errMessage = errMessageTemplate.format(it)
+//                saveFirstLog(
+//                    context,
+//                    errMessage,
+//                )
+//                return true
+//            }
             findJsImportNotExistPath(evaluateSrcCon).let {
                 if(
                     it.isNullOrEmpty()
@@ -1752,19 +1756,19 @@ object CheckTool {
             )
         }
 
-        private fun findTsvImportNotExistPath(
-            evaluateAcCon: String
-        ): String? {
-            val tsvImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.TSV_IMPORT.key}="
-            val findTsvImportRegex = Regex(
-                "${tsvImportKeyPrefix}[^\n|?&\"`]*"
-            )
-            return findImportNotExistPath(
-                evaluateAcCon,
-                findTsvImportRegex,
-                tsvImportKeyPrefix,
-            )
-        }
+//        private fun findTsvImportNotExistPath(
+//            evaluateAcCon: String
+//        ): String? {
+//            val tsvImportKeyPrefix = "${JsActionKeyManager.JsActionsKey.TSV_VARS.key}="
+//            val findTsvImportRegex = Regex(
+//                "${tsvImportKeyPrefix}[^\n|?&\"`]*"
+//            )
+//            return findImportNotExistPath(
+//                evaluateAcCon,
+//                findTsvImportRegex,
+//                tsvImportKeyPrefix,
+//            )
+//        }
 
         private fun findImportNotExistPath(
             evaluateAcCon: String,
@@ -1802,11 +1806,11 @@ object CheckTool {
 
     object InvalidAfterIdInAcImportErr {
 
-        private val actionImport =
-            JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
+        private val actionVar =
+            JsActionKeyManager.JsActionsKey.ACTION_VAR.key
         private val afterKey = JsActionKeyManager.JsSubKey.AFTER.key
         private val errMessagePrefix =
-            "Specify defined ID by '${afterKey}' in ${actionImport} file: "
+            "Specify defined ID by '${afterKey}' in ${actionVar} file: "
         private val errMessageTemplate = "${errMessagePrefix}'%s'"
         private val extractInValidAfterIdRegex = Regex("${errMessagePrefix}'(.*)'")
         private val invalidAfterKeyMark =
@@ -2404,15 +2408,15 @@ object CheckTool {
         }
     }
 
-    object MissLastVarKeyErrForUseVar {
+    object MissLastVarKeyErrForAcVar {
 
-        private val actionImportKey =
-            JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
+        private val actionVarKey =
+            JsActionKeyManager.JsActionsKey.ACTION_VAR.key
         private val missLastVarKeyErrMark =
             "?${JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_LAST_VAR_KEY.key}="
         private val varKey = JsActionKeyManager.JsSubKey.VAR.key
         private val missLastVarKeyErrMessagePrefix =
-            "Miss '${varKey}' key in last sec in ${actionImportKey} file"
+            "Miss '${varKey}' key in last sec in ${actionVarKey} file"
 
 
         fun makePutColorCon(
@@ -2453,13 +2457,13 @@ object CheckTool {
 
     object MissLastReturnKeyErrForAcImport {
 
-        private val actionImportKey =
-            JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
+        private val actionVarKey =
+            JsActionKeyManager.JsActionsKey.ACTION_VAR.key
         private val missLastReturnKeyErrMark =
             "?${JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_LAST_RETURN_KEY.key}="
         private val varReturnKey = JsActionKeyManager.OnlyVarSubKey.VAR_RETURN.key
         private val missLastVarKeyErrMessage =
-            "Miss '${varReturnKey}' key in last sec in ${actionImportKey} file"
+            "Miss '${varReturnKey}' key in last sec in ${actionVarKey} file"
 
 
         fun makePutColorCon(
@@ -2596,7 +2600,7 @@ object CheckTool {
             if(
                 evaluateGeneCon.isEmpty()
             ) return false
-            val isNotMatchToUseVar = !evaluateGeneCon.contains(
+            val isNotMatchToAcVar = !evaluateGeneCon.contains(
                 "?${forbiddenJsKeyDirectSpecifyErrMarkKeyEqual}"
             )
 //            FileSystems.writeFile(
@@ -2608,7 +2612,7 @@ object CheckTool {
 //                ).joinToString("\n\n")
 //            )
             if(
-                isNotMatchToUseVar
+                isNotMatchToAcVar
             ) return false
             saveFirstLog(
                 context,

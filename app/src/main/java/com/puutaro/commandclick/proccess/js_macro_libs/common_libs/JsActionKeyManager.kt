@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
-import TsvImportManager
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -17,15 +16,15 @@ object JsActionKeyManager {
         JS_FUNC("func"),
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
-        TSV_IMPORT("tsvImport"),
-        ACTION_IMPORT("actionImport"),
+        TSV_VARS("tsvVars"),
+        ACTION_VAR("actionVar"),
     }
 
     enum class CommonPathKey(
         val key: String
     ) {
         IMPORT_PATH("importPath"),
-        USE(TsvImportManager.tsvImportUsePhrase),
+//        USE(TsvImportManager.tsvImportUsePhrase),
     }
 
 
@@ -127,7 +126,7 @@ object JsActionKeyManager {
         ){
             IMPORT_PATH(CommonPathKey.IMPORT_PATH.key),
             REPLACE("replace"),
-            USE_VAR("useVar"),
+//            USE_VAR("useVar"),
             AFTER(JsSubKey.AFTER.key),
             WHEN("when"),
             DELAY(JsSubKey.DELAY.key),
@@ -610,7 +609,7 @@ object JsActionKeyManager {
             ActionImportManager.ActionImportKey.MISS_LAST_USE_VAR_KEY.key,
             ActionImportManager.ActionImportKey.MISS_LAST_RETURN_KEY.key,
             ActionImportManager.ActionImportKey.MISS_LAST_VAR_KEY.key,
-            ActionImportManager.ActionImportKey.USE_VAR.key,
+            JsActionsKey.ACTION_VAR.key,
         )
 
         private val onlySubKeyListForVar =
