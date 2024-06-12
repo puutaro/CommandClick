@@ -106,11 +106,14 @@ object JsActionTool {
             keyToSubKeyConWithReflectRepValDefalt,
             setReplaceVariableMap,
         ) ?: return null
-        val keyToSubMapTypeMap = keyToSubMapTypeMapToKeyToSubKeyConListByValidKey.first
-        val actionImportedKeyToSubKeyConList = keyToSubMapTypeMapToKeyToSubKeyConListByValidKey.second
-        val keyToSubKeyMapListWithAfterSubKey = keyToSubMapTypeMap.get(
-            KeyToSubConType.WITH_AFTER
-        )
+        val keyToSubMapTypeMap =
+            keyToSubMapTypeMapToKeyToSubKeyConListByValidKey.first
+        val actionImportedKeyToSubKeyConList =
+            keyToSubMapTypeMapToKeyToSubKeyConListByValidKey.second
+        val keyToSubKeyMapListWithAfterSubKey =
+            keyToSubMapTypeMap.get(
+                KeyToSubConType.WITH_AFTER
+            )
 
         val keyToSubKeyMapListWithoutAfterSubKey =
             keyToSubMapTypeMap.get(
