@@ -17,14 +17,13 @@ object JsActionKeyManager {
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
         TSV_VARS("tsvVars"),
-        ACTION_VAR("actionVar"),
+        ACTION_VAR("acVar"),
     }
 
     enum class CommonPathKey(
         val key: String
     ) {
         IMPORT_PATH("importPath"),
-//        USE(TsvImportManager.tsvImportUsePhrase),
     }
 
 
@@ -139,6 +138,7 @@ object JsActionKeyManager {
             MISS_LAST_USE_VAR_KEY("MISS_LAST_USE_VAR_KEY"),
             MISS_LAST_VAR_KEY("MISS_LAST_VAR_KEY"),
             MISS_LAST_RETURN_KEY("MISS_LAST_RETURN_KEY"),
+            MISS_IMPORT_PATH("MISS_IMPORT_PATH"),
         }
 
         fun putActionImportSubKey(mainAndSubKeyCon: String): String {

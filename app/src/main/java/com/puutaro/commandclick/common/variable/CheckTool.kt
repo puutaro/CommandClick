@@ -1039,12 +1039,12 @@ object CheckTool {
                 putColorConByVarNotInit,
                 errMessage,
             )
-//            val putColorConByMissLastUseVarKey = MissLastUseVarKey.makePutColorCon(
-//                putColorConByRunVarPrefixUsedErr,
-//                errMessage,
-//            )
-            val putColorConByMissLastVarKeyErrForAcVar = MissLastVarKeyErrForAcVar.makePutColorCon(
+            val putColorConByMissImportPathErr = MissImportPathErr.makePutColorCon(
                 putColorConByRunVarPrefixUsedErr,
+                errMessage,
+            )
+            val putColorConByMissLastVarKeyErrForAcVar = MissLastVarKeyErrForAcVar.makePutColorCon(
+                putColorConByMissImportPathErr,
                 errMessage,
             )
             val putColorConByMissVarKeyErr = MissLastReturnKeyErrForAcImport.makePutColorCon(
@@ -2408,6 +2408,51 @@ object CheckTool {
         }
     }
 
+    object MissImportPathErr {
+
+        private val actionVarKey =
+            JsActionKeyManager.JsActionsKey.ACTION_VAR.key
+        private val importPathSubKey =
+            JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_IMPORT_PATH.key
+        private val missImportPathErrMark = "?${importPathSubKey}="
+        private val missImportPathErrMessage =
+            "Miss '${importPathSubKey}' in ${actionVarKey} section"
+
+        fun makePutColorCon(
+            curPutColorCon: String,
+            errMessage: String,
+        ): String {
+            val isNotErr = !errMessage.startsWith(missImportPathErrMessage)
+            if (
+                isNotErr
+            ) return curPutColorCon
+            return curPutColorCon
+                .replace(
+                    missImportPathErrMark,
+                    "<span style=\"color:${errRedCode};\">${missImportPathErrMark}</span>",
+                )
+        }
+
+        fun check(
+            context: Context?,
+            actionImportedCon: String,
+        ): Boolean {
+            if(
+                actionImportedCon.isEmpty()
+            ) return false
+            val isNotmissImportPathErrMarkKey = !actionImportedCon.contains(
+                missImportPathErrMark
+            )
+            if(
+                isNotmissImportPathErrMarkKey
+            ) return false
+            saveFirstLog(
+                context,
+                missImportPathErrMessage
+            )
+            return true
+        }
+    }
     object MissLastVarKeyErrForAcVar {
 
         private val actionVarKey =

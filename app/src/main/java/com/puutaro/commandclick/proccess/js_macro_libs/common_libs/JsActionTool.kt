@@ -302,6 +302,15 @@ object JsActionTool {
                 isRunVarPrefixUsedErr
             ) return true
         }
+        CheckTool.MissImportPathErr.check(
+            context,
+            actionImportedCon,
+        ).let {
+                isMissImportPathErr ->
+            if(
+                isMissImportPathErr
+            ) return true
+        }
         CheckTool.MissLastVarKeyErrForAcVar.check(
             context,
             actionImportedCon
@@ -765,7 +774,8 @@ private object KeyToSubKeyMapListMaker {
             setReplaceVariableMap
         )
         for( i in 1..importRoopLimit) {
-            var errType: ActionImportPutter.ErrSignal = ActionImportPutter.ErrSignal.NO_ERR
+            var errType: ActionImportPutter.ErrSignal =
+                ActionImportPutter.ErrSignal.NO_ERR
             keyToSubKeyConList = keyToSubKeyConList.map {
                     keyToSubKeyPair ->
                 val mainKeyName = keyToSubKeyPair.first
@@ -1007,6 +1017,17 @@ private object ActionImportPutter {
                 JsActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
             )
         )
+        if(
+            importPathSrc.isEmpty()
+        ){
+            val missImportKey =
+                "${JsActionKeyManager.ActionImportManager.ActionImportKey.MISS_IMPORT_PATH.key}="
+            val actionVarSec = subKeyCon.replace(
+                Regex("(${actionVarKey}=[^?|]+)"),
+                "|$1?${missImportKey}"
+            )
+            return actionVarSec to ErrSignal.ERR
+        }
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath,"jsAcImport.txt").absolutePath,
 //            listOf(
@@ -1016,7 +1037,8 @@ private object ActionImportPutter {
 //                "importPathSrc: ${importPathSrc}",
 //            ).joinToString("\n\n") + "\n-----\n"
 //        )
-        val importPath = JsActionKeyManager.PathExistChecker.makeCodeOrPath(importPathSrc)
+        val importPath =
+            JsActionKeyManager.PathExistChecker.makeCodeOrPath(importPathSrc)
         val isNotFoundPrefix =
             importPath.startsWith(JsActionKeyManager.PathExistChecker.notFoundCodePrefix)
         val pathNotRegisterInRepValErrSignal =
