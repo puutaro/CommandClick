@@ -4,7 +4,7 @@ preferenceTableInitActionsPath=
     `${preferenceActionDirPath}/initAction.js`,
 preferenceTableInitAcDirPath=
     `${preferenceActionDirPath}/initAc`,
-copyBeforeFileToTempPath=
+copyBeforeFileToTempDir=
     `${preferenceTableInitAcDirPath}/copyBeforeFileToTemp.js`,
 
 // change state

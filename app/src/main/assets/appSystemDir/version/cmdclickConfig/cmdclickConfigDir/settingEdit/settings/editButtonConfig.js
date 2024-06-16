@@ -3,6 +3,7 @@ visible=ON,
 icon=list,
 
 click=
-    actionImport=`${cmdclickConfigChangeStateActionsPath}`
+    acVar=runChangeToTable
+        ?importPath=`${cmdclickConfigChangeStateActionsPath}`
         ?replace=
             STATE=`${TABLE}`,

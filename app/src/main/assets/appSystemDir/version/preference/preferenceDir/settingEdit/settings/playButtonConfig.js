@@ -4,13 +4,16 @@ icon=ok,
 
 click=
     onScriptSave=ON
-    |actionImport=
-        `${preferenceSettingEditOkBtnDirPath}
-            /reflectSetingValAction.js`
-    |actionImport=
-        `${preferenceSettingEditOkBtnDirPath}
+    |acVar=runReflectSetingValAction
+        ?importPath=
+            `${preferenceSettingEditOkBtnDirPath}
+                /reflectSetingValAction.js`
+    |acVar=runReflectRecentSettingVals
+        ?importPath=
+            `${preferenceSettingEditOkBtnDirPath}
             /reflectRecentSettingVals.js`
-    |actionImport=
-        `${preferenceChangeStateActionsPath}`
+    |acVar=runToTableState
+        ?importPath=
+            `${preferenceChangeStateActionsPath}`
         ?replace=
             STATE=`${TABLE}`,

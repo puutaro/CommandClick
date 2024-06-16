@@ -3,6 +3,7 @@ visible=ON,
 icon=list,
 
 click=
-    actionImport=`${preferenceChangeStateActionsPath}`
+    acVar=runToTableState
+        ?importPath=`${preferenceChangeStateActionsPath}`
         ?replace=
             STATE=`${TABLE}`,

@@ -26,7 +26,6 @@ object JsActionKeyManager {
         IMPORT_PATH("importPath"),
     }
 
-
     enum class JsSubKey(
         val key: String
     ) {

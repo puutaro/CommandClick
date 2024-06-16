@@ -16,8 +16,9 @@ click=
         ?args=
             srcFilePath="${ITEM_NAME}"
             &desitFilePath=`${dynamicHideSettingVariablePath}`
-    |actionImport=
-        `${cmdclickConfigChangeStateActionsPath}`
+    |acVar=runToSettingEdit
+        ?importPath=
+            `${cmdclickConfigChangeStateActionsPath}`
         ?replace=
             STATE=`${SETTING_EDIT}`
             &ON_LIST_DIR_UPDATER=ON

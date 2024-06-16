@@ -1,7 +1,8 @@
 
 
-actionImport=`${preferenceSettingEditOkBtnDirPath}/getDiffSettingVals.js`
-	?useVar="diffSettingVals"
+acVar="diffSettingVals"
+	?importPath=
+		`${preferenceSettingEditOkBtnDirPath}/getDiffSettingVals.js`
 
 |var=beforeEditSettingValsCon
 	?func=jsFileSystem.read

@@ -4,13 +4,16 @@ icon=ok,
 
 click=
     onScriptSave=ON
-    |actionImport=
-        `${cmdclickConfigSettingEditOkBtnDirPath}
-            /reflectSetingValAction.js`
-    |actionImport=
-        `${cmdclickConfigSettingEditOkBtnDirPath}
-            /reflectRecentSettingVals.js`
-    |actionImport=
-        `${cmdclickConfigChangeStateActionsPath}`
+    |acVar=runReflectSetingValAction
+        ?importPath=
+            `${cmdclickConfigSettingEditOkBtnDirPath}
+                /reflectSetingValAction.js`
+    |acVar=runReflectRecentSettingVals
+        ?importPath=
+            `${cmdclickConfigSettingEditOkBtnDirPath}
+                /reflectRecentSettingVals.js`
+    |acVar=runToTableState
+        ?importPath=
+            `${cmdclickConfigChangeStateActionsPath}`
         ?replace=
             STATE=`${TABLE}`,

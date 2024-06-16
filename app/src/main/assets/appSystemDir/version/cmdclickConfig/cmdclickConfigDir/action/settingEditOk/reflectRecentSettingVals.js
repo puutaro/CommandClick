@@ -1,7 +1,7 @@
 
-
-actionImport=`${cmdclickConfigSettingEditOkBtnDirPath}/getDiffSettingVals.js`
-	?useVar="diffSettingVals"
+acVar=diffSettingVals
+	?importPath=`${cmdclickConfigSettingEditOkBtnDirPath}/
+		getDiffSettingVals.js`
 
 |var=beforeEditSettingValsCon
 	?func=jsFileSystem.read

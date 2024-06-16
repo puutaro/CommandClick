@@ -1,8 +1,10 @@
 // js/action
 
-|actionImport=`${copyBeforeFileToTempPath}`
+|acVar=runCopyFannelToTempDir
+	?importPath=`${copyBeforeFileToTempPath}`
 	?replace=
 		&SRC_FILE_PATH=`${FANNEL_PATH}`
-|actionImport=`${copyBeforeFileToTempPath}`
+|acVar=runHomeFannelsPathToTempDir
+	?importPath=`${copyBeforeFileToTempPath}`
 	?replace=
 		&SRC_FILE_PATH=`${cmdclickConfigHomeFannelsPath}`
