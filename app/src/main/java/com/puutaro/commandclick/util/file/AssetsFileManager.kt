@@ -2,7 +2,6 @@ package com.puutaro.commandclick.util.file
 
 import android.content.Context
 import android.util.Log
-import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -161,9 +160,13 @@ object AssetsFileManager {
 //                "contain: ${escapeRelativeAssetsPathList.contains(assetsRelativeFilePath)}",
 //            ).joinToString("\n\n") + "\n------\n"
 //        )
+        val isContainEscapeRelativePathList = escapeRelativeAssetsPathList.any {
+            escapeRelativePath ->
+            assetsRelativeFilePath.startsWith(escapeRelativePath)
+        }
         if(
             newFilePathObj.isFile
-            && escapeRelativeAssetsPathList.contains(assetsRelativeFilePath)
+            && isContainEscapeRelativePathList
         ) return
         val newFilePath = newFilePathObj.absoluteFile
         val assetManager = context?.getAssets()

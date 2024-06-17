@@ -144,12 +144,12 @@ object CmdClickSystemAppDir {
 //                    escapeFilePath
 //                ).split("\n").filter { it.isNotEmpty() }
             withContext(Dispatchers.IO) {
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "escape.txt").absolutePath,
-                    listOf(
-                        "${escapeMapList}"
-                    ).joinToString("\n\b") + "\n-------------\n\n"
-                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "escape.txt").absolutePath,
+//                    listOf(
+//                        "${escapeMapList}"
+//                    ).joinToString("\n\b") + "\n-------------\n\n"
+//                )
                 AssetsFileManager.copyFileOrDirFromAssets(
                     context,
                     fannelRawDirAssetsPath,
