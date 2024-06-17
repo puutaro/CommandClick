@@ -179,6 +179,7 @@ object CmdClickSystemAppDir {
                 trimLine.split("\t")
             val relativePath = relativePathAndVersion
                 .firstOrNull()
+                ?.trim()
                 ?: String()
             val assetsVersion = relativePathAndVersion.getOrNull(1)
             val curVersion = TsvTool.getKeyValue(
