@@ -20,6 +20,11 @@ import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class InitFragmentManager(
@@ -28,6 +33,7 @@ class InitFragmentManager(
     private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
     private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
     private val intent = activity.intent
+    private val fragmentLaunchDelayTime = 300L
 
     fun registerSharePreferenceFromIntentExtra() {
         val normalTaskNum = 1
@@ -81,12 +87,19 @@ class InitFragmentManager(
             )
             || onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) {
-            WrapFragmentManager.initFragment(
-                savedInstanceState,
-                activity.supportFragmentManager,
-                activity.getString(R.string.index_terminal_fragment),
-                activity.getString(R.string.command_index_fragment)
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.IO){
+                    delay(fragmentLaunchDelayTime)
+                }
+                withContext(Dispatchers.Main) {
+                    WrapFragmentManager.initFragment(
+                        savedInstanceState,
+                        activity.supportFragmentManager,
+                        activity.getString(R.string.index_terminal_fragment),
+                        activity.getString(R.string.command_index_fragment)
+                    )
+                }
+            }
             return
         }
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
@@ -105,16 +118,23 @@ class InitFragmentManager(
             cmdVariableEditFragmentTag
         )
         if (cmdVariableEditFragment != null) return
-        WrapFragmentManager.changeFragmentEdit(
-            activity.supportFragmentManager,
-            cmdVariableEditFragmentTag,
-            activity.getString(R.string.edit_terminal_fragment),
-            EditFragmentArgs(
-                readSharePreferenceMapForNext,
-                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
-            ),
-            true
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                delay(fragmentLaunchDelayTime)
+            }
+            withContext(Dispatchers.Main) {
+                WrapFragmentManager.changeFragmentEdit(
+                    activity.supportFragmentManager,
+                    cmdVariableEditFragmentTag,
+                    activity.getString(R.string.edit_terminal_fragment),
+                    EditFragmentArgs(
+                        readSharePreferenceMapForNext,
+                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
+                    ),
+                    true
+                )
+            }
+        }
     }
 
     private fun execUrlIntent() {
