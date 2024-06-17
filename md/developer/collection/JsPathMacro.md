@@ -15,7 +15,7 @@ System auto exec string
 | `SELECT_MONITOR` | [Select monitor](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#select-monitor) |
 | `RESTART_UBUNTU` | [Restart ubuntu](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#restart-ubuntu) |
 | `INSTALL_FANNEL` | Launch [install fannel manager](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)  |
-| `EDIT_STARTUP` |  [Edit startup file](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit-startup) |
+| `EDIT_PREFERENCE` |  [Edit preference file](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit-preference) |
 | `JS_IMPORT` | Launch js import manager  |
 | `ADD` | Add file  |
 | `ADD_APP_DIR` | Add [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)  |
