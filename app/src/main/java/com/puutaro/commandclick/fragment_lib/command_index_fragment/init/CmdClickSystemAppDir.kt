@@ -41,11 +41,10 @@ object CmdClickSystemAppDir {
     fun createConfigFannel(
         context: Context?,
     ){
-        createFannelByVer(
+        FannelVersion.create(
             context,
             UsePath.cmdclickSystemAppDirPath,
             "cmdclickConfig",
-            "1",
         )
     }
 
@@ -56,138 +55,154 @@ object CmdClickSystemAppDir {
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePrefMap
         )
-        createFannelByVer(
+        FannelVersion.create(
             context,
             currentAppDirPath,
             "preference",
-            "1",
         )
     }
 
-
-    private fun createFannelByVer(
-        context: Context?,
-        targetAppDirPath: String,
-        fannelRawName: String,
-        version: String,
-    ){
-        val assetsPrefix = "${appSystemDirName}/version"
-        val fannelRawDirAssetsPath =
-            AssetsFileManager.concatAssetsPath(
-                listOf(assetsPrefix, fannelRawName)
-            )
-        val fannelDirName = fannelRawName + "Dir"
-        val infoDirName = "info"
-        val fannelInfoDirAssetsPath = let {
-            val fannelDirAssetsPath =
+    object FannelVersion {
+        fun create(
+            context: Context?,
+            targetAppDirPath: String,
+            fannelRawName: String,
+        ) {
+            val assetsPrefix = "${appSystemDirName}/version"
+            val fannelRawDirAssetsPath =
                 AssetsFileManager.concatAssetsPath(
-                    listOf(fannelRawDirAssetsPath, fannelDirName)
+                    listOf(assetsPrefix, fannelRawName)
                 )
-            AssetsFileManager.concatAssetsPath(
-                listOf(fannelDirAssetsPath,infoDirName)
-            )
-        }
-        val versionTextName = "version.txt"
-        val infoDirAssetsPath = AssetsFileManager.concatAssetsPath(
-            listOf(fannelDirName, infoDirName),
-        )
-        val versionFilePath =
-            File(
-                targetAppDirPath,
-                "${infoDirAssetsPath}/${versionTextName}"
-            ).absolutePath
-        val isNotUpdate =
-            ReadText(versionFilePath)
-                .textToList()
-                .firstOrNull()
-                ?.trim() == version
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "cmdclickconfigVer.txt").absolutePath,
-//            listOf(
-//                "con : ${ReadText(versionFilePath)
-//                    .textToList()
-//                    .firstOrNull()
-//                    ?.trim()}",
-//                "isNotUpdate: ${isNotUpdate}"
-//            ).joinToString("\n\n")
-//        )
-        if(isNotUpdate) return
-        FileSystems.writeFile(
-            versionFilePath,
-            version
-        )
-        CoroutineScope(Dispatchers.IO).launch {
-            val escapeMapList = withContext(Dispatchers.IO) {
-                val escapeTsvName = "escape.tsv"
-                val assetsEscapeTsvPath =
+            val fannelDirName = fannelRawName + "Dir"
+            val infoDirName = "info"
+            val fannelInfoDirAssetsPath = let {
+                val fannelDirAssetsPath =
                     AssetsFileManager.concatAssetsPath(
-                        listOf(fannelInfoDirAssetsPath, escapeTsvName)
+                        listOf(fannelRawDirAssetsPath, fannelDirName)
                     )
-                val curEscapeTsvPath = File(
-                    targetAppDirPath,
-                    infoDirAssetsPath
-                ).absolutePath.let { curInfoDirPath ->
-                    File(
-                        curInfoDirPath,
-                        escapeTsvName,
-                    ).absolutePath
-                }
-                makeEscapeRelativeAssetsPathList(
-                    context,
-                    assetsEscapeTsvPath,
-                    curEscapeTsvPath,
+                AssetsFileManager.concatAssetsPath(
+                    listOf(fannelDirAssetsPath, infoDirName)
                 )
             }
+            val versionTextName = "version.txt"
+            val infoDirAssetsPath = AssetsFileManager.concatAssetsPath(
+                listOf(fannelDirName, infoDirName),
+            )
+            val curVersionFilePath =
+                File(
+                    targetAppDirPath,
+                    "${infoDirAssetsPath}/${versionTextName}"
+                ).absolutePath
+            val assetsVersionFilePath =
+                AssetsFileManager.concatAssetsPath(
+                    listOf(
+                        assetsPrefix,
+                        infoDirAssetsPath,
+                        versionTextName
+                    )
+                )
+            val assetsVersion = AssetsFileManager.readFromAssets(
+                context,
+                assetsVersionFilePath
+            ).split("\n")
+                .firstOrNull()
+                ?.trim()
+            val curVersion = ReadText(curVersionFilePath)
+                .textToList()
+                .firstOrNull()
+                ?.trim()
+            val isUpdate =
+                curVersion.isNullOrEmpty()
+                        || curVersion != assetsVersion
+            val isNotUpdate = !isUpdate
+            FileSystems.updateFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "cmdclickconfigVer.txt").absolutePath,
+                listOf(
+                    "curVersionFilePath: ${curVersionFilePath}",
+                    "curVersion : ${curVersion}",
+                    "assetsVersionFilePath: ${assetsVersionFilePath}",
+                    "assetsVersion: ${assetsVersion}",
+                    "isNotUpdate: ${isNotUpdate}"
+                ).joinToString("\n\n")
+            )
+            if (isNotUpdate) return
+            assetsVersion?.let {
+                FileSystems.writeFile(
+                    curVersionFilePath,
+                    assetsVersion
+                )
+            }
+            CoroutineScope(Dispatchers.IO).launch {
+                val escapeMapList = withContext(Dispatchers.IO) {
+                    val escapeTsvName = "escape.tsv"
+                    val assetsEscapeTsvPath =
+                        AssetsFileManager.concatAssetsPath(
+                            listOf(fannelInfoDirAssetsPath, escapeTsvName)
+                        )
+                    val curEscapeTsvPath = File(
+                        targetAppDirPath,
+                        infoDirAssetsPath
+                    ).absolutePath.let { curInfoDirPath ->
+                        File(
+                            curInfoDirPath,
+                            escapeTsvName,
+                        ).absolutePath
+                    }
+                    makeEscapeRelativeAssetsPathList(
+                        context,
+                        assetsEscapeTsvPath,
+                        curEscapeTsvPath,
+                    )
+                }
 //            val escapeFilePathList =
 //                AssetsFileManager.readFromAssets(
 //                    context,
 //                    escapeFilePath
 //                ).split("\n").filter { it.isNotEmpty() }
-            withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "escape.txt").absolutePath,
 //                    listOf(
 //                        "${escapeMapList}"
 //                    ).joinToString("\n\b") + "\n-------------\n\n"
 //                )
-                AssetsFileManager.copyFileOrDirFromAssets(
-                    context,
-                    fannelRawDirAssetsPath,
-                    fannelRawDirAssetsPath,
-                    targetAppDirPath,
-                    escapeMapList
-                )
+                    AssetsFileManager.copyFileOrDirFromAssets(
+                        context,
+                        fannelRawDirAssetsPath,
+                        fannelRawDirAssetsPath,
+                        targetAppDirPath,
+                        escapeMapList
+                    )
+                }
             }
         }
-    }
 
-    private fun makeEscapeRelativeAssetsPathList(
-        context: Context?,
-        assetsEscapeTsvPath: String,
-        curEscapeTsvPath: String,
-    ): List<String> {
-        return AssetsFileManager.readFromAssets(
-            context,
-            assetsEscapeTsvPath
-        ).split("\n").map {
-            line ->
-            val trimLine = line.trim()
-            if(
-                trimLine.isEmpty()
-            ) return@map String()
-            val relativePathAndVersion =
-                trimLine.split("\t")
-            val relativePath = relativePathAndVersion
-                .firstOrNull()
-                ?.trim()
-                ?: String()
-            val assetsVersion = relativePathAndVersion.getOrNull(1)
-            val curVersion = TsvTool.getKeyValue(
-                curEscapeTsvPath,
-                relativePath
-            ).let { QuoteTool.trimBothEdgeQuote(it) }
-            val isEscape = assetsVersion.isNullOrEmpty()
-                    || assetsVersion == curVersion
+        private fun makeEscapeRelativeAssetsPathList(
+            context: Context?,
+            assetsEscapeTsvPath: String,
+            curEscapeTsvPath: String,
+        ): List<String> {
+            return AssetsFileManager.readFromAssets(
+                context,
+                assetsEscapeTsvPath
+            ).split("\n").map { line ->
+                val trimLine = line.trim()
+                if (
+                    trimLine.isEmpty()
+                ) return@map String()
+                val relativePathAndVersion =
+                    trimLine.split("\t")
+                val relativePath = relativePathAndVersion
+                    .firstOrNull()
+                    ?.trim()
+                    ?: String()
+                val assetsVersion = relativePathAndVersion.getOrNull(1)
+                val curVersion = TsvTool.getKeyValue(
+                    curEscapeTsvPath,
+                    relativePath
+                ).let { QuoteTool.trimBothEdgeQuote(it) }
+                val isEscape = assetsVersion.isNullOrEmpty()
+                        || assetsVersion == curVersion
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "escape_inner.txt").absolutePath,
 //                listOf(
@@ -198,12 +213,13 @@ object CmdClickSystemAppDir {
 //                    "isEscape: ${isEscape}",
 //                ).joinToString("\n\n") + "\n----\n"
 //            )
-            when(isEscape){
-                false -> String()
-                else -> relativePath
+                when (isEscape) {
+                    false -> String()
+                    else -> relativePath
+                }
+            }.filter {
+                it.isNotEmpty()
             }
-        }.filter {
-            it.isNotEmpty()
         }
     }
 }

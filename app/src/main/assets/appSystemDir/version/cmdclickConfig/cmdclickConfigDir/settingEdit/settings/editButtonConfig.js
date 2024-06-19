@@ -1,9 +1,9 @@
+// js/setting
 
 visible=ON,
 icon=list,
-
 click=
-    acVar=runChangeToTable
-        ?importPath=`${cmdclickConfigChangeStateActionsPath}`
-        ?replace=
-            STATE=`${TABLE}`,
+	|acVar=runChangeToTable
+		?importPath=`${cmdclickConfigChangeStateActionsPath}`
+		?replace=
+			STATE=`${TABLE}`,
