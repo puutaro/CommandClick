@@ -221,10 +221,6 @@ object ListSettingsForListIndex  {
                 indexListMap,
                 ListSettingKey.SUFFIX.key
             ) ?: String()
-            val filterShellCon = getFilterShellCon(
-                editFragment,
-                indexListMap,
-            )
             val currentFileList = FileSystems.sortedFiles(
                 filterDir,
                 "on"
@@ -236,6 +232,10 @@ object ListSettingsForListIndex  {
                     it
                 )
             }
+            val filterShellCon = getFilterShellCon(
+                editFragment,
+                indexListMap,
+            )
             val fileListSource = makeFileListElement(
                 currentFileList,
                 busyboxExecutor,

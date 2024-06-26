@@ -5,7 +5,6 @@ object FileNameKeyForListIndex {
     enum class ListIndexFileNameKey(
         val key: String,
     ) {
-        TYPE("type"),
         ON_HIDE("onHide"),
         REMOVE_EXTEND("removeExtend"),
         COMP_PREFIX("compPrefix"),

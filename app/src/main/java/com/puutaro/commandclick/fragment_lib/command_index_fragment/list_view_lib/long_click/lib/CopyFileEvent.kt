@@ -26,7 +26,7 @@ class CopyFileEvent(
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
     private val cmdListView = binding.cmdList
-    val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
+    private val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
     private var copyFileDialog: Dialog? = null
     private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 

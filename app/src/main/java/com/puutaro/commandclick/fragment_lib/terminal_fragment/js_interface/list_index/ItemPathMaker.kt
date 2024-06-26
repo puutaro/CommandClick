@@ -24,7 +24,7 @@ object ItemPathMaker {
         val extractedPath = when(type) {
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> getCatPathForNomal(
+            -> getCatPathForNormal(
                 editFragment,
                 selectedItem
             )
@@ -49,7 +49,7 @@ object ItemPathMaker {
         return extractedPath
     }
 
-    private fun getCatPathForNomal(
+    private fun getCatPathForNormal(
         editFragment: EditFragment,
         selectedItem: String
     ): String {

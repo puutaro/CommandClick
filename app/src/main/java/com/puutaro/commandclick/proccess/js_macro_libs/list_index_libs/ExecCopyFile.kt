@@ -49,7 +49,7 @@ object ExecCopyFile {
             editFragment.directoryAndCopyGetter?.get(
                 selectedItem,
                 listIndexPosition,
-                initialPath,
+                   initialPath,
                 pickerMacro,
                 fannelName,
                 tag,
