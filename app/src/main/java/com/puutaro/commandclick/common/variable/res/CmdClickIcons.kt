@@ -28,7 +28,7 @@ enum class CmdClickIcons(
     MENU("menu", R.drawable.icons8_menu),
     MUSIC("music", R.drawable.icon_music),
     OK("ok", R.drawable.icons8_check_ok),
-    OVERFLOW("oeverflow", androidx.appcompat.R.drawable.abc_ic_menu_overflow_material),
+    OVERFLOW("overflow", androidx.appcompat.R.drawable.abc_ic_menu_overflow_material),
     PLAY("play", R.drawable.icons_play),
     PUZZLE("puzzle", R.drawable.icons8_puzzle),
     PLUS("plus", R.drawable.icons8_plus),

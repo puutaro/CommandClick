@@ -13,7 +13,7 @@ enum class CmdClickColor(
     LIGHT_GREEN("lightGreen", R.color.fannel_icon_color),
     DARK_GREEN("darkGreen", R.color.terminal_color),
     OLIVE_GREEN("oliveGreen", R.color.olive_green),
-    RED("red", com.termux.shared.R.color.dark_red),
+    RED("red", R.color.red),
     AO("ao", R.color.ao),
     LIGHT_AO("lightAo", R.color.light_ao),
     ORANGE("orange", R.color.orange),

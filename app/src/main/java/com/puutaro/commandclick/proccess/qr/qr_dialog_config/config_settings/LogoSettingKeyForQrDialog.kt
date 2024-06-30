@@ -290,7 +290,7 @@ object QrLogoSettingsForQrDialog {
                 context == null
                 || fannelContentsQrLogoView == null
                 || qrLogoConfigMap.isEmpty()
-                ||  iconConfigMap.isEmpty()
+                || iconConfigMap.isEmpty()
                 || itemNameToNameColorConfigMap.isNullOrEmpty()
             ) return false
             if(
@@ -351,8 +351,8 @@ object QrLogoSettingsForQrDialog {
             val itemPath = when(listIndexTypeKey){
                 TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
                 -> return
-                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                    itemName
+                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+                -> itemName
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
                 -> File(filterDir, itemName).absolutePath
             }
