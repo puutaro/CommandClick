@@ -13,7 +13,7 @@ var=runSelectColumn_S
 
 - [js action](#) is annotation-oriented language based on javascript in CommandClick
 
-- The `run` prefix on `var` is a process annotation, not a variable definition
+- The `run` prefix difinition on `var` is a process annotation, not a variable definition
 
 ## Src
 
