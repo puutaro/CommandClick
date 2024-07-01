@@ -13,6 +13,8 @@ var=runWrapRemoveItemInListFileCon
 		&replaceTargetVariableString=String=
 ```
 
+- The `run` prefix on var is a process annotation, not a variable definition
+
 - [js action](#) is annotation-oriented language based on javascript in CommandClick
 
 ## Src

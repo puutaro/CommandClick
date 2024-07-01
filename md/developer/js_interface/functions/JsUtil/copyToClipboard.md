@@ -11,6 +11,8 @@ var=runCopyToClipboard
 		&fontSizeInt=
 ```
 
+- The `run` prefix on var is a process annotation, not a variable definition
+
 - [js action](#) is annotation-oriented language based on javascript in CommandClick
 
 ## Src
