@@ -9,4 +9,6 @@ var=conWithBothQuoteTrim
 		&valStringString
 ```
 
+## Detail
 
+->[jsScript.bothQuoteTrim](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsScript/bothQuoteTrim.md)

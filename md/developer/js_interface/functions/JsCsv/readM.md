@@ -11,4 +11,6 @@ var=runReadM
 		&csvOrTsvString
 ```
 
+## Detail
 
+->[jsCsv.readM](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsCsv/readM.md)

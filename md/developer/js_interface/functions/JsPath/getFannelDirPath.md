@@ -9,4 +9,6 @@ var=fannelDirPath
 		&pathString
 ```
 
+## Detail
 
+->[jsPath.getFannelDirPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/getFannelDirPath.md)

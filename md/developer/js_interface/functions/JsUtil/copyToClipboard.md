@@ -10,4 +10,6 @@ var=runCopyToClipboard
 		&fontSizeInt
 ```
 
+## Detail
 
+->[jsUtil.copyToClipboard](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUtil/copyToClipboard.md)

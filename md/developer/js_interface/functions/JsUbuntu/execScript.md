@@ -10,4 +10,6 @@ var=execScriptF
 		&tabSepaArgsString=String
 ```
 
+## Detail
 
+->[jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUbuntu/execScript.md)

@@ -10,4 +10,6 @@ var=runRemoveItemInListFileCon
 		&itemTextString
 ```
 
+## Detail
 
+->[jsListSelect.removeItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsListSelect/removeItemInListFileCon.md)

@@ -9,4 +9,6 @@ var=CommandClickVariables
 		&jsContentsString
 ```
 
+## Detail
 
+->[jsScript.subLabelingVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsScript/subLabelingVars.md)

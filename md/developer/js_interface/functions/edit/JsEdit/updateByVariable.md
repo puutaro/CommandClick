@@ -11,4 +11,6 @@ var=runUpdateByVariable
 		&updateVariableValueString
 ```
 
+## Detail
 
+->[jsEdit.updateByVariable](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsEdit/updateByVariable.md)

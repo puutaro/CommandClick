@@ -9,4 +9,6 @@ var=runLoadUrl
 		&urlStrString
 ```
 
+## Detail
 
+->[jsUrl.loadUrl](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUrl/loadUrl.md)

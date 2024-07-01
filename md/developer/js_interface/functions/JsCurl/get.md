@@ -10,4 +10,6 @@ var=con
 		&queryParameterString=String
 ```
 
+## Detail
 
+->[jsCurl.get](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsCurl/get.md)

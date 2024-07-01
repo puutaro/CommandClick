@@ -9,4 +9,6 @@ var=runShort
 		&contentsString
 ```
 
+## Detail
 
+->[jsToast.short](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsToast/short.md)

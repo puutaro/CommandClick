@@ -10,4 +10,6 @@ var=isExist
 		&prefixTabSeparateStrString
 ```
 
+## Detail
 
+->[jsPath.checkPrefix](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/checkPrefix.md)

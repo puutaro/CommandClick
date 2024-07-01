@@ -9,4 +9,6 @@ var=rowSize
 		&tagString
 ```
 
+## Detail
 
+->[jsCsv.takeRowSize](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsCsv/takeRowSize.md)

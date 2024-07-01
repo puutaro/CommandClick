@@ -9,4 +9,6 @@ var=ubuntuPath
 		&pathString
 ```
 
+## Detail
 
+->[jsPath.convertUbuntuPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/convertUbuntuPath.md)

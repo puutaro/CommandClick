@@ -9,4 +9,6 @@ var=runStop
 
 ```
 
+## Detail
 
+->[jsTextToSpeech.stop](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsTextToSpeech/stop.md)

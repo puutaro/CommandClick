@@ -14,4 +14,6 @@ var=runLaunchApp
 		&extraListFloatTabSepaString
 ```
 
+## Detail
 
+->[jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsIntent/launchApp.md)

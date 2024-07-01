@@ -1,4 +1,4 @@
-# execEditTargetFileName
+# execEditDirName
 
 Table
 -----------------
@@ -15,7 +15,7 @@ Edit targetVariable value(directory name) and update view by form dialog
 
 ```js.js
 
-execEditTargetFileName(  
+execEditDirName(  
   targetVariable: string,  
   renameVariable: string,  
   targetDirPath: string,  

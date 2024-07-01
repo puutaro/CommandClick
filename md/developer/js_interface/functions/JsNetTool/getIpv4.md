@@ -9,4 +9,6 @@ var=ipV4Address
 
 ```
 
+## Detail
 
+->[jsNetTool.getIpv4](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsNetTool/getIpv4.md)

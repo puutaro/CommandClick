@@ -9,4 +9,6 @@ var=downloadImagePath
 		&urlString
 ```
 
+## Detail
 
+->[jsCurl.getImage](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsCurl/getImage.md)

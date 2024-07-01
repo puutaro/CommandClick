@@ -9,4 +9,6 @@ var=runBoot
 
 ```
 
+## Detail
 
+->[jsUbuntu.boot](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUbuntu/boot.md)

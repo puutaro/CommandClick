@@ -10,4 +10,6 @@ var=targetSettingVariableValue
 		&valStringString
 ```
 
+## Detail
 
+->[jsScript.subValOnlyValue](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsScript/subValOnlyValue.md)

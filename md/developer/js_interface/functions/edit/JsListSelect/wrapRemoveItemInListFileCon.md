@@ -12,4 +12,6 @@ var=runWrapRemoveItemInListFileCon
 		&replaceTargetVariableString=String
 ```
 
+## Detail
 
+->[jsListSelect.wrapRemoveItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsListSelect/wrapRemoveItemInListFileCon.md)

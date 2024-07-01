@@ -9,4 +9,6 @@ var=commandVariableCon
 		&jsContentsString
 ```
 
+## Detail
 
+->[jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsScript/subCmdVars.md)

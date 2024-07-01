@@ -9,4 +9,6 @@ var=terminalViewModel
 
 ```
 
+## Detail
 
+->[jsStop.how](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsStop/how.md)

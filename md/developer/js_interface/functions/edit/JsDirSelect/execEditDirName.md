@@ -15,4 +15,6 @@ var=runExecEditDirName
 		&titleString
 ```
 
+## Detail
 
+->[jsDirSelect.execEditDirName](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsDirSelect/execEditDirName.md)

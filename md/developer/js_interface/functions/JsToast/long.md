@@ -9,4 +9,6 @@ var=runLong
 		&contentsString
 ```
 
+## Detail
 
+->[jsToast.long](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsToast/long.md)

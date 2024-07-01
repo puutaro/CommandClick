@@ -10,4 +10,6 @@ var=runUpdateEditText
 		&updateVariableValueString
 ```
 
+## Detail
 
+->[jsEdit.updateEditText](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsEdit/updateEditText.md)

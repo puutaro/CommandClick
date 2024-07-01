@@ -10,4 +10,6 @@ var=runSpeech
 		&extraSettingMapStrString
 ```
 
+## Detail
 
+->[jsTextToSpeech.speech](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsTextToSpeech/speech.md)

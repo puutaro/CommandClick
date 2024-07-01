@@ -11,4 +11,6 @@ var=runLoadUrlWithPageFinishedLoadCon
 		&beforeDelayMiliSecString
 ```
 
+## Detail
 
+->[jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUrl/loadUrlWithPageFinishedLoadCon.md)

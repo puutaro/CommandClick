@@ -9,4 +9,6 @@ var=runLaunchUrl
 		&currentPageUrlString
 ```
 
+## Detail
 
+->[jsIntent.launchUrl](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsIntent/launchUrl.md)

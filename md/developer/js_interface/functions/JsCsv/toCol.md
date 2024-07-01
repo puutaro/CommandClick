@@ -12,4 +12,6 @@ var=String
 		&endRowNumSourceInt
 ```
 
+## Detail
 
+->[jsCsv.toCol](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsCsv/toCol.md)

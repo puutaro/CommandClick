@@ -9,4 +9,6 @@ var=jsArguments
 
 ```
 
+## Detail
 
+->[jsArgs.get](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsArgs/get.md)

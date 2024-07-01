@@ -10,4 +10,6 @@ var=replacedSettingVariableCon
 		&replaceNewlineSepaConString
 ```
 
+## Detail
 
+->[jsScript.replaceSettingVariable](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsScript/replaceSettingVariable.md)

@@ -10,4 +10,6 @@ var=runBootOnExec
 		&delayMiliTimeInt
 ```
 
+## Detail
 
+->[jsUbuntu.bootOnExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUbuntu/bootOnExec.md)

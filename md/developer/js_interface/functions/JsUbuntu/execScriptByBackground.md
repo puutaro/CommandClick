@@ -11,4 +11,6 @@ var=runExecScriptByBackground
 		&monitorNumInt
 ```
 
+## Detail
 
+->[jsUbuntu.execScriptByBackground](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUbuntu/execScriptByBackground.md)
