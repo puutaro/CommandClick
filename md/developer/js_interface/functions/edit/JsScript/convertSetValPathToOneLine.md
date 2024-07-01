@@ -1,6 +1,6 @@
 # jsScript.convertSetValPathToOneLine--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.convertSetValPathToOneLine(
@@ -10,9 +10,7 @@ function jsScript.convertSetValPathToOneLine(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=oneLineSetVariableCon
@@ -23,8 +21,6 @@ var=oneLineSetVariableCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

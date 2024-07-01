@@ -1,6 +1,6 @@
 # jsPath.removeExtend--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.removeExtend(
@@ -10,9 +10,7 @@ function jsPath.removeExtend(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=removeSuffixFileName
@@ -23,8 +21,6 @@ var=removeSuffixFileName
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsFileSystem.readLocalFile--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.readLocalFile(
@@ -9,9 +9,7 @@ function jsFileSystem.readLocalFile(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=fileCon
@@ -21,8 +19,6 @@ var=fileCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

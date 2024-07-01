@@ -1,6 +1,6 @@
 # jsDialog.dAlert--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.dAlert(
@@ -10,9 +10,7 @@ function jsDialog.dAlert(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=conArg
@@ -23,8 +21,6 @@ var=conArg
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

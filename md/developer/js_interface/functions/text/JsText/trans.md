@@ -1,6 +1,6 @@
 # jsText.trans--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.trans(
@@ -9,9 +9,7 @@ function jsText.trans(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=transCon
@@ -21,8 +19,6 @@ var=transCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

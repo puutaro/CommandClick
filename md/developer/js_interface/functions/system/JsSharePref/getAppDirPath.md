@@ -1,6 +1,6 @@
 # jsSharePref.getAppDirPath--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsSharePref.getAppDirPath(
@@ -9,9 +9,7 @@ function jsSharePref.getAppDirPath(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=getAppDirPath
@@ -21,8 +19,6 @@ var=getAppDirPath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

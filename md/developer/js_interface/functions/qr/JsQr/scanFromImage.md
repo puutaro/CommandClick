@@ -1,6 +1,6 @@
 # jsQr.scanFromImage--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsQr.scanFromImage(
@@ -9,9 +9,7 @@ function jsQr.scanFromImage(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=errMassage
@@ -21,8 +19,6 @@ var=errMassage
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

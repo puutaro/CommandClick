@@ -1,6 +1,6 @@
 # jsValEdit.editAndSaveCmdVar--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsValEdit.editAndSaveCmdVar(
@@ -12,9 +12,7 @@ function jsValEdit.editAndSaveCmdVar(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=isOk
@@ -27,8 +25,6 @@ var=isOk
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

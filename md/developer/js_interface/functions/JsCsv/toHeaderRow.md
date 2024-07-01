@@ -1,6 +1,6 @@
 # jsCsv.toHeaderRow--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.toHeaderRow(
@@ -11,9 +11,7 @@ function jsCsv.toHeaderRow(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=headerRowWithTabSeparated
@@ -25,8 +23,6 @@ var=headerRowWithTabSeparated
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsScript.subCmdVars--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.subCmdVars(
@@ -9,9 +9,7 @@ function jsScript.subCmdVars(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=commandVariableCon
@@ -21,8 +19,6 @@ var=commandVariableCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

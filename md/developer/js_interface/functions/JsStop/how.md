@@ -1,6 +1,6 @@
 # jsStop.how--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsStop.how(
@@ -9,9 +9,7 @@ function jsStop.how(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=terminalViewModel
@@ -21,8 +19,6 @@ var=terminalViewModel
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

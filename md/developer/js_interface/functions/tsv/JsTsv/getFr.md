@@ -1,6 +1,6 @@
 # jsTsv.getFr--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getFr(
@@ -9,9 +9,7 @@ function jsTsv.getFr(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=firstFieldCon
@@ -21,8 +19,6 @@ var=firstFieldCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

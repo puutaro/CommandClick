@@ -1,6 +1,6 @@
 # jsCsv.takeColSize--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.takeColSize(
@@ -9,9 +9,7 @@ function jsCsv.takeColSize(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=tagName
@@ -21,8 +19,6 @@ var=tagName
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

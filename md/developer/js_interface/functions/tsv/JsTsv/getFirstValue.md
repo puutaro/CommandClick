@@ -1,6 +1,6 @@
 # jsTsv.getFirstValue--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getFirstValue(
@@ -9,9 +9,7 @@ function jsTsv.getFirstValue(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=firstValue
@@ -21,8 +19,6 @@ var=firstValue
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

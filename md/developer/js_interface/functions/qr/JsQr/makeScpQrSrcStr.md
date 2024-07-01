@@ -1,6 +1,6 @@
 # jsQr.makeScpQrSrcStr--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsQr.makeScpQrSrcStr(
@@ -9,9 +9,7 @@ function jsQr.makeScpQrSrcStr(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=scpQrSrcStr
@@ -21,8 +19,6 @@ var=scpQrSrcStr
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

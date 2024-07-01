@@ -1,6 +1,6 @@
 # jsText.takeLast--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.takeLast(
@@ -11,9 +11,7 @@ function jsText.takeLast(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=lastTakenCon
@@ -25,8 +23,6 @@ var=lastTakenCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

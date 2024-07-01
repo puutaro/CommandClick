@@ -1,6 +1,6 @@
 # jsDeleteItem.delete_S--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDeleteItem.delete_S(
@@ -10,9 +10,7 @@ function jsDeleteItem.delete_S(
 ```
 
 - The `run` prefix annotation is a process annotation
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=runDelete_S
@@ -24,9 +22,7 @@ var=runDelete_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
-
-## Src
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Src
 
 -> [jsDeleteItem.delete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L29)
 

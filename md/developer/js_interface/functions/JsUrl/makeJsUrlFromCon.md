@@ -1,6 +1,6 @@
 # jsUrl.makeJsUrlFromCon--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUrl.makeJsUrlFromCon(
@@ -9,9 +9,7 @@ function jsUrl.makeJsUrlFromCon(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=loadJsCon
@@ -21,8 +19,6 @@ var=loadJsCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

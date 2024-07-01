@@ -1,6 +1,6 @@
 # jsPath.compPrefix--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.compPrefix(
@@ -10,9 +10,7 @@ function jsPath.compPrefix(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=pathByCompPrefix
@@ -23,8 +21,6 @@ var=pathByCompPrefix
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsNetTool.getIpv4--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsNetTool.getIpv4(
@@ -9,9 +9,7 @@ function jsNetTool.getIpv4(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=ipV4Address
@@ -21,8 +19,6 @@ var=ipV4Address
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

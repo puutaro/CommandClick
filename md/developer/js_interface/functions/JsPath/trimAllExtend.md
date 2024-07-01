@@ -1,6 +1,6 @@
 # jsPath.trimAllExtend--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.trimAllExtend(
@@ -9,9 +9,7 @@ function jsPath.trimAllExtend(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=pathByTrimAllExtend
@@ -21,8 +19,6 @@ var=pathByTrimAllExtend
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsCsv.toHtml--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.toHtml(
@@ -10,9 +10,7 @@ function jsCsv.toHtml(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=htmlCon
@@ -23,8 +21,6 @@ var=htmlCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

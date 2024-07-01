@@ -1,6 +1,6 @@
 # jsTsv.getSecondRow--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getSecondRow(
@@ -9,9 +9,7 @@ function jsTsv.getSecondRow(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=secondFiledCon
@@ -21,8 +19,6 @@ var=secondFiledCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

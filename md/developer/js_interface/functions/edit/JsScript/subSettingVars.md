@@ -1,6 +1,6 @@
 # jsScript.subSettingVars--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.subSettingVars(
@@ -9,9 +9,7 @@ function jsScript.subSettingVars(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=settingVaribleCon
@@ -21,8 +19,6 @@ var=settingVaribleCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

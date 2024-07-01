@@ -1,6 +1,6 @@
 # jsPath.echoPath--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.echoPath(
@@ -9,9 +9,7 @@ function jsPath.echoPath(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=appFileDirPath
@@ -21,8 +19,6 @@ var=appFileDirPath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

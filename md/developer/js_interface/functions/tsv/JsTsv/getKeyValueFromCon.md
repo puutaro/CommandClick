@@ -1,6 +1,6 @@
 # jsTsv.getKeyValueFromCon--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getKeyValueFromCon(
@@ -10,9 +10,7 @@ function jsTsv.getKeyValueFromCon(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=keyValue
@@ -23,8 +21,6 @@ var=keyValue
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

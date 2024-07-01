@@ -1,6 +1,6 @@
 # jsUbuntu.isProc--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUbuntu.isProc(
@@ -9,9 +9,7 @@ function jsUbuntu.isProc(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=LinuxCmd
@@ -21,8 +19,6 @@ var=LinuxCmd
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

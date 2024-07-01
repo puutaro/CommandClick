@@ -1,6 +1,6 @@
 # jsFileSystem.isFile--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.isFile(
@@ -9,9 +9,7 @@ function jsFileSystem.isFile(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=isExistFile
@@ -21,8 +19,6 @@ var=isExistFile
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsQr.makeCpFileQr--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsQr.makeCpFileQr(
@@ -9,9 +9,7 @@ function jsQr.makeCpFileQr(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=cpQrFileQr
@@ -21,8 +19,6 @@ var=cpQrFileQr
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

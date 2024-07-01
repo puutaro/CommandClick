@@ -1,6 +1,6 @@
 # jsCsv.outPutTsvForDCol--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.outPutTsvForDCol(
@@ -9,9 +9,7 @@ function jsCsv.outPutTsvForDCol(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=tsvCon
@@ -21,8 +19,6 @@ var=tsvCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

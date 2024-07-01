@@ -1,6 +1,6 @@
 # jsSharePref.getFannelName--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsSharePref.getFannelName(
@@ -9,9 +9,7 @@ function jsSharePref.getFannelName(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=fannelName
@@ -21,8 +19,6 @@ var=fannelName
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

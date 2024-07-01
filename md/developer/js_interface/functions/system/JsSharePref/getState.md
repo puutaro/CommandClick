@@ -1,6 +1,6 @@
 # jsSharePref.getState--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsSharePref.getState(
@@ -9,9 +9,7 @@ function jsSharePref.getState(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=currentSate
@@ -21,8 +19,6 @@ var=currentSate
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

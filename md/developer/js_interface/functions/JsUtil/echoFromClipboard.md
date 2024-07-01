@@ -1,6 +1,6 @@
 # jsUtil.echoFromClipboard--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUtil.echoFromClipboard(
@@ -9,9 +9,7 @@ function jsUtil.echoFromClipboard(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=clipBoardCon
@@ -21,8 +19,6 @@ var=clipBoardCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

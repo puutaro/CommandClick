@@ -1,6 +1,6 @@
 # jsCurl.get--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCurl.get(
@@ -10,9 +10,7 @@ function jsCurl.get(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=con
@@ -23,8 +21,6 @@ var=con
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

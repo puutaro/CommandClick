@@ -1,6 +1,6 @@
 # jsScript.subLabelingVars--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.subLabelingVars(
@@ -9,9 +9,7 @@ function jsScript.subLabelingVars(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=CommandClickVariables
@@ -21,8 +19,6 @@ var=CommandClickVariables
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

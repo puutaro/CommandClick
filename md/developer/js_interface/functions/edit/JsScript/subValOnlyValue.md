@@ -1,6 +1,6 @@
 # jsScript.subValOnlyValue--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.subValOnlyValue(
@@ -10,9 +10,7 @@ function jsScript.subValOnlyValue(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=targetSettingVariableValue
@@ -23,8 +21,6 @@ var=targetSettingVariableValue
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

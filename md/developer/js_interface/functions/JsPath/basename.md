@@ -1,6 +1,6 @@
 # jsPath.basename--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.basename(
@@ -9,9 +9,7 @@ function jsPath.basename(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=onlyBaseName
@@ -21,8 +19,6 @@ var=onlyBaseName
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsFileSystem.showDirList--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.showDirList(
@@ -9,9 +9,7 @@ function jsFileSystem.showDirList(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=dirsCon
@@ -21,8 +19,6 @@ var=dirsCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

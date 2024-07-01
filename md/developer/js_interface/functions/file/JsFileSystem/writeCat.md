@@ -1,6 +1,6 @@
 # jsFileSystem.writeCat--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.writeCat(
@@ -10,9 +10,7 @@ function jsFileSystem.writeCat(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=contents
@@ -23,8 +21,6 @@ var=contents
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

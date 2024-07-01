@@ -1,6 +1,6 @@
 # jsPath.checkExtend--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.checkExtend(
@@ -10,9 +10,7 @@ function jsPath.checkExtend(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=extendList
@@ -23,8 +21,6 @@ var=extendList
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

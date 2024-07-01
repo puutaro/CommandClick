@@ -1,6 +1,6 @@
 # jsUbuntu.execScriptBySsh--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUbuntu.execScriptBySsh(
@@ -10,9 +10,7 @@ function jsUbuntu.execScriptBySsh(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=SshManager
@@ -23,8 +21,6 @@ var=SshManager
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

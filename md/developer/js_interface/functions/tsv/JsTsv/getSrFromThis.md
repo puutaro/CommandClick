@@ -1,6 +1,6 @@
 # jsTsv.getSrFromThis--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getSrFromThis(
@@ -10,9 +10,7 @@ function jsTsv.getSrFromThis(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=secondFieldCon
@@ -23,8 +21,6 @@ var=secondFieldCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsFileSystem.showFileList--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.showFileList(
@@ -9,9 +9,7 @@ function jsFileSystem.showFileList(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=FileSystems
@@ -21,8 +19,6 @@ var=FileSystems
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

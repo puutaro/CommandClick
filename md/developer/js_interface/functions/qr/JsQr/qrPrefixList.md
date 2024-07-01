@@ -1,6 +1,6 @@
 # jsQr.qrPrefixList--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsQr.qrPrefixList(
@@ -9,9 +9,7 @@ function jsQr.qrPrefixList(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=qrPrefixsCon
@@ -21,8 +19,6 @@ var=qrPrefixsCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsPdf.extractText--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPdf.extractText(
@@ -9,9 +9,7 @@ function jsPdf.extractText(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=extractText
@@ -21,8 +19,6 @@ var=extractText
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsQr.qrEditTypeList--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsQr.qrEditTypeList(
@@ -9,9 +9,7 @@ function jsQr.qrEditTypeList(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=qrEditTypesCon
@@ -21,8 +19,6 @@ var=qrEditTypesCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsText.take--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.take(
@@ -11,9 +11,7 @@ function jsText.take(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=takenCon
@@ -25,8 +23,6 @@ var=takenCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

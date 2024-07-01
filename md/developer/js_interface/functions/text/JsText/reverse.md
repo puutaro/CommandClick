@@ -1,6 +1,6 @@
 # jsText.reverse--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.reverse(
@@ -10,9 +10,7 @@ function jsText.reverse(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=reverseCon
@@ -23,8 +21,6 @@ var=reverseCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

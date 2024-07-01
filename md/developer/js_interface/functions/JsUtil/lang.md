@@ -1,6 +1,6 @@
 # jsUtil.lang--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUtil.lang(
@@ -9,9 +9,7 @@ function jsUtil.lang(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=settingLang
@@ -21,8 +19,6 @@ var=settingLang
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

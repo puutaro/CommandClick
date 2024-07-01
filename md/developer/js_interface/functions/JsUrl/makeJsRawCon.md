@@ -1,6 +1,6 @@
 # jsUrl.makeJsRawCon--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUrl.makeJsRawCon(
@@ -9,9 +9,7 @@ function jsUrl.makeJsRawCon(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=jsRawCon
@@ -21,8 +19,6 @@ var=jsRawCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

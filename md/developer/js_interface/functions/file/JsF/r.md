@@ -1,6 +1,6 @@
 # jsF.r--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsF.r(
@@ -9,9 +9,7 @@ function jsF.r(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=ReadText
@@ -21,8 +19,6 @@ var=ReadText
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

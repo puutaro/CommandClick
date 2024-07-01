@@ -1,6 +1,6 @@
 # jsPath.getFannelPath--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.getFannelPath(
@@ -9,9 +9,7 @@ function jsPath.getFannelPath(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=fannelPath
@@ -21,8 +19,6 @@ var=fannelPath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

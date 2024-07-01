@@ -1,6 +1,6 @@
 # jsUtil.convertDateTimeToMiliTime--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUtil.convertDateTimeToMiliTime(
@@ -9,9 +9,7 @@ function jsUtil.convertDateTimeToMiliTime(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=miliTimeCon
@@ -21,8 +19,6 @@ var=miliTimeCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

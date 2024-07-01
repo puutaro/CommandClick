@@ -1,6 +1,6 @@
 # jsDialog.formDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.formDialog(
@@ -11,9 +11,7 @@ function jsDialog.formDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=String
@@ -25,8 +23,6 @@ var=String
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

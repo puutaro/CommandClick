@@ -1,6 +1,6 @@
 # jsDiff.diff--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDiff.diff(
@@ -11,9 +11,7 @@ function jsDiff.diff(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=diffCon
@@ -25,8 +23,6 @@ var=diffCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsCurl.isConnOk--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCurl.isConnOk(
@@ -9,9 +9,7 @@ function jsCurl.isConnOk(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=CurlManager
@@ -21,8 +19,6 @@ var=CurlManager
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

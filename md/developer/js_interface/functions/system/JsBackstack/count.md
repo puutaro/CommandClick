@@ -1,6 +1,6 @@
 # jsBackstack.count--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsBackstack.count(
@@ -9,9 +9,7 @@ function jsBackstack.count(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=backstackCount
@@ -21,8 +19,6 @@ var=backstackCount
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsScript.convertRepValPathToOneLine--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.convertRepValPathToOneLine(
@@ -9,9 +9,7 @@ function jsScript.convertRepValPathToOneLine(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=listOf
@@ -21,8 +19,6 @@ var=listOf
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

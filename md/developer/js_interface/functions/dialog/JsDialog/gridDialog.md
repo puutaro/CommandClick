@@ -1,6 +1,6 @@
 # jsDialog.gridDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.gridDialog(
@@ -11,9 +11,7 @@ function jsDialog.gridDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=gridJsDialog
@@ -25,8 +23,6 @@ var=gridJsDialog
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

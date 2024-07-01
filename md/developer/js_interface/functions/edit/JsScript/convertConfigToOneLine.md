@@ -1,6 +1,6 @@
 # jsScript.convertConfigToOneLine--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.convertConfigToOneLine(
@@ -9,9 +9,7 @@ function jsScript.convertConfigToOneLine(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=SettingFile
@@ -21,8 +19,6 @@ var=SettingFile
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

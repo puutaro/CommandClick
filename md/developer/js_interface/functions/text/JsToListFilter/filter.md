@@ -1,6 +1,6 @@
 # jsToListFilter.filter--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsToListFilter.filter(
@@ -12,9 +12,7 @@ function jsToListFilter.filter(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=filterCon
@@ -27,8 +25,6 @@ var=filterCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

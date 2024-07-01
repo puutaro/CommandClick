@@ -1,6 +1,6 @@
 # jsLinux.runCmd--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsLinux.runCmd(
@@ -9,9 +9,7 @@ function jsLinux.runCmd(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=cmdOutput
@@ -21,8 +19,6 @@ var=cmdOutput
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

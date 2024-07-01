@@ -1,6 +1,6 @@
 # jsCurl.getImage--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCurl.getImage(
@@ -9,9 +9,7 @@ function jsCurl.getImage(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=downloadImagePath
@@ -21,8 +19,6 @@ var=downloadImagePath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

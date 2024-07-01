@@ -1,6 +1,6 @@
 # jsCsv.toRow--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.toRow(
@@ -12,9 +12,7 @@ function jsCsv.toRow(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=tabSeparatedRowByConvertedCols
@@ -27,8 +25,6 @@ var=tabSeparatedRowByConvertedCols
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsToListMap.map--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsToListMap.map(
@@ -11,9 +11,7 @@ function jsToListMap.map(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=mapMadeCon
@@ -25,8 +23,6 @@ var=mapMadeCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

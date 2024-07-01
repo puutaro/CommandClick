@@ -1,6 +1,6 @@
 # jsReplaceVariables.getTsv--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsReplaceVariables.getTsv(
@@ -9,9 +9,7 @@ function jsReplaceVariables.getTsv(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=replaceVariableTsvCon
@@ -21,8 +19,6 @@ var=replaceVariableTsvCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

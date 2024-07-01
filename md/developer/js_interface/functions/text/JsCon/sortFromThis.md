@@ -1,6 +1,6 @@
 # jsCon.sortFromThis--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCon.sortFromThis(
@@ -10,9 +10,7 @@ function jsCon.sortFromThis(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=conBySrotedFromThis
@@ -23,8 +21,6 @@ var=conBySrotedFromThis
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

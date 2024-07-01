@@ -1,6 +1,6 @@
 # jsFileSystem.isDir--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.isDir(
@@ -9,9 +9,7 @@ function jsFileSystem.isDir(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=isExistDir
@@ -21,8 +19,6 @@ var=isExistDir
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

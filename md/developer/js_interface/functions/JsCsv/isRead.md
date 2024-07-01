@@ -1,6 +1,6 @@
 # jsCsv.isRead--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.isRead(
@@ -9,9 +9,7 @@ function jsCsv.isRead(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=String
@@ -21,8 +19,6 @@ var=String
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

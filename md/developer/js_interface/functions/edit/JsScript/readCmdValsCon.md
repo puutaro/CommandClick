@@ -1,6 +1,6 @@
 # jsScript.readCmdValsCon--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.readCmdValsCon(
@@ -9,9 +9,7 @@ function jsScript.readCmdValsCon(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=commandVarialbeCon
@@ -21,8 +19,6 @@ var=commandVarialbeCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

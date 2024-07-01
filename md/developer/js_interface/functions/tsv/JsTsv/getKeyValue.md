@@ -1,6 +1,6 @@
 # jsTsv.getKeyValue--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getKeyValue(
@@ -10,9 +10,7 @@ function jsTsv.getKeyValue(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=firstKeyValue
@@ -23,8 +21,6 @@ var=firstKeyValue
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

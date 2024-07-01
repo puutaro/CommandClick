@@ -1,6 +1,6 @@
 # jsMap.get--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsMap.get(
@@ -11,9 +11,7 @@ function jsMap.get(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=keyCon
@@ -25,8 +23,6 @@ var=keyCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsPath.removePrefix--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.removePrefix(
@@ -10,9 +10,7 @@ function jsPath.removePrefix(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=removePrefixFileName
@@ -23,8 +21,6 @@ var=removePrefixFileName
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

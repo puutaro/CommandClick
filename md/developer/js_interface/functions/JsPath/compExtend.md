@@ -1,6 +1,6 @@
 # jsPath.compExtend--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.compExtend(
@@ -10,9 +10,7 @@ function jsPath.compExtend(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=pathByCompExtend
@@ -23,8 +21,6 @@ var=pathByCompExtend
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

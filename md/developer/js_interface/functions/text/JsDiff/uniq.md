@@ -1,6 +1,6 @@
 # jsDiff.uniq--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDiff.uniq(
@@ -11,9 +11,7 @@ function jsDiff.uniq(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=uniqCon
@@ -25,8 +23,6 @@ var=uniqCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

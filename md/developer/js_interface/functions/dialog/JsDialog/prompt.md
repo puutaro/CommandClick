@@ -1,6 +1,6 @@
 # jsDialog.prompt--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.prompt(
@@ -11,9 +11,7 @@ function jsDialog.prompt(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=promptStr
@@ -25,8 +23,6 @@ var=promptStr
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

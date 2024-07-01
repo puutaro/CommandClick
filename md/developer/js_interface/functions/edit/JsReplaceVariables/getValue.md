@@ -1,6 +1,6 @@
 # jsReplaceVariables.getValue--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsReplaceVariables.getValue(
@@ -10,9 +10,7 @@ function jsReplaceVariables.getValue(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=targetReplaceVariableValueStr
@@ -23,8 +21,6 @@ var=targetReplaceVariableValueStr
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

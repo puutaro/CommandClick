@@ -1,6 +1,6 @@
 # jsDialog.multiSelectOnlyImageGridDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.multiSelectOnlyImageGridDialog(
@@ -11,9 +11,7 @@ function jsDialog.multiSelectOnlyImageGridDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=selectedLine
@@ -25,8 +23,6 @@ var=selectedLine
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

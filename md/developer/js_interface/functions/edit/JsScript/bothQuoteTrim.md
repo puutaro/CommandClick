@@ -1,6 +1,6 @@
 # jsScript.bothQuoteTrim--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.bothQuoteTrim(
@@ -9,9 +9,7 @@ function jsScript.bothQuoteTrim(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=conWithBothQuoteTrim
@@ -21,8 +19,6 @@ var=conWithBothQuoteTrim
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

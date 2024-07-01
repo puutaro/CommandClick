@@ -1,6 +1,6 @@
 # jsArgs.get--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsArgs.get(
@@ -9,9 +9,7 @@ function jsArgs.get(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=jsArguments
@@ -21,8 +19,6 @@ var=jsArguments
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

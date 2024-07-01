@@ -1,6 +1,6 @@
 # jsCsv.takeRowSize--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.takeRowSize(
@@ -9,9 +9,7 @@ function jsCsv.takeRowSize(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=rowSize
@@ -21,8 +19,6 @@ var=rowSize
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsEdit.getFromEditText--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsEdit.getFromEditText(
@@ -9,9 +9,7 @@ function jsEdit.getFromEditText(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=targetEditTextCon
@@ -21,8 +19,6 @@ var=targetEditTextCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

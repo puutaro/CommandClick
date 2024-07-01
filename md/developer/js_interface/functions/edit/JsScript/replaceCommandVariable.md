@@ -1,6 +1,6 @@
 # jsScript.replaceCommandVariable--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.replaceCommandVariable(
@@ -10,9 +10,7 @@ function jsScript.replaceCommandVariable(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=replacedCommandVariableCon
@@ -23,8 +21,6 @@ var=replacedCommandVariableCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsToolbar.getListPath--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsToolbar.getListPath(
@@ -9,9 +9,7 @@ function jsToolbar.getListPath(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=listKeyCon
@@ -21,8 +19,6 @@ var=listKeyCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

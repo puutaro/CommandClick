@@ -1,6 +1,6 @@
 # jsBeforeInfo.match--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsBeforeInfo.match(
@@ -10,9 +10,7 @@ function jsBeforeInfo.match(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=isEqual
@@ -23,8 +21,6 @@ var=isEqual
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

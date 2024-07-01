@@ -1,6 +1,6 @@
 # jsVar.echo--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsVar.echo(
@@ -9,9 +9,7 @@ function jsVar.echo(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=valueStr
@@ -21,8 +19,6 @@ var=valueStr
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

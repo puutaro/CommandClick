@@ -1,6 +1,6 @@
 # jsUtil.sleep--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUtil.sleep(
@@ -9,9 +9,7 @@ function jsUtil.sleep(
 ```
 
 - The `run` prefix annotation is a process annotation
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=runSleep
@@ -22,9 +20,7 @@ var=runSleep
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
-
-## Src
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Src
 
 -> [jsUtil.sleep](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUtil.kt#L17)
 

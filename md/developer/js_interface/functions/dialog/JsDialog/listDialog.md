@@ -1,6 +1,6 @@
 # jsDialog.listDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.listDialog(
@@ -11,9 +11,7 @@ function jsDialog.listDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=selectedItem
@@ -25,8 +23,6 @@ var=selectedItem
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsText.countLines--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.countLines(
@@ -10,9 +10,7 @@ function jsText.countLines(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=linesSize
@@ -23,8 +21,6 @@ var=linesSize
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

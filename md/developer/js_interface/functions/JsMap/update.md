@@ -1,6 +1,6 @@
 # jsMap.update--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsMap.update(
@@ -11,9 +11,7 @@ function jsMap.update(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=updatedMapCon
@@ -25,8 +23,6 @@ var=updatedMapCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

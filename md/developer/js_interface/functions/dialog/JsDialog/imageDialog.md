@@ -1,6 +1,6 @@
 # jsDialog.imageDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.imageDialog(
@@ -11,9 +11,7 @@ function jsDialog.imageDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=createdImagePath
@@ -25,8 +23,6 @@ var=createdImagePath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

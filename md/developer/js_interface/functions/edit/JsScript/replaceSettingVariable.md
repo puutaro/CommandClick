@@ -1,6 +1,6 @@
 # jsScript.replaceSettingVariable--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.replaceSettingVariable(
@@ -10,9 +10,7 @@ function jsScript.replaceSettingVariable(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=replacedSettingVariableCon
@@ -23,8 +21,6 @@ var=replacedSettingVariableCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

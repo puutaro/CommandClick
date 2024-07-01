@@ -1,6 +1,6 @@
 # jsText.trimNewLine--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.trimNewLine(
@@ -9,9 +9,7 @@ function jsText.trimNewLine(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=conByTrimNewLine
@@ -21,8 +19,6 @@ var=conByTrimNewLine
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Description
 

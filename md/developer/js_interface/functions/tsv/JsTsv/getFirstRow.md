@@ -1,6 +1,6 @@
 # jsTsv.getFirstRow--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsTsv.getFirstRow(
@@ -9,9 +9,7 @@ function jsTsv.getFirstRow(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=TsvTool
@@ -21,8 +19,6 @@ var=TsvTool
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

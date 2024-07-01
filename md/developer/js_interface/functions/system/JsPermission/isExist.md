@@ -1,6 +1,6 @@
 # jsPermission.isExist--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPermission.isExist(
@@ -9,9 +9,7 @@ function jsPermission.isExist(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=ContextCompat
@@ -21,8 +19,6 @@ var=ContextCompat
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

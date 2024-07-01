@@ -1,6 +1,6 @@
 # jsCsv.toHeader--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.toHeader(
@@ -10,9 +10,7 @@ function jsCsv.toHeader(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=colName
@@ -23,8 +21,6 @@ var=colName
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

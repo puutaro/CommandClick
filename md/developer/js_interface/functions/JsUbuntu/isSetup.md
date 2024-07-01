@@ -1,6 +1,6 @@
 # jsUbuntu.isSetup--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUbuntu.isSetup(
@@ -9,9 +9,7 @@ function jsUbuntu.isSetup(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=isSetupFile
@@ -21,8 +19,6 @@ var=isSetupFile
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

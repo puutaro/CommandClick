@@ -1,6 +1,6 @@
 # jsUbuntu.execScriptF--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUbuntu.execScriptF(
@@ -10,9 +10,7 @@ function jsUbuntu.execScriptF(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=Shell2Http
@@ -23,8 +21,6 @@ var=Shell2Http
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

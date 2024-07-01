@@ -1,6 +1,6 @@
 # jsPath.checkPrefix--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.checkPrefix(
@@ -10,9 +10,7 @@ function jsPath.checkPrefix(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=isExist
@@ -23,8 +21,6 @@ var=isExist
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

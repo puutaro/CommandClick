@@ -1,6 +1,6 @@
 # jsPath.convertUbuntuPath--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.convertUbuntuPath(
@@ -9,9 +9,7 @@ function jsPath.convertUbuntuPath(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=ubuntuPath
@@ -21,8 +19,6 @@ var=ubuntuPath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

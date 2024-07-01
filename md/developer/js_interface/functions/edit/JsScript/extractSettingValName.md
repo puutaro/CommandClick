@@ -1,6 +1,6 @@
 # jsScript.extractSettingValName--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsScript.extractSettingValName(
@@ -9,9 +9,7 @@ function jsScript.extractSettingValName(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=settingVaribleNames
@@ -21,8 +19,6 @@ var=settingVaribleNames
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

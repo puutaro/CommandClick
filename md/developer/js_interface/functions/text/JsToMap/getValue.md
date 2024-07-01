@@ -1,6 +1,6 @@
 # jsToMap.getValue--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsToMap.getValue(
@@ -9,9 +9,7 @@ function jsToMap.getValue(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=value
@@ -21,8 +19,6 @@ var=value
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

@@ -1,6 +1,6 @@
 # jsPath.dirname--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPath.dirname(
@@ -9,9 +9,7 @@ function jsPath.dirname(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=parentDirPath
@@ -21,8 +19,6 @@ var=parentDirPath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

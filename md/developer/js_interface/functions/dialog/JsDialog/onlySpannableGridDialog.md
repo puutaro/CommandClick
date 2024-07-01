@@ -1,6 +1,6 @@
 # jsDialog.onlySpannableGridDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.onlySpannableGridDialog(
@@ -11,9 +11,7 @@ function jsDialog.onlySpannableGridDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=selectedLine
@@ -25,8 +23,6 @@ var=selectedLine
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

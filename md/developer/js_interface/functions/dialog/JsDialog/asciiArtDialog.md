@@ -1,6 +1,6 @@
 # jsDialog.asciiArtDialog--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsDialog.asciiArtDialog(
@@ -11,9 +11,7 @@ function jsDialog.asciiArtDialog(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=createdAsciiArtPath
@@ -25,8 +23,6 @@ var=createdAsciiArtPath
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

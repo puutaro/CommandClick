@@ -1,6 +1,6 @@
 # jsToMap.map--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsToMap.map(
@@ -12,9 +12,7 @@ function jsToMap.map(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=receiveTsvLineList
@@ -27,8 +25,6 @@ var=receiveTsvLineList
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

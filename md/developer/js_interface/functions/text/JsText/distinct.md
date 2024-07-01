@@ -1,6 +1,6 @@
 # jsText.distinct--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsText.distinct(
@@ -10,9 +10,7 @@ function jsText.distinct(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=distinctCon
@@ -23,8 +21,6 @@ var=distinctCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

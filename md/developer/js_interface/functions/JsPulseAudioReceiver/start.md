@@ -1,6 +1,6 @@
 # jsPulseAudioReceiver.start--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsPulseAudioReceiver.start(
@@ -10,9 +10,7 @@ function jsPulseAudioReceiver.start(
 ```
 
 - The `run` prefix annotation is a process annotation
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=runStart
@@ -24,9 +22,7 @@ var=runStart
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
-
-## Src
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Src
 
 -> [jsPulseAudioReceiver.start](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPulseAudioReceiver.kt#L21)
 

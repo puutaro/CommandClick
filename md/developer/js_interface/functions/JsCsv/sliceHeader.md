@@ -1,6 +1,6 @@
 # jsCsv.sliceHeader--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsCsv.sliceHeader(
@@ -12,9 +12,7 @@ function jsCsv.sliceHeader(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=slicedHeader
@@ -27,8 +25,6 @@ var=slicedHeader
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

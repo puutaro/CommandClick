@@ -1,6 +1,6 @@
 # jsFileSystem.showFullFileList--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsFileSystem.showFullFileList(
@@ -10,9 +10,7 @@ function jsFileSystem.showFullFileList(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=fullFilePathsCon
@@ -23,8 +21,6 @@ var=fullFilePathsCon
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 

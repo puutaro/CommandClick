@@ -1,6 +1,6 @@
 # jsUbuntu.isInstall--
 
-## Difinition
+## Definition
 
 ```js.js
 function jsUbuntu.isInstall(
@@ -13,9 +13,7 @@ function jsUbuntu.isInstall(
 ```
 
 
-
-
-## Difinition by js action
+## Definition by js action
 
 ```js.js
 var=false
@@ -29,8 +27,6 @@ var=false
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
-
-
 
 ## Src
 
