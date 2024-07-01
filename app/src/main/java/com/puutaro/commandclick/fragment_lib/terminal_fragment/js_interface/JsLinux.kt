@@ -17,19 +17,10 @@ class JsLinux(
         cmdStr: String
     ): String {
         ToastUtils.showShort(cmdStr)
-        return LinuxCmd.execCommand(
+        val cmdOutput = LinuxCmd.execCommand(
             context,
             listOf("sh", "-c", cmdStr).joinToString("\t")
         )
-    }
-
-    fun getOutput(cmd: String): String {
-        if(
-            context == null
-        ) return String()
-        return BusyboxExecutor(
-            context,
-            UbuntuFiles(context)
-        ).getCmdOutput(cmd)
+        return cmdOutput
     }
 }

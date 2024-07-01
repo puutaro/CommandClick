@@ -14,18 +14,20 @@ class JsTsv(
     fun getFirstValue(
         path: String
     ): String {
-        return TsvTool.getFirstValue(
+        val firstValue = TsvTool.getFirstValue(
             path,
         )
+        return firstValue
     }
 
     @JavascriptInterface
     fun getFirstKey(
         path: String
     ): String {
-        return TsvTool.getFirstKey(
+        val firstKey = TsvTool.getFirstKey(
             path
         )
+        return firstKey
     }
 
     @JavascriptInterface
@@ -44,9 +46,10 @@ class JsTsv(
         val con = ReadText(
             path
         ).readText()
-        return TsvTool.getSecondRow(
+        val firstLine = TsvTool.getSecondRow(
             con
         )
+        return firstLine
     }
 
     @JavascriptInterface
@@ -54,10 +57,11 @@ class JsTsv(
         path: String,
         thisLine: String,
     ): String {
-        return execGetSecondRowBySortFromThis(
+        val secondFieldCon = execGetSecondRowBySortFromThis(
             path,
             thisLine,
         )
+        return secondFieldCon
     }
 
 
@@ -68,18 +72,20 @@ class JsTsv(
         val con = ReadText(
             path
         ).readText()
-        return TsvTool.getFirstRow(
+        val firstFieldCon = TsvTool.getFirstRow(
             con
         )
+        return firstFieldCon
     }
 
     @JavascriptInterface
     fun getSecondRow(
         con: String,
     ): String {
-        return TsvTool.getSecondRow(
+        val secondFiledCon = TsvTool.getSecondRow(
             con
         )
+        return secondFiledCon
     }
 
     @JavascriptInterface
@@ -87,10 +93,11 @@ class JsTsv(
         path: String,
         thisLine: String,
     ): String {
-        return execGetSecondRowBySortFromThis(
+        val secondFieldCon = execGetSecondRowBySortFromThis(
             path,
             thisLine,
         )
+        return secondFieldCon
     }
 
     @JavascriptInterface
@@ -107,10 +114,11 @@ class JsTsv(
         path: String,
         key: String,
     ): String {
-        return TsvTool.getKeyValue(
+        val firstKeyValue = TsvTool.getKeyValue(
             path,
             key,
         )
+        return firstKeyValue
     }
 
     @JavascriptInterface
@@ -119,7 +127,7 @@ class JsTsv(
         key: String,
     ): String {
         val twoColumnNum = 2
-        return TsvTool.filterByColumnNum(
+        val keyValue = TsvTool.filterByColumnNum(
             con.split("\n"),
             twoColumnNum
         ).firstOrNull {
@@ -127,6 +135,7 @@ class JsTsv(
         }?.split("\t")
             ?.lastOrNull()
             ?: String()
+        return keyValue
     }
 
     private fun execGetSecondRowBySortFromThis(

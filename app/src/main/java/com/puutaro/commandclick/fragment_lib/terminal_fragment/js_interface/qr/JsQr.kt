@@ -50,13 +50,14 @@ class JsQr(
 
     @JavascriptInterface
     fun qrPrefixList(): String {
-        return QrLaunchType.values().map { it.prefix }.joinToString("\n")
+        val qrPrefixsCon = QrLaunchType.values().map { it.prefix }.joinToString("\n")
+        return qrPrefixsCon
     }
 
     @JavascriptInterface
     fun qrEditTypeList(): String {
         val freeEditType = QrEditType.FREE_TEXT.type
-        return QrLaunchType.values().map { it.prefix }.map {
+        val qrEditTypesCon = QrLaunchType.values().map { it.prefix }.map {
             prefix ->
             QrEditType.values()
                 .find {
@@ -64,6 +65,7 @@ class JsQr(
                 }?.type
                 ?: freeEditType
         }.distinct().reversed().joinToString("\n")
+        return qrEditTypesCon
     }
 
     @JavascriptInterface
@@ -85,9 +87,10 @@ class JsQr(
     fun scanFromImage(
         qrImagePath: String
     ): String {
-        return qrScanner.scanFromImage(
+        val errMassage = qrScanner.scanFromImage(
             qrImagePath
         )
+        return errMassage
     }
 
     @JavascriptInterface
@@ -214,20 +217,22 @@ class JsQr(
 
     @JavascriptInterface
     fun makeScpQrSrcStr(dirPath: String): String {
-        return QrDialogMethod.makeScpDirQrStr(
+        val scpQrSrcStr = QrDialogMethod.makeScpDirQrStr(
             terminalFragment,
             dirPath
         )
+        return scpQrSrcStr
     }
 
     @JavascriptInterface
     fun makeCpFileQr(
         path: String,
     ): String {
-        return QrDialogMethod.makeCpFileQrNormal(
+        val cpQrFileQr = QrDialogMethod.makeCpFileQrNormal(
             terminalFragment,
             path,
         )
+        return cpQrFileQr
     }
 
     @JavascriptInterface
@@ -246,7 +251,6 @@ class JsQr(
             savePath,
             qrBitMap
         )
-
     }
 
     @JavascriptInterface

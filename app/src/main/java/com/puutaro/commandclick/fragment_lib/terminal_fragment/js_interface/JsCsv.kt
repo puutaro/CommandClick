@@ -24,14 +24,16 @@ class JsCsv(
     fun takeRowSize(
         tag: String
     ): Int {
-        return terminalFragment.rowsMap[tag]?.size ?: 0
+        val rowSize = terminalFragment.rowsMap[tag]?.size ?: 0
+        return rowSize
     }
 
     @JavascriptInterface
     fun takeColSize(
         tag: String
     ): Int {
-        return terminalFragment.rowsMap[tag]?.firstOrNull()?.size ?: 0
+        val tagName = terminalFragment.rowsMap[tag]?.firstOrNull()?.size ?: 0
+        return tagName
     }
 
     @JavascriptInterface
@@ -188,7 +190,8 @@ class JsCsv(
         if(
             colNum >= colSize
         ) return String()
-        return headerList[colNum]
+        val colName = headerList[colNum]
+        return colName
     }
 
     @JavascriptInterface
@@ -215,9 +218,10 @@ class JsCsv(
             endColNum >= colSize
         ) colSize - 1
         else endColNum
-        return headerList
+        val headerRowWithTabSeparated = headerList
             .slice(startCol..lastColEndNum)
             .joinToString("\t")
+        return headerRowWithTabSeparated
     }
 
     @JavascriptInterface
@@ -242,12 +246,13 @@ class JsCsv(
             ?: return String()
         val cols = rows[rowNum]
         val colsSize = cols.size
-        return (0 until colsSize).filter {
+        val tabSeparatedRowByConvertedCols = (0 until colsSize).filter {
             startCol <= it
                     && it <= endColNum
         }.map {
             cols[it]
         }.joinToString("\t")
+        return tabSeparatedRowByConvertedCols
     }
 
     @JavascriptInterface
@@ -267,7 +272,7 @@ class JsCsv(
         )
         if(startRow > endRowNum) return String()
         try {
-            return (startRow..endRowNum).map {
+            val rowConByConvertedCols = (startRow..endRowNum).map {
                 val row = terminalFragment.rowsMap[tag]
                     ?.get(it)
                     ?: return@map String()
@@ -278,6 +283,7 @@ class JsCsv(
                 row.getOrNull(colNum)
                     ?: String()
             }.joinToString("\n")
+            return rowConByConvertedCols
         } catch (e: Exception){
             ToastUtils.showLong(e.toString())
             return String()
@@ -304,12 +310,13 @@ class JsCsv(
         ) return String()
         val headers = headerRow.split("\t")
         val colsSize = headers.size
-        return (0 until colsSize).filter {
+        val slicedHeader = (0 until colsSize).filter {
             startCol <= it
                     && it <= endColNum
         }.map {
             headers[it]
         }.joinToString("\t")
+        return slicedHeader
     }
 
     @JavascriptInterface
@@ -318,7 +325,7 @@ class JsCsv(
         onTh: String,
     ): String {
         val sourceRows = tsvString.split("\n")
-        return sourceRows.map {
+        val htmlCon = sourceRows.map {
             line ->
             val lineList = line.split("\t")
             val lineListSize = lineList.size
@@ -332,16 +339,18 @@ class JsCsv(
             }.joinToString("")
             listOf("<tr>", rows,"</tr>").joinToString("")
         }.joinToString("\n")
+        return htmlCon
     }
 
     @JavascriptInterface
     fun outPutTsvForDRow(
         tag: String
     ): String {
-        return terminalFragment.rowsMap[tag]?.map {
+        val tsvCon = terminalFragment.rowsMap[tag]?.map {
             it.joinToString("\t")
         }?.joinToString("\n")
             ?: String()
+        return tsvCon
     }
 
     @JavascriptInterface
@@ -350,9 +359,10 @@ class JsCsv(
     ): String {
         val rows = terminalFragment.rowsMap[tag]
             ?: return String()
-        return jsText.transpose(rows).map {
+        val tsvCon = jsText.transpose(rows).map {
             it.joinToString("\t")
         }.joinToString("\n")
+        return tsvCon
     }
 
     @JavascriptInterface

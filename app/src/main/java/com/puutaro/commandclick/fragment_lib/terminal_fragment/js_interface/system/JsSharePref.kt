@@ -11,22 +11,25 @@ class JsSharePref(
 
     @JavascriptInterface
     fun getFannelName(): String {
-        return SharePrefTool.getCurrentFannelName(
+        val fannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
+        return fannelName
     }
 
     @JavascriptInterface
     fun getAppDirPath(): String {
-        return SharePrefTool.getCurrentAppDirPath(
+        val getAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
+        return getAppDirPath
     }
 
     @JavascriptInterface
     fun getState(): String {
-        return SharePrefTool.getCurrentStateName(
+        val currentSate = SharePrefTool.getCurrentStateName(
             readSharePreferenceMap
         )
+        return currentSate
     }
 }

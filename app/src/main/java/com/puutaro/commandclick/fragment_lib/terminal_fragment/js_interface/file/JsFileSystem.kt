@@ -28,16 +28,18 @@ class JsFileSystem(
     fun readLocalFile(path: String): String {
         val fileObj = File(path)
         if(!fileObj.isFile) return String()
-        return ReadText(
+        val fileCon = ReadText(
             fileObj.absolutePath
         ).readText()
+        return fileCon
     }
 
     @JavascriptInterface
     fun read(path: String): String {
-        return readLocalFile(
+        val fileCon = readLocalFile(
             path
         )
+        return fileCon
     }
 
     @JavascriptInterface
@@ -307,11 +309,12 @@ class JsFileSystem(
                     && isPrefix
                     && isSuffix
         }
-        return nameOrFullPathHandler(
+        val fullFilePathsCon = nameOrFullPathHandler(
             extraMap,
             fileNameList,
             dirPath,
         )
+        return fullFilePathsCon
     }
 
     @JavascriptInterface
@@ -353,11 +356,12 @@ class JsFileSystem(
                     && isPrefix
                     && isSuffix
         }
-        return nameOrFullPathHandler(
+        val fullDirsCon = nameOrFullPathHandler(
             extraMap,
             dirNameList,
             dirPath,
         )
+        return fullDirsCon
     }
 
     private fun nameOrFullPathHandler(
@@ -392,23 +396,26 @@ class JsFileSystem(
     fun showDirList(
         dirPath: String
     ): String {
-        return FileSystems.showDirList(
+        val dirsCon = FileSystems.showDirList(
             dirPath
         ).joinToString("\n")
+        return dirsCon
     }
 
     @JavascriptInterface
     fun isFile(
         path: String
     ): Boolean {
-        return File(path).isFile
+        val isExistFile = File(path).isFile
+        return isExistFile
     }
 
     @JavascriptInterface
     fun isDir(
         path: String
     ): Boolean {
-        return File(path).isDirectory
+        val isExistDir = File(path).isDirectory
+        return isExistDir
     }
 
     @JavascriptInterface

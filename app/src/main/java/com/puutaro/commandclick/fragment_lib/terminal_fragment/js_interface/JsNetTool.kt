@@ -11,6 +11,7 @@ class JsNetTool(
 
     @JavascriptInterface
     fun getIpv4(): String {
-        return NetworkTool.getIpv4Address(context)
+        val ipV4Address = NetworkTool.getIpv4Address(context)
+        return ipV4Address
     }
 }

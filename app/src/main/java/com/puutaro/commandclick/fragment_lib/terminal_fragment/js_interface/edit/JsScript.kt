@@ -69,7 +69,7 @@ class JsScript(
             settingStartHolder.isNullOrEmpty()
             || settingEndHolder.isNullOrEmpty()
         ) return String()
-        return CommandClickVariables.extractValListFromHolder(
+        val settingVaribleCon = CommandClickVariables.extractValListFromHolder(
             jsContents.split("\n"),
             settingStartHolder,
             settingEndHolder
@@ -80,6 +80,7 @@ class JsScript(
                     && it.endsWith(settingEndHolder)
             !onStartHolder && !onEndHolder
         }?.joinToString("\n") ?: String()
+        return settingVaribleCon
     }
 
     @JavascriptInterface
@@ -90,7 +91,7 @@ class JsScript(
             commandStartHolder.isNullOrEmpty()
             || commandEndHolder.isNullOrEmpty()
         ) return String()
-        return CommandClickVariables.extractValListFromHolder(
+        val commandVariableCon = CommandClickVariables.extractValListFromHolder(
             jsContents.split("\n"),
             commandStartHolder,
             commandEndHolder
@@ -101,6 +102,7 @@ class JsScript(
                     && it.endsWith(commandEndHolder)
             !onStartHolder && !onEndHolder
         }?.joinToString("\n") ?: String()
+        return commandVariableCon
     }
 
     @JavascriptInterface
@@ -109,12 +111,13 @@ class JsScript(
         valString: String
     ): String {
         val targetValPrefix = "${targetValName}="
-        return valString.split("\n").filter {
+        val targetSettingVariableValue = valString.split("\n").filter {
             it.startsWith(targetValPrefix)
         }.map {
             val removedValName = it.removePrefix(targetValPrefix)
             QuoteTool.trimBothEdgeQuote(removedValName)
         }.joinToString("\n")
+        return targetSettingVariableValue
     }
 
     @JavascriptInterface
@@ -122,7 +125,7 @@ class JsScript(
         currentFannelPath: String,
         setVariableFilePath: String,
     ): String {
-        return listOf(
+        val oneLineSetVariableCon = listOf(
             CommandClickScriptVariable.SET_VARIABLE_TYPE,
             SettingFile.read(
                 setVariableFilePath,
@@ -130,6 +133,7 @@ class JsScript(
                 setReplaceVariableMap,
             )
         ).filter{ it.isNotEmpty() }.joinToString("=")
+        return oneLineSetVariableCon
     }
 
 //    @JavascriptInterface
@@ -160,7 +164,8 @@ class JsScript(
     fun bothQuoteTrim(
         valString: String
     ): String {
-        return QuoteTool.trimBothEdgeQuote(valString)
+        val conWithBothQuoteTrim = QuoteTool.trimBothEdgeQuote(valString)
+        return conWithBothQuoteTrim
     }
 
     @JavascriptInterface
@@ -168,12 +173,13 @@ class JsScript(
         scriptContents: String,
         replaceNewlineSepaCon: String,
     ): String {
-        return CommandClickVariables.replaceVariableInHolder(
+        val replacedCommandVariableCon = CommandClickVariables.replaceVariableInHolder(
             scriptContents,
             replaceNewlineSepaCon,
             commandStartHolder,
             commandEndHolder,
         )
+        return replacedCommandVariableCon
     }
 
     @JavascriptInterface
@@ -181,12 +187,13 @@ class JsScript(
         scriptContents: String,
         replaceNewlineSepaCon: String,
     ): String {
-        return CommandClickVariables.replaceVariableInHolder(
+        val replacedSettingVariableCon = CommandClickVariables.replaceVariableInHolder(
             scriptContents,
             replaceNewlineSepaCon,
             settingStartHolder,
             settingEndHolder,
         )
+        return replacedSettingVariableCon
     }
 
     @JavascriptInterface
@@ -199,9 +206,10 @@ class JsScript(
         val mainFannelCon = ReadText(
             fannelPath
         ).readText()
-        return subCmdVars(
+        val commandVarialbeCon = subCmdVars(
             mainFannelCon
         )
+        return commandVarialbeCon
     }
 
     @JavascriptInterface
@@ -209,7 +217,7 @@ class JsScript(
         settingValsCon: String
     ): String {
         val settingValsRegex = Regex("^[a-zA-Z0-9]+=")
-        return settingValsCon.split("\n").filter {
+        val settingVaribleNames = settingValsCon.split("\n").filter {
             val trimLine = it.trim()
             val notCommentOut =
                 !trimLine.startsWith("//")
@@ -226,79 +234,6 @@ class JsScript(
         }.filter {
             it.isNotEmpty()
         }.joinToString("\n")
+        return settingVaribleNames
     }
-
-//    @JavascriptInterface
-//    fun makeFannelCon(
-//        settingValConSrc: String,
-//        cmdValConSrc: String,
-//    ): String {
-//        val languageType = LanguageTypeSelects.JAVA_SCRIPT
-//        val languageTypeToSectionHolderMap =
-//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//                languageType
-//            )
-//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//        ) as String
-//
-//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//        ) as String
-//        val cmdSectionStart = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-//        ) as String
-//
-//        val cmdSectionEnd = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-//        ) as String
-//        val settingConListWithHolder = listOf(
-//            settingSectionStart,
-//            makeSettingValCon(settingValConSrc),
-//            settingSectionEnd
-//        )
-//        val cmdConListWithHolder = listOf(
-//            cmdSectionStart,
-//            cmdValConSrc,
-//            cmdSectionEnd
-//        )
-//        return listOf(
-//            listOf(String()),
-//            settingConListWithHolder,
-//            cmdConListWithHolder,
-//            listOf(String()),
-//        ).flatten().joinToString("\n\n")
-//    }
-
-//    private fun makeSettingValCon(
-//        settingValConSrc: String,
-//    ): String {
-//        val valNameRegex = Regex("[a-zA-Z0-9]+=.*")
-//        return settingValConSrc.split("\n").filter {
-//            val valLineList = it.split("=")
-//            it.isNotEmpty()
-//                    && it.matches(valNameRegex)
-//                    && valLineList.size >= 2
-//        }.map {
-//            val valLineList = it.split("=")
-//            val valName = valLineList.firstOrNull()
-//                ?: return@map String()
-//            val valValueSrc = QuoteTool.trimBothEdgeQuote(
-//                valLineList.filterIndexed { index, s -> index > 0 }
-//                    .joinToString("\n")
-//            )
-//            val valValue = when(
-//                valValueSrc.startsWith(filePrefix)
-//            ){
-//                true -> {
-//                    val filePath = valValueSrc.removePrefix(filePrefix)
-//                    SettingFile.read(
-//                        filePath
-//                    )
-//                }
-//                else -> valValueSrc
-//            }
-//            "${valName}=\"${valValue}\""
-//        }.joinToString("\n")
-//    }
 }

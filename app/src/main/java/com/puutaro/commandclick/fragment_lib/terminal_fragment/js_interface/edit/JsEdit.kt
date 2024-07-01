@@ -80,10 +80,11 @@ class JsEdit(
             currentFannelName,
             fannelState
         ) ?: return String()
-        return EditVariableName.getText(
+        val targetEditTextCon = EditVariableName.getText(
             editFragment,
             targetVariableName
         )
+        return targetEditTextCon
     }
 
     @JavascriptInterface

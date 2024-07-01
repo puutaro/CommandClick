@@ -26,7 +26,7 @@ class JsCurl(
         header: String = String(),
         timeout: Int
     ): String {
-        return CurlManager.get(
+        val con = CurlManager.get(
             context,
             mainUrl,
             queryParameter,
@@ -35,6 +35,7 @@ class JsCurl(
         ).let {
             CurlManager.convertResToStrByConn(it)
         }
+        return con
     }
 
     @JavascriptInterface

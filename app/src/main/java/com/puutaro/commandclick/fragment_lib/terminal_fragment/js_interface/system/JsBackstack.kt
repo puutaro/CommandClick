@@ -10,9 +10,10 @@ class JsBackstack(
 
     @JavascriptInterface
     fun count(): Int {
-        return activity
+        val backstackCount = activity
             ?.supportFragmentManager
             ?.backStackEntryCount
             ?: 0
+        return backstackCount
     }
 }

@@ -26,7 +26,7 @@ class JsValEdit(
         setVariableTypes: String,
         targetVariables: String,
     ): String {
-        return try {
+        val isOk = try {
             execEditAndSaveCmdVar(
                 title,
                 fContents,
@@ -41,6 +41,7 @@ class JsValEdit(
             )
             cancelReturnCode
         }
+        return isOk
     }
 
     @JavascriptInterface

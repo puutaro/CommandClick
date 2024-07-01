@@ -16,10 +16,11 @@ class JsPath(
         path: String,
         prefix: String
     ): String {
-        return UsePath.compPrefix(
+        val pathByCompPrefix = UsePath.compPrefix(
             path,
             prefix
         )
+        return pathByCompPrefix
     }
 
     @JavascriptInterface
@@ -27,10 +28,11 @@ class JsPath(
         path: String,
         extend: String
     ): String {
-        return UsePath.compExtend(
+        val pathByCompExtend = UsePath.compExtend(
             path,
             extend
         )
+        return pathByCompExtend
     }
 
     @JavascriptInterface
@@ -50,9 +52,10 @@ class JsPath(
         prefixTabSeparateStr: String
     ): Boolean {
         val prefixList = prefixTabSeparateStr.split("\t")
-        return prefixList.any {
+        val isExist = prefixList.any {
             name.startsWith(it)
         }
+        return isExist
     }
 
     @JavascriptInterface
@@ -85,52 +88,59 @@ class JsPath(
     fun trimAllExtend(
         path: String
     ): String {
-        return CcPathTool.trimAllExtend(path)
+        val pathByTrimAllExtend = CcPathTool.trimAllExtend(path)
+        return pathByTrimAllExtend
     }
 
     @JavascriptInterface
     fun dirname(
         path: String,
     ): String {
-        return File(path).parent ?: String()
+        val parentDirPath = File(path).parent ?: String()
+        return parentDirPath
     }
 
     @JavascriptInterface
     fun basename(
         path: String,
     ): String {
-        return File(path).name
+        val onlyBaseName = File(path).name
+        return onlyBaseName
     }
 
     @JavascriptInterface
     fun echoPath(pathType: String): String {
-        return when(pathType) {
+        val appFileDirPath = when(pathType) {
             PathType.appFiles.name
             -> return "${context?.filesDir}"
             else -> String()
         }
+        return appFileDirPath
     }
 
     @JavascriptInterface
     fun getFannelPath(path: String): String {
-        return CcPathTool.getMainFannelFilePath(
+        val fannelPath = CcPathTool.getMainFannelFilePath(
             path
         )
+        return fannelPath
     }
 
     @JavascriptInterface
     fun getFannelDirPath(path: String): String {
-        return CcPathTool.getMainFannelDirPath(
+        val fannelDirPath = CcPathTool.getMainFannelDirPath(
             path
         )
+        return fannelDirPath
     }
 
     @JavascriptInterface
     fun convertUbuntuPath(path: String): String {
-        return CcPathTool.convertUbuntuPath(
+        val ubuntuPath = CcPathTool.convertUbuntuPath(
             context,
             path
         )
+        return ubuntuPath
     }
 }
 

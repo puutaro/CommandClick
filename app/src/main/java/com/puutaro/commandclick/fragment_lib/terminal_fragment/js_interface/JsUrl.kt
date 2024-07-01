@@ -25,11 +25,12 @@ class JsUrl(
     ): String {
         val jsConList =
             ReadText(jsPath).textToList()
-        return JavaScriptLoadUrl.make(
+        val loadJsCon = JavaScriptLoadUrl.make(
             terminalFragment.context,
             jsPath,
             jsConList,
         ) ?: String()
+        return loadJsCon
     }
 
     @JavascriptInterface
@@ -44,12 +45,13 @@ class JsUrl(
             terminalFragment,
             jsPath,
         )
-        return JavaScriptLoadUrl.makeRawJsConFromContents(
+        val jsRawCon = JavaScriptLoadUrl.makeRawJsConFromContents(
             terminalFragment,
             readSharePreferenceMap,
             ReadText(jsPath).readText(),
             setReplaceVariableMap
         )
+        return jsRawCon
     }
 
     @JavascriptInterface
@@ -74,10 +76,11 @@ class JsUrl(
     fun makeJsUrlFromCon(
         execCode: String,
     ): String {
-        return JavaScriptLoadUrl.makeFromContents(
+        val loadJsCon = JavaScriptLoadUrl.makeFromContents(
             context,
             execCode.split("\n")
         ) ?: String()
+        return loadJsCon
     }
 
     @JavascriptInterface

@@ -132,7 +132,8 @@ class JsToListFilter(
             shellArgsMapSrc,
             shellOutput
         )
-        return filterLineList.joinToString(separator)
+        val filterCon = filterLineList.joinToString(separator)
+        return filterCon
     }
 
     private object ToListFilterOperator {

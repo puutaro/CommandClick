@@ -98,11 +98,12 @@ class JsDialog(
         message: String,
         listSource: String
     ): String {
-            return listJsDialog.create(
+        val selectedItem = listJsDialog.create(
             title,
             message,
             listSource
         )
+        return selectedItem
     }
 
     @JavascriptInterface
@@ -111,11 +112,12 @@ class JsDialog(
         message: String,
         suggestVars: String,
     ): String {
-        return promptJsDialog.create(
+        val promptStr = promptJsDialog.create(
             title,
             message,
             suggestVars,
         )
+        return promptStr
     }
 
     @JavascriptInterface
@@ -137,16 +139,17 @@ class JsDialog(
         title: String,
         formSettingVariables: String,
         formCommandVariables: String
-    ): String{
+    ): String {
         if(
             formCommandVariables.trim().isEmpty()
         ) return String()
-        return try {
-            formJsDialog.create(
+        try {
+            val formValues = formJsDialog.create(
                 title,
                 formSettingVariables,
                 formCommandVariables
             )
+            return formValues
         } catch(e: Exception){
             ToastUtils.showLong(e.toString())
             return String()
@@ -162,11 +165,14 @@ class JsDialog(
             .split("\n").filter {
             it.contains(targetVariableName)
         }.firstOrNull() ?: return String()
-        if(renameDirNameKeyValue.isEmpty()) return String()
-        return renameDirNameKeyValue
+        if(
+            renameDirNameKeyValue.isEmpty()
+        ) return String()
+        val targetFormValue = renameDirNameKeyValue
             .split("=")
             .lastOrNull()
             .let { QuoteTool.trimBothEdgeQuote(it) }
+        return targetFormValue
     }
 
     @JavascriptInterface
@@ -178,11 +184,12 @@ class JsDialog(
         if(
             preSelectedItemListStr.trim().isEmpty()
         ) return String()
-        return multiSelectJsDialog.create(
+        val selectedLine = multiSelectJsDialog.create(
             title,
             currentItemListStr,
             preSelectedItemListStr,
         )
+        return selectedLine
     }
 
     @JavascriptInterface
@@ -210,11 +217,12 @@ class JsDialog(
         if(
             imagePathListNewlineSepaStr.trim().isEmpty()
         ) return String()
-        return onlyImageGridJsDialog.create(
+        val selectedLine =  onlyImageGridJsDialog.create(
             title,
             message,
             imagePathListNewlineSepaStr
         )
+        return selectedLine
     }
 
     @JavascriptInterface
@@ -226,11 +234,12 @@ class JsDialog(
         if(
             imagePathListNewlineSepaStr.trim().isEmpty()
         ) return String()
-        return onlySpannableGridJsDialog.create(
+        val selectedLine =  onlySpannableGridJsDialog.create(
             title,
             message,
             imagePathListNewlineSepaStr
         )
+        return selectedLine
     }
 
     @JavascriptInterface
@@ -242,11 +251,12 @@ class JsDialog(
         if(
             imagePathListNewlineSepaStr.trim().isEmpty()
         ) return String()
-        return multiSelectGridViewJsDialog.create(
+        val selectedLine = multiSelectGridViewJsDialog.create(
             title,
             message,
             imagePathListNewlineSepaStr
         )
+        return selectedLine
     }
 
     @JavascriptInterface
@@ -258,11 +268,12 @@ class JsDialog(
         if(
             imagePathListNewlineSepaStr.trim().isEmpty()
         ) return String()
-        return multiSelectOnlyImageGridViewJsDialog.create(
+        val selectedLine = multiSelectOnlyImageGridViewJsDialog.create(
             title,
             message,
             imagePathListNewlineSepaStr
         )
+        return selectedLine
     }
 
     @JavascriptInterface
@@ -274,11 +285,12 @@ class JsDialog(
         if(
             imagePathListNewlineSepaStr.trim().isEmpty()
         ) return String()
-        return multiSelectSpannableJsDialog.create(
+        val selectedLine = multiSelectSpannableJsDialog.create(
             title,
             message,
             imagePathListNewlineSepaStr
         )
+        return selectedLine
     }
 
     @JavascriptInterface
@@ -290,11 +302,12 @@ class JsDialog(
         if(
             imagePath.trim().isEmpty()
         ) return false
-       return asciiArtJsDialog.create(
+        val createdAsciiArtPath = asciiArtJsDialog.create(
            title,
            imagePath,
            asciiArtMapCon,
        )
+        return createdAsciiArtPath
     }
 
     @JavascriptInterface
@@ -303,11 +316,12 @@ class JsDialog(
         imageSrcFilePath: String,
         imageDialogMapCon: String,
     ): Boolean {
-        return imageJsDialog.create(
+        val createdImagePath = imageJsDialog.create(
             title,
             imageSrcFilePath,
             imageDialogMapCon
         )
+        return createdImagePath
     }
 
     @JavascriptInterface
@@ -366,10 +380,11 @@ class JsDialog(
         title: String,
         body: String,
     ): Boolean {
-        return jsConfirm.create(
+        val isOk = jsConfirm.create(
             title,
             body,
         )
+        return isOk
     }
 
     @JavascriptInterface
@@ -380,9 +395,10 @@ class JsDialog(
         if(
             con.isEmpty()
         ) return String()
-        return debugJsAlert.create(
+        val conArg = debugJsAlert.create(
             title,
             con,
         )
+        return conArg
     }
 }

@@ -28,13 +28,13 @@ class JsMap(
         separator: String,
         key: String
     ): String {
-        return separator.getOrNull(0)?.let {
+        val keyCon = separator.getOrNull(0)?.let {
             CmdClickMap.createMap(
                 mapCon,
                 it
             ).toMap().get(key) ?: String()
         } ?: String()
-
+        return keyCon
     }
 
     @JavascriptInterface
@@ -58,9 +58,9 @@ class JsMap(
             targetKey,
             targetValue
         )
-        return updateMap.map {
+        val updatedMapCon = updateMap.map {
             "${it.key}=${it.value}"
         }.joinToString(separator)
-
+        return updatedMapCon
     }
 }

@@ -12,10 +12,11 @@ class JsReplaceVariables(
     fun getTsv(
         currentPath: String,
     ): String {
-        return SetReplaceVariabler.getReplaceVariablesTsv(
+        val replaceVariableTsvCon = SetReplaceVariabler.getReplaceVariablesTsv(
             context,
             currentPath
         )
+        return replaceVariableTsvCon
     }
 
     @JavascriptInterface
@@ -23,10 +24,11 @@ class JsReplaceVariables(
         tsvCon: String,
         targetKey: String,
     ): String {
-        return SetReplaceVariabler.getReplaceVariablesValue(
+        val targetReplaceVariableValueStr = SetReplaceVariabler.getReplaceVariablesValue(
             tsvCon,
             targetKey
         )
+        return targetReplaceVariableValueStr
     }
 
 }

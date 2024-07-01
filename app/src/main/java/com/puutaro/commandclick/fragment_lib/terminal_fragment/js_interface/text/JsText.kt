@@ -9,11 +9,17 @@ class JsText(
 
     @JavascriptInterface
     fun trimNewLine(con: String): String{
-        return con.split("\n").map {
+        /*
+        desctiontion aa
+        bb
+        cc
+        */
+        val conByTrimNewLine = con.split("\n").map {
             it.trim()
         }.filter {
             it.isNotEmpty()
         }.joinToString("\n")
+        return conByTrimNewLine
     }
 
     @JavascriptInterface
@@ -21,7 +27,8 @@ class JsText(
         lines: String,
         separator: String,
     ): Int {
-        return lines.split(separator).size
+        val linesSize = lines.split(separator).size
+        return linesSize
     }
 
     @JavascriptInterface
@@ -29,10 +36,11 @@ class JsText(
         lines: String,
         separator: String,
     ): String {
-        return lines
+        val reverseCon = lines
             .split(separator)
             .reversed()
             .joinToString(separator)
+        return reverseCon
     }
 
     @JavascriptInterface
@@ -41,9 +49,10 @@ class JsText(
         separator: String,
         takeNum: Int,
     ): String{
-        return con.split(separator)
+        val takenCon = con.split(separator)
             .take(takeNum)
             .joinToString(separator)
+        return takenCon
     }
 
     @JavascriptInterface
@@ -52,10 +61,11 @@ class JsText(
         separator: String,
         takeLastNum: Int,
     ): String{
-        return con.split(separator)
+        val lastTakenCon = con.split(separator)
             .reversed()
             .take(takeLastNum)
             .joinToString(separator)
+        return lastTakenCon
     }
 
     @JavascriptInterface
@@ -63,10 +73,11 @@ class JsText(
         con: String,
         separator: String,
     ): String {
-        return con.split(separator)
+        val distinctCon = con.split(separator)
             .sorted()
             .distinct()
             .joinToString(separator)
+        return distinctCon
     }
 
     @JavascriptInterface
@@ -78,9 +89,10 @@ class JsText(
             .map {
                 it.split("\t")
             }
-        return transpose(tsvMatrix).map {
+        val transCon = transpose(tsvMatrix).map {
             it.joinToString("\t")
         }.joinToString("\n")
+        return transCon
     }
 
     fun <T> transpose(list: List<List<T>>): List<List<T>> =

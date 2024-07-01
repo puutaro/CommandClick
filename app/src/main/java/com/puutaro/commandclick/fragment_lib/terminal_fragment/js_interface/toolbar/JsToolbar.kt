@@ -49,11 +49,12 @@ class JsToolbar(
         if(
             editFragment == null
         ) return null
-        return FilePrefixGetter.get(
+        val listKeyCon = FilePrefixGetter.get(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         )
+        return listKeyCon
     }
 
     @JavascriptInterface

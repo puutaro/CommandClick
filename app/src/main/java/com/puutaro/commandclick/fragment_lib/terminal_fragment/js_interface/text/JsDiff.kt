@@ -12,7 +12,7 @@ class JsDiff(terminalFragment: TerminalFragment) {
         separator: String,
     ): String {
         val baseConList = baseCon.split(separator)
-        return try {
+        val diffCon = try {
             compareCon.split(separator).filterIndexed { compareIndex, compareEl ->
                 val baseHitLine = baseConList.getOrNull(compareIndex)
                     ?: return@filterIndexed true
@@ -22,6 +22,7 @@ class JsDiff(terminalFragment: TerminalFragment) {
         } catch (e: Exception){
             return String()
         }
+        return diffCon
     }
 
     @JavascriptInterface
@@ -31,7 +32,7 @@ class JsDiff(terminalFragment: TerminalFragment) {
         separator: String,
     ): String {
         val baseConList = baseCon.split(separator)
-        return try {
+        val uniqCon = try {
             compareCon.split(separator).filter { compareEl ->
                 if(
                     compareEl.isEmpty()
@@ -42,6 +43,7 @@ class JsDiff(terminalFragment: TerminalFragment) {
         } catch (e: Exception){
             return String()
         }
+        return uniqCon
     }
 
 }

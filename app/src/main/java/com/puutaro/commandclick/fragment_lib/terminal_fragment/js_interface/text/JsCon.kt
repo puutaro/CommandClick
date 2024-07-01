@@ -23,6 +23,7 @@ class JsCon(
             index >= thisIndex
         }
         val conListFromThis = subConListFromThis + subConListUntilThis
-        return conListFromThis.joinToString("\n")
+        val conBySrotedFromThis = conListFromThis.joinToString("\n")
+        return conBySrotedFromThis
     }
 }

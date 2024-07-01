@@ -27,18 +27,20 @@ class JsToMap(
 
     @JavascriptInterface
     fun getKey(line: String): String {
-        return line
+        val key = line
             .split(keyValueSeparator)
             .firstOrNull()
             ?: String()
+        return key
     }
 
     @JavascriptInterface
     fun getValue(line: String): String {
-        return line
+        val value = line
             .split(keyValueSeparator)
             .getOrNull(1)
             ?: String()
+        return value
     }
 
 

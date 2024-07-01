@@ -39,7 +39,9 @@ class JsUtil(
             ?.getItemAt(0)
             ?.coerceToStyledText(fragment.context)
             ?: return String()
-        return clipText.toString()
+        val clipBoardCon = clipText.toString()
+        return clipBoardCon
+
     }
 
     @JavascriptInterface
@@ -64,11 +66,13 @@ class JsUtil(
             ?: calender.get(java.util.Calendar.MINUTE)
         val calenderDatetime: Calendar = Calendar.getInstance()
         calenderDatetime.set(year, month, day, hour, minute)
-        return calenderDatetime.timeInMillis.toString()
+        val miliTimeCon = calenderDatetime.timeInMillis.toString()
+        return miliTimeCon
     }
 
     @JavascriptInterface
     fun lang(): String {
-        return Locale.getDefault().language
+        val settingLang = Locale.getDefault().language
+        return settingLang
     }
 }

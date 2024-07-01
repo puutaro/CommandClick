@@ -107,7 +107,8 @@ class JsToListMap(
             shellArgsMapSrc,
             shellOutput
         )
-        return mapDestLinesList.joinToString(separator)
+        val mapMadeCon = mapDestLinesList.joinToString(separator)
+        return mapMadeCon
     }
 
     private object ToListMapOperator {
