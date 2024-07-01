@@ -5,7 +5,9 @@
 ```js.js
 function jsCurl.post(
 	${mainUrlString},
-	${headerString},String},
+	${headerString},
+	${bodyStrString},
+	${timeoutInt},
 ) -> CurlManager
 ```
 
@@ -17,7 +19,9 @@ var=CurlManager
 	?func=jsCurl.post
 	?args=
 		&mainUrlString=
-		&headerString=String=
+		&headerString=
+		&bodyStrString=
+		&timeoutInt=
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

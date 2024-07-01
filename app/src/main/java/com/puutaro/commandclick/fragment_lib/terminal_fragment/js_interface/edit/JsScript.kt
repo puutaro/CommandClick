@@ -136,30 +136,6 @@ class JsScript(
         return oneLineSetVariableCon
     }
 
-//    @JavascriptInterface
-//    fun convertRepValPathToOneLine(
-//        fannelPath: String,
-//        setVariableConfigPath: String,
-//    ): String {
-//        return listOf(
-//            CommandClickScriptVariable.SET_REPLACE_VARIABLE,
-//            SettingFile.read(
-//                setVariableConfigPath,
-//                fannelPath,
-//                setReplaceVariableMap,
-//            )
-//        ).filter{ it.isNotEmpty() }.joinToString("=")
-//    }
-
-//    @JavascriptInterface
-//    fun convertConfigToOneLine(
-//        setVariableConfigPath: String,
-//    ): String {
-//        return SettingFile.read(
-//            setVariableConfigPath,
-//        )
-//    }
-
     @JavascriptInterface
     fun bothQuoteTrim(
         valString: String

@@ -42,8 +42,8 @@ class JsCurl(
     fun getAndSave (
         path: String,
         mainUrl: String,
-        queryParameter: String = String(),
-        header: String = String(),
+        queryParameter: String,
+        header: String,
         timeout: Int
     ) {
         CurlManager.get(
@@ -66,7 +66,7 @@ class JsCurl(
     @JavascriptInterface
     fun post(
         mainUrl: String,
-        header: String = String(),
+        header: String,
         bodyStr: String,
         timeout: Int
     ): String {
@@ -85,7 +85,7 @@ class JsCurl(
     fun postAndSave(
         path: String,
         mainUrl: String,
-        header: String = String(),
+        header: String,
         bodyStr: String,
         timeout: Int
     ) {

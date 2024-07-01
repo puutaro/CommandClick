@@ -79,8 +79,8 @@ class JsListSelect(
         targetListFilePath: String,
         removeTargetItem: String,
         currentScriptPath: String,
-        replaceTargetVariable: String = String(),
-        defaultVariable: String = String()
+        replaceTargetVariable: String,
+        defaultVariable: String
     ){
         val searchListFileObj = File(
             targetListFilePath

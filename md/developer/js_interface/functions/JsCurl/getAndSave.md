@@ -6,7 +6,9 @@
 function jsCurl.getAndSave (
 	${pathString},
 	${mainUrlString},
-	${queryParameterString},String},
+	${queryParameterString},
+	${headerString},
+	${timeoutInt},
 ) -> runGetAndSave
 ```
 
@@ -19,7 +21,9 @@ var=runGetAndSave
 	?args=
 		&pathString=
 		&mainUrlString=
-		&queryParameterString=String=
+		&queryParameterString=
+		&headerString=
+		&timeoutInt=
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

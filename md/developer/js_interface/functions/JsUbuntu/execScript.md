@@ -5,7 +5,7 @@
 ```js.js
 function jsUbuntu.execScript(
 	${executeShellPathString},
-	${tabSepaArgsString},String},
+	${tabSepaArgsString},
 ) -> execScriptF
 ```
 
@@ -17,7 +17,7 @@ var=execScriptF
 	?func=jsUbuntu.execScript
 	?args=
 		&executeShellPathString=
-		&tabSepaArgsString=String=
+		&tabSepaArgsString=
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

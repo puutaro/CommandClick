@@ -5,7 +5,8 @@
 ```js.js
 function jsUbuntu.execScriptBySsh(
 	${executeShellPathString},
-	${tabSepaArgsString},String},
+	${tabSepaArgsString},
+	${monitorNumInt},
 ) -> SshManager
 ```
 
@@ -17,7 +18,8 @@ var=SshManager
 	?func=jsUbuntu.execScriptBySsh
 	?args=
 		&executeShellPathString=
-		&tabSepaArgsString=String=
+		&tabSepaArgsString=
+		&monitorNumInt=
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

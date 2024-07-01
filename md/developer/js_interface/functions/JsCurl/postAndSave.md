@@ -6,7 +6,9 @@
 function jsCurl.postAndSave(
 	${pathString},
 	${mainUrlString},
-	${headerString},String},
+	${headerString},
+	${bodyStrString},
+	${timeoutInt},
 ) -> CurlManager
 ```
 
@@ -19,7 +21,9 @@ var=CurlManager
 	?args=
 		&pathString=
 		&mainUrlString=
-		&headerString=String=
+		&headerString=
+		&bodyStrString=
+		&timeoutInt=
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

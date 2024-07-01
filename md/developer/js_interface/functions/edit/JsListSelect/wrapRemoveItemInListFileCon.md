@@ -7,7 +7,8 @@ function jsListSelect.wrapRemoveItemInListFileCon(
 	${targetListFilePathString},
 	${removeTargetItemString},
 	${currentScriptPathString},
-	${replaceTargetVariableString},String},
+	${replaceTargetVariableString},
+	${defaultVariableString},
 ) -> runWrapRemoveItemInListFileCon
 ```
 
@@ -21,7 +22,8 @@ var=runWrapRemoveItemInListFileCon
 		&targetListFilePathString=
 		&removeTargetItemString=
 		&currentScriptPathString=
-		&replaceTargetVariableString=String=
+		&replaceTargetVariableString=
+		&defaultVariableString=
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

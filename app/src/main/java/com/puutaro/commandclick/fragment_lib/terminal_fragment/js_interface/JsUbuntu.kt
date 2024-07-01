@@ -34,7 +34,7 @@ class JsUbuntu(
     @JavascriptInterface
     fun execScript(
         executeShellPath:String,
-        tabSepaArgs: String = String(),
+        tabSepaArgs: String,
     ): String {
         return execScriptF(
             executeShellPath,
@@ -47,7 +47,7 @@ class JsUbuntu(
     @JavascriptInterface
     fun execScriptF(
         executeShellPath:String,
-        tabSepaArgs: String = String(),
+        tabSepaArgs: String,
         timeMilisec: Int,
     ): String {
         if (
@@ -71,7 +71,7 @@ class JsUbuntu(
     @JavascriptInterface
     fun execScriptBySsh(
         executeShellPath:String,
-        tabSepaArgs: String = String(),
+        tabSepaArgs: String,
         monitorNum: Int,
     ): String {
         if(
