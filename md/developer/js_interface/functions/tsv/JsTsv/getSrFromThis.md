@@ -1,0 +1,33 @@
+# jsTsv.getSrFromThis--
+
+## Difinition
+
+```js.js
+function jsTsv.getSrFromThis(
+	${pathString},
+	${thisLineString},
+) -> secondFieldCon
+```
+
+- The `run` prefix annotation is a process annotation
+
+
+## Difinition by js action
+
+```js.js
+var=secondFieldCon
+	?func=jsTsv.getSrFromThis
+	?args=
+		&pathString=
+		&thisLineString=
+```
+
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
+
+- The `run` prefix definition on `var` is a process annotation, not a variable definition
+
+## Src
+
+-> [jsTsv.getSrFromThis](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/tsv/JsTsv.kt#L56)
+
+

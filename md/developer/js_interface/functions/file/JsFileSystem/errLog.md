@@ -1,0 +1,31 @@
+# jsFileSystem.errLog--
+
+## Difinition
+
+```js.js
+function jsFileSystem.errLog(
+	${conString},
+) -> runErrLog
+```
+
+- The `run` prefix annotation is a process annotation
+
+
+## Difinition by js action
+
+```js.js
+var=runErrLog
+	?func=jsFileSystem.errLog
+	?args=
+		&conString=
+```
+
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
+
+- The `run` prefix definition on `var` is a process annotation, not a variable definition
+
+## Src
+
+-> [jsFileSystem.errLog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsFileSystem.kt#L126)
+
+

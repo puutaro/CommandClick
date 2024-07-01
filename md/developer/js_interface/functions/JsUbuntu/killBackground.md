@@ -1,0 +1,31 @@
+# jsUbuntu.killBackground--
+
+## Difinition
+
+```js.js
+function jsUbuntu.killBackground(
+	${cmdNameString},
+) -> runKillBackground
+```
+
+- The `run` prefix annotation is a process annotation
+
+
+## Difinition by js action
+
+```js.js
+var=runKillBackground
+	?func=jsUbuntu.killBackground
+	?args=
+		&cmdNameString=
+```
+
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
+
+- The `run` prefix definition on `var` is a process annotation, not a variable definition
+
+## Src
+
+-> [jsUbuntu.killBackground](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L111)
+
+

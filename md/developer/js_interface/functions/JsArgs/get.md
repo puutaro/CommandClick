@@ -1,0 +1,33 @@
+# jsArgs.get--
+
+## Difinition
+
+```js.js
+function jsArgs.get(
+
+) -> jsArguments
+```
+
+- The `run` prefix annotation is a process annotation
+
+
+## Difinition by js action
+
+```js.js
+var=jsArguments
+	?func=jsArgs.get
+	?args=
+
+```
+
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
+
+- The `run` prefix definition on `var` is a process annotation, not a variable definition
+
+## Src
+
+-> [jsArgs.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsArgs.kt#L14)
+
+## Detail
+
+-> [jsArgs.get](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsArgs/get.md)
