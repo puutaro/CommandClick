@@ -14,6 +14,11 @@ android {
     namespace = "com.puutaro.commandclick"
     compileSdk = 33
 
+    packagingOptions {
+        resources.excludes.add("META-INF/INDEX.LIST")
+        resources.excludes.add("META-INF/io.netty.versions.properties")
+    }
+
     buildFeatures {
         buildConfig = true
     }
@@ -61,6 +66,7 @@ android {
         enable = true
     }
 }
+
 
 //ext.architectures = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
 ////ext.libDir = "$project.projectDir/src/main/resources/lib"
@@ -120,6 +126,14 @@ dependencies {
     implementation("io.coil-kt:coil:2.4.0")
     implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
     implementation("com.blankj:utilcodex:1.31.1")
+
+
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("io.ktor:ktor-server-netty:1.4.3")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
 
 //    implementation("androidx.camera:camera-camera2:1.2.2")
