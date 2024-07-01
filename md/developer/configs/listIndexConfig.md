@@ -1,4 +1,4 @@
-# listIndexConfig.md
+# listIndexConfig.js
 
 Config for [list index mode](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types/list_index.md) in edit's [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md)  
 This config is for list.  

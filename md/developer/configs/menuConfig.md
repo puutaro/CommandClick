@@ -1,4 +1,4 @@
-# Menu config
+# menuConfig.js
 
 You can customize menu by this config
 

@@ -1,0 +1,12 @@
+# jsCmdIntent.run_S
+
+## Difinition by js action
+
+```js.js
+
+var=runRun_S
+	?func=jsCmdIntent.run_S
+		&execCmdSourceString
+```
+
+
