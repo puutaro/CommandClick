@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runWebView_S
 	?func=jsDialog.webView_S
 	?args=

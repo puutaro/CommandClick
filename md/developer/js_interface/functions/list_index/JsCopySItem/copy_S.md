@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runCopy_S
 	?func=jsCopySItem.copy_S
 	?args=

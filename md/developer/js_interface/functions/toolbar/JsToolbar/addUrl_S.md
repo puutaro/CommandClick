@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runAddUrl_S
 	?func=jsToolbar.addUrl_S
 	?args=

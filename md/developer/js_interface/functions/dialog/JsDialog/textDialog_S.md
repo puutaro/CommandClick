@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runTextDialog_S
 	?func=jsDialog.textDialog_S
 	?args=

@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runShow_S
 	?func=jsDesc.show_S
 	?args=

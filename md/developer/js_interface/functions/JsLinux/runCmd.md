@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=cmdOutput
 	?func=jsLinux.runCmd
 	?args=

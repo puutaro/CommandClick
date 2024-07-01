@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runChange_S
 	?func=jsStateChange.change_S
 	?args=

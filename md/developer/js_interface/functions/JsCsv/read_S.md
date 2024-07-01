@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runRead_S
 	?func=jsCsv.read_S
 	?args=

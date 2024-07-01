@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runStdLog
 	?func=jsFileSystem.stdLog
 	?args=

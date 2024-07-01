@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=selectedItem
 	?func=jsDialog.listDialog
 	?args=

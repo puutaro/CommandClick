@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=contents
 	?func=jsFileSystem.writeCat
 	?args=

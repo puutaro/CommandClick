@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runGet_S
 	?func=jsQrGetter.get_S
 	?args=

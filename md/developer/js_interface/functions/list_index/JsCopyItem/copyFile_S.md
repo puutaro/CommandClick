@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runCopyFile_S
 	?func=jsCopyItem.copyFile_S
 	?args=

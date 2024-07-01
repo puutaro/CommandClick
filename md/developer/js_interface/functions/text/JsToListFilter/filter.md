@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=filterCon
 	?func=jsToListFilter.filter
 	?args=

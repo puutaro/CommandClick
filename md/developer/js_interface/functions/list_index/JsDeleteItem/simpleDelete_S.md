@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runSimpleDelete_S
 	?func=jsDeleteItem.simpleDelete_S
 	?args=

@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runRename_S
 	?func=jsRenameItem.rename_S
 	?args=

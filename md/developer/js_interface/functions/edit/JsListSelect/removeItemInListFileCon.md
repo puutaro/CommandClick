@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runRemoveItemInListFileCon
 	?func=jsListSelect.removeItemInListFileCon
 	?args=

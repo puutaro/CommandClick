@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runStart
 	?func=jsPulseAudioReceiver.start
 	?args=

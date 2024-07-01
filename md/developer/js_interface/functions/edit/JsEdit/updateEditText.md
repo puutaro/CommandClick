@@ -3,7 +3,6 @@
 ## Difinition by js action
 
 ```js.js
-
 var=runUpdateEditText
 	?func=jsEdit.updateEditText
 	?args=
