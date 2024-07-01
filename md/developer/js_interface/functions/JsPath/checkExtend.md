@@ -22,7 +22,7 @@ var=extendList
 		&extendTabSeparateStrString=
 ```
 
-- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
+[js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 
