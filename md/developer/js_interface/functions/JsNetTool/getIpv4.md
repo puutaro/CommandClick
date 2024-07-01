@@ -8,7 +8,7 @@ function jsNetTool.getIpv4(
 ) -> ipV4Address
 ```
 
-- The `run` prefix annotation is a process annotation
+- 
 
 
 ## Difinition by js action

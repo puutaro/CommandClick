@@ -8,7 +8,7 @@ function jsCurl.getImage(
 ) -> downloadImagePath
 ```
 
-- The `run` prefix annotation is a process annotation
+- 
 
 
 ## Difinition by js action

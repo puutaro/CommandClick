@@ -8,7 +8,7 @@ function jsKeyboard.show(
 ) -> runShow
 ```
 
-- The `run` prefix annotation is a process annotation
+- - The `run` prefix annotation is a process annotation
 
 
 ## Difinition by js action

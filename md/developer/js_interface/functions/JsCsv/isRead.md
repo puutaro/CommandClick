@@ -8,7 +8,7 @@ function jsCsv.isRead(
 ) -> String
 ```
 
-- The `run` prefix annotation is a process annotation
+- 
 
 
 ## Difinition by js action

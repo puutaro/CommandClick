@@ -11,7 +11,7 @@ function jsValEdit.editAndSaveCmdVar(
 ) -> isOk
 ```
 
-- The `run` prefix annotation is a process annotation
+- 
 
 
 ## Difinition by js action

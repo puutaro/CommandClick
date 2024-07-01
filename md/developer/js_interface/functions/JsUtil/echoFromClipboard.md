@@ -8,7 +8,7 @@ function jsUtil.echoFromClipboard(
 ) -> clipBoardCon
 ```
 
-- The `run` prefix annotation is a process annotation
+- 
 
 
 ## Difinition by js action

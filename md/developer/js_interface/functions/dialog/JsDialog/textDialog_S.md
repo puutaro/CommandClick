@@ -10,7 +10,7 @@ function jsDialog.textDialog_S(
 ) -> runTextDialog_S
 ```
 
-- The `run` prefix annotation is a process annotation
+- - The `run` prefix annotation is a process annotation
 
 
 ## Difinition by js action
