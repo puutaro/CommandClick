@@ -9,6 +9,10 @@ var=runLoadUrl
 		&urlStrString
 ```
 
+## Src
+
+->[jsUrl.loadUrl](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L117)
+
 ## Detail
 
 ->[jsUrl.loadUrl](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUrl/loadUrl.md)

@@ -9,4 +9,8 @@ var=settingLang
 
 ```
 
+## Src
+
+->[jsUtil.lang](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUtil.kt#L74)
+
 

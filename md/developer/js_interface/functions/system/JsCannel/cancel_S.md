@@ -9,4 +9,8 @@ var=runCancel_S
 
 ```
 
+## Src
+
+->[jsCannel.cancel_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/system/JsCannel.kt#L12)
+
 

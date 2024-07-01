@@ -10,6 +10,10 @@ var=runLaunchShortcut
 		&currentScriptFileNameString
 ```
 
+## Src
+
+->[jsIntent.launchShortcut](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L104)
+
 ## Detail
 
 ->[jsIntent.launchShortcut](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsIntent/launchShortcut.md)

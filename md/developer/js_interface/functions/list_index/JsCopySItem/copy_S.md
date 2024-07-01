@@ -11,4 +11,8 @@ var=runCopy_S
 		&extraMapConString
 ```
 
+## Src
+
+->[jsCopySItem.copy_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsCopySItem.kt#L32)
+
 

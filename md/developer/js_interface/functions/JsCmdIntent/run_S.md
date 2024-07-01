@@ -9,4 +9,8 @@ var=runRun_S
 		&execCmdSourceString
 ```
 
+## Src
+
+->[jsCmdIntent.run_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCmdIntent.kt#L18)
+
 
