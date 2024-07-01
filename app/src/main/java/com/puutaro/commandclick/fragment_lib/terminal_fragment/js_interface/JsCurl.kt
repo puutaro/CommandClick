@@ -22,8 +22,8 @@ class JsCurl(
     @JavascriptInterface
     fun get(
         mainUrl: String,
-        queryParameter: String = String(),
-        header: String = String(),
+        queryParameter: String,
+        header: String,
         timeout: Int
     ): String {
         val con = CurlManager.get(
