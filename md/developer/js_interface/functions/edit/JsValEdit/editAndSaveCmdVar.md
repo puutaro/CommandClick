@@ -13,6 +13,8 @@ var=isOk
 		&targetVariablesString=
 ```
 
+- [js action]() is annotation-oriented language based on javascript in CommandClick
+
 ## Src
 
 -> [jsValEdit.editAndSaveCmdVar](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsValEdit.kt#L23)
