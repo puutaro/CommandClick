@@ -14,7 +14,6 @@ function jsMusic.stop(
 ```js.js
 var=runStop
 	?func=jsMusic.stop
-	?args=
 
 ```
 

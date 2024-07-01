@@ -14,7 +14,6 @@ function jsToolbar.getListPath(
 ```js.js
 var=listKeyCon
 	?func=jsToolbar.getListPath
-	?args=
 
 ```
 

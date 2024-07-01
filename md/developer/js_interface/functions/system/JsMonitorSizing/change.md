@@ -14,7 +14,6 @@ function jsMonitorSizing.change(
 ```js.js
 var=runChange
 	?func=jsMonitorSizing.change
-	?args=
 
 ```
 

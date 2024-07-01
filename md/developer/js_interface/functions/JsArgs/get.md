@@ -14,7 +14,6 @@ function jsArgs.get(
 ```js.js
 var=jsArguments
 	?func=jsArgs.get
-	?args=
 
 ```
 

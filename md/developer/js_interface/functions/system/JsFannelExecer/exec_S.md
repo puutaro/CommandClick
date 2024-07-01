@@ -14,7 +14,6 @@ function jsFannelExecer.exec_S(
 ```js.js
 var=runExec_S
 	?func=jsFannelExecer.exec_S
-	?args=
 
 ```
 

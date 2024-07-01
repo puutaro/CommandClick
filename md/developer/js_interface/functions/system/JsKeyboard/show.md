@@ -14,7 +14,6 @@ function jsKeyboard.show(
 ```js.js
 var=runShow
 	?func=jsKeyboard.show
-	?args=
 
 ```
 

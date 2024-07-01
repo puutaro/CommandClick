@@ -14,7 +14,6 @@ function jsSharePref.getAppDirPath(
 ```js.js
 var=getAppDirPath
 	?func=jsSharePref.getAppDirPath
-	?args=
 
 ```
 

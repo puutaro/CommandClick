@@ -14,7 +14,6 @@ function jsExit.exit(
 ```js.js
 var=runExit
 	?func=jsExit.exit
-	?args=
 
 ```
 

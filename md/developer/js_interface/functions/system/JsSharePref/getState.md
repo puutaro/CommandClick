@@ -14,7 +14,6 @@ function jsSharePref.getState(
 ```js.js
 var=currentSate
 	?func=jsSharePref.getState
-	?args=
 
 ```
 

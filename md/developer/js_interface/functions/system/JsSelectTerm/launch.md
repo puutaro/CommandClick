@@ -14,7 +14,6 @@ function jsSelectTerm.launch(
 ```js.js
 var=runLaunch
 	?func=jsSelectTerm.launch
-	?args=
 
 ```
 

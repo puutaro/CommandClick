@@ -14,7 +14,6 @@ function jsUbuntu.isSetup(
 ```js.js
 var=isSetupFile
 	?func=jsUbuntu.isSetup
-	?args=
 
 ```
 

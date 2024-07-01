@@ -14,7 +14,6 @@ function jsStop.how(
 ```js.js
 var=terminalViewModel
 	?func=jsStop.how
-	?args=
 
 ```
 

@@ -14,7 +14,6 @@ function jsUbuntu.boot(
 ```js.js
 var=runBoot
 	?func=jsUbuntu.boot
-	?args=
 
 ```
 

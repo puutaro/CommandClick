@@ -14,7 +14,6 @@ function jsCannel.cancel_S(
 ```js.js
 var=runCancel_S
 	?func=jsCannel.cancel_S
-	?args=
 
 ```
 

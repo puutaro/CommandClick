@@ -14,7 +14,6 @@ function jsUtil.lang(
 ```js.js
 var=settingLang
 	?func=jsUtil.lang
-	?args=
 
 ```
 

@@ -14,7 +14,6 @@ function jsIntent.launchFzSite(
 ```js.js
 var=runLaunchFzSite
 	?func=jsIntent.launchFzSite
-	?args=
 
 ```
 

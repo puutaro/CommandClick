@@ -14,7 +14,6 @@ function jsMoniterShower.show(
 ```js.js
 var=runShow
 	?func=jsMoniterShower.show
-	?args=
 
 ```
 

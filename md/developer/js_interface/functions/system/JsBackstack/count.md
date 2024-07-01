@@ -14,7 +14,6 @@ function jsBackstack.count(
 ```js.js
 var=backstackCount
 	?func=jsBackstack.count
-	?args=
 
 ```
 

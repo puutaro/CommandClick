@@ -14,7 +14,6 @@ function jsTextToSpeech.stop(
 ```js.js
 var=runStop
 	?func=jsTextToSpeech.stop
-	?args=
 
 ```
 

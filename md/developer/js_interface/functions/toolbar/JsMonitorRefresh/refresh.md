@@ -14,7 +14,6 @@ function jsMonitorRefresh.refresh(
 ```js.js
 var=runRefresh
 	?func=jsMonitorRefresh.refresh
-	?args=
 
 ```
 

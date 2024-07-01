@@ -14,7 +14,6 @@ function jsScript.convertRepValPathToOneLine(
 ```js.js
 var=listOf
 	?func=jsScript.convertRepValPathToOneLine
-	?args=
 
 ```
 

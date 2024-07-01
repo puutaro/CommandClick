@@ -14,7 +14,6 @@ function jsDialog.webViewDismiss_S(
 ```js.js
 var=runWebViewDismiss_S
 	?func=jsDialog.webViewDismiss_S
-	?args=
 
 ```
 

@@ -14,7 +14,6 @@ function jsFannelConSaver.save(
 ```js.js
 var=runSave
 	?func=jsFannelConSaver.save
-	?args=
 
 ```
 

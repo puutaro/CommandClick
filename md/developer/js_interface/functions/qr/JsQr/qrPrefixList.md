@@ -14,7 +14,6 @@ function jsQr.qrPrefixList(
 ```js.js
 var=qrPrefixsCon
 	?func=jsQr.qrPrefixList
-	?args=
 
 ```
 

@@ -14,7 +14,6 @@ function jsDirect.launchCopyFannelServer(
 ```js.js
 var=runLaunchCopyFannelServer
 	?func=jsDirect.launchCopyFannelServer
-	?args=
 
 ```
 

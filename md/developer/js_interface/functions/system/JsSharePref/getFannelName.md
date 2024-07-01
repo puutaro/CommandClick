@@ -14,7 +14,6 @@ function jsSharePref.getFannelName(
 ```js.js
 var=fannelName
 	?func=jsSharePref.getFannelName
-	?args=
 
 ```
 

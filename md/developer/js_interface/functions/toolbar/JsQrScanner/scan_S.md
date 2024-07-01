@@ -14,7 +14,6 @@ function jsQrScanner.scan_S(
 ```js.js
 var=runScan_S
 	?func=jsQrScanner.scan_S
-	?args=
 
 ```
 

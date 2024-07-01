@@ -14,7 +14,6 @@ function jsDirect.exitCopyFannelServer(
 ```js.js
 var=runExitCopyFannelServer
 	?func=jsDirect.exitCopyFannelServer
-	?args=
 
 ```
 

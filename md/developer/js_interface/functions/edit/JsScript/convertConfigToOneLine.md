@@ -14,7 +14,6 @@ function jsScript.convertConfigToOneLine(
 ```js.js
 var=SettingFile
 	?func=jsScript.convertConfigToOneLine
-	?args=
 
 ```
 

@@ -14,7 +14,6 @@ function jsConfigEdit.edit_S(
 ```js.js
 var=runEdit_S
 	?func=jsConfigEdit.edit_S
-	?args=
 
 ```
 

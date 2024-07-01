@@ -14,7 +14,6 @@ function jsQr.qrEditTypeList(
 ```js.js
 var=qrEditTypesCon
 	?func=jsQr.qrEditTypeList
-	?args=
 
 ```
 

@@ -14,7 +14,6 @@ function jsNetTool.getIpv4(
 ```js.js
 var=ipV4Address
 	?func=jsNetTool.getIpv4
-	?args=
 
 ```
 

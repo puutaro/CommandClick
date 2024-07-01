@@ -14,7 +14,6 @@ function jsPulseAudioReceiver.stop(
 ```js.js
 var=runStop
 	?func=jsPulseAudioReceiver.stop
-	?args=
 
 ```
 

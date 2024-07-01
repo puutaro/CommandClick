@@ -14,7 +14,6 @@ function jsQr.launchUploader(
 ```js.js
 var=runLaunchUploader
 	?func=jsQr.launchUploader
-	?args=
 
 ```
 

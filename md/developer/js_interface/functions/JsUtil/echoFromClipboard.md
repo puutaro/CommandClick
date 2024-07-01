@@ -14,7 +14,6 @@ function jsUtil.echoFromClipboard(
 ```js.js
 var=clipBoardCon
 	?func=jsUtil.echoFromClipboard
-	?args=
 
 ```
 

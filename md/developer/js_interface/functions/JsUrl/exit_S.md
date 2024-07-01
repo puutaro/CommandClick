@@ -14,7 +14,6 @@ function jsUrl.exit_S(
 ```js.js
 var=runExit_S
 	?func=jsUrl.exit_S
-	?args=
 
 ```
 
