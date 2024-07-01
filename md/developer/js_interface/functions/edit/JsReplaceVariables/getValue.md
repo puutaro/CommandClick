@@ -6,9 +6,9 @@
 
 var=targetReplaceVariableValueStr
 	?func=jsReplaceVariables.getValue
-		?args=
-			&tsvConString=
-			&targetKeyString=
+	?args=
+		&tsvConString=
+		&targetKeyString=
 ```
 
 ## Src

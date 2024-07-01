@@ -6,8 +6,8 @@
 
 var=runInstall
 	?func=jsFannelInstaller.install
-		?args=
-			&selectedFannelString=
+	?args=
+		&selectedFannelString=
 ```
 
 ## Src

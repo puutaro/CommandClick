@@ -6,7 +6,7 @@
 
 var=runLaunch
 	?func=jsSelectTerm.launch
-		?args=
+	?args=
 
 ```
 

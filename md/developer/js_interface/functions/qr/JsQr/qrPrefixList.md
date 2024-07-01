@@ -6,7 +6,7 @@
 
 var=qrPrefixsCon
 	?func=jsQr.qrPrefixList
-		?args=
+	?args=
 
 ```
 

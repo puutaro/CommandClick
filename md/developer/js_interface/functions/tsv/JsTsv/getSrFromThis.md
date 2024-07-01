@@ -6,9 +6,9 @@
 
 var=secondFieldCon
 	?func=jsTsv.getSrFromThis
-		?args=
-			&pathString=
-			&thisLineString=
+	?args=
+		&pathString=
+		&thisLineString=
 ```
 
 ## Src

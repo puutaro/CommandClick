@@ -6,9 +6,9 @@
 
 var=SshManager
 	?func=jsUbuntu.execScriptBySsh
-		?args=
-			&executeShellPathString=
-			&tabSepaArgsString=String=
+	?args=
+		&executeShellPathString=
+		&tabSepaArgsString=String=
 ```
 
 ## Src

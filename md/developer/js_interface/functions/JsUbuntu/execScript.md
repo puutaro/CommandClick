@@ -6,9 +6,9 @@
 
 var=execScriptF
 	?func=jsUbuntu.execScript
-		?args=
-			&executeShellPathString=
-			&tabSepaArgsString=String=
+	?args=
+		&executeShellPathString=
+		&tabSepaArgsString=String=
 ```
 
 ## Src

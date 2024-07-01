@@ -6,8 +6,8 @@
 
 var=loadJsCon
 	?func=jsUrl.makeJsUrl
-		?args=
-			&jsPathString=
+	?args=
+		&jsPathString=
 ```
 
 ## Src

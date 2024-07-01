@@ -6,10 +6,10 @@
 
 var=runCreate
 	?func=jsQrEdit.create
-		?args=
-			&qrConFilePathString=
-			&qrPrefixTypeString=
-			&broadcastIntentMapStrString=
+	?args=
+		&qrConFilePathString=
+		&qrPrefixTypeString=
+		&broadcastIntentMapStrString=
 ```
 
 ## Src

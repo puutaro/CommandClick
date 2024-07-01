@@ -6,10 +6,10 @@
 
 var=promptStr
 	?func=jsDialog.prompt
-		?args=
-			&titleString=
-			&messageString=
-			&suggestVarsString=
+	?args=
+		&titleString=
+		&messageString=
+		&suggestVarsString=
 ```
 
 ## Src

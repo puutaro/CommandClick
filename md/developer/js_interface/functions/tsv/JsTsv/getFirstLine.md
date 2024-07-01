@@ -6,8 +6,8 @@
 
 var=TsvTool
 	?func=jsTsv.getFirstLine
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

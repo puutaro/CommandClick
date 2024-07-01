@@ -6,9 +6,9 @@
 
 var=linesSize
 	?func=jsText.countLines
-		?args=
-			&linesString=
-			&separatorString=
+	?args=
+		&linesString=
+		&separatorString=
 ```
 
 ## Src

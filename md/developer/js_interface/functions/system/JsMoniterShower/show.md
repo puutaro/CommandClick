@@ -6,7 +6,7 @@
 
 var=runShow
 	?func=jsMoniterShower.show
-		?args=
+	?args=
 
 ```
 

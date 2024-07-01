@@ -6,7 +6,7 @@
 
 var=runStop
 	?func=jsMusic.stop
-		?args=
+	?args=
 
 ```
 

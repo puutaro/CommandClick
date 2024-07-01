@@ -6,8 +6,8 @@
 
 var=targetEditTextCon
 	?func=jsEdit.getFromEditText
-		?args=
-			&targetVariableNameString=
+	?args=
+		&targetVariableNameString=
 ```
 
 ## Src

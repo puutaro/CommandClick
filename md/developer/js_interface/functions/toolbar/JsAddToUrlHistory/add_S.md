@@ -6,9 +6,9 @@
 
 var=runAdd_S
 	?func=jsAddToUrlHistory.add_S
-		?args=
-			&argsMapConString=
-			&separatorString=
+	?args=
+		&argsMapConString=
+		&separatorString=
 ```
 
 ## Src

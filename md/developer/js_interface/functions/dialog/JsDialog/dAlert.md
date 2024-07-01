@@ -6,9 +6,9 @@
 
 var=conArg
 	?func=jsDialog.dAlert
-		?args=
-			&titleString=
-			&conString=
+	?args=
+		&titleString=
+		&conString=
 ```
 
 ## Src

@@ -6,9 +6,9 @@
 
 var=fullFilePathsCon
 	?func=jsFileSystem.showFullFileList
-		?args=
-			&dirPathString=
-			&extraMapConString=
+	?args=
+		&dirPathString=
+		&extraMapConString=
 ```
 
 ## Src

@@ -6,7 +6,7 @@
 
 var=runBoot
 	?func=jsUbuntu.boot
-		?args=
+	?args=
 
 ```
 

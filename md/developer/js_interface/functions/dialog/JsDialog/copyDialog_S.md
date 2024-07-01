@@ -6,10 +6,10 @@
 
 var=runCopyDialog_S
 	?func=jsDialog.copyDialog_S
-		?args=
-			&titleString=
-			&contentsString=
-			&scrollBottomBoolean=
+	?args=
+		&titleString=
+		&contentsString=
+		&scrollBottomBoolean=
 ```
 
 ## Src

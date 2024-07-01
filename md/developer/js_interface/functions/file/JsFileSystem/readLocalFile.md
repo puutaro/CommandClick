@@ -6,8 +6,8 @@
 
 var=fileCon
 	?func=jsFileSystem.readLocalFile
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

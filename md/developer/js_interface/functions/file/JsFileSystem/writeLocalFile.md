@@ -6,9 +6,9 @@
 
 var=runWriteLocalFile
 	?func=jsFileSystem.writeLocalFile
-		?args=
-			&filePathString=
-			&contentsString=
+	?args=
+		&filePathString=
+		&contentsString=
 ```
 
 ## Src

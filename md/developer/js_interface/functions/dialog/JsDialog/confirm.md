@@ -6,9 +6,9 @@
 
 var=isOk
 	?func=jsDialog.confirm
-		?args=
-			&titleString=
-			&bodyString=
+	?args=
+		&titleString=
+		&bodyString=
 ```
 
 ## Src

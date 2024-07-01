@@ -6,9 +6,9 @@
 
 var=runUpdateEditText
 	?func=jsEdit.updateEditText
-		?args=
-			&updateVariableNameString=
-			&updateVariableValueString=
+	?args=
+		&updateVariableNameString=
+		&updateVariableValueString=
 ```
 
 ## Src

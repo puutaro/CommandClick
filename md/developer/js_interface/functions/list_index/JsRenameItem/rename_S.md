@@ -6,9 +6,9 @@
 
 var=runRename_S
 	?func=jsRenameItem.rename_S
-		?args=
-			&selectedItemString=
-			&listIndexPositionInt=
+	?args=
+		&selectedItemString=
+		&listIndexPositionInt=
 ```
 
 ## Src

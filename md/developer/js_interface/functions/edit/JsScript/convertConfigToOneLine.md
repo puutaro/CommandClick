@@ -6,7 +6,7 @@
 
 var=SettingFile
 	?func=jsScript.convertConfigToOneLine
-		?args=
+	?args=
 
 ```
 

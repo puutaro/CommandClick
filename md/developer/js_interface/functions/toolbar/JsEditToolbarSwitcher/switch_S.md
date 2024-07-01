@@ -6,8 +6,8 @@
 
 var=runSwitch_S
 	?func=jsEditToolbarSwitcher.switch_S
-		?args=
-			&switchMacroString=
+	?args=
+		&switchMacroString=
 ```
 
 ## Src

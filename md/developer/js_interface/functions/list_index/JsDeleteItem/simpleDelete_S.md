@@ -6,9 +6,9 @@
 
 var=runSimpleDelete_S
 	?func=jsDeleteItem.simpleDelete_S
-		?args=
-			&selectedItemString=
-			&listIndexListPositionInt=
+	?args=
+		&selectedItemString=
+		&listIndexListPositionInt=
 ```
 
 ## Src

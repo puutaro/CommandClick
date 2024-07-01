@@ -6,9 +6,9 @@
 
 var=runGet_S
 	?func=jsFileOrDirListGetter.get_S
-		?args=
-			&onDirectoryPickBoolean=
-			&filterMapConString=
+	?args=
+		&onDirectoryPickBoolean=
+		&filterMapConString=
 ```
 
 ## Src

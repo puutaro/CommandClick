@@ -6,9 +6,9 @@
 
 var=runJsEcho
 	?func=jsFileSystem.jsEcho
-		?args=
-			&outPutOptionString=
-			&contentsString=
+	?args=
+		&outPutOptionString=
+		&contentsString=
 ```
 
 ## Src

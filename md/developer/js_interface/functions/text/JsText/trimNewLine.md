@@ -6,8 +6,8 @@
 
 var=conByTrimNewLine
 	?func=jsText.trimNewLine
-		?args=
-			&conString=
+	?args=
+		&conString=
 ```
 
 ## Description

@@ -6,8 +6,8 @@
 
 var=onlyBaseName
 	?func=jsPath.basename
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

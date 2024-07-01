@@ -6,8 +6,8 @@
 
 var=CurlManager
 	?func=jsCurl.isConnOk
-		?args=
-			&resString=
+	?args=
+		&resString=
 ```
 
 ## Src

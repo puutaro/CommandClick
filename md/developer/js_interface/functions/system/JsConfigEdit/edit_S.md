@@ -6,7 +6,7 @@
 
 var=runEdit_S
 	?func=jsConfigEdit.edit_S
-		?args=
+	?args=
 
 ```
 

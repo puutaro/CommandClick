@@ -6,8 +6,8 @@
 
 var=conWithBothQuoteTrim
 	?func=jsScript.bothQuoteTrim
-		?args=
-			&valStringString=
+	?args=
+		&valStringString=
 ```
 
 ## Src

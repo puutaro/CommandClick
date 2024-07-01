@@ -6,9 +6,9 @@
 
 var=targetSettingVariableValue
 	?func=jsScript.subValOnlyValue
-		?args=
-			&targetValNameString=
-			&valStringString=
+	?args=
+		&targetValNameString=
+		&valStringString=
 ```
 
 ## Src

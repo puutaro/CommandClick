@@ -6,8 +6,8 @@
 
 var=scpQrSrcStr
 	?func=jsQr.makeScpQrSrcStr
-		?args=
-			&dirPathString=
+	?args=
+		&dirPathString=
 ```
 
 ## Src

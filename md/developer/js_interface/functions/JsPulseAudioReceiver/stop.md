@@ -6,7 +6,7 @@
 
 var=runStop
 	?func=jsPulseAudioReceiver.stop
-		?args=
+	?args=
 
 ```
 

@@ -6,11 +6,11 @@
 
 var=runWrapRemoveItemInListFileCon
 	?func=jsListSelect.wrapRemoveItemInListFileCon
-		?args=
-			&targetListFilePathString=
-			&removeTargetItemString=
-			&currentScriptPathString=
-			&replaceTargetVariableString=String=
+	?args=
+		&targetListFilePathString=
+		&removeTargetItemString=
+		&currentScriptPathString=
+		&replaceTargetVariableString=String=
 ```
 
 ## Src

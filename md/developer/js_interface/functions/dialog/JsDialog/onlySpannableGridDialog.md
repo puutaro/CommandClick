@@ -6,10 +6,10 @@
 
 var=selectedLine
 	?func=jsDialog.onlySpannableGridDialog
-		?args=
-			&titleString=
-			&messageString=
-			&imagePathListNewlineSepaStrString=
+	?args=
+		&titleString=
+		&messageString=
+		&imagePathListNewlineSepaStrString=
 ```
 
 ## Src

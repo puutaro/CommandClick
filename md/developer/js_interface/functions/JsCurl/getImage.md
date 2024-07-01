@@ -6,8 +6,8 @@
 
 var=downloadImagePath
 	?func=jsCurl.getImage
-		?args=
-			&urlString=
+	?args=
+		&urlString=
 ```
 
 ## Src

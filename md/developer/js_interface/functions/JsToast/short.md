@@ -6,8 +6,8 @@
 
 var=runShort
 	?func=jsToast.short
-		?args=
-			&contentsString=
+	?args=
+		&contentsString=
 ```
 
 ## Src

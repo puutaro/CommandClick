@@ -6,10 +6,10 @@
 
 var=mapMadeCon
 	?func=jsToListMap.map
-		?args=
-			&conString=
-			&separatorString=
-			&extraMapConString=
+	?args=
+		&conString=
+		&separatorString=
+		&extraMapConString=
 ```
 
 ## Src

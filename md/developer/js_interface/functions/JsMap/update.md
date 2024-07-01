@@ -6,10 +6,10 @@
 
 var=updatedMapCon
 	?func=jsMap.update
-		?args=
-			&mapConString=
-			&separatorString=
-			&keyValueStrString=
+	?args=
+		&mapConString=
+		&separatorString=
+		&keyValueStrString=
 ```
 
 ## Src

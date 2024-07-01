@@ -6,8 +6,8 @@
 
 var=runScanConfirmHandler
 	?func=jsQr.scanConfirmHandler
-		?args=
-			&qrImagePathString=
+	?args=
+		&qrImagePathString=
 ```
 
 ## Src

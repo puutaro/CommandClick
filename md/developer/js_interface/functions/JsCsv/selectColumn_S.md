@@ -6,10 +6,10 @@
 
 var=runSelectColumn_S
 	?func=jsCsv.selectColumn_S
-		?args=
-			&srcTagString=
-			&destTagString=
-			&comaSepaColumnsString=
+	?args=
+		&srcTagString=
+		&destTagString=
+		&comaSepaColumnsString=
 ```
 
 ## Src

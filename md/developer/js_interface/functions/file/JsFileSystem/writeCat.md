@@ -6,9 +6,9 @@
 
 var=contents
 	?func=jsFileSystem.writeCat
-		?args=
-			&filePathString=
-			&contentsString=
+	?args=
+		&filePathString=
+		&contentsString=
 ```
 
 ## Src

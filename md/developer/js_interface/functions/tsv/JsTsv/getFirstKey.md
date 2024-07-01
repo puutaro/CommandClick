@@ -6,8 +6,8 @@
 
 var=firstKey
 	?func=jsTsv.getFirstKey
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

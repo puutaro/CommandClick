@@ -6,9 +6,9 @@
 
 var=runGet
 	?func=jsPermission.get
-		?args=
-			&permissionTypeStrString=
-			&loadJsPathString=
+	?args=
+		&permissionTypeStrString=
+		&loadJsPathString=
 ```
 
 ## Src

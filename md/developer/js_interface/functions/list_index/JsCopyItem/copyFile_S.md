@@ -6,10 +6,10 @@
 
 var=runCopyFile_S
 	?func=jsCopyItem.copyFile_S
-		?args=
-			&selectedItemString=
-			&listIndexPositionInt=
-			&initialPathString=
+	?args=
+		&selectedItemString=
+		&listIndexPositionInt=
+		&initialPathString=
 ```
 
 ## Src

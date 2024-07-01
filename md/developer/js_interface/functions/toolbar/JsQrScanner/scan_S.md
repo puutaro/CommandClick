@@ -6,7 +6,7 @@
 
 var=runScan_S
 	?func=jsQrScanner.scan_S
-		?args=
+	?args=
 
 ```
 

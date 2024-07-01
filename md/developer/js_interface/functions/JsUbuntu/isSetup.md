@@ -6,7 +6,7 @@
 
 var=isSetupFile
 	?func=jsUbuntu.isSetup
-		?args=
+	?args=
 
 ```
 

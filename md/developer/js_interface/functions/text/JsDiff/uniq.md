@@ -6,10 +6,10 @@
 
 var=uniqCon
 	?func=jsDiff.uniq
-		?args=
-			&baseConString=
-			&compareConString=
-			&separatorString=
+	?args=
+		&baseConString=
+		&compareConString=
+		&separatorString=
 ```
 
 ## Src

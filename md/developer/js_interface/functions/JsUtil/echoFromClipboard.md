@@ -6,7 +6,7 @@
 
 var=clipBoardCon
 	?func=jsUtil.echoFromClipboard
-		?args=
+	?args=
 
 ```
 

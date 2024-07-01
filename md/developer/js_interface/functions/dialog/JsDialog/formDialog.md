@@ -6,10 +6,10 @@
 
 var=String
 	?func=jsDialog.formDialog
-		?args=
-			&titleString=
-			&formSettingVariablesString=
-			&formCommandVariablesString=
+	?args=
+		&titleString=
+		&formSettingVariablesString=
+		&formCommandVariablesString=
 ```
 
 ## Src

@@ -6,8 +6,8 @@
 
 var=runStdLog
 	?func=jsFileSystem.stdLog
-		?args=
-			&conString=
+	?args=
+		&conString=
 ```
 
 ## Src

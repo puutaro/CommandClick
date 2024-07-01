@@ -6,7 +6,7 @@
 
 var=listOf
 	?func=jsScript.convertRepValPathToOneLine
-		?args=
+	?args=
 
 ```
 

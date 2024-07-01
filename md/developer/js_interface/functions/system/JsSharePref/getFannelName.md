@@ -6,7 +6,7 @@
 
 var=fannelName
 	?func=jsSharePref.getFannelName
-		?args=
+	?args=
 
 ```
 

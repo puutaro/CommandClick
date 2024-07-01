@@ -6,7 +6,7 @@
 
 var=jsArguments
 	?func=jsArgs.get
-		?args=
+	?args=
 
 ```
 

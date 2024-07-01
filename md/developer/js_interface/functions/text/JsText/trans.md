@@ -6,8 +6,8 @@
 
 var=transCon
 	?func=jsText.trans
-		?args=
-			&tsvStrString=
+	?args=
+		&tsvStrString=
 ```
 
 ## Src

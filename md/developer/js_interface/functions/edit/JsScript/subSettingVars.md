@@ -6,8 +6,8 @@
 
 var=settingVaribleCon
 	?func=jsScript.subSettingVars
-		?args=
-			&jsContentsString=
+	?args=
+		&jsContentsString=
 ```
 
 ## Src

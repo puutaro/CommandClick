@@ -6,8 +6,8 @@
 
 var=dirsCon
 	?func=jsFileSystem.showDirList
-		?args=
-			&dirPathString=
+	?args=
+		&dirPathString=
 ```
 
 ## Src

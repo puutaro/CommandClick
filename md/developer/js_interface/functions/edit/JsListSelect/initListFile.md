@@ -6,9 +6,9 @@
 
 var=runInitListFile
 	?func=jsListSelect.initListFile
-		?args=
-			&targetListFilePathString=
-			&itemTextListConString=
+	?args=
+		&targetListFilePathString=
+		&itemTextListConString=
 ```
 
 ## Src

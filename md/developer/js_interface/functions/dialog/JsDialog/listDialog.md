@@ -6,10 +6,10 @@
 
 var=selectedItem
 	?func=jsDialog.listDialog
-		?args=
-			&titleString=
-			&messageString=
-			&listSourceString=
+	?args=
+		&titleString=
+		&messageString=
+		&listSourceString=
 ```
 
 ## Src

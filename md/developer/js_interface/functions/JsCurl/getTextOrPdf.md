@@ -6,8 +6,8 @@
 
 var=runGetTextOrPdf
 	?func=jsCurl.getTextOrPdf
-		?args=
-			&urlString=
+	?args=
+		&urlString=
 ```
 
 ## Src

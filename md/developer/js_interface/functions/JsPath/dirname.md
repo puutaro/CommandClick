@@ -6,8 +6,8 @@
 
 var=parentDirPath
 	?func=jsPath.dirname
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

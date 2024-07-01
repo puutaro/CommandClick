@@ -6,10 +6,10 @@
 
 var=keyCon
 	?func=jsMap.get
-		?args=
-			&mapConString=
-			&separatorString=
-			&keyString=
+	?args=
+		&mapConString=
+		&separatorString=
+		&keyString=
 ```
 
 ## Src

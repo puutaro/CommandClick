@@ -6,12 +6,12 @@
 
 var=false
 	?func=jsUbuntu.isInstall
-		?args=
-			&installStampFilePathString=
-			&expectStampConString=
-			&installConfirmTitleAndMessageString=
-			&installOneListString=
-			&cautionTitleAndMessageString=
+	?args=
+		&installStampFilePathString=
+		&expectStampConString=
+		&installConfirmTitleAndMessageString=
+		&installOneListString=
+		&cautionTitleAndMessageString=
 ```
 
 ## Src

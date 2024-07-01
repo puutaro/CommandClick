@@ -6,7 +6,7 @@
 
 var=settingLang
 	?func=jsUtil.lang
-		?args=
+	?args=
 
 ```
 

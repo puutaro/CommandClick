@@ -6,10 +6,10 @@
 
 var=diffCon
 	?func=jsDiff.diff
-		?args=
-			&baseConString=
-			&compareConString=
-			&separatorString=
+	?args=
+		&baseConString=
+		&compareConString=
+		&separatorString=
 ```
 
 ## Src

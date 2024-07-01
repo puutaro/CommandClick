@@ -6,7 +6,7 @@
 
 var=qrEditTypesCon
 	?func=jsQr.qrEditTypeList
-		?args=
+	?args=
 
 ```
 

@@ -6,9 +6,9 @@
 
 var=runKill_S
 	?func=jsProcessKiller.kill_S
-		?args=
-			&currentAppDirPathString=
-			&fannelNameString=
+	?args=
+		&currentAppDirPathString=
+		&fannelNameString=
 ```
 
 ## Src

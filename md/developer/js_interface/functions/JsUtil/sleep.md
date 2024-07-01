@@ -6,8 +6,8 @@
 
 var=runSleep
 	?func=jsUtil.sleep
-		?args=
-			&sleepMiriTimeInt=
+	?args=
+		&sleepMiriTimeInt=
 ```
 
 ## Src

@@ -6,9 +6,9 @@
 
 var=pathByCompExtend
 	?func=jsPath.compExtend
-		?args=
-			&pathString=
-			&extendString=
+	?args=
+		&pathString=
+		&extendString=
 ```
 
 ## Src

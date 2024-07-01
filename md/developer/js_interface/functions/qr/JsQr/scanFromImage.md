@@ -6,8 +6,8 @@
 
 var=errMassage
 	?func=jsQr.scanFromImage
-		?args=
-			&qrImagePathString=
+	?args=
+		&qrImagePathString=
 ```
 
 ## Src

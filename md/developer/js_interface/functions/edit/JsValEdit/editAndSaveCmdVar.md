@@ -6,11 +6,11 @@
 
 var=isOk
 	?func=jsValEdit.editAndSaveCmdVar
-		?args=
-			&titleString=
-			&fContentsString=
-			&setVariableTypesString=
-			&targetVariablesString=
+	?args=
+		&titleString=
+		&fContentsString=
+		&setVariableTypesString=
+		&targetVariablesString=
 ```
 
 ## Src

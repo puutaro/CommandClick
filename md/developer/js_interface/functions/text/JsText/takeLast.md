@@ -6,10 +6,10 @@
 
 var=lastTakenCon
 	?func=jsText.takeLast
-		?args=
-			&conString=
-			&separatorString=
-			&takeLastNumInt=
+	?args=
+		&conString=
+		&separatorString=
+		&takeLastNumInt=
 ```
 
 ## Src

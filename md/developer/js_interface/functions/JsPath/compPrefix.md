@@ -6,9 +6,9 @@
 
 var=pathByCompPrefix
 	?func=jsPath.compPrefix
-		?args=
-			&pathString=
-			&prefixString=
+	?args=
+		&pathString=
+		&prefixString=
 ```
 
 ## Src

@@ -6,9 +6,9 @@
 
 var=runEdit_S
 	?func=jsEditorItem.edit_S
-		?args=
-			&selectedItemString=
-			&listIndexPositionInt=
+	?args=
+		&selectedItemString=
+		&listIndexPositionInt=
 ```
 
 ## Src

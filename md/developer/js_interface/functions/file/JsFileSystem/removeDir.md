@@ -6,8 +6,8 @@
 
 var=runRemoveDir
 	?func=jsFileSystem.removeDir
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

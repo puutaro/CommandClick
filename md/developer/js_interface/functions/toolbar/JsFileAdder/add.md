@@ -6,9 +6,9 @@
 
 var=runAdd
 	?func=jsFileAdder.add
-		?args=
-			&compFileNameMapConString=
-			&separatorString=
+	?args=
+		&compFileNameMapConString=
+		&separatorString=
 ```
 
 ## Src

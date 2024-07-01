@@ -6,9 +6,9 @@
 
 var=runBootOnExec
 	?func=jsUbuntu.bootOnExec
-		?args=
-			&execCodeString=
-			&delayMiliTimeInt=
+	?args=
+		&execCodeString=
+		&delayMiliTimeInt=
 ```
 
 ## Src

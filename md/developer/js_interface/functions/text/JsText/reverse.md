@@ -6,9 +6,9 @@
 
 var=reverseCon
 	?func=jsText.reverse
-		?args=
-			&linesString=
-			&separatorString=
+	?args=
+		&linesString=
+		&separatorString=
 ```
 
 ## Src

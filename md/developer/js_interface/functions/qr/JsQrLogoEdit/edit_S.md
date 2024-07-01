@@ -6,8 +6,8 @@
 
 var=runEdit_S
 	?func=jsQrLogoEdit.edit_S
-		?args=
-			&clickFileNameString=
+	?args=
+		&clickFileNameString=
 ```
 
 ## Src

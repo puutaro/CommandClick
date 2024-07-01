@@ -6,8 +6,8 @@
 
 var=ContextCompat
 	?func=jsPermission.isExist
-		?args=
-			&permissionTypeStrString=
+	?args=
+		&permissionTypeStrString=
 ```
 
 ## Src

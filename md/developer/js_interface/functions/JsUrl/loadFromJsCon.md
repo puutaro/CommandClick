@@ -6,8 +6,8 @@
 
 var=runLoadFromJsCon
 	?func=jsUrl.loadFromJsCon
-		?args=
-			&jsConString=
+	?args=
+		&jsConString=
 ```
 
 ## Src

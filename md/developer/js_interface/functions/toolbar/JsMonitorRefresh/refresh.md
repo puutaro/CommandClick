@@ -6,7 +6,7 @@
 
 var=runRefresh
 	?func=jsMonitorRefresh.refresh
-		?args=
+	?args=
 
 ```
 

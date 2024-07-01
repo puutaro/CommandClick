@@ -6,9 +6,9 @@
 
 var=runSave
 	?func=jsUrlHistory.save
-		?args=
-			&titleString=
-			&urlString=
+	?args=
+		&titleString=
+		&urlString=
 ```
 
 ## Src

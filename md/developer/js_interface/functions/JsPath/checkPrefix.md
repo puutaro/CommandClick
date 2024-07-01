@@ -6,9 +6,9 @@
 
 var=isExist
 	?func=jsPath.checkPrefix
-		?args=
-			&nameString=
-			&prefixTabSeparateStrString=
+	?args=
+		&nameString=
+		&prefixTabSeparateStrString=
 ```
 
 ## Src

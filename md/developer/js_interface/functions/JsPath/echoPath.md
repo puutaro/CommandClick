@@ -6,8 +6,8 @@
 
 var=appFileDirPath
 	?func=jsPath.echoPath
-		?args=
-			&pathTypeString=
+	?args=
+		&pathTypeString=
 ```
 
 ## Src

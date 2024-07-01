@@ -6,8 +6,8 @@
 
 var=firstLine
 	?func=jsTsv.getSr
-		?args=
-			&pathString=
+	?args=
+		&pathString=
 ```
 
 ## Src

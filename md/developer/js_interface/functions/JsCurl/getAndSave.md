@@ -6,10 +6,10 @@
 
 var=runGetAndSave
 	?func=jsCurl.getAndSave 
-		?args=
-			&pathString=
-			&mainUrlString=
-			&queryParameterString=String=
+	?args=
+		&pathString=
+		&mainUrlString=
+		&queryParameterString=String=
 ```
 
 ## Src

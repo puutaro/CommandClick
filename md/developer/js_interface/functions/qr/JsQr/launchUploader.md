@@ -6,7 +6,7 @@
 
 var=runLaunchUploader
 	?func=jsQr.launchUploader
-		?args=
+	?args=
 
 ```
 

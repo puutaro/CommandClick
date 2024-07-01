@@ -6,9 +6,9 @@
 
 var=runLaunchShortcut
 	?func=jsIntent.launchShortcut
-		?args=
-			&currentAppDirPathString=
-			&currentScriptFileNameString=
+	?args=
+		&currentAppDirPathString=
+		&currentScriptFileNameString=
 ```
 
 ## Src

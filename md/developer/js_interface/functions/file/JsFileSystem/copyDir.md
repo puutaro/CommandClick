@@ -6,9 +6,9 @@
 
 var=runCopyDir
 	?func=jsFileSystem.copyDir
-		?args=
-			&sourcePathString=
-			&destiDirPathString=
+	?args=
+		&sourcePathString=
+		&destiDirPathString=
 ```
 
 ## Src

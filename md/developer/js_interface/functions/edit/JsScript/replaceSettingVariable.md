@@ -6,9 +6,9 @@
 
 var=replacedSettingVariableCon
 	?func=jsScript.replaceSettingVariable
-		?args=
-			&scriptContentsString=
-			&replaceNewlineSepaConString=
+	?args=
+		&scriptContentsString=
+		&replaceNewlineSepaConString=
 ```
 
 ## Src

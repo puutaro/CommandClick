@@ -6,8 +6,8 @@
 
 var=runKillBackground
 	?func=jsUbuntu.killBackground
-		?args=
-			&cmdNameString=
+	?args=
+		&cmdNameString=
 ```
 
 ## Src

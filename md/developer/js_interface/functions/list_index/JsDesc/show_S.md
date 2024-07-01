@@ -6,9 +6,9 @@
 
 var=runShow_S
 	?func=jsDesc.show_S
-		?args=
-			&selectedItemString=
-			&listIndexPositionInt=
+	?args=
+		&selectedItemString=
+		&listIndexPositionInt=
 ```
 
 ## Src
