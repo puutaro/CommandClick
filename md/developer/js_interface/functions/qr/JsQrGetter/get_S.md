@@ -1,4 +1,4 @@
-# jsQrGetter.get_S--
+# jsQrGetter.get_S
 
 ## Definition
 

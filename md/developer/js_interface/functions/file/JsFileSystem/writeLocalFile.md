@@ -1,4 +1,4 @@
-# jsFileSystem.writeLocalFile--
+# jsFileSystem.writeLocalFile
 
 ## Definition
 

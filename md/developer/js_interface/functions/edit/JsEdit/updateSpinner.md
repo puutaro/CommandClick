@@ -1,4 +1,4 @@
-# jsEdit.updateSpinner--
+# jsEdit.updateSpinner
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsDeleteItem.simpleDelete_S--
+# jsDeleteItem.simpleDelete_S
 
 ## Definition
 

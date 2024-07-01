@@ -1,4 +1,4 @@
-# jsBroadcast.send--
+# jsBroadcast.send
 
 ## Definition
 

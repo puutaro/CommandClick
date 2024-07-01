@@ -1,4 +1,4 @@
-# jsAddToUrlHistory.add_S--
+# jsAddToUrlHistory.add_S
 
 ## Definition
 

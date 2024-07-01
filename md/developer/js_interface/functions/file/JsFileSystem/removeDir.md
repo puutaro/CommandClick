@@ -1,4 +1,4 @@
-# jsFileSystem.removeDir--
+# jsFileSystem.removeDir
 
 ## Definition
 

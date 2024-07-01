@@ -1,4 +1,4 @@
-# jsUrl.makeJsUrl--
+# jsUrl.makeJsUrl
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsFileSystem.copyFile--
+# jsFileSystem.copyFile
 
 ## Definition
 

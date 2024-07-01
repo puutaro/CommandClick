@@ -1,4 +1,4 @@
-# jsCurl.postAndSave--
+# jsCurl.postAndSave
 
 ## Definition
 

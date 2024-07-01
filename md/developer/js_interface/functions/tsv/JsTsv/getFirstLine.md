@@ -1,4 +1,4 @@
-# jsTsv.getFirstLine--
+# jsTsv.getFirstLine
 
 ## Definition
 

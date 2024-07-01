@@ -1,4 +1,4 @@
-# jsFileSystem.revUpdateFile--
+# jsFileSystem.revUpdateFile
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsScript.extractSettingValName--
+# jsScript.extractSettingValName
 
 ## Definition
 

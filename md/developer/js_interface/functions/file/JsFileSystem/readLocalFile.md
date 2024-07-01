@@ -1,4 +1,4 @@
-# jsFileSystem.readLocalFile--
+# jsFileSystem.readLocalFile
 
 ## Definition
 

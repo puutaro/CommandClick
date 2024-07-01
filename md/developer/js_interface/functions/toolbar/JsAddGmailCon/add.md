@@ -1,4 +1,4 @@
-# jsAddGmailCon.add--
+# jsAddGmailCon.add
 
 ## Definition
 

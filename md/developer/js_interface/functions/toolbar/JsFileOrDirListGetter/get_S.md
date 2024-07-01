@@ -1,4 +1,4 @@
-# jsFileOrDirListGetter.get_S--
+# jsFileOrDirListGetter.get_S
 
 ## Definition
 

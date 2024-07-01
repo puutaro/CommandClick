@@ -1,4 +1,4 @@
-# jsCurl.getTextOrPdf--
+# jsCurl.getTextOrPdf
 
 ## Definition
 

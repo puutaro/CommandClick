@@ -1,4 +1,4 @@
-# jsDesc.show_S--
+# jsDesc.show_S
 
 ## Definition
 

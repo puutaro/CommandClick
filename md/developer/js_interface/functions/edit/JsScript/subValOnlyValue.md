@@ -1,4 +1,4 @@
-# jsScript.subValOnlyValue--
+# jsScript.subValOnlyValue
 
 ## Definition
 

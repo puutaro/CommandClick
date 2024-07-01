@@ -1,4 +1,4 @@
-# jsEdit.getFromEditText--
+# jsEdit.getFromEditText
 
 ## Definition
 

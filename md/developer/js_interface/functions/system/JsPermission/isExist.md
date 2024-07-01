@@ -1,4 +1,4 @@
-# jsPermission.isExist--
+# jsPermission.isExist
 
 ## Definition
 

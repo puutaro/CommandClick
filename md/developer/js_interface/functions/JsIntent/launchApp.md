@@ -1,4 +1,4 @@
-# jsIntent.launchApp--
+# jsIntent.launchApp
 
 ## Definition
 

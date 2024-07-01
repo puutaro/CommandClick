@@ -1,4 +1,4 @@
-# jsDialog.confirm--
+# jsDialog.confirm
 
 ## Definition
 

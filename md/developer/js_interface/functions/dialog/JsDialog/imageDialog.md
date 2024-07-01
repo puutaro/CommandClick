@@ -1,4 +1,4 @@
-# jsDialog.imageDialog--
+# jsDialog.imageDialog
 
 ## Definition
 

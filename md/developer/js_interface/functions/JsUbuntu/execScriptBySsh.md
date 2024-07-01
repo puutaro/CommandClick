@@ -1,4 +1,4 @@
-# jsUbuntu.execScriptBySsh--
+# jsUbuntu.execScriptBySsh
 
 ## Definition
 

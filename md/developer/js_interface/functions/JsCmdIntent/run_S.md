@@ -1,4 +1,4 @@
-# jsCmdIntent.run_S--
+# jsCmdIntent.run_S
 
 ## Definition
 

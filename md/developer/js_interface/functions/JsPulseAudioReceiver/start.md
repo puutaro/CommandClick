@@ -1,4 +1,4 @@
-# jsPulseAudioReceiver.start--
+# jsPulseAudioReceiver.start
 
 ## Definition
 

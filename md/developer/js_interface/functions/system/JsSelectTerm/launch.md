@@ -1,4 +1,4 @@
-# jsSelectTerm.launch--
+# jsSelectTerm.launch
 
 ## Definition
 

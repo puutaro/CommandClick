@@ -1,4 +1,4 @@
-# jsTsv.getSecondRow--
+# jsTsv.getSecondRow
 
 ## Definition
 

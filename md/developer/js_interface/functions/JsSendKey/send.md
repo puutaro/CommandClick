@@ -1,4 +1,4 @@
-# jsSendKey.send--
+# jsSendKey.send
 
 ## Definition
 

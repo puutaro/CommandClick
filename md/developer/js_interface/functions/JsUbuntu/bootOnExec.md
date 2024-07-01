@@ -1,4 +1,4 @@
-# jsUbuntu.bootOnExec--
+# jsUbuntu.bootOnExec
 
 ## Definition
 

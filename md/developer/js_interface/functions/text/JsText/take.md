@@ -1,4 +1,4 @@
-# jsText.take--
+# jsText.take
 
 ## Definition
 

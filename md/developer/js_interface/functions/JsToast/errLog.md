@@ -1,4 +1,4 @@
-# jsToast.errLog--
+# jsToast.errLog
 
 ## Definition
 

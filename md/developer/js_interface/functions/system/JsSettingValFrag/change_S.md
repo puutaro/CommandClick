@@ -1,4 +1,4 @@
-# jsSettingValFrag.change_S--
+# jsSettingValFrag.change_S
 
 ## Definition
 

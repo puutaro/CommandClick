@@ -1,4 +1,4 @@
-# jsMap.update--
+# jsMap.update
 
 ## Definition
 

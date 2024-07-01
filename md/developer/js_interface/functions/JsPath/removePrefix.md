@@ -1,4 +1,4 @@
-# jsPath.removePrefix--
+# jsPath.removePrefix
 
 ## Definition
 

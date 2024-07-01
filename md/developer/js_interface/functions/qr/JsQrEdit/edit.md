@@ -1,4 +1,4 @@
-# jsQrEdit.edit--
+# jsQrEdit.edit
 
 ## Definition
 

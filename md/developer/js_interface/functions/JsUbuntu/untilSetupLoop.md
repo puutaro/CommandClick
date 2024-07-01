@@ -1,4 +1,4 @@
-# jsUbuntu.untilSetupLoop--
+# jsUbuntu.untilSetupLoop
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsPdf.extractText--
+# jsPdf.extractText
 
 ## Definition
 

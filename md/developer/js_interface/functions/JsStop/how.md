@@ -1,4 +1,4 @@
-# jsStop.how--
+# jsStop.how
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsFileSystem.writeCat--
+# jsFileSystem.writeCat
 
 ## Definition
 

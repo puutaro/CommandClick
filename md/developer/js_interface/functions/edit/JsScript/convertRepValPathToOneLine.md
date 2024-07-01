@@ -1,4 +1,4 @@
-# jsScript.convertRepValPathToOneLine--
+# jsScript.convertRepValPathToOneLine
 
 ## Definition
 

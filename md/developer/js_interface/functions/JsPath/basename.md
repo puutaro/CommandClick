@@ -1,4 +1,4 @@
-# jsPath.basename--
+# jsPath.basename
 
 ## Definition
 

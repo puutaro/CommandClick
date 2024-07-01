@@ -1,4 +1,4 @@
-# jsFileSystem.copyDir--
+# jsFileSystem.copyDir
 
 ## Definition
 

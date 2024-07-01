@@ -1,4 +1,4 @@
-# jsQr.scanConfirmHandler--
+# jsQr.scanConfirmHandler
 
 ## Definition
 

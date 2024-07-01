@@ -1,4 +1,4 @@
-# jsFileSystem.errJsLog--
+# jsFileSystem.errJsLog
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsCon.sortFromThis--
+# jsCon.sortFromThis
 
 ## Definition
 

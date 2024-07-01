@@ -1,4 +1,4 @@
-# jsCsv.toCol--
+# jsCsv.toCol
 
 ## Definition
 

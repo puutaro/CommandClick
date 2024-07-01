@@ -1,4 +1,4 @@
-# jsQrLogoEdit.edit_S--
+# jsQrLogoEdit.edit_S
 
 ## Definition
 

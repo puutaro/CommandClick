@@ -1,4 +1,4 @@
-# jsCurl.post--
+# jsCurl.post
 
 ## Definition
 

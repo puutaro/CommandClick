@@ -1,4 +1,4 @@
-# jsIntent.launchFzSite--
+# jsIntent.launchFzSite
 
 ## Definition
 

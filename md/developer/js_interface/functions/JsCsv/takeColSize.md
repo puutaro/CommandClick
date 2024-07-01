@@ -1,4 +1,4 @@
-# jsCsv.takeColSize--
+# jsCsv.takeColSize
 
 ## Definition
 

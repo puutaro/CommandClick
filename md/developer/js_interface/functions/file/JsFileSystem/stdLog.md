@@ -1,4 +1,4 @@
-# jsFileSystem.stdLog--
+# jsFileSystem.stdLog
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsShowItemCon.show_S--
+# jsShowItemCon.show_S
 
 ## Definition
 

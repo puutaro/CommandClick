@@ -1,4 +1,4 @@
-# jsScript.readCmdValsCon--
+# jsScript.readCmdValsCon
 
 ## Definition
 

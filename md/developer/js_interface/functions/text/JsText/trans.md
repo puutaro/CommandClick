@@ -1,4 +1,4 @@
-# jsText.trans--
+# jsText.trans
 
 ## Definition
 

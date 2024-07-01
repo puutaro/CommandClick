@@ -1,4 +1,4 @@
-# jsPulseAudioReceiver.stop--
+# jsPulseAudioReceiver.stop
 
 ## Definition
 

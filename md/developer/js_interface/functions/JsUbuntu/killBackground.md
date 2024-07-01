@@ -1,4 +1,4 @@
-# jsUbuntu.killBackground--
+# jsUbuntu.killBackground
 
 ## Definition
 

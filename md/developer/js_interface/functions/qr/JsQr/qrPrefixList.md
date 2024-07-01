@@ -1,4 +1,4 @@
-# jsQr.qrPrefixList--
+# jsQr.qrPrefixList
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsScript.replaceSettingVariable--
+# jsScript.replaceSettingVariable
 
 ## Definition
 

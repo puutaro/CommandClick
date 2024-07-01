@@ -1,4 +1,4 @@
-# jsVar.echo--
+# jsVar.echo
 
 ## Definition
 

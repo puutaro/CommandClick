@@ -1,4 +1,4 @@
-# jsToListFilter.filter--
+# jsToListFilter.filter
 
 ## Definition
 

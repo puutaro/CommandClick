@@ -1,4 +1,4 @@
-# jsUbuntu.boot--
+# jsUbuntu.boot
 
 ## Definition
 

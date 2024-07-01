@@ -1,4 +1,4 @@
-# jsIntent.launchEditSite--
+# jsIntent.launchEditSite
 
 ## Definition
 

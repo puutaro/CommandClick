@@ -1,4 +1,4 @@
-# jsFileSystem.createDir--
+# jsFileSystem.createDir
 
 ## Definition
 

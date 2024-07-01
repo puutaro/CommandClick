@@ -1,4 +1,4 @@
-# jsQr.createAndSaveRnd--
+# jsQr.createAndSaveRnd
 
 ## Definition
 

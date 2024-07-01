@@ -1,4 +1,4 @@
-# jsDirect.get--
+# jsDirect.get
 
 ## Definition
 

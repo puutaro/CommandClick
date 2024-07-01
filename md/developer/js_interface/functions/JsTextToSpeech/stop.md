@@ -1,4 +1,4 @@
-# jsTextToSpeech.stop--
+# jsTextToSpeech.stop
 
 ## Definition
 

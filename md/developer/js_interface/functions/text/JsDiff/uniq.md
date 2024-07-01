@@ -1,4 +1,4 @@
-# jsDiff.uniq--
+# jsDiff.uniq
 
 ## Definition
 

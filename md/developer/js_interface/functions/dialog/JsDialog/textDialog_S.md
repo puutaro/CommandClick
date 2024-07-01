@@ -1,4 +1,4 @@
-# jsDialog.textDialog_S--
+# jsDialog.textDialog_S
 
 ## Definition
 

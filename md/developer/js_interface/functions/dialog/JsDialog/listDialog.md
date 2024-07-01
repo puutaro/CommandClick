@@ -1,4 +1,4 @@
-# jsDialog.listDialog--
+# jsDialog.listDialog
 
 ## Definition
 

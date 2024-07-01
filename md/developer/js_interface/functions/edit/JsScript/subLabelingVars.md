@@ -1,4 +1,4 @@
-# jsScript.subLabelingVars--
+# jsScript.subLabelingVars
 
 ## Definition
 

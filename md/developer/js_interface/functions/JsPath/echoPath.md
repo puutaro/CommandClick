@@ -1,4 +1,4 @@
-# jsPath.echoPath--
+# jsPath.echoPath
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsUtil.sleep--
+# jsUtil.sleep
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsDialog.dAlert--
+# jsDialog.dAlert
 
 ## Definition
 

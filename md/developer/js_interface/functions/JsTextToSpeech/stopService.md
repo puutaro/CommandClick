@@ -1,4 +1,4 @@
-# jsTextToSpeech.stopService--
+# jsTextToSpeech.stopService
 
 ## Definition
 

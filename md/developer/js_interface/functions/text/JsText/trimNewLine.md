@@ -1,4 +1,4 @@
-# jsText.trimNewLine--
+# jsText.trimNewLine
 
 ## Definition
 

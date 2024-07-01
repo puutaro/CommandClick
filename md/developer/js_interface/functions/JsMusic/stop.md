@@ -1,4 +1,4 @@
-# jsMusic.stop--
+# jsMusic.stop
 
 ## Definition
 

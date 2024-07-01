@@ -1,4 +1,4 @@
-# jsQr.makeCpFileQr--
+# jsQr.makeCpFileQr
 
 ## Definition
 

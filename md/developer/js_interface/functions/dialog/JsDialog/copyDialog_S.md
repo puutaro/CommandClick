@@ -1,4 +1,4 @@
-# jsDialog.copyDialog_S--
+# jsDialog.copyDialog_S
 
 ## Definition
 

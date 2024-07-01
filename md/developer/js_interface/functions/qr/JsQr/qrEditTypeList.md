@@ -1,4 +1,4 @@
-# jsQr.qrEditTypeList--
+# jsQr.qrEditTypeList
 
 ## Definition
 

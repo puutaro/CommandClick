@@ -1,4 +1,4 @@
-# jsUtil.lang--
+# jsUtil.lang
 
 ## Definition
 

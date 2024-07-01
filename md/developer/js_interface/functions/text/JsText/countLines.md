@@ -1,4 +1,4 @@
-# jsText.countLines--
+# jsText.countLines
 
 ## Definition
 

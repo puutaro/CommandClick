@@ -1,4 +1,4 @@
-# jsDialog.getFormValue--
+# jsDialog.getFormValue
 
 ## Definition
 

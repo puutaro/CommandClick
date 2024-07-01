@@ -1,4 +1,4 @@
-# jsFileSystem.updateWeekPastLastModified--
+# jsFileSystem.updateWeekPastLastModified
 
 ## Definition
 

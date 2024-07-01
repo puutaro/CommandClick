@@ -1,4 +1,4 @@
-# jsScript.convertSetValPathToOneLine--
+# jsScript.convertSetValPathToOneLine
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsPath.compPrefix--
+# jsPath.compPrefix
 
 ## Definition
 

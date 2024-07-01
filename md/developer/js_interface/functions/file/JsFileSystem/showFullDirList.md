@@ -1,4 +1,4 @@
-# jsFileSystem.showFullDirList--
+# jsFileSystem.showFullDirList
 
 ## Definition
 

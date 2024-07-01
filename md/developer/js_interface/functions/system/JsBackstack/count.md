@@ -1,4 +1,4 @@
-# jsBackstack.count--
+# jsBackstack.count
 
 ## Definition
 

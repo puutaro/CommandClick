@@ -1,4 +1,4 @@
-# jsEdit.updateEditText--
+# jsEdit.updateEditText
 
 ## Definition
 

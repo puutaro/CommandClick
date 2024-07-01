@@ -1,4 +1,4 @@
-# jsValEdit.registerFannelConChange--
+# jsValEdit.registerFannelConChange
 
 ## Definition
 

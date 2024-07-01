@@ -1,4 +1,4 @@
-# jsExit.exit--
+# jsExit.exit
 
 ## Definition
 

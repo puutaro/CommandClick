@@ -1,4 +1,4 @@
-# jsDialog.multiListDialog--
+# jsDialog.multiListDialog
 
 ## Definition
 

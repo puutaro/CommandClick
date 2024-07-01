@@ -1,4 +1,4 @@
-# jsPath.convertUbuntuPath--
+# jsPath.convertUbuntuPath
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsTextToSpeech.speech--
+# jsTextToSpeech.speech
 
 ## Definition
 

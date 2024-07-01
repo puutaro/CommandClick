@@ -1,4 +1,4 @@
-# jsUrl.loadQrUrl--
+# jsUrl.loadQrUrl
 
 ## Definition
 

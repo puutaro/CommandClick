@@ -1,4 +1,4 @@
-# jsQrEdit.create--
+# jsQrEdit.create
 
 ## Definition
 

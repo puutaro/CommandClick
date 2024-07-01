@@ -1,4 +1,4 @@
-# jsExit.exitWithToast--
+# jsExit.exitWithToast
 
 ## Definition
 

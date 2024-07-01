@@ -1,4 +1,4 @@
-# jsCsv.sliceHeader--
+# jsCsv.sliceHeader
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsToolbar.addUrl_S--
+# jsToolbar.addUrl_S
 
 ## Definition
 

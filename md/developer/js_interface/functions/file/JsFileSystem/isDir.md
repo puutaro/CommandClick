@@ -1,4 +1,4 @@
-# jsFileSystem.isDir--
+# jsFileSystem.isDir
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsToMap.getKey--
+# jsToMap.getKey
 
 ## Definition
 

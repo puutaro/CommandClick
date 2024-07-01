@@ -1,4 +1,4 @@
-# jsCopyItem.copyPath--
+# jsCopyItem.copyPath
 
 ## Definition
 

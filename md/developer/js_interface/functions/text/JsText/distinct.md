@@ -1,4 +1,4 @@
-# jsText.distinct--
+# jsText.distinct
 
 ## Definition
 

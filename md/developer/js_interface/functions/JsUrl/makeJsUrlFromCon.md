@@ -1,4 +1,4 @@
-# jsUrl.makeJsUrlFromCon--
+# jsUrl.makeJsUrlFromCon
 
 ## Definition
 

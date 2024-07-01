@@ -1,4 +1,4 @@
-# jsUtil.echoFromClipboard--
+# jsUtil.echoFromClipboard
 
 ## Definition
 

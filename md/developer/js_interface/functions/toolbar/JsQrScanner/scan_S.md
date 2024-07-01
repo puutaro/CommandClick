@@ -1,4 +1,4 @@
-# jsQrScanner.scan_S--
+# jsQrScanner.scan_S
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsMusic.play--
+# jsMusic.play
 
 ## Definition
 

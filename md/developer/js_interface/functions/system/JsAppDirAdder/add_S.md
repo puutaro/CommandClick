@@ -1,4 +1,4 @@
-# jsAppDirAdder.add_S--
+# jsAppDirAdder.add_S
 
 ## Definition
 

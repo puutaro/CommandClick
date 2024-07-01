@@ -1,4 +1,4 @@
-# jsPath.checkPrefix--
+# jsPath.checkPrefix
 
 ## Definition
 

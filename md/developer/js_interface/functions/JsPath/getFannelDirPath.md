@@ -1,4 +1,4 @@
-# jsPath.getFannelDirPath--
+# jsPath.getFannelDirPath
 
 ## Definition
 

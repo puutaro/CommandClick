@@ -1,4 +1,4 @@
-# jsNetTool.getIpv4--
+# jsNetTool.getIpv4
 
 ## Definition
 

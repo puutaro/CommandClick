@@ -1,4 +1,4 @@
-# jsEdit.removeFromEditHtml--
+# jsEdit.removeFromEditHtml
 
 ## Definition
 

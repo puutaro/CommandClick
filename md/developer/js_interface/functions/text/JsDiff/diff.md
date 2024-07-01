@@ -1,4 +1,4 @@
-# jsDiff.diff--
+# jsDiff.diff
 
 ## Definition
 

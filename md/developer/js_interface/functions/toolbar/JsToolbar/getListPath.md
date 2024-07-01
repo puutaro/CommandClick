@@ -1,4 +1,4 @@
-# jsToolbar.getListPath--
+# jsToolbar.getListPath
 
 ## Definition
 

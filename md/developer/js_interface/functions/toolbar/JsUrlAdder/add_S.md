@@ -1,4 +1,4 @@
-# jsUrlAdder.add_S--
+# jsUrlAdder.add_S
 
 ## Definition
 

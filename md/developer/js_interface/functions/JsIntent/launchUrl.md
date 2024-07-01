@@ -1,4 +1,4 @@
-# jsIntent.launchUrl--
+# jsIntent.launchUrl
 
 ## Definition
 

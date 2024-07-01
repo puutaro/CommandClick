@@ -1,4 +1,4 @@
-# jsCsv.takeRowSize--
+# jsCsv.takeRowSize
 
 ## Definition
 

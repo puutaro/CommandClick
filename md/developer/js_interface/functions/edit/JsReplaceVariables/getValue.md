@@ -1,4 +1,4 @@
-# jsReplaceVariables.getValue--
+# jsReplaceVariables.getValue
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsLinux.runCmd--
+# jsLinux.runCmd
 
 ## Definition
 

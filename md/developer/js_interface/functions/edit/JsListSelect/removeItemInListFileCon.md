@@ -1,4 +1,4 @@
-# jsListSelect.removeItemInListFileCon--
+# jsListSelect.removeItemInListFileCon
 
 ## Definition
 

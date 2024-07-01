@@ -1,4 +1,4 @@
-# jsCsv.isRead--
+# jsCsv.isRead
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsFannelInstaller.install--
+# jsFannelInstaller.install
 
 ## Definition
 

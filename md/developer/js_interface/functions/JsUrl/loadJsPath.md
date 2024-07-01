@@ -1,4 +1,4 @@
-# jsUrl.loadJsPath--
+# jsUrl.loadJsPath
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsUbuntu.execScriptByBackground--
+# jsUbuntu.execScriptByBackground
 
 ## Definition
 

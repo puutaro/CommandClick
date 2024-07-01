@@ -1,4 +1,4 @@
-# jsDialog.multiSelectGridDialog--
+# jsDialog.multiSelectGridDialog
 
 ## Definition
 

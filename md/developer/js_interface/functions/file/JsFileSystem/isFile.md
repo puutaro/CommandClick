@@ -1,4 +1,4 @@
-# jsFileSystem.isFile--
+# jsFileSystem.isFile
 
 ## Definition
 

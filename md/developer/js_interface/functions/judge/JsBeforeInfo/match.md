@@ -1,4 +1,4 @@
-# jsBeforeInfo.match--
+# jsBeforeInfo.match
 
 ## Definition
 

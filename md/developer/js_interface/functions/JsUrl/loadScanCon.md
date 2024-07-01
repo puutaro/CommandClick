@@ -1,4 +1,4 @@
-# jsUrl.loadScanCon--
+# jsUrl.loadScanCon
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsUrl.loadFromJsCon--
+# jsUrl.loadFromJsCon
 
 ## Definition
 

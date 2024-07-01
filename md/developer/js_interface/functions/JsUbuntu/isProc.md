@@ -1,4 +1,4 @@
-# jsUbuntu.isProc--
+# jsUbuntu.isProc
 
 ## Definition
 

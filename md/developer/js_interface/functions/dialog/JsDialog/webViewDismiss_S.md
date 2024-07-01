@@ -1,4 +1,4 @@
-# jsDialog.webViewDismiss_S--
+# jsDialog.webViewDismiss_S
 
 ## Definition
 

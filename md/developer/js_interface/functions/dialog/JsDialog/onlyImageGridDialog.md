@@ -1,4 +1,4 @@
-# jsDialog.onlyImageGridDialog--
+# jsDialog.onlyImageGridDialog
 
 ## Definition
 

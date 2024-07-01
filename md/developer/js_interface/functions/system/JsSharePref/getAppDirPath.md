@@ -1,4 +1,4 @@
-# jsSharePref.getAppDirPath--
+# jsSharePref.getAppDirPath
 
 ## Definition
 

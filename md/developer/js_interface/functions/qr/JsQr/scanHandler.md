@@ -1,4 +1,4 @@
-# jsQr.scanHandler--
+# jsQr.scanHandler
 
 ## Definition
 

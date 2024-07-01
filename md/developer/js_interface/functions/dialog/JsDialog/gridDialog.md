@@ -1,4 +1,4 @@
-# jsDialog.gridDialog--
+# jsDialog.gridDialog
 
 ## Definition
 

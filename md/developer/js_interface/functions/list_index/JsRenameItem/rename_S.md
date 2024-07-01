@@ -1,4 +1,4 @@
-# jsRenameItem.rename_S--
+# jsRenameItem.rename_S
 
 ## Definition
 

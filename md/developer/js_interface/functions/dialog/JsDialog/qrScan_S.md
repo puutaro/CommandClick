@@ -1,4 +1,4 @@
-# jsDialog.qrScan_S--
+# jsDialog.qrScan_S
 
 ## Definition
 

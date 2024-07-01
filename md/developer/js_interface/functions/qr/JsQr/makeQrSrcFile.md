@@ -1,4 +1,4 @@
-# jsQr.makeQrSrcFile--
+# jsQr.makeQrSrcFile
 
 ## Definition
 

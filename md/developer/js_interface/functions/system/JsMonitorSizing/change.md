@@ -1,4 +1,4 @@
-# jsMonitorSizing.change--
+# jsMonitorSizing.change
 
 ## Definition
 

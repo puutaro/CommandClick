@@ -1,4 +1,4 @@
-# jsPermission.get--
+# jsPermission.get
 
 ## Definition
 

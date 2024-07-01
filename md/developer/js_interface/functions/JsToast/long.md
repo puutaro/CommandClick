@@ -1,4 +1,4 @@
-# jsToast.long--
+# jsToast.long
 
 ## Definition
 

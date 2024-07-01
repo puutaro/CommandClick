@@ -1,4 +1,4 @@
-# jsTsv.getFirstRow--
+# jsTsv.getFirstRow
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsText.takeLast--
+# jsText.takeLast
 
 ## Definition
 

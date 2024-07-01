@@ -1,4 +1,4 @@
-# jsCurl.getImage--
+# jsCurl.getImage
 
 ## Definition
 

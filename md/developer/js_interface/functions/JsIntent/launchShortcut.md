@@ -1,4 +1,4 @@
-# jsIntent.launchShortcut--
+# jsIntent.launchShortcut
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsPath.trimAllExtend--
+# jsPath.trimAllExtend
 
 ## Definition
 

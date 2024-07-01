@@ -1,4 +1,4 @@
-# jsDialog.onlySpannableGridDialog--
+# jsDialog.onlySpannableGridDialog
 
 ## Definition
 

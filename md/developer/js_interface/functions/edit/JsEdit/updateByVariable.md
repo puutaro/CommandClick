@@ -1,4 +1,4 @@
-# jsEdit.updateByVariable--
+# jsEdit.updateByVariable
 
 ## Definition
 

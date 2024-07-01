@@ -1,4 +1,4 @@
-# jsConfigEdit.edit_S--
+# jsConfigEdit.edit_S
 
 ## Definition
 

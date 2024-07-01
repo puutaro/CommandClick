@@ -1,4 +1,4 @@
-# jsSharePref.getState--
+# jsSharePref.getState
 
 ## Definition
 

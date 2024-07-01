@@ -1,4 +1,4 @@
-# jsCsv.outPutTsvForDCol--
+# jsCsv.outPutTsvForDCol
 
 ## Definition
 

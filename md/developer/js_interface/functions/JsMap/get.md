@@ -1,4 +1,4 @@
-# jsMap.get--
+# jsMap.get
 
 ## Definition
 

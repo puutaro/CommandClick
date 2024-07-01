@@ -1,4 +1,4 @@
-# jsListTsvUpdater.update--
+# jsListTsvUpdater.update
 
 ## Definition
 

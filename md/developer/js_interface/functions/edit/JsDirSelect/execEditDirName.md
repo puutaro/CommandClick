@@ -1,4 +1,4 @@
-# jsDirSelect.execEditDirName--
+# jsDirSelect.execEditDirName
 
 ## Definition
 

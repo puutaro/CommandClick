@@ -1,4 +1,4 @@
-# jsPath.removeExtend--
+# jsPath.removeExtend
 
 ## Definition
 

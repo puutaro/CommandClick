@@ -1,4 +1,4 @@
-# jsKeyboard.show--
+# jsKeyboard.show
 
 ## Definition
 

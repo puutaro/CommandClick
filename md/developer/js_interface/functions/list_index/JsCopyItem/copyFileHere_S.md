@@ -1,4 +1,4 @@
-# jsCopyItem.copyFileHere_S--
+# jsCopyItem.copyFileHere_S
 
 ## Definition
 

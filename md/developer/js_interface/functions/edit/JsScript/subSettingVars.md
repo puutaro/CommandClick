@@ -1,4 +1,4 @@
-# jsScript.subSettingVars--
+# jsScript.subSettingVars
 
 ## Definition
 

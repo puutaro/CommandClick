@@ -1,4 +1,4 @@
-# jsEditorItem.edit_S--
+# jsEditorItem.edit_S
 
 ## Definition
 

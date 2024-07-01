@@ -1,4 +1,4 @@
-# jsEditToolbarSwitcher.switch_S--
+# jsEditToolbarSwitcher.switch_S
 
 ## Definition
 

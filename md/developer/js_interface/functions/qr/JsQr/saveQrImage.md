@@ -1,4 +1,4 @@
-# jsQr.saveQrImage--
+# jsQr.saveQrImage
 
 ## Definition
 

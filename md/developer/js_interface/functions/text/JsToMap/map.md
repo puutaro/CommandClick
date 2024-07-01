@@ -1,4 +1,4 @@
-# jsToMap.map--
+# jsToMap.map
 
 ## Definition
 

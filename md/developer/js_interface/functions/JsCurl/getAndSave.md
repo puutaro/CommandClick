@@ -1,4 +1,4 @@
-# jsCurl.getAndSave --
+# jsCurl.getAndSave 
 
 ## Definition
 

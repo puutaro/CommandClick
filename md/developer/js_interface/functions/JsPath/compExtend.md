@@ -1,4 +1,4 @@
-# jsPath.compExtend--
+# jsPath.compExtend
 
 ## Definition
 

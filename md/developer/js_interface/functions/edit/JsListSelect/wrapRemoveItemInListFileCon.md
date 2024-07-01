@@ -1,4 +1,4 @@
-# jsListSelect.wrapRemoveItemInListFileCon--
+# jsListSelect.wrapRemoveItemInListFileCon
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsCurl.isConnOk--
+# jsCurl.isConnOk
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsEditor.open_S--
+# jsEditor.open_S
 
 ## Definition
 

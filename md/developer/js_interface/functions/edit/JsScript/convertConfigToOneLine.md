@@ -1,4 +1,4 @@
-# jsScript.convertConfigToOneLine--
+# jsScript.convertConfigToOneLine
 
 ## Definition
 

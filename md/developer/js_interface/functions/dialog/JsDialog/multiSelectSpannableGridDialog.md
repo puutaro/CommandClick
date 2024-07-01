@@ -1,4 +1,4 @@
-# jsDialog.multiSelectSpannableGridDialog--
+# jsDialog.multiSelectSpannableGridDialog
 
 ## Definition
 

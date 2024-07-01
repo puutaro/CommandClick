@@ -1,4 +1,4 @@
-# jsUbuntu.isSetup--
+# jsUbuntu.isSetup
 
 ## Definition
 

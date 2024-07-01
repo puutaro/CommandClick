@@ -1,4 +1,4 @@
-# jsDialog.prompt--
+# jsDialog.prompt
 
 ## Definition
 

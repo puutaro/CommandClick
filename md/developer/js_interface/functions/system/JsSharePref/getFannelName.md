@@ -1,4 +1,4 @@
-# jsSharePref.getFannelName--
+# jsSharePref.getFannelName
 
 ## Definition
 

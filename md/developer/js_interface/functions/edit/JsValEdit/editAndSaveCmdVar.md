@@ -1,4 +1,4 @@
-# jsValEdit.editAndSaveCmdVar--
+# jsValEdit.editAndSaveCmdVar
 
 ## Definition
 

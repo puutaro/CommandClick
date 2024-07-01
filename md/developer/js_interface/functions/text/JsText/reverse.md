@@ -1,4 +1,4 @@
-# jsText.reverse--
+# jsText.reverse
 
 ## Definition
 

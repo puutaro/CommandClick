@@ -1,4 +1,4 @@
-# jsCsv.toHeaderRow--
+# jsCsv.toHeaderRow
 
 ## Definition
 

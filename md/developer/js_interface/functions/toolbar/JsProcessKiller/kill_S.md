@@ -1,4 +1,4 @@
-# jsProcessKiller.kill_S--
+# jsProcessKiller.kill_S
 
 ## Definition
 

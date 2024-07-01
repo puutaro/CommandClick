@@ -1,4 +1,4 @@
-# jsDirect.launchCopyFannelServer--
+# jsDirect.launchCopyFannelServer
 
 ## Definition
 

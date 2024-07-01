@@ -1,4 +1,4 @@
-# jsDialog.asciiArtDialog--
+# jsDialog.asciiArtDialog
 
 ## Definition
 

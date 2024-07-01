@@ -1,4 +1,4 @@
-# jsScript.replaceCommandVariable--
+# jsScript.replaceCommandVariable
 
 ## Definition
 

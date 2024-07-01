@@ -1,4 +1,4 @@
-# jsTsv.getSecondRowBySortFromThis--
+# jsTsv.getSecondRowBySortFromThis
 
 ## Definition
 

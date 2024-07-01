@@ -1,4 +1,4 @@
-# jsUbuntu.isInstall--
+# jsUbuntu.isInstall
 
 ## Definition
 

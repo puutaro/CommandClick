@@ -1,4 +1,4 @@
-# jsPath.checkExtend--
+# jsPath.checkExtend
 
 ## Definition
 

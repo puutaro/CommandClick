@@ -1,4 +1,4 @@
-# jsToast.short--
+# jsToast.short
 
 ## Definition
 

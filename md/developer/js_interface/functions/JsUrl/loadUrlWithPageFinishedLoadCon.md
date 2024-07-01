@@ -1,4 +1,4 @@
-# jsUrl.loadUrlWithPageFinishedLoadCon--
+# jsUrl.loadUrlWithPageFinishedLoadCon
 
 ## Definition
 

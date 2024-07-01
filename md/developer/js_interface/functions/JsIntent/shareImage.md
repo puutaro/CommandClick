@@ -1,4 +1,4 @@
-# jsIntent.shareImage--
+# jsIntent.shareImage
 
 ## Definition
 

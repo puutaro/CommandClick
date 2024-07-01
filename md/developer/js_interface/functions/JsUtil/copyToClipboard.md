@@ -1,4 +1,4 @@
-# jsUtil.copyToClipboard--
+# jsUtil.copyToClipboard
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsListSelect.initListFile--
+# jsListSelect.initListFile
 
 ## Definition
 

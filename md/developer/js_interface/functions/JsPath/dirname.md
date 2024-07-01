@@ -1,4 +1,4 @@
-# jsPath.dirname--
+# jsPath.dirname
 
 ## Definition
 

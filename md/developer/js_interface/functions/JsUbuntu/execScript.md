@@ -1,4 +1,4 @@
-# jsUbuntu.execScript--
+# jsUbuntu.execScript
 
 ## Definition
 

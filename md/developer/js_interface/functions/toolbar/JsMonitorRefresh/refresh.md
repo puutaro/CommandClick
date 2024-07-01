@@ -1,4 +1,4 @@
-# jsMonitorRefresh.refresh--
+# jsMonitorRefresh.refresh
 
 ## Definition
 

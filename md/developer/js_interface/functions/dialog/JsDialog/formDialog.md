@@ -1,4 +1,4 @@
-# jsDialog.formDialog--
+# jsDialog.formDialog
 
 ## Definition
 

@@ -1,4 +1,4 @@
-# jsDirect.exitCopyFannelServer--
+# jsDirect.exitCopyFannelServer
 
 ## Definition
 

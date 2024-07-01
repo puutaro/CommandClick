@@ -1,4 +1,4 @@
-# jsScript.bothQuoteTrim--
+# jsScript.bothQuoteTrim
 
 ## Definition
 
