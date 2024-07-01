@@ -6,8 +6,9 @@
 
 var=runDelete_S
 	?func=jsDeleteItem.delete_S
-		&parentDirPathString
-		&selectedItemString
+		?args=
+			&parentDirPathString=
+			&selectedItemString=
 ```
 
 ## Src

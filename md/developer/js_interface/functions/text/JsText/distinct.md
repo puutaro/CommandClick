@@ -6,8 +6,9 @@
 
 var=distinctCon
 	?func=jsText.distinct
-		&conString
-		&separatorString
+		?args=
+			&conString=
+			&separatorString=
 ```
 
 ## Src

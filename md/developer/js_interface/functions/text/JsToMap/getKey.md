@@ -6,7 +6,8 @@
 
 var=key
 	?func=jsToMap.getKey
-		&lineString
+		?args=
+			&lineString=
 ```
 
 ## Src

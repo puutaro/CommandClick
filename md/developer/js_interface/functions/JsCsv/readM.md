@@ -6,9 +6,10 @@
 
 var=runReadM
 	?func=jsCsv.readM
-		&tagString
-		&csvStringString
-		&csvOrTsvString
+		?args=
+			&tagString=
+			&csvStringString=
+			&csvOrTsvString=
 ```
 
 ## Src

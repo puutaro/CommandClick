@@ -6,10 +6,11 @@
 
 var=runAddUrlCon_S
 	?func=jsToolbar.addUrlCon_S
-		&titleString
-		&conString
-		&urlConSaveParentDirPathSrcString
-		&compSuffixString
+		?args=
+			&titleString=
+			&conString=
+			&urlConSaveParentDirPathSrcString=
+			&compSuffixString=
 ```
 
 ## Src

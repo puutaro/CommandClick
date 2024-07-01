@@ -6,7 +6,8 @@
 
 var=runErrLog
 	?func=jsFileSystem.errLog
-		&conString
+		?args=
+			&conString=
 ```
 
 ## Src

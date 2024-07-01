@@ -6,7 +6,8 @@
 
 var=runRevUpdateFile
 	?func=jsFileSystem.revUpdateFile
-		&errConString
+		?args=
+			&errConString=
 ```
 
 ## Src

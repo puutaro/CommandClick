@@ -6,8 +6,9 @@
 
 var=runAddUrl_S
 	?func=jsToolbar.addUrl_S
-		&titleString
-		&urlStringString
+		?args=
+			&titleString=
+			&urlStringString=
 ```
 
 ## Src

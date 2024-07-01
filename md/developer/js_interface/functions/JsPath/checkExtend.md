@@ -6,8 +6,9 @@
 
 var=extendList
 	?func=jsPath.checkExtend
-		&pathString
-		&extendTabSeparateStrString
+		?args=
+			&pathString=
+			&extendTabSeparateStrString=
 ```
 
 ## Src

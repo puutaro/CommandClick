@@ -6,7 +6,8 @@
 
 var=CommandClickVariables
 	?func=jsScript.subLabelingVars
-		&jsContentsString
+		?args=
+			&jsContentsString=
 ```
 
 ## Src

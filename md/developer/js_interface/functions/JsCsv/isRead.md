@@ -6,7 +6,8 @@
 
 var=String
 	?func=jsCsv.isRead
-		&tagString
+		?args=
+			&tagString=
 ```
 
 ## Src

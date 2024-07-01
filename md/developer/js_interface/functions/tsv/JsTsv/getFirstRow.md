@@ -6,7 +6,8 @@
 
 var=TsvTool
 	?func=jsTsv.getFirstRow
-		&conString
+		?args=
+			&conString=
 ```
 
 ## Src

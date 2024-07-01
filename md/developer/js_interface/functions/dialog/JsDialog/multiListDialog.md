@@ -6,9 +6,10 @@
 
 var=selectedLine
 	?func=jsDialog.multiListDialog
-		&titleString
-		&currentItemListStrString
-		&preSelectedItemListStrString
+		?args=
+			&titleString=
+			&currentItemListStrString=
+			&preSelectedItemListStrString=
 ```
 
 ## Src

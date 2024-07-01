@@ -6,7 +6,8 @@
 
 var=runUntilSetupLoop
 	?func=jsUbuntu.untilSetupLoop
-		&launchJsPathString
+		?args=
+			&launchJsPathString=
 ```
 
 ## Src

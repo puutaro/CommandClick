@@ -6,8 +6,9 @@
 
 var=keyValue
 	?func=jsTsv.getKeyValueFromCon
-		&conString
-		&keyString
+		?args=
+			&conString=
+			&keyString=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=LinuxCmd
 	?func=jsUbuntu.isProc
-		&processNameString
+		?args=
+			&processNameString=
 ```
 
 ## Src

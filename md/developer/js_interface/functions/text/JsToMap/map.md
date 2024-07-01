@@ -6,10 +6,11 @@
 
 var=receiveTsvLineList
 	?func=jsToMap.map
-		&tsvConString
-		&lineSeparatorString
-		&fannelPathString
-		&extraMapConString
+		?args=
+			&tsvConString=
+			&lineSeparatorString=
+			&fannelPathString=
+			&extraMapConString=
 ```
 
 ## Src

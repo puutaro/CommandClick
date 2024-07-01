@@ -6,8 +6,9 @@
 
 var=runRemoveFromEditHtml
 	?func=jsEdit.removeFromEditHtml
-		&editPathString
-		&removeUriString
+		?args=
+			&editPathString=
+			&removeUriString=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=runSend
 	?func=jsSendKey.send
-		&keyNameString
+		?args=
+			&keyNameString=
 ```
 
 ## Src

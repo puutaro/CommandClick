@@ -6,8 +6,9 @@
 
 var=replacedCommandVariableCon
 	?func=jsScript.replaceCommandVariable
-		&scriptContentsString
-		&replaceNewlineSepaConString
+		?args=
+			&scriptContentsString=
+			&replaceNewlineSepaConString=
 ```
 
 ## Src

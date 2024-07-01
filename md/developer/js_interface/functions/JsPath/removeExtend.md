@@ -6,8 +6,9 @@
 
 var=removeSuffixFileName
 	?func=jsPath.removeExtend
-		&fileNameString
-		&extendListConString
+		?args=
+			&fileNameString=
+			&extendListConString=
 ```
 
 ## Src

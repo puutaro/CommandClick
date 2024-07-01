@@ -6,9 +6,10 @@
 
 var=gridJsDialog
 	?func=jsDialog.gridDialog
-		&titleString
-		&messageString
-		&imagePathListNewlineSepaStrString
+		?args=
+			&titleString=
+			&messageString=
+			&imagePathListNewlineSepaStrString=
 ```
 
 ## Src

@@ -6,9 +6,10 @@
 
 var=takenCon
 	?func=jsText.take
-		&conString
-		&separatorString
-		&takeNumInt
+		?args=
+			&conString=
+			&separatorString=
+			&takeNumInt=
 ```
 
 ## Src

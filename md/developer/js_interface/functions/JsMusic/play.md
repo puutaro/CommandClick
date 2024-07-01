@@ -6,8 +6,9 @@
 
 var=runPlay
 	?func=jsMusic.play
-		&listFilePathString
-		&extraSettingMapStrString
+		?args=
+			&listFilePathString=
+			&extraSettingMapStrString=
 ```
 
 ## Src

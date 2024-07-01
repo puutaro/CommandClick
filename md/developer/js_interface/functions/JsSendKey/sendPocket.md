@@ -6,7 +6,8 @@
 
 var=runSendPocket
 	?func=jsSendKey.sendPocket
-		&keyNameString
+		?args=
+			&keyNameString=
 ```
 
 ## Src

@@ -6,8 +6,9 @@
 
 var=targetFormValue
 	?func=jsDialog.getFormValue
-		&targetVariableNameString
-		&contentsNewlineSepaListConString
+		?args=
+			&targetVariableNameString=
+			&contentsNewlineSepaListConString=
 ```
 
 ## Src

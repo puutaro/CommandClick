@@ -6,7 +6,8 @@
 
 var=runShareImage
 	?func=jsIntent.shareImage
-		&imageFilePathString
+		?args=
+			&imageFilePathString=
 ```
 
 ## Src

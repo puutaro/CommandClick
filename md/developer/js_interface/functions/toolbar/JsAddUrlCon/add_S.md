@@ -6,7 +6,8 @@
 
 var=runAdd_S
 	?func=jsAddUrlCon.add_S
-		&extraMapConString
+		?args=
+			&extraMapConString=
 ```
 
 ## Src

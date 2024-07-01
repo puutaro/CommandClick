@@ -6,7 +6,8 @@
 
 var=cmdOutput
 	?func=jsLinux.runCmd
-		&cmdStrString
+		?args=
+			&cmdStrString=
 ```
 
 ## Src

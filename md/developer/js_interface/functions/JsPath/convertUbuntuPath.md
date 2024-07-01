@@ -6,7 +6,8 @@
 
 var=ubuntuPath
 	?func=jsPath.convertUbuntuPath
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

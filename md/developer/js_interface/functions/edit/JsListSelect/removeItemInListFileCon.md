@@ -6,8 +6,9 @@
 
 var=runRemoveItemInListFileCon
 	?func=jsListSelect.removeItemInListFileCon
-		&targetListFilePathString
-		&itemTextString
+		?args=
+			&targetListFilePathString=
+			&itemTextString=
 ```
 
 ## Src

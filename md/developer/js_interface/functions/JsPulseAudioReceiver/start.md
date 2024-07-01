@@ -6,8 +6,9 @@
 
 var=runStart
 	?func=jsPulseAudioReceiver.start
-		&pcIpv4AddressString
-		&serverPortInt
+		?args=
+			&pcIpv4AddressString=
+			&serverPortInt=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=fannelDirPath
 	?func=jsPath.getFannelDirPath
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

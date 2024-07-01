@@ -6,9 +6,10 @@
 
 var=selectedLine
 	?func=jsDialog.onlyImageGridDialog
-		&titleString
-		&messageString
-		&imagePathListNewlineSepaStrString
+		?args=
+			&titleString=
+			&messageString=
+			&imagePathListNewlineSepaStrString=
 ```
 
 ## Src

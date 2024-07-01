@@ -6,8 +6,9 @@
 
 var=runWrite_S
 	?func=jsEditorItem.write_S
-		&selectedItemString
-		&listIndexPositionInt
+		?args=
+			&selectedItemString=
+			&listIndexPositionInt=
 ```
 
 ## Src

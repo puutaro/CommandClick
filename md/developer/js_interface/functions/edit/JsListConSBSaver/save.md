@@ -6,7 +6,8 @@
 
 var=runSave
 	?func=jsListConSBSaver.save
-		&buttonTagString
+		?args=
+			&buttonTagString=
 ```
 
 ## Src

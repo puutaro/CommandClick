@@ -6,7 +6,8 @@
 
 var=replaceVariableTsvCon
 	?func=jsReplaceVariables.getTsv
-		&currentPathString
+		?args=
+			&currentPathString=
 ```
 
 ## Src

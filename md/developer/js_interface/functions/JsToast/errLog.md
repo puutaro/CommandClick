@@ -6,7 +6,8 @@
 
 var=runErrLog
 	?func=jsToast.errLog
-		&contentsString
+		?args=
+			&contentsString=
 ```
 
 ## Src

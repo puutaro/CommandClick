@@ -6,7 +6,8 @@
 
 var=runOpen_S
 	?func=jsEditor.open_S
-		&filePathString
+		?args=
+			&filePathString=
 ```
 
 ## Src

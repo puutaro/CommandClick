@@ -6,8 +6,9 @@
 
 var=runW
 	?func=jsF.w
-		&pathString
-		&conString
+		?args=
+			&pathString=
+			&conString=
 ```
 
 ## Src

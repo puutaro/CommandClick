@@ -6,7 +6,8 @@
 
 var=firstFieldCon
 	?func=jsTsv.getFr
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

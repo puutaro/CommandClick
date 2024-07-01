@@ -6,7 +6,8 @@
 
 var=runLoadQrUrl
 	?func=jsUrl.loadQrUrl
-		&loadConSrcString
+		?args=
+			&loadConSrcString=
 ```
 
 ## Src

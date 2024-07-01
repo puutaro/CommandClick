@@ -6,7 +6,8 @@
 
 var=tagName
 	?func=jsCsv.takeColSize
-		&tagString
+		?args=
+			&tagString=
 ```
 
 ## Src

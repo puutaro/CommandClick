@@ -6,8 +6,9 @@
 
 var=runAdd_S
 	?func=jsUrlAdder.add_S
-		&urlStringOrMacroString
-		&onSearchBtnString
+		?args=
+			&urlStringOrMacroString=
+			&onSearchBtnString=
 ```
 
 ## Src

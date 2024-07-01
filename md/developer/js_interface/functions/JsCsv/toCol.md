@@ -6,10 +6,11 @@
 
 var=String
 	?func=jsCsv.toCol
-		&tagString
-		&colNumInt
-		&startRowNumSourceInt
-		&endRowNumSourceInt
+		?args=
+			&tagString=
+			&colNumInt=
+			&startRowNumSourceInt=
+			&endRowNumSourceInt=
 ```
 
 ## Src

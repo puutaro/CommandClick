@@ -6,7 +6,8 @@
 
 var=miliTimeCon
 	?func=jsUtil.convertDateTimeToMiliTime
-		&datetimeString
+		?args=
+			&datetimeString=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=ReadText
 	?func=jsF.r
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

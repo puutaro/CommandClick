@@ -6,8 +6,9 @@
 
 var=runGet
 	?func=jsDirect.get
-		&mainUrlString
-		&fullPathOrFannelRawNameString
+		?args=
+			&mainUrlString=
+			&fullPathOrFannelRawNameString=
 ```
 
 ## Src

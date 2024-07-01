@@ -6,8 +6,9 @@
 
 var=runChange_S
 	?func=jsStateChange.change_S
-		&stateNameString
-		&extraMapConString
+		?args=
+			&stateNameString=
+			&extraMapConString=
 ```
 
 ## Src

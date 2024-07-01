@@ -6,7 +6,8 @@
 
 var=jsRawCon
 	?func=jsUrl.makeJsRawCon
-		&jsPathString
+		?args=
+			&jsPathString=
 ```
 
 ## Src

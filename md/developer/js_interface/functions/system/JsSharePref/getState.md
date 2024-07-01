@@ -6,6 +6,7 @@
 
 var=currentSate
 	?func=jsSharePref.getState
+		?args=
 
 ```
 

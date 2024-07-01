@@ -6,9 +6,10 @@
 
 var=runCopy_S
 	?func=jsCopySItem.copy_S
-		&copyDirOrTsvPathToTypeConString
-		&selectedItemString
-		&extraMapConString
+		?args=
+			&copyDirOrTsvPathToTypeConString=
+			&selectedItemString=
+			&extraMapConString=
 ```
 
 ## Src

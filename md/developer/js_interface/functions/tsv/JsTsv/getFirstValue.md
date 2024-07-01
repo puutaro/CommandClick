@@ -6,7 +6,8 @@
 
 var=firstValue
 	?func=jsTsv.getFirstValue
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

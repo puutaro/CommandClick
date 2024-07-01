@@ -6,8 +6,9 @@
 
 var=runMakeQrSrcFile
 	?func=jsQr.makeQrSrcFile
-		&qrSrcFilePathString
-		&qrSrcMapStrString
+		?args=
+			&qrSrcFilePathString=
+			&qrSrcMapStrString=
 ```
 
 ## Src

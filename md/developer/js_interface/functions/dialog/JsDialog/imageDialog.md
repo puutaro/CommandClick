@@ -6,9 +6,10 @@
 
 var=createdImagePath
 	?func=jsDialog.imageDialog
-		&titleString
-		&imageSrcFilePathString
-		&imageDialogMapConString
+		?args=
+			&titleString=
+			&imageSrcFilePathString=
+			&imageDialogMapConString=
 ```
 
 ## Src

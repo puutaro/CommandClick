@@ -6,8 +6,9 @@
 
 var=secondFieldCon
 	?func=jsTsv.getSecondRowBySortFromThis
-		&pathString
-		&thisLineString
+		?args=
+			&pathString=
+			&thisLineString=
 ```
 
 ## Src

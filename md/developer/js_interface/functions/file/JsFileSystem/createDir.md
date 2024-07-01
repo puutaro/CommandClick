@@ -6,7 +6,8 @@
 
 var=runCreateDir
 	?func=jsFileSystem.createDir
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

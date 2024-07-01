@@ -6,7 +6,8 @@
 
 var=runCreateAndSaveRnd
 	?func=jsQr.createAndSaveRnd
-		&qrSrcStrString
+		?args=
+			&qrSrcStrString=
 ```
 
 ## Src

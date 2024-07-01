@@ -6,8 +6,9 @@
 
 var=runUpdateSpinner
 	?func=jsEdit.updateSpinner
-		&updateVariableNameString
-		&updateVariableValueString
+		?args=
+			&updateVariableNameString=
+			&updateVariableValueString=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=cpQrFileQr
 	?func=jsQr.makeCpFileQr
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

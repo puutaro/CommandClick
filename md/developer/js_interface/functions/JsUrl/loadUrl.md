@@ -6,7 +6,8 @@
 
 var=runLoadUrl
 	?func=jsUrl.loadUrl
-		&urlStrString
+		?args=
+			&urlStrString=
 ```
 
 ## Src

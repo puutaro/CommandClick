@@ -6,7 +6,8 @@
 
 var=runScanHandler
 	?func=jsQr.scanHandler
-		&decodedTextString
+		?args=
+			&decodedTextString=
 ```
 
 ## Src

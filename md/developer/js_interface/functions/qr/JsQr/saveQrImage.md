@@ -6,8 +6,9 @@
 
 var=runSaveQrImage
 	?func=jsQr.saveQrImage
-		&srcQrStrString
-		&savePathString
+		?args=
+			&srcQrStrString=
+			&savePathString=
 ```
 
 ## Src

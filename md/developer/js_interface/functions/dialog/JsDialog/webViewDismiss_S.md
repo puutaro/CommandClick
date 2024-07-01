@@ -6,6 +6,7 @@
 
 var=runWebViewDismiss_S
 	?func=jsDialog.webViewDismiss_S
+		?args=
 
 ```
 

@@ -6,8 +6,9 @@
 
 var=runCopyFileHere_S
 	?func=jsCopyItem.copyFileHere_S
-		&selectedItemString
-		&listIndexPositionInt
+		?args=
+			&selectedItemString=
+			&listIndexPositionInt=
 ```
 
 ## Src

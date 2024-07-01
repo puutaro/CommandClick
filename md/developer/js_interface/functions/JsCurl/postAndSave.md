@@ -6,9 +6,10 @@
 
 var=CurlManager
 	?func=jsCurl.postAndSave
-		&pathString
-		&mainUrlString
-		&headerString=String
+		?args=
+			&pathString=
+			&mainUrlString=
+			&headerString=String=
 ```
 
 ## Src

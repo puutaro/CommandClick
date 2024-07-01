@@ -6,9 +6,10 @@
 
 var=runGet_S
 	?func=jsQrGetter.get_S
-		&stockConDirPathForTsvString
-		&compPrefixString
-		&compSuffixString
+		?args=
+			&stockConDirPathForTsvString=
+			&compPrefixString=
+			&compSuffixString=
 ```
 
 ## Src

@@ -6,9 +6,10 @@
 
 var=runUpdate
 	?func=jsListTsvUpdater.update
-		&settingTsvPathString
-		&updateListIndexMapConString
-		&separatorString
+		?args=
+			&settingTsvPathString=
+			&updateListIndexMapConString=
+			&separatorString=
 ```
 
 ## Src

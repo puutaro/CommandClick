@@ -6,7 +6,8 @@
 
 var=value
 	?func=jsToMap.getValue
-		&lineString
+		?args=
+			&lineString=
 ```
 
 ## Src

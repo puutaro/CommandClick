@@ -6,9 +6,10 @@
 
 var=createdAsciiArtPath
 	?func=jsDialog.asciiArtDialog
-		&titleString
-		&imagePathString
-		&asciiArtMapConString
+		?args=
+			&titleString=
+			&imagePathString=
+			&asciiArtMapConString=
 ```
 
 ## Src

@@ -6,8 +6,9 @@
 
 var=runAdd
 	?func=jsAddGmailCon.add
-		&gmailAdString
-		&extraMapConString
+		?args=
+			&gmailAdString=
+			&extraMapConString=
 ```
 
 ## Src

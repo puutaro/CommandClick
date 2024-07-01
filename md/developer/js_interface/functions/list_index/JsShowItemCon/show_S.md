@@ -6,8 +6,9 @@
 
 var=runShow_S
 	?func=jsShowItemCon.show_S
-		&selectedItemString
-		&listIndexPositionInt
+		?args=
+			&selectedItemString=
+			&listIndexPositionInt=
 ```
 
 ## Src

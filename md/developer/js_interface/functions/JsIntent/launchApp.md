@@ -6,12 +6,13 @@
 
 var=runLaunchApp
 	?func=jsIntent.launchApp
-		&actionString
-		&uriStringString
-		&extraListStrTabSepaString
-		&extraListIntTabSepaString
-		&extraListLongTabSepaString
-		&extraListFloatTabSepaString
+		?args=
+			&actionString=
+			&uriStringString=
+			&extraListStrTabSepaString=
+			&extraListIntTabSepaString=
+			&extraListLongTabSepaString=
+			&extraListFloatTabSepaString=
 ```
 
 ## Src

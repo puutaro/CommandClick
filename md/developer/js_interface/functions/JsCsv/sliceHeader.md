@@ -6,10 +6,11 @@
 
 var=slicedHeader
 	?func=jsCsv.sliceHeader
-		&tagString
-		&startColNumSourceInt
-		&endColNumSourceInt
-		&headerRowString
+		?args=
+			&tagString=
+			&startColNumSourceInt=
+			&endColNumSourceInt=
+			&headerRowString=
 ```
 
 ## Src

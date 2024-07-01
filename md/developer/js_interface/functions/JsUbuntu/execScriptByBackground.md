@@ -6,9 +6,10 @@
 
 var=runExecScriptByBackground
 	?func=jsUbuntu.execScriptByBackground
-		&backgroundShellPathString
-		&argsTabSepaStrString
-		&monitorNumInt
+		?args=
+			&backgroundShellPathString=
+			&argsTabSepaStrString=
+			&monitorNumInt=
 ```
 
 ## Src

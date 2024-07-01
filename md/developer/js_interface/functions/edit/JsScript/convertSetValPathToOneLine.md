@@ -6,8 +6,9 @@
 
 var=oneLineSetVariableCon
 	?func=jsScript.convertSetValPathToOneLine
-		&currentFannelPathString
-		&setVariableFilePathString
+		?args=
+			&currentFannelPathString=
+			&setVariableFilePathString=
 ```
 
 ## Src

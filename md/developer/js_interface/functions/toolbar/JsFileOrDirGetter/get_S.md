@@ -6,8 +6,9 @@
 
 var=runGet_S
 	?func=jsFileOrDirGetter.get_S
-		&onDirectoryPickBoolean
-		&filterMapConString
+		?args=
+			&onDirectoryPickBoolean=
+			&filterMapConString=
 ```
 
 ## Src

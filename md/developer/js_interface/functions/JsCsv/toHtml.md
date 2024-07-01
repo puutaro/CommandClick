@@ -6,8 +6,9 @@
 
 var=htmlCon
 	?func=jsCsv.toHtml
-		&tsvStringString
-		&onThString
+		?args=
+			&tsvStringString=
+			&onThString=
 ```
 
 ## Src

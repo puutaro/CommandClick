@@ -6,7 +6,8 @@
 
 var=tsvCon
 	?func=jsCsv.outPutTsvForDCol
-		&tagString
+		?args=
+			&tagString=
 ```
 
 ## Src

@@ -6,8 +6,9 @@
 
 var=isEqual
 	?func=jsBeforeInfo.misMatch
-		&beforeInfoPathString
-		&curInfoString
+		?args=
+			&beforeInfoPathString=
+			&curInfoString=
 ```
 
 ## Src

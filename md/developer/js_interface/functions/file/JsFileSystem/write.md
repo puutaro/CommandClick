@@ -6,8 +6,9 @@
 
 var=runWrite
 	?func=jsFileSystem.write
-		&filePathString
-		&contentsString
+		?args=
+			&filePathString=
+			&contentsString=
 ```
 
 ## Src

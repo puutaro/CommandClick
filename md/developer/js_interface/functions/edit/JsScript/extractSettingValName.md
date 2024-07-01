@@ -6,7 +6,8 @@
 
 var=settingVaribleNames
 	?func=jsScript.extractSettingValName
-		&settingValsConString
+		?args=
+			&settingValsConString=
 ```
 
 ## Src

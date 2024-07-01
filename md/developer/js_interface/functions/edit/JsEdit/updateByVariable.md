@@ -6,9 +6,10 @@
 
 var=runUpdateByVariable
 	?func=jsEdit.updateByVariable
-		&fannelScriptPathString
-		&targetVariableNameString
-		&updateVariableValueString
+		?args=
+			&fannelScriptPathString=
+			&targetVariableNameString=
+			&updateVariableValueString=
 ```
 
 ## Src

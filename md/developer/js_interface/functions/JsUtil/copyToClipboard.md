@@ -6,8 +6,9 @@
 
 var=runCopyToClipboard
 	?func=jsUtil.copyToClipboard
-		&textString?
-		&fontSizeInt
+		?args=
+			&textString?=
+			&fontSizeInt=
 ```
 
 ## Src

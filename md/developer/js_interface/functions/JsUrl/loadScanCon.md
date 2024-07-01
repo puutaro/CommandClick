@@ -6,7 +6,8 @@
 
 var=runLoadScanCon
 	?func=jsUrl.loadScanCon
-		&loadConSrcString
+		?args=
+			&loadConSrcString=
 ```
 
 ## Src

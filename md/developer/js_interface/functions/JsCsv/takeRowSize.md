@@ -6,7 +6,8 @@
 
 var=rowSize
 	?func=jsCsv.takeRowSize
-		&tagString
+		?args=
+			&tagString=
 ```
 
 ## Src

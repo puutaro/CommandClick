@@ -6,8 +6,9 @@
 
 var=runUpdateTsvByKey
 	?func=jsListTsvUpdater.updateTsvByKey
-		&tsvPathString?
-		&updateTsvConListConString
+		?args=
+			&tsvPathString?=
+			&updateTsvConListConString=
 ```
 
 ## Src

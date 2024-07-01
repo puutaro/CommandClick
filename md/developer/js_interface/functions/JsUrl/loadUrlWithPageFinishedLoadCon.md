@@ -6,9 +6,10 @@
 
 var=runLoadUrlWithPageFinishedLoadCon
 	?func=jsUrl.loadUrlWithPageFinishedLoadCon
-		&urlConString
-		&pageFinishedLoadConString
-		&beforeDelayMiliSecString
+		?args=
+			&urlConString=
+			&pageFinishedLoadConString=
+			&beforeDelayMiliSecString=
 ```
 
 ## Src

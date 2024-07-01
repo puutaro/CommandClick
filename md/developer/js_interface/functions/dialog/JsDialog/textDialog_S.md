@@ -6,9 +6,10 @@
 
 var=runTextDialog_S
 	?func=jsDialog.textDialog_S
-		&titleString
-		&contentsString
-		&scrollBottomBoolean
+		?args=
+			&titleString=
+			&contentsString=
+			&scrollBottomBoolean=
 ```
 
 ## Src

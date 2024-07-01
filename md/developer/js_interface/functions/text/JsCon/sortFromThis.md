@@ -6,8 +6,9 @@
 
 var=conBySrotedFromThis
 	?func=jsCon.sortFromThis
-		&conString
-		&thisLineString
+		?args=
+			&conString=
+			&thisLineString=
 ```
 
 ## Src

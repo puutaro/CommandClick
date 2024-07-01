@@ -6,8 +6,9 @@
 
 var=colName
 	?func=jsCsv.toHeader
-		&tagString
-		&colNumInt
+		?args=
+			&tagString=
+			&colNumInt=
 ```
 
 ## Src

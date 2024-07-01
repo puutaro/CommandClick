@@ -6,7 +6,8 @@
 
 var=isExistFile
 	?func=jsFileSystem.isFile
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

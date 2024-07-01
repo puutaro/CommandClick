@@ -6,7 +6,8 @@
 
 var=runRegisterFannelConChange
 	?func=jsValEdit.registerFannelConChange
-		&changedFannelConString
+		?args=
+			&changedFannelConString=
 ```
 
 ## Src

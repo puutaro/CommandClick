@@ -6,9 +6,10 @@
 
 var=headerRowWithTabSeparated
 	?func=jsCsv.toHeaderRow
-		&tagString
-		&startColNumSourceInt
-		&endColNumSourceInt
+		?args=
+			&tagString=
+			&startColNumSourceInt=
+			&endColNumSourceInt=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=runUpdateWeekPastLastModified
 	?func=jsFileSystem.updateWeekPastLastModified
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

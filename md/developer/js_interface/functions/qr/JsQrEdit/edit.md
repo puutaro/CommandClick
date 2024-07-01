@@ -6,8 +6,9 @@
 
 var=runEdit
 	?func=jsQrEdit.edit
-		&qrConFilePathString
-		&broadcastIntentMapStrString
+		?args=
+			&qrConFilePathString=
+			&broadcastIntentMapStrString=
 ```
 
 ## Src

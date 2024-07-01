@@ -6,7 +6,8 @@
 
 var=runExitWithToast
 	?func=jsExit.exitWithToast
-		&messageString
+		?args=
+			&messageString=
 ```
 
 ## Src

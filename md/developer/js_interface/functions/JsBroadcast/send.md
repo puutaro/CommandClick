@@ -6,8 +6,9 @@
 
 var=runSend
 	?func=jsBroadcast.send
-		&actionString
-		&broadCastMapStrString
+		?args=
+			&actionString=
+			&broadCastMapStrString=
 ```
 
 ## Src

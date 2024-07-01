@@ -6,7 +6,8 @@
 
 var=runSet
 	?func=jsArgs.set
-		&argsString
+		?args=
+			&argsString=
 ```
 
 ## Src

@@ -6,8 +6,9 @@
 
 var=runSpeech
 	?func=jsTextToSpeech.speech
-		&listFilePathString
-		&extraSettingMapStrString
+		?args=
+			&listFilePathString=
+			&extraSettingMapStrString=
 ```
 
 ## Src

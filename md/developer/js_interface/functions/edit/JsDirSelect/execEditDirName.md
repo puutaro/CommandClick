@@ -6,13 +6,14 @@
 
 var=runExecEditDirName
 	?func=jsDirSelect.execEditDirName
-		&targetVariableString
-		&renameVariableString
-		&targetDirPathString
-		&settingVariablesString
-		&commandVariablesString
-		&scriptFilePathString
-		&titleString
+		?args=
+			&targetVariableString=
+			&renameVariableString=
+			&targetDirPathString=
+			&settingVariablesString=
+			&commandVariablesString=
+			&scriptFilePathString=
+			&titleString=
 ```
 
 ## Src

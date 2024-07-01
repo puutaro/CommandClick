@@ -6,8 +6,9 @@
 
 var=con
 	?func=jsCurl.get
-		&mainUrlString
-		&queryParameterString=String
+		?args=
+			&mainUrlString=
+			&queryParameterString=String=
 ```
 
 ## Src

@@ -6,6 +6,7 @@
 
 var=getAppDirPath
 	?func=jsSharePref.getAppDirPath
+		?args=
 
 ```
 

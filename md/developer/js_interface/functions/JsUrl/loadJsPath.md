@@ -6,8 +6,9 @@
 
 var=runLoadJsPath
 	?func=jsUrl.loadJsPath
-		&jsPathString
-		&replaceMapConString
+		?args=
+			&jsPathString=
+			&replaceMapConString=
 ```
 
 ## Src

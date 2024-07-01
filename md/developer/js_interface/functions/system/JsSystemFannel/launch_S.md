@@ -6,8 +6,9 @@
 
 var=runLaunch_S
 	?func=jsSystemFannel.launch_S
-		&appDirPathString
-		&fannelNameString
+		?args=
+			&appDirPathString=
+			&fannelNameString=
 ```
 
 ## Src

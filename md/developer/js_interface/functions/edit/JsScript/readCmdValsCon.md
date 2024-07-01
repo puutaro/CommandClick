@@ -6,7 +6,8 @@
 
 var=commandVarialbeCon
 	?func=jsScript.readCmdValsCon
-		&subFannelOrFannelPathString
+		?args=
+			&subFannelOrFannelPathString=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=extractText
 	?func=jsPdf.extractText
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

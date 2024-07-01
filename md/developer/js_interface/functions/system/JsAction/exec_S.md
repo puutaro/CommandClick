@@ -6,8 +6,9 @@
 
 var=runExec_S
 	?func=jsAction.exec_S
-		&jsActionPairListConString
-		&mainOrSubFannelPathString
+		?args=
+			&jsActionPairListConString=
+			&mainOrSubFannelPathString=
 ```
 
 ## Src

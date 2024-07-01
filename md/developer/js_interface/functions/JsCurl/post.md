@@ -6,8 +6,9 @@
 
 var=CurlManager
 	?func=jsCurl.post
-		&mainUrlString
-		&headerString=String
+		?args=
+			&mainUrlString=
+			&headerString=String=
 ```
 
 ## Src

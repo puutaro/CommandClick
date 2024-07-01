@@ -6,6 +6,7 @@
 
 var=backstackCount
 	?func=jsBackstack.count
+		?args=
 
 ```
 

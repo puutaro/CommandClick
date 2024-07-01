@@ -6,6 +6,7 @@
 
 var=ipV4Address
 	?func=jsNetTool.getIpv4
+		?args=
 
 ```
 

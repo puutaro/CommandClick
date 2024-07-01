@@ -6,8 +6,9 @@
 
 var=runStateChange_S
 	?func=jsCmdValFrag.stateChange_S
-		&stateString
-		&disableAddToBackStackBoolean
+		?args=
+			&stateString=
+			&disableAddToBackStackBoolean=
 ```
 
 ## Src

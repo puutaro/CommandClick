@@ -6,7 +6,8 @@
 
 var=valueStr
 	?func=jsVar.echo
-		&valueStrString
+		?args=
+			&valueStrString=
 ```
 
 ## Src

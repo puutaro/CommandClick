@@ -6,8 +6,9 @@
 
 var=removePrefixFileName
 	?func=jsPath.removePrefix
-		&fileNameString
-		&prefixListConString
+		?args=
+			&fileNameString=
+			&prefixListConString=
 ```
 
 ## Src

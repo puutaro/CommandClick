@@ -6,7 +6,8 @@
 
 var=runExecByPath_S
 	?func=jsAction.execByPath_S
-		&jsActionPathString
+		?args=
+			&jsActionPathString=
 ```
 
 ## Src

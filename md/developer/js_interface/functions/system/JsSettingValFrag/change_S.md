@@ -6,7 +6,8 @@
 
 var=runChange_S
 	?func=jsSettingValFrag.change_S
-		&fannelStateString
+		?args=
+			&fannelStateString=
 ```
 
 ## Src

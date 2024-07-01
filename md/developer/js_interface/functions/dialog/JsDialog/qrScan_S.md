@@ -6,10 +6,11 @@
 
 var=runQrScan_S
 	?func=jsDialog.qrScan_S
-		&titleString
-		&currentScriptPathString
-		&callBackJsPathString
-		&menuMapStrListStrString
+		?args=
+			&titleString=
+			&currentScriptPathString=
+			&callBackJsPathString=
+			&menuMapStrListStrString=
 ```
 
 ## Src

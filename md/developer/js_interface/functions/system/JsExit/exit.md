@@ -6,6 +6,7 @@
 
 var=runExit
 	?func=jsExit.exit
+		?args=
 
 ```
 

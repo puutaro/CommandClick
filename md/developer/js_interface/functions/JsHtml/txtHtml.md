@@ -6,8 +6,9 @@
 
 var=runTxtHtml
 	?func=jsHtml.txtHtml
-		&contentsString
-		&isScrollBottomBoolean
+		?args=
+			&contentsString=
+			&isScrollBottomBoolean=
 ```
 
 ## Src

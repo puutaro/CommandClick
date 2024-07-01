@@ -6,8 +6,9 @@
 
 var=Shell2Http
 	?func=jsUbuntu.execScriptF
-		&executeShellPathString
-		&tabSepaArgsString=String
+		?args=
+			&executeShellPathString=
+			&tabSepaArgsString=String=
 ```
 
 ## Src

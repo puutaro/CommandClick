@@ -6,8 +6,9 @@
 
 var=runUpdateListFileCon
 	?func=jsListSelect.updateListFileCon
-		&targetListFilePathString
-		&itemTextString
+		?args=
+			&targetListFilePathString=
+			&itemTextString=
 ```
 
 ## Src

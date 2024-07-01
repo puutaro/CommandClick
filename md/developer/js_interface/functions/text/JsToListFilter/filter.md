@@ -6,10 +6,11 @@
 
 var=filterCon
 	?func=jsToListFilter.filter
-		&linesString
-		&separatorString
-		&matchLinesString
-		&extraMapConString
+		?args=
+			&linesString=
+			&separatorString=
+			&matchLinesString=
+			&extraMapConString=
 ```
 
 ## Src

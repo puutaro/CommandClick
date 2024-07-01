@@ -6,7 +6,8 @@
 
 var=runLong
 	?func=jsToast.long
-		&contentsString
+		?args=
+			&contentsString=
 ```
 
 ## Src

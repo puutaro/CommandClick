@@ -6,9 +6,10 @@
 
 var=runFilter_S
 	?func=jsCsv.filter_S
-		&srcTagString
-		&destTagString
-		&tabSepaFormuraString
+		?args=
+			&srcTagString=
+			&destTagString=
+			&tabSepaFormuraString=
 ```
 
 ## Src

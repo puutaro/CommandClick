@@ -6,6 +6,7 @@
 
 var=runExitCopyFannelServer
 	?func=jsDirect.exitCopyFannelServer
+		?args=
 
 ```
 

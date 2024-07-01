@@ -6,7 +6,8 @@
 
 var=secondFiledCon
 	?func=jsTsv.getSecondRow
-		&conString
+		?args=
+			&conString=
 ```
 
 ## Src

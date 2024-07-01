@@ -6,7 +6,8 @@
 
 var=pathByTrimAllExtend
 	?func=jsPath.trimAllExtend
-		&pathString
+		?args=
+			&pathString=
 ```
 
 ## Src

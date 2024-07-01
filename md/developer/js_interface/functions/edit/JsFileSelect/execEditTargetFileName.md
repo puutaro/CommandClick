@@ -6,15 +6,16 @@
 
 var=runExecEditTargetFileName
 	?func=jsFileSelect.execEditTargetFileName
-		&targetVariableString
-		&renameVariableString
-		&targetDirPathString
-		&settingVariablesString
-		&commandVariablesString
-		&prefixString
-		&suffixString
-		&scriptFilePathString
-		&titleString
+		?args=
+			&targetVariableString=
+			&renameVariableString=
+			&targetDirPathString=
+			&settingVariablesString=
+			&commandVariablesString=
+			&prefixString=
+			&suffixString=
+			&scriptFilePathString=
+			&titleString=
 ```
 
 ## Src

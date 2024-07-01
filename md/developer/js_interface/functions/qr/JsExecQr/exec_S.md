@@ -6,7 +6,8 @@
 
 var=runExec_S
 	?func=jsExecQr.exec_S
-		&clickFileNameString
+		?args=
+			&clickFileNameString=
 ```
 
 ## Src

@@ -6,7 +6,8 @@
 
 var=runLaunchUrl
 	?func=jsIntent.launchUrl
-		&currentPageUrlString
+		?args=
+			&currentPageUrlString=
 ```
 
 ## Src

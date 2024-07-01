@@ -6,8 +6,9 @@
 
 var=isEqual
 	?func=jsBeforeInfo.match
-		&beforeInfoPathString
-		&curInfoString
+		?args=
+			&beforeInfoPathString=
+			&curInfoString=
 ```
 
 ## Src

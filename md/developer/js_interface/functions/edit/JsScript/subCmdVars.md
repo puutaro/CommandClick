@@ -6,7 +6,8 @@
 
 var=commandVariableCon
 	?func=jsScript.subCmdVars
-		&jsContentsString
+		?args=
+			&jsContentsString=
 ```
 
 ## Src

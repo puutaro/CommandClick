@@ -6,11 +6,12 @@
 
 var=runWebView_S
 	?func=jsDialog.webView_S
-		&urlStrString
-		&currentFannelPathString
-		&menuMapStrListStrString
-		&longPressMenuMapListStrString
-		&extraMapConString
+		?args=
+			&urlStrString=
+			&currentFannelPathString=
+			&menuMapStrListStrString=
+			&longPressMenuMapListStrString=
+			&extraMapConString=
 ```
 
 ## Src
