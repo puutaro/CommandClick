@@ -8,7 +8,7 @@ function jsCurl.isConnOk(
 ) -> CurlManager
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=CurlManager
 		&resString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

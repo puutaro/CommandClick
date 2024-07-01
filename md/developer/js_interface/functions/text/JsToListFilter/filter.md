@@ -11,7 +11,7 @@ function jsToListFilter.filter(
 ) -> filterCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -26,7 +26,7 @@ var=filterCon
 		&extraMapConString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

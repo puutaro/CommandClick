@@ -8,7 +8,7 @@ function jsVar.echo(
 ) -> valueStr
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=valueStr
 		&valueStrString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

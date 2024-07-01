@@ -8,7 +8,7 @@ function jsEdit.getFromEditText(
 ) -> targetEditTextCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=targetEditTextCon
 		&targetVariableNameString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

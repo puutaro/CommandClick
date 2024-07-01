@@ -8,7 +8,7 @@ function jsPath.echoPath(
 ) -> appFileDirPath
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=appFileDirPath
 		&pathTypeString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

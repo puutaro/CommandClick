@@ -8,7 +8,7 @@ function jsFileSystem.showFileList(
 ) -> FileSystems
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=FileSystems
 		&dirPathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

@@ -9,7 +9,7 @@ function jsPath.checkPrefix(
 ) -> isExist
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=isExist
 		&prefixTabSeparateStrString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

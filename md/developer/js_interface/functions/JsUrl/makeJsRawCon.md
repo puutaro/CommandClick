@@ -8,7 +8,7 @@ function jsUrl.makeJsRawCon(
 ) -> jsRawCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=jsRawCon
 		&jsPathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

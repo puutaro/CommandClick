@@ -9,7 +9,7 @@ function jsCurl.get(
 ) -> con
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=con
 		&queryParameterString=String=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

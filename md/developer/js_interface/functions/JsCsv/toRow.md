@@ -11,7 +11,7 @@ function jsCsv.toRow(
 ) -> tabSeparatedRowByConvertedCols
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -26,7 +26,7 @@ var=tabSeparatedRowByConvertedCols
 		&endColNumSourceInt=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

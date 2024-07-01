@@ -9,7 +9,7 @@ function jsTsv.getKeyValue(
 ) -> firstKeyValue
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=firstKeyValue
 		&keyString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

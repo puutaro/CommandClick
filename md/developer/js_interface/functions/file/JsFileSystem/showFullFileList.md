@@ -9,7 +9,7 @@ function jsFileSystem.showFullFileList(
 ) -> fullFilePathsCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=fullFilePathsCon
 		&extraMapConString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

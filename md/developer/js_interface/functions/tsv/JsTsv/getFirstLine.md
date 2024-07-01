@@ -8,7 +8,7 @@ function jsTsv.getFirstLine(
 ) -> TsvTool
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=TsvTool
 		&pathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

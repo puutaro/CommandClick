@@ -8,7 +8,7 @@ function jsQr.makeCpFileQr(
 ) -> cpQrFileQr
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=cpQrFileQr
 		&pathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

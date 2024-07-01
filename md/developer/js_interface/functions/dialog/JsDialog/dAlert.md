@@ -9,7 +9,7 @@ function jsDialog.dAlert(
 ) -> conArg
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=conArg
 		&conString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

@@ -8,7 +8,7 @@ function jsUbuntu.isProc(
 ) -> LinuxCmd
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=LinuxCmd
 		&processNameString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

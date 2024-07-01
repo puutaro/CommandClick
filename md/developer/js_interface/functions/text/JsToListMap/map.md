@@ -10,7 +10,7 @@ function jsToListMap.map(
 ) -> mapMadeCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -24,7 +24,7 @@ var=mapMadeCon
 		&extraMapConString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

@@ -8,7 +8,7 @@ function jsQr.scanFromImage(
 ) -> errMassage
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=errMassage
 		&qrImagePathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

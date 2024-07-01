@@ -10,7 +10,7 @@ function jsMap.get(
 ) -> keyCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -24,7 +24,7 @@ var=keyCon
 		&keyString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

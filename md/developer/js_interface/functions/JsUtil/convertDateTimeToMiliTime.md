@@ -8,7 +8,7 @@ function jsUtil.convertDateTimeToMiliTime(
 ) -> miliTimeCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=miliTimeCon
 		&datetimeString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

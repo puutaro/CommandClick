@@ -9,7 +9,7 @@ function jsPath.removePrefix(
 ) -> removePrefixFileName
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=removePrefixFileName
 		&prefixListConString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

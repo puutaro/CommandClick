@@ -8,7 +8,7 @@ function jsScript.convertConfigToOneLine(
 ) -> SettingFile
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=SettingFile
 
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

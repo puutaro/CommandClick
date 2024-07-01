@@ -9,7 +9,7 @@ function jsCon.sortFromThis(
 ) -> conBySrotedFromThis
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=conBySrotedFromThis
 		&thisLineString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

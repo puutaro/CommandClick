@@ -11,7 +11,7 @@ function jsToMap.map(
 ) -> receiveTsvLineList
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -26,7 +26,7 @@ var=receiveTsvLineList
 		&extraMapConString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

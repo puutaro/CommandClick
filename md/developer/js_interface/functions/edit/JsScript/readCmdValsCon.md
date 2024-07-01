@@ -8,7 +8,7 @@ function jsScript.readCmdValsCon(
 ) -> commandVarialbeCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=commandVarialbeCon
 		&subFannelOrFannelPathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

@@ -8,7 +8,7 @@ function jsCurl.getImage(
 ) -> downloadImagePath
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=downloadImagePath
 		&urlString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

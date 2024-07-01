@@ -8,7 +8,7 @@ function jsQr.makeScpQrSrcStr(
 ) -> scpQrSrcStr
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=scpQrSrcStr
 		&dirPathString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

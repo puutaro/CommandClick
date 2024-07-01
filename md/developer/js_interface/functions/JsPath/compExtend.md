@@ -9,7 +9,7 @@ function jsPath.compExtend(
 ) -> pathByCompExtend
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -22,7 +22,7 @@ var=pathByCompExtend
 		&extendString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

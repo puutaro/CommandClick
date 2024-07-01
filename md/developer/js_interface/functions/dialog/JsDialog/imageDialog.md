@@ -10,7 +10,7 @@ function jsDialog.imageDialog(
 ) -> createdImagePath
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -24,7 +24,7 @@ var=createdImagePath
 		&imageDialogMapConString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

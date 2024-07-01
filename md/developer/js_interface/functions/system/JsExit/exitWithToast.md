@@ -8,7 +8,7 @@ function jsExit.exitWithToast(
 ) -> runExitWithToast
 ```
 
-- - The `run` prefix annotation is a process annotation
+- The `run` prefix annotation is a process annotation
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=runExitWithToast
 		&messageString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition
 

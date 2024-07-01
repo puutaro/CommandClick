@@ -8,7 +8,7 @@ function jsLinux.runCmd(
 ) -> cmdOutput
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -20,7 +20,7 @@ var=cmdOutput
 		&cmdStrString=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 

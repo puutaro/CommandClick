@@ -10,7 +10,7 @@ function jsText.take(
 ) -> takenCon
 ```
 
-- 
+
 
 
 ## Difinition by js action
@@ -24,7 +24,7 @@ var=takenCon
 		&takeNumInt=
 ```
 
-[js action](#) is annotation-oriented language based on javascript in `CommandClick`
+- [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
 
 
