@@ -19,8 +19,8 @@ var=runExecEditTargetFileName
 
 ## Src
 
-->[jsFileSelect.execEditTargetFileName](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsFileSelect.kt#L34)
+-> [jsFileSelect.execEditTargetFileName](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsFileSelect.kt#L34)
 
 ## Detail
 
-->[jsFileSelect.execEditTargetFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsFileSelect/execEditTargetFileName.md)
+-> [jsFileSelect.execEditTargetFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsFileSelect/execEditTargetFileName.md)

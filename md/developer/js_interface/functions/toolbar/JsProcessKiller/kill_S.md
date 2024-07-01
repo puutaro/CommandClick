@@ -12,6 +12,6 @@ var=runKill_S
 
 ## Src
 
-->[jsProcessKiller.kill_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsProcessKiller.kt#L12)
+-> [jsProcessKiller.kill_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsProcessKiller.kt#L12)
 
 

@@ -12,6 +12,6 @@ var=runDelete_S
 
 ## Src
 
-->[jsDeleteItem.delete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L29)
+-> [jsDeleteItem.delete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L29)
 
 

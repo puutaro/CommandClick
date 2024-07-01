@@ -13,8 +13,8 @@ var=runLoadUrlWithPageFinishedLoadCon
 
 ## Src
 
-->[jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L127)
+-> [jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L127)
 
 ## Detail
 
-->[jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUrl/loadUrlWithPageFinishedLoadCon.md)
+-> [jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUrl/loadUrlWithPageFinishedLoadCon.md)

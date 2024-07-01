@@ -12,8 +12,8 @@ var=removePrefixFileName
 
 ## Src
 
-->[jsPath.removePrefix](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPath.kt#L75)
+-> [jsPath.removePrefix](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPath.kt#L75)
 
 ## Detail
 
-->[jsPath.removePrefix](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/removePrefix.md)
+-> [jsPath.removePrefix](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/removePrefix.md)

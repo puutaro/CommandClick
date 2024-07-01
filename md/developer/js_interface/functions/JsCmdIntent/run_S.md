@@ -11,6 +11,6 @@ var=runRun_S
 
 ## Src
 
-->[jsCmdIntent.run_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCmdIntent.kt#L18)
+-> [jsCmdIntent.run_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCmdIntent.kt#L18)
 
 

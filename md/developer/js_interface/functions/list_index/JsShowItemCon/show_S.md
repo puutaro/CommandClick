@@ -12,6 +12,6 @@ var=runShow_S
 
 ## Src
 
-->[jsShowItemCon.show_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsShowItemCon.kt#L26)
+-> [jsShowItemCon.show_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsShowItemCon.kt#L26)
 
 

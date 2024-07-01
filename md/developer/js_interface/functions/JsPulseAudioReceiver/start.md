@@ -12,8 +12,8 @@ var=runStart
 
 ## Src
 
-->[jsPulseAudioReceiver.start](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPulseAudioReceiver.kt#L21)
+-> [jsPulseAudioReceiver.start](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPulseAudioReceiver.kt#L21)
 
 ## Detail
 
-->[jsPulseAudioReceiver.start](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPulseAudioReceiver/start.md)
+-> [jsPulseAudioReceiver.start](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPulseAudioReceiver/start.md)

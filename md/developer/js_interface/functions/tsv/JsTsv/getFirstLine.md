@@ -11,6 +11,6 @@ var=TsvTool
 
 ## Src
 
-->[jsTsv.getFirstLine](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/tsv/JsTsv.kt#L34)
+-> [jsTsv.getFirstLine](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/tsv/JsTsv.kt#L34)
 
 

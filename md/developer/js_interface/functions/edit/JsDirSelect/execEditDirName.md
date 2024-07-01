@@ -17,8 +17,8 @@ var=runExecEditDirName
 
 ## Src
 
-->[jsDirSelect.execEditDirName](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsDirSelect.kt#L30)
+-> [jsDirSelect.execEditDirName](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsDirSelect.kt#L30)
 
 ## Detail
 
-->[jsDirSelect.execEditDirName](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsDirSelect/execEditDirName.md)
+-> [jsDirSelect.execEditDirName](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/edit/JsDirSelect/execEditDirName.md)

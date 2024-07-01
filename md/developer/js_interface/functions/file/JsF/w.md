@@ -12,6 +12,6 @@ var=runW
 
 ## Src
 
-->[jsF.w](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsF.kt#L19)
+-> [jsF.w](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsF.kt#L19)
 
 

@@ -11,6 +11,6 @@ var=key
 
 ## Src
 
-->[jsToMap.getKey](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsToMap.kt#L29)
+-> [jsToMap.getKey](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsToMap.kt#L29)
 
 

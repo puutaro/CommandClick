@@ -12,8 +12,8 @@ var=extendList
 
 ## Src
 
-->[jsPath.checkExtend](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPath.kt#L39)
+-> [jsPath.checkExtend](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPath.kt#L39)
 
 ## Detail
 
-->[jsPath.checkExtend](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/checkExtend.md)
+-> [jsPath.checkExtend](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsPath/checkExtend.md)

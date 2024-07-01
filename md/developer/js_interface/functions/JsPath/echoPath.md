@@ -11,6 +11,6 @@ var=appFileDirPath
 
 ## Src
 
-->[jsPath.echoPath](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPath.kt#L112)
+-> [jsPath.echoPath](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPath.kt#L112)
 
 

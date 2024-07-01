@@ -11,6 +11,6 @@ var=runExec_S
 
 ## Src
 
-->[jsExecQr.exec_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/qr/JsExecQr.kt#L25)
+-> [jsExecQr.exec_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/qr/JsExecQr.kt#L25)
 
 

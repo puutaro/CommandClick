@@ -11,8 +11,8 @@ var=runLong
 
 ## Src
 
-->[jsToast.long](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsToast.kt#L43)
+-> [jsToast.long](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsToast.kt#L43)
 
 ## Detail
 
-->[jsToast.long](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsToast/long.md)
+-> [jsToast.long](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsToast/long.md)

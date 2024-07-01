@@ -11,6 +11,6 @@ var=cmdOutput
 
 ## Src
 
-->[jsLinux.runCmd](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsLinux.kt#L16)
+-> [jsLinux.runCmd](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsLinux.kt#L16)
 
 

@@ -12,6 +12,6 @@ var=runAdd
 
 ## Src
 
-->[jsFileAdder.add](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsFileAdder.kt#L42)
+-> [jsFileAdder.add](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsFileAdder.kt#L42)
 
 

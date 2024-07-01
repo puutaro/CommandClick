@@ -13,6 +13,6 @@ var=runCreate
 
 ## Src
 
-->[jsQrEdit.create](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/qr/JsQrEdit.kt#L31)
+-> [jsQrEdit.create](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/qr/JsQrEdit.kt#L31)
 
 

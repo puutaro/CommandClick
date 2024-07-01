@@ -12,6 +12,6 @@ var=runAdd_S
 
 ## Src
 
-->[jsAddToUrlHistory.add_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsAddToUrlHistory.kt#L30)
+-> [jsAddToUrlHistory.add_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsAddToUrlHistory.kt#L30)
 
 

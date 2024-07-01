@@ -12,6 +12,6 @@ var=runGet_S
 
 ## Src
 
-->[jsFileOrDirGetter.get_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsFileOrDirGetter.kt#L31)
+-> [jsFileOrDirGetter.get_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsFileOrDirGetter.kt#L31)
 
 

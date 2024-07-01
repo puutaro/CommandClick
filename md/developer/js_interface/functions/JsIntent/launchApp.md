@@ -16,8 +16,8 @@ var=runLaunchApp
 
 ## Src
 
-->[jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L84)
+-> [jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L84)
 
 ## Detail
 
-->[jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsIntent/launchApp.md)
+-> [jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsIntent/launchApp.md)

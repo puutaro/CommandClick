@@ -12,8 +12,8 @@ var=execScriptF
 
 ## Src
 
-->[jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L35)
+-> [jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L35)
 
 ## Detail
 
-->[jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUbuntu/execScript.md)
+-> [jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/JsUbuntu/execScript.md)
