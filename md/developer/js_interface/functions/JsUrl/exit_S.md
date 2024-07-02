@@ -23,6 +23,6 @@ var=runExit_S
 
 ## Src
 
--> [jsUrl.exit_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L154)
+-> [jsUrl.exit_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L153)
 
 

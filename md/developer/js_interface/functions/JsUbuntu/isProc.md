@@ -24,7 +24,7 @@ var=LinuxCmd
 
 ## Src
 
--> [jsUbuntu.isProc](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L267)
+-> [jsUbuntu.isProc](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L266)
 
 ## Detail
 

@@ -30,6 +30,6 @@ var=runQrScan_S
 
 ## Src
 
--> [jsDialog.qrScan_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L365)
+-> [jsDialog.qrScan_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L364)
 
 
