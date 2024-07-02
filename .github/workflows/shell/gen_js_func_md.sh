@@ -321,8 +321,7 @@ exec_gen_md(){
 									md_con\
 								)
 				printf "# ok %s\n", output_md_path
-				print md_con
-				 # > output_md_path
+				print md_con > output_md_path
 			}
 	}'
 }
