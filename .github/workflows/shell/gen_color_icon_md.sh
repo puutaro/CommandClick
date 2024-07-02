@@ -75,6 +75,5 @@ readonly MD_CON=$(\
 )
 
 readonly outputPath="${WORKING_DIR_PATH}/md/developer/collection/color.md"
-echo "${MD_CON}" 
-# \
-# 	| tee "${outputPath}"
+echo "${MD_CON}" \
+	| tee "${outputPath}"
