@@ -16,8 +16,8 @@ function jsListTsvUpdater.updateTsvByKey(
 var=runUpdateTsvByKey
 	?func=jsListTsvUpdater.updateTsvByKey
 	?args=
-		&tsvPathString?=
-		&updateTsvConListConString=
+&tsvPathString?=
+		&updateTsvConListConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -15,7 +15,7 @@ function jsUrl.loadQrUrl(
 var=runLoadQrUrl
 	?func=jsUrl.loadQrUrl
 	?args=
-		&loadConSrcString=
+		&loadConSrcString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

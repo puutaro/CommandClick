@@ -16,8 +16,8 @@ function jsDialog.confirm(
 var=isOk
 	?func=jsDialog.confirm
 	?args=
-		&titleString=
-		&bodyString=
+		&titleString=${String}
+		&bodyString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

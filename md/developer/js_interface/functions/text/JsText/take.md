@@ -17,9 +17,9 @@ function jsText.take(
 var=takenCon
 	?func=jsText.take
 	?args=
-		&conString=
-		&separatorString=
-		&takeNumInt=
+		&conString=${String}
+		&separatorString=${String}
+		&takeNumInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -19,11 +19,11 @@ function jsUbuntu.isInstall(
 var=false
 	?func=jsUbuntu.isInstall
 	?args=
-		&installStampFilePathString=
-		&expectStampConString=
-		&installConfirmTitleAndMessageString=
-		&installOneListString=
-		&cautionTitleAndMessageString=
+		&installStampFilePathString=${String}
+		&expectStampConString=${String}
+		&installConfirmTitleAndMessageString=${String}
+		&installOneListString=${String}
+		&cautionTitleAndMessageString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

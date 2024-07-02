@@ -17,9 +17,9 @@ function jsCopyItem.copyFile_S(
 var=runCopyFile_S
 	?func=jsCopyItem.copyFile_S
 	?args=
-		&selectedItemString=
-		&listIndexPositionInt=
-		&initialPathString=
+		&selectedItemString=${String}
+		&listIndexPositionInt=${Int}
+		&initialPathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

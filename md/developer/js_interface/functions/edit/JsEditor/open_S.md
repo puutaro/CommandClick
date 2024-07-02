@@ -15,7 +15,7 @@ function jsEditor.open_S(
 var=runOpen_S
 	?func=jsEditor.open_S
 	?args=
-		&filePathString=
+		&filePathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -17,9 +17,9 @@ function jsCsv.filter_S(
 var=runFilter_S
 	?func=jsCsv.filter_S
 	?args=
-		&srcTagString=
-		&destTagString=
-		&tabSepaFormuraString=
+		&srcTagString=${String}
+		&destTagString=${String}
+		&tabSepaFormuraString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

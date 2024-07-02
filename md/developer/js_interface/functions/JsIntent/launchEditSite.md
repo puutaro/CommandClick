@@ -17,9 +17,9 @@ function jsIntent.launchEditSite(
 var=runLaunchEditSite
 	?func=jsIntent.launchEditSite
 	?args=
-		&editPathString=
-		&extraMapStrString=
-		&filterCodeString=
+		&editPathString=${String}
+		&extraMapStrString=${String}
+		&filterCodeString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

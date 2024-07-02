@@ -17,9 +17,9 @@ function jsUbuntu.execScriptF(
 var=Shell2Http
 	?func=jsUbuntu.execScriptF
 	?args=
-		&executeShellPathString=
-		&tabSepaArgsString=
-		&timeMilisecInt=
+		&executeShellPathString=${String}
+		&tabSepaArgsString=${String}
+		&timeMilisecInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -15,7 +15,7 @@ function jsVar.echo(
 var=valueStr
 	?func=jsVar.echo
 	?args=
-		&valueStrString=
+		&valueStrString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

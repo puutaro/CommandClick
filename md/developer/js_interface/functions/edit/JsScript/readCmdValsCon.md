@@ -15,7 +15,7 @@ function jsScript.readCmdValsCon(
 var=commandVarialbeCon
 	?func=jsScript.readCmdValsCon
 	?args=
-		&subFannelOrFannelPathString=
+		&subFannelOrFannelPathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

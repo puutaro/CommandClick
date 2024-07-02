@@ -16,8 +16,8 @@ function jsSystemFannel.launch_S(
 var=runLaunch_S
 	?func=jsSystemFannel.launch_S
 	?args=
-		&appDirPathString=
-		&fannelNameString=
+		&appDirPathString=${String}
+		&fannelNameString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

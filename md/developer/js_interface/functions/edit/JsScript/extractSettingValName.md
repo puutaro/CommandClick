@@ -15,7 +15,7 @@ function jsScript.extractSettingValName(
 var=settingVaribleNames
 	?func=jsScript.extractSettingValName
 	?args=
-		&settingValsConString=
+		&settingValsConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

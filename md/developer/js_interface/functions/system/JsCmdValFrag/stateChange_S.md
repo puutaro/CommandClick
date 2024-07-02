@@ -16,8 +16,8 @@ function jsCmdValFrag.stateChange_S(
 var=runStateChange_S
 	?func=jsCmdValFrag.stateChange_S
 	?args=
-		&stateString=
-		&disableAddToBackStackBoolean=
+		&stateString=${String}
+		&disableAddToBackStackBoolean=${Boolean}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

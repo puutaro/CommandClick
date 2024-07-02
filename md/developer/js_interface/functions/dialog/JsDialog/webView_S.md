@@ -19,11 +19,11 @@ function jsDialog.webView_S(
 var=runWebView_S
 	?func=jsDialog.webView_S
 	?args=
-		&urlStrString=
-		&currentFannelPathString=
-		&menuMapStrListStrString=
-		&longPressMenuMapListStrString=
-		&extraMapConString=
+		&urlStrString=${String}
+		&currentFannelPathString=${String}
+		&menuMapStrListStrString=${String}
+		&longPressMenuMapListStrString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

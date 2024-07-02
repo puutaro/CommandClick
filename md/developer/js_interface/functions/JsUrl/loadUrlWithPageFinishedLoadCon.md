@@ -17,9 +17,9 @@ function jsUrl.loadUrlWithPageFinishedLoadCon(
 var=runLoadUrlWithPageFinishedLoadCon
 	?func=jsUrl.loadUrlWithPageFinishedLoadCon
 	?args=
-		&urlConString=
-		&pageFinishedLoadConString=
-		&beforeDelayMiliSecString=
+		&urlConString=${String}
+		&pageFinishedLoadConString=${String}
+		&beforeDelayMiliSecString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

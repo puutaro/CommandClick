@@ -16,8 +16,8 @@ function jsFileSystem.copyDir(
 var=runCopyDir
 	?func=jsFileSystem.copyDir
 	?args=
-		&sourcePathString=
-		&destiDirPathString=
+		&sourcePathString=${String}
+		&destiDirPathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

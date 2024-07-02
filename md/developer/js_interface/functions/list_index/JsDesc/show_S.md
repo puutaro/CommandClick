@@ -16,8 +16,8 @@ function jsDesc.show_S(
 var=runShow_S
 	?func=jsDesc.show_S
 	?args=
-		&selectedItemString=
-		&listIndexPositionInt=
+		&selectedItemString=${String}
+		&listIndexPositionInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

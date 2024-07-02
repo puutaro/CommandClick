@@ -16,8 +16,8 @@ function jsTsv.getSrFromThis(
 var=secondFieldCon
 	?func=jsTsv.getSrFromThis
 	?args=
-		&pathString=
-		&thisLineString=
+		&pathString=${String}
+		&thisLineString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

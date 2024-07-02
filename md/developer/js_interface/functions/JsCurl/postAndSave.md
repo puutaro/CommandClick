@@ -19,11 +19,11 @@ function jsCurl.postAndSave(
 var=CurlManager
 	?func=jsCurl.postAndSave
 	?args=
-		&pathString=
-		&mainUrlString=
-		&headerString=
-		&bodyStrString=
-		&timeoutInt=
+		&pathString=${String}
+		&mainUrlString=${String}
+		&headerString=${String}
+		&bodyStrString=${String}
+		&timeoutInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -16,8 +16,8 @@ function jsAddGmailCon.add(
 var=runAdd
 	?func=jsAddGmailCon.add
 	?args=
-		&gmailAdString=
-		&extraMapConString=
+		&gmailAdString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

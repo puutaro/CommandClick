@@ -15,7 +15,7 @@ function jsTsv.getFr(
 var=firstFieldCon
 	?func=jsTsv.getFr
 	?args=
-		&pathString=
+		&pathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

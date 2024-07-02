@@ -15,7 +15,7 @@ function jsFannelInstaller.install(
 var=runInstall
 	?func=jsFannelInstaller.install
 	?args=
-		&selectedFannelString=
+		&selectedFannelString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

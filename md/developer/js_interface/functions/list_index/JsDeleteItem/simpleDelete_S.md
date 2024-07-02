@@ -16,8 +16,8 @@ function jsDeleteItem.simpleDelete_S(
 var=runSimpleDelete_S
 	?func=jsDeleteItem.simpleDelete_S
 	?args=
-		&selectedItemString=
-		&listIndexListPositionInt=
+		&selectedItemString=${String}
+		&listIndexListPositionInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

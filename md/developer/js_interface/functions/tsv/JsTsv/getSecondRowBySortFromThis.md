@@ -16,8 +16,8 @@ function jsTsv.getSecondRowBySortFromThis(
 var=secondFieldCon
 	?func=jsTsv.getSecondRowBySortFromThis
 	?args=
-		&pathString=
-		&thisLineString=
+		&pathString=${String}
+		&thisLineString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

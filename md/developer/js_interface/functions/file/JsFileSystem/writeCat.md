@@ -16,8 +16,8 @@ function jsFileSystem.writeCat(
 var=contents
 	?func=jsFileSystem.writeCat
 	?args=
-		&filePathString=
-		&contentsString=
+		&filePathString=${String}
+		&contentsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

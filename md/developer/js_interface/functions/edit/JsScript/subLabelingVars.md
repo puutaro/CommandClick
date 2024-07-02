@@ -15,7 +15,7 @@ function jsScript.subLabelingVars(
 var=CommandClickVariables
 	?func=jsScript.subLabelingVars
 	?args=
-		&jsContentsString=
+		&jsContentsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

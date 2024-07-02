@@ -18,10 +18,10 @@ function jsToListFilter.filter(
 var=filterCon
 	?func=jsToListFilter.filter
 	?args=
-		&linesString=
-		&separatorString=
-		&matchLinesString=
-		&extraMapConString=
+		&linesString=${String}
+		&separatorString=${String}
+		&matchLinesString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

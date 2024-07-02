@@ -15,7 +15,7 @@ function jsTsv.getFirstRow(
 var=TsvTool
 	?func=jsTsv.getFirstRow
 	?args=
-		&conString=
+		&conString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -17,9 +17,9 @@ function jsDialog.multiSelectSpannableGridDialog(
 var=selectedLine
 	?func=jsDialog.multiSelectSpannableGridDialog
 	?args=
-		&titleString=
-		&messageString=
-		&imagePathListNewlineSepaStrString=
+		&titleString=${String}
+		&messageString=${String}
+		&imagePathListNewlineSepaStrString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

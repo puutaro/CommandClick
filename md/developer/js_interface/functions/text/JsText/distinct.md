@@ -16,8 +16,8 @@ function jsText.distinct(
 var=distinctCon
 	?func=jsText.distinct
 	?args=
-		&conString=
-		&separatorString=
+		&conString=${String}
+		&separatorString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

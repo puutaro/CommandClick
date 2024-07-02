@@ -15,7 +15,7 @@ function jsArgs.set(
 var=runSet
 	?func=jsArgs.set
 	?args=
-		&argsString=
+		&argsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

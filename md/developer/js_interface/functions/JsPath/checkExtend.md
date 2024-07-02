@@ -16,8 +16,8 @@ function jsPath.checkExtend(
 var=extendList
 	?func=jsPath.checkExtend
 	?args=
-		&pathString=
-		&extendTabSeparateStrString=
+		&pathString=${String}
+		&extendTabSeparateStrString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

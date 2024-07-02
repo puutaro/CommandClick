@@ -17,9 +17,9 @@ function jsDiff.diff(
 var=diffCon
 	?func=jsDiff.diff
 	?args=
-		&baseConString=
-		&compareConString=
-		&separatorString=
+		&baseConString=${String}
+		&compareConString=${String}
+		&separatorString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

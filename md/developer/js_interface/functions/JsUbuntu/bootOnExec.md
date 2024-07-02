@@ -16,8 +16,8 @@ function jsUbuntu.bootOnExec(
 var=runBootOnExec
 	?func=jsUbuntu.bootOnExec
 	?args=
-		&execCodeString=
-		&delayMiliTimeInt=
+		&execCodeString=${String}
+		&delayMiliTimeInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

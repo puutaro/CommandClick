@@ -17,9 +17,9 @@ function jsDialog.copyDialog_S(
 var=runCopyDialog_S
 	?func=jsDialog.copyDialog_S
 	?args=
-		&titleString=
-		&contentsString=
-		&scrollBottomBoolean=
+		&titleString=${String}
+		&contentsString=${String}
+		&scrollBottomBoolean=${Boolean}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

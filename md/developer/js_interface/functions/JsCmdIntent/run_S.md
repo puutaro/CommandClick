@@ -15,7 +15,7 @@ function jsCmdIntent.run_S(
 var=runRun_S
 	?func=jsCmdIntent.run_S
 	?args=
-		&execCmdSourceString=
+		&execCmdSourceString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

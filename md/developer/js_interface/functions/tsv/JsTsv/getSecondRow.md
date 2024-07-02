@@ -15,7 +15,7 @@ function jsTsv.getSecondRow(
 var=secondFiledCon
 	?func=jsTsv.getSecondRow
 	?args=
-		&conString=
+		&conString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

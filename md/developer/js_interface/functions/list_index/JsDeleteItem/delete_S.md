@@ -16,8 +16,8 @@ function jsDeleteItem.delete_S(
 var=runDelete_S
 	?func=jsDeleteItem.delete_S
 	?args=
-		&parentDirPathString=
-		&selectedItemString=
+		&parentDirPathString=${String}
+		&selectedItemString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

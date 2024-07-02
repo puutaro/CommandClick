@@ -17,9 +17,9 @@ function jsDiff.uniq(
 var=uniqCon
 	?func=jsDiff.uniq
 	?args=
-		&baseConString=
-		&compareConString=
-		&separatorString=
+		&baseConString=${String}
+		&compareConString=${String}
+		&separatorString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

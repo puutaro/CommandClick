@@ -15,7 +15,7 @@ function jsPermission.isExist(
 var=ContextCompat
 	?func=jsPermission.isExist
 	?args=
-		&permissionTypeStrString=
+		&permissionTypeStrString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

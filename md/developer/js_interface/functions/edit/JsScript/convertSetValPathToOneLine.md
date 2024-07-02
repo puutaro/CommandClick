@@ -16,8 +16,8 @@ function jsScript.convertSetValPathToOneLine(
 var=oneLineSetVariableCon
 	?func=jsScript.convertSetValPathToOneLine
 	?args=
-		&currentFannelPathString=
-		&setVariableFilePathString=
+		&currentFannelPathString=${String}
+		&setVariableFilePathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

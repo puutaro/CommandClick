@@ -16,8 +16,8 @@ function jsFileSystem.writeLocalFile(
 var=runWriteLocalFile
 	?func=jsFileSystem.writeLocalFile
 	?args=
-		&filePathString=
-		&contentsString=
+		&filePathString=${String}
+		&contentsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

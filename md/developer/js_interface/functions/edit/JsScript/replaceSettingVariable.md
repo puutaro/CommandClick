@@ -16,8 +16,8 @@ function jsScript.replaceSettingVariable(
 var=replacedSettingVariableCon
 	?func=jsScript.replaceSettingVariable
 	?args=
-		&scriptContentsString=
-		&replaceNewlineSepaConString=
+		&scriptContentsString=${String}
+		&replaceNewlineSepaConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

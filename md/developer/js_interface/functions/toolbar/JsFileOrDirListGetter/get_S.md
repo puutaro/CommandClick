@@ -16,8 +16,8 @@ function jsFileOrDirListGetter.get_S(
 var=runGet_S
 	?func=jsFileOrDirListGetter.get_S
 	?args=
-		&onDirectoryPickBoolean=
-		&filterMapConString=
+		&onDirectoryPickBoolean=${Boolean}
+		&filterMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

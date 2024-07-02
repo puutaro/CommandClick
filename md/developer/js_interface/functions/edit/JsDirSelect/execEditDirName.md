@@ -21,13 +21,13 @@ function jsDirSelect.execEditDirName(
 var=runExecEditDirName
 	?func=jsDirSelect.execEditDirName
 	?args=
-		&targetVariableString=
-		&renameVariableString=
-		&targetDirPathString=
-		&settingVariablesString=
-		&commandVariablesString=
-		&scriptFilePathString=
-		&titleString=
+		&targetVariableString=${String}
+		&renameVariableString=${String}
+		&targetDirPathString=${String}
+		&settingVariablesString=${String}
+		&commandVariablesString=${String}
+		&scriptFilePathString=${String}
+		&titleString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

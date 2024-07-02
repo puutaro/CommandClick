@@ -17,9 +17,9 @@ function jsCsv.toHeaderRow(
 var=headerRowWithTabSeparated
 	?func=jsCsv.toHeaderRow
 	?args=
-		&tagString=
-		&startColNumSourceInt=
-		&endColNumSourceInt=
+		&tagString=${String}
+		&startColNumSourceInt=${Int}
+		&endColNumSourceInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

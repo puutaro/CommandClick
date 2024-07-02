@@ -16,8 +16,8 @@ function jsListSelect.removeItemInListFileCon(
 var=runRemoveItemInListFileCon
 	?func=jsListSelect.removeItemInListFileCon
 	?args=
-		&targetListFilePathString=
-		&itemTextString=
+		&targetListFilePathString=${String}
+		&itemTextString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

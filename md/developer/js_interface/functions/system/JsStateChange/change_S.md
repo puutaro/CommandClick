@@ -16,8 +16,8 @@ function jsStateChange.change_S(
 var=runChange_S
 	?func=jsStateChange.change_S
 	?args=
-		&stateNameString=
-		&extraMapConString=
+		&stateNameString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

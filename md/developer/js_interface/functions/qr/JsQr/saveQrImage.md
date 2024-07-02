@@ -16,8 +16,8 @@ function jsQr.saveQrImage(
 var=runSaveQrImage
 	?func=jsQr.saveQrImage
 	?args=
-		&srcQrStrString=
-		&savePathString=
+		&srcQrStrString=${String}
+		&savePathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

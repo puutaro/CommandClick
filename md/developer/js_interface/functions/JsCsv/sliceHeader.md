@@ -18,10 +18,10 @@ function jsCsv.sliceHeader(
 var=slicedHeader
 	?func=jsCsv.sliceHeader
 	?args=
-		&tagString=
-		&startColNumSourceInt=
-		&endColNumSourceInt=
-		&headerRowString=
+		&tagString=${String}
+		&startColNumSourceInt=${Int}
+		&endColNumSourceInt=${Int}
+		&headerRowString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

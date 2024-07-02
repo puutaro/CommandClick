@@ -18,10 +18,10 @@ function jsToMap.map(
 var=receiveTsvLineList
 	?func=jsToMap.map
 	?args=
-		&tsvConString=
-		&lineSeparatorString=
-		&fannelPathString=
-		&extraMapConString=
+		&tsvConString=${String}
+		&lineSeparatorString=${String}
+		&fannelPathString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

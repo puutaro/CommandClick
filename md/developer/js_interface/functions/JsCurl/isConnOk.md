@@ -15,7 +15,7 @@ function jsCurl.isConnOk(
 var=CurlManager
 	?func=jsCurl.isConnOk
 	?args=
-		&resString=
+		&resString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

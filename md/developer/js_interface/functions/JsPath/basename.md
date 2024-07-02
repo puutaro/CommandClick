@@ -15,7 +15,7 @@ function jsPath.basename(
 var=onlyBaseName
 	?func=jsPath.basename
 	?args=
-		&pathString=
+		&pathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

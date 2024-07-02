@@ -15,7 +15,7 @@ function jsQr.scanConfirmHandler(
 var=runScanConfirmHandler
 	?func=jsQr.scanConfirmHandler
 	?args=
-		&qrImagePathString=
+		&qrImagePathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

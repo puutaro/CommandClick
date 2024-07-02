@@ -17,9 +17,9 @@ function jsDialog.listDialog(
 var=selectedItem
 	?func=jsDialog.listDialog
 	?args=
-		&titleString=
-		&messageString=
-		&listSourceString=
+		&titleString=${String}
+		&messageString=${String}
+		&listSourceString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

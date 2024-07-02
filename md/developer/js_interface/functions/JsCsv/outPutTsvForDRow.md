@@ -15,7 +15,7 @@ function jsCsv.outPutTsvForDRow(
 var=tsvCon
 	?func=jsCsv.outPutTsvForDRow
 	?args=
-		&tagString=
+		&tagString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

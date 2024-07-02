@@ -15,7 +15,7 @@ function jsListConSBSaver.save(
 var=runSave
 	?func=jsListConSBSaver.save
 	?args=
-		&buttonTagString=
+		&buttonTagString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

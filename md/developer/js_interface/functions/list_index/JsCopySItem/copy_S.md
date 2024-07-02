@@ -17,9 +17,9 @@ function jsCopySItem.copy_S(
 var=runCopy_S
 	?func=jsCopySItem.copy_S
 	?args=
-		&copyDirOrTsvPathToTypeConString=
-		&selectedItemString=
-		&extraMapConString=
+		&copyDirOrTsvPathToTypeConString=${String}
+		&selectedItemString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

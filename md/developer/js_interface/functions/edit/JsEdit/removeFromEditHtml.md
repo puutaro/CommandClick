@@ -16,8 +16,8 @@ function jsEdit.removeFromEditHtml(
 var=runRemoveFromEditHtml
 	?func=jsEdit.removeFromEditHtml
 	?args=
-		&editPathString=
-		&removeUriString=
+		&editPathString=${String}
+		&removeUriString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -15,7 +15,7 @@ function jsUrl.makeJsRawCon(
 var=jsRawCon
 	?func=jsUrl.makeJsRawCon
 	?args=
-		&jsPathString=
+		&jsPathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

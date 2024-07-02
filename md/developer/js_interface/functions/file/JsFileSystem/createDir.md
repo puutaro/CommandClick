@@ -15,7 +15,7 @@ function jsFileSystem.createDir(
 var=runCreateDir
 	?func=jsFileSystem.createDir
 	?args=
-		&pathString=
+		&pathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

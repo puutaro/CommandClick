@@ -16,8 +16,8 @@ function jsProcessKiller.kill_S(
 var=runKill_S
 	?func=jsProcessKiller.kill_S
 	?args=
-		&currentAppDirPathString=
-		&fannelNameString=
+		&currentAppDirPathString=${String}
+		&fannelNameString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

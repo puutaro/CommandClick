@@ -15,7 +15,7 @@ function jsSendKey.send(
 var=runSend
 	?func=jsSendKey.send
 	?args=
-		&keyNameString=
+		&keyNameString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

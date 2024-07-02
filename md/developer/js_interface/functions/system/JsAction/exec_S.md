@@ -16,8 +16,8 @@ function jsAction.exec_S(
 var=runExec_S
 	?func=jsAction.exec_S
 	?args=
-		&jsActionPairListConString=
-		&mainOrSubFannelPathString=
+		&jsActionPairListConString=${String}
+		&mainOrSubFannelPathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

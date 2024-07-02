@@ -17,9 +17,9 @@ function jsQrGetter.get_S(
 var=runGet_S
 	?func=jsQrGetter.get_S
 	?args=
-		&stockConDirPathForTsvString=
-		&compPrefixString=
-		&compSuffixString=
+		&stockConDirPathForTsvString=${String}
+		&compPrefixString=${String}
+		&compSuffixString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

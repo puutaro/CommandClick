@@ -16,8 +16,8 @@ function jsEdit.updateEditText(
 var=runUpdateEditText
 	?func=jsEdit.updateEditText
 	?args=
-		&updateVariableNameString=
-		&updateVariableValueString=
+		&updateVariableNameString=${String}
+		&updateVariableValueString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

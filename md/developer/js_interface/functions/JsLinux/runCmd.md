@@ -15,7 +15,7 @@ function jsLinux.runCmd(
 var=cmdOutput
 	?func=jsLinux.runCmd
 	?args=
-		&cmdStrString=
+		&cmdStrString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

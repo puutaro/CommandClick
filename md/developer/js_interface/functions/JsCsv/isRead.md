@@ -15,7 +15,7 @@ function jsCsv.isRead(
 var=String
 	?func=jsCsv.isRead
 	?args=
-		&tagString=
+		&tagString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

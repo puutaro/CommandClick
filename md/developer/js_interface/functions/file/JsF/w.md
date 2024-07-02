@@ -16,8 +16,8 @@ function jsF.w(
 var=runW
 	?func=jsF.w
 	?args=
-		&pathString=
-		&conString=
+		&pathString=${String}
+		&conString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -18,10 +18,10 @@ function jsCsv.read_S(
 var=runRead_S
 	?func=jsCsv.read_S
 	?args=
-		&tagString=
-		&filePathString=
-		&withNoHeaderString=
-		&limitRowNumSourceInt=
+		&tagString=${String}
+		&filePathString=${String}
+		&withNoHeaderString=${String}
+		&limitRowNumSourceInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

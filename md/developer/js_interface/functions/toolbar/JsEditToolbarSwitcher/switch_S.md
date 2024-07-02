@@ -15,7 +15,7 @@ function jsEditToolbarSwitcher.switch_S(
 var=runSwitch_S
 	?func=jsEditToolbarSwitcher.switch_S
 	?args=
-		&switchMacroString=
+		&switchMacroString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

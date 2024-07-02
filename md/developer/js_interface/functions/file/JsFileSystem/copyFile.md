@@ -16,8 +16,8 @@ function jsFileSystem.copyFile(
 var=runCopyFile
 	?func=jsFileSystem.copyFile
 	?args=
-		&sourceFilePathString=
-		&destiFilePathString=
+		&sourceFilePathString=${String}
+		&destiFilePathString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

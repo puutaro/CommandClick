@@ -17,9 +17,9 @@ function jsCsv.selectColumn_S(
 var=runSelectColumn_S
 	?func=jsCsv.selectColumn_S
 	?args=
-		&srcTagString=
-		&destTagString=
-		&comaSepaColumnsString=
+		&srcTagString=${String}
+		&destTagString=${String}
+		&comaSepaColumnsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

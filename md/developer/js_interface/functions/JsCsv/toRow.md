@@ -18,10 +18,10 @@ function jsCsv.toRow(
 var=tabSeparatedRowByConvertedCols
 	?func=jsCsv.toRow
 	?args=
-		&tagString=
-		&rowNumInt=
-		&startColNumSourceInt=
-		&endColNumSourceInt=
+		&tagString=${String}
+		&rowNumInt=${Int}
+		&startColNumSourceInt=${Int}
+		&endColNumSourceInt=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

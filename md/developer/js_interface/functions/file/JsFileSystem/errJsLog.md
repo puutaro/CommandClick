@@ -15,7 +15,7 @@ function jsFileSystem.errJsLog(
 var=runErrJsLog
 	?func=jsFileSystem.errJsLog
 	?args=
-		&conString=
+		&conString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

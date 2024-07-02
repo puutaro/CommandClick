@@ -15,7 +15,7 @@ function jsUbuntu.isProc(
 var=LinuxCmd
 	?func=jsUbuntu.isProc
 	?args=
-		&processNameString=
+		&processNameString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

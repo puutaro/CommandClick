@@ -16,8 +16,8 @@ function jsFileSystem.showFullFileList(
 var=fullFilePathsCon
 	?func=jsFileSystem.showFullFileList
 	?args=
-		&dirPathString=
-		&extraMapConString=
+		&dirPathString=${String}
+		&extraMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

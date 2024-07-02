@@ -17,9 +17,9 @@ function jsDialog.formDialog(
 var=String
 	?func=jsDialog.formDialog
 	?args=
-		&titleString=
-		&formSettingVariablesString=
-		&formCommandVariablesString=
+		&titleString=${String}
+		&formSettingVariablesString=${String}
+		&formCommandVariablesString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

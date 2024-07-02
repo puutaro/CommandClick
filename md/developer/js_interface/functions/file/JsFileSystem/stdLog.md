@@ -15,7 +15,7 @@ function jsFileSystem.stdLog(
 var=runStdLog
 	?func=jsFileSystem.stdLog
 	?args=
-		&conString=
+		&conString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

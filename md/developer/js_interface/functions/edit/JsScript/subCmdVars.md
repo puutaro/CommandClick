@@ -15,7 +15,7 @@ function jsScript.subCmdVars(
 var=commandVariableCon
 	?func=jsScript.subCmdVars
 	?args=
-		&jsContentsString=
+		&jsContentsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

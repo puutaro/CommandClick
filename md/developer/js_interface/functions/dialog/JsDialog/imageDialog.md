@@ -17,9 +17,9 @@ function jsDialog.imageDialog(
 var=createdImagePath
 	?func=jsDialog.imageDialog
 	?args=
-		&titleString=
-		&imageSrcFilePathString=
-		&imageDialogMapConString=
+		&titleString=${String}
+		&imageSrcFilePathString=${String}
+		&imageDialogMapConString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

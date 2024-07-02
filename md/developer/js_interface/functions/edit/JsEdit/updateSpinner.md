@@ -16,8 +16,8 @@ function jsEdit.updateSpinner(
 var=runUpdateSpinner
 	?func=jsEdit.updateSpinner
 	?args=
-		&updateVariableNameString=
-		&updateVariableValueString=
+		&updateVariableNameString=${String}
+		&updateVariableValueString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

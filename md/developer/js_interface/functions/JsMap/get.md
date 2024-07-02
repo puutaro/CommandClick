@@ -17,9 +17,9 @@ function jsMap.get(
 var=keyCon
 	?func=jsMap.get
 	?args=
-		&mapConString=
-		&separatorString=
-		&keyString=
+		&mapConString=${String}
+		&separatorString=${String}
+		&keyString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

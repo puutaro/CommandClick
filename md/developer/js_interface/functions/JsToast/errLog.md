@@ -15,7 +15,7 @@ function jsToast.errLog(
 var=runErrLog
 	?func=jsToast.errLog
 	?args=
-		&contentsString=
+		&contentsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

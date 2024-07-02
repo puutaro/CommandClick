@@ -15,7 +15,7 @@ function jsExecQr.exec_S(
 var=runExec_S
 	?func=jsExecQr.exec_S
 	?args=
-		&clickFileNameString=
+		&clickFileNameString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
