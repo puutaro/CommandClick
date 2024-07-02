@@ -169,7 +169,7 @@ exec_gen_md(){
 				) {
 					continue
 				}
-				print "### hit line "line
+				printf "### hit line: %s, j: %d\n", line, j
 				line_num = j
 				break
 			}
