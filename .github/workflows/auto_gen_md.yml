@@ -11,9 +11,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: update jd func md
+      - name: update js func md
         run: |
           bash ".github/workflows/shell/gen_js_func_md.sh"
+      - name: update icon md
+        run: |
+          bash ".github/workflows/shell/gen_icon_md.sh"
       # - name: Update fannel list
       #   run: |
       #     bash "manage/fannels/update_fannel_list.sh"
