@@ -121,6 +121,5 @@ readonly UPDATE_MD_CON=$(\
 )
 
 
-echo "${CUR_TABLES}" 
-# \
-# 	| tee "${OUTPUT_PATH}"
+echo "${CUR_TABLES}" \
+	| tee "${OUTPUT_PATH}"
