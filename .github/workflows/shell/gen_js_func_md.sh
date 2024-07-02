@@ -6,6 +6,9 @@ readonly IF_DIR_PATH="${WORKING_DIR_PATH}/app/src/main/java/com/puutaro/commandc
 readonly JS_IF_MD_DIR="${WORKING_DIR_PATH}/md/developer/js_interface"
 readonly func_dir_name="functions"
 readonly FUNC_DIR_PATH="${JS_IF_MD_DIR}/${func_dir_name}"
+echo "WORKING_DIR_PATH: ${WORKING_DIR_PATH}"
+echo ${FUNC_DIR_PATH}
+ls "${FUNC_DIR_PATH}"
 hand_gen_feature_dir(){
 	find "${IF_DIR_PATH}"\
 		 -mindepth 1 -maxdepth 1 -type d \
