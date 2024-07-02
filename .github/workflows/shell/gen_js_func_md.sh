@@ -264,7 +264,7 @@ exec_gen_md(){
 				if(args_raw_con){
 					insert_js_ac_args_con = \
 						gensub(\
-							/&([a-zA-Z0-9]+?([A-Z][a-z]+))=/,\
+							/&([a-zA-Z0-9]+?)([A-Z][a-z]+)=/,\
 							"\t\t\\&\\1=${\\2}",\
 							"g",\
 							args_raw_con\
@@ -321,7 +321,8 @@ exec_gen_md(){
 									md_con\
 								)
 				printf "# ok %s\n", output_md_path
-				print md_con > output_md_path
+				print md_con
+				 # > output_md_path
 			}
 	}'
 }
