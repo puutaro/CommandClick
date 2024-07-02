@@ -1,0 +1,22 @@
+name: auto gen md
+on: 
+  workflow_dispatch:
+  schedule:
+    - cron: '20 20 * * *'
+jobs:
+  auto-gen-md:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: update jd func md
+        run: |
+          bash ".github/workflows/shell/gen_js_func_md.sh"
+      - name: Update fannel list
+      #   run: |
+      #     bash "manage/fannels/update_fannel_list.sh"
+      # - name: Auto Commit
+      #   uses: stefanzweifel/git-auto-commit-action@v5
+
