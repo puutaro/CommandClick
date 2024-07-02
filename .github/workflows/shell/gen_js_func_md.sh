@@ -164,12 +164,12 @@ exec_gen_md(){
 			line_num = 0
 			for(j=2; j<=len_js_if_con_list_by_new_line;j++){
 				line = js_if_con_list_by_new_line[j]
-				start_bracket_index = index(line, "(") - 1
 				if(\
 					line !~ func_regex \
 				) {
 					continue
 				}
+				print "### hit line "line
 				line_num = j
 				break
 			}
@@ -315,7 +315,8 @@ exec_gen_md(){
 									md_con\
 								)
 				printf "# ok %s\n", output_md_path
-				print md_con > output_md_path
+				print md_con
+				 # > output_md_path
 			}
 	}'
 }
