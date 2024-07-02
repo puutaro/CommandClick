@@ -208,7 +208,6 @@ exec_gen_md(){
 							)
 			gsub(/[/]+/, "/", output_dir_path)
 			print "# start dir setup"
-			print "output_dir_path "output_dir_path
 			rmdir_cmd = sprintf("rm -rf \x22%s\x22 2>/dev/null", output_dir_path)
 			system(rmdir_cmd)
 			close(rmdir_cmd)
@@ -316,8 +315,7 @@ exec_gen_md(){
 									md_con\
 								)
 				printf "# ok %s\n", output_md_path
-				print md_con 
-				# > output_md_path
+				print md_con > output_md_path
 			}
 	}'
 }
