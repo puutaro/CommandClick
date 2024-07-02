@@ -176,7 +176,6 @@ exec_gen_md(){
 				) {
 					continue
 				}
-				printf "### hit line: %s, j: %d\n", line, j
 				line_num = j
 				break
 			}
@@ -322,8 +321,7 @@ exec_gen_md(){
 									md_con\
 								)
 				printf "# ok %s\n", output_md_path
-				print md_con
-				 # > output_md_path
+				print md_con > output_md_path
 			}
 	}'
 }

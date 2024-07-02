@@ -14,12 +14,12 @@ jobs:
       - name: update js func md
         run: |
           bash ".github/workflows/shell/gen_js_func_md.sh"
-      # - name: update icon md
-      #   run: |
-      #     bash ".github/workflows/shell/gen_icon_md.sh"
-      # - name: update color md
-      #   run: |
-      #     bash ".github/workflows/shell/gen_color_icon_md.sh"
-      # - name: Auto Commit
-      #   uses: stefanzweifel/git-auto-commit-action@v5
+      - name: update icon md
+        run: |
+          bash ".github/workflows/shell/gen_icon_md.sh"
+      - name: update color md
+        run: |
+          bash ".github/workflows/shell/gen_color_icon_md.sh"
+      - name: Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
 
