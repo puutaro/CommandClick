@@ -162,7 +162,7 @@ exec_gen_md(){
 				split(js_if_con, js_if_con_list_by_new_line, "\n")
 			func_regex = "fun "func_name"[ \t]*[(]"
 			line_num = 0
-			for(j=2; j<=len_js_if_con_list_by_new_line;j++){
+			for(j=1; j<=len_js_if_con_list_by_new_line;j++){
 				line = js_if_con_list_by_new_line[j]
 				if(\
 					line !~ func_regex \
