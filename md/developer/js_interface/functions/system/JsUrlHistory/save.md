@@ -16,8 +16,8 @@ function jsUrlHistory.save(
 var=runSave
 	?func=jsUrlHistory.save
 	?args=
-		&titleString=${String}
-		&urlString=${String}
+		&title=${String}
+		&url=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

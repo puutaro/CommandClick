@@ -18,10 +18,10 @@ function jsValEdit.editAndSaveCmdVar(
 var=isOk
 	?func=jsValEdit.editAndSaveCmdVar
 	?args=
-		&titleString=${String}
-		&fContentsString=${String}
-		&setVariableTypesString=${String}
-		&targetVariablesString=${String}
+		&title=${String}
+		&fContents=${String}
+		&setVariableTypes=${String}
+		&targetVariables=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

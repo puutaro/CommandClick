@@ -15,7 +15,7 @@ function jsUrl.loadFromJsCon(
 var=runLoadFromJsCon
 	?func=jsUrl.loadFromJsCon
 	?args=
-		&jsConString=${String}
+		&jsCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

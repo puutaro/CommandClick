@@ -15,7 +15,7 @@ function jsTsv.getFirstValue(
 var=firstValue
 	?func=jsTsv.getFirstValue
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -16,8 +16,8 @@ function jsBeforeInfo.misMatch(
 var=isEqual
 	?func=jsBeforeInfo.misMatch
 	?args=
-		&beforeInfoPathString=${String}
-		&curInfoString=${String}
+		&beforeInfoPath=${String}
+		&curInfo=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

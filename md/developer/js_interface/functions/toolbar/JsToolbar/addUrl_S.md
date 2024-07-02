@@ -16,8 +16,8 @@ function jsToolbar.addUrl_S(
 var=runAddUrl_S
 	?func=jsToolbar.addUrl_S
 	?args=
-		&titleString=${String}
-		&urlStringString=${String}
+		&title=${String}
+		&urlString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

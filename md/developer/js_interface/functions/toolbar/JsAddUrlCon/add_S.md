@@ -15,7 +15,7 @@ function jsAddUrlCon.add_S(
 var=runAdd_S
 	?func=jsAddUrlCon.add_S
 	?args=
-		&extraMapConString=${String}
+		&extraMapCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

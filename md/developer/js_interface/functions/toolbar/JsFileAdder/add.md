@@ -16,8 +16,8 @@ function jsFileAdder.add(
 var=runAdd
 	?func=jsFileAdder.add
 	?args=
-		&compFileNameMapConString=${String}
-		&separatorString=${String}
+		&compFileNameMapCon=${String}
+		&separator=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -16,8 +16,8 @@ function jsReplaceVariables.getValue(
 var=targetReplaceVariableValueStr
 	?func=jsReplaceVariables.getValue
 	?args=
-		&tsvConString=${String}
-		&targetKeyString=${String}
+		&tsvCon=${String}
+		&targetKey=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

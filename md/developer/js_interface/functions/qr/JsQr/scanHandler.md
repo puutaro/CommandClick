@@ -15,7 +15,7 @@ function jsQr.scanHandler(
 var=runScanHandler
 	?func=jsQr.scanHandler
 	?args=
-		&decodedTextString=${String}
+		&decodedText=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -16,8 +16,8 @@ function jsUrlAdder.add_S(
 var=runAdd_S
 	?func=jsUrlAdder.add_S
 	?args=
-		&urlStringOrMacroString=${String}
-		&onSearchBtnString=${String}
+		&urlStringOrMacro=${String}
+		&onSearchBtn=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

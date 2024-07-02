@@ -16,8 +16,8 @@ function jsIntent.launchShortcut(
 var=runLaunchShortcut
 	?func=jsIntent.launchShortcut
 	?args=
-		&currentAppDirPathString=${String}
-		&currentScriptFileNameString=${String}
+		&currentAppDirPath=${String}
+		&currentScriptFileName=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

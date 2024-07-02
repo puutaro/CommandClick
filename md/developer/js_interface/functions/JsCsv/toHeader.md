@@ -16,8 +16,8 @@ function jsCsv.toHeader(
 var=colName
 	?func=jsCsv.toHeader
 	?args=
-		&tagString=${String}
-		&colNumInt=${Int}
+		&tag=${String}
+		&colNum=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

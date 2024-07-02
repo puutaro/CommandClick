@@ -16,8 +16,8 @@ function jsEditorItem.edit_S(
 var=runEdit_S
 	?func=jsEditorItem.edit_S
 	?args=
-		&selectedItemString=${String}
-		&listIndexPositionInt=${Int}
+		&selectedItem=${String}
+		&listIndexPosition=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

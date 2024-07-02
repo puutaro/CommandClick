@@ -15,7 +15,7 @@ function jsQr.makeScpQrSrcStr(
 var=scpQrSrcStr
 	?func=jsQr.makeScpQrSrcStr
 	?args=
-		&dirPathString=${String}
+		&dirPath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -16,8 +16,8 @@ function jsBroadcast.send(
 var=runSend
 	?func=jsBroadcast.send
 	?args=
-		&actionString=${String}
-		&broadCastMapStrString=${String}
+		&action=${String}
+		&broadCastMapStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

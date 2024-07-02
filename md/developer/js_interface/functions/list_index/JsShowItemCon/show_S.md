@@ -16,8 +16,8 @@ function jsShowItemCon.show_S(
 var=runShow_S
 	?func=jsShowItemCon.show_S
 	?args=
-		&selectedItemString=${String}
-		&listIndexPositionInt=${Int}
+		&selectedItem=${String}
+		&listIndexPosition=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

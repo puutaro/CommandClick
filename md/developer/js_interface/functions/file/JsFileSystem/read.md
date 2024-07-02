@@ -15,7 +15,7 @@ function jsFileSystem.read(
 var=fileCon
 	?func=jsFileSystem.read
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

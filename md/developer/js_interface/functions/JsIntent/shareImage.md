@@ -15,7 +15,7 @@ function jsIntent.shareImage(
 var=runShareImage
 	?func=jsIntent.shareImage
 	?args=
-		&imageFilePathString=${String}
+		&imageFilePath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

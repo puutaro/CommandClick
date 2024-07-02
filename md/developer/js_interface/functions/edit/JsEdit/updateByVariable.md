@@ -17,9 +17,9 @@ function jsEdit.updateByVariable(
 var=runUpdateByVariable
 	?func=jsEdit.updateByVariable
 	?args=
-		&fannelScriptPathString=${String}
-		&targetVariableNameString=${String}
-		&updateVariableValueString=${String}
+		&fannelScriptPath=${String}
+		&targetVariableName=${String}
+		&updateVariableValue=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -15,7 +15,7 @@ function jsUrl.loadScanCon(
 var=runLoadScanCon
 	?func=jsUrl.loadScanCon
 	?args=
-		&loadConSrcString=${String}
+		&loadConSrc=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

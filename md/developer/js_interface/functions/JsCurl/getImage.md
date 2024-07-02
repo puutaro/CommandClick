@@ -15,7 +15,7 @@ function jsCurl.getImage(
 var=downloadImagePath
 	?func=jsCurl.getImage
 	?args=
-		&urlString=${String}
+		&url=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

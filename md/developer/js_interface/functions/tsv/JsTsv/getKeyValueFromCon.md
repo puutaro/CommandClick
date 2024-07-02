@@ -16,8 +16,8 @@ function jsTsv.getKeyValueFromCon(
 var=keyValue
 	?func=jsTsv.getKeyValueFromCon
 	?args=
-		&conString=${String}
-		&keyString=${String}
+		&con=${String}
+		&key=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

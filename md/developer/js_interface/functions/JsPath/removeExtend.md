@@ -16,8 +16,8 @@ function jsPath.removeExtend(
 var=removeSuffixFileName
 	?func=jsPath.removeExtend
 	?args=
-		&fileNameString=${String}
-		&extendListConString=${String}
+		&fileName=${String}
+		&extendListCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

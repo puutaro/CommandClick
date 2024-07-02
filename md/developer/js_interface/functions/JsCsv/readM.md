@@ -17,9 +17,9 @@ function jsCsv.readM(
 var=runReadM
 	?func=jsCsv.readM
 	?args=
-		&tagString=${String}
-		&csvStringString=${String}
-		&csvOrTsvString=${String}
+		&tag=${String}
+		&csvString=${String}
+		&csvOrTsv=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

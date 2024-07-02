@@ -16,8 +16,8 @@ function jsPath.removePrefix(
 var=removePrefixFileName
 	?func=jsPath.removePrefix
 	?args=
-		&fileNameString=${String}
-		&prefixListConString=${String}
+		&fileName=${String}
+		&prefixListCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

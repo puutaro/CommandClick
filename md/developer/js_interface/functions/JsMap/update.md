@@ -17,9 +17,9 @@ function jsMap.update(
 var=updatedMapCon
 	?func=jsMap.update
 	?args=
-		&mapConString=${String}
-		&separatorString=${String}
-		&keyValueStrString=${String}
+		&mapCon=${String}
+		&separator=${String}
+		&keyValueStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

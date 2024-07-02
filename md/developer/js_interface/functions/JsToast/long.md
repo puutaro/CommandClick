@@ -15,7 +15,7 @@ function jsToast.long(
 var=runLong
 	?func=jsToast.long
 	?args=
-		&contentsString=${String}
+		&contents=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

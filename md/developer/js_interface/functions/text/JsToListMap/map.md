@@ -17,9 +17,9 @@ function jsToListMap.map(
 var=mapMadeCon
 	?func=jsToListMap.map
 	?args=
-		&conString=${String}
-		&separatorString=${String}
-		&extraMapConString=${String}
+		&con=${String}
+		&separator=${String}
+		&extraMapCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

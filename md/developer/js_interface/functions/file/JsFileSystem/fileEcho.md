@@ -16,8 +16,8 @@ function jsFileSystem.fileEcho(
 var=runFileEcho
 	?func=jsFileSystem.fileEcho
 	?args=
-		&fileNameString=${String}
-		&outPutOptionString=${String}
+		&fileName=${String}
+		&outPutOption=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

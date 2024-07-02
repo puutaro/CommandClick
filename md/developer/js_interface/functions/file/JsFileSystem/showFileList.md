@@ -15,7 +15,7 @@ function jsFileSystem.showFileList(
 var=FileSystems
 	?func=jsFileSystem.showFileList
 	?args=
-		&dirPathString=${String}
+		&dirPath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

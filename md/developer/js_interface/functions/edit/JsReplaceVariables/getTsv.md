@@ -15,7 +15,7 @@ function jsReplaceVariables.getTsv(
 var=replaceVariableTsvCon
 	?func=jsReplaceVariables.getTsv
 	?args=
-		&currentPathString=${String}
+		&currentPath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

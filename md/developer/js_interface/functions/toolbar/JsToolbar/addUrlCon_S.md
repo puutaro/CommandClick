@@ -18,10 +18,10 @@ function jsToolbar.addUrlCon_S(
 var=runAddUrlCon_S
 	?func=jsToolbar.addUrlCon_S
 	?args=
-		&titleString=${String}
-		&conString=${String}
-		&urlConSaveParentDirPathSrcString=${String}
-		&compSuffixString=${String}
+		&title=${String}
+		&con=${String}
+		&urlConSaveParentDirPathSrc=${String}
+		&compSuffix=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

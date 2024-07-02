@@ -15,7 +15,7 @@ function jsSettingValFrag.change_S(
 var=runChange_S
 	?func=jsSettingValFrag.change_S
 	?args=
-		&fannelStateString=${String}
+		&fannelState=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

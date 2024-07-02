@@ -16,8 +16,8 @@ function jsHtml.txtHtml(
 var=runTxtHtml
 	?func=jsHtml.txtHtml
 	?args=
-		&contentsString=${String}
-		&isScrollBottomBoolean=${Boolean}
+		&contents=${String}
+		&isScrollBottom=${Boolean}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

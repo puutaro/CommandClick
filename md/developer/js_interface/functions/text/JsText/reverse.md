@@ -16,8 +16,8 @@ function jsText.reverse(
 var=reverseCon
 	?func=jsText.reverse
 	?args=
-		&linesString=${String}
-		&separatorString=${String}
+		&lines=${String}
+		&separator=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

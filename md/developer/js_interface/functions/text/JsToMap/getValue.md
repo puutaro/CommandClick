@@ -15,7 +15,7 @@ function jsToMap.getValue(
 var=value
 	?func=jsToMap.getValue
 	?args=
-		&lineString=${String}
+		&line=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

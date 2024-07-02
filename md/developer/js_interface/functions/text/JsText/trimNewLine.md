@@ -15,7 +15,7 @@ function jsText.trimNewLine(
 var=conByTrimNewLine
 	?func=jsText.trimNewLine
 	?args=
-		&conString=${String}
+		&con=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

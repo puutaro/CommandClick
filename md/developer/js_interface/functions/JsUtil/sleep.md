@@ -15,7 +15,7 @@ function jsUtil.sleep(
 var=runSleep
 	?func=jsUtil.sleep
 	?args=
-		&sleepMiriTimeInt=${Int}
+		&sleepMiriTime=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

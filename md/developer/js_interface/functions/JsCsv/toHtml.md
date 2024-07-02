@@ -16,8 +16,8 @@ function jsCsv.toHtml(
 var=htmlCon
 	?func=jsCsv.toHtml
 	?args=
-		&tsvStringString=${String}
-		&onThString=${String}
+		&tsvString=${String}
+		&onTh=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

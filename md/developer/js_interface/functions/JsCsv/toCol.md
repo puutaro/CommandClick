@@ -18,10 +18,10 @@ function jsCsv.toCol(
 var=String
 	?func=jsCsv.toCol
 	?args=
-		&tagString=${String}
-		&colNumInt=${Int}
-		&startRowNumSourceInt=${Int}
-		&endRowNumSourceInt=${Int}
+		&tag=${String}
+		&colNum=${Int}
+		&startRowNumSource=${Int}
+		&endRowNumSource=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

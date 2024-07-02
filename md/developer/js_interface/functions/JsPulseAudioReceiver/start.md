@@ -16,8 +16,8 @@ function jsPulseAudioReceiver.start(
 var=runStart
 	?func=jsPulseAudioReceiver.start
 	?args=
-		&pcIpv4AddressString=${String}
-		&serverPortInt=${Int}
+		&pcIpv4Address=${String}
+		&serverPort=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -17,9 +17,9 @@ function jsDialog.multiSelectOnlyImageGridDialog(
 var=selectedLine
 	?func=jsDialog.multiSelectOnlyImageGridDialog
 	?args=
-		&titleString=${String}
-		&messageString=${String}
-		&imagePathListNewlineSepaStrString=${String}
+		&title=${String}
+		&message=${String}
+		&imagePathListNewlineSepaStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

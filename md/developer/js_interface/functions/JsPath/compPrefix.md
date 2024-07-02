@@ -16,8 +16,8 @@ function jsPath.compPrefix(
 var=pathByCompPrefix
 	?func=jsPath.compPrefix
 	?args=
-		&pathString=${String}
-		&prefixString=${String}
+		&path=${String}
+		&prefix=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

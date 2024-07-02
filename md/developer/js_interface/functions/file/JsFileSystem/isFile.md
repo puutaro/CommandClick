@@ -15,7 +15,7 @@ function jsFileSystem.isFile(
 var=isExistFile
 	?func=jsFileSystem.isFile
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

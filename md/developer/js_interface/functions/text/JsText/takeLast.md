@@ -17,9 +17,9 @@ function jsText.takeLast(
 var=lastTakenCon
 	?func=jsText.takeLast
 	?args=
-		&conString=${String}
-		&separatorString=${String}
-		&takeLastNumInt=${Int}
+		&con=${String}
+		&separator=${String}
+		&takeLastNum=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

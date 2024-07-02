@@ -16,8 +16,8 @@ function jsDialog.getFormValue(
 var=targetFormValue
 	?func=jsDialog.getFormValue
 	?args=
-		&targetVariableNameString=${String}
-		&contentsNewlineSepaListConString=${String}
+		&targetVariableName=${String}
+		&contentsNewlineSepaListCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

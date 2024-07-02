@@ -15,7 +15,7 @@ function jsUrl.makeJsUrlFromCon(
 var=loadJsCon
 	?func=jsUrl.makeJsUrlFromCon
 	?args=
-		&execCodeString=${String}
+		&execCode=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

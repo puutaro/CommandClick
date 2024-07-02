@@ -15,7 +15,7 @@ function jsQr.scanFromImage(
 var=errMassage
 	?func=jsQr.scanFromImage
 	?args=
-		&qrImagePathString=${String}
+		&qrImagePath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -18,10 +18,10 @@ function jsCurl.get(
 var=con
 	?func=jsCurl.get
 	?args=
-		&mainUrlString=${String}
-		&queryParameterString=${String}
-		&headerString=${String}
-		&timeoutInt=${Int}
+		&mainUrl=${String}
+		&queryParameter=${String}
+		&header=${String}
+		&timeout=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -15,7 +15,7 @@ function jsExit.exitWithToast(
 var=runExitWithToast
 	?func=jsExit.exitWithToast
 	?args=
-		&messageString=${String}
+		&message=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

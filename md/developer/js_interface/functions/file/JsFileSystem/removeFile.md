@@ -15,7 +15,7 @@ function jsFileSystem.removeFile(
 var=runRemoveFile
 	?func=jsFileSystem.removeFile
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

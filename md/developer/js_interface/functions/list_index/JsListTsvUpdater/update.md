@@ -17,9 +17,9 @@ function jsListTsvUpdater.update(
 var=runUpdate
 	?func=jsListTsvUpdater.update
 	?args=
-		&settingTsvPathString=${String}
-		&updateListIndexMapConString=${String}
-		&separatorString=${String}
+		&settingTsvPath=${String}
+		&updateListIndexMapCon=${String}
+		&separator=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

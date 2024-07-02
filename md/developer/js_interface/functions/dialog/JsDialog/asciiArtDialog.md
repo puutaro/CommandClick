@@ -17,9 +17,9 @@ function jsDialog.asciiArtDialog(
 var=createdAsciiArtPath
 	?func=jsDialog.asciiArtDialog
 	?args=
-		&titleString=${String}
-		&imagePathString=${String}
-		&asciiArtMapConString=${String}
+		&title=${String}
+		&imagePath=${String}
+		&asciiArtMapCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

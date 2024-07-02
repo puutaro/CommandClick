@@ -15,7 +15,7 @@ function jsCsv.takeColSize(
 var=tagName
 	?func=jsCsv.takeColSize
 	?args=
-		&tagString=${String}
+		&tag=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

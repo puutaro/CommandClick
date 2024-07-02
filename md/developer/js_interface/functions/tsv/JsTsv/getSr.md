@@ -15,7 +15,7 @@ function jsTsv.getSr(
 var=firstLine
 	?func=jsTsv.getSr
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

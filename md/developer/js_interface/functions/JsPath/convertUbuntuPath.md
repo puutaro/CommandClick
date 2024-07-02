@@ -15,7 +15,7 @@ function jsPath.convertUbuntuPath(
 var=ubuntuPath
 	?func=jsPath.convertUbuntuPath
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

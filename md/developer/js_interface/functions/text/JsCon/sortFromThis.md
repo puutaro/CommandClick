@@ -16,8 +16,8 @@ function jsCon.sortFromThis(
 var=conBySrotedFromThis
 	?func=jsCon.sortFromThis
 	?args=
-		&conString=${String}
-		&thisLineString=${String}
+		&con=${String}
+		&thisLine=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

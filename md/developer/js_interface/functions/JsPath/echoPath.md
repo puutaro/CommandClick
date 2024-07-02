@@ -15,7 +15,7 @@ function jsPath.echoPath(
 var=appFileDirPath
 	?func=jsPath.echoPath
 	?args=
-		&pathTypeString=${String}
+		&pathType=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

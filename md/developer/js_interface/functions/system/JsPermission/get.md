@@ -16,8 +16,8 @@ function jsPermission.get(
 var=runGet
 	?func=jsPermission.get
 	?args=
-		&permissionTypeStrString=${String}
-		&loadJsPathString=${String}
+		&permissionTypeStr=${String}
+		&loadJsPath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

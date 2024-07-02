@@ -16,8 +16,8 @@ function jsDirect.get(
 var=runGet
 	?func=jsDirect.get
 	?args=
-		&mainUrlString=${String}
-		&fullPathOrFannelRawNameString=${String}
+		&mainUrl=${String}
+		&fullPathOrFannelRawName=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

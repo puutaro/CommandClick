@@ -16,8 +16,8 @@ function jsRenameItem.rename_S(
 var=runRename_S
 	?func=jsRenameItem.rename_S
 	?args=
-		&selectedItemString=${String}
-		&listIndexPositionInt=${Int}
+		&selectedItem=${String}
+		&listIndexPosition=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

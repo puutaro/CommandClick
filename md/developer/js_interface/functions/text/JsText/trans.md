@@ -15,7 +15,7 @@ function jsText.trans(
 var=transCon
 	?func=jsText.trans
 	?args=
-		&tsvStrString=${String}
+		&tsvStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

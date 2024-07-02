@@ -15,7 +15,7 @@ function jsIntent.launchUrl(
 var=runLaunchUrl
 	?func=jsIntent.launchUrl
 	?args=
-		&currentPageUrlString=${String}
+		&currentPageUrl=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

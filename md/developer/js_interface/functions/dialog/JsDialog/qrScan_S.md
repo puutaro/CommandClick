@@ -18,10 +18,10 @@ function jsDialog.qrScan_S(
 var=runQrScan_S
 	?func=jsDialog.qrScan_S
 	?args=
-		&titleString=${String}
-		&currentScriptPathString=${String}
-		&callBackJsPathString=${String}
-		&menuMapStrListStrString=${String}
+		&title=${String}
+		&currentScriptPath=${String}
+		&callBackJsPath=${String}
+		&menuMapStrListStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

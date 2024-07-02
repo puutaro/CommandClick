@@ -23,15 +23,15 @@ function jsFileSelect.execEditTargetFileName(
 var=runExecEditTargetFileName
 	?func=jsFileSelect.execEditTargetFileName
 	?args=
-		&targetVariableString=${String}
-		&renameVariableString=${String}
-		&targetDirPathString=${String}
-		&settingVariablesString=${String}
-		&commandVariablesString=${String}
-		&prefixString=${String}
-		&suffixString=${String}
-		&scriptFilePathString=${String}
-		&titleString=${String}
+		&targetVariable=${String}
+		&renameVariable=${String}
+		&targetDirPath=${String}
+		&settingVariables=${String}
+		&commandVariables=${String}
+		&prefix=${String}
+		&suffix=${String}
+		&scriptFilePath=${String}
+		&title=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

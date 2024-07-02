@@ -15,7 +15,7 @@ function jsFileSystem.isDir(
 var=isExistDir
 	?func=jsFileSystem.isDir
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

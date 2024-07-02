@@ -16,8 +16,8 @@ function jsTsv.getKeyValue(
 var=firstKeyValue
 	?func=jsTsv.getKeyValue
 	?args=
-		&pathString=${String}
-		&keyString=${String}
+		&path=${String}
+		&key=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

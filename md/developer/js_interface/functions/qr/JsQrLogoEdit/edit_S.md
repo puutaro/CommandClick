@@ -15,7 +15,7 @@ function jsQrLogoEdit.edit_S(
 var=runEdit_S
 	?func=jsQrLogoEdit.edit_S
 	?args=
-		&clickFileNameString=${String}
+		&clickFileName=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

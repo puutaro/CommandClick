@@ -17,7 +17,7 @@ var=runCopyToClipboard
 	?func=jsUtil.copyToClipboard
 	?args=
 &textString?=
-		&fontSizeInt=${Int}
+		&fontSize=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

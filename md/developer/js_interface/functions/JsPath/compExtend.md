@@ -16,8 +16,8 @@ function jsPath.compExtend(
 var=pathByCompExtend
 	?func=jsPath.compExtend
 	?args=
-		&pathString=${String}
-		&extendString=${String}
+		&path=${String}
+		&extend=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

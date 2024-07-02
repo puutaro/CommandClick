@@ -16,8 +16,8 @@ function jsDialog.dAlert(
 var=conArg
 	?func=jsDialog.dAlert
 	?args=
-		&titleString=${String}
-		&conString=${String}
+		&title=${String}
+		&con=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

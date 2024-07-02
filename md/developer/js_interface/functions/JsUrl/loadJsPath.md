@@ -16,8 +16,8 @@ function jsUrl.loadJsPath(
 var=runLoadJsPath
 	?func=jsUrl.loadJsPath
 	?args=
-		&jsPathString=${String}
-		&replaceMapConString=${String}
+		&jsPath=${String}
+		&replaceMapCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

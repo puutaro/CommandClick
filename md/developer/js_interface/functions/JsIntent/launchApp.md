@@ -20,12 +20,12 @@ function jsIntent.launchApp(
 var=runLaunchApp
 	?func=jsIntent.launchApp
 	?args=
-		&actionString=${String}
-		&uriStringString=${String}
-		&extraListStrTabSepaString=${String}
-		&extraListIntTabSepaString=${String}
-		&extraListLongTabSepaString=${String}
-		&extraListFloatTabSepaString=${String}
+		&action=${String}
+		&uriString=${String}
+		&extraListStrTabSepa=${String}
+		&extraListIntTabSepa=${String}
+		&extraListLongTabSepa=${String}
+		&extraListFloatTabSepa=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

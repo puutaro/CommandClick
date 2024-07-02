@@ -15,7 +15,7 @@ function jsUrl.loadUrl(
 var=runLoadUrl
 	?func=jsUrl.loadUrl
 	?args=
-		&urlStrString=${String}
+		&urlStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

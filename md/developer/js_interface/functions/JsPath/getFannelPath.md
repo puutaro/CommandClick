@@ -15,7 +15,7 @@ function jsPath.getFannelPath(
 var=fannelPath
 	?func=jsPath.getFannelPath
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

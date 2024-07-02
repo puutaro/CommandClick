@@ -15,7 +15,7 @@ function jsValEdit.registerFannelConChange(
 var=runRegisterFannelConChange
 	?func=jsValEdit.registerFannelConChange
 	?args=
-		&changedFannelConString=${String}
+		&changedFannelCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

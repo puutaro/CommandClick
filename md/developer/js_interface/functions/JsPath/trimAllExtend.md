@@ -15,7 +15,7 @@ function jsPath.trimAllExtend(
 var=pathByTrimAllExtend
 	?func=jsPath.trimAllExtend
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

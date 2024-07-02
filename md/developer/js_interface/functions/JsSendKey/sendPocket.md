@@ -15,7 +15,7 @@ function jsSendKey.sendPocket(
 var=runSendPocket
 	?func=jsSendKey.sendPocket
 	?args=
-		&keyNameString=${String}
+		&keyName=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

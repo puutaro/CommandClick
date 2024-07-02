@@ -15,7 +15,7 @@ function jsQr.createAndSaveRnd(
 var=runCreateAndSaveRnd
 	?func=jsQr.createAndSaveRnd
 	?args=
-		&qrSrcStrString=${String}
+		&qrSrcStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

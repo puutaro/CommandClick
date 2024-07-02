@@ -15,7 +15,7 @@ function jsTsv.getFirstLine(
 var=TsvTool
 	?func=jsTsv.getFirstLine
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

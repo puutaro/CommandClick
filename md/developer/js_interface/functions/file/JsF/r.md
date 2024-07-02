@@ -15,7 +15,7 @@ function jsF.r(
 var=ReadText
 	?func=jsF.r
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

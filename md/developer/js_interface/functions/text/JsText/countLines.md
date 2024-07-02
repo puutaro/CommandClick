@@ -16,8 +16,8 @@ function jsText.countLines(
 var=linesSize
 	?func=jsText.countLines
 	?args=
-		&linesString=${String}
-		&separatorString=${String}
+		&lines=${String}
+		&separator=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

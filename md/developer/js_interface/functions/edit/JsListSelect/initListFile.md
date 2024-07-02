@@ -16,8 +16,8 @@ function jsListSelect.initListFile(
 var=runInitListFile
 	?func=jsListSelect.initListFile
 	?args=
-		&targetListFilePathString=${String}
-		&itemTextListConString=${String}
+		&targetListFilePath=${String}
+		&itemTextListCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

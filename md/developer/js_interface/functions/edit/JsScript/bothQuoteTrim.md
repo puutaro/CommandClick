@@ -15,7 +15,7 @@ function jsScript.bothQuoteTrim(
 var=conWithBothQuoteTrim
 	?func=jsScript.bothQuoteTrim
 	?args=
-		&valStringString=${String}
+		&valString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

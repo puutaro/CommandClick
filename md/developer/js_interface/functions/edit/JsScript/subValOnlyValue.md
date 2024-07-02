@@ -16,8 +16,8 @@ function jsScript.subValOnlyValue(
 var=targetSettingVariableValue
 	?func=jsScript.subValOnlyValue
 	?args=
-		&targetValNameString=${String}
-		&valStringString=${String}
+		&targetValName=${String}
+		&valString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

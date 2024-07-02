@@ -16,8 +16,8 @@ function jsMusic.play(
 var=runPlay
 	?func=jsMusic.play
 	?args=
-		&listFilePathString=${String}
-		&extraSettingMapStrString=${String}
+		&listFilePath=${String}
+		&extraSettingMapStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

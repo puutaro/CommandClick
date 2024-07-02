@@ -16,8 +16,8 @@ function jsQr.makeQrSrcFile(
 var=runMakeQrSrcFile
 	?func=jsQr.makeQrSrcFile
 	?args=
-		&qrSrcFilePathString=${String}
-		&qrSrcMapStrString=${String}
+		&qrSrcFilePath=${String}
+		&qrSrcMapStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

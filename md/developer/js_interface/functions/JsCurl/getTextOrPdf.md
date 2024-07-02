@@ -15,7 +15,7 @@ function jsCurl.getTextOrPdf(
 var=runGetTextOrPdf
 	?func=jsCurl.getTextOrPdf
 	?args=
-		&urlString=${String}
+		&url=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

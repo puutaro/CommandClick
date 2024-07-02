@@ -16,8 +16,8 @@ function jsQrEdit.edit(
 var=runEdit
 	?func=jsQrEdit.edit
 	?args=
-		&qrConFilePathString=${String}
-		&broadcastIntentMapStrString=${String}
+		&qrConFilePath=${String}
+		&broadcastIntentMapStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

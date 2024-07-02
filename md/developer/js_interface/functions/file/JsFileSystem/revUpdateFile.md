@@ -15,7 +15,7 @@ function jsFileSystem.revUpdateFile(
 var=runRevUpdateFile
 	?func=jsFileSystem.revUpdateFile
 	?args=
-		&errConString=${String}
+		&errCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

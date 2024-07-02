@@ -15,7 +15,7 @@ function jsFileSystem.removeDir(
 var=runRemoveDir
 	?func=jsFileSystem.removeDir
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

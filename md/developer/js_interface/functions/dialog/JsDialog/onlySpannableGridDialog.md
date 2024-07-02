@@ -17,9 +17,9 @@ function jsDialog.onlySpannableGridDialog(
 var=selectedLine
 	?func=jsDialog.onlySpannableGridDialog
 	?args=
-		&titleString=${String}
-		&messageString=${String}
-		&imagePathListNewlineSepaStrString=${String}
+		&title=${String}
+		&message=${String}
+		&imagePathListNewlineSepaStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

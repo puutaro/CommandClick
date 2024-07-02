@@ -15,7 +15,7 @@ function jsUbuntu.untilSetupLoop(
 var=runUntilSetupLoop
 	?func=jsUbuntu.untilSetupLoop
 	?args=
-		&launchJsPathString=${String}
+		&launchJsPath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

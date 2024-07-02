@@ -17,9 +17,9 @@ function jsDialog.multiListDialog(
 var=selectedLine
 	?func=jsDialog.multiListDialog
 	?args=
-		&titleString=${String}
-		&currentItemListStrString=${String}
-		&preSelectedItemListStrString=${String}
+		&title=${String}
+		&currentItemListStr=${String}
+		&preSelectedItemListStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

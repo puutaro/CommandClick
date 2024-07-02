@@ -15,7 +15,7 @@ function jsUtil.convertDateTimeToMiliTime(
 var=miliTimeCon
 	?func=jsUtil.convertDateTimeToMiliTime
 	?args=
-		&datetimeString=${String}
+		&datetime=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

@@ -15,7 +15,7 @@ function jsEdit.getFromEditText(
 var=targetEditTextCon
 	?func=jsEdit.getFromEditText
 	?args=
-		&targetVariableNameString=${String}
+		&targetVariableName=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

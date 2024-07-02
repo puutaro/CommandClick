@@ -15,7 +15,7 @@ function jsFileSystem.updateWeekPastLastModified(
 var=runUpdateWeekPastLastModified
 	?func=jsFileSystem.updateWeekPastLastModified
 	?args=
-		&pathString=${String}
+		&path=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

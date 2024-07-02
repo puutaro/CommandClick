@@ -15,7 +15,7 @@ function jsUbuntu.killBackground(
 var=runKillBackground
 	?func=jsUbuntu.killBackground
 	?args=
-		&cmdNameString=${String}
+		&cmdName=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

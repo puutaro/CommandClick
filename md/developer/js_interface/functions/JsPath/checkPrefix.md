@@ -16,8 +16,8 @@ function jsPath.checkPrefix(
 var=isExist
 	?func=jsPath.checkPrefix
 	?args=
-		&nameString=${String}
-		&prefixTabSeparateStrString=${String}
+		&name=${String}
+		&prefixTabSeparateStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

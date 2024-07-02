@@ -16,8 +16,8 @@ function jsAddToUrlHistory.add_S(
 var=runAdd_S
 	?func=jsAddToUrlHistory.add_S
 	?args=
-		&argsMapConString=${String}
-		&separatorString=${String}
+		&argsMapCon=${String}
+		&separator=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

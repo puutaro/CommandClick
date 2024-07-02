@@ -17,9 +17,9 @@ function jsUbuntu.execScriptByBackground(
 var=runExecScriptByBackground
 	?func=jsUbuntu.execScriptByBackground
 	?args=
-		&backgroundShellPathString=${String}
-		&argsTabSepaStrString=${String}
-		&monitorNumInt=${Int}
+		&backgroundShellPath=${String}
+		&argsTabSepaStr=${String}
+		&monitorNum=${Int}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

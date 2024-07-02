@@ -17,9 +17,9 @@ function jsDialog.prompt(
 var=promptStr
 	?func=jsDialog.prompt
 	?args=
-		&titleString=${String}
-		&messageString=${String}
-		&suggestVarsString=${String}
+		&title=${String}
+		&message=${String}
+		&suggestVars=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`

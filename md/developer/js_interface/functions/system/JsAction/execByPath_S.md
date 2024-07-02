@@ -15,7 +15,7 @@ function jsAction.execByPath_S(
 var=runExecByPath_S
 	?func=jsAction.execByPath_S
 	?args=
-		&jsActionPathString=${String}
+		&jsActionPath=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
