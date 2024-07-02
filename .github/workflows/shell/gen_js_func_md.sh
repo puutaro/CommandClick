@@ -39,11 +39,18 @@ IFS=$'\n'
 if_file_list=($(find "${IF_DIR_PATH}" -type f | grep -v "/lib/"))
 IFS="${old_ifs}"
 exec_gen_md(){
+	local newline="NEW_LINE"
 	local src_path="${1}"
 	awk \
 		-v src_path="${src_path}" \
-		-v js_if_con="$(cat "${src_path}")" \
-		-v class_name=$(basename "${src_path}" | sed 's/\..*$//') \
+		-v js_if_con="$(\
+			cat "${src_path}" \
+			| sed 's/\\n/'${newline}'/g'\
+		)" \
+		-v class_name=$(\
+			basename "${src_path}" \
+			| sed 's/\..*$//'\
+		) \
 		-v classifi_func_dir_name=$(echo "${src_path}" \
 			| sed 's/'${IF_DIR_PATH//\//\\\/}'//g' \
 			| dirname "$(cat)" \
