@@ -32,7 +32,7 @@ var=runWrapRemoveItemInListFileCon
 
 ## Src
 
--> [jsListSelect.wrapRemoveItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsListSelect.kt#L79)
+-> [jsListSelect.wrapRemoveItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsListSelect.kt#L78)
 
 ## Detail
 
