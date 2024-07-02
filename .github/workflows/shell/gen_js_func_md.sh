@@ -9,6 +9,7 @@ readonly FUNC_DIR_PATH="${JS_IF_MD_DIR}/${func_dir_name}"
 echo "WORKING_DIR_PATH: ${WORKING_DIR_PATH}"
 echo ${FUNC_DIR_PATH}
 ls "${FUNC_DIR_PATH}"
+exit 0
 hand_gen_feature_dir(){
 	find "${IF_DIR_PATH}"\
 		 -mindepth 1 -maxdepth 1 -type d \
