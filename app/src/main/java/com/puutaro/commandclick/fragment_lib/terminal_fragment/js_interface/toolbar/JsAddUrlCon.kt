@@ -22,11 +22,6 @@ class JsAddUrlCon(
     @JavascriptInterface
     fun add_S(
         extraMapCon: String,
-//        urlStringOrMacro: String,
-//        onSearchBtn: String,
-//        urlConSaveParentDirPath: String,
-//        compSuffix: String,
-//        addUrlHistory: String,
     ){
         val extraMap = CmdClickMap.createMap(
             extraMapCon,

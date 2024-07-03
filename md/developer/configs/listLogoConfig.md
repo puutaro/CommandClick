@@ -1,7 +1,8 @@
 # listLogoConfig.js
 
 Config for [list logo mode](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types/list_logo.md) in edit's [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md)  
-This config is for logo image of list.
+This config is for logo image of list.    
+Also, when [layout](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) is grid, this config is more important.   
 
 Table
 -----------------
@@ -9,39 +10,41 @@ Table
 
 * [List logo config format](#list-logo-config-format)
 * [List logo config key](#list-logo-config-key)
+    * [mode](#mode)
+    * [Format for mode](#format-for-mode)
+    * [Value table for mode](#value-table-for-mode)
+    * [logo](#logo)
+    * [Format for logo](#format-for-logo)
+    * [oneSideLength](#onesidelength)
+        * [Format for oneSideLength](#format-for-onesidelength)
     * [type](#type)
         * [Format for type](#format-for-type)
         * [Value table for type](#value-table-for-type)
-    * [layout](#layout)
-        * [Format for layout](#format-for-layout)
-        * [Value table for layout](#value-table-for-layout)
-    * [name](#name)
-        * [Format for name](#format-for-name)
-        * [Key-value table for name](#key-value-table-for-name)
-        * [Ex for name](#ex-for-name)
-    * [desc](#desc)
-        * [Format for desc](#format-for-desc)
-        * [Key-value table for desc](#key-value-table-for-desc)
-        * [Ex for desc](#ex-for-desc)
-    * [list](#list)
-        * [Format for list](#format-for-list)
-        * [Key-value table for list](#key-value-table-for-list)
-        * [Ex for list](#ex-for-list)
-    * [searchBox](#searchbox)
-        * [Format for searchBox](#format-for-searchBox)
-        * [Key-Value table for searchBox](#key-value-table-for-searchBox)
-        * [Ex for searchBox](#ex-for-searchBox)
-    * [click](#click)
-        * [Format for click](#format-for-click)
-        * [Key-Value table for click](#key-value-table-for-click)
-        * [Ex for click](#ex-for-click)
-    * [longClick](#longclick)
-    * [delete](#delete)
-        * [Format for delete](#format-for-delete)
-        * [Key-value table for delete](#key-value-table-for-delete)
-        * [Ex for delete](#ex-for-delete)
-    * [alter](#alter)
-
+        * [Ex for type](#ex-for-type)
+    * [disable](#disable)
+        * [Format for disable](#format-for-disable)
+        * [Value table for disable](#value-table-for-disable)
+        * [Ex for disable](#ex-for-disable)
+    * [icon](#icon)
+        * [Format for icon](#format-for-icon)
+        * [name](#name)
+            * [Format for name in icon](#format-for-name-in-icon)
+            * [Value table for name in icon](#value-table-for-name-in-icon)
+            * [Ex for name in icon](#ex-for-name-in-icon)
+        * [color](#color)
+            * [Format for color in icon](#format-for-color-in-icon)
+            * [Value for color in icon](#value-for-color-in-icon)
+            * [Ex for color in icon](#ex-for-color-in-icon)
+        * [bkColor](#bkcolor)
+            * [Format for bkColor in icon](#format-for-bkcolor-in-icon)
+            * [Value for bkColor in icon](#value-for-bkcolor-in-icon)
+            * [Ex for bkColor in icon](#ex-for-bkcolor-in-icon)
+        * [nameConfigPath](#nameconfigpath)
+            * [Format for nameConfigPath in icon](#format-for-nameconfigpath-in-icon)
+            * [About tsv con for nameConfigPath in icon](#about-tsv-con-for-nameconfigpath-in-icon)
+            * [listDirPath macro for nameConfigPath tsv](#listdirpath-macro-for-nameconfigpath-tsv)
+            * [map contents value for nameConfigPath tsv](#map-contents-value-for-nameconfigpath-tsv)
+            * [Ex for nameConfigPath in icon](#ex-for-nameconfigpath-in-icon)
 
 ## List logo config format
 
@@ -219,7 +222,7 @@ logo=
 
 Icon name or it`s macro
 
-##### Format for name in color
+##### Format for color in icon
 
 value
 
@@ -229,12 +232,12 @@ value
 color={value}
 ```
 
-##### Value for name in color
+##### Value for color in icon
 
 -> [color name](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/color.md)
 
 
-##### Ex for name in color
+##### Ex for color in icon
 
 ```js.js
 logo=
@@ -250,7 +253,7 @@ logo=
 
 Icon name or it`s macro
 
-##### Format for name in bkColor
+##### Format for bkColor in icon
 
 value
 
@@ -260,12 +263,12 @@ value
 bkColor={value}
 ```
 
-##### Value for name in bkColor
+##### Value for bkColor in icon
 
 -> [color name](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/color.md)
 
 
-##### Ex for name in bkColor
+##### Ex for bkColor in icon
 
 ```js.js
 logo=
@@ -277,3 +280,141 @@ logo=
         ?color=yellow
         ?bkColor=white,
 ```
+
+#### nameConfigPath
+
+Icon name or it`s macro
+
+##### Format for nameConfigPath in icon
+
+tsv path
+
+- ex
+
+```js.js
+nameConfigPath={tsv path}
+```
+
+##### About tsv con for nameConfigPath in icon
+
+-> tsv path ({listDirPath}-{map contents value})
+
+##### listDirPath macro for nameConfigPath tsv
+
+| macro     | Description                                                              | 
+|-----------|--------------------------------------------------------------------------|
+| `default` | -> Default list dir path. <br> if no specify, this is normal fannel path |
+
+
+##### map contents value for nameConfigPath tsv
+
+| key       | Description           | 
+|-----------|-----------------------|
+| `name`    | -> [Detail](#name)    |
+| `color`   | -> [Detail](#color)   |
+| `bkColor` | -> [Detail](#bkColor) |
+
+- Concat by `,`
+
+##### Ex for nameConfigPath in icon
+
+```js.js
+logo=
+    oneSideLength=60
+    |icon=
+        nameConfigPath=`${cmdTtsPlayerTableIconNameColorConfigPath}`,
+```
+
+- `${cmdTtsPlayerTableIconNameColorConfigPath}`
+
+```js.js
+${cmdTtsPlayerLikePlayListPath}	name=star,color=${iconColor},bkColor=${iconBkColor}
+${cmdTtsPlayerPreviousTtsPlayListPath}	name=history,color=${iconColor},bkColor=${iconBkColor}
+default	name=music,color=${iconColor},bkColor=${iconBkColor}
+```
+
+### click
+
+Click action for logo  
+
+#### Format for click
+
+key-value
+
+- ex
+
+```js.js
+click=
+    {key1}={value1}  
+    |{key2}={value2}  
+    |{key3}=...
+    |...    
+```
+
+#### Key-value table for click
+
+| Key name      | value           | Description                    | 
+|---------------|-----------------|--------------------------------| 
+| `func`        | Js action macro | Js action process macro        |
+| `args`        | Js action args  | Js action process macro        |
+| js action key | Js action con   | User implemented js action con |
+
+- Concat by `?`
+
+#### Pre reserved variable
+
+| Key name                 | Description                                                                                                                                                                                  | 
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+| `${ITEM_TITLE}` | When [type](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) is <br> -> `normal`: None <br> -> `tsvEdit`: second field      |
+| `${ITEM_NAME}`  | When [type](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) is <br> -> `normal`: file name <br> -> `tsvEdit`: second field |
+| `${INDEX_LIST_DIR_PATH}`  | When [type](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) is <br> -> `normal`: list dir path <br> -> `tsvEdit`: None     |
+| `${POSITION}`      | Item position number                                                                                                                                                                         |
+
+
+#### Ex for click
+
+- `FILE_CONTENTS` macro case
+
+```js.js
+  click=
+      func=FILE_CONTENTS
+```
+
+- Js action case
+
+```js.js
+click=
+    |tsvVars="listDir => asciiDirPathForQuiz"
+        ?importPath=`${image2AsciiArtAsciiListIndexTsvPath}`
+    |var=asciiDirPath
+        ?value=`${asciiDirPathForQuiz}`
+    |var=isOk
+        ?func=jsDialog.imageDialog
+        ?args=
+            msg="What's image ?"
+            &path=`${asciiDirPath}/{{ IMAGE_NAME }}`
+            &imageDialogMapCon=
+        |var=runExitJudge
+            ?when=`!isOk`
+            ?func=exitZero
+    |var=imageDirPath
+        ?value=`${asciiDirPath}/${imageDirName}`
+    |var=runImageAnswerDialog
+        ?func=jsDialog.imageDialog
+        ?args=
+            msg="Answer"
+            &path=`${imageDirPath}/{{ IMAGE_NAME }}`
+            &imageDialogMapCon=`hideButtons=ok`
+    ,
+
+```
+
+#### Js action macro
+
+-> [Js action macro for list logo](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_logo.md)  
+
+### longClick
+
+Long click action for logo  
+Similar to [click](#click)  
+

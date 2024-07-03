@@ -235,7 +235,7 @@ object EditSettingExtraArgsTool {
             CAMEL_TO_BLANK_SNAKE
         }
 
-        private fun makeFileNameByMacro(
+            private fun makeFileNameByMacro(
             srcFileName: String,
             macroStr: String?,
         ): String {

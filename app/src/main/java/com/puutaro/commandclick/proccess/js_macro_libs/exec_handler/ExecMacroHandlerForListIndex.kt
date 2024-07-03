@@ -129,7 +129,7 @@ object ExecMacroHandlerForListIndex {
                     selectedItem,
                 )
             JsPathMacroForListIndex.MENU ->
-                    ListIndexMenuLauncher.launch(
+                ListIndexMenuLauncher.launch(
                     editFragment,
                     jsActionMap,
                     selectedItem,

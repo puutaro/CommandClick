@@ -22,11 +22,7 @@ Table of Contents
 * [onTermVisibleWhenKeyboard](#ontermvisiblewhenkeyboard)
 * [onTermShortWhenLoad](#ontermshortwhenload)
 * [disableShowToolbarWhenHighlight](#disableshowtoolbarwhenhighlight)
-* [disableEditButton](#disableeditbutton)
-* [disablePlayButton](#disableplaybutton)
 * [defaultMonitorFile](#defaultmonitorfile)
-* [execPlayBtnLongPress](#execplaybtnlongpress)
-* [execEditBtnLongPress](#execeditbtnlongpress)
 * [execJsOrHtmlPath](#execjsorhtmlpath)
 * [overrideItemClickExec](#overrideItemClickExec)
 * [setReplaceVariables](#setreplacevariables)
@@ -38,6 +34,9 @@ Table of Contents
 * [srcImageAnchorLongPressMenuFilePath](#srcimageanchorlongpressmenufilepath)
 * [srcAnchorLongPressMenuFilePath](#srcanchorlongpressmenufilepath)
 * [imageLongPressMenuFilePath](#imagelongpressmenufilepath)
+* [playButtonConfig](#playbuttonconfig)
+* [editButtonConfig](#editbuttonconfig)
+* [settingButtonConfig](#settingbuttonconfig)
 * [noScrollSaveUrls](#noscrollsaveurls)
 * [terminalFontZoom](#terminalfontzoom)
 * [terminalFontColor](#terminalfontcolor)
@@ -45,8 +44,6 @@ Table of Contents
 * [ubuntuSleepDelayMinInScreenOff](#ubuntusleepdelaymininscreenoff)
 * [passCmdVariableEdit](#passcmdvariableedit)
 * [urlHistoryOrButtonExec](#urlhistoryorbuttonexec)
-* [beforeCommand](#before_command)
-* [afterCommand](#after_command)
 * [terminalDo](#terminal_do)
 * [settingImport](#settingimport)
 * [importDisableValList](#importdisablevallist)
@@ -55,14 +52,13 @@ Table of Contents
 ## editExecute
 
 Edit and Execute on click play button.  
-Particularly, `ALWAYS` is most used value in order to make execute box.
+Particularly, `ALWAYS` is most used value in order to standalone app.
 
 
 | Value| Description |
 | -------- | --------- |
 | `NO` | only edit (default) |
 | `ALWAYS` | always edit -> execute |
-| `ONCE` | one time edit and execute (deprecated) |
 
 ## scriptFileName
 
@@ -186,23 +182,6 @@ Switch disable to show toolbar when highlight text in webview
 | `OFF` | off (default)  |
 | `NO` | on |
 
-## disableEditButton
-
-Switch disable to edit button
-
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default)  |
-| `NO` | on |
-
-## disablePlayButton
-
-Switch disable to play button
-
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default)  |
-| `NO` | on |
 
 ## defaultMonitorFile
 
@@ -212,42 +191,27 @@ Select default monitor file for screen
 | -------- | --------- |
 | `term_[1-4]` | [term type](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#output_monitor)  |
 
-## execPlayBtnLongPress
-
-Execute when play button long press in `editExecute=EditExecute`
-
-| Value | Description |
-| -------- | --------- |
-| `WEB_SEARCH` | Appear web search bar |
-| `PAGE_SEARCH` | Appear page search bar |
-| `{js file path}` | Execute js file |
-
-## execEditBtnLongPress
-
-Execute when edit button long press in `editExecute=EditExecute`
-
-| Value | Description |
-| -------- | --------- |
-| `WEB_SEARCH` | Appear web search bar |
-| `PAGE_SEARCH` | Appear page search bar |
-| `{js file path}` | Execute js file |
-
 ## execJsOrHtmlPath
 
 Execute javascript or html file path
 
 ## setReplaceVariables
 
-String replaced with certain string.   
-
+This variable **definite constant variable**.   
 You also have multiple specifing this.
 
-ex)   
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md)
+
+- ex   
 
 ```js.js
-setReplaceVariables="{replaceVariablle1}={repalce string1}   
-or setReplaceVariables="file://{file path}"    
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) 
+setReplaceVariables="{replaceVariablle1}={repalce string1}        
+```
+
+or
+
+```js.js
+setReplaceVariables="file://{file path}"     
 ```
 
 ## overrideItemClickExec
@@ -256,18 +220,27 @@ Override js executor to `itemClick.js` when click in [ListIndex](https://github.
 
 ## setVariableTypes
 
-when edit, whether to set variable type to [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables).   
+This variable is **controller** in MVVM or MVC architecture    
+When edit, set variable type to [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables).   
 
-You also have multiple specifing this.   
+You also have multiple specifying this.   
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md)
 
 ## hideSettingVariables
 
 Specified [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md) you want to hidden when edit (hidden variable in default)   
 
+- ex
+
 ```js.js
-${setting variable name}="..."
-or hideSettingVariables="file://{file path} 
+hideSettingVariables="setVariableTypes,editExecute,..."
+hideSettingVariables="ignoreHistoryPaths,..." 
+```
+
+or 
+
+```js.js
+hideSettingVariables="file://{file path} 
 ```
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md) |    
@@ -277,11 +250,18 @@ or hideSettingVariables="file://{file path}
 
 Ignore history path like grep -v 
 
-```js.js
-${setting variable name}="..."   
-or ignoreHistoryPaths="file://{file path} 
-```
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/ignore_history_paths.md)
+
+- ex 
+
+```js.js
+ignoreHistoryPaths="..."    
+```
+or
+
+```js.js   
+ignoreHistoryPaths="file://{file path} 
+```
 
 ## homeScriptUrlsPath
 
@@ -308,6 +288,78 @@ Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/deve
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
 
 - [imageLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#image_long_press_menu)
+
+## playButtonConfig
+
+Set play or ok button config
+
+-> [toolbar button config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/toolbarButtonConfig.md)
+
+- ex
+
+```js.js
+playButtonConfig="icon=play,click=OK..." 
+```
+
+or
+
+```js.js
+playButtonConfig="file://{play button config path} 
+```
+
+## editButtonConfig
+
+Set edit button config
+
+-> [toolbar button config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/toolbarButtonConfig.md)
+
+- ex
+
+```js.js
+editButtonConfig="icon=edit,click=EDIT..." 
+```
+
+or
+
+```js.js
+editButtonConfig="file://{edit button config path} 
+```
+
+## settingButtonConfig
+
+Set setting button config
+
+-> [toolbar button config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/toolbarButtonConfig.md)
+
+- ex
+
+```js.js
+settingButtonConfig="icon=setting,click=MENU..." 
+```
+
+or
+
+```js.js
+settingButtonConfig="file://{setting button config path} 
+```
+
+## extraButtonConfig
+
+Set extra button config
+
+-> [toolbar button config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/toolbarButtonConfig.md)
+
+- ex
+
+```js.js
+extraButtonConfig="icon=setup,click=MENU..." 
+```
+
+or
+
+```js.js
+extraButtonConfig="file://{extra button config path} 
+```
  
 ## noScrollSaveUrls
 

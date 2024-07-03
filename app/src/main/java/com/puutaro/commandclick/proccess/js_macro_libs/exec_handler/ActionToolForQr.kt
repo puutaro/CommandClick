@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.exec_handler
 
 import android.content.Context
-import android.widget.Toast
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -25,14 +24,14 @@ object ActionToolForQr {
         parentDirPath: String,
         clickFileName: String,
     ): String? {
-        val clicFilePathObj = File(parentDirPath, clickFileName)
+        val clickFilePathObj = File(parentDirPath, clickFileName)
         if(
-            !clicFilePathObj.isFile
+            !clickFilePathObj.isFile
         ){
             return null
         }
         return ReadText(
-            clicFilePathObj.absolutePath
+            clickFilePathObj.absolutePath
         ).readText()
     }
 }

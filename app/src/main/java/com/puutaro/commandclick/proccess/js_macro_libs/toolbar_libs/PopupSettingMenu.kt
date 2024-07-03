@@ -61,7 +61,6 @@ object PopupSettingMenu {
         settingButtonView: View?,
         jsActionMap: Map<String, String>,
     ) {
-//        val settingButtonView = toolbarButtonArgsMaker.settingButtonView
         if (settingButtonView == null) return
         val context = settingButtonView.context
         val menuPairList =

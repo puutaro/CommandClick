@@ -54,7 +54,7 @@ class GetFileListForEdit (
                 pickerMacro,
                 srcDirPath,
             )
-            val  srcFirOrDirList = when(onDirectoryPick){
+            val srcFirOrDirList = when(onDirectoryPick){
                 true -> showDirNameList(
                     srcDirPath,
                     filterPrefixListCon,

@@ -175,12 +175,12 @@ class JsFileAdder(
         fileName: String,
         compFileNameMap: Map<String, String>,
     ): String {
-        val dirPath = compFileNameMap.get(AddFileForEdit.AddFileExtraArgs.DIR_PATH.key)
         val compFileName = EditSettingExtraArgsTool.makeCompFileName(
             editFragment,
             fileName,
             compFileNameMap,
         )
+        val dirPath = compFileNameMap.get(AddFileForEdit.AddFileExtraArgs.DIR_PATH.key)
         return when(
             dirPath.isNullOrEmpty()
         ){

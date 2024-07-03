@@ -11,16 +11,16 @@ Table
 * [List index config format](#list-index-config-format)
 * [List index config key](#list-index-config-key)
     * [type](#type)
-       * [Format for type](#format-for-type)
-       * [Value table for type](#value-table-for-type)
+    * [Format for type](#format-for-type)
+    * [Value table for type](#value-table-for-type)
     * [layout](#layout)
         * [Format for layout](#format-for-layout)
         * [Value table for layout](#value-table-for-layout)
-	* [name](#name)
+    * [name](#name)
         * [Format for name](#format-for-name)
         * [Key-value table for name](#key-value-table-for-name)
-        * [Ex for name](#ex-for-name) 
-	* [desc](#desc)
+        * [Ex for name](#ex-for-name)
+    * [desc](#desc)
         * [Format for desc](#format-for-desc)
         * [Key-value table for desc](#key-value-table-for-desc)
         * [Ex for desc](#ex-for-desc)
@@ -29,17 +29,19 @@ Table
         * [Key-value table for list](#key-value-table-for-list)
         * [Ex for list](#ex-for-list)
     * [searchBox](#searchbox)
-        * [Format for searchBox](#format-for-searchBox)
-        * [Key-Value table for searchBox](#key-value-table-for-searchBox)
-        * [Ex for searchBox](#ex-for-searchBox)
+        * [Format for searchBox](#format-for-searchbox)
+        * [Key-value table](#key-value-table)
+        * [Ex for searchBox](#ex-for-searchbox)
     * [click](#click)
-      * [Format for click](#format-for-click)
-      * [Key-Value table for click](#key-value-table-for-click)
-      * [Ex for click](#ex-for-click)
+        * [Format for click](#format-for-click)
+        * [Key-value table for click](#key-value-table-for-click)
+        * [Pre reserved variable](#pre-reserved-variable)
+        * [Ex for click](#ex-for-click)
+        * [Js action macro](#js-action-macro)
     * [longClick](#longclick)
     * [delete](#delete)
         * [Format for delete](#format-for-delete)
-        * [Key-value table for delete](#key-value-table-for-delete)
+        * [Key-value table](#key-value-table)
         * [Ex for delete](#ex-for-delete)
     * [alter](#alter)
 
@@ -377,11 +379,20 @@ click=
 
 #### Key-value table for click
 
-| Key name      | value         | Description                    | 
-|---------------|---------------|--------------------------------| 
+| Key name      | value           | Description                    | 
+|---------------|-----------------|--------------------------------| 
+| `onScriptSave`        | `ON` / other    | Save fannel contents on click  |
+| `monitorSize`        | `ON` / other | Sizing monitor on click        |
 | `func`        | js action macro | js action process macro        |
-| `args`        | js action args | js action process macro        |
-| js action key | js action con | user implemented js action con |
+
+- Concat by `|`
+
+#### func key table for click
+
+| Key name      | value           | Description                    |
+|---------------|-----------------|--------------------------------| 
+| `args`        | js action args  | js action process macro        |
+| js action key | js action con   | user implemented js action con |
 
 - Concat by `?`
 
@@ -389,81 +400,18 @@ click=
 
 ```js.js
   click=
-      func=COPY_FILE_SIMPLE
-          ?args=
-              copyDestiTsvPathCon=`
-                      $COPY_DEST_DIR_PATH1}\ttsv\n
-                      $COPY_DEST_DIR_PATH1}\ttsv\n
-                  `
-              &extra=
-                withFile="ON"
+    onScriptSave
+    |func=QR_SCAN
 ```
-
 
 #### Js action macro
 
--> [Js action macro for list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md)
-
+-> [Js action macro for toolbar](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md)
 
 ### longClick
 
 Long click action  
-Similer to [click](#click)  
-
-### delete
-
-List item delete setting  
-This setting apply to swipe delete and [SIMPLE_DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#simple_delete)
-
-#### Format for delete
-
-key-value
-
-- ex
-```js.js
-delete=
-    {key1}={value1}  
-    |{key2}={value2}  
-    |{key3}=...
-    |...
-```
-
-#### Key-value table
-
-| Key name           | value                             | Description                       | 
-|--------------------|-----------------------------------|-----------------------------------| 
-| `disableDeleteConfirm`          | `ON` <br> other (default)         | Delete confirm switch             |
-| `onDeleteConFile`           | `OFF` <br> other (default)        | delete file in `type` = `tsvEdit` |
-| `withJsAction`           | js action con | Trigger js action on delete       |
-
-- Concat by `|`
-
-#### Ex for delete
-
-##### standard case
-
-```js.js
-	disableDeleteConfirm=OFF
-	|onDeleteConFile=ON,
-```
-
-##### js action case
-
-```js.js
-delete=
-	withJsAction=`
-        tsvVars="listDir => asciiDirPath"
-            ?importPath="${image2AsciiArtAsciiListIndexTsvPath}"
-        |var=imageDirPath
-            ?value="${asciiDirPath}/${imageDirName}"
-        |acVar=runDeleteImage
-            ?importPath=
-                "${image2AsciiArtDeleteWithAction}"
-            ?replace=
-                DELETE_DIR_PATH="${imageDirPath}"
-                &IMAGE_NAME="${ITEM_NAME}"
-    `,
-```
+Similer to [click](#click)
 
 ### alter
 

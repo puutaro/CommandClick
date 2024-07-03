@@ -8,9 +8,11 @@ import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 
 object AddUrl {
-    private const val urlExtraKey = "url"
-    private const val onSearchBtnKey = "onSearchBtn"
 
+    private enum class AddUrlKey(val key: String){
+        URL("url"),
+        ON_SEARCH_BTN("onSearchBtn"),
+    }
 
     fun add(
         editFragment: EditFragment,
@@ -20,7 +22,7 @@ object AddUrl {
             jsActionMap
         ) ?: emptyMap()
 
-        val urlStringOrMacro = argsMap.get(urlExtraKey) ?: String()
+        val urlStringOrMacro = argsMap.get(AddUrlKey.URL.key) ?: String()
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
@@ -30,7 +32,7 @@ object AddUrl {
             urlStringOrMacro
         ) ?: String()
         val onSearchBtn =
-            argsMap.get(onSearchBtnKey)
+            argsMap.get(AddUrlKey.ON_SEARCH_BTN.key)
                 ?: String()
         ExecJsLoad.execExternalJs(
             editFragment,
