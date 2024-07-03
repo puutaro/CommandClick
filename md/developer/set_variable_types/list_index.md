@@ -19,7 +19,7 @@ This option transform `command variable` into list index.
 ## Usage  
 
 ```js.js
-setVariableTypes={variableName}:LI=listDir={target list dir path}|menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(|prefix={grep prefix})(|suffix={grep suffix})
+setVariableTypes={variableName}:LI=
 ```
 
 ## List index config
