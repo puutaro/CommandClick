@@ -530,6 +530,7 @@ private object AudioStreamingUrlExtractor {
                     existPreloadMapFileCon
         val preloadStUrlMapList =
             preloadStUrlMapListSrc
+                .filter { it.isNotEmpty() }
                 .take(mapLineLimit)
                 .joinToString("\n")
         FileSystems.writeFile(
@@ -604,7 +605,7 @@ private object AudioStreamingUrlExtractor {
             }
             execPreloadJobJobList.forEach { it.await() }
             stUrlMapChannel.close()
-            var indexCount = 1
+//            var indexCount = 1
             for (rowNumToLine in stUrlMapChannel){
 //                FileSystems.updateFile(
 //                    File(
@@ -617,7 +618,7 @@ private object AudioStreamingUrlExtractor {
 //                        "rowNumToLine: ${rowNumToLine}",
 //                    ).joinToString("\n\n")
 //                )
-                indexCount++
+//                indexCount++
                 // Channelから受信
                 receiveMapList.add(rowNumToLine)
             }
