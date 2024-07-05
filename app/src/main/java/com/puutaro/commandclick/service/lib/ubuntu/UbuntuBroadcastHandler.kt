@@ -525,15 +525,24 @@ object UbuntuBroadcastHandler {
         if(
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) return
+        val context = ubuntuService.applicationContext
         val ubuntuCroutineJobTypeListForKill = intent.getStringExtra(
             UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema
         ) ?: return
         ubuntuService.ubuntuCoroutineJobsHashMap.get(ubuntuCroutineJobTypeListForKill)?.cancel()
-        ubuntuFiles.let {
-            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillProcessFromList(
-                ubuntuCroutineJobTypeListForKill.split("\t"),
-                ubuntuService.cmdclickMonitorFileName
+        val ubuntuCroutineJobTypeListForKillList =
+            ubuntuCroutineJobTypeListForKill.split("\t")
+        ubuntuCroutineJobTypeListForKillList.forEach {
+            LinuxCmd.killCertainProcess(
+                context,
+                it,
             )
         }
+//        ubuntuFiles.let {
+//            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillProcessFromList(
+//                ubuntuCroutineJobTypeListForKill.split("\t"),
+//                ubuntuService.cmdclickMonitorFileName
+//            )
+//        }
     }
 }

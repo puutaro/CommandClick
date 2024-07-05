@@ -325,25 +325,19 @@ private object AudioStreamingUrlExtractor {
 
     private var execPreloadJobJobList: List<Deferred<Unit>> = listOf()
     private const val preloadNum = 30
-//    private val channel = Channel<Pair<Int, Map<String, String>>>(preloadNum)
     private const val pastLoadNum = 10
     private const val mapLineLimit = preloadNum + pastLoadNum
 
     private val mediaPlayerServiceStreamingPreloadTxtPath =
         UsePath.mediaPlayerServiceStreamingPreloadTxtPath
-//    private var firstExtract = false
-
-//    fun setFirstExtractFalse(){
-//        firstExtract = false
-//    }
-//    private fun setFirstExtractTrue(){
-//        firstExtract = true
-//    }
     fun exit(context: Context){
         execPreloadJobJobList.forEach {
             it.cancel()
         }
-//        channel.close()
+//        LinuxCmd.killCertainProcess(
+//            context,
+//            CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingUrlShellName)
+//        )
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,

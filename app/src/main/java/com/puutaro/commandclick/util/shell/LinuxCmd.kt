@@ -101,6 +101,21 @@ object LinuxCmd {
             )
         )
     }
+
+    fun killCertainProcess(
+        context: Context?,
+        processNane: String,
+    ){
+        val packageName = context?.packageName
+            ?: return
+        execKillProcess(
+            context,
+            findPList(
+                packageName,
+                processNane,
+            )
+        )
+    }
     fun killAllProcess(){
         LogSystems.stdSys(
             "allkill"
@@ -185,14 +200,24 @@ object LinuxCmd {
     private fun subFrontSystemPList(
         packageName: String
     ): String {
+        return findPList(
+            packageName,
+            "pulseaudio"
+        )
+    }
+
+    private fun findPList(
+        packageName: String,
+        processName: String
+    ): String {
         return if(BuildConfig.DEBUG) {
             "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
                     "ps -ef | grep -v '${packageName}$' " +
-                    "| grep -e 'pulseaudio' " +
+                    "| grep -e '${processName}' " +
                     "| sed 's/  */\\t/g'"
         } else {
             "ps -ef " +
-                    "| grep 'pulseaudio' " +
+                    "| grep '${processName}' " +
                     "| sed 's/  */\\t/g'"
         }
     }

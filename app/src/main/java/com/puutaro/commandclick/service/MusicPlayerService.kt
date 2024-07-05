@@ -14,6 +14,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.MusicPlayerInten
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
@@ -24,11 +25,18 @@ import com.puutaro.commandclick.service.lib.music_player.libs.ExecMusicPlay
 import com.puutaro.commandclick.service.lib.music_player.libs.InfoFileForMediaPlayer
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayListMaker
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.tsv.TsvTool
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 //import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class MusicPlayerService: Service() {
@@ -178,14 +186,36 @@ class MusicPlayerService: Service() {
             this,
             playList,
         )
-        BroadcastSender.normalSend(
-            context,
-            BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
-            listOf(
-                BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme
-                        to currentTrackIndex.toString(),
-            )
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                val procName =
+                    CcPathTool.trimAllExtend(
+                        UbuntuFiles.extractAudioStreamingUrlShellName
+                    )
+                for (i in 1..30){
+                    val isNotExist = !LinuxCmd.isProcessCheck(
+                        applicationContext,
+                        procName
+                    )
+                    if(isNotExist) break
+//                    LinuxCmd.killCertainProcess(
+//                        context,
+//                        procName
+//                    )
+                    delay(300)
+                }
+            }
+            withContext(Dispatchers.IO) {
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
+                    listOf(
+                        BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme
+                                to currentTrackIndex.toString(),
+                    )
+                )
+            }
+        }
         return Service.START_NOT_STICKY
     }
 
