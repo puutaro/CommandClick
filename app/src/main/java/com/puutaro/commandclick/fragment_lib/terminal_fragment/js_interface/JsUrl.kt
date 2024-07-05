@@ -2,8 +2,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForUrl
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForUrl
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender

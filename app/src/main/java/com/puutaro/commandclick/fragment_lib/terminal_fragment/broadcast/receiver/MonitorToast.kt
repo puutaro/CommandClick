@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 
 import android.content.Intent
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 
 object MonitorToast {
 

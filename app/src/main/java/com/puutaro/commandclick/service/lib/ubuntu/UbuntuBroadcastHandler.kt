@@ -3,8 +3,8 @@ package com.puutaro.commandclick.service.lib.ubuntu
 import android.content.Intent
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -391,6 +391,9 @@ object UbuntuBroadcastHandler {
         val backgroundMonitorFileName = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundMonitorFileName.schema
         ) ?: UsePath.cmdClickMonitorFileName_2
+        val backgroundResFilePath = intent.getStringExtra(
+            UbuntuServerIntentExtra.backgroundResFilePath.schema
+        )
         ubuntuService.ubuntuCoroutineJobsHashMap.get(
             backgroundShellPath,
         )?.cancel()
@@ -400,6 +403,7 @@ object UbuntuBroadcastHandler {
                 backgroundShellPath,
                 backgroundArgsTabSepaStr,
                 backgroundMonitorFileName,
+                backgroundResFilePath,
             )
         }
         ubuntuService.ubuntuCoroutineJobsHashMap.put(
@@ -413,10 +417,17 @@ object UbuntuBroadcastHandler {
         backgroundShellPath: String,
         backgroundArgsTabSepaStr: String,
         backgroundMonitorFileName: String,
+        backgroundResFilePath: String?,
     ){
         val context = ubuntuService.applicationContext
+        var isBasicProcess = false
+        for (i in 1..3) {
+            isBasicProcess = LinuxCmd.isBasicProcess(context)
+            if(isBasicProcess) break
+            delay(300)
+        }
         if(
-            !LinuxCmd.isBasicProcess(context)
+            !isBasicProcess
         ){
             withContext(Dispatchers.Main){
                 ToastUtils.showLong("Restart proc: lost base proc")
@@ -433,7 +444,8 @@ object UbuntuBroadcastHandler {
                 delay(processRestartDelayTime)
             }
         }
-        withContext(Dispatchers.IO) {
+        val isOutput = !backgroundResFilePath.isNullOrEmpty()
+        val output = withContext(Dispatchers.IO) {
             when (
                 LinuxCmd.isProcessCheck(
                     context,
@@ -445,16 +457,25 @@ object UbuntuBroadcastHandler {
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
                     backgroundMonitorFileName,
-                    false,
+                    isOutput,
                 )
                 else -> SshManager.execScript(
                     context,
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
                     backgroundMonitorFileName,
-                    false,
+                    isOutput,
                 )
             }
+        }
+        if (
+            backgroundResFilePath.isNullOrEmpty()
+        ) return
+        withContext(Dispatchers.IO){
+            FileSystems.writeFile(
+                backgroundResFilePath,
+                output
+            )
         }
     }
 

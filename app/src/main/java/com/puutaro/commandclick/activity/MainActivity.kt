@@ -57,7 +57,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool

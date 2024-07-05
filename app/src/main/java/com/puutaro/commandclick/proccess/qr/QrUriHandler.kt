@@ -7,9 +7,9 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
-import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
-import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.FileDownloadExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.GitDownloadExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator

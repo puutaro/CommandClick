@@ -46,8 +46,13 @@ android {
             }
         }
 //        ndk {
-//            abiFilters += listOf("arm64-v8a", "x86_64")
-//                listOf("armeabi-v7a", "arm64-v8a")
+//            abiFilters.add("x86")
+//            abiFilters.add("x86_64")
+//            abiFilters.add("'armeabi'")
+//            abiFilters.add("armeabi-v7a")
+//            abiFilters.add("arm64-v8a")
+////            abiFilters += listOf("arm64-v8a", "x86_64")
+////                listOf("armeabi-v7a", "arm64-v8a")
 //        }
     }
 
@@ -65,6 +70,16 @@ android {
     dataBinding {
         enable = true
     }
+
+//    splits {
+//        abi {
+//            isEnable = true
+//            reset()
+//            include( "armeabi", "arm64-v8a", "x86")
+////             "x86", "x86_64", "armeabi-v7a",
+//            isUniversalApk = true
+//        }
+//    }
 }
 
 
@@ -124,7 +139,9 @@ dependencies {
     implementation ("com.github.alexzhirkevich:custom-qr-generator:2.0.0-alpha01")
 
     implementation("io.coil-kt:coil:2.4.0")
-    implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
+//    implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
+//    implementation("io.github.junkfood02.youtubedl-android:library:0.16.0")
+//    implementation("io.github.junkfood02.youtubedl-android:ffmpeg:0.16.0")
     implementation("com.blankj:utilcodex:1.31.1")
 
 

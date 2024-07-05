@@ -10,8 +10,8 @@ import android.media.MediaPlayer
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.intent.extra.MusicPlayerIntentExtra
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
+import com.puutaro.commandclick.common.variable.broadcast.extra.MusicPlayerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
@@ -20,12 +20,14 @@ import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerBroadcastHandler
 import com.puutaro.commandclick.service.lib.music_player.NotiSetter
 import com.puutaro.commandclick.service.lib.music_player.PlayerExit
+import com.puutaro.commandclick.service.lib.music_player.libs.ExecMusicPlay
 import com.puutaro.commandclick.service.lib.music_player.libs.InfoFileForMediaPlayer
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayListMaker
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
+//import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.Job
 import java.io.File
 
@@ -37,6 +39,7 @@ class MusicPlayerService: Service() {
     val channelNum = ServiceChannelNum.musicPlayer
     var mediaPlayer: MediaPlayer? = null
     var madiaPlayerPosiUpdateJob: Job? = null
+    var streamingPreloadFileMakeJob: Job? = null
     var execPlayJob: Job? = null
     var currentTrackLength: Int = 0
     var currentTrackIndex = 0
@@ -58,6 +61,7 @@ class MusicPlayerService: Service() {
     var notificationManager: NotificationManagerCompat? = null
 
     override fun onCreate(){
+//        YoutubeDL.getInstance().init(this)
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForMusicPlayerService,
@@ -105,6 +109,7 @@ class MusicPlayerService: Service() {
                 it
             )
         }
+        ExecMusicPlay.init()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

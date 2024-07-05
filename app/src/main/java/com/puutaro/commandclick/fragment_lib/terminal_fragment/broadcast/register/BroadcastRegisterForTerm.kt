@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register
 
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 

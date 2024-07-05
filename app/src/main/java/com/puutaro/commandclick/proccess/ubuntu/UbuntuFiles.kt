@@ -21,6 +21,7 @@ class UbuntuFiles(
         const val ubuntuEnvTsvName = "ubuntu_env.tsv"
         const val supportDirName = "support"
         const val startupFilePath = "/${supportDirName}/startup.sh"
+        const val extractAudioStreamingUrlShellName = "extract_audio_streaming_url.sh"
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir
@@ -39,6 +40,8 @@ class UbuntuFiles(
     val filesOneRootfs = File("${filesDir}/1/rootfs")
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
+    val extractAudioStreamingUrlShell =
+        File(filesOneRootfsSupportDir.absolutePath, extractAudioStreamingUrlShellName)
     val filesOneRootfsSupportProcDir =
         File("${filesOneRootfsSupportDir.absolutePath}/proc")
     val filesOneRootfsSupportCmdDir =

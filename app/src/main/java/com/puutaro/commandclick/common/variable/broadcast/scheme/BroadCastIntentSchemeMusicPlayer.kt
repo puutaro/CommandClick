@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent.scheme
+package com.puutaro.commandclick.common.variable.broadcast.scheme
 
 enum class BroadCastIntentSchemeMusicPlayer(
     val action: String,

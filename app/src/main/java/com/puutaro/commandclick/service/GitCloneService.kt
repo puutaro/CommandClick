@@ -12,8 +12,8 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeGitClone
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeGitClone
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables

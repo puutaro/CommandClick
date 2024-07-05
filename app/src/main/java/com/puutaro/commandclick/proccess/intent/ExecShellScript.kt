@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable

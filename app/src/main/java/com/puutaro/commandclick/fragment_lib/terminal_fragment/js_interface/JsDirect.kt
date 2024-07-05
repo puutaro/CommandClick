@@ -3,8 +3,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import androidx.core.content.ContextCompat
-import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
-import com.puutaro.commandclick.common.variable.intent.extra.FileUploadExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.FileDownloadExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.FileUploadService

@@ -8,6 +8,7 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -124,14 +125,14 @@ class JsToListMap(
             shellOutput: String?
         ): List<String> {
             val concurrentLimit = 50
-            val semaphore: Semaphore = Semaphore(concurrentLimit)
+            val semaphore = Semaphore(concurrentLimit)
             val listSize = mapSrcLinesList.size
             val channel = Channel<Pair<Int, String>>(listSize)
             val receiveLineMapList = mutableListOf<Pair<Int, String>>()
             runBlocking {
-                launch {
-                    mapSrcLinesList.forEachIndexed {
-                            index, line ->
+                val jobList = mapSrcLinesList.mapIndexed {
+                        index, line ->
+                    async {
                         semaphore.withPermit {
                             val lineWithRemove = FilterAndMapModule.applyRemoveRegex(
                                 line,
@@ -146,27 +147,26 @@ class JsToListMap(
                                 lineWithCompPrefix,
                                 compSuffixList
                             )
-                            val lineByShell = FilterAndMapModule.ShellResultForToList.getResultByShell(
-                                busyboxExecutor,
-                                lineWithCompSuffix,
-                                shellArgsMapSrc,
-                                shellCon,
-                                shellOutput
-                            )
+                            val lineByShell =
+                                FilterAndMapModule.ShellResultForToList.getResultByShell(
+                                    busyboxExecutor,
+                                    lineWithCompSuffix,
+                                    shellArgsMapSrc,
+                                    shellCon,
+                                    shellOutput
+                                )
                             // Channelに文字列を送信
                             channel.send(
                                 Pair(index, lineByShell)
                             )
                         }
                     }
-                    channel.close()
                 }
-
-                launch {
-                    for (received in channel){
-                        // Channelから受信
-                        receiveLineMapList.add(received)
-                    }
+                jobList.forEach { it.await() }
+                channel.close()
+                for (received in channel){
+                    // Channelから受信
+                    receiveLineMapList.add(received)
                 }
             }
             receiveLineMapList.sortBy { it.first }

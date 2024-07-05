@@ -1,8 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment

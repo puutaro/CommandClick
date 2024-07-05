@@ -8,11 +8,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.BuildConfig
-import com.puutaro.commandclick.common.variable.intent.extra.MusicPlayerIntentExtra
-import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.MusicPlayerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.broadcast.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadCastSenderSchemaForCommon

@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.service.lib.file_download
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType

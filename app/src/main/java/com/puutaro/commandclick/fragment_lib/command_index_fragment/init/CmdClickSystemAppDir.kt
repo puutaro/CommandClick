@@ -115,16 +115,16 @@ object CmdClickSystemAppDir {
                 curVersion.isNullOrEmpty()
                         || curVersion != assetsVersion
             val isNotUpdate = !isUpdate
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "cmdclickconfigVer.txt").absolutePath,
-                listOf(
-                    "curVersionFilePath: ${curVersionFilePath}",
-                    "curVersion : ${curVersion}",
-                    "assetsVersionFilePath: ${assetsVersionFilePath}",
-                    "assetsVersion: ${assetsVersion}",
-                    "isNotUpdate: ${isNotUpdate}"
-                ).joinToString("\n\n")
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "cmdclickconfigVer.txt").absolutePath,
+//                listOf(
+//                    "curVersionFilePath: ${curVersionFilePath}",
+//                    "curVersion : ${curVersion}",
+//                    "assetsVersionFilePath: ${assetsVersionFilePath}",
+//                    "assetsVersion: ${assetsVersion}",
+//                    "isNotUpdate: ${isNotUpdate}"
+//                ).joinToString("\n\n")
+//            )
             if (isNotUpdate) return
             assetsVersion?.let {
                 FileSystems.writeFile(

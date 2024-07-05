@@ -8,8 +8,8 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeGitDownload
+import com.puutaro.commandclick.common.variable.broadcast.extra.GitDownloadExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeGitDownload
 import com.puutaro.commandclick.proccess.qr.OnGitKey
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance

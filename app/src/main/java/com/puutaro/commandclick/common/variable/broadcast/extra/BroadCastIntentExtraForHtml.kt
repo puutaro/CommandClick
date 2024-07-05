@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent.extra
+package com.puutaro.commandclick.common.variable.broadcast.extra
 
 enum class BroadCastIntentExtraForHtml(
     val scheme: String

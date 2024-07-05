@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 
 import android.content.Intent
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForMonitorManager
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForMonitorManager
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel

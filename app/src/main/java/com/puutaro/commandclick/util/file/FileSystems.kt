@@ -443,11 +443,14 @@ object FileSystems {
             && !isOverride
         ) {
             true -> {
-                val fileName = destiFilePathObjSrc.name
-                val fileRawName = CcPathTool.makeFannelRawName(fileName)
-                val extend = CcPathTool.subExtend(destiFilePathObjSrc.name)
-                "${destiFileDirPath}/" +
-                        "${fileRawName}_${CommandClickScriptVariable.makeCopyPrefix()}${extend}"
+                CcPathTool.makeRndSuffixFilePath(
+                    destiFilePathObjSrc.absolutePath
+                )
+//                val fileName = destiFilePathObjSrc.name
+//                val fileRawName = CcPathTool.makeFannelRawName(fileName)
+//                val extend = CcPathTool.subExtend(destiFilePathObjSrc.name)
+//                "${destiFileDirPath}/" +
+//                        "${fileRawName}_${CommandClickScriptVariable.makeCopyPrefix()}${extend}"
             }
             else ->
                 destiFilePathObjSrc.absolutePath

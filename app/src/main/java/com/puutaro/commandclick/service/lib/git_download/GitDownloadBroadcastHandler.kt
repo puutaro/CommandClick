@@ -1,9 +1,8 @@
 package com.puutaro.commandclick.service.lib.git_download
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeGitDownload
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeGitDownload
 import com.puutaro.commandclick.service.GitDownloadService
-import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadLabels
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadStatus
 

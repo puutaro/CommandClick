@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.intent
 import android.content.Context
 import android.content.Intent
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.map.CmdClickMap
 

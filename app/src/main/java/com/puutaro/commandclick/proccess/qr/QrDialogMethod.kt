@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import coil.load
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.extra.FileUploadExtra
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType

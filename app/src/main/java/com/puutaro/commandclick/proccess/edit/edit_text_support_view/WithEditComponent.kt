@@ -10,7 +10,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.file_download
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeFileDownload
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeFileDownload
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadStatus

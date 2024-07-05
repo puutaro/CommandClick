@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.file_upload
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeFileUpload
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeFileUpload
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.service.lib.file_upload.libs.FileUploadLabels
 import com.puutaro.commandclick.service.lib.file_upload.libs.FileUploadStatus

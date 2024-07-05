@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent.extra
+package com.puutaro.commandclick.common.variable.broadcast.extra
 
 enum class UbuntuServerIntentExtra(
     val schema: String
@@ -12,6 +12,7 @@ enum class UbuntuServerIntentExtra(
     backgroundShellPath("shell_path"),
     backgroundArgsTabSepaStr("cmd_args_tab_sepa_str"),
     backgroundMonitorFileName("monitorFileName"),
+    backgroundResFilePath("backgroundResFilePath"),
     fannelDirPath("fannelDirPath"),
     fannelName("fannelName"),
     foregroundShellPath("shell_path"),

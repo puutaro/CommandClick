@@ -2,7 +2,7 @@ package com.puutaro.commandclick.common.variable
 
 import TsvImportManager
 import android.content.Context
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsFileSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder

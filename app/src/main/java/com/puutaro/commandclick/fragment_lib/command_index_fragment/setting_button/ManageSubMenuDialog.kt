@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.ListView
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment

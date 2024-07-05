@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent.extra
+package com.puutaro.commandclick.common.variable.broadcast.extra
 
 enum class BroadCastIntentExtraForMonitorManager(
     val scheme: String

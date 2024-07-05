@@ -22,7 +22,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects

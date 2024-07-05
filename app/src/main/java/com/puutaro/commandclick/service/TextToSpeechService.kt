@@ -12,8 +12,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTextToSpeech
-import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTextToSpeech
+import com.puutaro.commandclick.common.variable.broadcast.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.variant.Translate
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables

@@ -478,7 +478,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
             "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath,
             "UBUNTU_ENV_TSV_NAME" to UbuntuFiles.ubuntuEnvTsvName,
-            "UBUNTU_SERVICE_TEMP_DIR_PATH" to UsePath.cmdclickTempUbuntuServiceDirPath
+            "UBUNTU_SERVICE_TEMP_DIR_PATH" to UsePath.cmdclickTempUbuntuServiceDirPath,
         )
     }
 

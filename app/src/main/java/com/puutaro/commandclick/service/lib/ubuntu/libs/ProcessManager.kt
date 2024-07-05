@@ -3,7 +3,7 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService

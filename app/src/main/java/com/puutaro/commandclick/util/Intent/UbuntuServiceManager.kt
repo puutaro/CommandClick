@@ -1,11 +1,14 @@
 package com.puutaro.commandclick.util.Intent
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
@@ -67,32 +70,59 @@ object UbuntuServiceManager {
         }
     }
 
+
+    fun launchByNoCoroutine(context: Context?): Boolean {
+        if(
+            context == null
+        ) return false
+        val ubuntuFiles = UbuntuFiles(context)
+        if(
+            !ubuntuFiles.ubuntuSetupCompFile.isFile
+        ) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(
+                    context,
+                    "Setup ubuntu",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            return  false
+        }
+        val isBasicProcess =
+            LinuxCmd.isBasicProcess(context)
+        if(
+            isBasicProcess
+        ) return true
+        launch(context)
+        return true
+    }
+
     fun launch(
-        activity: Activity?,
+        context: Context?,
     ){
-        if(activity == null) return
+        if(context == null) return
         val intent = Intent(
-            activity,
+            context,
             UbuntuService::class.java
         )
-        killAllProcess(activity)
+        killAllProcess(context)
         intent.putExtra(UbuntuServerIntentExtra.ubuntuStartCommand.schema, "on")
         CoroutineScope(Dispatchers.IO).launch{
             withContext(Dispatchers.IO){
-                activity.stopService(intent)
+                context.stopService(intent)
                 delay(300)
             }
             withContext(Dispatchers.IO){
-                ContextCompat.startForegroundService(activity, intent)
+                ContextCompat.startForegroundService(context, intent)
             }
         }
     }
 
 
     private fun killAllProcess(
-        activity: Activity?
+        context: Context?
     ){
-        if(activity == null) return
-        LinuxCmd.killProcess(activity)
+        if(context == null) return
+        LinuxCmd.killProcess(context)
     }
 }

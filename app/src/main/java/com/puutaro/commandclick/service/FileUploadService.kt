@@ -8,8 +8,8 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.intent.extra.FileUploadExtra
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeFileUpload
+import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeFileUpload
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance

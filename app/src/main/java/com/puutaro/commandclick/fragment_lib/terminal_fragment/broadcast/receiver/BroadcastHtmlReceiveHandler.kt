@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForUrl
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForUrl
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager.TxtHtmlLauncher

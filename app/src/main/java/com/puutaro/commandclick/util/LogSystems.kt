@@ -2,7 +2,7 @@ package com.puutaro.commandclick.util
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.util.file.FileSystems

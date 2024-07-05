@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.music_player
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.libs.ExecMusicPlay

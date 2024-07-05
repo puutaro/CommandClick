@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent.extra
+package com.puutaro.commandclick.common.variable.broadcast.extra
 
 
 object BroadCastIntentExtraForJsDebug {
@@ -17,7 +17,7 @@ object BroadCastIntentExtraForJsDebug {
         HIGH("high"),
     }
 
-    private val clickBellowButtonMsg = "click bellow button"
+    private const val clickBellowButtonMsg = "click bellow button"
 
     enum class DebugGenre(
         val type: String,

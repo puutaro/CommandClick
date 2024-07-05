@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
@@ -201,7 +201,7 @@ object MusicPlayerMaker {
         )
     }
 
-    fun stop(
+    private fun stop(
         musicPlayerService: MusicPlayerService
     ){
         setStateSetInitDoing()

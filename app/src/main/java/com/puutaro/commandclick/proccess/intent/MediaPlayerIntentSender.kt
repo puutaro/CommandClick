@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.intent
 import android.content.Context
 import android.content.Intent
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.intent.extra.MusicPlayerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.MusicPlayerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.util.file.FileSystems

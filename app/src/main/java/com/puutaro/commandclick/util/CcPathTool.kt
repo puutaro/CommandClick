@@ -8,6 +8,21 @@ import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object CcPathTool {
+
+    fun makeRndSuffixFilePath(path: String): String {
+        val filePathObj = File(path)
+        val fileName = filePathObj.name
+        val fileRawName = makeFannelRawName(fileName)
+        val extend = subExtend(fileName)
+        val parentDirPath = filePathObj.parent
+        val rndFileName =
+            "${fileRawName}_${CommandClickScriptVariable.makeCopyPrefix()}${extend}"
+        return when(parentDirPath.isNullOrEmpty()){
+            true -> rndFileName
+            else -> "${parentDirPath}/" +
+                    rndFileName
+        }
+    }
     fun makeFannelDirName(
         fannelNameSrc: String
     ): String {

@@ -1,24 +1,50 @@
 package com.puutaro.commandclick.service.lib.music_player.libs
 
-import com.maxrave.kotlinyoutubeextractor.State
-import com.maxrave.kotlinyoutubeextractor.YTExtractor
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
+import android.content.Context
+import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.time.LocalDateTime
 
-
-private val queryStr = "?v="
 
 object ExecMusicPlay {
+
+    private const val queryStr = "?v="
+
+    fun init(){
+        FileSystems.removeAndCreateDir(
+            UsePath.mediaPlayerServiceStreamingDirPath
+        )
+    }
+
+    fun exit(context: Context){
+        AudioStreamingUrlExtractor.exit(context)
+    }
 
     fun playHandler(
         musicPlayerService: MusicPlayerService,
@@ -26,8 +52,16 @@ object ExecMusicPlay {
         playIndex: Int,
         fileListConBeforePlayMode: String,
     ){
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "music_last.txt").absolutePath,
+//            listOf(
+//                "musicPlayerService.currentTrackIndex: ${musicPlayerService.currentTrackIndex}",
+//                "playList.lastIndex: ${playList.lastIndex}",
+//                "isOver: ${musicPlayerService.currentTrackIndex >= playList.lastIndex}"
+//            ).joinToString("\n")
+//        )
         musicPlayerService.notiSetter?.setOnStop()
-        val isYtUrl = judgeYtUri(
+        val isStreamingUrl = judgeStreamingUri(
             playList,
             playIndex
         ) ?: return
@@ -45,13 +79,13 @@ object ExecMusicPlay {
 //        )
         launchLoadingNoti(
             musicPlayerService,
-            isYtUrl,
+            isStreamingUrl,
             playList,
             playIndex,
         )
         musicPlayerService.execPlayJob?.cancel()
-        musicPlayerService.execPlayJob = when(isYtUrl){
-            true -> playByYtExtract(
+        musicPlayerService.execPlayJob = when(isStreamingUrl){
+            true -> playByStreamingUrLExtract(
                     musicPlayerService,
                     playList,
                     playIndex,
@@ -65,7 +99,7 @@ object ExecMusicPlay {
         }
     }
 
-    private fun playByYtExtract(
+    private fun playByStreamingUrLExtract(
         musicPlayerService: MusicPlayerService,
         playList: List<String>,
         playIndex: Int,
@@ -75,7 +109,7 @@ object ExecMusicPlay {
             val uri = withContext(Dispatchers.IO){
                 playList.getOrNull(playIndex)
             } ?: return@launch
-            val yt = withContext(Dispatchers.IO) {
+            val stUrlMapToPreloadJob = withContext(Dispatchers.IO) {
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "musicExecPlay_yt.txt").absolutePath,
 //                    listOf(
@@ -84,14 +118,18 @@ object ExecMusicPlay {
 //                        "playIndex: ${playIndex}",
 //                    ).joinToString("\n")
 //                )
-                YtExtractorMaker.make(
-                    musicPlayerService,
+                AudioStreamingUrlExtractor.extractController(
+                    context,
                     uri,
+                    playList,
+                    playIndex,
+                    musicPlayerService.streamingPreloadFileMakeJob,
                 )
             }
+            musicPlayerService.streamingPreloadFileMakeJob = stUrlMapToPreloadJob.second
+            val streamingUrlMap = stUrlMapToPreloadJob.first
             if(
-                yt == null
-                || yt.state != State.SUCCESS
+                streamingUrlMap.isNullOrEmpty()
             ) {
                 LogSystems.stdWarn(
                     "extract failure"
@@ -102,16 +140,9 @@ object ExecMusicPlay {
                 )
                 return@launch
             }
-            val videoMeta = withContext(Dispatchers.IO) {
-                yt.getVideoMeta()
-            }
-            val ytFiles = withContext(Dispatchers.IO) {
-                yt.getYTFiles()
-            } ?: return@launch
-            val ytFile = withContext(Dispatchers.IO) {
-                ytFiles.get(251)
-            }
-            val uriTitle = videoMeta?.title ?: String()
+            val uriTitle = streamingUrlMap.get(
+                AudioStreamingUrlExtractor.AudioStreamingKey.TITLE.key
+            ) ?: String()
             withContext(Dispatchers.IO) {
                 launchLoadingNoti(
                     musicPlayerService,
@@ -122,7 +153,9 @@ object ExecMusicPlay {
                 )
             }
             withContext(Dispatchers.IO) {
-                val videoLength = videoMeta?.videoLength
+                val videoLength = streamingUrlMap.get(
+                    AudioStreamingUrlExtractor.AudioStreamingKey.DURATION.key
+                )
                 musicPlayerService.currentTrackLength =
                     when (videoLength == null) {
                         true -> 0
@@ -132,7 +165,17 @@ object ExecMusicPlay {
                     }
             }
             withContext(Dispatchers.IO) {
-                ytFile.url?.let {
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "vAudio_url.txt").absolutePath,
+//                    listOf(
+//                        "stUrl: ${streamingUrlMap.get(
+//                            AudioStreamingUrlExtractor.AudioStreamingKey.STREAMING_URL.key
+//                        )}",
+//                    ).joinToString("\n")
+//                )
+                streamingUrlMap.get(
+                    AudioStreamingUrlExtractor.AudioStreamingKey.STREAMING_URL.key
+                )?.let {
                     execPlay(
                         musicPlayerService,
                         it,
@@ -194,9 +237,6 @@ object ExecMusicPlay {
             LogSystems.stdWarn("musicPlayer null")
             return
         }
-//        val url = "http://137.110.92.231/~chenyu/BBC.mp4"
-//        https://www.youtube.com/watch?v=5c1F8FzPfz8
-//            .setAudioStreamType(AudioManager.STREAM_MUSIC)
         try {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "musicPlay.txt").absolutePath,
@@ -230,7 +270,7 @@ object ExecMusicPlay {
         }
     }
 
-    private fun judgeYtUri(
+    private fun judgeStreamingUri(
         playList: List<String>,
         playIndex: Int,
     ): Boolean? {
@@ -281,49 +321,441 @@ object ExecMusicPlay {
 }
 
 
-private object YtExtractorMaker {
+private object AudioStreamingUrlExtractor {
 
-    suspend fun make(
-        musicPlayerService: MusicPlayerService,
-        url: String,
-    ): YTExtractor? {
-        val context = musicPlayerService.applicationContext
-        if(context == null) return null
-//        musicPlayerService.currentTrackIndex =
-//            playList.indexOf(url)
-        //If your YouTube link is "https://www.youtube.com/watch?v=IDwytT0wFRM" so this videoId is "IDwytT0wFRM"
-        val videoId =
-            extractYtVideoId(url)
-                ?: return null
-        val yt = YTExtractor(
-            con = context,
-            CACHING = true,
-            LOGGING = true,
-            retryCount = 3
+    private var execPreloadJobJobList: List<Deferred<Unit>> = listOf()
+    private const val preloadNum = 30
+//    private val channel = Channel<Pair<Int, Map<String, String>>>(preloadNum)
+    private const val pastLoadNum = 10
+    private const val mapLineLimit = preloadNum + pastLoadNum
+
+    private val mediaPlayerServiceStreamingPreloadTxtPath =
+        UsePath.mediaPlayerServiceStreamingPreloadTxtPath
+//    private var firstExtract = false
+
+//    fun setFirstExtractFalse(){
+//        firstExtract = false
+//    }
+//    private fun setFirstExtractTrue(){
+//        firstExtract = true
+//    }
+    fun exit(context: Context){
+        execPreloadJobJobList.forEach {
+            it.cancel()
+        }
+//        channel.close()
+        BroadcastSender.normalSend(
+            context,
+            BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
+            listOf(
+                UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema to
+                        CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingUrlShellName)
+            )
         )
-// CACHING and LOGGING are 2 optional params. LOGGING is for showing Log and CACHING is for saving SignatureCipher to optimize extracting time (not recommend CACHING to extract multiple videos because it causes HTTP 403 Error)
-// retryCount is for retrying when extract fail (default is 1)
-        yt.extract(videoId)
-        return yt
-        //Get stream URL
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "music.txt").absolutePath,
-//                listOf(
-//                    "title: ${videoMeta?.title}",
-//                    "videoId: ${videoId}",
-//                    "videoLength: ${videoMeta?.videoLength}",
-//                    "viewCount: ${videoMeta?.author}",
-//                    "channelId: ${videoMeta?.channelId}",
-//                ).joinToString("\n")
-//            )
     }
 
-    private fun extractYtVideoId(
+    suspend fun extractController(
+        context: Context,
+        url: String,
+        playList: List<String>,
+        playIndex: Int,
+        streamingPreloadFileMakeJob: Job?,
+    ): Pair<Map<String, String>?, Job?>{
+        val audioStreamingUrlMap = extractOneMap(
+            context,
+            url
+        )
+        val lastIndex = playList.lastIndex
+        if(
+            playIndex >= lastIndex
+        ) return audioStreamingUrlMap to null
+        return audioStreamingUrlMap to
+                StPreloadFileMakeJob.handle(
+                    context,
+                    playList,
+                    playIndex,
+                    streamingPreloadFileMakeJob,
+                )
+    }
+
+    private object StPreloadFileMakeJob {
+
+        fun handle(
+            context: Context,
+            playList: List<String>,
+            playIndex: Int,
+            streamingPreloadFileMakeJob: Job?,
+        ): Job? {
+            return when(
+                streamingPreloadFileMakeJob?.isActive == true
+            ) {
+                true -> streamingPreloadFileMakeJob
+                else -> execute(
+                    context,
+                    playList,
+                    playIndex,
+                )
+            }
+        }
+        private fun execute(
+            context: Context,
+            playList: List<String>,
+            playIndex: Int,
+        ): Job {
+            return CoroutineScope(Dispatchers.IO).launch {
+                val isNotPreload = withContext(Dispatchers.IO) {
+                    !judgePreload(
+                        playList,
+                        playIndex,
+                    )
+                }
+                if (
+                    isNotPreload
+                ) return@launch
+                val preLoadUrlList = withContext(Dispatchers.IO) {
+                    playList.filterIndexed { index, _ ->
+                        playIndex <= index && index <= playIndex + preloadNum
+                    }
+                }
+//                withContext(Dispatchers.IO){
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "preload_execute.txt").absolutePath,
+//                        listOf(
+//                            "isNotPreload: ${isNotPreload}",
+//                            "preLoadUrlList: ${preLoadUrlList}",
+//                        ).joinToString("\n")
+//                    )
+//                }
+                val preloadStUrlMapList = withContext(Dispatchers.IO) {
+                    extractByLoop(
+                        context,
+                        preLoadUrlList,
+                        UsePath.mediaPlayerServiceStreamingPreloadShellDirPath,
+                        UsePath.mediaPlayerServiceStreamingPreloadShellOutDirPath,
+                    ).sortedBy {
+                        it.first
+                    }.map {
+                        it.second
+                    }
+                }
+                withContext(Dispatchers.IO) {
+                    saveMapToPreloadFile(preloadStUrlMapList)
+                }
+            }
+        }
+    }
+
+    private fun judgePreload(
+        playList: List<String>,
+        playIndex: Int,
+    ): Boolean {
+        val searchEndPlayIndex = playIndex + 5
+        for (i in playIndex..searchEndPlayIndex) {
+            val searchUrl = playList.getOrNull(i)
+            if (
+                searchUrl.isNullOrEmpty()
+            ) {
+                return false
+            }
+            val hitStUrlMapCon = findStUrlMapConFromPreloadFileByUrl(searchUrl)
+            if (
+                hitStUrlMapCon.isNullOrEmpty()
+            ) return true
+        }
+       return false
+    }
+
+    private suspend fun extractOneMap(
+        context: Context,
+        url: String
+    ): Map<String, String>? {
+        val existStreamingUrlMapCon =
+            findStUrlMapConFromPreloadFileByUrl(url)
+        if(
+            !existStreamingUrlMapCon.isNullOrEmpty()
+        ) {
+            val existStreamingUrlMap = CmdClickMap.createMap(
+                existStreamingUrlMapCon,
+                '\t'
+            ).toMap()
+            saveMapToPreloadFile(
+                listOf(existStreamingUrlMap)
+            )
+            return existStreamingUrlMap
+        }
+        val newStreamingUrlMap = extractByLoop(
+            context,
+            listOf(url),
+            UsePath.mediaPlayerServiceStreamingShellDirPath,
+            UsePath.mediaPlayerServiceStreamingShellOutDirPath
+        ).firstOrNull()?.second
+        if(
+            newStreamingUrlMap.isNullOrEmpty()
+        ) return null
+        saveMapToPreloadFile(
+            listOf(newStreamingUrlMap)
+        )
+        return newStreamingUrlMap
+
+    }
+
+
+    private fun findStUrlMapConFromPreloadFileByUrl(
         url: String,
     ): String? {
-        return url.split(queryStr)
-            .lastOrNull()
-            ?.split("&")
-            ?.firstOrNull()
+        val srcUrlKey = AudioStreamingKey.SRC_URL.key
+        return ReadText(mediaPlayerServiceStreamingPreloadTxtPath)
+            .textToList()
+            .firstOrNull {
+                it.contains("${srcUrlKey}=${url}")
+            }
     }
+
+    private fun saveMapToPreloadFile(
+        insertStUrlMapList: List<Map<String, String>,>
+    ){
+        val insertMapLineList = insertStUrlMapList.map{
+            it.toSortedMap().map {
+                "${it.key}=${it.value}"
+            }.joinToString("\t")
+        }
+        val existPreloadMapFileCon =
+            ReadText(mediaPlayerServiceStreamingPreloadTxtPath)
+                .textToList()
+                .filter {
+                    !insertMapLineList.contains(it)
+                }
+        val preloadStUrlMapListSrc =
+            insertMapLineList +
+                    existPreloadMapFileCon
+        val preloadStUrlMapList =
+            preloadStUrlMapListSrc
+                .take(mapLineLimit)
+                .joinToString("\n")
+        FileSystems.writeFile(
+            mediaPlayerServiceStreamingPreloadTxtPath,
+            preloadStUrlMapList
+        )
+
+    }
+
+    private suspend fun extractByLoop(
+        context: Context,
+        urlList: List<String>,
+        shellDirPath: String,
+        shellOutDirPath: String,
+    ): List<Pair<Int, Map<String, String>>> {
+        val isNotLaunch = !UbuntuServiceManager.launchByNoCoroutine(
+            context
+        )
+        if(isNotLaunch){
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeMusicPlayer.DESTROY_MUSIC_PLAYER.action,
+            )
+            return emptyList()
+        }
+        for(i in 1..100){
+            delay(100)
+            val isBasicProcess = LinuxCmd.isBasicProcess(context)
+            if(isBasicProcess) break
+        }
+        val concurrentLimit = 5
+        val semaphore = Semaphore(concurrentLimit)
+        val loopTimes = urlList.size
+        val stUrlMapChannel = Channel<Pair<Int, Map<String, String>>>(loopTimes)
+        val receiveMapList = mutableListOf<Pair<Int, Map<String, String>>>()
+        val ubuntuFiles = UbuntuFiles(context)
+        val extractAudioStreamingUrlShellPathObj =
+            ubuntuFiles.extractAudioStreamingUrlShell
+//        withContext(Dispatchers.IO){
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "preload_extractByLoop00.txt").absolutePath,
+//                listOf(
+//                    "isNotLaunch: ${isNotLaunch}",
+//                    "urlList: ${urlList}",
+//                ).joinToString("\n")
+//            )
+//        }
+
+        withContext(Dispatchers.IO){
+            execPreloadJobJobList = urlList.mapIndexed { index, url ->
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "preload_extractByLoop.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}",
+//                        "isNotLaunch: ${isNotLaunch}",
+//                        "urlList: ${urlList}",
+//                    ).joinToString("\n")
+//                )
+                async {
+                    semaphore.withPermit {
+                        execExtractByLoop(
+                            context,
+                            url,
+                            index,
+                            extractAudioStreamingUrlShellPathObj,
+                            shellDirPath,
+                            shellOutDirPath,
+                            stUrlMapChannel
+                        )
+                    }
+                }
+            }
+            execPreloadJobJobList.forEach { it.await() }
+            stUrlMapChannel.close()
+            var indexCount = 1
+            for (rowNumToLine in stUrlMapChannel){
+//                FileSystems.updateFile(
+//                    File(
+//                        UsePath.cmdclickDefaultAppDirPath,
+//                        "prelaod_foreach_channel.txt"
+//                    ).absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}",
+//                        "indexCount: ${indexCount}",
+//                        "rowNumToLine: ${rowNumToLine}",
+//                    ).joinToString("\n\n")
+//                )
+                indexCount++
+                // Channelから受信
+                receiveMapList.add(rowNumToLine)
+            }
+        }
+
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "prelaod.txt").absolutePath,
+//            listOf("newStreamingUrlMap: ${receiveMapList}").joinToString("\n\n")
+//        )
+        return receiveMapList
+    }
+
+    private suspend fun execExtractByLoop(
+        context: Context?,
+        url: String,
+        index: Int,
+        extractAudioStreamingUrlShellPathObj: File,
+        shellDirPath: String,
+        shellOutDirPath: String,
+        stUrlMapChannel: Channel<Pair<Int, Map<String, String>>>
+    ){
+//        FileSystems.writeFileToDirByTimeStamp(
+//            File(UsePath.cmdclickDefaultAppDirPath, "preload_extractByLoop").absolutePath,
+//            listOf(
+//                "isNotLaunch: ${isNotLaunch}",
+//                "urlList: ${urlList}",
+//            ).joinToString("\n")
+//        )
+        val existStreamingUrlMap =
+            withContext(Dispatchers.IO) {
+                findStUrlMapConFromPreloadFileByUrl(url)?.let {
+                    CmdClickMap.createMap(
+                        it,
+                        '\t'
+                    ).toMap()
+                }
+            }
+//        withContext(Dispatchers.IO) {
+//            FileSystems.updateFile(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+////                                    "prelaod_foreach.txt"
+//                ).absolutePath,
+//                listOf(
+//                    "index: ${index}",
+//                    "url: ${url}",
+//                    "existStreamingUrlMap: ${existStreamingUrlMap}",
+////                    "urlList: ${urlList}"
+//                ).joinToString("\n\n")
+//            )
+//        }
+        if(
+            !existStreamingUrlMap.isNullOrEmpty()
+        ) {
+            stUrlMapChannel.send(
+                Pair(index, existStreamingUrlMap)
+            )
+            return
+        }
+        val extractAudioStreamingUrlShellName =
+            withContext(Dispatchers.IO) {
+                CcPathTool.makeRndSuffixFilePath(
+                    extractAudioStreamingUrlShellPathObj.name
+                )
+            }
+        val extractAudioStreamingUrlShellPathInMusic =
+            withContext(Dispatchers.IO) {
+                File(
+                    shellDirPath,
+                    extractAudioStreamingUrlShellName
+                ).absolutePath
+            }
+        withContext(Dispatchers.IO) {
+            FileSystems.createDirs(
+                shellDirPath
+            )
+            FileSystems.copyFile(
+                extractAudioStreamingUrlShellPathObj.absolutePath,
+                extractAudioStreamingUrlShellPathInMusic
+            )
+        }
+        val resFilePath = withContext(Dispatchers.IO) {
+                CcPathTool.trimAllExtend(extractAudioStreamingUrlShellName).let {
+                    File(shellOutDirPath, "${it}Res.txt").absolutePath
+                }
+            }
+        withContext(Dispatchers.IO) {
+            FileSystems.createDirs(
+                shellOutDirPath
+            )
+        }
+        withContext(Dispatchers.IO) {
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
+                listOf(
+                    UbuntuServerIntentExtra.backgroundShellPath.schema to
+                            extractAudioStreamingUrlShellPathInMusic,
+                    UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema to
+                            url,
+                    UbuntuServerIntentExtra.backgroundResFilePath.schema to
+                            resFilePath
+                )
+            )
+        }
+        withContext(Dispatchers.IO) {
+            for (i in 1..200) {
+                delay(100)
+                if (
+                    File(resFilePath).isFile
+                ) break
+            }
+        }
+        val audioStreamingMap =
+            withContext(Dispatchers.IO) {
+                ReadText(resFilePath).readText().let {
+                    CmdClickMap.createMap(
+                        it,
+                        '\t'
+                    ).toMap()
+                }
+            }
+        withContext(Dispatchers.IO) {
+            stUrlMapChannel.send(
+                Pair(index, audioStreamingMap)
+            )
+        }
+    }
+
+    enum class AudioStreamingKey (
+        val key: String,
+    ){
+        SRC_URL("src_url"),
+        CHANNEL("channel"),
+        DURATION("duration"),
+        TITLE("title"),
+        STREAMING_URL("streaming_url"),
+
+    }
+
 }

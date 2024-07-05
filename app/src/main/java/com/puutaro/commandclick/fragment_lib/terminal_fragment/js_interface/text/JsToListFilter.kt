@@ -9,6 +9,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.RegexTool
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -156,14 +157,14 @@ class JsToListFilter(
         ): List<String> {
             val notInsertMark = "\${CMDCLICK_NOT_INSERT}"
             val concurrentLimit = 50
-            val semaphore: Semaphore = Semaphore(concurrentLimit)
+            val semaphore = Semaphore(concurrentLimit)
             val listSize = mapSrcLinesList.size
             val channel = Channel<Pair<Int, String>>(listSize)
             val receiveLineMapList = mutableListOf<Pair<Int, String>>()
             runBlocking {
-                launch {
-                    mapSrcLinesList.forEachIndexed {
-                            index, line ->
+                val jobList = mapSrcLinesList.mapIndexed {
+                        index, line ->
+                    async{
                         semaphore.withPermit {
                             val lineWithRemove = FilterAndMapModule.applyRemoveRegex(
                                 line,
@@ -213,14 +214,12 @@ class JsToListFilter(
                             )
                         }
                     }
-                    channel.close()
                 }
-
-                launch {
-                    for (rowNumToLine in channel){
-                        // Channelから受信
-                        receiveLineMapList.add(rowNumToLine)
-                    }
+                jobList.forEach { it.await() }
+                channel.close()
+                for (rowNumToLine in channel){
+                    // Channelから受信
+                    receiveLineMapList.add(rowNumToLine)
                 }
             }
             val rowNumToLineFilterList = receiveLineMapList.filter {

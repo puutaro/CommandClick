@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForHtml
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForHtml
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.map.CmdClickMap
 

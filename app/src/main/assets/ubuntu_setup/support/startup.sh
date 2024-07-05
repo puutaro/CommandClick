@@ -188,7 +188,6 @@ install_golang_and_go_package(){
 	esac
 	go version
 	go install github.com/msoap/shell2http@latest
-	# go install github.com/skanehira/rtty@latest
 	export GOPATH=\$HOME/go
 	export GOBIN=\$GOPATH/bin
 	export PATH=\$PATH:\$GOBIN
@@ -337,6 +336,7 @@ install_base_pkg(){
 	apt-get update -y && apt-get upgrade -y
 	install_require_pacakges
 	install_pip3_pkg webssh
+	install_pip3_pkg yt-dlp
 	install_shell2http
 }
 
