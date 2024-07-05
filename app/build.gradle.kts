@@ -8,7 +8,7 @@ plugins {
 val applicationName = "CommandClick"
 val versionMajor = 1
 val versionMinor = 3
-val versionPatch = 14
+val versionPatch = 15
 
 android {
     namespace = "com.puutaro.commandclick"
@@ -27,7 +27,7 @@ android {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
         targetSdk = 33
-        versionCode = 75
+        versionCode = 76
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -140,8 +140,6 @@ dependencies {
 
     implementation("io.coil-kt:coil:2.4.0")
 //    implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
-//    implementation("io.github.junkfood02.youtubedl-android:library:0.16.0")
-//    implementation("io.github.junkfood02.youtubedl-android:ffmpeg:0.16.0")
     implementation("com.blankj:utilcodex:1.31.1")
 
 
