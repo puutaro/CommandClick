@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
@@ -119,7 +120,13 @@ object ProcessManager {
                 if(
                     currentDisplayMessage == shouldDisplayMessage
                 ) continue
-                ubuntuService.sendBroadcast(processNumUpdateIntent)
+                when(shouldDisplayProcessNum < 0) {
+                    true -> BroadcastSender.normalSend(
+                        ubuntuService,
+                        BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action
+                    )
+                    else -> ubuntuService.sendBroadcast(processNumUpdateIntent)
+                }
                 val processTypeList = makeProcessTypeList(ubuntuService)
                 FileSystems.writeFile(
                     File(
