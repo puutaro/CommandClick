@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -14,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.processNextEventInCurrentThread
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDateTime
@@ -71,6 +73,30 @@ object MusicPlayerMaker {
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build()
             )
+        mediaPlayer.setOnErrorListener {
+                mp, what, extra ->
+            if(
+                musicPlayerService.currentTrackIndex >= playList.lastIndex
+            ) {
+                musicPlayerService.notiSetter?.setOnStop()
+                return@setOnErrorListener true
+            }
+            when(what){
+                MediaPlayer.MEDIA_ERROR_UNKNOWN,
+                MediaPlayer.MEDIA_ERROR_SERVER_DIED,
+                MediaPlayer.MEDIA_ERROR_TIMED_OUT,
+                MediaPlayer.MEDIA_ERROR_UNSUPPORTED -> {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        ToastUtils.showShort("Next, because cannot read: ${what}")
+                    }
+                    BroadcastSender.normalSend(
+                        context,
+                        BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action,
+                    )
+                }
+            }
+            true
+        }
         mediaPlayer.setOnCompletionListener {
             if(
                 howPrepareState() != MusicPlayerState.PREPARE_DONE
@@ -216,7 +242,7 @@ object MusicPlayerMaker {
         val musicPrepareLog = "musicLog_releaseMediaPlayer_log.txt"
         FileSystems.updateFile(
             File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} releaseMediaPlayer"
+            "${LocalDateTime.now()} start releaseMediaPlayer"
         )
         if(
             musicPlayerService.mediaPlayer == null
@@ -226,7 +252,7 @@ object MusicPlayerMaker {
         musicPlayerService.mediaPlayer = null
         FileSystems.updateFile(
             File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} releaseMediaPlayer"
+            "${LocalDateTime.now()} end releaseMediaPlayer"
         )
     }
 
