@@ -139,6 +139,10 @@ object PcPulseSetServer {
             )
         }
         pcPulseSetServer = withContext(Dispatchers.IO) {
+            if (
+                pcPulseSetServer != null
+                && pcPulseSetServer?.isClosed != true
+            ) pcPulseSetServer?.close()
             ServerSocket(pcPulseSetServerPort)
         }
         enablePcPulseSetServerRoop = true

@@ -71,6 +71,10 @@ object PcPulseSetServerForUbuntu {
             } catch (e: Exception){
                 UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num
             }
+            if (
+                pcPulseSetServer != null
+                && pcPulseSetServer?.isClosed != true
+            ) pcPulseSetServer?.close()
             ServerSocket(ubuntuPcPulseSetServerPortInt)
         }
         enablePcPulseSetServerRoop = true

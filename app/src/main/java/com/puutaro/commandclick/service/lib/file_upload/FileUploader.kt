@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.FileUploadService
+import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.file.FileSystems
@@ -56,7 +57,10 @@ object CopyFannelServer {
     ){
         val context = fileUploadService.applicationContext
         withContext(Dispatchers.IO) {
-            fileUploadService.copyFannelSocket?.close()
+            if (
+                fileUploadService.copyFannelSocket != null
+                && fileUploadService.copyFannelSocket?.isClosed != true
+            ) fileUploadService.copyFannelSocket?.close()
         }
         fileUploadService.copyFannelSocket = withContext(Dispatchers.IO) {
             ServerSocket(UsePort.COPY_FANNEL_PORT.num)

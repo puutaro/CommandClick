@@ -74,7 +74,10 @@ object IntentRequestMonitor {
         val ubuntuLaunchCompFile = ubuntuFiles.ubuntuLaunchCompFile
 
         withContext(Dispatchers.IO) {
-            ubuntuService.intentMonitorServerSocket?.close()
+            if (
+                ubuntuService.intentMonitorServerSocket != null
+                && ubuntuService.intentMonitorServerSocket?.isClosed != true
+            ) ubuntuService.intentMonitorServerSocket?.close()
         }
         ubuntuService.intentMonitorServerSocket = withContext(Dispatchers.IO) {
             ServerSocket(UsePort.UBUNTU_INTENT_MONITOR_PORT.num)
