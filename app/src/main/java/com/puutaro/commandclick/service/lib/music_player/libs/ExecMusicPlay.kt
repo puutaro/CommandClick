@@ -337,12 +337,22 @@ private object AudioStreamingMapExtractor {
 //            context,
 //            CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingUrlShellName)
 //        )
+        killExtractProcess(
+            context,
+            CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingMapShellName)
+        )
+    }
+
+    private fun killExtractProcess(
+        context: Context?,
+        processName: String
+    ){
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
             listOf(
                 UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema to
-                        CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingMapShellName)
+                        processName
             )
         )
     }
@@ -750,7 +760,7 @@ private object AudioStreamingMapExtractor {
         val resFilePathObj = File(resFilePath)
         val twoSec = 2000
         val waitMilliSec = 200L
-        val waitTimes = 400
+        val waitTimes = 200
         for (i in 1..waitTimes) {
             delay(waitMilliSec)
             val soFarWaitTime = i * waitMilliSec
@@ -779,6 +789,10 @@ private object AudioStreamingMapExtractor {
             ) continue
             break
         }
+        killExtractProcess(
+            context,
+            extractAudioStreamingMapShellPathInMusic
+        )
     }
 
     enum class AudioStreamingKey (
