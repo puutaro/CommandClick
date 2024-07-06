@@ -29,7 +29,6 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-import java.time.LocalDateTime
 
 
 object ExecMusicPlay {
@@ -43,7 +42,7 @@ object ExecMusicPlay {
     }
 
     fun exit(context: Context){
-        AudioStreamingUrlExtractor.exit(context)
+        AudioStreamingMapExtractor.exit(context)
     }
 
     fun playHandler(
@@ -118,7 +117,7 @@ object ExecMusicPlay {
 //                        "playIndex: ${playIndex}",
 //                    ).joinToString("\n")
 //                )
-                AudioStreamingUrlExtractor.extractController(
+                AudioStreamingMapExtractor.extractController(
                     context,
                     uri,
                     playList,
@@ -127,9 +126,9 @@ object ExecMusicPlay {
                 )
             }
             musicPlayerService.streamingPreloadFileMakeJob = stUrlMapToPreloadJob.second
-            val streamingUrlMap = stUrlMapToPreloadJob.first
+            val streamingMap = stUrlMapToPreloadJob.first
             if(
-                streamingUrlMap.isNullOrEmpty()
+                streamingMap.isNullOrEmpty()
             ) {
                 LogSystems.stdWarn(
                     "extract failure"
@@ -140,8 +139,8 @@ object ExecMusicPlay {
                 )
                 return@launch
             }
-            val uriTitle = streamingUrlMap.get(
-                AudioStreamingUrlExtractor.AudioStreamingKey.TITLE.key
+            val uriTitle = streamingMap.get(
+                AudioStreamingMapExtractor.AudioStreamingKey.TITLE.key
             ) ?: String()
             withContext(Dispatchers.IO) {
                 launchLoadingNoti(
@@ -153,8 +152,8 @@ object ExecMusicPlay {
                 )
             }
             withContext(Dispatchers.IO) {
-                val videoLength = streamingUrlMap.get(
-                    AudioStreamingUrlExtractor.AudioStreamingKey.DURATION.key
+                val videoLength = streamingMap.get(
+                    AudioStreamingMapExtractor.AudioStreamingKey.DURATION.key
                 )
                 musicPlayerService.currentTrackLength =
                     when (videoLength == null) {
@@ -173,8 +172,8 @@ object ExecMusicPlay {
 //                        )}",
 //                    ).joinToString("\n")
 //                )
-                streamingUrlMap.get(
-                    AudioStreamingUrlExtractor.AudioStreamingKey.STREAMING_URL.key
+                streamingMap.get(
+                    AudioStreamingMapExtractor.AudioStreamingKey.STREAMING_URL.key
                 )?.let {
                     execPlay(
                         musicPlayerService,
@@ -321,7 +320,7 @@ object ExecMusicPlay {
 }
 
 
-private object AudioStreamingUrlExtractor {
+private object AudioStreamingMapExtractor {
 
     private var execPreloadJobJobList: List<Deferred<Unit>> = listOf()
     private const val preloadNum = 30
@@ -343,7 +342,7 @@ private object AudioStreamingUrlExtractor {
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
             listOf(
                 UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema to
-                        CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingUrlShellName)
+                        CcPathTool.trimAllExtend(UbuntuFiles.extractAudioStreamingMapShellName)
             )
         )
     }
@@ -355,15 +354,15 @@ private object AudioStreamingUrlExtractor {
         playIndex: Int,
         streamingPreloadFileMakeJob: Job?,
     ): Pair<Map<String, String>?, Job?>{
-        val audioStreamingUrlMap = extractOneMap(
+        val streamingMap = extractOneMap(
             context,
             url
         )
         val lastIndex = playList.lastIndex
         if(
             playIndex >= lastIndex
-        ) return audioStreamingUrlMap to null
-        return audioStreamingUrlMap to
+        ) return streamingMap to null
+        return streamingMap to
                 StPreloadFileMakeJob.handle(
                     context,
                     playList,
@@ -463,33 +462,33 @@ private object AudioStreamingUrlExtractor {
         context: Context,
         url: String
     ): Map<String, String>? {
-        val existStreamingUrlMapCon =
+        val existStreamingMapCon =
             findStUrlMapConFromPreloadFileByUrl(url)
         if(
-            !existStreamingUrlMapCon.isNullOrEmpty()
+            !existStreamingMapCon.isNullOrEmpty()
         ) {
-            val existStreamingUrlMap = CmdClickMap.createMap(
-                existStreamingUrlMapCon,
+            val existStreamingMap = CmdClickMap.createMap(
+                existStreamingMapCon,
                 '\t'
             ).toMap()
             saveMapToPreloadFile(
-                listOf(existStreamingUrlMap)
+                listOf(existStreamingMap)
             )
-            return existStreamingUrlMap
+            return existStreamingMap
         }
-        val newStreamingUrlMap = extractByLoop(
+        val newStreamingMap = extractByLoop(
             context,
             listOf(url),
             UsePath.mediaPlayerServiceStreamingShellDirPath,
             UsePath.mediaPlayerServiceStreamingShellOutDirPath
         ).firstOrNull()?.second
         if(
-            newStreamingUrlMap.isNullOrEmpty()
+            newStreamingMap.isNullOrEmpty()
         ) return null
         saveMapToPreloadFile(
-            listOf(newStreamingUrlMap)
+            listOf(newStreamingMap)
         )
-        return newStreamingUrlMap
+        return newStreamingMap
 
     }
 
@@ -516,6 +515,7 @@ private object AudioStreamingUrlExtractor {
         val existPreloadMapFileCon =
             ReadText(mediaPlayerServiceStreamingPreloadTxtPath)
                 .textToList()
+                .filter { it.isNotEmpty() }
                 .filter {
                     !insertMapLineList.contains(it)
                 }
@@ -561,8 +561,8 @@ private object AudioStreamingUrlExtractor {
         val stUrlMapChannel = Channel<Pair<Int, Map<String, String>>>(loopTimes)
         val receiveMapList = mutableListOf<Pair<Int, Map<String, String>>>()
         val ubuntuFiles = UbuntuFiles(context)
-        val extractAudioStreamingUrlShellPathObj =
-            ubuntuFiles.extractAudioStreamingUrlShell
+        val extractAudioStreamingMapShellPathObj =
+            ubuntuFiles.extractAudioStreamingMapShell
 //        withContext(Dispatchers.IO){
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "preload_extractByLoop00.txt").absolutePath,
@@ -589,7 +589,7 @@ private object AudioStreamingUrlExtractor {
                             context,
                             url,
                             index,
-                            extractAudioStreamingUrlShellPathObj,
+                            extractAudioStreamingMapShellPathObj,
                             shellDirPath,
                             shellOutDirPath,
                             stUrlMapChannel
@@ -629,7 +629,7 @@ private object AudioStreamingUrlExtractor {
         context: Context?,
         url: String,
         index: Int,
-        extractAudioStreamingUrlShellPathObj: File,
+        extractAudioStreamingMapShellPathObj: File,
         shellDirPath: String,
         shellOutDirPath: String,
         stUrlMapChannel: Channel<Pair<Int, Map<String, String>>>
@@ -641,7 +641,7 @@ private object AudioStreamingUrlExtractor {
 //                "urlList: ${urlList}",
 //            ).joinToString("\n")
 //        )
-        val existStreamingUrlMap =
+        val existStreamingMap =
             withContext(Dispatchers.IO) {
                 findStUrlMapConFromPreloadFileByUrl(url)?.let {
                     CmdClickMap.createMap(
@@ -665,24 +665,24 @@ private object AudioStreamingUrlExtractor {
 //            )
 //        }
         if(
-            !existStreamingUrlMap.isNullOrEmpty()
+            !existStreamingMap.isNullOrEmpty()
         ) {
             stUrlMapChannel.send(
-                Pair(index, existStreamingUrlMap)
+                Pair(index, existStreamingMap)
             )
             return
         }
-        val extractAudioStreamingUrlShellName =
+        val extractAudioStreamingMapShellName =
             withContext(Dispatchers.IO) {
                 CcPathTool.makeRndSuffixFilePath(
-                    extractAudioStreamingUrlShellPathObj.name
+                    extractAudioStreamingMapShellPathObj.name
                 )
             }
-        val extractAudioStreamingUrlShellPathInMusic =
+        val extractAudioStreamingMapShellPathInMusic =
             withContext(Dispatchers.IO) {
                 File(
                     shellDirPath,
-                    extractAudioStreamingUrlShellName
+                    extractAudioStreamingMapShellName
                 ).absolutePath
             }
         withContext(Dispatchers.IO) {
@@ -690,12 +690,12 @@ private object AudioStreamingUrlExtractor {
                 shellDirPath
             )
             FileSystems.copyFile(
-                extractAudioStreamingUrlShellPathObj.absolutePath,
-                extractAudioStreamingUrlShellPathInMusic
+                extractAudioStreamingMapShellPathObj.absolutePath,
+                extractAudioStreamingMapShellPathInMusic
             )
         }
         val resFilePath = withContext(Dispatchers.IO) {
-                CcPathTool.trimAllExtend(extractAudioStreamingUrlShellName).let {
+                CcPathTool.trimAllExtend(extractAudioStreamingMapShellName).let {
                     File(shellOutDirPath, "${it}Res.txt").absolutePath
                 }
             }
@@ -710,7 +710,7 @@ private object AudioStreamingUrlExtractor {
                 BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
                 listOf(
                     UbuntuServerIntentExtra.backgroundShellPath.schema to
-                            extractAudioStreamingUrlShellPathInMusic,
+                            extractAudioStreamingMapShellPathInMusic,
                     UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema to
                             url,
                     UbuntuServerIntentExtra.backgroundResFilePath.schema to
@@ -719,12 +719,11 @@ private object AudioStreamingUrlExtractor {
             )
         }
         withContext(Dispatchers.IO) {
-            for (i in 1..200) {
-                delay(100)
-                if (
-                    File(resFilePath).isFile
-                ) break
-            }
+            waitResAndProcess(
+                context,
+                resFilePath,
+                extractAudioStreamingMapShellPathInMusic,
+            )
         }
         val audioStreamingMap =
             withContext(Dispatchers.IO) {
@@ -732,7 +731,7 @@ private object AudioStreamingUrlExtractor {
                     CmdClickMap.createMap(
                         it,
                         '\t'
-                    ).toMap()
+                    ).toMap().filterKeys { it.isNotEmpty() }
                 }
             }
         withContext(Dispatchers.IO) {
@@ -742,15 +741,53 @@ private object AudioStreamingUrlExtractor {
         }
     }
 
+    private suspend fun waitResAndProcess(
+        context: Context?,
+        resFilePath: String,
+        extractAudioStreamingMapShellPathInMusic: String,
+    ){
+        var beforeLength = 0L
+        val resFilePathObj = File(resFilePath)
+        val twoSec = 2000
+        val waitMilliSec = 200L
+        val waitTimes = 400
+        for (i in 1..waitTimes) {
+            delay(waitMilliSec)
+            val soFarWaitTime = i * waitMilliSec
+            if(
+                soFarWaitTime > twoSec
+                && !LinuxCmd.isProcessCheck(
+                    context,
+                    extractAudioStreamingMapShellPathInMusic
+                )
+            ) break
+            if (
+                !resFilePathObj.isFile
+            ) {
+                continue
+            }
+            val resFileLen = resFilePathObj.length()
+            if(beforeLength != resFileLen){
+                beforeLength = resFileLen
+                continue
+            }
+            if(
+                LinuxCmd.isProcessCheck(
+                    context,
+                    extractAudioStreamingMapShellPathInMusic
+                )
+            ) continue
+            break
+        }
+    }
+
     enum class AudioStreamingKey (
         val key: String,
     ){
         SRC_URL("src_url"),
-        CHANNEL("channel"),
         DURATION("duration"),
         TITLE("title"),
         STREAMING_URL("streaming_url"),
-
     }
 
 }

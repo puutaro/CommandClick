@@ -26,7 +26,6 @@ import com.puutaro.commandclick.service.lib.music_player.libs.InfoFileForMediaPl
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayListMaker
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.tsv.TsvTool
@@ -190,7 +189,7 @@ class MusicPlayerService: Service() {
             withContext(Dispatchers.IO){
                 val procName =
                     CcPathTool.trimAllExtend(
-                        UbuntuFiles.extractAudioStreamingUrlShellName
+                        UbuntuFiles.extractAudioStreamingMapShellName
                     )
                 for (i in 1..30){
                     val isNotExist = !LinuxCmd.isProcessCheck(
