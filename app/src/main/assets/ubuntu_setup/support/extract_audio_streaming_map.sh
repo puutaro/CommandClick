@@ -9,6 +9,8 @@ get_audio_streaming_map_con(){
 		-x -g -f bestaudio \
 		--print "duration=%(duration>%H:%M:%S)s${separator}title=%(title)s"  \
 		--skip-download  \
+		--socket-timeout 30 \
+		--retries 3 \
 		"${src_url}"	\
 	| awk \
 		-v separator="${separator}" \
