@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object ProcessManager {
@@ -85,6 +86,7 @@ object ProcessManager {
     fun monitorProcessAndNum(
         ubuntuService: UbuntuService
     ){
+        val context = ubuntuService.applicationContext
         ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuRunningSystemProcessType.MonitoringProcessNum.name]?.cancel()
         val processNumUpdateIntent = Intent()
         processNumUpdateIntent.action =
@@ -109,24 +111,40 @@ object ProcessManager {
                 if(
                     ubuntuLaunchCompFile?.isFile != true
                 ) continue
-                val currentProcessNum = processNumCalculator(
-                    ubuntuService
-                )
+                var isStop = true
+                withContext(Dispatchers.IO) {
+                    for (i in 1..3) {
+                        delay(300)
+                        val currentProcessNum = processNumCalculator(
+                            ubuntuService
+                        )
+                        if (
+                            !LinuxCmd.isBasicProcess(context)
+                            || currentProcessNum < 0
+                        ) continue
+                        isStop = false
+                        break
+                    }
+                }
+                if(isStop){
+                    BroadcastSender.normalSend(
+                        ubuntuService,
+                        BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action
+                    )
+                    return@launch
+                }
                 val currentDisplayMessage = notificationManager.activeNotifications.filter {
                     it.id == channelId
                 }.firstOrNull()?.notification?.extras?.getString("android.text")
+                val currentProcessNum = processNumCalculator(
+                    ubuntuService
+                )
                 val shouldDisplayProcessNum = currentProcessNum - runningSystemProcessNum
                 val shouldDisplayMessage = notiUbuntuRunningMessage.format(shouldDisplayProcessNum)
                 if(
                     currentDisplayMessage == shouldDisplayMessage
                 ) continue
-                when(shouldDisplayProcessNum < 0) {
-                    true -> BroadcastSender.normalSend(
-                        ubuntuService,
-                        BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action
-                    )
-                    else -> ubuntuService.sendBroadcast(processNumUpdateIntent)
-                }
+                ubuntuService.sendBroadcast(processNumUpdateIntent)
                 val processTypeList = makeProcessTypeList(ubuntuService)
                 FileSystems.writeFile(
                     File(

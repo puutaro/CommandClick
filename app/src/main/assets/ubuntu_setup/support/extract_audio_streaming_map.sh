@@ -44,4 +44,4 @@ get_audio_streaming_map_con(){
 
 get_audio_streaming_map_con \
 	"${1}" \
-	2>&1
+	2>/dev/null
