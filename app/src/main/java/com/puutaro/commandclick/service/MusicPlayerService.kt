@@ -181,10 +181,10 @@ class MusicPlayerService: Service() {
             playMode,
             fileListConBeforePlayMode,
         ) ?: 0
-        mediaPlayer = MusicPlayerMaker.make(
-            this,
-            playList,
-        )
+//        mediaPlayer = MusicPlayerMaker.make(
+//            this,
+//            playList,
+//        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
                 val procName =

@@ -63,6 +63,7 @@ object MusicPlayerMaker {
         musicPlayerService: MusicPlayerService,
         playList: List<String>,
     ): MediaPlayer {
+        setStateSetInitDoing()
         val context =
             musicPlayerService.applicationContext
         val mediaPlayer = MediaPlayer()
@@ -107,6 +108,9 @@ object MusicPlayerMaker {
                 musicPlayerService.notiSetter?.setOnStop()
                 return@setOnCompletionListener
             }
+            releaseMediaPlayer(
+                musicPlayerService
+            )
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action,
@@ -165,6 +169,7 @@ object MusicPlayerMaker {
             )
         }
         musicPlayerService.mediaPlayer = mediaPlayer
+        setStateSetInitDone()
         return mediaPlayer
     }
 
@@ -187,29 +192,17 @@ object MusicPlayerMaker {
             "${LocalDateTime.now()} started"
         )
     }
-    fun prepare(
-        musicPlayerService: MusicPlayerService
-    ){
-        if(
-            musicPlayerState != MusicPlayerState.SET_DATASET_DONE
-        ) return
-        val musicPrepareLog = "musicLog_prepare.txt"
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} prepare"
-        )
-        setPrepareDoing()
-        musicPlayerService.mediaPlayer?.prepareAsync()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} prepared"
-        )
-    }
 
     fun setDatasource(
         musicPlayerService: MusicPlayerService,
         uri: String
     ){
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "psetDatasource.txt").absolutePath,
+//            listOf(
+//                "musicPlayerState: ${musicPlayerState}"
+//            ).joinToString("\n")
+//        )
         if(
             musicPlayerState != MusicPlayerState.INIT_DONE
         ) return
@@ -227,13 +220,23 @@ object MusicPlayerMaker {
         )
     }
 
-    private fun stop(
+    fun prepare(
         musicPlayerService: MusicPlayerService
     ){
-        setStateSetInitDoing()
-        musicPlayerService.mediaPlayer?.stop()
-        musicPlayerService.mediaPlayer?.reset()
-        setStateSetInitDone()
+        if(
+            musicPlayerState != MusicPlayerState.SET_DATASET_DONE
+        ) return
+        val musicPrepareLog = "musicLog_prepare.txt"
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
+            "${LocalDateTime.now()} prepare"
+        )
+        setPrepareDoing()
+        musicPlayerService.mediaPlayer?.prepareAsync()
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
+            "${LocalDateTime.now()} prepared"
+        )
     }
 
     fun releaseMediaPlayer(
@@ -254,6 +257,14 @@ object MusicPlayerMaker {
             File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
             "${LocalDateTime.now()} end releaseMediaPlayer"
         )
+    }
+
+    private fun stop(
+        musicPlayerService: MusicPlayerService
+    ){
+        musicPlayerService.mediaPlayer?.stop()
+        musicPlayerService.mediaPlayer?.reset()
+//        setStateSetInitDone()
     }
 
     private fun posiUpdate(

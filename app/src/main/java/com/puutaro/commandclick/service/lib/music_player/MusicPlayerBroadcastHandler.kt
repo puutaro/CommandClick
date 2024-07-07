@@ -2,12 +2,15 @@ package com.puutaro.commandclick.service.lib.music_player
 
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.libs.ExecMusicPlay
 import com.puutaro.commandclick.service.lib.music_player.libs.ExecShellForMusicPlayer
 import com.puutaro.commandclick.service.lib.music_player.libs.MiliToDisplayTimeForMusic
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayNotiLauncher
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 object MusicPlayerBroadcastHandler {
 
@@ -161,7 +164,6 @@ object MusicPlayerBroadcastHandler {
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "music_next_playuer.txt").absolutePath,
 //                    listOf(
-//                        "index0: ${index0}",
 //                        "currentTrackIndex: ${musicPlayerService.currentTrackIndex}",
 //                    ).joinToString("\n")
 //                )

@@ -71,7 +71,7 @@ object ExecMusicPlay {
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "musicExecPlay.txt").absolutePath,
 //            listOf(
-//                "isYtUrl: ${isYtUrl}",
+//                "isStreamingUrl: ${isStreamingUrl}",
 //                "playList: ${playList}",
 //                "playIndex: ${playIndex}",
 //            ).joinToString("\n")
@@ -82,6 +82,7 @@ object ExecMusicPlay {
             playList,
             playIndex,
         )
+        MusicPlayerMaker.releaseMediaPlayer(musicPlayerService)
         musicPlayerService.execPlayJob?.cancel()
         musicPlayerService.execPlayJob = when(isStreamingUrl){
             true -> playByStreamingUrLExtract(
@@ -213,6 +214,14 @@ object ExecMusicPlay {
             }
             withContext(Dispatchers.IO) {
                 try {
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "playByNormal_1.txt").absolutePath,
+//                        listOf(
+//                            "text",
+//                            "playList: ${playList.joinToString("----")}",
+//                            "uri: ${uri}"
+//                        ).joinToString("\n")
+//                    )
                     execPlay(
                         musicPlayerService,
                         uri,
@@ -225,47 +234,46 @@ object ExecMusicPlay {
         }
     }
 
-    private suspend fun execPlay(
+    private fun execPlay(
         musicPlayerService: MusicPlayerService,
         uri: String,
         playList: List<String>,
     ){
-        if(
-            musicPlayerService.mediaPlayer == null
-        ) {
-            LogSystems.stdWarn("musicPlayer null")
-            return
-        }
+//        if(
+//            musicPlayerService.mediaPlayer == null
+//        ) {
+//            LogSystems.stdWarn("musicPlayer null")
+//            return
+//        }
         try {
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "musicPlay.txt").absolutePath,
-//                listOf(
-//                    "uri: ${uri}",
-//                    "uriTitle: ${uriTitle}"
-//                ).joinToString("\n")
-//            )
-            withContext(Dispatchers.IO) {
+            if(musicPlayerService.mediaPlayer != null) {
                 MusicPlayerMaker.releaseMediaPlayer(musicPlayerService)
-                musicPlayerService.mediaPlayer = MusicPlayerMaker.make(
-                    musicPlayerService,
-                    playList
-                )
-                MusicPlayerMaker.setDatasource(
-                    musicPlayerService,
-                    uri
-                )
             }
+            musicPlayerService.mediaPlayer = MusicPlayerMaker.make(
+                musicPlayerService,
+                playList
+            )
+            MusicPlayerMaker.setDatasource(
+                musicPlayerService,
+                uri
+            )
+//            }
         } catch (e: IOException) {
             LogSystems.stdWarn("$e")
             e.printStackTrace()
         }
-        withContext(Dispatchers.IO) {
-            try {
-                MusicPlayerMaker.prepare(musicPlayerService)
-            } catch (e: IOException) {
-                LogSystems.stdWarn("$e")
-                e.printStackTrace()
-            }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "pexecPlay.txt").absolutePath,
+//            listOf(
+//                "uri: ${uri}",
+//                "playList: ${playList.joinToString("----")}"
+//            ).joinToString("\n")
+//        )
+        try {
+            MusicPlayerMaker.prepare(musicPlayerService)
+        } catch (e: IOException) {
+            LogSystems.stdWarn("$e")
+            e.printStackTrace()
         }
     }
 

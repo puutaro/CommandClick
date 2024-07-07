@@ -11,12 +11,12 @@ object PlayNotiLauncher {
         header: String,
         uriTitle: String,
     ){
-        val currentPosition = musicPlayerService.mediaPlayer?.currentPosition
-        if(currentPosition == null){
-            PlayerExit.exit(musicPlayerService)
-            musicPlayerService.stopSelf()
-            return
-        }
+//        val currentPosition = musicPlayerService.mediaPlayer?.currentPosition
+//        if(currentPosition == null){
+//            PlayerExit.exit(musicPlayerService)
+//            musicPlayerService.stopSelf()
+//            return
+//        }
         musicPlayerService.notificationBuilder?.setContentTitle(header)
         musicPlayerService.notificationBuilder?.setContentText(uriTitle)
         musicPlayerService.notificationBuilder?.build()?.let {
