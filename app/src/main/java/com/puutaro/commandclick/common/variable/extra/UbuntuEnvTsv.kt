@@ -11,6 +11,7 @@ object UbuntuEnvTsv {
             "WAIT_QUIZ_TSV_NAME" to UbuntuFiles.waitQuizTsvName,
             "UBUNTU_BACKUP_ROOTFS_PATH" to "${UsePath.cmdclickUbuntuBackupDirPath}/${rootfsTarGzName}",
             "UBUNTU_BACKUP_TEMP_ROOTFS_PATH" to "${UsePath.cmdclickUbuntuBackupTempDirPath}/${rootfsTarGzName}",
+            "UBUNTU_EXTRA_STARTUP_SHELLS_PATH" to UbuntuFiles.ubuntuExtraStartupShellsPath,
         ).map {
             "${it.first}\t${it.second}"
         }.joinToString("\n")

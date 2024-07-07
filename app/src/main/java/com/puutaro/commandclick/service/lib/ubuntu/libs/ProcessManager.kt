@@ -6,6 +6,7 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuExtraSystemShells
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
@@ -28,9 +29,14 @@ object ProcessManager {
 
     enum class UbuntuRunningSystemProcessType {
         SetUp,
-        PulseaudioSetUp,
         MonitoringProcessNum,
         IntentRequestMonitor,
+    }
+
+    enum class UbuntuExtraSystemProcessType(
+        val type: String,
+    ) {
+        PULSE_AUDIO_SETUP(UbuntuExtraSystemShells.UbuntuExtraSystemShellMacro.PULSE.macro)
     }
 
     fun finishProcess(
@@ -69,10 +75,20 @@ object ProcessManager {
     fun processNumCalculator(
         ubuntuService: UbuntuService
     ): Int {
-        return ubuntuService.ubuntuCoroutineJobsHashMap.filter {
+        val totalProcNum = ubuntuService.ubuntuCoroutineJobsHashMap.filter {
             val job = it.value
             job != null && job.isActive
         }.size
+        val pulseaudioNum = ubuntuService.ubuntuCoroutineJobsHashMap[
+                UbuntuExtraSystemProcessType.PULSE_AUDIO_SETUP.type
+        ].let {
+            if(
+                it != null
+                && it.isActive
+            ) return@let 1
+            0
+        }
+        return totalProcNum - pulseaudioNum
     }
 
     private fun killAllCoroutineJob(
@@ -163,14 +179,17 @@ object ProcessManager {
     private fun makeProcessTypeList(
         ubuntuService: UbuntuService
     ): List<String> {
+        val regularProcTypeList = UbuntuRunningSystemProcessType.values().map{
+            it.name
+        } + listOf(UbuntuExtraSystemProcessType.PULSE_AUDIO_SETUP.type)
         return ubuntuService.ubuntuCoroutineJobsHashMap.keys.filter {
                 curProcessType ->
-            val isRegularProcess = UbuntuRunningSystemProcessType.values().filter {
-                curProcessType == it.name
-            }.isNotEmpty()
+            val isNotRegularProcess = regularProcTypeList.filter { regProcTypeName ->
+                curProcessType == regProcTypeName
+            }.isEmpty()
             val isActive =
                 ubuntuService.ubuntuCoroutineJobsHashMap[curProcessType]?.isActive == true
-            !isRegularProcess && isActive
+            isNotRegularProcess && isActive
         }
     }
 

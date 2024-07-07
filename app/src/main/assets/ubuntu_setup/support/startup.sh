@@ -242,33 +242,6 @@ startup_launch_system(){
 }
 
 
-pulseaudioSetup(){
-	su - "${CMDCLICK_USER}" <<-EOF
-	rm -rf \$HOME/.config/pulse
-	echo --- pulseaudio --start
-	retry_times=5
-	ok_count = 0
-	for i in \$(seq \${retry_times})
-	do
-		shellCon="\$(curl 127.0.0.1:${UBUNTU_PC_PULSE_SET_SERVER_PORT})"
-		case "\${shellCon}" in
-			"") ;;
-			*)	
-				echo "UBUNTU_PC_PULSE_SET_SERVER_PORT ${UBUNTU_PC_PULSE_SET_SERVER_PORT}"
-				sh -c "\${shellCon}"
-				ok_count=\$((\${ok_count} + 1))
-				echo "ok_count: \${ok_count}"
-				;;
-		esac
-		if [ -n "\${shellCon}" ] && [ \${ok_count} -ge 2 ]; then
-			break;
-		fi
-		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
-		sleep 2
-	done
-	EOF
-}
-
 
 make_package_list(){
 	local packages="${1:-}"
@@ -341,6 +314,7 @@ install_base_pkg(){
 }
 
 install_user_package(){
+	echo "### ${FUNCNAME}"
 	su - "${CMDCLICK_USER}" <<-EOF
 		ansi2html_package="ansi2html"
 		is_installed=\$(\
@@ -358,6 +332,7 @@ install_user_package(){
 }
 
 launch_setup(){
+	echo "### ${FUNCNAME}"
 	local profile_path="/etc/profile"
 	insert_str_to_file \
 		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
@@ -392,8 +367,58 @@ install_nodjs(){
 	apt-get install -y nodejs
 }
 
+launch_extra_startup(){
+	echo "### ${FUNCNAME}"
+	local support_dir_path="/support"
+	local ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
+	local ubuntu_env_tsv_con="$(cat "${ubuntu_env_tsv_path}")"
+	local ubuntuExtraStartupShellsPath=$(\
+		tsvar "${ubuntu_env_tsv_con}" "UBUNTU_EXTRA_STARTUP_SHELLS_PATH" \
+	)
+	local pulse_macro_shell="PULSE.sh"
+	local ubuntuExtraStartupShellsCon=$(\
+		cat "${ubuntuExtraStartupShellsPath}"\
+	)
+	local is_pulse="$(\
+		echo "${ubuntuExtraStartupShellsCon}" \
+		| awk \
+			-v pulse_macro_shell="${pulse_macro_shell}" \
+			-F '\t' '{
+			shell_path = $1
+			gsub(/^[ \t]+/, "", shell_path)
+			gsub(/[ \t]+$/, "", shell_path)
+			if(shell_path != pulse_macro_shell) next
+			extra_map_con = $2
+			if(extra_map_con ~ /disable=ON/) next
+			if(extra_map_con ~ /disable=on/) next
+			print $0
+		}' \
+	)"
+	case "${is_pulse}" in
+		"") ;;
+		*) bash "${support_dir_path}/pulse_setup.sh" &
+			;;
+	esac
+	echo "${ubuntuExtraStartupShellsCon}"\
+	 | awk \
+	 	-F '\t' \
+	 	-v pulse_macro_shell="${pulse_macro_shell}" \
+	 '{
+	 	shell_path = $1
+		gsub(/^[ \t]+/, "", shell_path)
+		gsub(/[ \t]+$/, "", shell_path)
+		if(!shell_path) next
+		if( shell_path == pulse_macro_shell ) next
+		extra_map_con = $2
+		if( extra_map_con ~ /disable=ON/) next
+		if( extra_map_con ~ /disable=on/) next
+		printf "bash \x22%s\x22 &", shell_path
+	}' | bash 
+}
+
 
 wait_cmd(){
+	echo "### ${FUNCNAME}"
 	while true; 
 	do 
 		sleep 1; 
@@ -413,8 +438,8 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 fi
 kill_front_and_sub_process
 startup_launch_system
+launch_extra_startup
 touch "${UBUNTU_LAUNCH_COMP_FILE}"
-pulseaudioSetup
 wait_cmd
 exit 0
 install_golang_and_go_package

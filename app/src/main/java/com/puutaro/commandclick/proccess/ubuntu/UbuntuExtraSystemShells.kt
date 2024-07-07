@@ -1,28 +1,111 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
+import java.io.File
 
-object UbuntuExtraSystemShell {
+object UbuntuExtraSystemShells {
+
+    private val shellPathKey = ConfigKey.SHELL_PATH.key
+    private val onAutoResotreKey = ConfigKey.ON_AUTO_RESTORE.key
+    private const val extraSeparator = ','
+    private const val switchOn = "ON"
+
     enum class UbuntuExtraSystemShellMacro(
-        val macro: String
+        val macro: String,
+        val processName: String,
     ) {
-        PULSE("PULSE.sh")
-    }
-
-    fun readUbuntuExtraStartupShells(): List<String> {
-        return ReadText(
-            UbuntuFiles.ubuntuExtraStartupShellsPath
-        ).textToList().filter {
-            it.trim().isNotEmpty()
-        }
+        PULSE("PULSE.sh", "pulseaudio --start")
     }
 
     fun isMacro(
         ubuntuExtraSystemShellMacro: UbuntuExtraSystemShellMacro
     ): Boolean {
         val macroName =  ubuntuExtraSystemShellMacro.macro
-        val isNotPulseSet =readUbuntuExtraStartupShells().firstOrNull {
-            it == macroName
+        val isHit = !makeMapList().firstOrNull{
+            it.get(shellPathKey) == macroName
         }.isNullOrEmpty()
+        return isHit
+    }
+
+
+    enum class ConfigKey(
+        val key: String
+    ){
+        SHELL_PATH("shellPath"),
+        ON_AUTO_RESTORE("onAutoRestore"),
+        DISABLE("disable"),
+    }
+
+    object OnAutoRestore {
+        fun makeRestoreProcessPathList(): List<String> {
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "resotre_shell.txt").absolutePath,
+//                listOf(
+//                   "makeMapList(): ${makeMapList()}",
+//                    "autoResotreList: ${makeMapList().filter {
+//                        it.get(onAutoResotreKey) == switchOn
+//                                || it.get(onAutoResotreKey) == switchOn.lowercase()
+//                    }.map {
+//                        it.get(shellPathKey)?.let {
+//                            shellPath ->
+//                            UbuntuExtraSystemShellMacro.values().firstOrNull {
+//                               macro ->
+//                                macro.macro == shellPath
+//                            }?.processName ?: shellPath
+//                        } ?: String()
+//                    }.filter {
+//                        it.isNotEmpty()
+//                    }}"
+//                ).joinToString("\n")
+//            )
+            return makeMapList().filter {
+                it.get(onAutoResotreKey) == switchOn
+                        || it.get(onAutoResotreKey) == switchOn.lowercase()
+            }.map {
+                it.get(shellPathKey)?.let {
+                        shellPath ->
+                    UbuntuExtraSystemShellMacro.values().firstOrNull {
+                            macro ->
+                        macro.macro == shellPath
+                    }?.processName ?: shellPath
+                } ?: String()
+            }.filter {
+                it.isNotEmpty()
+            }
+        }
+    }
+
+
+    private fun makeMapList(): List<Map<String, String>>{
+        return ReadText(
+            UbuntuFiles.ubuntuExtraStartupShellsPath
+        ).textToList().filter {
+            it.trim().isNotEmpty()
+        }.map {
+            val shellPathAndExtra = it.trim().split("\t")
+            val shellPathMap = mapOf(
+                ConfigKey.SHELL_PATH.key to
+                        (shellPathAndExtra.firstOrNull() ?: String())
+            )
+            val extraMap = shellPathAndExtra.getOrNull(1).let {
+                CmdClickMap.createMap(
+                    it,
+                    extraSeparator
+                ).toMap()
+            }
+            shellPathMap + extraMap
+        }.filter {
+            val isExist =
+                !it.get(shellPathKey).isNullOrEmpty()
+            val disableValue =
+                it.get(ConfigKey.DISABLE.key)
+            val isNotDisable =
+                disableValue != switchOn
+                        && disableValue != switchOn.lowercase()
+            isExist && isNotDisable
+        }
     }
 }

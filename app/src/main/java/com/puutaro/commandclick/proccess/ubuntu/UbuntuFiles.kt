@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Environment
 import android.system.Os
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 import java.lang.NullPointerException
 
@@ -22,6 +23,13 @@ class UbuntuFiles(
         const val supportDirName = "support"
         const val startupFilePath = "/${supportDirName}/startup.sh"
         const val extractAudioStreamingMapShellName = "extract_audio_streaming_map.sh"
+        val ubuntuExtraStartupShellsPath = let {
+            ScriptPreWordReplacer.replace(
+                "${UsePath.fannelSettingsDirPath}/ubuntuExtraStartupShellPaths.tsv",
+                UsePath.cmdclickSystemAppDirPath,
+                UsePath.cmdclickConfigFileName
+            )
+        }
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir

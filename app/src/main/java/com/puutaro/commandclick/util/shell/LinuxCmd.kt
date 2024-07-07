@@ -3,8 +3,13 @@ package com.puutaro.commandclick.util.shell
 import android.content.Context
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.network.UsePort
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuExtraSystemShells
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 
@@ -31,14 +36,48 @@ object LinuxCmd {
         val isWsshProcess =
             psResult.contains("wssh")
                     && psResult.contains("${UsePort.WEB_SSH_TERM_PORT.num}")
-        val isPulseAudioProcess =
-            psResult.contains("pulseaudio --start")
+        val autoRestoreShellPathList =
+            UbuntuExtraSystemShells.OnAutoRestore.makeRestoreProcessPathList()
+                .map{
+                    val isPath = it.startsWith("/")
+                            || it.startsWith("\${")
+                    when(isPath){
+                        true ->  File(it).name
+                        else -> it
+                    }
+                }
+        val isExtraProcess =
+            autoRestoreShellPathList.all {
+                psResult.contains(it)
+            } || autoRestoreShellPathList.isEmpty()
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "restore_is_basic.txt").absolutePath,
+//            listOf(
+//                "isExtraProcess: ${isExtraProcess}",
+//                "isEmpty: ${ autoRestoreShellPathList.isEmpty()}",
+//                "resotreShellPathList.all: ${autoRestoreShellPathList.all {
+//                    psResult.contains(it)
+//                }}",
+//                "psResult_pulseaudio: ${psResult.split("\n").filter{
+//                    it.contains("pulseaudio --start")
+//                }}",
+//                "psResult_loop: ${psResult.split("\n").filter{
+//                    it.contains("ppDir/default/loop.sh")
+//                }}",
+//                "resotreShellPathList: ${autoRestoreShellPathList}",
+//                "resotreShellPathList.size: ${autoRestoreShellPathList.size}",
+//            ).joinToString("\n")
+//        )
+//        val isPulseAudioProcess =
+//            psResult.contains("pulseaudio --start")
+
 
         return isProotProcess
                 && isWsshProcess
                 && isHttp2ShellProcess
                 && isDropbearProcess
-                && isPulseAudioProcess
+                && isExtraProcess
+//                && isPulseAudioProcess
     }
 
     fun isProcessCheck(
@@ -89,18 +128,18 @@ object LinuxCmd {
         )
     }
 
-    fun killSubFrontProcess(
-        context: Context?,
-    ){
-        val packageName = context?.packageName
-            ?: return
-        execKillProcess(
-            context,
-            subFrontSystemPList(
-                packageName
-            )
-        )
-    }
+//    fun killSubFrontProcess(
+//        context: Context?,
+//    ){
+//        val packageName = context?.packageName
+//            ?: return
+//        execKillProcess(
+//            context,
+//            subFrontSystemPList(
+//                packageName
+//            )
+//        )
+//    }
 
     fun killCertainProcess(
         context: Context?,
@@ -197,14 +236,14 @@ object LinuxCmd {
         }
     }
 
-    private fun subFrontSystemPList(
-        packageName: String
-    ): String {
-        return findPList(
-            packageName,
-            "pulseaudio"
-        )
-    }
+//    private fun subFrontSystemPList(
+//        packageName: String
+//    ): String {
+//        return findPList(
+//            packageName,
+//            "pulseaudio"
+//        )
+//    }
 
     private fun findPList(
         packageName: String,

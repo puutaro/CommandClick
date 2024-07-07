@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import com.puutaro.commandclick.common.variable.network.UsePort
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuExtraSystemShells
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
@@ -13,9 +14,15 @@ object InnerPulseServer {
     fun launch(
         ubuntuService: UbuntuService
     ){
+        val isNotPulseSet = !UbuntuExtraSystemShells.isMacro(
+            UbuntuExtraSystemShells.UbuntuExtraSystemShellMacro.PULSE
+        )
+        if(
+            isNotPulseSet
+        ) return
         val context = ubuntuService.applicationContext
-        val pulseaudioSetupName = ProcessManager.UbuntuRunningSystemProcessType.PulseaudioSetUp.name
-        ubuntuService.ubuntuCoroutineJobsHashMap[pulseaudioSetupName]?.cancel()
+        val pulseaudioSetupTypeName = ProcessManager.UbuntuExtraSystemProcessType.PULSE_AUDIO_SETUP.type
+        ubuntuService.ubuntuCoroutineJobsHashMap[pulseaudioSetupTypeName]?.cancel()
         val pulseaudioSetUpJob = CoroutineScope(Dispatchers.IO).launch {
             PcPulseSetServerForUbuntu.exit()
             delay(100)
@@ -27,7 +34,7 @@ object InnerPulseServer {
             )
         }
         ubuntuService.ubuntuCoroutineJobsHashMap.put(
-            pulseaudioSetupName,
+            pulseaudioSetupTypeName,
             pulseaudioSetUpJob
         )
     }
