@@ -2,7 +2,7 @@
 
 
 # It is assumed that you are root user.
-# sudo -su -
+# sudo su -
 
 export backup_dir_path="${APP_ROOT_PATH}/ubuntu/backup/temp" \
 ;export rootfsTarGz="rootfs.tar.gz" \
