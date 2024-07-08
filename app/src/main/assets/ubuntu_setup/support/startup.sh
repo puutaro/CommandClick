@@ -293,7 +293,7 @@ install_repbash(){
 	echo "### ${FUNCNAME}"
 	local package_name="repbash"
 	curl \
-		-L "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64" \
+		-sSL "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64" \
 		> "${package_name}"
 	local usrlocalbin_repbash="/usr/local/bin/${package_name}"
 	mv \
@@ -440,6 +440,7 @@ kill_front_and_sub_process
 startup_launch_system
 launch_extra_startup
 touch "${UBUNTU_LAUNCH_COMP_FILE}"
+echo "### Setup and launch ok"
 wait_cmd
 exit 0
 install_golang_and_go_package

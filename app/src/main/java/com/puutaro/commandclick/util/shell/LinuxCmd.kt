@@ -5,7 +5,6 @@ import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuExtraSystemShells
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.BufferedReader
@@ -15,6 +14,8 @@ import java.nio.charset.Charset
 
 
 object LinuxCmd {
+
+    private val objectName = this::class.java.name
 
     fun isBasicProcess(context: Context?): Boolean {
         val psResult = execCommand(
@@ -112,39 +113,23 @@ object LinuxCmd {
                 dirPath
             ).joinToString("\t")
         )
-        LogSystems.stdSys(
-            "chmod ${result}"
-        )
-    }
-
-    fun killFrontProcess(
-        context: Context?,
-    ){
-        val packageName = context?.packageName
-            ?: return
-        execKillProcess(
-            context,
-            frontSystemPList(packageName)
-        )
-    }
-
-//    fun killSubFrontProcess(
-//        context: Context?,
-//    ){
-//        val packageName = context?.packageName
-//            ?: return
-//        execKillProcess(
-//            context,
-//            subFrontSystemPList(
-//                packageName
-//            )
+//        LogSystems.stdSys(
+//            "chmod ${result}"
 //        )
-//    }
+    }
+
 
     fun killCertainProcess(
         context: Context?,
         processNane: String,
     ){
+        val funcName = object{}.javaClass.enclosingMethod?.name
+        LogSystems.stdSys(
+            listOf(
+                "${objectName}.${funcName}",
+                processNane
+            ).joinToString("\t")
+        )
         val packageName = context?.packageName
             ?: return
         execKillProcess(
@@ -156,8 +141,11 @@ object LinuxCmd {
         )
     }
     fun killAllProcess(){
+        val funcName = object{}.javaClass.enclosingMethod?.name
         LogSystems.stdSys(
-            "allkill"
+            listOf(
+                "${objectName}.${funcName}",
+            ).joinToString("\t")
         )
         android.os.Process.killProcess(android.os.Process.myPid())
     }
@@ -165,6 +153,12 @@ object LinuxCmd {
     fun killProcess(
         context: Context?,
     ){
+        val funcName = object{}.javaClass.enclosingMethod?.name
+        LogSystems.stdSys(
+            listOf(
+                "${objectName}.${funcName}",
+            ).joinToString("\t")
+        )
         val packageName =  context?.packageName
             ?: return
         execKillProcess(
@@ -181,19 +175,19 @@ object LinuxCmd {
             context,
             listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
         )
-        LogSystems.stdSys(
-            "psOutput ${psOutput}"
-        )
+//        LogSystems.stdSys(
+//            "psOutput ${psOutput}"
+//        )
         val pListOutput = psOutput.split("\n").map {
             it.split("\t").getOrNull(1) ?: String()
         }.joinToString("  ")
-        LogSystems.stdSys(
-            "pListOutput ${pListOutput}"
-        )
+//        LogSystems.stdSys(
+//            "pListOutput ${pListOutput}"
+//        )
         val killCmd = "kill -9 ${pListOutput}"
-        LogSystems.stdSys(
-            "killCmd ${killCmd}"
-        )
+//        LogSystems.stdSys(
+//            "killCmd ${killCmd}"
+//        )
         val killOutput = execCommand(
             context,
             listOf(
@@ -202,9 +196,9 @@ object LinuxCmd {
                 killCmd
             ).joinToString("\t")
         )
-        LogSystems.stdSys(
-            "kill output ${killOutput}"
-        )
+//        LogSystems.stdSys(
+//            "kill output ${killOutput}"
+//        )
     }
 
     private fun pListOutputExcludeApp(
@@ -221,29 +215,6 @@ object LinuxCmd {
         }
     }
 
-    private fun frontSystemPList(
-        packageName: String
-    ): String {
-        return if(BuildConfig.DEBUG){
-            "app_pname=\$(ps -ef | grep -E '${packageName}$' | sed 's/ .*//g' ); " +
-                    "ps -ef | grep -v '${packageName}$' " +
-                    "| grep -e 'wssh --address=' -e 'shell2http' " +
-                    "| sed 's/  */\\t/g'"
-        } else {
-            "ps -ef " +
-                    "| grep -e 'wssh --address=' -e 'shell2http' " +
-                    "| sed 's/  */\\t/g'"
-        }
-    }
-
-//    private fun subFrontSystemPList(
-//        packageName: String
-//    ): String {
-//        return findPList(
-//            packageName,
-//            "pulseaudio"
-//        )
-//    }
 
     private fun findPList(
         packageName: String,
@@ -311,7 +282,7 @@ object LinuxCmd {
         } catch (e: Exception){
             LogSystems.stdErr(
                 context,
-                "### ${this::class.java.name} ${e}"
+                "### ${objectName} ${e}"
             )
             return e.toString()
         }

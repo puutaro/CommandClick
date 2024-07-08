@@ -214,6 +214,9 @@ object SetReplaceVariabler {
         context: Context?,
         currentSubFannelPath: String
     ): Map<String, String>? {
+        if(
+            currentSubFannelPath.isEmpty()
+        ) return null
         val mainFannlePath = CcPathTool.getMainFannelFilePath(
             currentSubFannelPath
         )
