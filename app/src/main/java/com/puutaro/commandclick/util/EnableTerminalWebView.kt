@@ -13,7 +13,8 @@ object EnableTerminalWebView {
         currentFragment: Fragment,
         fragmentTag: String?
     ): Boolean {
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.Main) {
+            var hitTimes = 0
             for (i in 1..10) {
                 val targetTerminalFragment = TargetFragmentInstance().getFromFragment<TerminalFragment>(
                     currentFragment.activity,
@@ -23,9 +24,12 @@ object EnableTerminalWebView {
                     targetTerminalFragment?.isResumed == true
                     && targetTerminalFragment.binding.terminalWebView.isVisible
                 ) {
-                    return@withContext true
+                    hitTimes++
                 }
-                delay(200)
+                if(
+                    hitTimes > 2
+                ) return@withContext true
+                delay(100)
             }
             return@withContext false
         }
