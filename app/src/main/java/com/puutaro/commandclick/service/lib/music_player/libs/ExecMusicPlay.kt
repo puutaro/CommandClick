@@ -6,6 +6,8 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.ubuntu.ResAndProcess
+import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
@@ -722,7 +724,7 @@ private object AudioStreamingMapExtractor {
                 shellOutDirPath
             )
         }
-        withContext(Dispatchers.IO) {
+        val res = withContext(Dispatchers.IO) {
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
@@ -732,75 +734,51 @@ private object AudioStreamingMapExtractor {
                     UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema to
                             url,
                     UbuntuServerIntentExtra.backgroundResFilePath.schema to
-                            resFilePath
+                            resFilePath,
                 )
             )
-        }
-        withContext(Dispatchers.IO) {
-            waitResAndProcess(
+            ResAndProcess.wait(
                 context,
                 resFilePath,
                 extractAudioStreamingMapShellPathInMusic,
             )
+            ReadText(resFilePath).readText()
         }
+//        withContext(Dispatchers.IO) {
+//            BroadcastSender.normalSend(
+//                context,
+//                BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action,
+//                listOf(
+//                    UbuntuServerIntentExtra.foregroundShellPath.schema to
+//                            extractAudioStreamingMapShellPathInMusic,
+//                    UbuntuServerIntentExtra.foregroundArgsTabSepaStr.schema to
+//                            url,
+//                    UbuntuServerIntentExtra.foregroundTimeout.schema to
+//                            "0",
+//                    UbuntuServerIntentExtra.foregroundResFilePath.schema to
+//                            resFilePath
+//                )
+//            )
+//        }
+//        withContext(Dispatchers.IO) {
+//            ResAndProcess.wait(
+//                context,
+//                resFilePath,
+//                extractAudioStreamingMapShellPathInMusic,
+//            )
+//        }
         val audioStreamingMap =
             withContext(Dispatchers.IO) {
-                ReadText(resFilePath).readText().let {
-                    CmdClickMap.createMap(
-                        it,
-                        '\t'
-                    ).toMap().filterKeys { it.isNotEmpty() }
-                }
+                CmdClickMap.createMap(
+                    res,
+                    '\t'
+                ).toMap().filterKeys { it.isNotEmpty() }
             }
         withContext(Dispatchers.IO) {
             stUrlMapChannel.send(
                 Pair(index, audioStreamingMap)
             )
         }
-    }
-
-    private suspend fun waitResAndProcess(
-        context: Context?,
-        resFilePath: String,
-        extractAudioStreamingMapShellPathInMusic: String,
-    ){
-        var beforeLength = 0L
-        val resFilePathObj = File(resFilePath)
-        val twoSec = 2000
-        val waitMilliSec = 200L
-        val waitTimes = 200
-        for (i in 1..waitTimes) {
-            delay(waitMilliSec)
-            val soFarWaitTime = i * waitMilliSec
-            if(
-                soFarWaitTime > twoSec
-                && !LinuxCmd.isProcessCheck(
-                    context,
-                    extractAudioStreamingMapShellPathInMusic
-                )
-            ) break
-            if (
-                !resFilePathObj.isFile
-            ) {
-                continue
-            }
-            val resFileLen = resFilePathObj.length()
-            if(beforeLength != resFileLen){
-                beforeLength = resFileLen
-                continue
-            }
-            if(
-                LinuxCmd.isProcessCheck(
-                    context,
-                    extractAudioStreamingMapShellPathInMusic
-                )
-            ) continue
-            break
-        }
-        killExtractProcess(
-            context,
-            extractAudioStreamingMapShellPathInMusic
-        )
     }
 
     enum class AudioStreamingKey (

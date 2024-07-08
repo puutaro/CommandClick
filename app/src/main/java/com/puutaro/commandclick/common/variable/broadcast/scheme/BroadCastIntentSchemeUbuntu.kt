@@ -28,10 +28,10 @@ enum class BroadCastIntentSchemeUbuntu(
         "com.puutaro.commandclick.ubuntu_service.background_cmd_start",
         "background_cmd_start",
     ),
-    ADMIN_CMD_START(
-        "com.puutaro.commandclick.ubuntu_service.admin_cmd_start",
-        "admin_cmd_start",
-    ),
+//    ADMIN_CMD_START(
+//        "com.puutaro.commandclick.ubuntu_service.admin_cmd_start",
+//        "admin_cmd_start",
+//    ),
     RESTART_UBUNTU_SERVICE_FROM_ACTIVITY(
         "com.puutaro.commandclick.ubuntu_service.restart",
         "restart",

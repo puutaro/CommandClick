@@ -34,7 +34,8 @@ object QuoteTool {
     }
 
     fun compBothQuote(
-        targetStr: String?
+        targetStr: String?,
+        primaryQuote: String = "`"
     ): String {
         if(
             targetStr.isNullOrEmpty()
@@ -83,7 +84,7 @@ object QuoteTool {
             val isReturn = it.second
             val compStr = when(isReturn){
                 true -> compStrSrc
-                false -> "`${compStrSrc}`"
+                false -> "${primaryQuote}${compStrSrc}${primaryQuote}"
             }
             compStr
         }

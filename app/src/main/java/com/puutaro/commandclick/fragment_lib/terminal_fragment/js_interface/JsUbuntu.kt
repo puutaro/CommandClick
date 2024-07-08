@@ -9,20 +9,26 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.ubuntu.ResAndProcess
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuProcessChecker
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.shell.LinuxCmd
+import io.ktor.http.ContentDisposition.Companion.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class JsUbuntu(
@@ -36,12 +42,20 @@ class JsUbuntu(
         executeShellPath:String,
         tabSepaArgs: String,
     ): String {
-        return execScriptF(
+        if(
+            !UbuntuProcessChecker.isExist(
+                context,
+                null
+            )
+        ) return String()
+        return Shell2Http.runScript(
+            context,
             executeShellPath,
             tabSepaArgs,
             2000,
         )
     }
+
 
 
     @JavascriptInterface
@@ -50,16 +64,13 @@ class JsUbuntu(
         tabSepaArgs: String,
         timeMilisec: Int,
     ): String {
-        if (
-            context == null
+        if(
+            !UbuntuProcessChecker.isExist(
+                context,
+                null
+            )
         ) return String()
-        if (
-            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
-        ) {
-            ToastUtils.showShort("Launch ubuntu")
-            return String()
-        }
-        return Shell2Http.runCmd(
+        return Shell2Http.runScript(
             context,
             executeShellPath,
             tabSepaArgs,
@@ -68,30 +79,30 @@ class JsUbuntu(
     }
 
 
-    @JavascriptInterface
-    fun execScriptBySsh(
-        executeShellPath:String,
-        tabSepaArgs: String,
-        monitorNum: Int,
-    ): String {
-        if(
-            context == null
-        ) return  String()
-        if(
-            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
-        ) {
-            ToastUtils.showShort("Launch ubuntu")
-            return  String()
-        }
-        val monitorFileName = UsePath.decideMonitorName(monitorNum)
-        return SshManager.execScript(
-            context,
-            executeShellPath,
-            tabSepaArgs,
-            monitorFileName,
-            true,
-        )
-    }
+//    @JavascriptInterface
+//    fun execScriptBySsh(
+//        executeShellPath:String,
+//        tabSepaArgs: String,
+//        monitorNum: Int,
+//    ): String {
+//        if(
+//            context == null
+//        ) return  String()
+//        if(
+//            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+//        ) {
+//            ToastUtils.showShort("Launch ubuntu")
+//            return  String()
+//        }
+//        val monitorFileName = UsePath.decideMonitorName(monitorNum)
+//        return SshManager.execScript(
+//            context,
+//            executeShellPath,
+//            tabSepaArgs,
+//            monitorFileName,
+//            true,
+//        )
+//    }
 
     @JavascriptInterface
     fun execScriptByBackground(

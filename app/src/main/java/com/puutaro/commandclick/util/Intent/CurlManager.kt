@@ -4,6 +4,7 @@ import android.content.Context
 import com.puutaro.commandclick.util.LogSystems
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.net.URL
 import java.util.Locale
 
@@ -57,9 +58,9 @@ object CurlManager {
                 connection,
             )
         } catch (e: Exception) {
-            LogSystems.stdErrByLowLevelSysNoti(
+            stdErrByLowLevelSysNoti(
                 context,
-                e.toString()
+                e
             )
         } finally {
             connection.disconnect()
@@ -98,10 +99,12 @@ object CurlManager {
                 connection,
             )
         } catch (e: Exception) {
-            LogSystems.stdErrByLowLevelSysNoti(
-                context,
-                e.toString()
-            )
+            if(e !is SocketTimeoutException) {
+                LogSystems.stdErrByLowLevelSysNoti(
+                    context,
+                    e.toString()
+                )
+            }
         } finally {
             connection.disconnect()
         }
@@ -138,9 +141,9 @@ object CurlManager {
             )
             return connection
         } catch (e: Exception){
-            LogSystems.stdErrByLowLevelSysNoti(
+            stdErrByLowLevelSysNoti(
                 context,
-                e.toString()
+                e
             )
             return null
         }
@@ -217,5 +220,16 @@ object CurlManager {
         }
         connection.disconnect()
         return resOutputStream.toByteArray()
+    }
+
+    private fun stdErrByLowLevelSysNoti(
+        context: Context?,
+        e: Exception
+    ){
+        if(e !is SocketTimeoutException) return
+        LogSystems.stdErrByLowLevelSysNoti(
+            context,
+            e.toString()
+        )
     }
 }

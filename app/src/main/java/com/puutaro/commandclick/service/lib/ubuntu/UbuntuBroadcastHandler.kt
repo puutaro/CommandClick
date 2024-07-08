@@ -12,6 +12,7 @@ import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuProcessChecker
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServiceButton
@@ -26,7 +27,6 @@ import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -37,63 +37,67 @@ object UbuntuBroadcastHandler {
         intent: Intent,
     ){
         val action = intent.action
-        when(action){
-            BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action
+        val broadCastIntentSchemeUbuntu = BroadCastIntentSchemeUbuntu.values().firstOrNull {
+            it.action == action
+        } ?: return
+        when(broadCastIntentSchemeUbuntu){
+            BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE
             -> execStartUbuntuService(
                 ubuntuService,
                 intent,
             )
-            BroadCastIntentSchemeUbuntu.ON_RUNNING_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_RUNNING_NOTIFICATION
             -> execRunningNotification(
                 ubuntuService
             )
-            BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION.action
+            BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION
             -> execWifiNotification(
                 ubuntuService,
             )
-            BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION
             -> execOnUbuntuSetupNotification(
                     ubuntuService
                 )
-            BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION
             -> execOnUbuntuSetupQuizNotification(
                 ubuntuService
             )
-            BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE.action
+            BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE
             -> execIsActiveUbuntuService()
-            BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action
+            BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE
             -> execStopUbuntuService(
                 ubuntuService
             )
-            BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION
             -> execUpdateProcessNumNotification(
                 ubuntuService
             )
-            BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION
             -> execSleepingNotification(
                 ubuntuService
             )
-            BroadCastIntentSchemeUbuntu.OPEN_FANNEL.action
+            BroadCastIntentSchemeUbuntu.OPEN_FANNEL
             -> execOpenFannel(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentSchemeUbuntu.ADMIN_CMD_START.action
-            -> execAdminCmdStart(
-                ubuntuService,
-                intent
-            )
-            BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
+            BroadCastIntentSchemeUbuntu.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY -> {}
+//            BroadCastIntentSchemeUbuntu.ADMIN_CMD_START.action
+//            -> execAdminCmdStart(
+//                ubuntuService,
+//                intent
+//            )
+            BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START
             -> execBackGroundCmdStart(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
-            -> execSell2Http(
+            BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START
+            -> execForegroundCmd(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action
+            BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN
             -> execCmdKillByAdmin(
                 ubuntuService,
                 intent,
@@ -325,63 +329,60 @@ object UbuntuBroadcastHandler {
         )
     }
 
-    private fun execAdminCmdStart(
-        ubuntuService: UbuntuService,
-        intent: Intent
-    ){
-        val context = ubuntuService.applicationContext
-        val ubuntuFiles = ubuntuService.ubuntuFiles
-        if(
-            ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
-        ) {
-            CoroutineScope(Dispatchers.Main).launch {
-                ToastUtils.showShort("Launch ubuntu")
-            }
-            return
-        }
-        val adminShellPath = intent.getStringExtra(
-            UbuntuServerIntentExtra.adminShellPath.schema
-        ) ?: return
-        val adminArgsTabSepaStr = intent.getStringExtra(
-            UbuntuServerIntentExtra.adminArgsTabSepaStr.schema
-        ) ?: String()
-        val adminMonitorFileName = intent.getStringExtra(
-            UbuntuServerIntentExtra.adminMonitorFileName.schema
-        ) ?: return
-        val adminArgsTabSepaStrWithQuote = adminArgsTabSepaStr.split("\t").map {
-            "\"$it\""
-        }.joinToString("\t")
-        val adminShellJob = CoroutineScope(Dispatchers.IO).launch {
-            BusyboxExecutor(
-                context,
-                UbuntuFiles(context)
-            ).executeProotCommand(
-                listOf("su","-", UbuntuInfo.user, "-c" ,"bash '$adminShellPath' $adminArgsTabSepaStrWithQuote"),
-                monitorFileName = adminMonitorFileName,
-            )
-        }
-        ubuntuService.ubuntuCoroutineJobsHashMap.get(
-            adminShellPath,
-        )?.cancel()
-        ubuntuService.ubuntuCoroutineJobsHashMap.put(
-            adminShellPath,
-            adminShellJob
-        )
-    }
+//    private fun execAdminCmdStart(
+//        ubuntuService: UbuntuService,
+//        intent: Intent
+//    ){
+//        val context = ubuntuService.applicationContext
+//        val ubuntuFiles = ubuntuService.ubuntuFiles
+//        if(
+//            ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+//        ) {
+//            CoroutineScope(Dispatchers.Main).launch {
+//                ToastUtils.showShort("Launch ubuntu")
+//            }
+//            return
+//        }
+//        val adminShellPath = intent.getStringExtra(
+//            UbuntuServerIntentExtra.adminShellPath.schema
+//        ) ?: return
+//        val adminArgsTabSepaStr = intent.getStringExtra(
+//            UbuntuServerIntentExtra.adminArgsTabSepaStr.schema
+//        ) ?: String()
+//        val adminMonitorFileName = intent.getStringExtra(
+//            UbuntuServerIntentExtra.adminMonitorFileName.schema
+//        ) ?: return
+//        val adminArgsTabSepaStrWithQuote = adminArgsTabSepaStr.split("\t").map {
+//            "\"$it\""
+//        }.joinToString("\t")
+//        val adminShellJob = CoroutineScope(Dispatchers.IO).launch {
+//            BusyboxExecutor(
+//                context,
+//                UbuntuFiles(context)
+//            ).executeProotCommand(
+//                listOf("su","-", UbuntuInfo.user, "-c" ,"bash '$adminShellPath' $adminArgsTabSepaStrWithQuote"),
+//                monitorFileName = adminMonitorFileName,
+//            )
+//        }
+//        ubuntuService.ubuntuCoroutineJobsHashMap.get(
+//            adminShellPath,
+//        )?.cancel()
+//        ubuntuService.ubuntuCoroutineJobsHashMap.put(
+//            adminShellPath,
+//            adminShellJob
+//        )
+//    }
 
     private fun execBackGroundCmdStart(
         ubuntuService: UbuntuService,
         intent: Intent
     ){
-        val ubuntuFiles = ubuntuService.ubuntuFiles
         if(
-            ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
-        ) {
-            CoroutineScope(Dispatchers.Main).launch {
-                ToastUtils.showShort("Launch ubuntu")
-            }
-            return
-        }
+            !UbuntuProcessChecker.isExist(
+                ubuntuService.applicationContext,
+                ubuntuService.ubuntuFiles
+            )
+        ) return
         val backgroundShellPath = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundShellPath.schema
         ) ?: return
@@ -391,6 +392,10 @@ object UbuntuBroadcastHandler {
         val backgroundMonitorFileName = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundMonitorFileName.schema
         ) ?: UsePath.cmdClickMonitorFileName_2
+        val backgroundMonitorFilePath = File(
+            UsePath.cmdclickMonitorDirPath,
+            backgroundMonitorFileName
+        ) .absolutePath
         val backgroundResFilePath = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundResFilePath.schema
         )
@@ -398,13 +403,34 @@ object UbuntuBroadcastHandler {
             backgroundShellPath,
         )?.cancel()
         val backgroundShellJob = CoroutineScope(Dispatchers.IO).launch {
-            execBackGroundCmdStartHandler(
-                ubuntuService,
-                backgroundShellPath,
-                backgroundArgsTabSepaStr,
-                backgroundMonitorFileName,
-                backgroundResFilePath,
-            )
+            val output = withContext(Dispatchers.IO) {
+                execBackgroundCmdStartHandler(
+                    ubuntuService,
+                    backgroundShellPath,
+                    backgroundArgsTabSepaStr,
+                )
+            }
+            withContext(Dispatchers.IO) {
+                when (
+                    backgroundResFilePath.isNullOrEmpty()
+                ) {
+                    false -> FileSystems.writeFile(
+                        backgroundResFilePath,
+                        output
+                    )
+                    else -> FileSystems.updateFile(
+                        backgroundMonitorFilePath,
+                        output
+                    )
+                }
+            }
+//            execBackGroundCmdStartHandler2(
+//                ubuntuService,
+//                backgroundShellPath,
+//                backgroundArgsTabSepaStr,
+//                backgroundMonitorFileName,
+//                backgroundResFilePath,
+//            )
         }
         ubuntuService.ubuntuCoroutineJobsHashMap.put(
             backgroundShellPath,
@@ -412,7 +438,37 @@ object UbuntuBroadcastHandler {
         )
     }
 
-    private suspend fun execBackGroundCmdStartHandler(
+    private suspend fun execBackgroundCmdStartHandler(
+        ubuntuService: UbuntuService,
+        shellPath: String,
+        argsTabSepaStr: String,
+    ): String{
+        val context = ubuntuService.applicationContext
+        val noTimeout = 0
+        return withContext(Dispatchers.IO) {
+            when (
+                LinuxCmd.isProcessCheck(
+                    context,
+                    shellPath
+                )
+            ) {
+                true -> Shell2Http.runScriptAfterKill(
+                    context,
+                    shellPath,
+                    argsTabSepaStr,
+                    noTimeout
+                )
+                else -> Shell2Http.runScript(
+                    context,
+                    shellPath,
+                    argsTabSepaStr,
+                    noTimeout
+                )
+            }
+        }
+    }
+
+    private suspend fun execBackGroundCmdStartHandler2(
         ubuntuService: UbuntuService,
         backgroundShellPath: String,
         backgroundArgsTabSepaStr: String,
@@ -420,36 +476,21 @@ object UbuntuBroadcastHandler {
         backgroundResFilePath: String?,
     ){
         val context = ubuntuService.applicationContext
-        var isBasicProcess = false
-        for (i in 1..3) {
-            isBasicProcess = LinuxCmd.isBasicProcess(context)
-            if(isBasicProcess) break
-            delay(300)
-        }
         if(
-            !isBasicProcess
+            !LinuxCmd.isBasicProcess(context)
         ){
-            withContext(Dispatchers.Main){
-                ToastUtils.showLong("Restart proc: lost base proc")
-            }
-            val processRestartDelayTime = 3000L
-            withContext(Dispatchers.IO){
-                LinuxCmd.killProcess(
-                    context,
-                )
-                BroadcastSender.normalSend(
-                    context,
-                    BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action
-                )
-                delay(processRestartDelayTime)
-            }
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action
+            )
+            return
         }
         val isOutput = !backgroundResFilePath.isNullOrEmpty()
         val output = withContext(Dispatchers.IO) {
             when (
                 LinuxCmd.isProcessCheck(
                     context,
-                    backgroundMonitorFileName
+                    backgroundShellPath
                 )
             ) {
                 true -> SshManager.execScriptAfterKill(
@@ -479,7 +520,7 @@ object UbuntuBroadcastHandler {
         }
     }
 
-    private fun execSell2Http(
+    private fun execForegroundCmd(
         ubuntuService: UbuntuService,
         intent: Intent,
     ){
@@ -497,7 +538,7 @@ object UbuntuBroadcastHandler {
         val foregroundShellPath = intent.getStringExtra(
             UbuntuServerIntentExtra.foregroundShellPath.schema
         ) ?: return
-        val args = intent.getStringExtra(
+        val foregroundArgsTabSepaStr = intent.getStringExtra(
             UbuntuServerIntentExtra.foregroundArgsTabSepaStr.schema
         ) ?: String()
         val timeout = try {
@@ -507,15 +548,26 @@ object UbuntuBroadcastHandler {
         } catch (e: Exception){
             defaultTimeoutMiliSec
         }
+//        val foregroundResFilePath =
+//            intent.getStringExtra(
+//                UbuntuServerIntentExtra.foregroundResFilePath.schema
+//            )
+//        val onForegroundAsProc =
+//            !intent.getStringExtra(
+//                UbuntuServerIntentExtra.foregroundAsProc.schema
+//            ).isNullOrEmpty()
         CoroutineScope(Dispatchers.IO).launch {
-            Shell2Http.runCmd(
-                context,
-                foregroundShellPath,
-                args,
-                timeout
-            )
+            withContext(Dispatchers.IO) {
+                Shell2Http.runScript(
+                    context,
+                    foregroundShellPath,
+                    foregroundArgsTabSepaStr,
+                    timeout
+                )
+            }
         }
     }
+
 
     private fun execCmdKillByAdmin(
         ubuntuService: UbuntuService,

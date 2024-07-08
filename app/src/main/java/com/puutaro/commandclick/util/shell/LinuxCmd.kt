@@ -28,9 +28,13 @@ object LinuxCmd {
         )
         val isProotProcess =
             psResult.contains("proot")
+//        val isHttp2ShellProcess =
+//            psResult.contains("
+//            ")
+//                && psResult.contains("${UsePort.HTTP2_SHELL_PORT.num}")
         val isHttp2ShellProcess =
-            psResult.contains("shell2http")
-                && psResult.contains("${UsePort.HTTP2_SHELL_PORT.num}")
+            psResult.contains("httpshd")
+                    && psResult.contains("${UsePort.HTTP2_SHELL_PORT.num}")
         val isDropbearProcess =
             psResult.contains("dropbear")
                     && psResult.contains("${UsePort.DROPBEAR_SSH_PORT.num}")
