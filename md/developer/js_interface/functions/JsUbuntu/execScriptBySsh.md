@@ -4,9 +4,7 @@
 
 ```js.js
 function jsUbuntu.execScriptBySsh(
-	${executeShellPathString},
-	${tabSepaArgsString},
-	${monitorNumInt},
+
 ) -> SshManager
 ```
 
@@ -16,10 +14,7 @@ function jsUbuntu.execScriptBySsh(
 ```js.js
 var=SshManager
 	?func=jsUbuntu.execScriptBySsh
-	?args=
-		&executeShellPath=${String}
-		&tabSepaArgs=${String}
-		&monitorNum=${Int}
+
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
@@ -28,6 +23,6 @@ var=SshManager
 
 ## Src
 
--> [jsUbuntu.execScriptBySsh](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L72)
+-> [jsUbuntu.execScriptBySsh](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L83)
 
 
