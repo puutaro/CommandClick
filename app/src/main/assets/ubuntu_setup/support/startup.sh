@@ -419,6 +419,7 @@ launch_extra_startup(){
 
 wait_cmd(){
 	echo "### ${FUNCNAME}"
+	echo "### Setup ok, launching..."
 	while true; 
 	do 
 		sleep 1; 
@@ -440,7 +441,6 @@ kill_front_and_sub_process
 startup_launch_system
 launch_extra_startup
 touch "${UBUNTU_LAUNCH_COMP_FILE}"
-echo "### Setup and launch ok"
 wait_cmd
 exit 0
 install_golang_and_go_package
