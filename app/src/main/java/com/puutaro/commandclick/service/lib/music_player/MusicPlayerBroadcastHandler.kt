@@ -33,9 +33,7 @@ object MusicPlayerBroadcastHandler {
                 if(
                     restartJudge(musicPlayerService)
                 ) {
-                    musicPlayerService.notiSetter?.setOnStart(
-//                        musicPlayerService.mediaPlayer
-                    )
+                    musicPlayerService.notiSetter?.setOnStart()
                     return
                 }
                 val position = musicPlayerService.mediaPlayer?.currentPosition
@@ -59,9 +57,7 @@ object MusicPlayerBroadcastHandler {
                 if(
                     restartJudge(musicPlayerService)
                 ) {
-                    musicPlayerService.notiSetter?.setOnStart(
-//                        musicPlayerService.mediaPlayer
-                    )
+                    musicPlayerService.notiSetter?.setOnStart()
                     return
                 }
                 val position = musicPlayerService.mediaPlayer?.currentPosition

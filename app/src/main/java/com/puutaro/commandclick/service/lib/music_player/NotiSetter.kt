@@ -99,6 +99,14 @@ class NotiSetter(
             true -> R.drawable.ic_media_pause
             else -> com.puutaro.commandclick.R.drawable.icons8_cancel
         }
+        val fromOrPlayIcon = when(musicPlayerService.mediaPlayer?.isPlaying == true){
+            false -> R.drawable.ic_media_play
+            else -> R.drawable.ic_media_rew
+        }
+        val toOrPlayIcon = when(musicPlayerService.mediaPlayer?.isPlaying == true){
+            false -> R.drawable.ic_media_play
+            else -> R.drawable.ic_media_ff
+        }
 
         musicPlayerService.notificationBuilder
             ?.clearActions()
@@ -113,12 +121,12 @@ class NotiSetter(
                 previousPendingIntent
             )
             ?.addAction(
-                R.drawable.ic_media_rew,
+                fromOrPlayIcon,
                 "From",
                 fromPendingIntent
             )
             ?.addAction(
-                R.drawable.ic_media_ff,
+                toOrPlayIcon,
                 "to",
                 toPendingIntent
             )
