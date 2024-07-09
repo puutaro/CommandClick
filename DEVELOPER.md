@@ -32,6 +32,7 @@ Table of Contents
 * [Ubuntu](#ubuntu)
     * [Custom shell command](#custom-shell-command)
     * [Ubuntu env variables](#ubuntu-env-variables)
+    * [Ubuntu Extra Startup Shell Paths](#ubuntuextrastartupshellpaths)
 * [QR code format](#qr-code-format)
 * [Directory structure](#directory-structure)
 * [File api](#file-api)
@@ -241,6 +242,13 @@ For example, send broadcast, toast, and etc.
 ### Ubuntu env variables
 
 -> [About environment variable in ubuntu](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntu_env_variables.md)
+
+### Ubuntu Extra Startup Shell Paths
+
+Set auto start shell script path 
+Usecase is startup script, service, and daemon etc...
+
+-> [ubuntuExtraStartupShellPaths.tsv](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/ubuntuExtraStartupShellPaths.md)
 
 ## QR code format
 
