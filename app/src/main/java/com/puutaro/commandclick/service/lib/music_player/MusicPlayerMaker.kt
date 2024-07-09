@@ -274,13 +274,28 @@ object MusicPlayerMaker {
         musicPlayerService.madiaPlayerPosiUpdateJob?.cancel()
         musicPlayerService.madiaPlayerPosiUpdateJob = CoroutineScope(Dispatchers.IO).launch {
             while(true) {
-                try {
-                    execPosiUpdate(
-                        musicPlayerService,
-                        uriTitle,
-                    )
-                } catch (e: Exception){
-                    println("pass")
+                withContext(Dispatchers.IO) {
+                    try {
+                        val waitMiliSecond = 1000L
+                        val previousPosi =
+                            musicPlayerService.mediaPlayer?.currentPosition ?: 0
+                        delay(waitMiliSecond)
+                        val posi =
+                            musicPlayerService.mediaPlayer?.currentPosition ?: 0
+                        if (
+                            posi == previousPosi
+                        ) return@withContext
+                        BroadcastSender.normalSend(
+                            musicPlayerService,
+                            BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.action,
+                            listOf(
+                                BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.scheme
+                                        to uriTitle
+                            )
+                        )
+                    } catch (e: Exception){
+                        println("pass")
+                    }
                 }
             }
         }
