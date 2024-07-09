@@ -29,19 +29,21 @@ import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
 
 object IntentRequestMonitor {
 
-    private val fieldSeparator = ','
+    private const val fieldSeparator = ','
     private const val elementSeparator = '|'
     private const val keySeparator = '?'
     private const val valueSeparator = '&'
@@ -177,10 +179,18 @@ object IntentRequestMonitor {
                 keySeparator
             )
             ReceiveIntentType.notification.name
-            -> notificationHandler(
-                ubuntuService,
-                broadcastMap,
-            )
+            -> {
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "noti.txt").absolutePath,
+                    listOf(
+                        "broadcastMap: ${broadcastMap}"
+                    ).joinToString("\n") + "\n-------------\n"
+                )
+                notificationHandler(
+                    ubuntuService,
+                    broadcastMap,
+                )
+            }
             ReceiveIntentType.toast.name
             -> execToast(broadcastMap,)
             ReceiveIntentType.textToSpeech.name
@@ -706,6 +716,12 @@ object IntentRequestMonitor {
     private fun createBroadcastMap(
         broadcastMapStr: String
     ): Map<String, String> {
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "noti_bradmap.txt").absolutePath,
+            listOf(
+                "broadcastMapStr: ${broadcastMapStr}"
+            ).joinToString("\n")
+        )
         return broadcastMapStr
             .trimSeparatorGap(fieldSeparator)
             .trimSeparatorGap(elementSeparator)
@@ -713,10 +729,21 @@ object IntentRequestMonitor {
             .trimSeparatorGap(valueSeparator)
             .split("\n").let {
             SettingFile.formSettingContents(it)
-        }.let { CmdClickMap.createMap(
-                it,
-                fieldSeparator
-            )
+        }.let {
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "noti_bradmap.txt").absolutePath,
+                    listOf(
+                        "formSettingContents: ${it}",
+                        "map: ${CmdClickMap.createMap(
+                            it,
+                            fieldSeparator
+                        )}"
+                    ).joinToString("\n") + "\n-----------\n"
+                )
+                CmdClickMap.createMap(
+                    it,
+                    fieldSeparator
+                )
         }.toMap()
     }
 

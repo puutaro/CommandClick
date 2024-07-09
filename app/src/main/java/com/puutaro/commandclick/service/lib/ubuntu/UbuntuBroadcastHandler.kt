@@ -392,37 +392,35 @@ object UbuntuBroadcastHandler {
         val backgroundMonitorFileName = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundMonitorFileName.schema
         ) ?: UsePath.cmdClickMonitorFileName_2
-        val backgroundMonitorFilePath = File(
-            UsePath.cmdclickMonitorDirPath,
-            backgroundMonitorFileName
-        ) .absolutePath
         val backgroundResFilePath = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundResFilePath.schema
         )
         ubuntuService.ubuntuCoroutineJobsHashMap.get(
             backgroundShellPath,
         )?.cancel()
+        val useMonitorFilename = when(
+            backgroundResFilePath.isNullOrEmpty()
+        ){
+            true -> backgroundMonitorFileName
+            else -> null
+        }
         val backgroundShellJob = CoroutineScope(Dispatchers.IO).launch {
             val output = withContext(Dispatchers.IO) {
                 execBackgroundCmdStartHandler(
                     ubuntuService,
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
+                    useMonitorFilename,
                 )
             }
+            if (
+                backgroundResFilePath.isNullOrEmpty()
+            ) return@launch
             withContext(Dispatchers.IO) {
-                when (
-                    backgroundResFilePath.isNullOrEmpty()
-                ) {
-                    false -> FileSystems.writeFile(
-                        backgroundResFilePath,
-                        output
-                    )
-                    else -> FileSystems.updateFile(
-                        backgroundMonitorFilePath,
-                        output
-                    )
-                }
+                FileSystems.writeFile(
+                    backgroundResFilePath,
+                    output
+                )
             }
 //            execBackGroundCmdStartHandler2(
 //                ubuntuService,
@@ -442,6 +440,7 @@ object UbuntuBroadcastHandler {
         ubuntuService: UbuntuService,
         shellPath: String,
         argsTabSepaStr: String,
+        useMonitorFileName: String?,
     ): String{
         val context = ubuntuService.applicationContext
         val noTimeout = 0
@@ -456,13 +455,15 @@ object UbuntuBroadcastHandler {
                     context,
                     shellPath,
                     argsTabSepaStr,
-                    noTimeout
+                    noTimeout,
+                    useMonitorFileName
                 )
                 else -> Shell2Http.runScript(
                     context,
                     shellPath,
                     argsTabSepaStr,
-                    noTimeout
+                    noTimeout,
+                    useMonitorFileName
                 )
             }
         }
@@ -548,21 +549,14 @@ object UbuntuBroadcastHandler {
         } catch (e: Exception){
             defaultTimeoutMiliSec
         }
-//        val foregroundResFilePath =
-//            intent.getStringExtra(
-//                UbuntuServerIntentExtra.foregroundResFilePath.schema
-//            )
-//        val onForegroundAsProc =
-//            !intent.getStringExtra(
-//                UbuntuServerIntentExtra.foregroundAsProc.schema
-//            ).isNullOrEmpty()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 Shell2Http.runScript(
                     context,
                     foregroundShellPath,
                     foregroundArgsTabSepaStr,
-                    timeout
+                    timeout,
+                    null,
                 )
             }
         }

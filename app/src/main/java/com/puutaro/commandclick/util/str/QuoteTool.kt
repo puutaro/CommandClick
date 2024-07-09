@@ -39,7 +39,7 @@ object QuoteTool {
     ): String {
         if(
             targetStr.isNullOrEmpty()
-        ) return "``"
+        ) return "${primaryQuote}${primaryQuote}"
         val isBothBackQuote = isBothChar(
             targetStr,
             '`'

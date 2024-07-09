@@ -54,8 +54,8 @@ install_pip3_pkg(){
 }
 
 insert_str_to_file(){
-	insert_str="${1}"
-	file_path="${2}"
+	local insert_str="${1}"
+	local file_path="${2}"
 	echo "### $FUNCNAME"
 	echo "${!insert_str@}: ${insert_str}"
 	echo "${!file_path@}: ${file_path}"
@@ -64,7 +64,7 @@ insert_str_to_file(){
 		|| [ -z "${file_path}" ]; then
 			return
 	fi
-	is_insert_str=$(\
+	local is_insert_str=$(\
 		cat "${file_path}" \
 		| grep "${insert_str}"\
 	)

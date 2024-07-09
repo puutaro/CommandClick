@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util.Intent
 import android.content.Context
 import com.puutaro.commandclick.util.LogSystems
 import java.io.ByteArrayOutputStream
+import java.io.EOFException
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.URL
@@ -226,7 +227,10 @@ object CurlManager {
         context: Context?,
         e: Exception
     ){
-        if(e !is SocketTimeoutException) return
+        if(
+            e is SocketTimeoutException
+            || e is EOFException
+        ) return
         LogSystems.stdErrByLowLevelSysNoti(
             context,
             e.toString()

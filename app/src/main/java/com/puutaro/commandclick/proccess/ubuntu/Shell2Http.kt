@@ -2,16 +2,11 @@ package com.puutaro.commandclick.proccess.ubuntu
 
 import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object Shell2Http {
@@ -21,13 +16,15 @@ object Shell2Http {
         shellPath: String,
         tabSepaArgs: String,
         timeoutMiliSec: Int,
+        monitorFileName: String?,
     ): String {
         if (
             context == null
         ) return String()
         val cmd = UbuntuCmdTool.makeRunBashScript(
             shellPath,
-            tabSepaArgs
+            tabSepaArgs,
+            monitorFileName,
         )
         return runCmd(
             context,
@@ -41,13 +38,15 @@ object Shell2Http {
         shellPath: String,
         tabSepaArgs: String,
         timeoutMiliSec: Int,
+        monitorFileName: String?,
     ): String {
         if (
             context == null
         ) return String()
         val mainCmd = UbuntuCmdTool.makeRunBashScript(
             shellPath,
-            tabSepaArgs
+            tabSepaArgs,
+            monitorFileName
         )
         val killCmd = "bash '/support/killProcTree.sh' '${shellPath}' 1>/dev/null 2>&1"
         val cmd = listOf(
@@ -119,13 +118,13 @@ object Shell2Http {
                 ToastUtils.showShort("Launch ubuntu")
                 return String()
             }
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "run.txt").absolutePath,
-                listOf(
-                    "cmdUrl: ${cmdUrl}",
-                    "cmd: ${cmd}",
-                ).joinToString("\n")
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "run.txt").absolutePath,
+//                listOf(
+//                    "cmdUrl: ${cmdUrl}",
+//                    "cmd: ${cmd}",
+//                ).joinToString("\n")
+//            )
             val shellOutput = CurlManager.post(
                 context,
                 cmdUrl,

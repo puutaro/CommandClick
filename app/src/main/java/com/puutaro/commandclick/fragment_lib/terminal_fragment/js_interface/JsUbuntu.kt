@@ -53,6 +53,7 @@ class JsUbuntu(
             executeShellPath,
             tabSepaArgs,
             2000,
+            null,
         )
     }
 
@@ -63,6 +64,7 @@ class JsUbuntu(
         executeShellPath:String,
         tabSepaArgs: String,
         timeMilisec: Int,
+        monitorNum: Int,
     ): String {
         if(
             !UbuntuProcessChecker.isExist(
@@ -70,11 +72,16 @@ class JsUbuntu(
                 null
             )
         ) return String()
+        val monitorName = when(monitorNum == 0) {
+            false -> UsePath.decideMonitorName(monitorNum)
+            else -> null
+        }
         return Shell2Http.runScript(
             context,
             executeShellPath,
             tabSepaArgs,
             timeMilisec,
+            monitorName,
         )
     }
 
