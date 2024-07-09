@@ -12,6 +12,7 @@ COMP_ICON_NAME="download_done"
 IMPORTANCE="low"
 TITLE="wait.."
 COMP_MESSAGE=""
+MONITOR_PATH=""
 MARK=""
 
 read_args(){
@@ -52,6 +53,10 @@ read_args(){
 			;;
 		--comp-message|-cm)
 			COMP_MESSAGE="${2}"
+			shift
+			;;
+		--monitor-path|-mp)
+			MONITOR_PATH="${2}"
 			shift
 			;;
 		-*)
@@ -103,6 +108,9 @@ echo_help(){
 		print "[Optional]"
 		print "--comp-message|-cm"
 		print "\t-> complete message: remain noti on specify in finished"
+		print "[Optional]"
+		print "--monitor-path|-mp"
+		print "\t-> Process std monitoring path"
 		print ""
 	}'
 	exit 0
@@ -127,12 +135,13 @@ exit_noti(){
 
 launch_noti(){
 	local message="${1}"
+	local monitor_line="${2:-}"
 	noti \
 		-t launch \
 		-cn "${CHANNEL_NUM}" \
 		--icon-name "${ICON_NAME}" \
 		--importance "${IMPORTANCE}" \
-		--title "${TITLE}" \
+		--title "${TITLE} ${monitor_line}" \
 		--message "${message}" \
 		--alert-once \
 		--delete "shellPath=${CANCEL_SHELL_PATH}" \
@@ -183,13 +192,22 @@ wait_quiz(){
 	while kill -0 "${target_pid}" 2>/dev/null
 	do
 		local current_sec=$((current_times * ${wait_sec}))
+		local monitor_line=""
+		case "${MONITOR_PATH}" in
+			"") ;;
+			*) monitor_line=$(tail -1 "${MONITOR_PATH}") 
+				;;
+		esac
 		if [ $((${current_times} % 2)) -eq 0 ];then
-			launch_noti "[${current_sec}s] ${answer/-/=}"
+			launch_noti \
+				"[${current_sec}s] ${answer/-/=}" \
+				"${monitor_line}"
 		else 
 			quiz_con="$(decide_message)"
 			answer="$(echo "${quiz_con}" | cut -f 2)"
 			launch_noti \
-				"[${current_sec}s] Q. $(echo "${quiz_con}" | cut -f 1)"
+				"[${current_sec}s] Q. $(echo "${quiz_con}" | cut -f 1)" \
+				"${monitor_line}"
 		fi
 		sleep ${wait_sec}
 		current_times=$((${current_times} + 1))

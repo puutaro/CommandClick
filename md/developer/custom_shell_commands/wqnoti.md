@@ -13,6 +13,7 @@ Table
   * [--title, -t](#title)
   * [--cancel-shell-path, -cs](#cancel-shell-path)
   * [--comp-message, -cm](#comp-message)
+  * [--monitor-path, -mp](#monitor-path)
 * [example](#example)
 
 ## Overview
@@ -73,6 +74,11 @@ Wait target pid
 
 process comp message
 When specified this message, comp noti remain 
+
+### [Optional] --monitor-path, -mp] <a id="monitor-path"></a>
+
+Process std monitoring path
+When specified this, add monitor file last line to title suffix by every 3s
 
 ## example
 

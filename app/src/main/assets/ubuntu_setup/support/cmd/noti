@@ -92,7 +92,9 @@ noti(){
 	-v notificationStyle="${NOTIFICATION_STYLE}" \
 	-v button="${BUTTONS/\|/}" \
 	'function concat(val, val_name){
-		if(val) output_con = output_con""val_name"="val"\n"
+		if(val) {
+			output_con = output_con""val_name"="val"\n"
+		}
 	}
 	BEGIN {
 		output_con=""
@@ -112,7 +114,7 @@ noti(){
 		gsub(/\n/, ",\n", output_con)
 		print output_con
 	}' \
-	| curl -s -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+	| curl -s -X POST --data-binary @- "${INTENT_MONITOR_ADDRESS}"
 }
 
 readonly output="$(noti)"
