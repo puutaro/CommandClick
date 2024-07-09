@@ -150,6 +150,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
+
 
 //    implementation("androidx.camera:camera-camera2:1.2.2")
 //    implementation("androidx.camera:camera-lifecycle:1.2.2")
