@@ -42,6 +42,9 @@ object ProcessManager {
     fun finishProcess(
         ubuntuService: UbuntuService
     ){
+        LinuxCmd.killProcess(
+            ubuntuService.applicationContext
+        )
         BroadcastManagerForService.unregisterBroadcastReceiver(
             ubuntuService,
             ubuntuService.broadcastReceiverForUbuntuServerProcess,
