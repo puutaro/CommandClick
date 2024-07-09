@@ -11,15 +11,17 @@ object UbuntuInfo {
     private val buildConfigDebug = BuildConfig.DEBUG
 
     //  for development
-    val onForDev = if(
-        buildConfigDebug
-    ) false
-    else devFalseInRelease
+    val onForDev = devFalseInRelease
+//        if(
+//        buildConfigDebug
+//    ) false
+//    else devFalseInRelease
 
-    val createImageSwitch = if(
-        buildConfigDebug
-    ) CreateImageSwitch.on.name
-    else createImageSwitchForRelease
+    val createImageSwitch = CreateImageSwitch.on.name
+//        if(
+//        buildConfigDebug
+//    ) CreateImageSwitch.on.name
+//    else createImageSwitchForRelease
 
     val arm64UbuntuRootfsUrl =
         decideArm64UbuntuRootfsUrl(createImageSwitch)
