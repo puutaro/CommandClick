@@ -6,14 +6,14 @@
 function jsUbuntu.execScript(
 	${executeShellPathString},
 	${tabSepaArgsString},
-) -> execScriptF
+) -> Shell2Http
 ```
 
 
 ## Definition by js action
 
 ```js.js
-var=execScriptF
+var=Shell2Http
 	?func=jsUbuntu.execScript
 	?args=
 		&executeShellPath=${String}
@@ -26,7 +26,7 @@ var=execScriptF
 
 ## Src
 
--> [jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L35)
+-> [jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L41)
 
 ## Detail
 
