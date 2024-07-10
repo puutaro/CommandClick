@@ -86,6 +86,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
         ) ?: return
         cancelButton.setOnClickListener {
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             terminalViewModel.onDialog = false
             returnValue = String()
         }
@@ -94,10 +95,12 @@ class MultiSelectOnlyImageGridViewJsDialog(
         ) ?: return
         okButton.setOnClickListener {
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             terminalViewModel.onDialog = false
         }
         gridDialogObj?.setOnCancelListener {
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             terminalViewModel.onDialog = false
             returnValue = String()
         }

@@ -77,6 +77,7 @@ object EditableListContentsSelectGridViewProducer {
             )
             gridDialogObj?.setOnCancelListener {
                 gridDialogObj?.dismiss()
+                gridDialogObj = null
             }
             gridDialogObj?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -179,6 +180,7 @@ object EditableListContentsSelectGridViewProducer {
                 currentFragment
             )
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             val currentGridList = ReadText(
                 listContentsFilePath
             ).textToList()

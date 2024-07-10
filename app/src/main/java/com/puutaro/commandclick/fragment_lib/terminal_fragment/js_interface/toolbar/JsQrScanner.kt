@@ -57,8 +57,8 @@ private fun execQrScan(
         else -> currentAppDirPath
     }
 
-    QrScanner(
+    QrScanner.scanFromCamera(
         editFragment,
         activeCurrentDirPath,
-    ).scanFromCamera()
+    )
 }

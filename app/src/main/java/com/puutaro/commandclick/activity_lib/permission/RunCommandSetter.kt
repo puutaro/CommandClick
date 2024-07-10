@@ -129,11 +129,13 @@ object RunCommandSetter {
             )
         cancelImageButton?.setOnClickListener {
             termuxSetupDialogObj?.dismiss()
+            termuxSetupDialogObj = null
             execTermuxSetupAndStorageAccessPermissionProcessLauncher(activity)
         }
         cancelImageButton?.setImageResource(R.drawable.icons8_check_ok)
         termuxSetupDialogObj?.setOnCancelListener {
             termuxSetupDialogObj?.dismiss()
+            termuxSetupDialogObj = null
             execTermuxSetupAndStorageAccessPermissionProcessLauncher(activity)
         }
         termuxSetupDialogObj?.window?.setLayout(

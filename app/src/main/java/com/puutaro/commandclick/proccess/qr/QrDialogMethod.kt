@@ -101,11 +101,13 @@ object QrDialogMethod {
         cancelButton?.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 imageDialogObj?.dismiss()
+                imageDialogObj = null
             }
         }
         imageDialogObj?.setOnCancelListener {
             CoroutineScope(Dispatchers.Main).launch {
                 imageDialogObj?.dismiss()
+                imageDialogObj = null
             }
         }
 //        imageDialogObj?.window?.setLayout(

@@ -55,6 +55,7 @@ object ConfirmDialogForDelete {
             )
         confirmCancelButton?.setOnClickListener {
             addConfirmDialog?.dismiss()
+            addConfirmDialog = null
         }
         deleteOkListener(
             currentAppDirPath,
@@ -63,6 +64,7 @@ object ConfirmDialogForDelete {
         )
         addConfirmDialog?.setOnCancelListener {
             addConfirmDialog?.dismiss()
+            addConfirmDialog = null
         }
         addConfirmDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -85,6 +87,7 @@ object ConfirmDialogForDelete {
             )
         confirmOkButtonView?.setOnClickListener {
             addConfirmDialog?.dismiss()
+            addConfirmDialog = null
             FileSystems.removeFiles(
                 File(
                     currentAppDirPath,

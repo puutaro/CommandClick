@@ -94,6 +94,7 @@ object DragSortListViewProducer {
             )
             dragSortDialogObj?.setOnCancelListener {
                 dragSortDialogObj?.dismiss()
+                dragSortDialogObj = null
             }
             val cancelButton =
                 dragSortDialogObj?.findViewById<AppCompatImageButton>(
@@ -101,6 +102,7 @@ object DragSortListViewProducer {
                 )
             cancelButton?.setOnClickListener {
                 dragSortDialogObj?.dismiss()
+                dragSortDialogObj = null
             }
             val okButton =
                 dragSortDialogObj?.findViewById<AppCompatImageButton>(
@@ -113,6 +115,7 @@ object DragSortListViewProducer {
                 val dragSortAdapter =
                     dragSortRecyclerView?.adapter as? DragSortRecyclerAdapter
                 dragSortDialogObj?.dismiss()
+                dragSortDialogObj = null
                 dragSortAdapter?.let {
                     FileSystems.writeFile(
                         listContentsFilePath,

@@ -78,6 +78,7 @@ object FileSelectGridViewProducer {
             )
             gridDialogObj?.setOnCancelListener {
                 gridDialogObj?.dismiss()
+                gridDialogObj = null
             }
             gridDialogObj?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -183,6 +184,7 @@ object FileSelectGridViewProducer {
                 parent, View, pos, id
             ->
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             val currentGridList = makeGridList(
                 filterDir,
                 filterPrefixListCon,

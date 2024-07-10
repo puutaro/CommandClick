@@ -91,10 +91,11 @@ class JsQrGetter(
             EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key to compPrefix,
             EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key to compSuffix,
         )
-        QrScanner(
+        QrScanner.saveFromCamera(
             editFragment,
             parentDirPath,
             stockDirAndCompMap,
-        ).saveFromCamera(fileName)
+            fileName
+        )
     }
 }

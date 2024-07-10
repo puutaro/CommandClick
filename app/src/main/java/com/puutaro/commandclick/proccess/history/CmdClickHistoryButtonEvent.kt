@@ -49,6 +49,7 @@ class CmdClickHistoryButtonEvent (
     private val currentViewContext = historyButtonInnerView.context
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
+    private var fannelHistoryDialog: Dialog? = null
 
     private val homeFannelList = when(
         fragment
@@ -78,25 +79,25 @@ class CmdClickHistoryButtonEvent (
         val historyListAdapter = FannelHistoryAdapter(
             historyList.toMutableList()
         )
-        val fannelHistoryDialog = Dialog(
+        fannelHistoryDialog = Dialog(
             currentViewContext
         )
-        fannelHistoryDialog.setContentView(
+        fannelHistoryDialog?.setContentView(
                 com.puutaro.commandclick.R.layout.fannel_history_recycler_view
             )
         val searchText =
-            fannelHistoryDialog.findViewById<EditText>(
+            fannelHistoryDialog?.findViewById<EditText>(
                 com.puutaro.commandclick.R.id.fannel_history_search_edit_text
             )
         val searchTextLinearParams =
-            searchText.layoutParams as LinearLayout.LayoutParams
+            searchText?.layoutParams as LinearLayout.LayoutParams
         searchTextLinearParams.weight = searchTextLinearWeight
         val historyListView =
-            fannelHistoryDialog.findViewById<RecyclerView>(
+            fannelHistoryDialog?.findViewById<RecyclerView>(
                 com.puutaro.commandclick.R.id.fannel_history_recycler_view
             )
         val historyListViewLinearParams =
-            historyListView.layoutParams as LinearLayout.LayoutParams
+            historyListView?.layoutParams as LinearLayout.LayoutParams
         historyListViewLinearParams.weight = listLinearWeight
         historyListView.layoutManager = LinearLayoutManager(
             currentViewContext,
@@ -111,19 +112,20 @@ class CmdClickHistoryButtonEvent (
             historyListAdapter,
             searchText
         )
-        fannelHistoryDialog.window
+        fannelHistoryDialog?.window
             ?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        fannelHistoryDialog.window
+        fannelHistoryDialog?.window
             ?.setGravity(Gravity.BOTTOM)
-        fannelHistoryDialog.show()
-        fannelHistoryDialog.setOnCancelListener(
+        fannelHistoryDialog?.show()
+        fannelHistoryDialog?.setOnCancelListener(
             object : DialogInterface.OnCancelListener {
                 override fun onCancel(dialog: DialogInterface?) {
                     terminalViewModel.onDialog = false
-                    fannelHistoryDialog.dismiss()
+                    fannelHistoryDialog?.dismiss()
+                    fannelHistoryDialog = null
                 }
             })
         terminalViewModel.onDialog = true
@@ -134,7 +136,6 @@ class CmdClickHistoryButtonEvent (
             cmdclickAppHistoryDirAdminPath
         )
         invokeItemSetClickListenerForHistory(
-            fannelHistoryDialog,
             historyListAdapter
         )
     }
@@ -177,12 +178,12 @@ class CmdClickHistoryButtonEvent (
     }
 
     private fun invokeItemSetClickListenerForHistory(
-        alertDialog: Dialog,
         historyListAdapter: FannelHistoryAdapter,
     ) {
         historyListAdapter.itemClickListener = object: FannelHistoryAdapter.OnItemClickListener {
             override fun onItemClick(holder: FannelHistoryAdapter.HistoryViewHolder) {
-                alertDialog.dismiss()
+                fannelHistoryDialog?.dismiss()
+                fannelHistoryDialog = null
                 terminalViewModel.onDialog = false
                 val appDirName = holder.appDirNameTextView.text.toString()
                 val fannelName = holder.fannelNameTextView.text.toString()

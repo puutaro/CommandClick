@@ -251,6 +251,7 @@ class FormDialogForListIndexOrButton(
             terminalViewModel.onDialog = false
             returnValue = String()
             formDialog?.dismiss()
+            formDialog = null
         }
         val confirmOkButton =
             formDialog?.findViewById<AppCompatImageButton>(
@@ -258,6 +259,7 @@ class FormDialogForListIndexOrButton(
             )
         confirmOkButton?.setOnClickListener {
             formDialog?.dismiss()
+            formDialog = null
             val recordNumToMapNameValueInHolder = if(
                 onSetting.isEmpty()
             ) recordNumToMapNameValueInCommandHolder
@@ -288,6 +290,7 @@ class FormDialogForListIndexOrButton(
             terminalViewModel.onDialog = false
             returnValue = String()
             formDialog?.dismiss()
+            formDialog = null
         }
         formDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

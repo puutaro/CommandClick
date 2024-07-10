@@ -113,11 +113,13 @@ object QrLogoEditDialogLauncher {
         cancelButton?.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 qrLogoDialogObj?.dismiss()
+                qrLogoDialogObj = null
             }
         }
         qrLogoDialogObj?.setOnCancelListener {
             CoroutineScope(Dispatchers.Main).launch {
                 qrLogoDialogObj?.dismiss()
+                qrLogoDialogObj = null
             }
         }
     }
@@ -150,6 +152,7 @@ object QrLogoEditDialogLauncher {
                 CoroutineScope(Dispatchers.Main).launch {
                     withContext(Dispatchers.Main) {
                         qrLogoDialogObj?.dismiss()
+                        qrLogoDialogObj = null
                     }
                     val myBitmap =
                         withContext(Dispatchers.Main) {
@@ -188,6 +191,7 @@ object QrLogoEditDialogLauncher {
                 CoroutineScope(Dispatchers.Main).launch {
                     withContext(Dispatchers.Main){
                         qrLogoDialogObj?.dismiss()
+                        qrLogoDialogObj = null
                     }
                     withContext(Dispatchers.Main) {
                         QrDialogMethod.launchPassDialog(
@@ -286,6 +290,7 @@ object QrLogoEditDialogLauncher {
             cancelButton.setOnClickListener {
                 CoroutineScope(Dispatchers.Main).launch {
                     qrLogoDialogObj?.dismiss()
+                    qrLogoDialogObj = null
                 }
             }
         }

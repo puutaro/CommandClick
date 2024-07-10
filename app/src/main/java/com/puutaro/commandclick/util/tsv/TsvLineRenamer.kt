@@ -183,6 +183,7 @@ object TsvLineRenamer {
         editFragment: EditFragment
     ){
         renamePromptDialog?.dismiss()
+        renamePromptDialog = null
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 delay(200)

@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.io.File
 import java.util.LinkedList
 
@@ -69,10 +70,23 @@ object EditorByEditText {
             fileName,
             broadcastIntent
         )
-        KeyboardVisibilityEvent.setEventListener(activity) {
-                isOpen ->
-            if(editorDialog?.isShowing != true) return@setEventListener
-            confirmTitleTextView?.isVisible = !isOpen
+        activity?.let {
+            KeyboardVisibilityEvent.setEventListener(
+                it,
+                fragment.viewLifecycleOwner,
+                KeyboardVisibilityEventListener {
+                    isOpen ->
+                    if (
+                        editorDialog?.isShowing != true
+                    ) return@KeyboardVisibilityEventListener
+                    confirmTitleTextView?.isVisible = !isOpen
+                }
+            )
+//            KeyboardVisibilityEvent.setEventListener(it) { isOpen ->
+//
+//                if (editorDialog?.isShowing != true) return@setEventListener
+//                confirmTitleTextView?.isVisible = !isOpen
+//            }
         }
         editorDialog?.setOnCancelListener {
             editDialogDismissProcess(fragment)
@@ -180,6 +194,7 @@ object EditorByEditText {
         fragment: Fragment,
     ){
         editorDialog?.dismiss()
+        editorDialog = null
         if(fragment !is EditFragment) return
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main){

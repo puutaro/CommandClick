@@ -63,7 +63,8 @@ object ColorPickerViewProducer {
 
                 })
                 .setNegativeButton("NO", DialogInterface.OnClickListener {
-                        dialogInterface, i -> dialogInterface.dismiss()
+                        dialogInterface, i ->
+                    dialogInterface.dismiss()
                 })
             val colorPickerDialog = colorPickerDialogBuilder.create()
             colorPickerDialog.show()

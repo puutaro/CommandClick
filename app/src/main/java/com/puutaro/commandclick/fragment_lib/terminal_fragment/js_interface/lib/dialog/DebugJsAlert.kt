@@ -108,6 +108,7 @@ class DebugJsAlert(
 
     private fun dismissProcess(){
         alertDialogObj?.dismiss()
+        alertDialogObj = null
         terminalViewModel.onDialog = false
     }
 }

@@ -70,9 +70,11 @@ object ExecOnQrLongClickDo {
                     )
                     cancelButton?.setOnClickListener {
                         qrLogoDialogObj?.dismiss()
+                        qrLogoDialogObj = null
                     }
                     qrLogoDialogObj?.setOnCancelListener {
                         qrLogoDialogObj?.dismiss()
+                        qrLogoDialogObj = null
                     }
 //                    qrLogoDialogObj?.window?.setLayout(
 //                        ViewGroup.LayoutParams.MATCH_PARENT,
@@ -93,6 +95,7 @@ object ExecOnQrLongClickDo {
         )
         shareButton?.setOnClickListener {
             qrLogoDialogObj?.dismiss()
+            qrLogoDialogObj = null
             val myBitmap =
                 BitmapFactory.decodeFile(
                     qrLogoPath
@@ -114,6 +117,7 @@ object ExecOnQrLongClickDo {
         )
         passButton?.setOnClickListener {
             qrLogoDialogObj?.dismiss()
+            qrLogoDialogObj = null
             QrDialogMethod.launchPassDialog(
                 cmdIndexFragment,
                 currentAppDirPath,

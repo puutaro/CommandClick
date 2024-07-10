@@ -197,6 +197,7 @@ class GridJsDialog(
                 parent, View, pos, id
             ->
             webViewDialog?.dismiss()
+            webViewDialog = null
             val selectedElement = listCon.split("\n").filter {
                 Regex(
                     searchText.text.toString()

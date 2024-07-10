@@ -124,16 +124,21 @@ class TerminalFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val terminalViewModel: TerminalViewModel by activityViewModels()
-
-        outputFileLength = savedInstanceState?.getInt("outputFileLength")
-            ?:arguments?.getInt("outputFileLength") ?: 0
         _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.terminal_fragment,
             container,
         false
         )
+        binding.lifecycleOwner = this.viewLifecycleOwner
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val terminalViewModel: TerminalViewModel by activityViewModels()
+        outputFileLength = savedInstanceState?.getInt("outputFileLength")
+            ?:arguments?.getInt("outputFileLength") ?: 0
 
         if(savedInstanceState != null) {
             binding.terminalWebView.restoreState(savedInstanceState)
@@ -204,7 +209,6 @@ class TerminalFragment: Fragment() {
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
-        return binding.root
     }
 
     override fun onStart() {
@@ -219,6 +223,7 @@ class TerminalFragment: Fragment() {
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = true
         alertDialogInstance?.dismiss()
+        alertDialogInstance = null
         webViewDialogInstance?.findViewById<WebView>(
             R.id.webview_dialog_webview
         )?.onPause()
@@ -255,6 +260,7 @@ class TerminalFragment: Fragment() {
         InitCurrentMonitorFile.trim(this)
         terminalViewModel.isStop = false
         alertDialogInstance?.dismiss()
+        alertDialogInstance = null
         webViewDialogInstance?.findViewById<WebView>(
             R.id.webview_dialog_webview
         )?.onResume()
@@ -361,6 +367,10 @@ class TerminalFragment: Fragment() {
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
+        webViewDialogInstance?.dismiss()
+        webViewDialogInstance = null
+        alertDialogInstance?.dismiss()
+        alertDialogInstance = null
         firstDisplayUpdate = true
     }
 

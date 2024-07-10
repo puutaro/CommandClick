@@ -17,7 +17,7 @@ object UbuntuInfo {
 //    ) false
 //    else devFalseInRelease
 
-    val createImageSwitch = CreateImageSwitch.on.name
+    val createImageSwitch = createImageSwitchForRelease
 //        if(
 //        buildConfigDebug
 //    ) CreateImageSwitch.on.name

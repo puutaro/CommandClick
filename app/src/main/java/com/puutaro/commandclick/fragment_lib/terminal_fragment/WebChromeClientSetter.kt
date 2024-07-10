@@ -186,10 +186,12 @@ object WebChromeClientSetter {
                 cancelImageButton?.setOnClickListener {
                     result.cancel()
                     alertDialogObj?.dismiss()
+                    alertDialogObj = null
                 }
                 alertDialogObj?.setOnCancelListener {
                     result.cancel()
                     alertDialogObj?.dismiss()
+                    alertDialogObj = null
                 }
                 alertDialogObj?.window?.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -240,6 +242,7 @@ object WebChromeClientSetter {
                 confirmCancelButton?.setOnClickListener {
                     result.cancel()
                     confirmDialogObj?.dismiss()
+                    confirmDialogObj = null
                 }
                 val confirmOkButton =
                     confirmDialogObj?.findViewById<AppCompatImageButton>(
@@ -248,10 +251,12 @@ object WebChromeClientSetter {
                 confirmOkButton?.setOnClickListener {
                     result.confirm()
                     confirmDialogObj?.dismiss()
+                    confirmDialogObj = null
                 }
                 confirmDialogObj?.setOnCancelListener {
                     result.cancel()
                     confirmDialogObj?.dismiss()
+                    confirmDialogObj = null
                 }
                 confirmDialogObj?.window?.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -306,6 +311,7 @@ object WebChromeClientSetter {
                     )
                 promptCancelButton?.setOnClickListener {
                     promptDialogObj?.dismiss()
+                    promptDialogObj = null
                     result.cancel()
                 }
                 val promptOkButtonView =
@@ -314,6 +320,7 @@ object WebChromeClientSetter {
                     )
                 promptOkButtonView?.setOnClickListener {
                     promptDialogObj?.dismiss()
+                    promptDialogObj = null
                     val inputEditable = promptEditText?.text
                     if(
                         inputEditable.isNullOrEmpty()
@@ -324,6 +331,7 @@ object WebChromeClientSetter {
                 }
                 promptDialogObj?.setOnCancelListener {
                     promptDialogObj?.dismiss()
+                    promptDialogObj = null
                     result.cancel()
                 }
                 promptDialogObj?.window?.setLayout(

@@ -155,10 +155,12 @@ class JsFileSelect(
         )
         confirmCancelButton?.setOnClickListener {
             confirmDialog?.dismiss()
+            confirmDialog = null
             terminalViewModel.onDialog = false
         }
         confirmDialog?.setOnCancelListener {
             confirmDialog?.dismiss()
+            confirmDialog = null
             terminalViewModel.onDialog = false
         }
         confirmDialog?.window?.setLayout(
@@ -186,6 +188,7 @@ class JsFileSelect(
             )
         confirmOkButton?.setOnClickListener {
             confirmDialog?.dismiss()
+            confirmDialog = null
             if(
                 !File(
                     targetDirPath,

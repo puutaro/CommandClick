@@ -59,11 +59,13 @@ class UrlHistoryAddToTsv (
         )
         cancelButton?.setOnClickListener {
             urlHistoryToTsvDialog?.dismiss()
+            urlHistoryToTsvDialog = null
         }
 
         setListView()
         urlHistoryToTsvDialog?.setOnCancelListener {
             urlHistoryToTsvDialog?.dismiss()
+            urlHistoryToTsvDialog = null
         }
         urlHistoryToTsvDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -165,6 +167,7 @@ class UrlHistoryAddToTsv (
                 selectedUrlHistoryLine
             )
             urlHistoryToTsvDialog?.dismiss()
+            urlHistoryToTsvDialog = null
             return@setOnItemClickListener
         }
     }

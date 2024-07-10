@@ -124,6 +124,7 @@ class ListJsDialog(
         )
         cancelButton?.setOnClickListener {
             listDialog?.dismiss()
+            listDialog = null
             terminalViewModel.onDialog = false
         }
         listDialog?.window?.setLayout(
@@ -136,6 +137,7 @@ class ListJsDialog(
         listDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 listDialog?.dismiss()
+                listDialog = null
                 terminalViewModel.onDialog = false
             }
         })
@@ -155,6 +157,7 @@ class ListJsDialog(
                 parent, View, pos, id
             ->
             listDialog?.dismiss()
+            listDialog = null
             val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedElement =
                 menuListAdapter.getItem(pos)

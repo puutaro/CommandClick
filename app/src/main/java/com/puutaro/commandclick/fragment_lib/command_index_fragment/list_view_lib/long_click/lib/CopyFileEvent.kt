@@ -57,11 +57,13 @@ class CopyFileEvent(
         )
         cancelButton?.setOnClickListener {
             copyFileDialog?.dismiss()
+            copyFileDialog = null
         }
 
         setListView()
         copyFileDialog?.setOnCancelListener {
             copyFileDialog?.dismiss()
+            copyFileDialog = null
         }
         copyFileDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -119,6 +121,7 @@ class CopyFileEvent(
                 selectedAppDirName
             )
             copyFileDialog?.dismiss()
+            copyFileDialog = null
             return@setOnItemClickListener
         }
     }

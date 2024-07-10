@@ -82,9 +82,11 @@ object DialogObject {
             )
         cancelImageButton?.setOnClickListener {
             simpleTextDialogObj?.dismiss()
+            simpleTextDialogObj = null
         }
         simpleTextDialogObj?.setOnCancelListener {
             simpleTextDialogObj?.dismiss()
+            simpleTextDialogObj = null
         }
         simpleTextDialogObj?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -142,6 +144,7 @@ object DialogObject {
         ) ?: return
         webViewCancelBtn.setOnClickListener {
             descWebDialog?.dismiss()
+            descWebDialog = null
         }
         setProgressChanged(
             webView,
@@ -162,6 +165,7 @@ object DialogObject {
         }
         webViewBackBtn.setOnLongClickListener {
             descWebDialog?.dismiss()
+            descWebDialog = null
             true
         }
         descWebDialog?.window?.setLayout(
@@ -172,6 +176,7 @@ object DialogObject {
 
         descWebDialog?.setOnCancelListener {
             descWebDialog?.dismiss()
+            descWebDialog = null
         }
     }
     private fun webViewSetting(

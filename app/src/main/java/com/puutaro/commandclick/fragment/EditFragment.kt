@@ -47,6 +47,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.Directory
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -61,6 +62,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.io.File
 
 
@@ -157,6 +159,7 @@ class EditFragment: Fragment() {
             container,
             false
         )
+        binding.lifecycleOwner = this.viewLifecycleOwner
         return binding.root
     }
 
@@ -326,49 +329,107 @@ class EditFragment: Fragment() {
             )
         }
         val listener = context as? OnKeyboardVisibleListenerForEditFragment
-        KeyboardVisibilityEvent.setEventListener(activity) {
-                isOpen ->
-            if(!this.isVisible) return@setEventListener
-            if(disableKeyboardFragmentChange) return@setEventListener
+        activity?.let {
+            KeyboardVisibilityEvent.setEventListener(
+                it,
+                this.viewLifecycleOwner,
+                KeyboardVisibilityEventListener {
+                        isOpen ->
+                    if(
+                        !this.isVisible
+                    ) return@KeyboardVisibilityEventListener
+                    if(
+                        disableKeyboardFragmentChange
+                    ) return@KeyboardVisibilityEventListener
 //            if(terminalViewModel.onDialog) return@setEventListener
-            binding.editTitleLinearlayout.isVisible = !isOpen
-            val linearLayoutParam =
-                binding.editFragment.layoutParams as LinearLayout.LayoutParams
-            val editFragmentWeight = linearLayoutParam.weight
-            if(
-                editFragmentWeight != ReadLines.LONGTH
-            ) {
-                KeyboardWhenTermLongForEdit.handle(
-                    this,
-                    isOpen
-                )
-                return@setEventListener
-            }
-            ListIndexSizingToKeyboard.handle(
-                this,
-                isOpen
-            )
-            binding.editToolBarLinearLayout.isVisible =
-                when(isOpen) {
-                    true -> {
-                        val isNotSearchTextWhenIndexList =
-                            (existIndexList && !binding.editListSearchEditText.isVisible)
-                        !existIndexList
-                                || isNotSearchTextWhenIndexList
+                    binding.editTitleLinearlayout.isVisible = !isOpen
+                    val linearLayoutParam =
+                        binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    val editFragmentWeight = linearLayoutParam.weight
+                    if(
+                        editFragmentWeight != ReadLines.LONGTH
+                    ) {
+                        KeyboardWhenTermLongForEdit.handle(
+                            this,
+                            isOpen
+                        )
+                        return@KeyboardVisibilityEventListener
                     }
-                    else -> true
+                    ListIndexSizingToKeyboard.handle(
+                        this,
+                        isOpen
+                    )
+                    binding.editToolBarLinearLayout.isVisible =
+                        when(isOpen) {
+                            true -> {
+                                val isNotSearchTextWhenIndexList =
+                                    (existIndexList && !binding.editListSearchEditText.isVisible)
+                                !existIndexList
+                                        || isNotSearchTextWhenIndexList
+                            }
+                            else -> true
+                        }
+                    val isOpenKeyboard =
+                        when(isOpen) {
+                            true -> onTermVisibleWhenKeyboard !=
+                                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+                            else -> isOpen
+                        }
+                    listener?.onKeyBoardVisibleChangeForEditFragment(
+                        isOpenKeyboard,
+                        this.isVisible
+                    )
                 }
-            val isOpenKeyboard =
-                when(isOpen) {
-                    true -> onTermVisibleWhenKeyboard !=
-                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-                    else -> isOpen
-                }
-            listener?.onKeyBoardVisibleChangeForEditFragment(
-                isOpenKeyboard,
-                this.isVisible
             )
+//            KeyboardVisibilityEvent.setEventListener(it) { isOpen ->
+//
+//                if (editorDialog?.isShowing != true) return@setEventListener
+//                confirmTitleTextView?.isVisible = !isOpen
+//            }
         }
+//        KeyboardVisibilityEvent.setEventListener(activity) {
+//                isOpen ->
+//            if(!this.isVisible) return@setEventListener
+//            if(disableKeyboardFragmentChange) return@setEventListener
+////            if(terminalViewModel.onDialog) return@setEventListener
+//            binding.editTitleLinearlayout.isVisible = !isOpen
+//            val linearLayoutParam =
+//                binding.editFragment.layoutParams as LinearLayout.LayoutParams
+//            val editFragmentWeight = linearLayoutParam.weight
+//            if(
+//                editFragmentWeight != ReadLines.LONGTH
+//            ) {
+//                KeyboardWhenTermLongForEdit.handle(
+//                    this,
+//                    isOpen
+//                )
+//                return@setEventListener
+//            }
+//            ListIndexSizingToKeyboard.handle(
+//                this,
+//                isOpen
+//            )
+//            binding.editToolBarLinearLayout.isVisible =
+//                when(isOpen) {
+//                    true -> {
+//                        val isNotSearchTextWhenIndexList =
+//                            (existIndexList && !binding.editListSearchEditText.isVisible)
+//                        !existIndexList
+//                                || isNotSearchTextWhenIndexList
+//                    }
+//                    else -> true
+//                }
+//            val isOpenKeyboard =
+//                when(isOpen) {
+//                    true -> onTermVisibleWhenKeyboard !=
+//                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+//                    else -> isOpen
+//                }
+//            listener?.onKeyBoardVisibleChangeForEditFragment(
+//                isOpenKeyboard,
+//                this.isVisible
+//            )
+//        }
     }
 
     override fun onPause() {
@@ -427,6 +488,16 @@ class EditFragment: Fragment() {
         super.onDestroyView()
         jsExecuteJob?.cancel()
         alterIfShellResultMap.clear()
+        destroyViews()
+        _binding = null
+    }
+
+    private fun destroyViews(){
+        binding.editLinearLayout.removeAllViews()
+        binding.editListInnerTopLinearLayout.removeAllViews()
+        binding.editListInnerBottomLinearLayout.removeAllViews()
+        binding.editListLinearLayout.removeAllViews()
+        binding.editToolBarLinearLayout.removeAllViews()
     }
 
     interface onToolBarButtonClickListenerForEditFragment {

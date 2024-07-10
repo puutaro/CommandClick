@@ -137,6 +137,7 @@ object StorageAccessSetter {
             )
         confirmCancelButton?.setOnClickListener {
             getPermissionConfirmDialog?.dismiss()
+            getPermissionConfirmDialog = null
             ActivityFinisher.finish(activity)
         }
         val confirmOkButton =
@@ -145,6 +146,7 @@ object StorageAccessSetter {
             )
         confirmOkButton?.setOnClickListener {
             getPermissionConfirmDialog?.dismiss()
+            getPermissionConfirmDialog = null
             val uri = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
             activity.manageFullStoragePermissionResultLauncher.launch(
                 Intent(
@@ -152,6 +154,10 @@ object StorageAccessSetter {
                     uri
                 )
             )
+        }
+        getPermissionConfirmDialog?.setOnCancelListener {
+            getPermissionConfirmDialog?.dismiss()
+            getPermissionConfirmDialog = null
         }
         getPermissionConfirmDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

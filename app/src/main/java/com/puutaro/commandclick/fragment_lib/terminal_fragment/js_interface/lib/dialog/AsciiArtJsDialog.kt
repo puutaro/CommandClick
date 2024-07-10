@@ -178,6 +178,7 @@ class AsciiArtJsDialog(
         isSuccess = isOk
         terminalViewModel.onDialog = false
         spannableDialogObj?.dismiss()
+        spannableDialogObj = null
     }
 
     private fun setShareButton(): AppCompatImageButton?  {

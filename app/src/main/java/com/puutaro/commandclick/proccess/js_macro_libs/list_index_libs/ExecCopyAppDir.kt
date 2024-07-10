@@ -50,6 +50,7 @@ object ExecCopyAppDir {
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
+            promptDialog = null
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
@@ -57,6 +58,7 @@ object ExecCopyAppDir {
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
+            promptDialog = null
             CopyAppDirEventForEdit.execCopyAppDir(
                 UsePath.cmdclickAppDirAdminPath,
                 selectedItem,
@@ -73,6 +75,7 @@ object ExecCopyAppDir {
         }
         promptDialog?.setOnCancelListener {
             promptDialog?.dismiss()
+            promptDialog = null
         }
         promptDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

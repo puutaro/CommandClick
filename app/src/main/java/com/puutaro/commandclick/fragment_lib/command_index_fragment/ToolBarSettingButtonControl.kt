@@ -140,6 +140,7 @@ class ToolBarSettingButtonControl(
             )
         navImageButton.setOnClickListener {
             menuPopupWindow?.dismiss()
+            menuPopupWindow = null
             val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(
                 toolbarMenuCategoriesVariantForCmdIndex,
@@ -160,6 +161,7 @@ class ToolBarSettingButtonControl(
         menuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             menuPopupWindow?.dismiss()
+            menuPopupWindow = null
             val menuListAdapter =
                 menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
@@ -170,10 +172,10 @@ class ToolBarSettingButtonControl(
                         UsePath.fannelRepoFannelName
                     )
                 MenuEnums.QR_SCAN.itemName ->
-                    QrScanner(
+                    QrScanner.scanFromCamera(
                         cmdIndexFragment,
                         currentAppDirPath,
-                    ).scanFromCamera()
+                    )
                 MenuEnums.NO_SCROLL_SAVE_URL.itemName ->
                     NoScrollUrlSaver.save(
                         cmdIndexFragment,

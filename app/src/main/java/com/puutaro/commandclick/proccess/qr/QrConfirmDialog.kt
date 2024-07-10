@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 
 class QrConfirmDialog(
     private val fragment: Fragment,
-    private val qrScanDialogObj: Dialog?,
     private val codeScanner: CodeScanner?,
     private val currentAppDirPath: String,
     private val title: String,
@@ -59,14 +58,15 @@ class QrConfirmDialog(
         confirmCancelButton?.setOnClickListener {
             codeScanner?.startPreview()
             confirmDialogObj?.dismiss()
+            confirmDialogObj = null
         }
         val confirmOkButton =
             confirmDialogObj?.findViewById<AppCompatImageButton>(
                 R.id.confirm_text_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
-            qrScanDialogObj?.dismiss()
             confirmDialogObj?.dismiss()
+            confirmDialogObj = null
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
                     QrUriHandler.handle(
@@ -87,6 +87,7 @@ class QrConfirmDialog(
         confirmDialogObj?.setOnCancelListener {
             codeScanner?.startPreview()
             confirmDialogObj?.dismiss()
+            confirmDialogObj = null
         }
         confirmDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

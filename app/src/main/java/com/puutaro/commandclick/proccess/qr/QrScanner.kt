@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ListView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -26,6 +27,8 @@ import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -36,6 +39,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,22 +49,20 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class QrScanner(
-    private val fragment: Fragment,
-    private val currentAppDirPath: String,
-    private val stockDirAndCompMap: Map<String, String>? = null,
-) {
-    private val fragContext = fragment.context
+object QrScanner{
 
     private var qrScanDialogObj: Dialog? = null
-
     fun scanFromImage(
+        fragment: Fragment,
         qrImagePath: String,
     ): String {
         var errMessage = String()
         for(i in 1..3) {
             try {
-                return execScanFromImage(qrImagePath)
+                return execScanFromImage(
+                    fragment,
+                    qrImagePath
+                )
             } catch (e: Exception) {
                 errMessage = e.toString()
                 continue
@@ -69,8 +71,10 @@ class QrScanner(
         return errMessage
     }
     private fun execScanFromImage(
+        fragment: Fragment,
         qrImagePath: String,
     ): String {
+        val fragContext = fragment.context
         try {
             val bMap = BitmapFactory.decodeFile(qrImagePath)
 
@@ -93,36 +97,61 @@ class QrScanner(
         }
     }
 
-    fun scanFromCamera() {
+    fun scanFromCamera(
+        fragment: Fragment,
+        currentAppDirPath: String,
+    ) {
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        getCameraPermission()
+        getCameraPermission(
+            fragment,
+        )
         CoroutineScope(Dispatchers.IO).launch {
             val isCameraPermission = withContext(Dispatchers.IO) {
-                howCameraPermission(terminalViewModel)
+                howCameraPermission(
+                    fragment,
+                    terminalViewModel
+                )
             }
             if(!isCameraPermission) return@launch
             withContext(Dispatchers.Main) {
-                launchCameraDialog()
+                launchCameraDialog(
+                    fragment,
+                    currentAppDirPath,
+                )
             }
         }
     }
 
     fun saveFromCamera(
-        fileName: String,
+        fragment: Fragment,
+        currentAppDirPath: String,
+        stockDirAndCompMap: Map<String, String>? = null,
+        qrImagePath: String,
     ) {
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        getCameraPermission()
+        getCameraPermission(
+            fragment,
+        )
         CoroutineScope(Dispatchers.IO).launch {
             val isCameraPermission = withContext(Dispatchers.IO) {
-                howCameraPermission(terminalViewModel)
+                howCameraPermission(
+                    fragment,
+                    terminalViewModel
+                )
             }
             if(!isCameraPermission) return@launch
             withContext(Dispatchers.Main) {
-                launchCameraDialogForSave(fileName)
+                launchCameraDialogForSave(
+                    fragment,
+                    currentAppDirPath,
+                    stockDirAndCompMap,
+                    qrImagePath,
+                )
             }
         }
     }
     private suspend fun howCameraPermission(
+        fragment: Fragment,
         terminalViewModel: TerminalViewModel
     ): Boolean {
         val activity = fragment.activity
@@ -137,7 +166,10 @@ class QrScanner(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun getCameraPermission(){
+    private fun getCameraPermission(
+        fragment: Fragment,
+    ){
+        val fragContext = fragment.context
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         terminalViewModel.onPermDialog = true
         val cameraPermissionStr = Manifest.permission.CAMERA
@@ -156,7 +188,10 @@ class QrScanner(
     }
 
 
-    private suspend fun launchCameraDialog() {
+    private suspend fun launchCameraDialog(
+        fragment: Fragment,
+        currentAppDirPath: String,
+    ) {
         val context = fragment.context
             ?: return
         qrScanDialogObj = Dialog(
@@ -193,7 +228,7 @@ class QrScanner(
                 codeScanner.releaseResources()
                 loadDecodedText(
                     fragment,
-                    qrScanDialogObj,
+                    currentAppDirPath,
                     codeScanner,
                     decodeText
                 )
@@ -210,11 +245,15 @@ class QrScanner(
         val qrScanBottomLinearLayout = qrScanDialogObj?.findViewById<LinearLayout>(
             R.id.qr_scan_bottom_linearlayout
         ) ?: return
-        val cancelButton = makeCancelButton(codeScanner)
+        val cancelButton = makeCancelButton(
+            fragment,
+            codeScanner
+        )
         qrScanBottomLinearLayout.addView(cancelButton)
         val historyButton = makeHistoryButton(
+            fragment,
+            currentAppDirPath,
             codeScanner,
-            qrScanDialogObj
         )
         qrScanBottomLinearLayout.addView(historyButton)
         qrScanDialogObj?.setOnCancelListener {
@@ -230,6 +269,9 @@ class QrScanner(
     }
 
     private fun launchCameraDialogForSave(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        stockDirAndCompMap: Map<String, String>? = null,
         fileName: String,
     ) {
         val context = fragment.context
@@ -268,11 +310,15 @@ class QrScanner(
                 codeScanner.releaseResources()
                 withContext(Dispatchers.IO) {
                     qrSaverForType(
+                        fragment,
+                        currentAppDirPath,
+                        stockDirAndCompMap,
                         fileName,
                         decodeText
                     )
                 }
                 qrScanDialogObj?.dismiss()
+                qrScanDialogObj = null
             }
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
@@ -287,6 +333,7 @@ class QrScanner(
             R.id.qr_scan_bottom_linearlayout
         ) ?: return
         val cancelButton = makeCancelButton(
+            fragment,
             codeScanner,
             1F,
         )
@@ -304,6 +351,9 @@ class QrScanner(
     }
 
     private suspend fun qrSaverForType(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        stockDirAndCompMap: Map<String, String>? = null,
         fileName: String,
         decodeText: String
     ){
@@ -312,6 +362,8 @@ class QrScanner(
             || fragment is TerminalFragment
         ) {
             addFile(
+                fragment,
+                currentAppDirPath,
                 fileName,
                 decodeText
             )
@@ -328,6 +380,8 @@ class QrScanner(
             -> return
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> addFile(
+                fragment,
+                currentAppDirPath,
                 fileName,
                 decodeText
             )
@@ -363,9 +417,12 @@ class QrScanner(
     }
 
     private fun addFile(
+        fragment: Fragment,
+        currentAppDirPath: String,
         fileName: String,
         decodeText: String
     ){
+        val fragContext = fragment.context
         FileSystems.writeFile(
             File(
                 currentAppDirPath,
@@ -384,21 +441,24 @@ class QrScanner(
     ){
         codeScanner.releaseResources()
         qrScanDialogObj?.dismiss()
+        qrScanDialogObj = null
     }
 
     private suspend fun loadDecodedText(
         fragment: Fragment,
-        qrScanDialogObj: Dialog?,
+        currentAppDirPath: String,
         codeScanner: CodeScanner,
         decodeText: String,
     ){
+        val fragContext = fragment.context
         val title = QrDecodedTitle.makeTitle(
             fragContext,
             decodeText
         )
+        qrScanDialogObj?.dismiss()
+        qrScanDialogObj = null
         QrConfirmDialog(
             fragment,
-            qrScanDialogObj,
             codeScanner,
             currentAppDirPath,
             title,
@@ -407,9 +467,11 @@ class QrScanner(
     }
 
     private fun makeHistoryButton(
+        fragment: Fragment,
+        currentAppDirPath: String,
         codeScanner: CodeScanner,
-        qrScanDialogObj: Dialog?
     ): ImageButton {
+        val fragContext = fragment.context
         val imageButton = ImageButton(fragContext)
         imageButton.imageTintList = fragContext?.getColorStateList(R.color.web_icon_color)
         imageButton.backgroundTintList = fragContext?.getColorStateList(R.color.white)
@@ -423,17 +485,17 @@ class QrScanner(
         imageButton.setImageResource(R.drawable.icons8_history)
         imageButton.setOnClickListener {
             codeScanner.releaseResources()
-            QrHistoryListDialog(
+            QrHistoryListDialog.launch(
                 fragment,
                 codeScanner,
-                qrScanDialogObj,
-                currentAppDirPath
-            ).launch()
+                currentAppDirPath,
+            )
         }
         return imageButton
     }
 
     private fun makeCancelButton(
+        fragment: Fragment,
         codeScanner: CodeScanner,
         weight: Float = 0.5F
     ): ImageButton {
@@ -454,4 +516,150 @@ class QrScanner(
         }
         return imageButton
     }
+
+    object QrHistoryListDialog{
+
+        private var subMenuDialog: Dialog? = null
+        fun launch(
+            fragment: Fragment,
+            codeScanner: CodeScanner,
+            currentAppDirPath: String,
+        ){
+            val context = fragment.context ?: return
+
+            subMenuDialog = Dialog(
+                context
+            )
+            subMenuDialog?.setContentView(
+                R.layout.submenu_dialog
+            )
+            setListView(
+                fragment,
+                currentAppDirPath,
+                codeScanner,
+            )
+            setCancelListener(codeScanner)
+            subMenuDialog?.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            subMenuDialog
+                ?.window
+                ?.setGravity(Gravity.BOTTOM)
+            subMenuDialog?.show()
+        }
+
+        private fun setCancelListener(
+            codeScanner: CodeScanner,
+        ){
+            val cancelImageButton =
+                subMenuDialog?.findViewById<ImageButton>(
+                    R.id.submenu_dialog_cancel
+                )
+            cancelImageButton?.setOnClickListener {
+                codeScanner.startPreview()
+                subMenuDialog?.dismiss()
+                subMenuDialog = null
+            }
+            subMenuDialog?.setOnCancelListener {
+                codeScanner.startPreview()
+                subMenuDialog?.dismiss()
+                subMenuDialog = null
+            }
+        }
+
+        private fun setListView(
+            fragment: Fragment,
+            currentAppDirPath: String,
+            codeScanner: CodeScanner,
+        ) {
+            val context = fragment.context
+                ?: return
+            val subMenuListView =
+                subMenuDialog?.findViewById<ListView>(
+                    R.id.sub_menu_list_view
+                )
+            val subMenuPairList = makeQrTitleList(
+                currentAppDirPath
+            )
+            val subMenuAdapter = SubMenuAdapter(
+                context,
+                subMenuPairList.toMutableList()
+            )
+            subMenuListView?.adapter = subMenuAdapter
+            subMenuItemClickListener(
+                fragment,
+                subMenuListView,
+                currentAppDirPath,
+                codeScanner,
+            )
+        }
+
+        private fun subMenuItemClickListener(
+            fragment: Fragment,
+            subMenuListView: ListView?,
+            currentAppDirPath: String,
+            codeScanner: CodeScanner,
+        ){
+            subMenuListView?.setOnItemClickListener {
+                    parent, view, position, id ->
+                qrScanDialogObj?.dismiss()
+                qrScanDialogObj = null
+                codeScanner.releaseResources()
+                subMenuDialog?.dismiss()
+                subMenuDialog = null
+                val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
+                val selectedQrTitle = menuListAdapter.getItem(position)
+                    ?: return@setOnItemClickListener
+                val selectedQrTitleUriLine = makeQrHistoryList(currentAppDirPath).filter {
+                    val titleUriList = it.split("\t")
+                    val title = titleUriList.firstOrNull() ?: String()
+                    title == selectedQrTitle
+                }.firstOrNull() ?: return@setOnItemClickListener
+                val selectedTitleQrList = selectedQrTitleUriLine.split("\t")
+                val selectedQrUri = selectedTitleQrList.filterIndexed{
+                        index, s -> index > 0
+                }.joinToString()
+                QrUriHandler.handle(
+                    fragment,
+                    currentAppDirPath,
+                    selectedQrUri
+                )
+                QrHistoryManager.registerQrUriToHistory(
+                    currentAppDirPath,
+                    selectedQrTitle,
+                    selectedQrUri,
+                )
+
+            }
+        }
+
+        private fun makeQrTitleList(
+            currentAppDirPath: String
+        ): List<Pair<String, Int>> {
+            val qrLogo = R.drawable.icons_qr_code
+            return makeQrHistoryList(
+                currentAppDirPath
+            ).map {
+                val titleUriList = it.split("\t")
+                val title = titleUriList.firstOrNull() ?: String()
+                title to qrLogo
+            }.filter { it.first.isNotEmpty() }.reversed()
+        }
+
+        private fun makeQrHistoryList(
+            currentAppDirPath: String
+        ): List<String>
+        {
+            val qrHistoryParentDirPath = "$currentAppDirPath/${UsePath.cmdclickQrSystemDirRelativePath}"
+            val cmdclickQrHistoryFileName = UsePath.cmdclickQrHistoryFileName
+            return ReadText(
+                File(
+                    qrHistoryParentDirPath,
+                    cmdclickQrHistoryFileName
+                ).absolutePath
+            ).textToList()
+        }
+    }
+
 }

@@ -115,7 +115,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.termux.termux-app:termux-shared:0.117")
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
-    implementation("com.github.Yumenokanata:KeyboardVisibilityEvent:1.1")
+    implementation("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3")
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     implementation("commons-io:commons-io:2.11.0")
     implementation("com.github.omadahealth:swipy:1.2.3@aar")

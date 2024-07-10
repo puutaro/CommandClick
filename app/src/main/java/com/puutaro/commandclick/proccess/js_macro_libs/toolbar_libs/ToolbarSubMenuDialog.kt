@@ -79,9 +79,11 @@ object ToolbarSubMenuDialog {
             )
         cancelImageButton?.setOnClickListener {
             listIndexSubMenuDialog?.dismiss()
+            listIndexSubMenuDialog = null
         }
         listIndexSubMenuDialog?.setOnCancelListener {
             listIndexSubMenuDialog?.dismiss()
+            listIndexSubMenuDialog = null
         }
     }
 
@@ -136,6 +138,7 @@ object ToolbarSubMenuDialog {
         )
         subMenuListView?.setOnItemClickListener { parent, view, position, id ->
             listIndexSubMenuDialog?.dismiss()
+            listIndexSubMenuDialog = null
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener

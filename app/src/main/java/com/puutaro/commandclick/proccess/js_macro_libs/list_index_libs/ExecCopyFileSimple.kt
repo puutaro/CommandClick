@@ -294,9 +294,11 @@ object CopyListDialog {
             )
         cancelImageButton?.setOnClickListener {
             copyListDialog?.dismiss()
+            copyListDialog = null
         }
         copyListDialog?.setOnCancelListener {
             copyListDialog?.dismiss()
+            copyListDialog = null
         }
     }
 
@@ -338,6 +340,7 @@ object CopyListDialog {
     ) {
         copyListView?.setOnItemClickListener { parent, view, position, id ->
             copyListDialog?.dismiss()
+            copyListDialog = null
             val copyListAdapter = copyListView.adapter as SubMenuAdapter
             val selectedDirOrTsvName = copyListAdapter.getItem(position)
                 ?: return@setOnItemClickListener

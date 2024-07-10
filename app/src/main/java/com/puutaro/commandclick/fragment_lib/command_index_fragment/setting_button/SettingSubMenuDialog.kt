@@ -51,9 +51,11 @@ object SettingSubMenuDialog {
             )
         cancelImageButton?.setOnClickListener {
             settingSubMenuDialog?.dismiss()
+            settingSubMenuDialog = null
         }
         settingSubMenuDialog?.setOnCancelListener {
             settingSubMenuDialog?.dismiss()
+            settingSubMenuDialog = null
         }
     }
 
@@ -87,6 +89,7 @@ object SettingSubMenuDialog {
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
             settingSubMenuDialog?.dismiss()
+            settingSubMenuDialog = null
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener

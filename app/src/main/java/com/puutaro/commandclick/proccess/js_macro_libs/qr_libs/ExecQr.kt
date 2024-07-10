@@ -58,7 +58,6 @@ object ExecQr {
                 QrConfirmDialog(
                     editFragment,
                     null,
-                    null,
                     useAppDirPath,
                     QrDecodedTitle.makeTitle(
                         context,

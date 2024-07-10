@@ -59,6 +59,7 @@ object GridDialogForButton {
 
         gridDialogObj?.setOnCancelListener {
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             terminalViewModel.onDialog = false
         }
         gridDialogObj?.window?.setLayout(
@@ -127,6 +128,7 @@ object GridDialogForButton {
                 editFragment
             )
             gridDialogObj?.dismiss()
+            gridDialogObj = null
             terminalViewModel.onDialog = false
             val selectedElement =
                 makeGridList(listCon).filter {

@@ -119,6 +119,7 @@ class JsConfirm(
     private fun dismissProcess(){
         returnBool = false
         confirmDialogObj?.dismiss()
+        confirmDialogObj = null
         terminalViewModel.onDialog = false
     }
 }

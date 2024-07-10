@@ -89,6 +89,7 @@ object ExecRenameAppDir {
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
+            promptDialog = null
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
@@ -96,6 +97,7 @@ object ExecRenameAppDir {
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
+            promptDialog = null
             val inputEditable = promptEditText?.text
             if(
                 inputEditable.isNullOrEmpty()
@@ -153,6 +155,7 @@ object ExecRenameAppDir {
         }
         promptDialog?.setOnCancelListener {
             promptDialog?.dismiss()
+            promptDialog = null
         }
         promptDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

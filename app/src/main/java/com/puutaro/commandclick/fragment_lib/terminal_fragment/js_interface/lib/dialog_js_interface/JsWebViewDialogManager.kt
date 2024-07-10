@@ -11,5 +11,6 @@ class JsWebViewDialogManager(
     @JavascriptInterface
     fun dismiss(){
         terminalFragment.webViewDialogInstance?.dismiss()
+        terminalFragment.webViewDialogInstance = null
     }
 }

@@ -8,6 +8,7 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -15,10 +16,10 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
@@ -34,6 +35,8 @@ import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.io.File
 
 
@@ -77,6 +80,7 @@ class CommandIndexFragment: Fragment() {
             container,
             false
         )
+        binding.lifecycleOwner = this.viewLifecycleOwner
         return binding.root
     }
 
@@ -172,14 +176,24 @@ class CommandIndexFragment: Fragment() {
         )
 
         val cmdindexInternetButton = binding.cmdindexInternetButton
-        KeyboardVisibilityEvent.setEventListener(activity) {
-                isOpen ->
+        activity?.let {
+            KeyboardVisibilityEvent.setEventListener(
+                it,
+                this.viewLifecycleOwner,
+                KeyboardVisibilityEventListener {
+                    isOpen ->
+                    // some code depending on keyboard visiblity status
+                    if(
+                        !this.isVisible
+                    ) return@KeyboardVisibilityEventListener
+                    Toast.makeText(
+                        context,
+                        "move",
+                        Toast.LENGTH_SHORT
+                    ).show()
             if(
-                !this.isVisible
-            ) return@setEventListener
-//            if(
-//                terminalViewModel.onDialog
-//            ) return@setEventListener
+                terminalViewModel.onDialog
+            ) return@KeyboardVisibilityEventListener
             val linearLayoutParam =
                 binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
             val cmdIndexFragmentWeight = linearLayoutParam.weight
@@ -199,7 +213,7 @@ class CommandIndexFragment: Fragment() {
                         isOpen,
                         this,
                 )
-                return@setEventListener
+                return@KeyboardVisibilityEventListener
             }
             KeyboardForCmdIndex.historyAndSearchHideShow(
                 isOpen,
@@ -227,7 +241,69 @@ class CommandIndexFragment: Fragment() {
                     )
                 }
             }
+                })
         }
+//        KeyboardVisibilityEvent.setEventListener(activity) {
+//                isOpen ->
+//            if(
+//                !this.isVisible
+//            ) return@setEventListener
+//            Toast.makeText(
+//                context,
+//                "move",
+//                Toast.LENGTH_SHORT
+//            ).show()
+////            if(
+////                terminalViewModel.onDialog
+////            ) return@setEventListener
+////            val linearLayoutParam =
+////                binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+////            val cmdIndexFragmentWeight = linearLayoutParam.weight
+////            val enableInternetButton = (
+////                    !isOpen
+////                    || cmdIndexFragmentWeight != ReadLines.LONGTH
+////                    )
+////            cmdindexInternetButton.isEnabled = enableInternetButton
+////            if(enableInternetButton){
+////                cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
+////            } else {
+////                cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
+////            }
+////            val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
+////            if(isLongth) {
+////                KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
+////                        isOpen,
+////                        this,
+////                )
+////                return@setEventListener
+////            }
+////            KeyboardForCmdIndex.historyAndSearchHideShow(
+////                isOpen,
+////                this,
+////            )
+////            val listener = context as? OnKeyboardVisibleListener
+////            val isOpenKeyboard = if(
+////                isOpen
+////            ) onTermVisibleWhenKeyboard !=
+////                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+////            else isOpen
+////            listener?.onKeyBoardVisibleChange(
+////                isOpenKeyboard,
+////                this.isVisible,
+////                this.WebSearchSwitch
+////            )
+////            if(
+////                !isOpen
+////                && binding.cmdListSwipeToRefresh.isVisible
+////            ){
+////                CoroutineScope(Dispatchers.Main).launch {
+////                    delay(100)
+////                    cmdListView.scrollToPosition(
+////                        fannelIndexListAdapter.itemCount - 1
+////                    )
+////                }
+////            }
+//        }
 
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             this,

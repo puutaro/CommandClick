@@ -81,6 +81,7 @@ object FileRenamer {
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
+            promptDialog = null
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
@@ -88,6 +89,7 @@ object FileRenamer {
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
+            promptDialog = null
             val inputEditable = promptEditText?.text
             if(
                 inputEditable.isNullOrEmpty()
@@ -123,6 +125,7 @@ object FileRenamer {
         }
         promptDialog?.setOnCancelListener {
             promptDialog?.dismiss()
+            promptDialog = null
         }
         promptDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

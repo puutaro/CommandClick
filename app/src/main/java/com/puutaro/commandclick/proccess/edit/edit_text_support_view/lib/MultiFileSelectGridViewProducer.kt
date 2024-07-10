@@ -133,10 +133,12 @@ object MultiFileSelectGridViewProducer {
                 .setNegativeButton("NO", DialogInterface.OnClickListener{
                         dialog, which ->
                     alertDialog?.dismiss()
+                    alertDialog = null
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{
                         dialog, which ->
                     alertDialog?.dismiss()
+                    alertDialog = null
                     val selectedItems = multiSelectImageAdapter.selectedItemList.map {
                         File(it).name
                     }.joinToString(",")
@@ -149,6 +151,7 @@ object MultiFileSelectGridViewProducer {
                 object : DialogInterface.OnCancelListener {
                     override fun onCancel(dialog: DialogInterface?) {
                         alertDialog?.dismiss()
+                        alertDialog = null
                     }
                 })
             alertDialog?.getButton(

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
@@ -19,7 +20,9 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
+import java.io.File
 
 
 object ToolbarMenuDialog {
@@ -128,9 +131,11 @@ object ToolbarMenuDialog {
             )
         cancelImageButton?.setOnClickListener {
             listIndexMenuDialog?.dismiss()
+            listIndexMenuDialog = null
         }
         listIndexMenuDialog?.setOnCancelListener {
             listIndexMenuDialog?.dismiss()
+            listIndexMenuDialog = null
         }
     }
 

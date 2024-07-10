@@ -160,6 +160,7 @@ class ImageJsDialog(
         isSuccess = isOk
         terminalViewModel.onDialog = false
         imageDialogObj?.dismiss()
+        imageDialogObj = null
     }
 
     private fun setShareButton(

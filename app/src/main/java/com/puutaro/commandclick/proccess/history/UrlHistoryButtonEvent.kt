@@ -50,6 +50,7 @@ class UrlHistoryButtonEvent(
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
     private val takeUrlListNum = 400
+    private var urlHistoryDialog: Dialog? = null
 
 
     fun invoke(
@@ -71,24 +72,24 @@ class UrlHistoryButtonEvent(
         }
         terminalViewModel.onDialog = true
         val historyButtonInnerViewContext = historyButtonInnerView.context
-        val urlHistoryDialog = Dialog(
+        urlHistoryDialog = Dialog(
             historyButtonInnerViewContext,
         )
-        urlHistoryDialog.setContentView(
+        urlHistoryDialog?.setContentView(
             R.layout.url_history_list_view_layout
         )
-        val urlHistoryListView = urlHistoryDialog.findViewById<ListView>(
+        val urlHistoryListView = urlHistoryDialog?.findViewById<ListView>(
             R.id.url_history_list_view
         )
         val urlHistoryListViewLinearParams =
-            urlHistoryListView.layoutParams as LinearLayout.LayoutParams
+            urlHistoryListView?.layoutParams as LinearLayout.LayoutParams
         urlHistoryListViewLinearParams.weight = listLinearWeight
         val urlHistoryList = makeUrlHistoryList()
-        val searchText = urlHistoryDialog.findViewById<EditText>(
+        val searchText = urlHistoryDialog?.findViewById<EditText>(
             R.id.url_history_search_edit_text
         )
         val searchTextLinearParams =
-            searchText.layoutParams as LinearLayout.LayoutParams
+            searchText?.layoutParams as LinearLayout.LayoutParams
         searchTextLinearParams.weight = searchTextLinearWeight
 
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
@@ -105,23 +106,23 @@ class UrlHistoryButtonEvent(
             urlHistoryDisplayListAdapter,
             searchText
         )
-        urlHistoryDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
+        urlHistoryDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
-                urlHistoryDialog.dismiss()
+                urlHistoryDialog?.dismiss()
+                urlHistoryDialog = null
                 terminalViewModel.onDialog = false
             }
         })
-        urlHistoryDialog.window
+        urlHistoryDialog?.window
             ?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        urlHistoryDialog.window?.setGravity(Gravity.BOTTOM)
-        urlHistoryDialog.show()
+        urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
+        urlHistoryDialog?.show()
         setUrlHistoryListViewOnItemClickListener(
             urlHistoryListView,
             urlHistoryList,
-            urlHistoryDialog,
             searchText
         )
 
@@ -157,12 +158,13 @@ class UrlHistoryButtonEvent(
     private fun setUrlHistoryListViewOnItemClickListener (
         urlHistoryListView: ListView,
         urlHistoryList: List<String>,
-        urlHistoryDialog: Dialog,
         searchText: EditText,
     ){
         urlHistoryListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
+            urlHistoryDialog?.dismiss()
+            urlHistoryDialog = null
             terminalViewModel.onDialog = false
             val filteredUrlHistoryTitle =
                 makeSearchFilteredUrlHistoryList(
@@ -183,7 +185,6 @@ class UrlHistoryButtonEvent(
                         currentAppDirPath
                     )
                 } ?: return@setOnItemClickListener
-            urlHistoryDialog.dismiss()
             if (
                 selectedUrl.endsWith(
                     UsePath.SHELL_FILE_SUFFIX

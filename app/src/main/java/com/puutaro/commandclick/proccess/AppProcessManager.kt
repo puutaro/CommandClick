@@ -90,6 +90,7 @@ object AppProcessManager {
         )
         cancelButton?.setOnClickListener {
             killDialog?.dismiss()
+            killDialog = null
         }
 
         setKillTypeListView(
@@ -100,6 +101,7 @@ object AppProcessManager {
         )
         killDialog?.setOnCancelListener {
             killDialog?.dismiss()
+            killDialog = null
         }
         killDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -222,6 +224,7 @@ object AppProcessManager {
                 parent, View, pos, id
             ->
             killDialog?.dismiss()
+            killDialog = null
             val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedProcess = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
@@ -283,6 +286,7 @@ object AppProcessManager {
         )
         cancelButton?.setOnClickListener {
             killDialog?.dismiss()
+            killDialog = null
         }
 
         setProcessListView(
@@ -291,6 +295,7 @@ object AppProcessManager {
         )
         killDialog?.setOnCancelListener {
             killDialog?.dismiss()
+            killDialog = null
         }
         killDialog?.window?.setGravity(Gravity.BOTTOM)
         killDialog?.show()

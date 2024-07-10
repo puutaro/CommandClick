@@ -140,10 +140,12 @@ class JsDirSelect(
         )
         confirmCancelButton?.setOnClickListener {
             confirmDialog?.dismiss()
+            confirmDialog = null
             terminalViewModel.onDialog = false
         }
         confirmDialog?.setOnCancelListener {
             confirmDialog?.dismiss()
+            confirmDialog = null
             terminalViewModel.onDialog = false
         }
         confirmDialog?.window?.setLayout(
@@ -169,6 +171,7 @@ class JsDirSelect(
             )
         confirmOkButton?.setOnClickListener {
             confirmDialog?.dismiss()
+            confirmDialog = null
             val removeDirPath = "${targetDirPath}/${editDirNameForDialog}"
             val removeDirPathObj = File(removeDirPath)
             if(

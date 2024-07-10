@@ -188,6 +188,7 @@ class PromptJsDialog(
         promptCancelButton?.setOnClickListener {
             returnValue = String()
             promptDialogObj?.dismiss()
+            promptDialogObj = null
             terminalViewModel.onDialog = false
         }
         val promptOkButtonView =
@@ -201,17 +202,20 @@ class PromptJsDialog(
             ) {
                 returnValue = String()
                 promptDialogObj?.dismiss()
+                promptDialogObj = null
                 terminalViewModel.onDialog = false
                 return@setOnClickListener
             }
             else returnValue = inputEditable.toString()
             registerToSuggest(variableName)
             promptDialogObj?.dismiss()
+            promptDialogObj = null
             terminalViewModel.onDialog = false
         }
         promptDialogObj?.setOnCancelListener {
             returnValue = String()
             promptDialogObj?.dismiss()
+            promptDialogObj = null
             terminalViewModel.onDialog = false
         }
         promptDialogObj?.window?.setLayout(
@@ -258,6 +262,7 @@ class PromptJsDialog(
                 if(promptEditText.text.isNullOrEmpty()){
                     returnValue = String()
                     promptDialogObj?.dismiss()
+                    promptDialogObj = null
                     terminalViewModel.onDialog = false
                     return false
                 }
@@ -266,6 +271,7 @@ class PromptJsDialog(
                     variableName,
                 )
                 promptDialogObj?.dismiss()
+                promptDialogObj = null
                 terminalViewModel.onDialog = false
                 return false
             }

@@ -167,6 +167,7 @@ object PopupSettingMenu {
     ) {
         menuListView.setOnItemClickListener { parent, View, pos, id ->
             menuPopupWindow?.dismiss()
+            menuPopupWindow = null
             val menuListAdapter = menuListView.adapter as SubMenuAdapter
             val clickedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
@@ -320,6 +321,7 @@ object PopupSettingMenu {
             )
         navImageButton.setOnClickListener {
             menuPopupWindow?.dismiss()
+            menuPopupWindow = null
             val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
             listener?.onToolbarMenuCategoriesForEdit(
                 toolbarMenuCategoriesVariantForCmdIndex,

@@ -112,6 +112,7 @@ class QrScanJsDialog(
                 ToastUtils.showLong("Scan result: ${decodeText}")
                 codeScanner.releaseResources()
                 qrScanDialogObj?.dismiss()
+                qrScanDialogObj = null
                 terminalViewModel.onDialog = false
                 loadJsForQrMenu(
                     currentScriptPath,
@@ -174,6 +175,7 @@ class QrScanJsDialog(
     ){
         codeScanner.releaseResources()
         qrScanDialogObj?.dismiss()
+        qrScanDialogObj = null
         terminalViewModel.onDialog = false
     }
 
@@ -474,6 +476,7 @@ class QrScanJsDialog(
                 }
                 withContext(Dispatchers.Main) {
                     qrScanDialogObj?.dismiss()
+                    qrScanDialogObj = null
                 }
             }
         }

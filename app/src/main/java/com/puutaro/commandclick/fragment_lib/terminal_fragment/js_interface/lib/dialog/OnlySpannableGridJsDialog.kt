@@ -152,6 +152,7 @@ class OnlySpannableGridJsDialog(
                 parent, View, pos, id
             ->
             alertDialog?.dismiss()
+            alertDialog = null
             val selectedElement = listCon.split("\n")
                 .get(pos)
                 .split("\n")

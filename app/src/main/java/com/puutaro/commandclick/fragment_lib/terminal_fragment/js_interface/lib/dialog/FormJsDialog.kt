@@ -75,6 +75,7 @@ class FormJsDialog(
                     delay(100)
                     if (!terminalViewModel.onDialog) {
                         formDialog?.dismiss()
+                        formDialog = null
                         break
                     }
                 }
@@ -198,6 +199,7 @@ class FormJsDialog(
             terminalViewModel.onDialog = false
             returnValue = String()
             formDialog?.dismiss()
+            formDialog = null
         }
         val confirmOkButton =
             formDialog?.findViewById<AppCompatImageButton>(
@@ -205,6 +207,7 @@ class FormJsDialog(
             )
         confirmOkButton?.setOnClickListener {
             formDialog?.dismiss()
+            formDialog = null
             val updateVirtualJsContentsList = if(
                 recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
             ) virtualJsContentsList
@@ -233,6 +236,7 @@ class FormJsDialog(
             terminalViewModel.onDialog = false
             returnValue = String()
             formDialog?.dismiss()
+            formDialog = null
         }
         formDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

@@ -72,9 +72,11 @@ object CopyJsDialog {
                 descriptionTextView,
             )
             copyDialogObj?.dismiss()
+            copyDialogObj = null
         }
         copyDialogObj?.setOnCancelListener {
             copyDialogObj?.dismiss()
+            copyDialogObj = null
         }
         copyDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

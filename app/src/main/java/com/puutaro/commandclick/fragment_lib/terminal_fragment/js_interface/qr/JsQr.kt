@@ -43,11 +43,6 @@ class JsQr(
 ) {
     private val context = terminalFragment.context
 
-    val qrScanner = QrScanner(
-        terminalFragment,
-        terminalFragment.currentAppDirPath
-    )
-
     @JavascriptInterface
     fun qrPrefixList(): String {
         val qrPrefixsCon = QrLaunchType.values().map { it.prefix }.joinToString("\n")
@@ -87,7 +82,8 @@ class JsQr(
     fun scanFromImage(
         qrImagePath: String
     ): String {
-        val errMassage = qrScanner.scanFromImage(
+        val errMassage = QrScanner.scanFromImage(
+            terminalFragment,
             qrImagePath
         )
         return errMassage
@@ -108,14 +104,13 @@ class JsQr(
     fun scanConfirmHandler(
         qrImagePath: String
     ){
-        val decodedText = QrScanner(
+        val decodedText = QrScanner.scanFromImage(
             terminalFragment,
-            terminalFragment.currentAppDirPath
-        ).scanFromImage(qrImagePath)
+            qrImagePath,
+        )
         CoroutineScope(Dispatchers.Main).launch {
             QrConfirmDialog(
                 terminalFragment,
-                null,
                 null,
                 terminalFragment.currentAppDirPath,
                 QrDecodedTitle.makeTitle(

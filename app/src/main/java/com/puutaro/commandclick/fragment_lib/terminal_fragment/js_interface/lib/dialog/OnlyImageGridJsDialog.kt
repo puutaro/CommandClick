@@ -164,6 +164,7 @@ class OnlyImageGridJsDialog(
                 parent, View, pos, id
             ->
             onlyImageGridDialog?.dismiss()
+            onlyImageGridDialog = null
             val selectedElement = listCon.split("\n")
                 .get(pos)
                 .split("\n")

@@ -24,6 +24,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 object ListDialogForButton {
 
     private val searchSwitchThreshold = 5
+    private var alertDialog: AlertDialog? = null
 
 
     fun create(
@@ -83,23 +84,25 @@ object ListDialogForButton {
         linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
-        val alertDialog = AlertDialog.Builder(
+        alertDialog = AlertDialog.Builder(
             context
         )
             .setTitle("Select bellow list")
             .setView(linearLayoutForTotal)
             .create()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
+        alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setTextColor(
             context.getColor(android.R.color.black)
         )
         alertDialog?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setTextColor(
             context.getColor(android.R.color.black)
         )
-        alertDialog.show()
+        alertDialog?.show()
 
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
+        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
+                alertDialog?.dismiss()
+                alertDialog = null
                 terminalViewModel.onDialog = false
             }
         })
@@ -107,7 +110,6 @@ object ListDialogForButton {
             dialogListView,
             listCon,
             searchText,
-            alertDialog,
             terminalViewModel,
         )
     }
@@ -116,13 +118,13 @@ object ListDialogForButton {
         dialogListView: ListView,
         listCon: String,
         searchText: EditText,
-        alertDialog: AlertDialog,
         terminalViewModel: TerminalViewModel,
     ) {
         dialogListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog.dismiss()
+            alertDialog?.dismiss()
+            alertDialog = null
             val selectedElement = listCon.split("\n").filter {
                 Regex(
                     searchText.text.toString()

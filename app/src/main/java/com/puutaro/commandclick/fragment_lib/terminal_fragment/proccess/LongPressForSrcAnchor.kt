@@ -101,6 +101,7 @@ class LongPressForSrcAnchor(
         )
         cancelButton?.setOnClickListener {
             longPressSrcAnchorDialog?.dismiss()
+            longPressSrcAnchorDialog = null
         }
 
         setListView(
@@ -111,6 +112,7 @@ class LongPressForSrcAnchor(
         )
         longPressSrcAnchorDialog?.setOnCancelListener {
             longPressSrcAnchorDialog?.dismiss()
+            longPressSrcAnchorDialog = null
         }
         longPressSrcAnchorDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -156,6 +158,7 @@ class LongPressForSrcAnchor(
                 parent, View, pos, id
             ->
             longPressSrcAnchorDialog?.dismiss()
+            longPressSrcAnchorDialog = null
             val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener

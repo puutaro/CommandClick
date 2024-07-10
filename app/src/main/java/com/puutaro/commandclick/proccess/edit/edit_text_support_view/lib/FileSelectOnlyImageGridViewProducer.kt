@@ -131,6 +131,7 @@ object FileSelectOnlyImageGridViewProducer {
             alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
                 override fun onCancel(dialog: DialogInterface?) {
                     alertDialog?.dismiss()
+                    alertDialog = null
                 }
             })
         }
@@ -172,6 +173,7 @@ object FileSelectOnlyImageGridViewProducer {
                 parent, View, pos, id
             ->
             alertDialog?.dismiss()
+            alertDialog = null
             val currentGridList = makeGridList(
                 filterDir,
                 filterPrefix,

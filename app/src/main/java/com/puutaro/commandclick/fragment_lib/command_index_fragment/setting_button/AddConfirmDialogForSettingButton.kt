@@ -65,6 +65,7 @@ object AddConfirmDialogForSettingButton {
         )
         addConfirmDialog?.setOnCancelListener {
             addConfirmDialog?.dismiss()
+            addConfirmDialog = null
         }
         addConfirmDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -87,6 +88,7 @@ object AddConfirmDialogForSettingButton {
             )
         confirmCancelButton?.setOnClickListener {
             addConfirmDialog?.dismiss()
+            addConfirmDialog = null
             FileSystems.removeFiles(
                 File(
                     currentAppDirPath,
@@ -112,6 +114,7 @@ object AddConfirmDialogForSettingButton {
             )
         confirmOkButton?.setOnClickListener {
             addConfirmDialog?.dismiss()
+            addConfirmDialog = null
             confirmOkExecutor(
                 binding,
                 languageTypeToSectionHolderMap,

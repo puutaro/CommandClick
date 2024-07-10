@@ -54,6 +54,7 @@ class AddScriptHandler(
         )
         cancelButton?.setOnClickListener {
             languageSelectDialog?.dismiss()
+            languageSelectDialog = null
         }
         setListView(
             languageSelectList
@@ -61,6 +62,7 @@ class AddScriptHandler(
 
         languageSelectDialog?.setOnCancelListener {
             languageSelectDialog?.dismiss()
+            languageSelectDialog = null
         }
         languageSelectDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -96,6 +98,7 @@ class AddScriptHandler(
                 parent, View, pos, id
             ->
             languageSelectDialog?.dismiss()
+            languageSelectDialog = null
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedLanguage = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener

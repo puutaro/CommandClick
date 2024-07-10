@@ -82,6 +82,7 @@ object ConfirmWaitDialog {
             )
         confirmCancelButton?.setOnClickListener {
             getPermissionConfirmDialog?.dismiss()
+            getPermissionConfirmDialog = null
         }
         val confirmOkButton =
             getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
@@ -89,6 +90,7 @@ object ConfirmWaitDialog {
             )
         confirmOkButton?.setOnClickListener {
             getPermissionConfirmDialog?.dismiss()
+            getPermissionConfirmDialog = null
             isOk = true
         }
         getPermissionConfirmDialog?.window?.setLayout(

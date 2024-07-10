@@ -107,6 +107,7 @@ class LongPressForImage(
         )
         cancelButton?.setOnClickListener {
             longPressImageDialog?.dismiss()
+            longPressImageDialog = null
         }
 
         setListView(
@@ -124,6 +125,7 @@ class LongPressForImage(
 
         longPressImageDialog?.setOnCancelListener{
             longPressImageDialog?.dismiss()
+            longPressImageDialog = null
         }
     }
 
@@ -138,6 +140,7 @@ class LongPressForImage(
                 parent, View, pos, id
             ->
             longPressImageDialog?.dismiss()
+            longPressImageDialog = null
             val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener

@@ -120,11 +120,13 @@ class MultiSelectGridViewJsDialog(
                 .setView(linearLayoutForGridView)
                 .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
                     terminalFragment.alertDialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance = null
                     terminalViewModel.onDialog = false
                     returnValue = String()
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
                     terminalFragment.alertDialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance = null
                     terminalViewModel.onDialog = false
                 })
                 .show()
@@ -136,11 +138,13 @@ class MultiSelectGridViewJsDialog(
                 .setView(linearLayoutForGridView)
                 .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
                     terminalFragment.alertDialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance = null
                     terminalViewModel.onDialog = false
                     returnValue = String()
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
                     terminalFragment.alertDialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance = null
                     terminalViewModel.onDialog = false
                 })
                 .show()

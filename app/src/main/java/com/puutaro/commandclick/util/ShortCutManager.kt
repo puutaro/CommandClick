@@ -121,6 +121,7 @@ class ShortCutManager(
             )
         promptCancelButton?.setOnClickListener {
             shortcutNamePromptDialog?.dismiss()
+            shortcutNamePromptDialog = null
         }
         val promptOkButtonView =
             shortcutNamePromptDialog?.findViewById<AppCompatImageButton>(
@@ -128,6 +129,7 @@ class ShortCutManager(
             )
         promptOkButtonView?.setOnClickListener {
             shortcutNamePromptDialog?.dismiss()
+            shortcutNamePromptDialog = null
             val shortcutNameEditable = promptEditText?.text
             if(
                 shortcutNameEditable.isNullOrEmpty()
@@ -140,6 +142,7 @@ class ShortCutManager(
         }
         shortcutNamePromptDialog?.setOnCancelListener {
             shortcutNamePromptDialog?.dismiss()
+            shortcutNamePromptDialog = null
         }
         shortcutNamePromptDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

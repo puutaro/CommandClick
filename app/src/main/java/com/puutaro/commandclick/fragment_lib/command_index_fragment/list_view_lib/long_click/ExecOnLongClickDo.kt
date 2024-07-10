@@ -75,6 +75,7 @@ object ExecOnLongClickDo {
                     )
                     cancelButton?.setOnClickListener {
                         contextMenuDialog?.dismiss()
+                        contextMenuDialog = null
                     }
 
                     setContextMenuListView(
@@ -84,6 +85,7 @@ object ExecOnLongClickDo {
                     )
                     contextMenuDialog?.setOnCancelListener {
                         contextMenuDialog?.dismiss()
+                        contextMenuDialog = null
                     }
                     contextMenuDialog?.window?.setLayout(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -132,6 +134,7 @@ object ExecOnLongClickDo {
         contextMenuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             contextMenuDialog?.dismiss()
+            contextMenuDialog = null
             val menuListAdapter = contextMenuListView.adapter as SubMenuAdapter
             val selectedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
@@ -346,6 +349,7 @@ private object UtilitySubMenuDialog {
         )
         cancelButton?.setOnClickListener {
             utilitySubMenuDialog?.dismiss()
+            utilitySubMenuDialog = null
         }
 
         utilitySubMenuListView(
@@ -355,6 +359,7 @@ private object UtilitySubMenuDialog {
         )
         utilitySubMenuDialog?.setOnCancelListener {
             utilitySubMenuDialog?.dismiss()
+            utilitySubMenuDialog = null
         }
         utilitySubMenuDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -402,6 +407,7 @@ private object UtilitySubMenuDialog {
         copyMenuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             utilitySubMenuDialog?.dismiss()
+            utilitySubMenuDialog = null
             val menuListAdapter = copyMenuListView.adapter as SubMenuAdapter
             val selectedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener

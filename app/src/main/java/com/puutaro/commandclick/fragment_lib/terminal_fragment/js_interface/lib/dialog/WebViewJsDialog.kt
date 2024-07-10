@@ -199,6 +199,7 @@ class WebViewJsDialog(
         else "${WebUrlVariables.queryUrl}${madeUrl}"
         CoroutineScope(Dispatchers.Main).launch{
             terminalFragment.webViewDialogInstance?.dismiss()
+            terminalFragment.webViewDialogInstance = null
             terminalFragment.webViewDialogInstance = Dialog(
                 context as Context
             )
@@ -280,8 +281,8 @@ class WebViewJsDialog(
                 delay(200)
             }
             withContext(Dispatchers.Main) {
-                val webViewDialog = terminalFragment.webViewDialogInstance
-                webViewDialog?.dismiss()
+                terminalFragment.webViewDialogInstance?.dismiss()
+                terminalFragment.webViewDialogInstance = null
             }
         }
     }
@@ -292,6 +293,7 @@ class WebViewJsDialog(
         webView.destroy()
         positionHashMap.clear()
         terminalFragment.webViewDialogInstance?.dismiss()
+        terminalFragment.webViewDialogInstance = null
     }
 
     private fun webViewSetting(

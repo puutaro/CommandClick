@@ -167,6 +167,7 @@ object ExecSimpleDelete {
                 )
             confirmCancelButton?.setOnClickListener {
                 getPermissionConfirmDialog?.dismiss()
+                getPermissionConfirmDialog = null
                 cancelProcess(
                     recyclerView,
                     listIndexPosition,
@@ -174,6 +175,7 @@ object ExecSimpleDelete {
             }
             getPermissionConfirmDialog?.setOnCancelListener {
                 getPermissionConfirmDialog?.dismiss()
+                getPermissionConfirmDialog = null
                 cancelProcess(
                     recyclerView,
                     listIndexPosition,
@@ -185,6 +187,7 @@ object ExecSimpleDelete {
                 )
             confirmOkButton?.setOnClickListener {
                 getPermissionConfirmDialog?.dismiss()
+                getPermissionConfirmDialog = null
                 removeItem(
                     editFragment,
                     listIndexForEditAdapter,
