@@ -186,61 +186,56 @@ class CommandIndexFragment: Fragment() {
                     if(
                         !this.isVisible
                     ) return@KeyboardVisibilityEventListener
-                    Toast.makeText(
-                        context,
-                        "move",
-                        Toast.LENGTH_SHORT
-                    ).show()
-            if(
-                terminalViewModel.onDialog
-            ) return@KeyboardVisibilityEventListener
-            val linearLayoutParam =
-                binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
-            val cmdIndexFragmentWeight = linearLayoutParam.weight
-            val enableInternetButton = (
-                    !isOpen
-                    || cmdIndexFragmentWeight != ReadLines.LONGTH
-                    )
-            cmdindexInternetButton.isEnabled = enableInternetButton
-            if(enableInternetButton){
-                cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
-            } else {
-                cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
-            }
-            val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
-            if(isLongth) {
-                KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
+                    if(
+                        terminalViewModel.onDialog
+                    ) return@KeyboardVisibilityEventListener
+                    val linearLayoutParam =
+                        binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    val cmdIndexFragmentWeight = linearLayoutParam.weight
+                    val enableInternetButton = (
+                            !isOpen
+                            || cmdIndexFragmentWeight != ReadLines.LONGTH
+                            )
+                    cmdindexInternetButton.isEnabled = enableInternetButton
+                    if(enableInternetButton){
+                        cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
+                    } else {
+                        cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
+                    }
+                    val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
+                    if(isLongth) {
+                        KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
+                                isOpen,
+                                this,
+                        )
+                        return@KeyboardVisibilityEventListener
+                    }
+                    KeyboardForCmdIndex.historyAndSearchHideShow(
                         isOpen,
                         this,
-                )
-                return@KeyboardVisibilityEventListener
-            }
-            KeyboardForCmdIndex.historyAndSearchHideShow(
-                isOpen,
-                this,
-            )
-            val listener = context as? OnKeyboardVisibleListener
-            val isOpenKeyboard = if(
-                isOpen
-            ) onTermVisibleWhenKeyboard !=
-                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-            else isOpen
-            listener?.onKeyBoardVisibleChange(
-                isOpenKeyboard,
-                this.isVisible,
-                this.WebSearchSwitch
-            )
-            if(
-                !isOpen
-                && binding.cmdListSwipeToRefresh.isVisible
-            ){
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(100)
-                    cmdListView.scrollToPosition(
-                        fannelIndexListAdapter.itemCount - 1
                     )
-                }
-            }
+                    val listener = context as? OnKeyboardVisibleListener
+                    val isOpenKeyboard = if(
+                        isOpen
+                    ) onTermVisibleWhenKeyboard !=
+                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+                    else isOpen
+                    listener?.onKeyBoardVisibleChange(
+                        isOpenKeyboard,
+                        this.isVisible,
+                        this.WebSearchSwitch
+                    )
+                    if(
+                        !isOpen
+                        && binding.cmdListSwipeToRefresh.isVisible
+                    ){
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(100)
+                            cmdListView.scrollToPosition(
+                                fannelIndexListAdapter.itemCount - 1
+                            )
+                        }
+                    }
                 })
         }
 //        KeyboardVisibilityEvent.setEventListener(activity) {
