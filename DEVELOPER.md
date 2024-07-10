@@ -32,7 +32,7 @@ Table of Contents
 * [Ubuntu](#ubuntu)
     * [Custom shell command](#custom-shell-command)
     * [Ubuntu env variables](#ubuntu-env-variables)
-    * [Ubuntu Extra Startup Shell Paths](#ubuntuextrastartupshellpaths)
+    * [Ubuntu Extra Startup Shell Paths](#ubuntu-extra-startup-shell-paths)
 * [QR code format](#qr-code-format)
 * [Directory structure](#directory-structure)
 * [File api](#file-api)
