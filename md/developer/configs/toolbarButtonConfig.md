@@ -5,6 +5,7 @@ Table
 <!-- vim-markdown-toc GFM -->
 
 * [Overview](#overview)
+* [How to specify](#how-to-specify)
 * [Config key ](#config-key-)
 	* [click](#click)
 		* [Ex for click](#ex-for-click)
@@ -18,6 +19,68 @@ Table
 Config for toolbar button feature
 
 - Use default config in no set
+
+## How to specify
+
+
+Specify by setting variables([playButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#playbuttonconfig)),[editButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editbuttonconfig)), [settingButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#settingbuttonconfig)), [extraButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#extrabuttonconfig))) in fannel
+
+
+```js.js
+/// SETTING_SECTION_START
+playButtonConfig="file://${toolbar button config path1}"
+editButtonConfig="file://${toolbar button config path2}"
+settingButtonConfig="file://${toolbar button config path3}"
+extraButtonConfig="file://${toolbar button config path4}"
+/// SETTING_SECTION_END
+```
+
+- `${toolbar button config path1}` con
+
+```js.js
+color=darkGreen,
+disable=OFF,
+
+click=
+    func=D_MENU
+        ?args=
+            menuPath=
+                `${cmdTtsPlayerTableSettingMenuConfigPath}`
+                &title="Setting menu",
+
+```
+- `${toolbar button config path2}` ex
+
+```js.js
+visible=ON,
+
+disable=OFF,
+    color=darkGreen,
+
+click=
+    acVar=runToTableState
+        ?importPath=`${cmdMusicPlayerChangeStateAction}`
+        ?replace=
+            STATE=`${TABLE}`,
+
+```
+
+- `${toolbar button config path3}` ex
+
+```js.js
+.  
+.  
+.  
+```
+
+- `${toolbar button config path4}` ex
+
+```js.js
+.  
+.  
+.  
+```
+
 
 ## Config key 
 

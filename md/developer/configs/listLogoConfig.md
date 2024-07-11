@@ -8,6 +8,7 @@ Table
 -----------------
 <!-- vim-markdown-toc GFM -->
 
+* [How to specify](#how-to-specify)
 * [List logo config format](#list-logo-config-format)
 * [List logo config key](#list-logo-config-key)
     * [mode](#mode)
@@ -45,6 +46,53 @@ Table
             * [listDirPath macro for nameConfigPath tsv](#listdirpath-macro-for-nameconfigpath-tsv)
             * [map contents value for nameConfigPath tsv](#map-contents-value-for-nameconfigpath-tsv)
             * [Ex for nameConfigPath in icon](#ex-for-nameconfigpath-in-icon)
+    * [click](#click)
+        * [Format for click](#format-for-click)
+        * [Key-value table for click](#key-value-table-for-click)
+        * [Pre reserved variable](#pre-reserved-variable)
+        * [Ex for click](#ex-for-click)
+        * [Js action macro](#js-action-macro)
+    * [longClick](#longclick)
+    * [alter](#alter)
+
+## How to specify
+
+Specify by setting variables([qrDialogConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#playbuttonconfig)),[editButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editbuttonconfig)), [settingButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#settingbuttonconfig)), [extraButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#qrdialogconfig))) in fannel
+
+```js.js
+/// SETTING_SECTION_START
+qrDialogConfig="file://${qr dialog config path1}"
+/// SETTING_SECTION_END
+```
+
+- `${qr dialog config path1}` con
+
+```js.js
+mode=
+    tsvEdit,
+
+logo=
+    oneSideLength=40
+    |icon=
+        name=star
+        ?bkColor=navy
+        ?color=lightAo,
+
+click=
+    acVar=runCopyToLike
+        ?importPath=
+            `${cmdTtsPlayerCopyToOtherAction}`
+        ?replace=
+            COPY_TSV_PATH_TO_TYPE_CON=`${cmdTtsPlayerLikePlayListPath}`
+    |alter=`
+        shellIfPath=JUDGE_LIST_DIR
+        |ifArgs=
+            tsvPath=${cmdTtsPlayerManagerListIndexTsvPath}
+            ?tsvValue=${cmdTtsPlayerLikePlayListPath}
+            ?alterCon="?when=false"
+            `,
+
+```
 
 ## List logo config format
 
@@ -418,3 +466,6 @@ click=
 Long click action for logo  
 Similar to [click](#click)  
 
+### alter
+
+Alter by condition [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/alter.md)

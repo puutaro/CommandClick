@@ -7,17 +7,24 @@ Table
 <!-- vim-markdown-toc GFM -->
 
 * [Use case](#use-case)
+* [How to specify](#how-to-specify)
 * [Ex ubuntuExtraStartupShellPaths.tsv](#ex-ubuntuextrastartupshellpaths.tsv)
 * [ubuntuExtraStartupShellPaths.tsv format](#ubuntuextrastartupshellpaths.tsv-format)
 * [First field](#first-field)
-    * [Env variable on shell path](#env-variable-on-shell-path)
-    * [shell path macro](#shell-path-macro)
+  * [Env variable on shell path](#env-variable-on-shell-path)
+  * [shell path macro](#shell-path-macro)
 * [Second field](#second-field)
-    * [Key-values table](#key-values-table)
+  * [Key-values table](#key-values-table)
 
 ## Use case
 
 For make startup script, service, and daemon etc...
+
+## How to specify
+
+Put this tsv to `/storage/emulated/0/Documents/cmdclick/AppDir/system/cmdclickConfigDir/settings`  
+So, automatically reflect in ubuntu service
+
 
 ## Ex ubuntuExtraStartupShellPaths.tsv
 

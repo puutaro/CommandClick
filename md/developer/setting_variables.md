@@ -289,23 +289,73 @@ Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/deve
 
 - [imageLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#image_long_press_menu)
 
+## listIndexConfig
+
+[List index](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types/list_index.md) setting config
+
+-> [list index config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+- ex
+
+```js.js
+/// SETTING_SECTION_START
+listIndexConfig="type=normal,..." 
+/// SETTING_SECTION_END
+```
+
+- file prefix ex
+
+```js.js
+/// SETTING_SECTION_START
+listIndexConfig="file://{list index config path} 
+/// SETTING_SECTION_END
+```
+
+## qrDialogConfig
+
+Qr logo setting config
+
+-> [list logo config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listLogoConfig.md)
+
+- ex
+
+```js.js
+/// SETTING_SECTION_START
+qrDialogConfig="mode=normal,..." 
+/// SETTING_SECTION_END
+```
+
+- file prefix ex
+
+```js.js
+/// SETTING_SECTION_START
+qrDialogConfig="file://{qr dialog config path} 
+/// SETTING_SECTION_END
+```
+
+
 ## playButtonConfig
 
 Set play or ok button config
 
 -> [toolbar button config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/toolbarButtonConfig.md)
 
-- ex
+- ex 
 
 ```js.js
+/// SETTING_SECTION_START
 playButtonConfig="icon=play,click=OK..." 
+/// SETTING_SECTION_END
 ```
 
-or
+- file prefix ex 
 
 ```js.js
+/// SETTING_SECTION_START
 playButtonConfig="file://{play button config path} 
+/// SETTING_SECTION_END
 ```
+
 
 ## editButtonConfig
 
@@ -316,13 +366,17 @@ Set edit button config
 - ex
 
 ```js.js
+/// SETTING_SECTION_START
 editButtonConfig="icon=edit,click=EDIT..." 
+/// SETTING_SECTION_END
 ```
 
-or
+- file prefix ex
 
 ```js.js
+/// SETTING_SECTION_START
 editButtonConfig="file://{edit button config path} 
+/// SETTING_SECTION_END
 ```
 
 ## settingButtonConfig
@@ -334,13 +388,17 @@ Set setting button config
 - ex
 
 ```js.js
+/// SETTING_SECTION_START
 settingButtonConfig="icon=setting,click=MENU..." 
+/// SETTING_SECTION_END
 ```
 
-or
+- file prefix ex
 
 ```js.js
+/// SETTING_SECTION_START
 settingButtonConfig="file://{setting button config path} 
+/// SETTING_SECTION_END
 ```
 
 ## extraButtonConfig
@@ -352,13 +410,16 @@ Set extra button config
 - ex
 
 ```js.js
+/// SETTING_SECTION_START
 extraButtonConfig="icon=setup,click=MENU..." 
+/// SETTING_SECTION_END
 ```
 
-or
+- file prefix ex
 
 ```js.js
 extraButtonConfig="file://{extra button config path} 
+/// SETTING_SECTION_END
 ```
  
 ## noScrollSaveUrls

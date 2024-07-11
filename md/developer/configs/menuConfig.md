@@ -6,6 +6,7 @@ Table
 -----------------
 <!-- vim-markdown-toc GFM -->
 
+* [How to specify](#how-to-specify)
 * [Menu config format](#menu-config-format)
 * [Menu config key](#menu-config-key)
     * [name](#name)
@@ -24,7 +25,34 @@ Table
     * [parentName](#parentname)
         * [Format for parentName](#format-for-parentname)
         * [Ex for parentName](#ex-for-parentname)
+    * [alter](#alter)
 
+## How to specify
+
+Specify by [MENU](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#menu), [MENU](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#menu), or [D_MENU](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#menu) macro
+
+```js.js
+|func=MENU
+  ?args=
+    menuPath=`${MENU_PATH}`
+    &onHideFooter=,
+```
+
+- `${MENU_PATH}` con
+
+```js.js
+name=delete
+|icon=cancel
+|func=SIMPLE_DELETE,
+
+name=Rename
+|icon=edit_frame
+|func=RENAME,
+
+name=edit
+|icon=edit
+|func=SIMPLE_EDIT,
+```
 
 ## Menu config format
 
@@ -190,3 +218,7 @@ name=edit
 |icon=edit
 |func=SIMPLE_EDIT,
 ```
+
+### alter
+
+Alter by condition [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/alter.md)

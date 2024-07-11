@@ -8,6 +8,7 @@ Table
 -----------------
 <!-- vim-markdown-toc GFM -->
 
+* [How to specify](#how-to-specify)
 * [List index config format](#list-index-config-format)
 * [List index config key](#list-index-config-key)
     * [type](#type)
@@ -35,17 +36,61 @@ Table
     * [click](#click)
         * [Format for click](#format-for-click)
         * [Key-value table for click](#key-value-table-for-click)
-        * [Pre reserved variable](#pre-reserved-variable)
+        * [func key table for click](#func-key-table-for-click)
         * [Ex for click](#ex-for-click)
         * [Js action macro](#js-action-macro)
     * [longClick](#longclick)
-    * [delete](#delete)
-        * [Format for delete](#format-for-delete)
-        * [Key-value table](#key-value-table)
-        * [Ex for delete](#ex-for-delete)
     * [alter](#alter)
 
+
+## How to specify
+
+Specify by setting variables([listIndexConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#listindexconfig))) in fannel
+
+```js.js
+/// SETTING_SECTION_START
+listIndexConfig="file://${list index config path1}"
+/// SETTING_SECTION_END
+```
     
+
+- `${list index config path1}` con
+
+```js.js
+type=
+    tsvEdit,
+
+list=
+    listDir=`${cmdTtsPlayerTableTsvPath}`
+    |compPath=`${cmdTtsPlayerTableInitTsvConPath}`
+    |prefix=`${TTS_PREFIX}`
+    |suffix=`${TSV_SUFFIX}`
+    ,
+
+name=
+    removeExtend=,
+
+click=
+    enableUpdate=ON
+    |acVar=runToConfigState
+        ?importPath=
+            `${cmdTtsPlayerChangeStateAction}`
+        ?replace=
+            STATE=`${MANAGER}`
+            &ON_LIST_DIR_UPDATER=ON
+            &ON_PLAY_INFO_SAVE=ON,
+
+longClick=
+    |func=MENU
+        ?args=
+            menuPath=
+                `${cmdTtsPlayerTableLongPressListIndexMenuPath}`,
+
+searchBox=
+    visible=OFF,
+
+```
+
 ## List index config format
 
 ```js.js

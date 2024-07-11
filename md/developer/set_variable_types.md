@@ -11,6 +11,7 @@ Table
 * [Usage](#usage)
 	* [This option can be combined](#this-option-can-be-combined)
 	* [Specify config](#specify-config)
+    * [alter](#alter)
 
 
 ## Overview
@@ -166,3 +167,7 @@ ${variable name2}:
 						!label=button label2,
 
 ```
+
+### alter
+
+Alter by condition [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/alter.md)

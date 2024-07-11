@@ -6,16 +6,45 @@ Table
 -----------------
 <!-- vim-markdown-toc GFM -->
 
+* [How to specify](#how-to-specify)
 * [Setting key](#setting-key)
-    * [name setting key](#name-setting-key)
     * [shellIfPath](#shellifpath)
         * [JUDGE_LIST_DIR](#judge_list_dir)
-        * [JUDGE_LIST_DIR ifArgs table](#judge_list_dir-ifargs-table)
-        * [JUDGE_LIST_DIR ex](#judge_list_dir-ex)
+            * [JUDGE_LIST_DIR ifArgs table](#judge_list_dir-ifargs-table)
+            * [JUDGE_LIST_DIR ex](#judge_list_dir-ex)
         * [JUDGE_TSV_VALUE](#judge_tsv_value)
-        * [JUDGE_TSV_VALUE ifArgs table](#judge_tsv_value-ifargs-table)
-        * [JUDGE_TSV_VALUE ex](#judge_tsv_value-ex)
+            * [JUDGE_TSV_VALUE ifArgs table](#judge_tsv_value-ifargs-table)
+            * [JUDGE_TSV_VALUE ex](#judge_tsv_value-ex)
 
+## How to specify
+
+Specify by alter key in bellow 
+
+[setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md), 
+[listIndexConfig](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md), 
+[qrDialogCofig](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listLogoConfig.md), 
+[menuConfuig](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/menuConfig.md)
+
+- Bellow example in `listIndexConfig`  
+Alter `delete` key config in certain condition   
+
+```js.js
+delete=
+    disableDeleteConfirm=OFF
+    |onDeleteConFile=ON
+    |alter=`
+        shellIfPath=JUDGE_TSV_VALUE
+        |ifArgs=
+            tsvPath=${cmdTtsPlayerManagerListIndexTsvPath}
+            ?tsvKey=listDir
+            ?tsvValue=${cmdTtsPlayerPreviousTtsPlayListPath}
+            ?alterCon="
+                    |disableDeleteConfirm=ON
+                    |onDeleteConFile=OFF
+                "
+        `
+        ,
+```
 
 ## Setting key
 
