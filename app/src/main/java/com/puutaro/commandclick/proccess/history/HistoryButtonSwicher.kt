@@ -42,7 +42,7 @@ object HistoryBottunSwitcher {
 
         if(switchOn) {
             CmdClickHistoryButtonEvent(
-                innerView,
+//                innerView,
                 fragment,
                 sharedPref,
             ).invoke()

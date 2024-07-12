@@ -38,15 +38,15 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class CmdClickHistoryButtonEvent (
-    historyButtonInnerView: View,
+//    historyButtonInnerView: View,
     private val fragment: Fragment,
     private val sharedPref: SharedPreferences?,
     )
 {
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
-    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+//    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
     private val context = fragment.context
-    private val currentViewContext = historyButtonInnerView.context
+//    private val currentViewContext = historyButtonInnerView.context
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
     private var fannelHistoryDialog: Dialog? = null
@@ -63,7 +63,11 @@ class CmdClickHistoryButtonEvent (
         else -> emptyList()
     } ?: emptyList()
 
-    fun invoke() {
+    fun invoke(
+    ) {
+        if(
+            context == null
+        ) return
         deleteOverHistory(
             cmdclickAppHistoryDirAdminPath
         )
@@ -80,7 +84,7 @@ class CmdClickHistoryButtonEvent (
             historyList.toMutableList()
         )
         fannelHistoryDialog = Dialog(
-            currentViewContext
+            context
         )
         fannelHistoryDialog?.setContentView(
                 com.puutaro.commandclick.R.layout.fannel_history_recycler_view
@@ -100,7 +104,7 @@ class CmdClickHistoryButtonEvent (
             historyListView?.layoutParams as LinearLayout.LayoutParams
         historyListViewLinearParams.weight = listLinearWeight
         historyListView.layoutManager = LinearLayoutManager(
-            currentViewContext,
+            context,
             LinearLayoutManager.VERTICAL,
             false
         )
@@ -123,12 +127,12 @@ class CmdClickHistoryButtonEvent (
         fannelHistoryDialog?.setOnCancelListener(
             object : DialogInterface.OnCancelListener {
                 override fun onCancel(dialog: DialogInterface?) {
-                    terminalViewModel.onDialog = false
+//                    terminalViewModel.onDialog = false
                     fannelHistoryDialog?.dismiss()
                     fannelHistoryDialog = null
                 }
             })
-        terminalViewModel.onDialog = true
+//        terminalViewModel.onDialog = true
 
         invokeItemSetLongTimeClickListenerForHistory(
             historyListAdapter,
@@ -184,7 +188,7 @@ class CmdClickHistoryButtonEvent (
             override fun onItemClick(holder: FannelHistoryAdapter.HistoryViewHolder) {
                 fannelHistoryDialog?.dismiss()
                 fannelHistoryDialog = null
-                terminalViewModel.onDialog = false
+//                terminalViewModel.onDialog = false
                 val appDirName = holder.appDirNameTextView.text.toString()
                 val fannelName = holder.fannelNameTextView.text.toString()
                 val selectedHistoryFile = AppHistoryManager.makeAppHistoryFileNameForInit(
@@ -280,7 +284,7 @@ class CmdClickHistoryButtonEvent (
             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
         val jsExecWaitTime =
             if(isJsExec) 200L
-            else 0L
+            else 200L
         CoroutineScope(Dispatchers.Main).launch {
             delay(jsExecWaitTime)
             if(fragment is CommandIndexFragment) {
@@ -328,7 +332,7 @@ class CmdClickHistoryButtonEvent (
                     fannelName
                 )
                 val popup = PopupMenu(
-                    currentViewContext,
+                    context,
                     itemView
                 )
                 val inflater = popup.menuInflater
