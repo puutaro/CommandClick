@@ -96,9 +96,9 @@ object IntentRequestMonitor {
             responseString = String()
             val client = withContext(Dispatchers.IO) {
                 try {
-                    LogSystems.stdSys(
-                        "accept start"
-                    )
+//                    LogSystems.stdSys(
+//                        "accept start"
+//                    )
                     ubuntuService.intentMonitorServerSocket?.accept()
                 } catch (e:Exception){
                     isTerminated = true
@@ -160,9 +160,9 @@ object IntentRequestMonitor {
             broadcastMapStr
         )
         if(broadcastMap.isEmpty()) return
-        LogSystems.stdSys(
-            "broadcastMap ${broadcastMap}"
-        )
+//        LogSystems.stdSys(
+//            "broadcastMap ${broadcastMap}"
+//        )
         val intentType = broadcastMap.get(
             BroadcastMonitorScheme.intentType.name
         ) ?: return
@@ -179,18 +179,10 @@ object IntentRequestMonitor {
                 keySeparator
             )
             ReceiveIntentType.notification.name
-            -> {
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "noti.txt").absolutePath,
-                    listOf(
-                        "broadcastMap: ${broadcastMap}"
-                    ).joinToString("\n") + "\n-------------\n"
-                )
-                notificationHandler(
+            -> notificationHandler(
                     ubuntuService,
                     broadcastMap,
                 )
-            }
             ReceiveIntentType.toast.name
             -> execToast(broadcastMap,)
             ReceiveIntentType.textToSpeech.name
@@ -469,9 +461,6 @@ object IntentRequestMonitor {
         notificationManager.createNotificationChannel(channel)
 
         val notificationBuilder = ubuntuService.notificationBuilderHashMap.get(channelNum) ?: let {
-            LogSystems.stdSys(
-                "builder create"
-            )
             val newNotificationBuilder = NotificationCompat.Builder(
                 context,
                 notificationId
@@ -557,15 +546,15 @@ object IntentRequestMonitor {
             NotificationStyleSchema.compactActionsInts.name
         )?.split(valueSeparator)?.map {
             val posi = toInt(it) ?: return Unit.also {
-                LogSystems.stdWarn("no int value ${it}")
+                LogSystems.stdWarn("no int value ${it}, broadcastMap: ${broadcastMap}")
             }
             if(posi > buttonListTotalIndex) {
-                LogSystems.stdWarn("over index: $posi")
+                LogSystems.stdWarn("over index: $posi, broadcastMap: ${broadcastMap}")
                 return@map 0
             }
             posi
         }?.toIntArray() ?: return Unit.also {
-            LogSystems.stdWarn("include no int value ${styleMap}")
+            LogSystems.stdWarn("include no int value ${styleMap}, broadcastMap: ${broadcastMap}")
         }
         try {
             notificationBuilder.setStyle(
@@ -573,7 +562,7 @@ object IntentRequestMonitor {
                     .setShowActionsInCompactView(*compactActionsInts)
             )
         } catch (e: Exception){
-            LogSystems.stdWarn("$e")
+            LogSystems.stdWarn("$e, broadcastMap: ${broadcastMap}")
         }
     }
 
@@ -716,12 +705,6 @@ object IntentRequestMonitor {
     private fun createBroadcastMap(
         broadcastMapStr: String
     ): Map<String, String> {
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "noti_bradmap.txt").absolutePath,
-            listOf(
-                "broadcastMapStr: ${broadcastMapStr}"
-            ).joinToString("\n")
-        )
         return broadcastMapStr
             .trimSeparatorGap(fieldSeparator)
             .trimSeparatorGap(elementSeparator)
@@ -730,16 +713,6 @@ object IntentRequestMonitor {
             .split("\n").let {
             SettingFile.formSettingContents(it)
         }.let {
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "noti_bradmap.txt").absolutePath,
-                    listOf(
-                        "formSettingContents: ${it}",
-                        "map: ${CmdClickMap.createMap(
-                            it,
-                            fieldSeparator
-                        )}"
-                    ).joinToString("\n") + "\n-----------\n"
-                )
                 CmdClickMap.createMap(
                     it,
                     fieldSeparator
