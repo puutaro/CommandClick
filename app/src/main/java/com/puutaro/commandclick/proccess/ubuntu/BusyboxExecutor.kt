@@ -3,14 +3,17 @@ package com.puutaro.commandclick.proccess.ubuntu
 import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -209,6 +212,11 @@ class BusyboxExecutor(
         )
         removeProotTempDir()
         CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                setupForUbuntu(
+                    ubuntuFiles
+                )
+            }
             withContext(Dispatchers.IO) {
                 AssetsFileManager.copyFileOrDirFromAssets(
                     context,
@@ -405,6 +413,72 @@ class BusyboxExecutor(
             process.errorStream.close()
         }
         return output.removePrefix("\n")
+    }
+
+    private fun setupForUbuntu(
+        ubuntuFiles: UbuntuFiles
+    ){
+        if(
+            !ubuntuFiles.ubuntuSetupCompFile.isFile
+        ) return
+        addBinByUrl()
+        addEnvToProfile()
+    }
+
+    private fun addEnvToProfile(){
+        val etcProfilePath = ubuntuFiles.filesOneRootfsEtcProfile.absolutePath
+        val profileConList = ReadText(
+            ubuntuFiles.filesOneRootfsEtcProfile.absolutePath
+        ).textToList()
+        val ubuntuIntentMonitorPort = UsePort.UBUNTU_INTENT_MONITOR_PORT.num.toString()
+        val exportList = listOf(
+            "export APP_ROOT_PATH=\"${UsePath.cmdclickDirPath}\"",
+            "export MONITOR_DIR_PATH=\"${UsePath.cmdclickMonitorDirPath}\"",
+            "export APP_DIR_PATH=\"${UsePath.cmdclickAppDirPath}\"",
+            "export INTENT_MONITOR_PORT=\"${ubuntuIntentMonitorPort}\"",
+            "export INTENT_MONITOR_ADDRESS=\"127.0.0.1:${ubuntuIntentMonitorPort}\"",
+            "export REPLACE_VARIABLES_TSV_RELATIVE_PATH=\"${UsePath.replaceVariablesTsvRelativePath}\"",
+            "export UBUNTU_ENV_TSV_NAME=\"${UbuntuFiles.ubuntuEnvTsvName}\"",
+            "export UBUNTU_SERVICE_TEMP_DIR_PATH=\"${UsePath.cmdclickTempUbuntuServiceDirPath}\"",
+            "export IP_V4_ADDRESS=\"${NetworkTool.getIpv4Address(context)}\"",
+        )
+        val insertExportList = exportList.filter {
+            !profileConList.contains(it)
+        }
+        val updateProfileCon = profileConList + insertExportList
+        FileSystems.writeFile(
+            etcProfilePath,
+            updateProfileCon.joinToString("\n")
+        )
+    }
+
+    private fun addBinByUrl(){
+        val filesUsrLocalBinPath = ubuntuFiles.filesUsrLocalBin.absolutePath
+
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                FileSystems.createDirs(filesUsrLocalBinPath)
+                val binInstallJobList = listOf(
+                    "https://github.com/puutaro/httpshd/releases/download/0.0.1/httpshd-0.0.1-arm64",
+                    "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64",
+                ).map { url ->
+                    async {
+                        val bin = CurlManager.get(
+                            context,
+                            url,
+                            String(),
+                            String(),
+                            30_000
+                        )
+                        FileSystems.writeFromByteArray(
+                            filesUsrLocalBinPath,
+                            bin,
+                        )
+                    }
+                }
+                binInstallJobList.forEach { it.await() }
+            }
+        }
     }
 
 }

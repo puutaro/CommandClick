@@ -13,7 +13,7 @@ kill_front_and_sub_process(){
 		| grep \
 			-e "pulseaudio"  \
 			-e "wssh --address="  \
-			-e "shell2http"  \
+			-e "httpshd"  \
 		| awk '{print $2}' \
 	)
 	case "${killId}" in
@@ -243,6 +243,7 @@ startup_launch_system(){
 	# 	-port ${HTTP2_SHELL_PORT} \
 	# 	-export-vars=APP_ROOT_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_ENV_TSV_NAME,UBUNTU_SERVICE_TEMP_DIR_PATH,IP_V4_ADDRESS \
 	# 	/bash "bash ${HTTP2_SHELL_PATH}"  &
+	wait
 	EOF
 }
 
@@ -285,41 +286,33 @@ install_require_pacakges(){
 	apt-get install -y ${require_packages}
 }
 
-install_shell2http(){
-	local package_name="shell2http_1.16.0_linux_arm64.deb"
-	curl \
-		-L "https://github.com/msoap/shell2http/releases/download/v1.16.0/shell2http_1.16.0_linux_arm64.deb" \
-		> "${package_name}"
-	dpkg -i "${package_name}"
-	rm -f "${package_name}"
-}
+# install_shell2http(){
+# 	local package_name="shell2http_1.16.0_linux_arm64.deb"
+# 	curl \
+# 		-L "https://github.com/msoap/shell2http/releases/download/v1.16.0/shell2http_1.16.0_linux_arm64.deb" \
+# 		> "${package_name}"
+# 	dpkg -i "${package_name}"
+# 	rm -f "${package_name}"
+# }
 
 
 install_httpshd(){
 	echo "### ${FUNCNAME}"
 	local package_name="httpshd"
-	curl \
-		-sSL "https://github.com/puutaro/httpshd/releases/download/0.0.1/httpshd-0.0.1-arm64" \
-		> "${package_name}"
-	sudo cp -avf \
-		"${package_name}" \
-		"/usr/local/bin/${package_name}"
 	sudo chmod +x "/usr/local/bin/${package_name}"
-	rm -f "${package_name}"
+# 	rm -f "${package_name}"
 }
 
 install_repbash(){
 	echo "### ${FUNCNAME}"
 	local package_name="repbash"
-	curl \
-		-sSL "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64" \
-		> "${package_name}"
-	local usrlocalbin_repbash="/usr/local/bin/${package_name}"
-	mv \
-		"${package_name}" \
-		"${usrlocalbin_repbash}"
-	chmod +x "${usrlocalbin_repbash}"
+	chmod +x "/usr/local/bin/${package_name}"
 	echo "install ok"
+}
+
+install_bin(){
+	install_httpshd
+	install_repbash
 }
 
 
@@ -352,42 +345,9 @@ install_user_package(){
 
 launch_setup(){
 	echo "### ${FUNCNAME}"
-	local profile_path="/etc/profile"
-	insert_str_to_file \
-		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export MONITOR_DIR_PATH="'${MONITOR_DIR_PATH}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export APP_DIR_PATH="'${APP_DIR_PATH}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export INTENT_MONITOR_PORT="'${INTENT_MONITOR_PORT}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export INTENT_MONITOR_ADDRESS="'${INTENT_MONITOR_ADDRESS}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export REPLACE_VARIABLES_TSV_RELATIVE_PATH="'${REPLACE_VARIABLES_TSV_RELATIVE_PATH}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export UBUNTU_ENV_TSV_NAME="'${UBUNTU_ENV_TSV_NAME}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export UBUNTU_SERVICE_TEMP_DIR_PATH="'${UBUNTU_SERVICE_TEMP_DIR_PATH}'"' \
-		"${profile_path}"
-	insert_str_to_file \
-		'export IP_V4_ADDRESS="'${IP_V4_ADDRESS}'"' \
-		"${profile_path}"
 	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo
-	install_httpshd
-	install_repbash
-}
-
-install_nodjs(){
-	apt-get install -y nodejs
+	install_bin
 }
 
 launch_extra_startup(){
@@ -436,7 +396,8 @@ launch_extra_startup(){
 		if( extra_map_con ~ /disable=ON/) next
 		if( extra_map_con ~ /disable=on/) next
 		printf "bash \x22%s\x22 &", shell_path
-	}' | bash 
+	}' | bash &
+	wait
 }
 
 
@@ -451,7 +412,7 @@ wait_cmd(){
 
 
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
-		&& [ "${CREATE_IMAGE_SWITCH}" = "on" ];then
+		&& [ "${CREATE_IMAGE_SWITCH}" = "ON" ];then
 	install_base_pkg
 	add_user
 	setup_dropbear_sshserver
@@ -461,9 +422,10 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process
-startup_launch_system
-launch_extra_startup
+startup_launch_system &
+launch_extra_startup &
 touch "${UBUNTU_LAUNCH_COMP_FILE}"
-wait_cmd
+wait
+# wait_cmd
 exit 0
 install_golang_and_go_package
