@@ -137,12 +137,19 @@ App installation
 -----  
 - Android 8+
 
-get it on belllow link  
+get it on bellow link  
 
 <a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
+- This app not spyware.  Sometimes, it is detected by malware checkers because of the following.
+
+> `ACCESS_FINE_LOCATION` -> Ths require WIFI setting via QR reader .  
+> `READ_EXTERNAL_STORAGE` -> CommandClick base is file system.   
+> This app data is saved to file. So, without this permission, CC is not feasible.
+
+-> detail is [this issue](https://github.com/puutaro/CommandClick/issues/11)
 
 [Recommend] Install WebView Canary
 --------
