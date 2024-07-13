@@ -64,4 +64,8 @@ enum class BroadCastIntentSchemeUbuntu(
         "com.puutaro.commandclick.ubuntu_service.shell2http",
         "shell2http",
     ),
+    DOWN_LOAD_ERR_NOTI(
+    "com.puutaro.commandclick.ubuntu_service.download_err_noti",
+    ""
+    )
 }

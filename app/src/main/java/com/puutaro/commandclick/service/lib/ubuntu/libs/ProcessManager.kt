@@ -94,7 +94,7 @@ object ProcessManager {
         return totalProcNum - pulseaudioNum
     }
 
-    private fun killAllCoroutineJob(
+    fun killAllCoroutineJob(
         ubuntuService: UbuntuService
     ){
         ubuntuService.ubuntuCoroutineJobsHashMap.forEach { t, u ->

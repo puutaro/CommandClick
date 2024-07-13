@@ -10,7 +10,9 @@ object UbuntuInitProcess {
     fun launch(
         ubuntuService: UbuntuService,
         ){
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[
+                ProcessManager.UbuntuRunningSystemProcessType.SetUp.name
+        ]?.cancel()
         FileSystems.updateFile(
             File(
                 ubuntuService.cmdclickMonitorDirPath,
@@ -22,6 +24,16 @@ object UbuntuInitProcess {
             ubuntuService,
             ubuntuService.cmdclickMonitorFileName,
         )
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name] = setupUbuntuJob
+        ubuntuService.ubuntuCoroutineJobsHashMap[
+                ProcessManager.UbuntuRunningSystemProcessType.SetUp.name
+        ] = setupUbuntuJob
+    }
+
+    fun cancel(
+        ubuntuService: UbuntuService,
+    ){
+        ubuntuService.ubuntuCoroutineJobsHashMap[
+                ProcessManager.UbuntuRunningSystemProcessType.SetUp.name
+        ]?.cancel()
     }
 }

@@ -12,4 +12,5 @@ enum class UbuntuStateType(
     WIFI_WAIT("Connect wifi!", "Connect wifi! and restart"),
     ON_SETUP("Ubuntu Setup..", "Ubuntu Setup..(take 5 minutes)"),
     RUNNING("Ubuntu running..", "%d process.."),
+    DOWNLOAD_ERR("Download err", "Check network and, press RESTART")
 }

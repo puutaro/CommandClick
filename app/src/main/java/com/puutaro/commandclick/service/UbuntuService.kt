@@ -24,6 +24,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.InnerPulseServer
 import com.puutaro.commandclick.service.lib.ubuntu.SetupMonitoring
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuBroadcastHandler
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuInitProcess
+import com.puutaro.commandclick.service.lib.ubuntu.UbuntuSetUp
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
@@ -111,6 +112,7 @@ class UbuntuService:
                 BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
                 BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action,
                 BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
+                BroadCastIntentSchemeUbuntu.DOWN_LOAD_ERR_NOTI.action,
             )
         )
         BroadcastManagerForService.registerScreenOnOffReceiver(
@@ -283,6 +285,7 @@ class UbuntuService:
 
     override fun onDestroy() {
         super.onDestroy()
+        UbuntuSetUp.exitDownloadMonitorProcess()
         ProcessManager.finishProcess(this)
     }
 

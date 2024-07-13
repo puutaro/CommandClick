@@ -1,37 +1,48 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
+import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
-import android.content.Intent
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
 import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.net.HttpURLConnection
 import java.net.URL
 
 
 object UbuntuSetUp {
 
-    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val downLoadCompPercent = 100L
-    private var downloadProgress = 100L
+    private val rootfsTarGzUrl = UbuntuInfo.rootfsTarGzUrl
+    private val downloadRootfsTarGzPathObj = File(
+        UbuntuFiles.downloadDirPath,
+        File(rootfsTarGzUrl).name
+    )
 
+    fun exitDownloadMonitorProcess(){
+        RootfsDownloader.exit()
+    }
     fun set(
         ubuntuService: UbuntuService,
         monitorFileName: String,
@@ -44,12 +55,8 @@ object UbuntuSetUp {
                 )
             }
         } catch (e: Exception){
-            FileSystems.updateFile(
-                File(
-                    cmdclickMonitorDirPath,
-                    monitorFileName
-                ).absolutePath,
-                    "\n\n${e}"
+           LogSystems.stdSSys(
+                    "$e"
             )
            null
         }
@@ -63,7 +70,6 @@ object UbuntuSetUp {
         val ubuntuFiles = ubuntuService.ubuntuFiles
             ?: return
         val startupFilePath = UbuntuFiles.startupFilePath
-        downloadProgress = 100L
         val isUbuntuRestore = ubuntuService.isUbuntuRestore
         if(
             ubuntuFiles.ubuntuSetupCompFile.isFile
@@ -81,60 +87,51 @@ object UbuntuSetUp {
             }
             return
         }
+
         withContext(Dispatchers.IO) {
+            LogSystems.stdSSys(
+                "Ready.."
+            )
             FileSystems.removeAndCreateDir(
                 ubuntuFiles.filesOneRootfs.absolutePath
             )
         }
         when(isUbuntuRestore){
             true
-            -> {
-                withContext(Dispatchers.IO) {
-                    FileSystems.updateFile(
-                        File(
-                            cmdclickMonitorDirPath,
-                            UsePath.cmdClickMonitorFileName_2
-                        ).absolutePath,
-                        "copy start"
+            -> withContext(Dispatchers.IO) {
+                    LogSystems.stdSSys(
+                        "Copy start"
                     )
                     FileSystems.copyFile(
                         ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
                         "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
                     )
                 }
-            }
             else
-            -> {
-                withContext(Dispatchers.IO) {
-                    downloadUbuntu(
-                        context,
+            -> withContext(Dispatchers.IO) {
+                    RootfsDownloader.handle(
                         ubuntuService,
-                        monitorFileName
                     )
-                    FileSystems.copyFile(
-                        UbuntuFiles.downloadRootfsTarGzPath,
-                        "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
+                    LogSystems.stdSSys(
+                       "Copy start"
                     )
+                    copyAndRemoveDownloadRootfs(ubuntuFiles)
                 }
-            }
         }
-        if(
-            judgeDownloadInvalid(monitorFileName)
-        ) return
+        withContext(Dispatchers.IO){
+            LogSystems.stdSSys(
+                "Copy comp"
+            )
+        }
         withContext(Dispatchers.IO) {
             initSetup(
                 context,
                 ubuntuFiles,
-                monitorFileName
             )
         }
         withContext(Dispatchers.IO) {
-            FileSystems.updateFile(
-                File(
-                    cmdclickMonitorDirPath,
-                    monitorFileName
-                ).absolutePath,
-                "\nextract file"
+            LogSystems.stdSSys(
+                "Extract file"
             )
         }
         withContext(Dispatchers.IO) {
@@ -150,9 +147,6 @@ object UbuntuSetUp {
                 ubuntuFiles,
             )
         }
-        if(
-            judgeDownloadInvalid(monitorFileName)
-        ) return
         withContext(Dispatchers.IO) {
             busyboxExecutor.executeScript(
                 "support/extractRootfs.sh",
@@ -210,16 +204,9 @@ object UbuntuSetUp {
                 ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
             )
         }
-        if(
-            judgeDownloadInvalid(monitorFileName)
-        ) return
         withContext(Dispatchers.IO) {
-            FileSystems.updateFile(
-                File(
-                    cmdclickMonitorDirPath,
-                    monitorFileName
-                ).absolutePath,
-                "\nexec setup"
+            LogSystems.stdSSys(
+                "Setup start"
             )
             FileSystems.createDirs(
                 ubuntuFiles.filesOneRootfsSupportDir.absolutePath
@@ -231,157 +218,280 @@ object UbuntuSetUp {
         }
     }
 
-    private fun judgeDownloadInvalid(
-        monitorFileName: String
-    ): Boolean {
-        val isInvalidDownload = downloadProgress != downLoadCompPercent
-        if(isInvalidDownload) {
-            FileSystems.updateFile(
-                File(
-                    cmdclickMonitorDirPath,
-                    monitorFileName
-                ).absolutePath,
-                "retry, invalid download ${downloadProgress}%"
-            )
+    private object RootfsDownloader {
+
+        private var monitorDownloadJob: Job? = null
+        private var monitorDownloadErrJob: Job? = null
+
+        fun exit(){
+            monitorDownloadJob?.cancel()
+            monitorDownloadErrJob?.cancel()
         }
-        return isInvalidDownload
-
-    }
-
-    private suspend fun downloadUbuntu(
-        context: Context,
-        ubuntuService: UbuntuService,
-        monitorFileName: String,
-    ){
-        try {
-            execDownloadUbuntu(
-                ubuntuService,
-                monitorFileName
-            )
-        } catch (e: Exception){
-            val setupIntent = Intent()
-            setupIntent.action = BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action
-            context.sendBroadcast(setupIntent)
-            return
+        suspend fun handle(
+            ubuntuService: UbuntuService,
+        ) {
+            try {
+                execDownload(ubuntuService)
+            } catch (e: Exception) {
+                DownloadErr.cleanup(
+                    ubuntuService,
+                    null,
+                    null,
+                )
+                return
+            }
         }
-    }
 
-    private suspend fun execDownloadUbuntu(
-        ubuntuService: UbuntuService,
-        monitorFileName: String,
-    ){
-        val ubuntuFiles = ubuntuService.ubuntuFiles ?: return
-        val supportDirPath = ubuntuFiles.supportDir.absolutePath
-        FileSystems.createDirs(
-            supportDirPath
-        )
-        withContext(Dispatchers.IO) {
+        private suspend fun execDownload(
+            ubuntuService: UbuntuService,
+        ) {
+            val downloadProgressChannel = Channel<Long>(UNLIMITED)
+            val errChannel = Channel<String>(1)
+            val ubuntuFiles =
+                ubuntuService.ubuntuFiles
+                    ?: return
+            val supportDirPath = ubuntuFiles.supportDir.absolutePath
+            FileSystems.createDirs(
+                supportDirPath
+            )
+            removeRootfsTarGz()
+            val rootfsTarGzOriginLength = withContext(Dispatchers.IO) {
+                getRootfsTarGzOriginLength(rootfsTarGzUrl)
+            }
             if(
-                UbuntuInfo.onForDev
-            ) return@withContext
-            FileSystems.removeFiles(
-                File(
-                    UbuntuFiles.downloadDirPath,
-                    UbuntuFiles.rootfsTarGzName
-                ).absolutePath
-            )
-            // put your url.this is sample url.
-            val url = URL(UbuntuInfo.arm64UbuntuRootfsUrl)
-            val connection = url.openConnection()
-            connection.connect()
-            val lenghtOfFile = connection.contentLength
-            // download the file
-            val input = connection.getInputStream()
-            //catalogfile is your destenition folder
-            val output: OutputStream = FileOutputStream(
-                UbuntuFiles.downloadRootfsTarGzPath
-            )
-            val data = ByteArray(1024)
-            var total: Long = 0
-            var count: Int
-            var previousDisplayProgress: Long = 0
-            val cmdclickTmpUbuntuMonitorOffFile = File(
-                UsePath.cmdclickTempUbuntuServiceDirPath,
-                UsePath.cmdclickTmpUbuntuMonitorOff,
-            )
-            var processNum = 10
-            while (input.read(data).also { count = it } != -1) {
-                for (i in 1..3) {
-                    processNum = ProcessManager.processNumCalculator(ubuntuService)
-                    if(processNum != 0) break
-                    delay(500)
+                rootfsTarGzOriginLength == 0
+            ){
+                DownloadErr.cleanup(
+                    ubuntuService,
+                    downloadProgressChannel,
+                    errChannel,
+                )
+                return
+            }
+            withContext(Dispatchers.IO) {
+                monitorDownloadJob?.cancel()
+                monitorDownloadJob = CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        LogSystems.stdSSys(
+                            "Download start"
+                        )
+                        var currentLength = 0L
+                        var previousProgressRate = 0L
+                        for (progress in downloadProgressChannel) {
+                            currentLength += progress
+                            val currentProgressRate = (currentLength * 100) / rootfsTarGzOriginLength
+                            if (
+                                currentProgressRate <= previousProgressRate
+                            ) continue
+                            previousProgressRate = currentProgressRate
+                            LogSystems.stdSSys(
+                                "Download ${currentProgressRate}%"
+                            )
+                        }
+                    }
                 }
-                if (
-                    processNum == 0
-                    && !cmdclickTmpUbuntuMonitorOffFile.isFile
-                ) {
-                    FileSystems.removeFiles(
-                        File(
-                            UbuntuFiles.downloadDirPath,
-                            UbuntuFiles.rootfsTarGzName
-                        ).absolutePath
+                monitorDownloadErrJob?.cancel()
+                monitorDownloadErrJob = CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        for (msg in errChannel) {
+                            DownloadErr.cleanup(
+                                ubuntuService,
+                                downloadProgressChannel,
+                                errChannel,
+                            )
+                            errChannel.close()
+                            break
+                        }
+                    }
+                }
+                try {
+                    execRootfsTarGzDownload(
+                        ubuntuService,
+                        downloadProgressChannel,
+                        errChannel,
                     )
-                    break
+                } catch (e: Exception) {
+                    errChannel.send(e.toString())
                 }
-                total += count
-                previousDisplayProgress = downloadProgress
-                downloadProgress = total * 100 / lenghtOfFile
-                output.write(data, 0, count)
-                if (downloadProgress <= previousDisplayProgress) continue
-                FileSystems.updateFile(
-                    File(
-                        cmdclickMonitorDirPath,
-                        monitorFileName
-                    ).absolutePath,
-                    "download ${downloadProgress}%"
-                )
+                downloadProgressChannel.close()
+                errChannel.close()
+                exitDownloadMonitorProcess()
             }
-            if(downloadProgress != downLoadCompPercent){
-                FileSystems.removeFiles(
-                    File(
-                        UbuntuFiles.downloadDirPath,
-                        UbuntuFiles.rootfsTarGzName
-                    ).absolutePath
+            if(
+                isLessLength(
+                    rootfsTarGzOriginLength
                 )
-                FileSystems.updateFile(
-                    File(
-                        cmdclickMonitorDirPath,
-                        monitorFileName
-                    ).absolutePath,
-                    "invalid download: ${downloadProgress}%"
+            ) {
+                DownloadErr.cleanup(
+                    ubuntuService,
+                    downloadProgressChannel,
+                    errChannel,
                 )
+                return
             }
-            // flushing output
-            output.flush()
-            // closing streams
-            output.close()
-            input.close()
+            withContext(Dispatchers.IO) {
+                LogSystems.stdSSys("Download comp")
+            }
         }
-        withContext(Dispatchers.IO){
-            FileSystems.updateFile(
-                File(
-                    cmdclickMonitorDirPath,
-                    monitorFileName
-                ).absolutePath,
-                "\ndownload comp"
-            )
+
+        private suspend fun getRootfsTarGzOriginLength(
+            rootfsGzUrl: String
+        ): Int {
+            val totalLength = withContext(Dispatchers.IO) {
+                try {
+                    val url = URL(rootfsGzUrl)
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.connect()
+                    val lengthOfFile = connection.contentLength
+                    connection.disconnect()
+                    lengthOfFile
+                } catch (e: Exception) {
+                    0
+                }
+            }
+            return totalLength
         }
+
+        private suspend fun execRootfsTarGzDownload(
+            ubuntuService: UbuntuService,
+            downloadProgressChannel: Channel<Long>,
+            errChannel: Channel<String>,
+        ) {
+            withContext(Dispatchers.IO) {
+                // put your url.this is sample url.
+                val url = URL(rootfsTarGzUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.connect()
+                // download the file
+                val totalLength = connection.contentLength
+                if(
+                    totalLength == 0
+                ) {
+                    DownloadErr.cleanup(
+                        ubuntuService,
+                        downloadProgressChannel,
+                        errChannel,
+                    )
+                    return@withContext
+                }
+                val input = connection.getInputStream()
+                //catalogfile is your destenition folder
+                val output: OutputStream = FileOutputStream(
+                    downloadRootfsTarGzPathObj
+                )
+                val data = ByteArray(1024)
+                var total: Long = 0
+                var previousTotal = 0L
+                var count: Int
+                var previousPercentage = 0L
+                while (input.read(data).also { count = it } != -1) {
+                    total += count
+                    val curPercentage = (total * 100) / totalLength
+                    val isOverCertainPercentage =
+                        count > 0 && curPercentage - previousPercentage  > 5
+                    val isComp = total >= totalLength
+                    if (
+                        isOverCertainPercentage
+                        || isComp
+                    ) {
+                        val sendTotal = total - previousTotal
+                        downloadProgressChannel.send(sendTotal)
+                        previousTotal = total
+                        previousPercentage = curPercentage
+                    }
+                    output.write(data, 0, count)
+                }
+                // flushing output
+                output.flush()
+                // closing streams
+                output.close()
+                input.close()
+                connection.disconnect()
+            }
+        }
+        private object DownloadErr {
+            fun cleanup(
+                ubuntuService: UbuntuService,
+                downloadProgressChannel: Channel<Long>?,
+                errChannel: Channel<String>?,
+            ) {
+                LogSystems.stdSErr(
+                    "Download err",
+                )
+                downloadProgressChannel?.close()
+                errChannel?.close()
+                exitDownloadMonitorProcess()
+                removeRootfsTarGz()
+                UbuntuInitProcess.cancel(ubuntuService)
+                ProcessManager.killAllCoroutineJob(ubuntuService)
+                compDownloadErrNoti(ubuntuService)
+            }
+
+            private fun compDownloadErrNoti(
+                ubuntuService: UbuntuService,
+            ){
+                val context = ubuntuService.applicationContext
+                val notificationManager =
+                    ubuntuService.getSystemService(
+                        Service.NOTIFICATION_SERVICE
+                    ) as NotificationManager
+                val shouldMsg = UbuntuStateType.DOWNLOAD_ERR.message
+                val channelId = ubuntuService.chanelId
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        for (i in 1..3) {
+                            BroadcastSender.normalSend(
+                                context,
+                                BroadCastIntentSchemeUbuntu.DOWN_LOAD_ERR_NOTI.action
+                            )
+                            delay(300)
+                            val currentDisplayMessage =
+                                notificationManager.activeNotifications.filter {
+                                    it.id == channelId
+                                }.firstOrNull()?.notification?.extras?.getString("android.text")
+                            if (
+                                currentDisplayMessage == shouldMsg
+                            ) break
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun isLessLength(
+            rootfsTarGzOriginLength: Int
+        ): Boolean {
+            if(
+                rootfsTarGzOriginLength == 0
+            ) return true
+            val rootfsTarGzLength = downloadRootfsTarGzPathObj.length()
+            if(
+                rootfsTarGzLength == 0L
+            ) return true
+            return rootfsTarGzLength < rootfsTarGzOriginLength
+        }
+    }
+
+
+    private fun copyAndRemoveDownloadRootfs(
+        ubuntuFiles: UbuntuFiles
+    ){
+        FileSystems.copyFile (
+            downloadRootfsTarGzPathObj.absolutePath,
+            "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
+        )
+        removeRootfsTarGz()
     }
 
     private fun initSetup(
         context: Context?,
         ubuntuFiles: UbuntuFiles,
-        monitorFileName: String,
     ){
         FileSystems.createDirs(
             ubuntuFiles.supportDir.absolutePath
         )
-        FileSystems.updateFile(
-            File(
-                cmdclickMonitorDirPath,
-                monitorFileName
-            ).absolutePath,
-            "support copy start"
+        LogSystems.stdSSys(
+            "Support copy start"
         )
         AssetsFileManager.copyFileOrDirFromAssets(
             context,
@@ -390,12 +500,8 @@ object UbuntuSetUp {
             ubuntuFiles.supportDir.absolutePath,
             emptyList()
         )
-        FileSystems.updateFile(
-            File(
-                cmdclickMonitorDirPath,
-                monitorFileName
-            ).absolutePath,
-            "chmod start"
+        LogSystems.stdSSys(
+            "Chmod start"
         )
         ubuntuFiles.supportDir.listFiles()?.forEach {
             ubuntuFiles.makePermissionsUsable(
@@ -406,24 +512,9 @@ object UbuntuSetUp {
         FileSystems.createDirs(
             ubuntuFiles.filesOneRootfs.absolutePath
         )
-        FileSystems.updateFile(
-            File(
-                cmdclickMonitorDirPath,
-                monitorFileName
-            ).absolutePath,
-            "rootfs copy start"
+        LogSystems.stdSSys(
+            "Rootfs copy start"
         )
-        if(
-            !UbuntuInfo.onForDev
-        ) {
-            FileSystems.removeFiles(
-                File(
-                    UbuntuFiles.downloadDirPath,
-                    UbuntuFiles.rootfsTarGzName
-                ).absolutePath
-            )
-        }
-
         ubuntuFiles.makePermissionsUsable(
             ubuntuFiles.filesOneRootfs.absolutePath,
             UbuntuFiles.rootfsTarGzName
@@ -440,5 +531,12 @@ object UbuntuSetUp {
             )
         }
         ubuntuFiles.setupLinks()
+    }
+
+    private fun removeRootfsTarGz(
+    ){
+        FileSystems.removeFiles(
+            downloadRootfsTarGzPathObj.absolutePath
+        )
     }
 }

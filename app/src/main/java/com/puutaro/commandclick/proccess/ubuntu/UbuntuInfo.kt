@@ -1,17 +1,15 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
-import com.puutaro.commandclick.BuildConfig
-
 
 object UbuntuInfo {
     const val user = "cmdclick"
 
-    private const val devFalseInRelease = false
-    private val createImageSwitchForRelease = CreateImageSwitch.off.name
-    private val buildConfigDebug = BuildConfig.DEBUG
-
+//    private const val devFalseInRelease = false
+    private val createImageSwitchForRelease = CreateImageSwitch.OFF.name
+//    private val buildConfigDebug = BuildConfig.DEBUG
+//
     //  for development
-    val onForDev = devFalseInRelease
+//    val onForDev = devFalseInRelease
 //        if(
 //        buildConfigDebug
 //    ) false
@@ -23,14 +21,17 @@ object UbuntuInfo {
 //    ) CreateImageSwitch.on.name
 //    else createImageSwitchForRelease
 
-    val arm64UbuntuRootfsUrl =
-        decideArm64UbuntuRootfsUrl(createImageSwitch)
+    val rootfsTarGzUrl = decideArm64UbuntuRootfsUrl(createImageSwitch)
+//        "https://raw.githubusercontent.com/puutaro/CommandClick-Linux/master/rootfs_list/list.txt"
+
+//    val arm64UbuntuRootfsUrl =
+//        decideArm64UbuntuRootfsUrl(createImageSwitch)
 
     private fun decideArm64UbuntuRootfsUrl(
         imageSwitch: String
     ): String {
         return when(imageSwitch){
-            CreateImageSwitch.on.name
+            CreateImageSwitch.ON.name
             -> "https://partner-images.canonical.com/core/jammy/" +
                     "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
             else
@@ -38,8 +39,8 @@ object UbuntuInfo {
         }
     }
 
-    private enum class CreateImageSwitch {
-        on,
-        off
+    enum class CreateImageSwitch {
+        ON,
+        OFF
     }
 }

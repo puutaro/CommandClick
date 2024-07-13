@@ -38,6 +38,22 @@ object LogSystems {
         }
     }
 
+    fun stdSSys(
+        logContents: String,
+    ){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                FileSystems.updateFile(
+                    File(
+                        cmdclickMonitorDirPath,
+                        sysLogFileName
+                    ).absolutePath,
+                    logContents
+                )
+            }
+        }
+    }
+
     fun stdErr(
         context: Context?,
         errContents: String,
@@ -128,6 +144,18 @@ object LogSystems {
                 sysLogFileName
             ).absolutePath,
             line
+        )
+    }
+
+    fun stdSErr(
+        errContents: String,
+    ){
+        FileSystems.updateFile(
+            File(
+                cmdclickMonitorDirPath,
+                sysLogFileName
+            ).absolutePath,
+            "ERR $errContents"
         )
     }
 

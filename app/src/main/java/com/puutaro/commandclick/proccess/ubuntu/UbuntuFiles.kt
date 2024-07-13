@@ -16,8 +16,10 @@ class UbuntuFiles(
     companion object {
         val downloadDirPath = UsePath.emulatedPath +
                 "/${Environment.DIRECTORY_DOWNLOADS}"
+//        val rootfsTarName = "rootfs.tar"
+//        val downloadRootfsTarPath = "$downloadDirPath/$rootfsTarName"
         val rootfsTarGzName = "rootfs.tar.gz"
-        val downloadRootfsTarGzPath = "$downloadDirPath/$rootfsTarGzName"
+//        val downloadRootfsTarGzPath = "$downloadDirPath/$rootfsTarGzName"
         const val waitQuizTsvName = "wait_quiz.tsv"
         const val ubuntuEnvTsvName = "ubuntu_env.tsv"
         const val supportDirName = "support"
@@ -66,6 +68,10 @@ class UbuntuFiles(
         File("${filesOneRootfsSupportDir.absolutePath}/common")
     val filesOneRootfsEtcDir =
         File("${filesOneRootfs.absolutePath}/etc")
+    val filesOneRootfsEtcProfile =
+        File("${filesOneRootfsEtcDir.absolutePath}/profile")
+    val filesUsrLocalBin =
+        File("${filesOneRootfs.absolutePath}/usr/local/bin")
     val filesOneRootfsEtcDProfileDir =
         File("${filesOneRootfsEtcDir.absolutePath}/profile.d")
     val filesOneRootfsUsrLocalBin =

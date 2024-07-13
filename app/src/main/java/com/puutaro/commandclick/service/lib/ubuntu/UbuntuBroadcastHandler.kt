@@ -7,11 +7,9 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuProcessChecker
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
@@ -99,6 +97,11 @@ object UbuntuBroadcastHandler {
             )
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN
             -> execCmdKillByAdmin(
+                ubuntuService,
+                intent,
+            )
+            BroadCastIntentSchemeUbuntu.DOWN_LOAD_ERR_NOTI
+            -> execDownloadErrNoti(
                 ubuntuService,
                 intent,
             )
@@ -262,6 +265,7 @@ object UbuntuBroadcastHandler {
         LinuxCmd.killProcess(
             ubuntuService.applicationContext,
         )
+        UbuntuSetUp.exitDownloadMonitorProcess()
         ProcessManager.finishProcess(ubuntuService)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
@@ -590,5 +594,29 @@ object UbuntuBroadcastHandler {
 //                ubuntuService.cmdclickMonitorFileName
 //            )
 //        }
+    }
+
+    private fun execDownloadErrNoti(
+        ubuntuService: UbuntuService,
+        intent: Intent,
+    ){
+        ubuntuService.notificationBuilder?.setContentTitle(
+            UbuntuStateType.DOWNLOAD_ERR.title
+        )
+        ubuntuService.notificationBuilder?.setContentText(
+            UbuntuStateType.DOWNLOAD_ERR.message
+        )
+        ubuntuService.notificationBuilder?.clearActions()
+        ubuntuService.notificationBuilder?.addAction(
+            R.drawable.icons8_cancel,
+            UbuntuNotiButtonLabel.RESTART.label,
+            ubuntuService.cancelUbuntuServicePendingIntent
+        )
+        ubuntuService.notificationBuilder?.build()?.let {
+            ubuntuService.notificationManager?.notify(
+                ubuntuService.chanelId,
+                it
+            )
+        }
     }
 }
