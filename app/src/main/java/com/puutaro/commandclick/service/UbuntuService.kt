@@ -27,12 +27,11 @@ import com.puutaro.commandclick.service.lib.ubuntu.UbuntuInitProcess
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuSetUp
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
-import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.NetworkTool
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Job
 import java.net.ServerSocket
 
@@ -205,7 +204,7 @@ class UbuntuService:
                     it
                 )
             }
-            ProcessManager.monitorProcessAndNum(this)
+            UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY
         }
@@ -250,7 +249,7 @@ class UbuntuService:
                     it
                 )
             }
-            ProcessManager.monitorProcessAndNum(this)
+            UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY
         }
@@ -271,7 +270,7 @@ class UbuntuService:
                 it
             )
         }
-        ProcessManager.monitorProcessAndNum(this)
+        UbuntuProcessManager.monitorProcessAndNum(this)
         IntentRequestMonitor.launch(this)
         SetupMonitoring.launch(this)
         InnerPulseServer.launch(this)
@@ -286,7 +285,7 @@ class UbuntuService:
     override fun onDestroy() {
         super.onDestroy()
         UbuntuSetUp.exitDownloadMonitorProcess()
-        ProcessManager.finishProcess(this)
+        UbuntuProcessManager.finishProcess(this)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

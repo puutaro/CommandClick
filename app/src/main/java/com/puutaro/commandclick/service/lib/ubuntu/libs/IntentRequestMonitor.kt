@@ -29,14 +29,12 @@ import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
-import java.io.File
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
@@ -54,7 +52,7 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
     ){
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                ProcessManager.UbuntuRunningSystemProcessType.IntentRequestMonitor.name
+                UbuntuProcessManager.UbuntuRunningSystemProcessType.IntentRequestMonitor.name
         ]?.cancel()
         val intentRequestMonitor = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
@@ -64,7 +62,7 @@ object IntentRequestMonitor {
             }
         }
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                ProcessManager.UbuntuRunningSystemProcessType.IntentRequestMonitor.name
+                UbuntuProcessManager.UbuntuRunningSystemProcessType.IntentRequestMonitor.name
         ] = intentRequestMonitor
     }
 

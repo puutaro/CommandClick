@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-object ProcessManager {
+object UbuntuProcessManager {
 
     enum class UbuntuInitProcessType {
         SetUpMonitoring,

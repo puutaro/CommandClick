@@ -28,7 +28,7 @@ object ScreenMonitor {
             String()
         )
         val ubuntuRunningProcessNum =
-            ProcessManager.UbuntuRunningSystemProcessType.values().size
+            UbuntuProcessManager.UbuntuRunningSystemProcessType.values().size
         val noSleepSignal = 0L
         val settingSectionStart = ubuntuService.settingSectionStart
         val settingSectionEnd = ubuntuService.settingSectionEnd
@@ -48,12 +48,12 @@ object ScreenMonitor {
                 if (
                     !ubuntuLaunchCompFile.isFile
                 ) return@withContext
-                val processNum = ProcessManager.processNumCalculator(ubuntuService)
+                val processNum = UbuntuProcessManager.processNumCalculator(ubuntuService)
                 if (
                     processNum > ubuntuRunningProcessNum
                 ) return@withContext
                 ubuntuService.screenOffKill = true
-                ProcessManager.finishProcessForSleep(ubuntuService)
+                UbuntuProcessManager.finishProcessForSleep(ubuntuService)
 //                LinuxCmd.killProcess(ubuntuService.packageName)
 //                killFrontProcess(ubuntuService)
 //                killSubFrontProcess(ubuntuService)
@@ -73,7 +73,7 @@ object ScreenMonitor {
         ubuntuService.monitorScreenJob?.cancel()
         if(!ubuntuService.screenOffKill) return
         ubuntuService.notificationBuilderHashMap.clear()
-        ProcessManager.removeLaunchCompFile(ubuntuService)
+        UbuntuProcessManager.removeLaunchCompFile(ubuntuService)
         val sleepingIntent = Intent()
         sleepingIntent.action = BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action
         ubuntuService.sendBroadcast(sleepingIntent)

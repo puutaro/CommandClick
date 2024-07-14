@@ -11,7 +11,7 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
@@ -423,7 +423,7 @@ object UbuntuSetUp {
                 exitDownloadMonitorProcess()
                 removeRootfsTarGz()
                 UbuntuInitProcess.cancel(ubuntuService)
-                ProcessManager.killAllCoroutineJob(ubuntuService)
+                UbuntuProcessManager.killAllCoroutineJob(ubuntuService)
                 compDownloadErrNoti(ubuntuService)
             }
 

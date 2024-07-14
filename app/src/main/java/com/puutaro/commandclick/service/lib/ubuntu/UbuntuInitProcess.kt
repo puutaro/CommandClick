@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 import java.time.LocalDateTime
@@ -11,7 +11,7 @@ object UbuntuInitProcess {
         ubuntuService: UbuntuService,
         ){
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                ProcessManager.UbuntuRunningSystemProcessType.SetUp.name
+                UbuntuProcessManager.UbuntuRunningSystemProcessType.SetUp.name
         ]?.cancel()
         FileSystems.updateFile(
             File(
@@ -25,7 +25,7 @@ object UbuntuInitProcess {
             ubuntuService.cmdclickMonitorFileName,
         )
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                ProcessManager.UbuntuRunningSystemProcessType.SetUp.name
+                UbuntuProcessManager.UbuntuRunningSystemProcessType.SetUp.name
         ] = setupUbuntuJob
     }
 
@@ -33,7 +33,7 @@ object UbuntuInitProcess {
         ubuntuService: UbuntuService,
     ){
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                ProcessManager.UbuntuRunningSystemProcessType.SetUp.name
+                UbuntuProcessManager.UbuntuRunningSystemProcessType.SetUp.name
         ]?.cancel()
     }
 }

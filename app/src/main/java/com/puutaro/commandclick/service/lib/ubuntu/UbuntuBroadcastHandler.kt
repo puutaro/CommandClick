@@ -14,7 +14,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuProcessChecker
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServiceButton
-import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.RestoreLabel
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManager
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
@@ -214,7 +214,7 @@ object UbuntuBroadcastHandler {
         val itSelfProcessNum = 1
         ubuntuService.notificationBuilder?.setContentText(
             UbuntuStateType.RUNNING.message.format(
-                ProcessManager.processNumCalculator(ubuntuService) - itSelfProcessNum
+                UbuntuProcessManager.processNumCalculator(ubuntuService) - itSelfProcessNum
             )
         )
         ubuntuService.notificationBuilder?.clearActions()
@@ -231,7 +231,7 @@ object UbuntuBroadcastHandler {
                 it
             )
         }
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuInitProcessType.SetUpMonitoring.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuProcessManager.UbuntuInitProcessType.SetUpMonitoring.name]?.cancel()
     }
 
     private fun execSleepingNotification(
@@ -266,7 +266,7 @@ object UbuntuBroadcastHandler {
             ubuntuService.applicationContext,
         )
         UbuntuSetUp.exitDownloadMonitorProcess()
-        ProcessManager.finishProcess(ubuntuService)
+        UbuntuProcessManager.finishProcess(ubuntuService)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 ubuntuService.stopSelf()
@@ -283,10 +283,10 @@ object UbuntuBroadcastHandler {
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) return
         val systemRunningProcessNum =
-            ProcessManager.UbuntuRunningSystemProcessType.values().size
+            UbuntuProcessManager.UbuntuRunningSystemProcessType.values().size
         ubuntuService.notificationBuilder?.setContentTitle(UbuntuStateType.RUNNING.title)
         val userProotProcessNum =
-            ProcessManager.processNumCalculator(ubuntuService) - systemRunningProcessNum
+            UbuntuProcessManager.processNumCalculator(ubuntuService) - systemRunningProcessNum
         ubuntuService.notificationBuilder?.setContentText(
             UbuntuStateType.RUNNING.message.format(
                 userProotProcessNum
