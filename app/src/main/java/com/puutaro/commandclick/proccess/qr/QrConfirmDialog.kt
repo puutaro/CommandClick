@@ -65,6 +65,7 @@ class QrConfirmDialog(
                 R.id.confirm_text_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
+            QrScanner.qrDialogDismiss()
             confirmDialogObj?.dismiss()
             confirmDialogObj = null
             CoroutineScope(Dispatchers.Main).launch {

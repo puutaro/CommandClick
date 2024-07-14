@@ -317,8 +317,7 @@ object QrScanner{
                         decodeText
                     )
                 }
-                qrScanDialogObj?.dismiss()
-                qrScanDialogObj = null
+                qrDialogDismiss()
             }
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
@@ -440,8 +439,7 @@ object QrScanner{
         codeScanner: CodeScanner
     ){
         codeScanner.releaseResources()
-        qrScanDialogObj?.dismiss()
-        qrScanDialogObj = null
+        qrDialogDismiss()
     }
 
     private suspend fun loadDecodedText(
@@ -455,8 +453,6 @@ object QrScanner{
             fragContext,
             decodeText
         )
-        qrScanDialogObj?.dismiss()
-        qrScanDialogObj = null
         QrConfirmDialog(
             fragment,
             codeScanner,
@@ -603,8 +599,7 @@ object QrScanner{
         ){
             subMenuListView?.setOnItemClickListener {
                     parent, view, position, id ->
-                qrScanDialogObj?.dismiss()
-                qrScanDialogObj = null
+                qrDialogDismiss()
                 codeScanner.releaseResources()
                 subMenuDialog?.dismiss()
                 subMenuDialog = null
@@ -660,6 +655,11 @@ object QrScanner{
                 ).absolutePath
             ).textToList()
         }
+    }
+
+    fun qrDialogDismiss(){
+        qrScanDialogObj?.dismiss()
+        qrScanDialogObj = null
     }
 
 }
