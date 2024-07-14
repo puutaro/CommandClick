@@ -2,11 +2,9 @@ package com.puutaro.commandclick.util.shell
 
 import android.content.Context
 import com.puutaro.commandclick.BuildConfig
-import com.puutaro.commandclick.common.variable.network.UsePort
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuExtraSystemShells
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuBasicProcess
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -26,21 +24,16 @@ object LinuxCmd {
                 "ps -ef | grep -v grep"
             ).joinToString("\t")
         )
-        val isProotProcess =
-            psResult.contains("proot")
-//        val isHttp2ShellProcess =
-//            psResult.contains("
-//            ")
-//                && psResult.contains("${UsePort.HTTP2_SHELL_PORT.num}")
-        val isHttp2ShellProcess =
-            psResult.contains("httpshd")
-                    && psResult.contains("${UsePort.HTTP2_SHELL_PORT.num}")
-        val isDropbearProcess =
-            psResult.contains("dropbear")
-                    && psResult.contains("${UsePort.DROPBEAR_SSH_PORT.num}")
-        val isWsshProcess =
-            psResult.contains("wssh")
-                    && psResult.contains("${UsePort.WEB_SSH_TERM_PORT.num}")
+        val ubuntuBasicProcessValues = UbuntuBasicProcess.values()
+        val isMustProcess = ubuntuBasicProcessValues.filter {
+            mustCmd ->
+            val isCmd = when(mustCmd.extra.isEmpty()) {
+                true -> psResult.contains(mustCmd.cmd)
+                else -> psResult.contains(mustCmd.cmd)
+                        && psResult.contains(mustCmd.extra)
+            }
+            isCmd
+        }.size == ubuntuBasicProcessValues.size
         val autoRestoreShellPathList =
             UbuntuExtraSystemShells.OnAutoRestore.makeRestoreProcessPathList()
                 .map{
@@ -73,14 +66,9 @@ object LinuxCmd {
 //                "resotreShellPathList.size: ${autoRestoreShellPathList.size}",
 //            ).joinToString("\n")
 //        )
-//        val isPulseAudioProcess =
-//            psResult.contains("pulseaudio --start")
 
 
-        return isProotProcess
-                && isWsshProcess
-                && isHttp2ShellProcess
-                && isDropbearProcess
+        return isMustProcess
                 && isExtraProcess
 //                && isPulseAudioProcess
     }

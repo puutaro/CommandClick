@@ -10,6 +10,7 @@ object UbuntuExtraSystemShells {
 
     private val shellPathKey = ConfigKey.SHELL_PATH.key
     private val onAutoResotreKey = ConfigKey.ON_AUTO_RESTORE.key
+    private val disableKey = ConfigKey.DISABLE.key
     private const val extraSeparator = ','
     private const val switchOn = "ON"
 
@@ -76,6 +77,20 @@ object UbuntuExtraSystemShells {
                 it.isNotEmpty()
             }
         }
+    }
+
+    fun makeGrepCon(): String {
+        return makeMapList().map {
+            if(
+                it.get(disableKey) == switchOn
+            ) return@map String()
+            val pathOrMacro = it.get(shellPathKey)
+            UbuntuExtraSystemShellMacro.values().firstOrNull {
+                it.macro == pathOrMacro
+            }?.processName ?: pathOrMacro
+        }.filter { !it.isNullOrEmpty() }.map {
+            " | grep \"${it}\""
+        }.joinToString("\n")
     }
 
 

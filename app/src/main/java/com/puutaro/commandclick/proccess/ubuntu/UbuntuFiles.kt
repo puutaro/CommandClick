@@ -32,6 +32,7 @@ class UbuntuFiles(
                 UsePath.cmdclickConfigFileName
             )
         }
+        val mustProcessGrepCmdsTxt = "mustProcessGrepCmds.txt"
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir

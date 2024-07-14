@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.ubuntu
 
 import com.puutaro.commandclick.common.variable.network.UsePort
 
-enum class UbuntuMustProcess(
+enum class UbuntuBasicProcess(
     val cmd: String,
     val extra: String,
 ) {

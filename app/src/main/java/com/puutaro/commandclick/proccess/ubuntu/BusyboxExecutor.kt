@@ -212,6 +212,11 @@ class BusyboxExecutor(
         )
         removeProotTempDir()
         CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                launchSetupForUbuntu(
+                    ubuntuFiles
+                )
+            }
             withContext(Dispatchers.IO){
                 setupForUbuntu(
                     ubuntuFiles
@@ -423,6 +428,29 @@ class BusyboxExecutor(
         ) return
         addBinByUrl()
         addEnvToProfile()
+    }
+
+    private fun launchSetupForUbuntu(
+        ubuntuFiles: UbuntuFiles
+    ){
+        val mustCmdGrepList = UbuntuBasicProcess.values().map {
+            basicCmd ->
+            listOf(
+                basicCmd.cmd,
+                basicCmd.extra,
+            ).filter {
+                it.isNotEmpty()
+            }.map {
+                "| grep \"${it}\""
+            }.joinToString(" ")
+        } + UbuntuExtraSystemShells.makeGrepCon()
+        FileSystems.writeFile(
+            File(
+                ubuntuFiles.filesOneRootfsSupportDir,
+                UbuntuFiles.mustProcessGrepCmdsTxt
+            ).absolutePath,
+            mustCmdGrepList.joinToString("\n")
+        )
     }
 
     private fun addEnvToProfile(){

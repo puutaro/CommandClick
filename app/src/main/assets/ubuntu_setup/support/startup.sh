@@ -20,7 +20,7 @@ kill_front_and_sub_process(){
 		"") return ;;
 	esac
 	echo --- kill process
-	kill ${killId}
+	kill ${killId} 2>/dev/null
 }
 
 install_pip3_pkg(){
@@ -350,11 +350,15 @@ launch_setup(){
 	install_bin
 }
 
-launch_extra_startup(){
-	echo "### ${FUNCNAME}"
+echo_ubuntu_env_tsv_con(){
 	local support_dir_path="/support"
 	local ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
-	local ubuntu_env_tsv_con="$(cat "${ubuntu_env_tsv_path}")"
+	cat "${ubuntu_env_tsv_path}"
+}
+
+launch_extra_startup(){
+	local ubuntu_env_tsv_con="${1}"
+	echo "### ${FUNCNAME}"
 	local ubuntuExtraStartupShellsPath=$(\
 		tsvar "${ubuntu_env_tsv_con}" "UBUNTU_EXTRA_STARTUP_SHELLS_PATH" \
 	)
@@ -377,6 +381,7 @@ launch_extra_startup(){
 			print $0
 		}' \
 	)"
+	local support_dir_path="/support"
 	case "${is_pulse}" in
 		"") ;;
 		*) bash "${support_dir_path}/pulse_setup.sh" &
@@ -400,15 +405,48 @@ launch_extra_startup(){
 	wait
 }
 
-
-wait_cmd(){
+put_launch_comp_file(){
 	echo "### ${FUNCNAME}"
+	local ubuntu_env_tsv_con="${1}"
+	local mustProcessGrepCmdsTxtName=$(\
+		tsvar "${ubuntu_env_tsv_con}" "MUST_PROCESS_GREP_CMDS_TXT" \
+	)
+	local mustProcessGrepCmdsTxtCon=$(cat "/support/${mustProcessGrepCmdsTxtName}")
+	local must_proc_num=$(echo "${mustProcessGrepCmdsTxtCon}" | wc -l)
+	while :
+	do
+		local ps_con="$(ps aux)"
+		local proc_grep_cmd=$(\
+			echo  "${mustProcessGrepCmdsTxtCon}" \
+			| awk -v ps_con="${ps_con}" '{
+					printf "echo \x22%s\x22 %s\n", ps_con, $0
+				}'\
+		)
+		local fact_proc_num=$(\
+			echo "${proc_grep_cmd}" | bash | wc -l\
+		)
+		echo "# fact_proc_num: ${fact_proc_num}"
+		echo "# must_proc_num: ${must_proc_num}"
+		case "${fact_proc_num}" in
+			"${must_proc_num}") 
+				break
+				;;
+		esac
+		sleep 1
+	done
 	echo "### Setup ok, launching..."
-	while true; 
-	do 
-		sleep 1; 
-	done	
+	touch "${UBUNTU_LAUNCH_COMP_FILE}"
 }
+
+
+# wait_cmd(){
+# 	echo "### ${FUNCNAME}"
+# 	echo "### Setup ok, launching..."
+# 	while true; 
+# 	do 
+# 		sleep 1; 
+# 	done	
+# }
 
 
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
@@ -422,9 +460,12 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process
+readonly ubuntu_env_tsv_con=$(echo_ubuntu_env_tsv_con)
 startup_launch_system &
-launch_extra_startup &
-touch "${UBUNTU_LAUNCH_COMP_FILE}"
+launch_extra_startup\
+	"${ubuntu_env_tsv_con}" &
+put_launch_comp_file \
+	"${ubuntu_env_tsv_con}"
 wait
 # wait_cmd
 exit 0
