@@ -421,7 +421,13 @@ extraButtonConfig="icon=setup,click=MENU..."
 extraButtonConfig="file://{extra button config path} 
 /// SETTING_SECTION_END
 ```
- 
+
+## fannelStateConfig
+
+Manage fannel state
+
+-> [fannel state config](https://github.com/puutaro/CommandClick/blob/master/md/developer/state/fannelStateConfig.md)
+
 ## noScrollSaveUrls
 
 Ignore scroll yPosition site domain saved       
