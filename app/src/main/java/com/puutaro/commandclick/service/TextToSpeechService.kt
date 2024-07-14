@@ -173,12 +173,22 @@ class TextToSpeechService:
             broadcastReceiverForTextToSpeechNext,
         )
         notificationManager?.cancel(channelNum)
-        textToSpeech?.stop()
+        releaseTts()
         textToSpeechJob?.cancel()
         execTextToSpeechJob?.cancel()
-        done = true
         stopForeground(Service.STOP_FOREGROUND_DETACH)
         stopSelf()
+    }
+
+    private fun releaseTts(){
+        done = true
+        if (
+            textToSpeech == null
+        ) return
+        textToSpeech?.stop()
+        textToSpeech?.setOnUtteranceProgressListener(null);
+        textToSpeech?.shutdown()
+        textToSpeech = null
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
