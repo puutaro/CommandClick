@@ -486,7 +486,6 @@ class BusyboxExecutor(
             "export REPLACE_VARIABLES_TSV_RELATIVE_PATH=\"${UsePath.replaceVariablesTsvRelativePath}\"",
             "export UBUNTU_ENV_TSV_NAME=\"${UbuntuFiles.ubuntuEnvTsvName}\"",
             "export UBUNTU_SERVICE_TEMP_DIR_PATH=\"${UsePath.cmdclickTempUbuntuServiceDirPath}\"",
-            "export IP_V4_ADDRESS=\"${NetworkTool.getIpv4Address(context)}\"",
         )
         val insertExportList = exportList.filter {
             !profileConList.contains(it)
@@ -581,7 +580,6 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
 //                "PROOT_DEBUG_LEVEL" to prootDebugLevel,
             "EXTRA_BINDINGS" to bindings,
             "OS_VERSION" to System.getProperty("os.version")!!,
-            "IP_V4_ADDRESS" to NetworkTool.getIpv4Address(context),
             "PACKAGE_NAME" to context?.packageName.toString(),
             "UBUNTU_PC_PULSE_SET_SERVER_PORT" to UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num.toString(),
             "UBUNTU_PULSE_RECEIVER_PORT" to UsePort.UBUNTU_PULSE_RECEIVER_PORT.num.toString(),

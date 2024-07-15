@@ -193,7 +193,7 @@ object UbuntuSetUp {
                     filesOneRootfsSupportDirPath,
                     UbuntuFiles.ubuntuEnvTsvName
                 ).absolutePath,
-                UbuntuEnvTsv.makeTsv()
+                UbuntuEnvTsv.makeTsv(context)
             )
         }
         withContext(Dispatchers.IO) {
