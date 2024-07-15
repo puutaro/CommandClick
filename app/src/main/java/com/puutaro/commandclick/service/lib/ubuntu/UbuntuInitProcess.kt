@@ -2,8 +2,7 @@ package com.puutaro.commandclick.service.lib.ubuntu
 
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
+import com.puutaro.commandclick.util.LogSystems
 import java.time.LocalDateTime
 
 object UbuntuInitProcess {
@@ -13,11 +12,7 @@ object UbuntuInitProcess {
         ubuntuService.ubuntuCoroutineJobsHashMap[
                 UbuntuProcessManager.UbuntuRunningSystemProcessType.SetUp.name
         ]?.cancel()
-        FileSystems.updateFile(
-            File(
-                ubuntuService.cmdclickMonitorDirPath,
-                ubuntuService.cmdclickMonitorFileName
-            ).absolutePath,
+        LogSystems.stdSys(
             "### ${LocalDateTime.now()} proot"
         )
         val setupUbuntuJob = UbuntuSetUp.set(

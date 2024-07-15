@@ -14,6 +14,7 @@ import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
@@ -85,6 +86,15 @@ object UbuntuSetUp {
                     monitorFileName = monitorFileName
                 )
             }
+            return
+        }
+        if(
+            !NetworkTool.isWifi(context)
+        ){
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION.action
+            )
             return
         }
 

@@ -14,6 +14,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
@@ -53,7 +54,6 @@ class UbuntuService:
     ) as String
     var isUbuntuRestore = false
 
-    var isStartup = false
     val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     val cmdclickMonitorFileName = UsePath.cmdClickMonitorFileName_2
     var ubuntuFiles: UbuntuFiles? = null
@@ -154,10 +154,6 @@ class UbuntuService:
         flags: Int,
         startId: Int
     ): Int {
-        if(isStartup) {
-            isStartup = true
-            return START_NOT_STICKY
-        }
         if(
             intent?.getStringExtra(
                 UbuntuServerIntentExtra.ubuntuStartCommand.schema
@@ -171,39 +167,25 @@ class UbuntuService:
             sendBroadcast(processNumUpdateIntent)
             return START_NOT_STICKY
         }
-        ubuntuFiles = UbuntuFiles(
-            applicationContext,
-        )
         ubuntuFiles = UbuntuFiles(applicationContext)
-        if(ubuntuFiles?.ubuntuSetupCompFile?.isFile == true) {
-            notificationBuilder?.setContentTitle(UbuntuStateType.WAIT.title)
-            notificationBuilder?.setContentText(UbuntuStateType.WAIT.message)
-        } else {
-            notificationBuilder?.setContentTitle(UbuntuStateType.UBUNTU_SETUP_WAIT.title)
-            notificationBuilder?.setContentText(UbuntuStateType.UBUNTU_SETUP_WAIT.message)
+        when(ubuntuFiles?.ubuntuSetupCompFile?.isFile) {
+            true -> {
+                notificationBuilder?.setContentTitle(UbuntuStateType.WAIT.title)
+                notificationBuilder?.setContentText(UbuntuStateType.WAIT.message)
+            }
+            else -> {
+                notificationBuilder?.setContentTitle(UbuntuStateType.UBUNTU_SETUP_WAIT.title)
+                notificationBuilder?.setContentText(UbuntuStateType.UBUNTU_SETUP_WAIT.message)
+            }
         }
         if(
             ubuntuFiles?.ubuntuSetupCompFile?.isFile != true
             && !NetworkTool.isWifi(applicationContext)
         ) {
-            notificationBuilder?.setContentTitle(UbuntuStateType.WIFI_WAIT.title)
-            notificationBuilder?.setContentText(UbuntuStateType.WIFI_WAIT.message)
-            notificationBuilder?.clearActions()
-            notificationBuilder?.addAction(
-                com.puutaro.commandclick.R.drawable.icons8_cancel,
-                UbuntuNotiButtonLabel.RESTART.label,
-                cancelUbuntuServicePendingIntent,
+            BroadcastSender.normalSend(
+                applicationContext,
+                BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION.action
             )
-            notificationBuilder?.build()?.let {
-                notificationManager?.notify(
-                    ServiceChannelNum.ubuntuServer,
-                    it
-                )
-                startForeground(
-                    chanelId,
-                    it
-                )
-            }
             UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY
@@ -244,10 +226,6 @@ class UbuntuService:
                     chanelId,
                     it
                 )
-                startForeground(
-                    chanelId,
-                    it
-                )
             }
             UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
@@ -262,10 +240,6 @@ class UbuntuService:
         val notificationInstance = notificationBuilder?.build()
         notificationInstance?.let {
             notificationManager?.notify(
-                chanelId,
-                it
-            )
-            startForeground(
                 chanelId,
                 it
             )
