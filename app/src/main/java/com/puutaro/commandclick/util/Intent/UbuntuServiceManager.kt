@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
+import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -33,10 +36,28 @@ object UbuntuServiceManager {
         val cmdclickTmpUbuntuServiceActiveFile = File("${cmdclickTempUbuntuServiceDirPath}/${cmdclickTmpUbuntuServiceActiveFileName}")
         CoroutineScope(Dispatchers.IO).launch {
 
-            withContext(Dispatchers.IO) {
-                if(!onInitDelay) return@withContext
-                delay(8000)
+            val isLaunch = withContext(Dispatchers.IO) {
+                if(
+                    activity !is MainActivity
+                ) return@withContext true
+                for(i in 1..300) {
+                    val isGranted =
+                        StorageAccessSetter.checkPermissionGranted(activity)
+                            && NotifierSetter.checkPermission(activity)
+                    if(
+                        isGranted
+                    ) return@withContext true
+                    delay(1000)
+                }
+                return@withContext false
             }
+            if(!isLaunch) return@launch
+//            withContext(Dispatchers.IO){
+//                if(
+//                    !onInitDelay
+//                ) return@withContext
+//                delay(8000)
+//            }
             withContext(Dispatchers.IO){
                 FileSystems.removeFiles(
                     File(

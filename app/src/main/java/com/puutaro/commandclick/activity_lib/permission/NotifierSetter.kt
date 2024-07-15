@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.activity_lib.permission
 
 import android.Manifest
-import android.app.ActivityManager
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
@@ -14,6 +12,7 @@ import com.puutaro.commandclick.activity_lib.manager.FragmentStartHandler
 
 object NotifierSetter {
 
+    val postNotifications = Manifest.permission.POST_NOTIFICATIONS
     fun getPermissionAndSet(
         activity: MainActivity
     ){
@@ -25,15 +24,8 @@ object NotifierSetter {
             )
             return
         }
-        val postNotifications = Manifest.permission.POST_NOTIFICATIONS
-        val checkingRunCommandPermission =
-            ContextCompat.checkSelfPermission(
-                activity,
-                postNotifications
-            )
         if(
-            checkingRunCommandPermission ==
-            PackageManager.PERMISSION_GRANTED
+            checkPermission(activity)
         ) {
             FragmentStartHandler.handle(
                 activity
@@ -43,6 +35,18 @@ object NotifierSetter {
         activity.getNotifierSetterLaunch.launch(
             postNotifications
         )
+    }
+
+    fun checkPermission(
+        activity: MainActivity
+    ): Boolean {
+        if(
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+        ) return true
+        return ContextCompat.checkSelfPermission(
+            activity,
+            postNotifications
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     fun set(

@@ -34,7 +34,7 @@ object StorageAccessSetter {
         when (
             checkPermissionGranted(activity)
         ) {
-            PackageManager.PERMISSION_GRANTED -> {
+            true -> {
                 NotifierSetter.getPermissionAndSet(
                     activity
                 )
@@ -83,18 +83,19 @@ object StorageAccessSetter {
     }
 
 
-    private fun checkPermissionGranted(
+    fun checkPermissionGranted(
         activity: MainActivity
-    ): Int {
+    ): Boolean {
         if(
             Build.VERSION.SDK_INT < 30
         ){
             return ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
+            ) == PackageManager.PERMISSION_GRANTED
         }
-        return checkedManagedFullStorageGranted()
+        return checkedManagedFullStorageGranted() ==
+                PackageManager.PERMISSION_GRANTED
     }
 
 
