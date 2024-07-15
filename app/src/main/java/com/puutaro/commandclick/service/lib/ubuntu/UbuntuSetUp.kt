@@ -161,8 +161,6 @@ object UbuntuSetUp {
                 ).absolutePath
             )
             ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
-
-            ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
             ubuntuFiles.filesOneRootfsSupportCommonDir.mkdirs()
             ubuntuFiles.filesOneRootfsStorageDir.mkdir()
             ubuntuFiles.filesOneRootfsEtcDProfileDir.mkdir()

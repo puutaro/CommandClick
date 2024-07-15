@@ -16,22 +16,22 @@ class UbuntuFiles(
     companion object {
         val downloadDirPath = UsePath.emulatedPath +
                 "/${Environment.DIRECTORY_DOWNLOADS}"
-//        val rootfsTarName = "rootfs.tar"
-//        val downloadRootfsTarPath = "$downloadDirPath/$rootfsTarName"
         val rootfsTarGzName = "rootfs.tar.gz"
-//        val downloadRootfsTarGzPath = "$downloadDirPath/$rootfsTarGzName"
         const val waitQuizTsvName = "wait_quiz.tsv"
         const val ubuntuEnvTsvName = "ubuntu_env.tsv"
         const val supportDirName = "support"
-        const val startupFilePath = "/${supportDirName}/startup.sh"
+        const val supportDirInUbuntu = "/${supportDirName}"
+        const val startupFilePath = "${supportDirInUbuntu}/startup.sh"
         const val extractAudioStreamingMapShellName = "extract_audio_streaming_map.sh"
-        val ubuntuExtraStartupShellsPath = let {
+        val ubuntuExtraStartupShellsTsvPath = let {
             ScriptPreWordReplacer.replace(
                 "${UsePath.fannelSettingsDirPath}/ubuntuExtraStartupShellPaths.tsv",
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
             )
         }
+        const val pulseAudioStartUpShellPath = "${supportDirInUbuntu}/pulse_setup.sh"
+        const val extraStartupShellName = "extra_startup.sh"
         val mustProcessGrepCmdsTxt = "mustProcessGrepCmds.txt"
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
@@ -53,6 +53,8 @@ class UbuntuFiles(
         File("${filesOneRootfs.absolutePath}/support")
     val extractAudioStreamingMapShell =
         File(filesOneRootfsSupportDir.absolutePath, extractAudioStreamingMapShellName)
+    val extraStartupShell =
+        File(filesOneRootfsSupportDir.absolutePath, extraStartupShellName)
     val filesOneRootfsSupportProcDir =
         File("${filesOneRootfsSupportDir.absolutePath}/proc")
     val filesOneRootfsSupportCmdDir =

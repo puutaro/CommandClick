@@ -17,6 +17,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
 
 
 class BusyboxExecutor(
@@ -213,6 +214,9 @@ class BusyboxExecutor(
         removeProotTempDir()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
+                setExtraStartupShellForUbuntu(
+                    ubuntuFiles
+                )
                 launchSetupForUbuntu(
                     ubuntuFiles
                 )
@@ -450,6 +454,20 @@ class BusyboxExecutor(
                 UbuntuFiles.mustProcessGrepCmdsTxt
             ).absolutePath,
             mustCmdGrepList.joinToString("\n")
+        )
+    }
+
+    private fun setExtraStartupShellForUbuntu(
+        ubuntuFiles: UbuntuFiles
+    ){
+        if(
+            ubuntuFiles.ubuntuLaunchCompFile.isFile
+        ) return
+        val startupShellCon =
+           UbuntuExtraSystemShells.makeStartupShellCon()
+        FileSystems.writeFile(
+            ubuntuFiles.extraStartupShell.absolutePath,
+            startupShellCon
         )
     }
 

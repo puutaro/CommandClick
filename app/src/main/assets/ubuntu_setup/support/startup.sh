@@ -299,8 +299,7 @@ install_require_pacakges(){
 install_httpshd(){
 	echo "### ${FUNCNAME}"
 	local package_name="httpshd"
-	sudo chmod +x "/usr/local/bin/${package_name}"
-# 	rm -f "${package_name}"
+	chmod +x "/usr/local/bin/${package_name}"
 }
 
 install_repbash(){
@@ -351,67 +350,22 @@ launch_setup(){
 }
 
 echo_ubuntu_env_tsv_con(){
-	local support_dir_path="/support"
-	local ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
+	local ubuntu_env_tsv_path="${SUPPORT_DIR_PATH}/${UBUNTU_ENV_TSV_NAME}"
 	cat "${ubuntu_env_tsv_path}"
 }
 
 launch_extra_startup(){
-	local ubuntu_env_tsv_con="${1}"
 	echo "### ${FUNCNAME}"
-	local ubuntuExtraStartupShellsPath=$(\
-		tsvar "${ubuntu_env_tsv_con}" "UBUNTU_EXTRA_STARTUP_SHELLS_PATH" \
-	)
-	local pulse_macro_shell="PULSE.sh"
-	local ubuntuExtraStartupShellsCon=$(\
-		cat "${ubuntuExtraStartupShellsPath}"\
-	)
-	local is_pulse="$(\
-		echo "${ubuntuExtraStartupShellsCon}" \
-		| awk \
-			-v pulse_macro_shell="${pulse_macro_shell}" \
-			-F '\t' '{
-			shell_path = $1
-			gsub(/^[ \t]+/, "", shell_path)
-			gsub(/[ \t]+$/, "", shell_path)
-			if(shell_path != pulse_macro_shell) next
-			extra_map_con = $2
-			if(extra_map_con ~ /disable=ON/) next
-			if(extra_map_con ~ /disable=on/) next
-			print $0
-		}' \
-	)"
-	local support_dir_path="/support"
-	case "${is_pulse}" in
-		"") ;;
-		*) bash "${support_dir_path}/pulse_setup.sh" &
-			;;
-	esac
-	echo "${ubuntuExtraStartupShellsCon}"\
-	 | awk \
-	 	-F '\t' \
-	 	-v pulse_macro_shell="${pulse_macro_shell}" \
-	 '{
-	 	shell_path = $1
-		gsub(/^[ \t]+/, "", shell_path)
-		gsub(/[ \t]+$/, "", shell_path)
-		if(!shell_path) next
-		if( shell_path == pulse_macro_shell ) next
-		extra_map_con = $2
-		if( extra_map_con ~ /disable=ON/) next
-		if( extra_map_con ~ /disable=on/) next
-		printf "bash \x22%s\x22 &", shell_path
-	}' | bash &
-	wait
+	bash "${SUPPORT_DIR_PATH}/extra_startup.sh"
 }
 
 put_launch_comp_file(){
 	echo "### ${FUNCNAME}"
-	local ubuntu_env_tsv_con="${1}"
+	local ubuntu_env_tsv_con=$(echo_ubuntu_env_tsv_con)
 	local mustProcessGrepCmdsTxtName=$(\
 		tsvar "${ubuntu_env_tsv_con}" "MUST_PROCESS_GREP_CMDS_TXT" \
 	)
-	local mustProcessGrepCmdsTxtCon=$(cat "/support/${mustProcessGrepCmdsTxtName}")
+	local mustProcessGrepCmdsTxtCon=$(cat "${SUPPORT_DIR_PATH}/${mustProcessGrepCmdsTxtName}")
 	local must_proc_num=$(echo "${mustProcessGrepCmdsTxtCon}" | wc -l)
 	while :
 	do
@@ -439,16 +393,6 @@ put_launch_comp_file(){
 }
 
 
-# wait_cmd(){
-# 	echo "### ${FUNCNAME}"
-# 	echo "### Setup ok, launching..."
-# 	while true; 
-# 	do 
-# 		sleep 1; 
-# 	done	
-# }
-
-
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 		&& [ "${CREATE_IMAGE_SWITCH}" = "ON" ];then
 	install_base_pkg
@@ -460,13 +404,10 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process
-readonly ubuntu_env_tsv_con=$(echo_ubuntu_env_tsv_con)
 startup_launch_system &
-launch_extra_startup\
-	"${ubuntu_env_tsv_con}" &
+launch_extra_startup &
 put_launch_comp_file \
 	"${ubuntu_env_tsv_con}"
 wait
-# wait_cmd
 exit 0
 install_golang_and_go_package

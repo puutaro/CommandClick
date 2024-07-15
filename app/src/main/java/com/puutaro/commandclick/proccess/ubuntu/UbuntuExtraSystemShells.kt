@@ -1,10 +1,7 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import java.io.File
 
 object UbuntuExtraSystemShells {
 
@@ -17,8 +14,9 @@ object UbuntuExtraSystemShells {
     enum class UbuntuExtraSystemShellMacro(
         val macro: String,
         val processName: String,
+        val shellPath: String,
     ) {
-        PULSE("PULSE.sh", "pulseaudio --start")
+        PULSE("PULSE.sh", "pulseaudio --start", UbuntuFiles.pulseAudioStartUpShellPath)
     }
 
     fun isMacro(
@@ -93,10 +91,31 @@ object UbuntuExtraSystemShells {
         }.joinToString("\n")
     }
 
+    fun makeStartupShellCon(): String {
+        val shellShiban = "#!/bin/bash"
+        val shellBody = makeMapList().map {
+            if(
+                it.get(disableKey) == switchOn
+            ) return@map String()
+            val pathOrMacro = it.get(shellPathKey)
+            UbuntuExtraSystemShellMacro.values().firstOrNull {
+                it.macro == pathOrMacro
+            }?.shellPath ?: pathOrMacro
+        }.filter { !it.isNullOrEmpty() }.map {
+            "bash \"${it}\" &"
+        }.joinToString("\n")
+        return listOf(
+            shellShiban,
+            String(),
+            shellBody,
+            "wait",
+        ).joinToString("\n")
+    }
+
 
     private fun makeMapList(): List<Map<String, String>>{
         return ReadText(
-            UbuntuFiles.ubuntuExtraStartupShellsPath
+            UbuntuFiles.ubuntuExtraStartupShellsTsvPath
         ).textToList().filter {
             it.trim().isNotEmpty()
         }.map {
