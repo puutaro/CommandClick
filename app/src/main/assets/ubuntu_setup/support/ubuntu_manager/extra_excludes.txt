@@ -1,0 +1,17 @@
+/etc
+/home
+/root
+/var
+/usr/bin
+/usr/include
+/usr/lib/aarch64-linux-gnu
+/usr/lib/gcc
+/usr/lib/git-core
+/usr/lib/python3
+/usr/lib/python3.10
+/usr/lib/python3.11
+/usr/lib/systemd
+/usr/libexec
+/usr/local
+/usr/sbin
+/usr/share

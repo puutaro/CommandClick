@@ -8,7 +8,6 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +16,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.LocalDateTime
 
 
 class BusyboxExecutor(
@@ -430,7 +428,7 @@ class BusyboxExecutor(
         if(
             !ubuntuFiles.ubuntuSetupCompFile.isFile
         ) return
-        addBinByUrl()
+//        addBinByUrl()
         addEnvToProfile()
     }
 
@@ -508,16 +506,21 @@ class BusyboxExecutor(
                     "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64",
                 ).map { url ->
                     async {
-                        val bin = CurlManager.get(
+                        val byte = CurlManager.get(
                             context,
                             url,
                             String(),
                             String(),
                             30_000
                         )
+                        val binName = File(url).name.split("-").first()
+                        val binPath = File(filesUsrLocalBinPath, binName).absolutePath
                         FileSystems.writeFromByteArray(
-                            filesUsrLocalBinPath,
-                            bin,
+                            binPath,
+                            byte,
+                        )
+                        LogSystems.stdSys(
+                            "binPath: ${binPath}"
                         )
                     }
                 }
@@ -544,6 +547,8 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
             "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
             "ROOTFS_PATH" to ubuntuFiles.filesOneRootfs.absolutePath,
+            "DOWNLOAD_ROOTFS_TARGZ_PATH" to UbuntuFiles.downloadRootfsTarGzPath,
+            "UBUNTU_BACKUP_ROOTFS_PATH" to UbuntuFiles.ubuntuBackupRootfsPath,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "b" to ubuntuFiles.busybox.absolutePath
 

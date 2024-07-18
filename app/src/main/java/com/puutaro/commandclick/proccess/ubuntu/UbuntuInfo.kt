@@ -35,7 +35,7 @@ object UbuntuInfo {
             -> "https://partner-images.canonical.com/core/jammy/" +
                     "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
             else
-            -> "https://github.com/puutaro/CommandClick-Linux/releases/download/v1.1.6/rootfs.tar.gz"
+            -> "https://github.com/puutaro/CommandClick-Linux/releases/download/v1.1.7/rootfs.tar.gz"
         }
     }
 

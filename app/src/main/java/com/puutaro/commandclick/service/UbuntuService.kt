@@ -33,6 +33,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabe
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.NetworkTool
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Job
 import java.net.ServerSocket
 
@@ -203,9 +204,11 @@ class UbuntuService:
                 UbuntuNotiButtonLabel.SETUP.label,
                 startUbuntuServicePendingIntent
             )
-            if(
-                ubuntuFiles?.ubuntuBackupRootfsFile?.isFile == true
-            ) {
+            val isUbuntuDataDir = ubuntuFiles?.ubuntuBackupRootfsDataDir?.isDirectory == true
+                    && FileSystems.showDirList(
+                ubuntuFiles?.ubuntuBackupRootfsDataDir?.absolutePath ?: String()
+            ).isNotEmpty()
+            if(isUbuntuDataDir) {
                 val extraList = listOf(
                     UbuntuServerIntentExtra.ubuntuRestoreSign.schema to "on"
                 )

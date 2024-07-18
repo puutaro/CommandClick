@@ -51,24 +51,38 @@ if [[ ! -r /proc/version ]] ; then
 	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/version:/proc/version" 
 fi
 
-
+restore_switch="${1:-}"
 PROOT="$LIB_PATH/proot"
 unset LD_PRELOAD
 cd "${ROOTFS_PATH}"
 chmod -R 777 "${ROOTFS_PATH}"
 cd "${ROOT_PATH}"
 
-tar \
---no-same-owner \
--xzvf \
-rootfs.tar.gz \
---exclude sys \
---exclude dev \
---exclude proc \
---exclude mnt \
---exclude support \
--C "${ROOTFS_PATH}" \
->/dev/null &
+if [ -z "${restore_switch}" ]; then
+    tar \
+        --no-same-owner \
+        -xzvf \
+        "${DOWNLOAD_ROOTFS_TARGZ_PATH}" \
+        --exclude sys \
+        --exclude dev \
+        --exclude proc \
+        --exclude mnt \
+        --exclude support \
+        -C "${ROOTFS_PATH}" \
+        >/dev/null &
+else
+    tar \
+        --no-same-owner \
+        -xvf \
+        "${UBUNTU_BACKUP_ROOTFS_PATH}" \
+        --exclude sys \
+        --exclude dev \
+        --exclude proc \
+        --exclude mnt \
+        --exclude support \
+        -C "${ROOTFS_PATH}" \
+        >/dev/null &
+fi
 
 extract_pid=$!
 wait_spin \

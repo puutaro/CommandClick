@@ -5,6 +5,7 @@ readonly SUPPORT_DIR_PATH="/support"
 readonly USR_LOCAL_BIN="/usr/local/bin"
 readonly UBUNTU_SETUP_COMP_FILE="${SUPPORT_DIR_PATH}/ubuntuSetupComp.txt"
 readonly UBUNTU_LAUNCH_COMP_FILE="${SUPPORT_DIR_PATH}/ubuntuLaunchComp.txt"
+readonly FIRST_SETUP_OK_FILE="${SUPPORT_DIR_PATH}/firstSetupOk.txt"
 
 kill_front_and_sub_process(){
 	local killId=$(\
@@ -210,7 +211,9 @@ setup_dropbear_sshserver(){
 startup_launch_system(){
 	echo "### $FUNCNAME"
 	rm -rf  /tmp/pulse* &
-
+	echo --- launch sshd server
+	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
+	dropbear -E -p ${DROPBEAR_SSH_PORT} >/dev/null &
 	su - "${CMDCLICK_USER}" <<-EOF
 	export APP_ROOT_PATH="${APP_ROOT_PATH}"
 	export MONITOR_DIR_PATH="${MONITOR_DIR_PATH}"
@@ -223,7 +226,7 @@ startup_launch_system(){
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
-	sudo dropbear -E -p ${DROPBEAR_SSH_PORT} >/dev/null &
+	# sudo dropbear -E -p ${DROPBEAR_SSH_PORT} >/dev/null &
 	# 2>&1 &
 	echo "Type bellow command"
 	echo -e "\tssh -p ${DROPBEAR_SSH_PORT}  cmdclick@{your android ip_address}"
@@ -297,20 +300,34 @@ install_require_pacakges(){
 
 install_httpshd(){
 	echo "### ${FUNCNAME}"
-	local package_name="httpshd"
-	chmod +x "/usr/local/bin/${package_name}"
+    local package_name="httpshd"
+    curl \
+        -sSL "https://github.com/puutaro/httpshd/releases/download/0.0.1/httpshd-0.0.1-arm64" \
+        > "${package_name}"
+    local usrlocalbin_httpshd="/usr/local/bin/${package_name}"
+    mv -vf \
+        "${package_name}" \
+        "/usr/local/bin/${package_name}"
+    chmod +x "${usrlocalbin_httpshd}"
 }
 
 install_repbash(){
 	echo "### ${FUNCNAME}"
-	local package_name="repbash"
-	chmod +x "/usr/local/bin/${package_name}"
-	echo "install ok"
+    local package_name="repbash"
+    curl \
+        -sSL "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64" \
+        > "${package_name}"
+    local usrlocalbin_repbash="/usr/local/bin/${package_name}"
+    mv -vf \
+        "${package_name}" \
+        "${usrlocalbin_repbash}"
+    chmod +x "${usrlocalbin_repbash}"
 }
 
 install_bin(){
-	install_httpshd
-	install_repbash
+	install_httpshd &
+	install_repbash &
+	wait
 }
 
 
@@ -320,6 +337,7 @@ install_base_pkg(){
 	install_require_pacakges
 	install_pip3_pkg webssh
 	install_pip3_pkg yt-dlp
+	install_bin
 	# install_shell2http
 }
 
@@ -341,11 +359,16 @@ install_user_package(){
 	EOF
 }
 
-launch_setup(){
+
+first_setup(){
+	if [ -f "${FIRST_SETUP_OK_FILE}" ];then
+		return
+	fi
 	echo "### ${FUNCNAME}"
+	install_bin &
 	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo
-	install_bin
+	touch "${FIRST_SETUP_OK_FILE}"
 }
 
 echo_ubuntu_env_tsv_con(){
@@ -399,7 +422,7 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 	setup_dropbear_sshserver
 fi
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
-	launch_setup
+	# launch_setup
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process
@@ -407,6 +430,7 @@ startup_launch_system &
 launch_extra_startup &
 put_launch_comp_file \
 	"${ubuntu_env_tsv_con}"
+first_setup
 wait
 exit 0
 install_golang_and_go_package

@@ -3,38 +3,103 @@
 exec repbash "${0}" \
 	-t "\${UBUNTU_ENV_TSV_PATH}"
 
-readonly UBUNTU_BACKUP_DIR_PATH="$(dirname "${UBUNTU_BACKUP_ROOTFS_PATH}")"
-readonly ROOTFS_TAR_GZ="$(basename "${UBUNTU_BACKUP_ROOTFS_PATH}")"
-readonly UBUNUT_BACKUP_TMP_DIR_PATH="$(dirname "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}")"
-
 echo "extract.." >> "${MONITOR_FILE_PATH}"
-mkdir -p "${UBUNUT_BACKUP_TMP_DIR_PATH}"
-rm -f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
+sudo apt-get clean
+sudo apt-get autoremove
+sudo pip cache purge
+sudo pip3 cache purge
+dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d' | xargs sudo apt-get -y purge
+mkdir -p "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}"
 cd / 
-sudo tar \
-	-cvpzf "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}" \
-	--exclude=/sys \
-	--exclude=/dev \
-	--exclude=/proc \
-	--exclude=/data \
-	--exclude=/mnt \
-	--exclude=/host-rootfs \
-	--exclude=/support  \
-	--exclude=/etc/mtab \
-	--exclude=/storage \
-	--exclude=/etc/profile.d/userland_profile.sh \
-	--one-file-system \
-	/ \
-	>> "${MONITOR_FILE_PATH}" || e=$?
+readonly ORDINALY_EXCLUDE_CON="$(\
+	echo "/sys
+		/dev
+		/proc
+		/data
+		/mnt
+		/host-rootfs
+		/support
+		/etc/mtab
+		/storage
+		/etc/profile.d/userland_profile.sh  
+	"\
+	|awk '{ 
+ 		gsub(/^[ \t]+/, "", $0)
+ 		gsub(/[ \t]+$/, "", $0)
+ 		if(!$0) next
+ 		printf "--exclude=%s ", $0
+ 	}'\
+)"
+readonly EXTRA_EXCLUDE_CON=$(\
+	cat "${EXTRA_EXCLUDE_PATH}"\
+	|awk '{ 
+		gsub(/^[ \t]+/, "", $0)
+		gsub(/[ \t]+$/, "", $0)
+		if($0 ~ /^#/) next
+		if(!$0) next
+		print $0
+	}'\
+	| awk '{
+		printf "test -d \x22%s\x22 && echo \x22%s\x22\n", $0, $0
+	}' | bash\
+) 
+awk \
+	-v EXTRA_EXCLUDE_CON="${EXTRA_EXCLUDE_CON}" \
+	-v ORDINALY_EXCLUDE_CON="${ORDINALY_EXCLUDE_CON}" \
+	-v UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH="${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
+	-v ROOTFS_TAR_NAME="${ROOTFS_TAR_NAME}" \
+	-v concurrency=3 \
+	'BEGIN{
+		len_extra_exclude_list = split(EXTRA_EXCLUDE_CON, extra_exclude_list, "\n")
+		cd_cmd="cd /"
+		for(k=1; k <= len_extra_exclude_list; k++){
+			exclude_ops = ""
+	 		for(i=1; i <= len_extra_exclude_list; i++){
+	 			if(k == i) {
+	 				continue
+	 			}
+	 			exclude_ops = sprintf( "%s --exclude=%s ", exclude_ops, extra_exclude_list[i])
+	 		}
+	 		dir_suffix = gensub("/", "___", "g", extra_exclude_list[k])
+	 		make_dir_path = sprintf("%s/%s", UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH, dir_suffix)
+	 		gsub(/[/]+/, "/", make_dir_path)
+	 		mkdir_cmd = sprintf("mkdir -p \x22%s\x22", make_dir_path)
+	 		rootfs_path = sprintf("%s/%s", make_dir_path, ROOTFS_TAR_NAME)
+	 		gsub(/[/]+/, "/", rootfs_path)
+	 		tar_cmd_body = sprintf("sudo tar -cpPf \x22%s\x22", rootfs_path)
+	 		total_exclude_con = sprintf("%s %s", ORDINALY_EXCLUDE_CON, exclude_ops)
+	 		tar_ops = "--one-file-system "
+	 		output_cmd = sprintf("echo \x22[%d/%d]\x22", k, len_extra_exclude_list)
+	 		tar_cmd = sprintf("%s %s %s /", \
+	 			tar_cmd_body, \
+	 			total_exclude_con, \
+	 			tar_ops\
+	 		)
+	 		pipe_cmd = "e=$?"
+	 		printf "%s && %s && %s && %s || %s &\n", 
+	 			cd_cmd,
+	 			mkdir_cmd, 
+	 			tar_cmd, 
+	 			output_cmd,
+	 			pipe_cmd
+	 		if(\
+	 			k % concurrency == 0\
+	 			&& k > 0 \
+	 		){
+	 			print "wait"
+	 		}
+		}
+		print "wait"
+	}' | bash >> "${MONITOR_FILE_PATH}" || e=$?
 
-mkdir -p "${UBUNTU_BACKUP_DIR_PATH}"
+rm -rf "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}"
+mkdir "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}"
 echo "cp rootfs.." >> "${MONITOR_FILE_PATH}"
-sudo cp -vf \
-	"${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}" \
+sudo cp -rvf \
+	"${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
 	"${UBUNTU_BACKUP_DIR_PATH}/" \
 	>> "${MONITOR_FILE_PATH}"
 echo "crean up.." >> "${MONITOR_FILE_PATH}"
-sudo rm \
-	-f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
+rm -rf "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}"
 echo "Comp & Click CANCEL" >> "${MONITOR_FILE_PATH}"
 bash "${NOTI_MANAGER_SHELL_PATH}"

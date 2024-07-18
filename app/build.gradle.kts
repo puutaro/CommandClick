@@ -130,7 +130,7 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
     implementation("org.rauschig:jarchivelib:0.8.0")
-    implementation("org.apache.commons:commons-compress:1.20")
+//    implementation("org.apache.commons:commons-compress:1.26.2")
     implementation("com.github.mwiede:jsch:0.2.11")
 
     implementation("com.github.yuriy-budiyev:code-scanner:2.3.2")
@@ -145,8 +145,10 @@ dependencies {
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("io.ktor:ktor-server-netty:1.4.3")
+//    implementation("io.ktor:ktor-server-netty:1.4.3")
     implementation("ch.qos.logback:logback-classic:1.2.3")
+
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 

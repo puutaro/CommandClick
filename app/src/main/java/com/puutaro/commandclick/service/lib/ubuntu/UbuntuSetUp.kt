@@ -21,16 +21,26 @@ import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.nio.file.Files
+import java.nio.file.Paths
+import kotlin.io.path.exists
 
 
 object UbuntuSetUp {
@@ -38,7 +48,7 @@ object UbuntuSetUp {
     private val rootfsTarGzUrl = UbuntuInfo.rootfsTarGzUrl
     private val downloadRootfsTarGzPathObj = File(
         UbuntuFiles.downloadDirPath,
-        File(rootfsTarGzUrl).name
+        UbuntuFiles.rootfsTarGzName
     )
 
     fun exitDownloadMonitorProcess(){
@@ -106,31 +116,11 @@ object UbuntuSetUp {
                 ubuntuFiles.filesOneRootfs.absolutePath
             )
         }
-        when(isUbuntuRestore){
-            true
-            -> withContext(Dispatchers.IO) {
-                    LogSystems.stdSSys(
-                        "Copy start"
-                    )
-                    FileSystems.copyFile(
-                        ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
-                        "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
-                    )
-                }
-            else
-            -> withContext(Dispatchers.IO) {
-                    RootfsDownloader.handle(
-                        ubuntuService,
-                    )
-                    LogSystems.stdSSys(
-                       "Copy start"
-                    )
-                    copyAndRemoveDownloadRootfs(ubuntuFiles)
-                }
-        }
-        withContext(Dispatchers.IO){
-            LogSystems.stdSSys(
-                "Copy comp"
+        if(
+            !isUbuntuRestore
+        ){
+            RootfsDownloader.handle(
+                ubuntuService,
             )
         }
         withContext(Dispatchers.IO) {
@@ -141,7 +131,7 @@ object UbuntuSetUp {
         }
         withContext(Dispatchers.IO) {
             LogSystems.stdSSys(
-                "Extract file"
+                "Extract file..."
             )
         }
         withContext(Dispatchers.IO) {
@@ -150,7 +140,6 @@ object UbuntuSetUp {
                 ubuntuFiles.supportDir.absolutePath
             )
         }
-
         val busyboxExecutor = withContext(Dispatchers.IO) {
             BusyboxExecutor(
                 context,
@@ -158,18 +147,33 @@ object UbuntuSetUp {
             )
         }
         withContext(Dispatchers.IO) {
-            busyboxExecutor.executeScript(
-                "support/extractRootfs.sh",
-                monitorFileName
-            )
+//            val extractShellRelativePath = "support/extractRootfs.sh"
+            when(isUbuntuRestore){
+                true -> {
+                    extractTarForRestore(
+                        ubuntuFiles.filesOneRootfs.absolutePath
+                    )
+//                    busyboxExecutor.executeScript(
+//                        "${extractShellRelativePath} on",
+//                        monitorFileName
+//                    )
+//                    removeRootfsTarGz()
+                }
+                else -> {
+                    extractTarWithoutOwnership(
+                        UbuntuFiles.downloadRootfsTarGzPath,
+                        ubuntuFiles.filesOneRootfs.absolutePath,
+                        true
+                    )
+                    removeRootfsTarGz()
+//                    busyboxExecutor.executeScript(
+//                        extractShellRelativePath,
+//                        monitorFileName
+//                    )
+                }
+            }
         }
         withContext(Dispatchers.IO) {
-            FileSystems.removeFiles(
-                File(
-                    ubuntuFiles.filesDir.absolutePath,
-                    UbuntuFiles.rootfsTarGzName
-                ).absolutePath
-            )
             ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
             ubuntuFiles.filesOneRootfsSupportCommonDir.mkdirs()
             ubuntuFiles.filesOneRootfsStorageDir.mkdir()
@@ -207,10 +211,32 @@ object UbuntuSetUp {
             )
         }
         withContext(Dispatchers.IO) {
+            LogSystems.stdSSys(
+                "chmod.."
+            )
             LinuxCmd.chmod(
                 context,
-                ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+                ubuntuFiles.filesOneRootfs.absolutePath
             )
+//            val output = LinuxCmd.execCommand(
+//                context,
+//                listOf(
+//                    "sh",
+//                    "-c",
+//                    "ls -al ${ubuntuFiles.filesOneRootfs.absolutePath}"
+//                ).joinToString("\t")
+//            )
+//            LogSystems.stdSSys("ls ${ubuntuFiles.filesOneRootfs.absolutePath}: ${output}")
+//            val output2 = LinuxCmd.execCommand(
+//                context,
+//                listOf(
+//                    "sh",
+//                    "-c",
+//                    "ls -al ${ubuntuFiles.filesOneRootfsSupportDir.absolutePath}"
+//                ).joinToString("\t")
+//            )
+//            LogSystems.stdSSys("ls ${ubuntuFiles.filesOneRootfsSupportDir.absolutePath}: ${output2}")
+//
         }
         withContext(Dispatchers.IO) {
             LogSystems.stdSSys(
@@ -225,6 +251,95 @@ object UbuntuSetUp {
             )
         }
     }
+
+    private suspend fun extractTarForRestore(
+        filesOneRootfsPath: String,
+    ){
+//        val replacePair = Pair("___", "/")
+        val ubuntuBackupRootfsDirPath = UbuntuFiles.ubuntuBackupRootfsDirPath
+        val concurrentLimit = 5
+        val semaphore = Semaphore(concurrentLimit)
+        withContext(Dispatchers.IO) {
+            val jobList = FileSystems.showDirList(
+                ubuntuBackupRootfsDirPath
+            ).map {
+                async {
+                    semaphore.withPermit {
+                        val rootfsDirPath = File(ubuntuBackupRootfsDirPath, it).absolutePath
+                        val rootfsPath = File(rootfsDirPath, UbuntuFiles.rootfsTarName).absolutePath
+                        extractTarWithoutOwnership(
+                            rootfsPath,
+                            filesOneRootfsPath,
+                            false
+                        )
+                    }
+                }
+            }
+            jobList.forEach { it.await() }
+        }
+    }
+
+    private suspend fun extractTarWithoutOwnership(
+        tarPath: String,
+        destPath: String,
+        onGzip: Boolean
+    ) {
+        withContext(Dispatchers.IO) {
+            when (onGzip) {
+                true -> TarArchiveInputStream(
+                    BufferedInputStream(
+                        GzipCompressorInputStream(
+                            FileInputStream(tarPath)
+                        )
+                    )
+                )
+
+                else -> TarArchiveInputStream(
+                    BufferedInputStream(
+                        FileInputStream(tarPath)
+                    )
+                )
+            }.use { tis ->
+                var entry = tis.nextTarEntry
+                while (entry != null) {
+                    val targetPath = Paths.get(destPath, entry.name)
+                    when {
+                        targetPath.exists() ->{}
+                        entry.isDirectory -> {
+                            try {
+                                Files.createDirectories(targetPath)
+                            } catch (e: Exception){
+                                println(e.toString())
+                            }
+//                        println("Creating directory: $targetPath")
+                        }
+                        entry.isSymbolicLink -> {
+                            try {
+                                val linkTarget = entry.linkName
+                                Files.createSymbolicLink(targetPath, Paths.get(linkTarget))
+                            } catch (e: Exception){
+                                println(e.toString())
+                            }
+//                        println("Creating symlink: $targetPath -> $linkTarget")
+                        }
+                        else -> {
+                            try {
+                                Files.createDirectories(targetPath.parent)
+                                Files.newOutputStream(targetPath).use { out ->
+                                    tis.copyTo(out)
+                                }
+                            } catch (e: Exception){
+                                println(e.toString())
+                            }
+//                        println("Extracting file: $targetPath")
+                        }
+                    }
+                    entry = tis.nextTarEntry
+                }
+            }
+        }
+    }
+
 
     private object RootfsDownloader {
 

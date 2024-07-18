@@ -17,6 +17,8 @@ class UbuntuFiles(
         val downloadDirPath = UsePath.emulatedPath +
                 "/${Environment.DIRECTORY_DOWNLOADS}"
         val rootfsTarGzName = "rootfs.tar.gz"
+        val downloadRootfsTarGzPath = File(downloadDirPath, rootfsTarGzName).absolutePath
+        const val rootfsTarName = "rootfs.tar"
         const val waitQuizTsvName = "wait_quiz.tsv"
         const val ubuntuEnvTsvName = "ubuntu_env.tsv"
         const val supportDirName = "support"
@@ -33,6 +35,10 @@ class UbuntuFiles(
         const val pulseAudioStartUpShellPath = "${supportDirInUbuntu}/pulse_setup.sh"
         const val extraStartupShellName = "extra_startup.sh"
         val mustProcessGrepCmdsTxt = "mustProcessGrepCmds.txt"
+        val ubuntuBackupRootfsPath = File(UsePath.cmdclickUbuntuBackupDirPath, rootfsTarName).absolutePath
+        const val rootfsDirName = "rootfs"
+        val ubuntuBackupTempRootfsDirPath = File(UsePath.cmdclickUbuntuBackupTempDirPath, rootfsDirName).absolutePath
+        val ubuntuBackupRootfsDirPath = File(UsePath.cmdclickUbuntuBackupDirPath, rootfsDirName).absolutePath
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir
@@ -87,11 +93,8 @@ class UbuntuFiles(
     val ubuntuLaunchCompFile = File(
         "${filesOneRootfsSupportDir.absolutePath}/ubuntuLaunchComp.txt"
     )
-    val ubuntuBackupRootfsFile = File(
-            "${UsePath.cmdclickUbuntuBackupDirPath}/${rootfsTarGzName}"
-    )
-    val ubuntuBackupTempRootfsFile = File(
-        "${UsePath.cmdclickUbuntuBackupTempDirPath}/${rootfsTarGzName}"
+    val ubuntuBackupRootfsDataDir = File(
+        "${UsePath.cmdclickUbuntuBackupDirPath}/${rootfsDirName}"
     )
 
     fun makePermissionsUsable(containingDirectoryPath: String, filename: String) {
