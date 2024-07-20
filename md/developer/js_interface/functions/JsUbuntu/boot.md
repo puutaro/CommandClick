@@ -23,7 +23,7 @@ var=runBoot
 
 ## Src
 
--> [jsUbuntu.boot](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L242)
+-> [jsUbuntu.boot](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L236)
 
 ## Detail
 
