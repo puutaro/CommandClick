@@ -67,6 +67,14 @@ object SdFileSystems {
             relativeDirPath: String,
             watchFilePathObj: File?,
         ) {
+            val relativePathObj = File(relativeDirPath)
+            removeDirOrFile(
+                context,
+                ubuntuBackupSharePref,
+                relativePathObj.parent,
+                relativePathObj.name,
+                null
+            )
             val destinationUri = createDir(
                 context,
                 ubuntuBackupSharePref,
@@ -152,6 +160,14 @@ object SdFileSystems {
             watchFilePathObj: File?,
             cpWatchJob: Job?
         ) {
+            val relativePathObj = File(relativeDirPath)
+            removeDirOrFile(
+                context,
+                ubuntuBackupSharePref,
+                relativePathObj.parent,
+                relativePathObj.name,
+                null
+            )
             val destinationUri = createDir(
                 context,
                 ubuntuBackupSharePref,
