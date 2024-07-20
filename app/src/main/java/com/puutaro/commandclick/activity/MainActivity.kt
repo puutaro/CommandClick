@@ -21,9 +21,6 @@ import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
-import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
-import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
-import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
@@ -41,36 +38,39 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.GetFileListForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
-import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
+import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
+import com.puutaro.commandclick.activity_lib.permission.CameraSetter
+import com.puutaro.commandclick.activity_lib.permission.LocationSetter
+import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
+import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
+import com.puutaro.commandclick.activity_lib.permission.SdCardDirGetter
+import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
-import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.activity_lib.manager.AdBlocker
-import com.puutaro.commandclick.activity_lib.permission.CameraSetter
-import com.puutaro.commandclick.activity_lib.permission.LocationSetter
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
+import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity:
@@ -97,6 +97,7 @@ class MainActivity:
     TerminalFragment.OnCmdValSaveAndBackListenerForTerm,
     TerminalFragment.OnGetFileListenerForTerm,
     TerminalFragment.OnGetFileListListenerForTerm,
+    TerminalFragment.GetSdcardDirListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -137,6 +138,8 @@ class MainActivity:
                 filePath = null
             }
         }
+
+    private val sdcardDirGetter = SdCardDirGetter(this)
     private val storageHelper = SimpleStorageHelper(this)
     private val getFileForEdit = GetFileForEdit(
         this,
@@ -253,17 +256,17 @@ class MainActivity:
         val startUpPref = getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag =
             FragmentTagManager.makeCmdValEditTag(
-                SharePrefTool.getStringFromSharePref(
+                FannelInfoTool.getStringFromFannelInfo(
                     startUpPref,
-                    SharePrefferenceSetting.current_app_dir
+                    FannelInfoSetting.current_app_dir
                 ),
-                SharePrefTool.getStringFromSharePref(
+                FannelInfoTool.getStringFromFannelInfo(
                     startUpPref,
-                    SharePrefferenceSetting.current_fannel_name
+                    FannelInfoSetting.current_fannel_name
                 ),
-                SharePrefTool.getStringFromSharePref(
+                FannelInfoTool.getStringFromFannelInfo(
                     startUpPref,
-                    SharePrefferenceSetting.current_fannel_state
+                    FannelInfoSetting.current_fannel_state
                 )
             )
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<EditFragment>(
@@ -277,14 +280,14 @@ class MainActivity:
     override fun onToolBarButtonClickForEditFragment(
         callOwnerFragmentTag : String?,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         enableCmdEdit: Boolean,
     ){
         ExecToolBarButtonClickForEdit.execToolBarButtonClickForEdit(
             this,
             callOwnerFragmentTag,
             toolbarButtonBariantForEdit,
-            readSharePreffernceMap,
+            fannelInfoMap,
             enableCmdEdit,
         )
     }
@@ -695,22 +698,22 @@ class MainActivity:
     }
 
     override fun onEditFannelContentsListUpdateForTerm(
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         updateScriptContents: List<String>,
     ) {
         ExecFannelConListUpdate.update(
             this,
-            readSharePreffernceMap,
+            fannelInfoMap,
             updateScriptContents,
         )
     }
 
     override fun onMonitorSizeChangeingForTerm(
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ) {
         ExecMonitorSizeChangeForTerm.change(
             this,
-            readSharePreffernceMap,
+            fannelInfoMap,
         )
     }
 
@@ -765,6 +768,15 @@ class MainActivity:
             pickerMacro,
             currentFannelName,
             tag,
+        )
+    }
+
+    override fun getSdcardDirForTerm(
+        isCreate: Boolean
+    ) {
+        sdcardDirGetter.handle(
+            this,
+            isCreate,
         )
     }
 

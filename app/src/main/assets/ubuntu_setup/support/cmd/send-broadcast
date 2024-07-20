@@ -19,7 +19,7 @@ read_args(){
 			shift
 			;;
 		--extras|-e)
-			EXTRAS="${EXTRAS}!${2}"
+			EXTRAS="${EXTRAS}?${2}"
 			shift
 			;;
 		-*)
@@ -41,7 +41,7 @@ send-broadcast(){
 	awk \
 	-v help="${HELP}" \
 	-v action="${ACTION}" \
-	-v extras="${EXTRAS/\!/}" \
+	-v extras="${EXTRAS/\?/}" \
 	'function concat(val, val_name){
 		if(val) ouput_con = ouput_con""val_name"="val"\n"
 	}
