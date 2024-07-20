@@ -10,7 +10,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
 
-object SharePrefTool {
+object FannelInfoTool {
 
     fun getReadSharePrefMap(
         fragment: Fragment,

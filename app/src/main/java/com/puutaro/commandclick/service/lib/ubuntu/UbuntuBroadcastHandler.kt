@@ -1,11 +1,13 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Intent
+import com.anggrayudi.storage.file.getAbsolutePath
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
@@ -20,11 +22,16 @@ import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManag
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.file.SdCardTool
+import com.puutaro.commandclick.util.file.SdFileSystems
+import com.puutaro.commandclick.util.file.SdPath
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -102,6 +109,16 @@ object UbuntuBroadcastHandler {
             )
             BroadCastIntentSchemeUbuntu.DOWN_LOAD_ERR_NOTI
             -> execDownloadErrNoti(
+                ubuntuService,
+                intent,
+            )
+            BroadCastIntentSchemeUbuntu.COPY_TO_SD_CARD
+            -> execCopyDirToSdCard(
+                ubuntuService,
+                intent,
+            )
+            BroadCastIntentSchemeUbuntu.DELETE_FROM_SD_CARD
+            -> execDeleteFromSdCard(
                 ubuntuService,
                 intent,
             )
@@ -619,4 +636,162 @@ object UbuntuBroadcastHandler {
             )
         }
     }
+
+    private fun execCopyDirToSdCard(
+        ubuntuService: UbuntuService,
+        intent: Intent,
+    ){
+        val context = ubuntuService.applicationContext
+        val ubuntuBackupSharePref = SdCardTool.getSharePref(context)
+        val watchFilePathObj =  intent.getStringExtra(
+            UbuntuServerIntentExtra.copyToSdCardWatchFilePath.schema
+        )?.let { File(it) } ?: return
+        if(
+            ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+            || !SdCardTool.isAvailable(context)
+        ) {
+            FileSystems.removeFiles(watchFilePathObj.absolutePath)
+            return
+        }
+        val fromPathObj = intent.getStringExtra(
+            UbuntuServerIntentExtra.copyToSdCardFromRelativePath.schema
+        )?.let {
+            if(
+                !it.startsWith("/")
+            ) return@let File(
+                SdPath.getSdUseRootPath(),
+                it
+            )
+            val ubuntuFromPath = CcPathTool.convertUbuntuPath(
+                context,
+                it,
+            )
+            File(ubuntuFromPath)
+        } ?: let {
+            FileSystems.removeFiles(
+                watchFilePathObj.absolutePath
+            )
+            return
+        }
+        val toRelativeDirPath = intent.getStringExtra(
+            UbuntuServerIntentExtra.copyToSdCardTo.schema
+        )?.let {
+            val sdTreePath = SdCardTool.getTreeUri(
+                context,
+                ubuntuBackupSharePref,
+            )?.getAbsolutePath(context)
+                ?: return@let it
+            it.replace(
+                sdTreePath,
+                String()
+            ).removePrefix("/")
+        } ?: let {
+            FileSystems.removeFiles(
+                watchFilePathObj.absolutePath
+            )
+            return
+        }
+        val cpDirToSdJobName = "${CommandClickScriptVariable.makeRndPrefix()}_cpDirToSdJob"
+        ubuntuService.ubuntuCoroutineJobsHashMap[cpDirToSdJobName]?.cancel()
+        val cpDirToSdJob = CoroutineScope(Dispatchers.IO).launch {
+            val watchJob = launch {
+                while(true){
+                    if(
+                        !watchFilePathObj.isFile
+                    ) {
+                        ubuntuService.ubuntuCoroutineJobsHashMap[cpDirToSdJobName]?.cancel()
+                        ubuntuService.ubuntuCoroutineJobsHashMap.remove(cpDirToSdJobName)
+                        break
+                    }
+                    delay(1000)
+                }
+            }
+            launch {
+                when(true) {
+                    fromPathObj.isDirectory ->
+                    SdFileSystems.CopyDirRecursively.copy(
+                        context,
+                        ubuntuBackupSharePref,
+                        fromPathObj.absolutePath,
+                        toRelativeDirPath,
+                        watchFilePathObj,
+                        watchJob,
+                    )
+                    fromPathObj.isFile ->
+                        SdFileSystems.Copy.copy(
+                            context,
+                            ubuntuBackupSharePref,
+                            fromPathObj.absolutePath,
+                            toRelativeDirPath,
+                            watchFilePathObj,
+                        )
+                    else -> FileSystems.removeFiles(
+                        watchFilePathObj.absolutePath
+                    )
+                }
+            }
+        }
+        ubuntuService.ubuntuCoroutineJobsHashMap.put(cpDirToSdJobName, cpDirToSdJob)
+    }
+
+    private fun execDeleteFromSdCard(
+        ubuntuService: UbuntuService,
+        intent: Intent,
+    ){
+        val context = ubuntuService.applicationContext
+        val ubuntuBackupSharePref = SdCardTool.getSharePref(context)
+        val watchFilePathObj =  intent.getStringExtra(
+            UbuntuServerIntentExtra.deleteFromSdWatchFilePath.schema
+        )?.let { File(it) } ?: return
+        if(
+            ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+            || !SdCardTool.isAvailable(context)
+        ) {
+            FileSystems.removeFiles(watchFilePathObj.absolutePath)
+            return
+        }
+        val fromRelativePath = intent.getStringExtra(
+            UbuntuServerIntentExtra.copyToSdCardFromRelativePath.schema
+        )?.let {
+            val sdTreePath = SdCardTool.getTreeUri(
+                context,
+                ubuntuBackupSharePref,
+            )?.getAbsolutePath(context)
+                ?: return@let it
+            it.replace(
+                sdTreePath,
+                String()
+            ).removePrefix("/")
+        } ?: return
+        val relativePathObj = File(fromRelativePath)
+        val relativeDirPath = relativePathObj.parent
+        val deleteName = relativePathObj.name
+        val deleteFromSdJobName = "${CommandClickScriptVariable.makeRndPrefix()}_deleteFromSd"
+        ubuntuService.ubuntuCoroutineJobsHashMap[deleteFromSdJobName]?.cancel()
+        val cpDirToSdJob = CoroutineScope(Dispatchers.IO).launch {
+            launch {
+                while(true){
+                    if(
+                        !watchFilePathObj.isFile
+                    ) {
+                        ubuntuService.ubuntuCoroutineJobsHashMap[deleteFromSdJobName]?.cancel()
+                        ubuntuService.ubuntuCoroutineJobsHashMap.remove(deleteFromSdJobName)
+                        break
+                    }
+                    delay(1000)
+                }
+            }
+            launch {
+                SdFileSystems.removeDirOrFile(
+                    context,
+                    ubuntuBackupSharePref,
+                    relativeDirPath,
+                    deleteName,
+                    watchFilePathObj
+                )
+            }
+        }
+        ubuntuService.ubuntuCoroutineJobsHashMap.put(deleteFromSdJobName, cpDirToSdJob)
+    }
+
 }

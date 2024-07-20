@@ -13,7 +13,7 @@ object UbuntuInitProcess {
                 UbuntuProcessManager.UbuntuRunningSystemProcessType.SetUp.name
         ]?.cancel()
         LogSystems.stdSys(
-            "### ${LocalDateTime.now()} proot"
+            "start"
         )
         val setupUbuntuJob = UbuntuSetUp.set(
             ubuntuService,

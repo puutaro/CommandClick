@@ -3,7 +3,7 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 
 object IntentManager {
     fun launchFannelIntent(
@@ -16,11 +16,11 @@ object IntentManager {
             .setAction(Intent.ACTION_MAIN)
             .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         execIntent.putExtra(
-            SharePrefferenceSetting.current_app_dir.name,
+            FannelInfoSetting.current_app_dir.name,
             fannelDirPath
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_fannel_name.name,
+            FannelInfoSetting.current_fannel_name.name,
             fannelName
         )
         context?.startActivity(execIntent)

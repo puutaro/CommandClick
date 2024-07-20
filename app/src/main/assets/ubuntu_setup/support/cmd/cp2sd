@@ -1,0 +1,160 @@
+#!/bin/bash
+
+set -ue
+
+HELP=""
+FROM_PATH=""
+TO_DIR_PATH=""
+WATCH_FILE_PATH=""
+VERVOSE_MODE=""
+readonly PARENT_PID="${PPID}"
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--to|-t)
+			TO_DIR_PATH="${2}"
+			shift
+			;;
+		--from|-f)
+			FROM_PATH="${2}"
+			shift
+			;;
+		--watch-file_path|-w)
+			WATCH_FILE_PATH="${2}"
+			shift
+			;;
+		--vervose-mode|-v)
+			VERVOSE_MODE="-v"
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+display_help(){
+	case "${HELP}" in
+		"") return ;;
+	esac
+	awk -v cmd_name="$(basename "${0}")" \
+		'BEGIN{
+			print "### Copy dir or file to sd card dir"
+			print ""
+			print ""
+			print "## Usage"
+			printf "%s  --from \x22${dir}\x22 --to \x22${sd dir}\x22 --watch-file_path \x22${watch file path}\x22", cmd_name
+			print ""
+			print "--from|-f"
+			print "\t-> from dir"
+			print "--to|-t"
+			print "\t-> dest sd dir path"
+			print "--watch-file_path|-w"
+			print "\t-> watch file path"
+			print "[Optional] --vervose-mode|-v"
+			print "\tshow vervose"
+		}'
+		exit 0
+}
+
+clean_up(){
+	rm "${WATCH_FILE_PATH}"
+	exit 1
+}
+
+wait_spin(){
+	local spin='-\|/'
+	local i=0
+	while :
+	do
+		local is_parent=$(\
+			ps -p "${PARENT_PID}" \
+			| grep "${PARENT_PID}" \
+			| grep -v grep\
+		)
+		if [ -z "${is_parent}" ];then
+			clean_up
+		fi
+		if [ ! -f "${WATCH_FILE_PATH}" ]; then
+			break
+		fi
+		case "${VERVOSE_MODE}" in
+			"-v") 
+				i=$(( (i+1) %4 ))
+				printf "\r copy... ${spin:$i:1} "
+				;;
+		esac
+		sleep 1
+	done
+	case "${VERVOSE_MODE}" in
+		"-v") 
+			printf "\r copy ok "
+			echo ""
+			;;
+	esac
+}
+
+
+exit_judge(){
+	case "${SD_ROOT_DIR_PATH}" in
+		"") 
+			echo "Not found sd card"
+			exit 1
+			;;
+	esac
+	case "${FROM_PATH}" in
+		"") 
+			echo "must --from|-f option"
+			exit 1
+			;;
+	esac
+	if [ ! -e "${FROM_PATH}" ] \
+		&& [ ! -e "${SD_ROOT_DIR_PATH}/${FROM_PATH}" ];then
+		echo "no exist from dir path: ${FROM_PATH}"
+		exit 1
+	fi
+	case "${TO_DIR_PATH}" in
+		"") 
+			echo "must --to|-t option"
+			exit 1
+			;;
+	esac
+	case "$(echo "${WATCH_FILE_PATH}" | grep "/")" in
+		"") 
+			echo "must --watch-file_path|-w option or must be path string"
+			exit 1
+			;;
+	esac
+
+}
+
+read_args "$@"
+
+trap 'clean_up' SIGINT
+trap 'clean_up' SIGTERM
+trap 'clean_up' TERM
+trap 'clean_up' SIGKILL
+
+display_help
+exit_judge
+touch "${WATCH_FILE_PATH}"
+
+send-broadcast \
+	-a "com.puutaro.commandclick.ubuntu_service.copy_dir_to_sd_card" \
+	-e "from=${FROM_PATH}" \
+	-e "to=${TO_DIR_PATH}" \
+	-e "watch=${WATCH_FILE_PATH}"
+
+wait_spin

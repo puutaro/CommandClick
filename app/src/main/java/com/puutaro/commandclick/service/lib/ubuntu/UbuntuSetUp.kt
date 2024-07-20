@@ -3,9 +3,11 @@ package com.puutaro.commandclick.service.lib.ubuntu
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
+import android.content.SharedPreferences
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
 import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -17,6 +19,9 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.SdCardTool
+import com.puutaro.commandclick.util.file.SdFileSystems
+import com.puutaro.commandclick.util.file.SdPath
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -151,6 +156,7 @@ object UbuntuSetUp {
             when(isUbuntuRestore){
                 true -> {
                     extractTarForRestore(
+                        context,
                         ubuntuFiles.filesOneRootfs.absolutePath
                     )
 //                    busyboxExecutor.executeScript(
@@ -253,10 +259,11 @@ object UbuntuSetUp {
     }
 
     private suspend fun extractTarForRestore(
+        context: Context,
         filesOneRootfsPath: String,
     ){
 //        val replacePair = Pair("___", "/")
-        val ubuntuBackupRootfsDirPath = UbuntuFiles.ubuntuBackupRootfsDirPath
+        val ubuntuBackupRootfsDirPath = UbuntuFiles.getUbuntuBackupRootfsDirPath()
         val concurrentLimit = 5
         val semaphore = Semaphore(concurrentLimit)
         withContext(Dispatchers.IO) {
@@ -265,10 +272,13 @@ object UbuntuSetUp {
             ).map {
                 async {
                     semaphore.withPermit {
-                        val rootfsDirPath = File(ubuntuBackupRootfsDirPath, it).absolutePath
-                        val rootfsPath = File(rootfsDirPath, UbuntuFiles.rootfsTarName).absolutePath
+                        val currentRootfsDirPath = File(ubuntuBackupRootfsDirPath, it).absolutePath
+                        val rootfsFileName =  FileSystems.sortedFiles(
+                            currentRootfsDirPath
+                        ).firstOrNull() ?: return@withPermit
+                        val rootfsFilePath = File(currentRootfsDirPath, rootfsFileName).absolutePath
                         extractTarWithoutOwnership(
-                            rootfsPath,
+                            rootfsFilePath,
                             filesOneRootfsPath,
                             false
                         )
@@ -293,7 +303,6 @@ object UbuntuSetUp {
                         )
                     )
                 )
-
                 else -> TarArchiveInputStream(
                     BufferedInputStream(
                         FileInputStream(tarPath)

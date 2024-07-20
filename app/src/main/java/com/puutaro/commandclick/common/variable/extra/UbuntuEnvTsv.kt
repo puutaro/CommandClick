@@ -13,7 +13,7 @@ object UbuntuEnvTsv {
         return listOf(
             "WAIT_QUIZ_TSV_NAME" to UbuntuFiles.waitQuizTsvName,
             "UBUNTU_BACKUP_DIR_PATH" to UsePath.cmdclickUbuntuBackupDirPath,
-            "UBUNTU_BACKUP_ROOTFS_DIR_PATH" to UbuntuFiles.ubuntuBackupRootfsDirPath,
+            "UBUNTU_BACKUP_ROOTFS_DIR_PATH" to UbuntuFiles.getUbuntuBackupRootfsDirPathOnlyWrite(),
             "UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH" to UbuntuFiles.ubuntuBackupTempRootfsDirPath,
             "ROOTFS_TAR_NAME" to UbuntuFiles.rootfsTarName,
             "UBUNTU_EXTRA_STARTUP_SHELLS_PATH" to UbuntuFiles.ubuntuExtraStartupShellsTsvPath,

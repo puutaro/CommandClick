@@ -66,6 +66,14 @@ enum class BroadCastIntentSchemeUbuntu(
     ),
     DOWN_LOAD_ERR_NOTI(
     "com.puutaro.commandclick.ubuntu_service.download_err_noti",
-    ""
-    )
+        String()
+    ),
+    COPY_TO_SD_CARD(
+    "com.puutaro.commandclick.ubuntu_service.copy_dir_to_sd_card",
+        String()
+    ),
+    DELETE_FROM_SD_CARD(
+        "com.puutaro.commandclick.ubuntu_service.delete_from_sd_card",
+        String()
+    ),
 }

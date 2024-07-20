@@ -35,6 +35,7 @@ import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Job
+import java.io.File
 import java.net.ServerSocket
 
 
@@ -113,6 +114,8 @@ class UbuntuService:
                 BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action,
                 BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
                 BroadCastIntentSchemeUbuntu.DOWN_LOAD_ERR_NOTI.action,
+                BroadCastIntentSchemeUbuntu.COPY_TO_SD_CARD.action,
+                BroadCastIntentSchemeUbuntu.DELETE_FROM_SD_CARD.action,
             )
         )
         BroadcastManagerForService.registerScreenOnOffReceiver(
@@ -204,11 +207,18 @@ class UbuntuService:
                 UbuntuNotiButtonLabel.SETUP.label,
                 startUbuntuServicePendingIntent
             )
-            val isUbuntuDataDir = ubuntuFiles?.ubuntuBackupRootfsDataDir?.isDirectory == true
+            val ubuntuBackupRootfsDirPathObj = File(UbuntuFiles.getUbuntuBackupRootfsDirPath())
+            val isUbuntuBackupRootfsDir = ubuntuBackupRootfsDirPathObj.isDirectory
                     && FileSystems.showDirList(
-                ubuntuFiles?.ubuntuBackupRootfsDataDir?.absolutePath ?: String()
+                ubuntuBackupRootfsDirPathObj.absolutePath
             ).isNotEmpty()
-            if(isUbuntuDataDir) {
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "mubuntuBackupRootfsDirPathObj.txt").absolutePath,
+                listOf(
+                    "ubuntuBackupRootfsDirPathObj: ${ubuntuBackupRootfsDirPathObj.absolutePath}"
+                ).joinToString("\n")
+            )
+            if(isUbuntuBackupRootfsDir) {
                 val extraList = listOf(
                     UbuntuServerIntentExtra.ubuntuRestoreSign.schema to "on"
                 )
@@ -229,6 +239,10 @@ class UbuntuService:
                     chanelId,
                     it
                 )
+                startForeground(
+                    chanelId,
+                    it
+                )
             }
             UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
@@ -243,6 +257,10 @@ class UbuntuService:
         val notificationInstance = notificationBuilder?.build()
         notificationInstance?.let {
             notificationManager?.notify(
+                chanelId,
+                it
+            )
+            startForeground(
                 chanelId,
                 it
             )

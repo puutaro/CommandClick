@@ -5,6 +5,8 @@ import android.os.Build
 import android.os.Environment
 import android.system.Os
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.SdPath
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 import java.lang.NullPointerException
@@ -38,7 +40,41 @@ class UbuntuFiles(
         val ubuntuBackupRootfsPath = File(UsePath.cmdclickUbuntuBackupDirPath, rootfsTarName).absolutePath
         const val rootfsDirName = "rootfs"
         val ubuntuBackupTempRootfsDirPath = File(UsePath.cmdclickUbuntuBackupTempDirPath, rootfsDirName).absolutePath
-        val ubuntuBackupRootfsDirPath = File(UsePath.cmdclickUbuntuBackupDirPath, rootfsDirName).absolutePath
+        fun getUbuntuBackupRootfsDirPath(): String {
+            val normalBackupPath =
+                File(
+                    UsePath.cmdclickUbuntuBackupDirPath,
+                    rootfsDirName
+                ).absolutePath
+            val sdRootDirPath =
+                SdPath.getSdUseRootPath().ifEmpty {
+                    return normalBackupPath
+                }
+            val ubuntuBackupDirInSharePref = File(
+                sdRootDirPath,
+                SdPath.rootfsRelativePath
+            ).absolutePath
+            if(
+               FileSystems.showDirList(ubuntuBackupDirInSharePref).isNotEmpty()
+            ) return ubuntuBackupDirInSharePref
+            return normalBackupPath
+        }
+
+        fun getUbuntuBackupRootfsDirPathOnlyWrite(): String {
+            val sdRootDirPath = SdPath.getSdUseRootPath()
+            return when(
+                sdRootDirPath.isEmpty()
+            ) {
+                false -> File(
+                    sdRootDirPath,
+                    SdPath.rootfsRelativePath
+                ).absolutePath
+                else -> File(
+                    UsePath.cmdclickUbuntuBackupDirPath,
+                    rootfsDirName
+                ).absolutePath
+            }
+        }
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir
@@ -92,9 +128,6 @@ class UbuntuFiles(
     )
     val ubuntuLaunchCompFile = File(
         "${filesOneRootfsSupportDir.absolutePath}/ubuntuLaunchComp.txt"
-    )
-    val ubuntuBackupRootfsDataDir = File(
-        "${UsePath.cmdclickUbuntuBackupDirPath}/${rootfsDirName}"
     )
 
     fun makePermissionsUsable(containingDirectoryPath: String, filename: String) {

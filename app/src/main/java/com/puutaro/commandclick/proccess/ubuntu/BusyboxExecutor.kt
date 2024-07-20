@@ -9,6 +9,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.file.SdPath
 import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -426,7 +427,7 @@ class BusyboxExecutor(
         ubuntuFiles: UbuntuFiles
     ){
         if(
-            !ubuntuFiles.ubuntuSetupCompFile.isFile
+            ubuntuFiles.ubuntuLaunchCompFile.isFile
         ) return
 //        addBinByUrl()
         addEnvToProfile()
@@ -476,19 +477,45 @@ class BusyboxExecutor(
         ).textToList()
         val ubuntuIntentMonitorPort = UsePort.UBUNTU_INTENT_MONITOR_PORT.num.toString()
         val exportList = listOf(
-            "export APP_ROOT_PATH=\"${UsePath.cmdclickDirPath}\"",
-            "export MONITOR_DIR_PATH=\"${UsePath.cmdclickMonitorDirPath}\"",
-            "export APP_DIR_PATH=\"${UsePath.cmdclickAppDirPath}\"",
-            "export INTENT_MONITOR_PORT=\"${ubuntuIntentMonitorPort}\"",
-            "export INTENT_MONITOR_ADDRESS=\"127.0.0.1:${ubuntuIntentMonitorPort}\"",
-            "export REPLACE_VARIABLES_TSV_RELATIVE_PATH=\"${UsePath.replaceVariablesTsvRelativePath}\"",
-            "export UBUNTU_ENV_TSV_NAME=\"${UbuntuFiles.ubuntuEnvTsvName}\"",
-            "export UBUNTU_SERVICE_TEMP_DIR_PATH=\"${UsePath.cmdclickTempUbuntuServiceDirPath}\"",
+            "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
+            "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
+            "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
+            "INTENT_MONITOR_PORT" to ubuntuIntentMonitorPort,
+            "INTENT_MONITOR_ADDRESS" to "127.0.0.1:${ubuntuIntentMonitorPort}",
+            "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath,
+            "UBUNTU_ENV_TSV_NAME" to UbuntuFiles.ubuntuEnvTsvName,
+            "UBUNTU_SERVICE_TEMP_DIR_PATH" to UsePath.cmdclickTempUbuntuServiceDirPath,
+            "SD_ROOT_DIR_PATH" to SdPath.getSdUseRootPath(),
         )
-        val insertExportList = exportList.filter {
-            !profileConList.contains(it)
+        val exportCmd = "export"
+        val existEnvMark = "EXIST_ENV_MARK"
+        val uniqProfileList =  profileConList.map {
+            line ->
+            if(
+                !line.startsWith(exportCmd)
+            ) return@map line
+            val curExportKey =
+                line.removePrefix(exportCmd)
+                    .trim()
+                    .split("=")
+                    .firstOrNull()
+                    ?: return@map line
+            val isNotContainKey = !exportList.any {
+                val exportKey = it.first
+                exportKey == curExportKey
+            }
+            if(
+                isNotContainKey
+            ) return@map line
+            existEnvMark
+        }.filter {
+            it != existEnvMark
         }
-        val updateProfileCon = profileConList + insertExportList
+        val exportConList = exportList.map {
+            "${exportCmd} ${it.first}=\"${it.second}\""
+        }
+
+        val updateProfileCon = uniqProfileList + exportConList
         FileSystems.writeFile(
             etcProfilePath,
             updateProfileCon.joinToString("\n")

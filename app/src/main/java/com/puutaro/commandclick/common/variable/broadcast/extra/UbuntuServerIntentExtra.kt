@@ -20,4 +20,9 @@ enum class UbuntuServerIntentExtra(
     foregroundTimeout("foreground_timeout"),
 //    foregroundResFilePath("res_file_path"),
 //    foregroundAsProc("as_proc"),
+    copyToSdCardFromRelativePath("from"),
+    copyToSdCardTo("to"),
+    copyToSdCardWatchFilePath("watch"),
+    deleteFromSdCard("from"),
+    deleteFromSdWatchFilePath("watch"),
 }
