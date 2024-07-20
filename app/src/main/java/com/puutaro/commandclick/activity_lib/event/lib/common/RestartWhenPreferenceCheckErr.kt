@@ -3,8 +3,8 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 class RestartWhenPreferenceCheckErr {
     companion object {
@@ -13,12 +13,12 @@ class RestartWhenPreferenceCheckErr {
         ){
             val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)
             if(sharePref == null) return
-            SharePrefTool.putAllSharePref(
+            FannelInfoTool.putAllFannelInfo(
                 sharePref,
-                SharePrefferenceSetting.current_app_dir.defalutStr,
-                SharePrefferenceSetting.current_fannel_name.defalutStr,
-                SharePrefferenceSetting.on_shortcut.defalutStr,
-                SharePrefferenceSetting.current_fannel_state.defalutStr
+                FannelInfoSetting.current_app_dir.defalutStr,
+                FannelInfoSetting.current_fannel_name.defalutStr,
+                FannelInfoSetting.on_shortcut.defalutStr,
+                FannelInfoSetting.current_fannel_state.defalutStr
             )
             val execIntent = Intent(activity, activity::class.java)
             execIntent.setAction(Intent.ACTION_MAIN)

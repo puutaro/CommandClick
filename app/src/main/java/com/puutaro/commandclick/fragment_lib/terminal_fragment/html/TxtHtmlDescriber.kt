@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -12,7 +12,7 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object TxtHtmlDescriber {
@@ -166,15 +166,15 @@ object TxtHtmlDescriber {
 
     fun makeCurrentFannelHtmlPosiDirPath(
         activity: FragmentActivity?,
-        readSharePrefMap: Map<String, String>? = null
+        fannelInfoMap: Map<String, String>? = null
     ): String {
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val fannelRawName = when(readSharePrefMap.isNullOrEmpty()) {
-            true -> SharePrefTool.getStringFromSharePref(
+        val fannelRawName = when(fannelInfoMap.isNullOrEmpty()) {
+            true -> FannelInfoTool.getStringFromFannelInfo(
                 sharePref,
-                SharePrefferenceSetting.current_fannel_name
+                FannelInfoSetting.current_fannel_name
             )
-            else -> SharePrefTool.getCurrentFannelName(readSharePrefMap)
+            else -> FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         }.let {
             CcPathTool.trimAllExtend(it)
         }

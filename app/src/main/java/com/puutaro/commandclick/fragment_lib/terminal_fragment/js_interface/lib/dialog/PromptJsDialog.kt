@@ -26,7 +26,7 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -437,15 +437,15 @@ private object EditTextMakerForPrompt {
                     mainOrSubFannelPath
                 )
         }
-        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+        val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             terminalFragment,
             mainOrSubFannelPath
         )
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
 
         val shellCon = editTextMap.get(

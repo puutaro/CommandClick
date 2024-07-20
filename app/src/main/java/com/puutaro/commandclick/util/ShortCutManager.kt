@@ -13,8 +13,8 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 
 class ShortCutManager(
@@ -58,17 +58,17 @@ class ShortCutManager(
     private fun createExecIntent(
     ): Intent {
         val startUpPref =  activity.getPreferences(Context.MODE_PRIVATE)
-        val readSharePreffernceMap = SharePrefTool.makeReadSharePrefMapByShare(
+        val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             startUpPref
         )
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentShellFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentShellFileName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val currentStateName = SharePrefTool.getCurrentStateName(
-            readSharePreffernceMap
+        val currentStateName = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
 
         val execIntent = Intent(activity, activity::class.java)
@@ -77,15 +77,15 @@ class ShortCutManager(
             .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         execIntent.putExtra(
-            SharePrefferenceSetting.current_app_dir.name,
+            FannelInfoSetting.current_app_dir.name,
             currentAppDirPath
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_fannel_name.name,
+            FannelInfoSetting.current_fannel_name.name,
             currentShellFileName
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_fannel_state.name,
+            FannelInfoSetting.current_fannel_state.name,
             currentStateName
         )
         return execIntent

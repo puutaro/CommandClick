@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
@@ -30,7 +29,6 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -274,7 +272,7 @@ class CmdClickHistoryButtonEvent (
             mainFannelSettingConList,
             setReplaceVariableMap
         )
-        val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+        val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
             selectedAppDirPath,
             fannelName,
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
@@ -294,7 +292,7 @@ class CmdClickHistoryButtonEvent (
                 listener?.onLongClickMenuItemsforCmdIndex(
                     LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
                     EditFragmentArgs(
-                        readSharePreferenceMap,
+                        fannelInfoMap,
                         cmdValEdit,
                     ),
                     String(),
@@ -306,7 +304,7 @@ class CmdClickHistoryButtonEvent (
                 listener?.onToolbarMenuCategoriesForEdit(
                     ToolbarMenuCategoriesVariantForCmdIndex.HISTORY,
                     EditFragmentArgs(
-                        readSharePreferenceMap,
+                        fannelInfoMap,
                         cmdValEdit,
                     )
                 )

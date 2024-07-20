@@ -5,19 +5,19 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object TerminalShowByTerminalDo {
     fun show(
         editFragment: EditFragment,
     ){
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val currentFannelConList = ReadText(
             File(

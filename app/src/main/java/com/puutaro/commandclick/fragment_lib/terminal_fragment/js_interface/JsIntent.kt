@@ -5,7 +5,7 @@ import android.net.Uri
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.EditSiteBroadCast
 import com.puutaro.commandclick.util.Intent.IntentLauncher
@@ -111,11 +111,11 @@ class JsIntent(
             .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         execIntent.putExtra(
-            SharePrefferenceSetting.current_app_dir.name,
+            FannelInfoSetting.current_app_dir.name,
             currentAppDirPath
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_fannel_name.name,
+            FannelInfoSetting.current_fannel_name.name,
             currentScriptFileName
         )
         terminalFragment.activity?.startActivity(execIntent)

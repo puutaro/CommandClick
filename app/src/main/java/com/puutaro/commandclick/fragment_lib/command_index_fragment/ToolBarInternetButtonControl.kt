@@ -10,20 +10,20 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ToolBarInternetButtonControl(
     private val cmdIndexFragment: CommandIndexFragment,
-    readSharePreffernceMap: Map<String, String>,
+    fannelInfoMap: Map<String, String>,
 ) {
     private val context = cmdIndexFragment.context
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val binding = cmdIndexFragment.binding
     private val cmdclickToolBar = cmdIndexFragment.binding.cmdclickToolBar
     private val cmdindexInternet = binding.cmdindexInternetButton
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
 
     fun interneButtontSetOnClickListener () {

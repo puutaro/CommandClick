@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -223,17 +223,17 @@ class TargetFragmentInstance {
             activity == null
         ) return String()
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
-        val currentFannelName = SharePrefTool.getStringFromSharePref(
+        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
-        val fannelState = SharePrefTool.getStringFromSharePref(
+        val fannelState = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_state
+            FannelInfoSetting.current_fannel_state
         )
         return FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

@@ -47,14 +47,13 @@ import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.Directory
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -101,8 +100,8 @@ class EditFragment: Fragment() {
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
-    var readSharePreferenceMap: Map<String, String> = mapOf()
-    var srcReadSharePreffernceMap: Map<String, String>? = null
+    var fannelInfoMap: Map<String, String> = mapOf()
+    var srcFannelInfoMap: Map<String, String>? = null
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var setReplaceVariableMap: Map<String, String>? = null
@@ -170,21 +169,21 @@ class EditFragment: Fragment() {
         binding.editListLinearLayout.isVisible = false
         directoryAndCopyGetter = DirectoryAndCopyGetter(this)
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-        readSharePreferenceMap =
-            EditFragmentArgs.getReadSharePreference(arguments)
-        srcReadSharePreffernceMap =
-            EditFragmentArgs.getSrcReadSharePreference(arguments)
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        fannelInfoMap =
+            EditFragmentArgs.getFannelInfoMap(arguments)
+        srcFannelInfoMap =
+            EditFragmentArgs.getSrcFannelInfoMap(arguments)
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val onShortcutValue = SharePrefTool.getOnShortcut(
-            readSharePreferenceMap
+        val onShortcutValue = FannelInfoTool.getOnShortcut(
+            fannelInfoMap
         )
-        val currentFannelState = SharePrefTool.getCurrentStateName(
-            readSharePreferenceMap
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
 
         editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
@@ -201,7 +200,7 @@ class EditFragment: Fragment() {
             )
         }
         SetConfigInfo.set(this)
-        SharePrefTool.putAllSharePref(
+        FannelInfoTool.putAllFannelInfo(
             sharePref,
             currentAppDirPath,
             currentFannelName,
@@ -238,7 +237,7 @@ class EditFragment: Fragment() {
                 currentFannelName,
             )
         settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap
         )
         currentFannelConList = CurrentFannelConListMaker.make(
@@ -248,7 +247,7 @@ class EditFragment: Fragment() {
         )
         FannelStateManager.updateState(
             currentFannelState,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
         )
         ConfigFromScriptFileSetter.set(
@@ -504,7 +503,7 @@ class EditFragment: Fragment() {
         fun onToolBarButtonClickForEditFragment(
             callOwnerFragmentTag : String?,
             toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-            readSharePreffernceMap: Map<String, String>,
+            fannelInfoMap: Map<String, String>,
             enableCmdEdit: Boolean,
         )
     }

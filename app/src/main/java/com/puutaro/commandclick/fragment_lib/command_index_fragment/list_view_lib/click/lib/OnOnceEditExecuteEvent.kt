@@ -2,11 +2,12 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.content.SharedPreferences
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
+import com.puutaro.commandclick.util.SharePrefTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object OnOnceEditExecuteEvent {
     fun invoke(
@@ -19,26 +20,26 @@ object OnOnceEditExecuteEvent {
         SharePrefTool.putSharePref(
             sharedPref,
             mapOf(
-                SharePrefferenceSetting.current_fannel_name.name
+                FannelInfoSetting.current_fannel_name.name
                         to selectedShellFileName,
             )
         )
-        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
-        val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+        val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
             currentAppDirPath,
             selectedShellFileName,
             String(),
-            SharePrefferenceSetting.current_fannel_state.defalutStr,
+            FannelInfoSetting.current_fannel_state.defalutStr,
         )
         val listener = context
                 as CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
             EditFragmentArgs(
-                readSharePreferenceMap,
+                fannelInfoMap,
                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
             ),
             editFragmentTag,

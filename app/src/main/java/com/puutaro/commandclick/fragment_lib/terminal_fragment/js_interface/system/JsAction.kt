@@ -6,7 +6,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 class JsAction(
     private val terminalFragment: TerminalFragment,
@@ -43,7 +43,7 @@ class JsAction(
         jsActionPairListCon: String,
         mainOrSubFannelPath: String,
     ){
-        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+        val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             terminalFragment,
             mainOrSubFannelPath
         )
@@ -54,7 +54,7 @@ class JsAction(
             )
         JsActionHandler.handle(
             terminalFragment,
-            readSharePreferenceMap,
+            fannelInfoMap,
             mainOrSubFannelPath,
             setReplaceVariableMap,
             jsActionPairListCon

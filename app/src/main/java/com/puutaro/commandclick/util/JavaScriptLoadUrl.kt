@@ -11,7 +11,7 @@ import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -181,15 +181,15 @@ object JavaScriptLoadUrl {
 
     fun makeRawJsConFromContents(
         fragment: Fragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         jsConBeforeJsImport: String,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val currentFannelPath = File(currentAppDirPath, currentFannelName).absolutePath
         val jsConBeforeJsImportCompNewLine = "\n${jsConBeforeJsImport}"

@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object OnEditExecuteEvent {
     fun invoke(
@@ -22,14 +22,14 @@ object OnEditExecuteEvent {
             ?: return
         val sharedPref =  fragment.activity?.getPreferences(Context.MODE_PRIVATE)
         val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-        SharePrefTool.putAllSharePref(
+        FannelInfoTool.putAllFannelInfo(
             sharedPref,
             currentAppDirPath,
             selectedShellFileName,
             shortcutOnMark,
             fannelState
         )
-        val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+        val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
             currentAppDirPath,
             selectedShellFileName,
             shortcutOnMark,
@@ -50,7 +50,7 @@ object OnEditExecuteEvent {
                 listener?.onLongClickMenuItemsforCmdIndex(
                     LongClickMenuItemsforCmdIndex.EDIT,
                     EditFragmentArgs(
-                        readSharePreferenceMap,
+                        fannelInfoMap,
                         cmdValEdit,
                     ),
                     editFragmentTag,
@@ -63,7 +63,7 @@ object OnEditExecuteEvent {
                     listener?.onLongClickMenuItemsforCmdIndex(
                         LongClickMenuItemsforCmdIndex.EDIT,
                         EditFragmentArgs(
-                            readSharePreferenceMap,
+                            fannelInfoMap,
                             cmdValEdit,
                         ),
                         editFragmentTag,

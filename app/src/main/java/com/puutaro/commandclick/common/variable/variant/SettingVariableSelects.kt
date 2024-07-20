@@ -99,4 +99,9 @@ object SettingVariableSelects {
     enum class ToolbarBtnCustomInSettingSelects {
         ON
     }
+
+    enum class OnRootfsSdCardSaveSelects {
+        ON,
+        OFF,
+    }
 }

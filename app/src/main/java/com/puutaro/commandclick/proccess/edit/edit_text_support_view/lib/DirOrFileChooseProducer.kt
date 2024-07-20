@@ -9,7 +9,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object DirOrFileChooseProducer {
 
@@ -37,8 +37,8 @@ object DirOrFileChooseProducer {
             editParameters,
             currentComponentIndex
         )
-        val fannelName = SharePrefTool.getCurrentFannelName(
-            editFragment.readSharePreferenceMap
+        val fannelName = FannelInfoTool.getCurrentFannelName(
+            editFragment.fannelInfoMap
         )
         val currentVariableName =
             editParameters.currentVariableName
@@ -67,12 +67,12 @@ object DirOrFileChooseProducer {
         currentComponentIndex: Int
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
-        val readSharePreferenceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editParameters.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentScriptName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentScriptName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name

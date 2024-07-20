@@ -2,33 +2,33 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 class JsSharePref(
     terminalFragment: TerminalFragment
 ) {
-    val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
+    val fannelInfoMap = terminalFragment.fannelInfoMap
 
     @JavascriptInterface
     fun getFannelName(): String {
-        val fannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val fannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         return fannelName
     }
 
     @JavascriptInterface
     fun getAppDirPath(): String {
-        val getAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val getAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
         return getAppDirPath
     }
 
     @JavascriptInterface
     fun getState(): String {
-        val currentSate = SharePrefTool.getCurrentStateName(
-            readSharePreferenceMap
+        val currentSate = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
         return currentSate
     }

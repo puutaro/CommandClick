@@ -3,13 +3,13 @@ package com.puutaro.commandclick.proccess.history
 import android.content.SharedPreferences
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object AppHistoryAdminEvent {
@@ -27,12 +27,12 @@ object AppHistoryAdminEvent {
         val onEditExecute = updateEditExecuteValue ==
                 SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         if (!onEditExecute) {
-            SharePrefTool.putAllSharePref(
+            FannelInfoTool.putAllFannelInfo(
                 sharedPref,
                 selectedAppDirPath,
-                SharePrefferenceSetting.current_fannel_name.defalutStr,
-                SharePrefferenceSetting.on_shortcut.defalutStr,
-                SharePrefferenceSetting.current_fannel_state.defalutStr,
+                FannelInfoSetting.current_fannel_name.defalutStr,
+                FannelInfoSetting.on_shortcut.defalutStr,
+                FannelInfoSetting.current_fannel_state.defalutStr,
             )
             return
         }
@@ -50,7 +50,7 @@ object AppHistoryAdminEvent {
             CommandClickScriptVariable.EMPTY_STRING +
             UsePath.JS_FILE_SUFFIX
         ) {
-            SharePrefferenceSetting.on_shortcut.defalutStr
+            FannelInfoSetting.on_shortcut.defalutStr
         } else {
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         }
@@ -60,7 +60,7 @@ object AppHistoryAdminEvent {
             mainFannelSettingConList,
             setReplaceVariableMap,
         )
-        SharePrefTool.putAllSharePref(
+        FannelInfoTool.putAllFannelInfo(
             sharedPref,
             selectedAppDirPath,
             selectedFannelName,

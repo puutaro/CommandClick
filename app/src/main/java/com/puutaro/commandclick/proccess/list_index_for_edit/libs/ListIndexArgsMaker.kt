@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -10,7 +9,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
@@ -19,12 +18,12 @@ class ListIndexArgsMaker(
     val clickConfigPairList: List<Pair<String, String>>?,
 ) {
     val setReplaceVariableMap = editFragment.setReplaceVariableMap
-    val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    val fannelInfoMap = editFragment.fannelInfoMap
+    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
-    val currentFannelName = SharePrefTool.getCurrentFannelName(
-        readSharePreffernceMap
+    val currentFannelName = FannelInfoTool.getCurrentFannelName(
+        fannelInfoMap
     )
 
     companion object {
@@ -32,17 +31,17 @@ class ListIndexArgsMaker(
             fragment: Fragment,
             jsActionMap: Map<String, String>
         ): List<List<Pair<String, String>>> {
-            val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+            val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
                 fragment,
                 null
             )
-            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-                readSharePreferenceMap
+            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+                fannelInfoMap
             )
-            val currentFannelName = SharePrefTool.getCurrentFannelName(
-                readSharePreferenceMap,
+            val currentFannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap,
             )
-            val setReplaceVariableMap = SharePrefTool.getReplaceVariableMap(
+            val setReplaceVariableMap = FannelInfoTool.getReplaceVariableMap(
                 fragment,
                 null
             )

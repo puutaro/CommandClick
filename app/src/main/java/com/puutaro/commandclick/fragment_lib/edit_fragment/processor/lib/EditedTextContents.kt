@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
@@ -20,13 +20,13 @@ class EditedTextContents(
     private val editFragment: EditFragment,
 ) {
 
-    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    private val currentAppDirPath = readSharePreffernceMap.get(
-        SharePrefferenceSetting.current_app_dir.name
-    ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
-    private val currentScriptFileName = readSharePreffernceMap.get(
-        SharePrefferenceSetting.current_fannel_name.name
-    ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
+    private val fannelInfoMap = editFragment.fannelInfoMap
+    private val currentAppDirPath = fannelInfoMap.get(
+        FannelInfoSetting.current_app_dir.name
+    ) ?: FannelInfoSetting.current_app_dir.defalutStr
+    private val currentScriptFileName = fannelInfoMap.get(
+        FannelInfoSetting.current_fannel_name.name
+    ) ?: FannelInfoSetting.current_fannel_name.defalutStr
     private val scriptContentsLister = ScriptContentsLister(
         CcEditComponent.makeEditLinearLayoutList(editFragment)
     )
@@ -80,7 +80,7 @@ class EditedTextContents(
             isSettingEdit
         ){
             true -> FannelStateRooterManager.getSettingFannelPath(
-                editFragment.readSharePreferenceMap,
+                editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap
             )
             else -> File(

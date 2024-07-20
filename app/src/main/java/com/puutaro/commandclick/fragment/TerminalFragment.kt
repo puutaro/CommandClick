@@ -39,7 +39,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
@@ -71,8 +71,8 @@ class TerminalFragment: Fragment() {
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
     var busyboxExecutor: BusyboxExecutor? = null
-    var readSharePreferenceMap = mapOf<String, String>()
-    var srcReadSharedPreferences: Map<String, String>? = null
+    var fannelInfoMap = mapOf<String, String>()
+    var srcFannelInfoMap: Map<String, String>? = null
     var editType =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var currentAppDirPath = String()
@@ -149,13 +149,13 @@ class TerminalFragment: Fragment() {
                 UbuntuFiles(it)
             )
         }
-        readSharePreferenceMap = EditFragmentArgs.getReadSharePreference(arguments)
-        srcReadSharedPreferences = EditFragmentArgs.getSrcReadSharePreference(arguments)
-        currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        fannelInfoMap = EditFragmentArgs.getFannelInfoMap(arguments)
+        srcFannelInfoMap = EditFragmentArgs.getSrcFannelInfoMap(arguments)
+        currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val currentValidFannelName =
             ValidFannelNameGetterForTerm.get(
@@ -173,7 +173,7 @@ class TerminalFragment: Fragment() {
                 currentValidFannelName,
             )
         settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap
         )
         editType = EditFragmentArgs.getEditType(arguments)
@@ -406,14 +406,14 @@ class TerminalFragment: Fragment() {
     }
     interface OnEditFannelContentsListUpdateListenerForTerm {
         fun onEditFannelContentsListUpdateForTerm(
-            readSharePreffernceMap: Map<String, String>,
+            fannelInfoMap: Map<String, String>,
             updateScriptContents: List<String>,
         )
     }
 
     interface OnMonitorSizeChangeingForTerm {
         fun onMonitorSizeChangeingForTerm(
-            readSharePreffernceMap: Map<String, String>,
+            fannelInfoMap: Map<String, String>,
         )
     }
 
@@ -449,6 +449,12 @@ class TerminalFragment: Fragment() {
             pickerMacro: FilePickerTool.PickerMacro?,
             currentFannelName: String,
             tag: String,
+        )
+    }
+
+    interface GetSdcardDirListenerForTerm {
+        fun getSdcardDirForTerm(
+            isCreate: Boolean
         )
     }
 }

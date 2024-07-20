@@ -6,14 +6,14 @@ import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 class JsCcUsage(
     private val terminalFragment: TerminalFragment
 ) {
-    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreferenceMap
+    private val fannelInfoMap = terminalFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
 
     @JavascriptInterface

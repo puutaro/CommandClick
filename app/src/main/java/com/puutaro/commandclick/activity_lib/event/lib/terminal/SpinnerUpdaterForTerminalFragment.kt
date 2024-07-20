@@ -5,11 +5,11 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,17 +23,17 @@ object SpinnerUpdaterForTerminalFragment {
     ) {
         if(spinnerId == null) return
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
-        val currentFannelName = SharePrefTool.getStringFromSharePref(
+        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
-        val currentFannelState = SharePrefTool.getStringFromSharePref(
+        val currentFannelState = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_state
+            FannelInfoSetting.current_fannel_state
         )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

@@ -51,14 +51,14 @@ object FannelStateManager {
 
     fun updateState(
         updateFannelState: String,
-        readSharePrefMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ) {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePrefMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePrefMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
             UsePath.fannelStateRootTableFilePath,
@@ -76,7 +76,7 @@ object FannelStateManager {
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.FANNEL_STATE_CONFIG,
             mainFannelSettingConList,
-            readSharePrefMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             String()
         )
@@ -105,14 +105,14 @@ object FannelStateManager {
         mainFannelSettingConList: List<String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String? {
-        val readSharePreferenceMap = SharePrefTool.makeReadSharePrefMapByString(
+        val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByString(
             currentAppDirPath,
             currentFannelName
         )
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.FANNEL_STATE_CONFIG,
             mainFannelSettingConList,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             String()
         )

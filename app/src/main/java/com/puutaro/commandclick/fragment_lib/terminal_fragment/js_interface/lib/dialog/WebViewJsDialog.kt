@@ -48,7 +48,7 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,9 +64,9 @@ class WebViewJsDialog(
 ) {
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
-    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreferenceMap
+    private val fannelInfoMap = terminalFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private val longpressMenuGroupId = 110000

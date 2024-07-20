@@ -3,9 +3,9 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 import android.content.Context
 import android.util.Log
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,17 +19,17 @@ object EditTextUpdaterForTerminalFragment {
     ) {
         if(editTextId == null) return
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
-        val currentFannelName = SharePrefTool.getStringFromSharePref(
+        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
-        val fannelState = SharePrefTool.getStringFromSharePref(
+        val fannelState = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_state
+            FannelInfoSetting.current_fannel_state
         )
         val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,

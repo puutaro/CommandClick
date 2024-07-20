@@ -10,7 +10,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 object JsActionHandler {
     fun handle(
         fragment: Fragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         mainOrSubFannelPath: String,
         setReplaceVariableMapSrc: Map<String, String>?,
         jsActionPairListCon: String,
@@ -29,7 +29,7 @@ object JsActionHandler {
         val jsActionMap =
             JsActionTool.makeJsActionMap(
                 fragment,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 jsAcKeyToSubKeyCon,
                 setReplaceVariableMap,
                 mainOrSubFannelPath,

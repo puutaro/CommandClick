@@ -9,7 +9,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.net.URLDecoder
 
@@ -24,15 +24,15 @@ object SearchViewAndAutoCompUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val readSharedPreferenceMap = terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharedPreferenceMap
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharedPreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val fannelState = SharePrefTool.getCurrentStateName(
-            readSharedPreferenceMap
+        val fannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

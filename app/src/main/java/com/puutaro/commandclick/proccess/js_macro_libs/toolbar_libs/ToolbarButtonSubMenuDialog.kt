@@ -110,11 +110,11 @@ object ToolbarButtonSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-            val readSharePreferenceMap =
-                editFragment.readSharePreferenceMap
+            val fannelInfoMap =
+                editFragment.fannelInfoMap
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ToolbarButtonArgsMaker.makeSettingButtonMenuPairList(
                         editFragment,

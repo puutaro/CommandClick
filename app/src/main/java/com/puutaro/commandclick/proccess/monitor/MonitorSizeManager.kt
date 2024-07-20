@@ -102,7 +102,7 @@ object MonitorSizeManager {
         listener?.onToolbarMenuCategoriesForEdit(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
             EditFragmentArgs(
-                editFragment.readSharePreferenceMap,
+                editFragment.fannelInfoMap,
                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
             )
         )

@@ -3,10 +3,10 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.r
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object BroadcastReceiveHandlerForCmdIndex {
     fun handle(
@@ -23,9 +23,9 @@ object BroadcastReceiveHandlerForCmdIndex {
                 val startUpPref =
                     cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
                     ?: return
-                val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+                val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
                     startUpPref,
-                    SharePrefferenceSetting.current_app_dir
+                    FannelInfoSetting.current_app_dir
                 )
                 CommandListManager.execListUpdateForCmdIndex(
                     currentAppDirPath,

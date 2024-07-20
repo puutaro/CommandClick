@@ -5,7 +5,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object ConfigMapTool {
@@ -14,15 +14,15 @@ object ConfigMapTool {
     fun create(
         configPath: String,
         defaultConfigMapStr: String,
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val settingMenuSettingFilePath = ScriptPreWordReplacer.replace(
             configPath,

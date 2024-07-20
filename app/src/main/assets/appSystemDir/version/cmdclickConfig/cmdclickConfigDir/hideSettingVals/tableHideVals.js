@@ -14,3 +14,4 @@ historySwitch,
 urlHistoryOrButtonExec,
 // ubuntu setting
 ubuntuSleepDelayMinInScreenOff,
+onRootfsSdCardSave,

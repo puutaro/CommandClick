@@ -20,7 +20,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -113,7 +113,7 @@ object JavascriptExecuter {
         val isJsAction = JsActionTool.judgeJsAction(
             execJsConList
         )
-        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+        val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             fragment,
             execJsPath
         )
@@ -158,7 +158,7 @@ object JavascriptExecuter {
 
                 JsActionHandler.handle(
                     fragment,
-                    readSharePreferenceMap,
+                    fannelInfoMap,
                     execJsPath,
                     setReplaceVariableMap,
                     jsKeyToSubKeyListCon,

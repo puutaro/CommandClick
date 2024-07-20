@@ -13,7 +13,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object SystemFannelLauncher {
@@ -112,7 +112,7 @@ object SystemFannelLauncher {
             mainFannelSettingConList,
             setReplaceVariableMap
         )
-        SharePrefTool.putAllSharePref(
+        FannelInfoTool.putAllFannelInfo(
             sharedPref,
             appDirPath,
             fannelName,

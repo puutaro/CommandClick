@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 class JsListConSBSaver(
@@ -11,15 +11,15 @@ class JsListConSBSaver(
 ) {
     val context = terminalFragment.context
     val activity = terminalFragment.activity
-    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreferenceMap
+    private val fannelInfoMap = terminalFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
-    private val currentFannelName = SharePrefTool.getCurrentFannelName(
-        readSharePreferenceMap
+    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
+        fannelInfoMap
     )
-    private val currentFannelState = SharePrefTool.getCurrentStateName(
-        readSharePreferenceMap
+    private val currentFannelState = FannelInfoTool.getCurrentStateName(
+        fannelInfoMap
     )
 
     @JavascriptInterface

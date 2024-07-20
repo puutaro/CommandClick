@@ -5,7 +5,7 @@ import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,8 +36,8 @@ object ExecCopyFile {
         val pickerMacro = FilePickerTool.PickerMacro.values().firstOrNull {
             it.name == pickerMacroStr
         }
-        val fannelName = SharePrefTool.getCurrentFannelName(
-            editFragment.readSharePreferenceMap
+        val fannelName = FannelInfoTool.getCurrentFannelName(
+            editFragment.fannelInfoMap
         )
         val initialPath = FilePickerTool.makeInitialDirPath(
             filterMap,

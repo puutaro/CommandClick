@@ -13,7 +13,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
@@ -33,8 +33,8 @@ object FileSelectSpinnerViewProducer {
         val currentFragment = editParameters.currentFragment
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            editParameters.readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            editParameters.fannelInfoMap
         )
 
         val linearParamsForSpinner = LinearLayout.LayoutParams(
@@ -214,8 +214,8 @@ object FileSelectSpinnerViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            editParameters.readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            editParameters.fannelInfoMap
         )
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
@@ -273,12 +273,12 @@ object FileSelectSpinnerViewProducer {
         currentComponentIndex: Int
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
-        val readSharePreferenceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editParameters.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentScriptName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentScriptName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name

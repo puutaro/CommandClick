@@ -44,7 +44,7 @@ class ListIndexForEditAdapter(
     var listIndexList: MutableList<String>,
 ): RecyclerView.Adapter<ListIndexForEditAdapter.ListIndexListViewHolder>()
 {
-    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
+    private val fannelInfoMap = editFragment.fannelInfoMap
     private val context = editFragment.context
     private val activity = editFragment.activity
     private val maxTakeSize = 150
@@ -444,7 +444,6 @@ class ListIndexForEditAdapter(
                     QrDialogConfig.QrLogoHandlerArgsMaker(
                         editFragment,
                         recentAppDirPath,
-                        readSharePreffernceMap,
                         qrLogoConfigMap,
                         filterDir,
                         holder.fileName,

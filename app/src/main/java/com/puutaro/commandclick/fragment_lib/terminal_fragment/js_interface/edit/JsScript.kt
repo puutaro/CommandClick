@@ -36,8 +36,6 @@ class JsScript(
     private val commandEndHolder = languageTypeHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     )
-    private val readSharedPreferences = terminalFragment.readSharePreferenceMap
-    private val filePrefix = "file://"
     private val setReplaceVariableMap = terminalFragment.setReplaceVariableMap
 
     @JavascriptInterface

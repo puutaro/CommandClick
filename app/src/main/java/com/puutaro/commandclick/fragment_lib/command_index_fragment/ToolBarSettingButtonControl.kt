@@ -24,7 +24,7 @@ import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 
 class ToolBarSettingButtonControl(
@@ -32,9 +32,9 @@ class ToolBarSettingButtonControl(
 ){
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
-    private val readSharePreffernceMap = cmdIndexFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    private val fannelInfoMap = cmdIndexFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
 
     private val settingButtonView = binding.cmdindexSettingButton
@@ -145,7 +145,7 @@ class ToolBarSettingButtonControl(
             listener?.onToolbarMenuCategories(
                 toolbarMenuCategoriesVariantForCmdIndex,
                 EditFragmentArgs(
-                    cmdIndexFragment.readSharePreferenceMap,
+                    cmdIndexFragment.fannelInfoMap,
                     EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                 )
             )
@@ -202,7 +202,7 @@ class ToolBarSettingButtonControl(
     private fun preferenceEdit(){
         CmdClickSystemAppDir.createPreferenceFannel(
             context,
-            cmdIndexFragment.readSharePreferenceMap
+            cmdIndexFragment.fannelInfoMap
         )
         SystemFannelLauncher.launch(
             cmdIndexFragment,

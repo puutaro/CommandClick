@@ -15,7 +15,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSe
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 class ToolbarButtonArgsMaker(
@@ -37,13 +37,13 @@ class ToolbarButtonArgsMaker(
         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
-    val readSharePreffernceMap = editFragment.readSharePreferenceMap
+    val fannelInfoMap = editFragment.fannelInfoMap
 
-    val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
-    val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-        readSharePreffernceMap
+    val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
+        fannelInfoMap
     )
     val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
 
@@ -105,12 +105,12 @@ class ToolbarButtonArgsMaker(
             editFragment: EditFragment,
             jsActionMap: Map<String, String>?
         ): List<List<Pair<String, String>>> {
-            val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-                readSharePreferenceMap
+            val fannelInfoMap = editFragment.fannelInfoMap
+            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+                fannelInfoMap
             )
-            val currentFannelName = SharePrefTool.getCurrentFannelName(
-                readSharePreferenceMap
+            val currentFannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
             )
             val setReplaceVariableMap = editFragment.setReplaceVariableMap
             val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(

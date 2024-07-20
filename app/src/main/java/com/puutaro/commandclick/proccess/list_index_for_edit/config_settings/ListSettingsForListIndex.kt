@@ -12,7 +12,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -470,12 +470,12 @@ object ListSettingsForListIndex  {
             if(
                 filterShellPath.isEmpty()
             ) return String()
-            val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-                readSharePreferenceMap
+            val fannelInfoMap = editFragment.fannelInfoMap
+            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+                fannelInfoMap
             )
-            val currentFannelName = SharePrefTool.getCurrentFannelName(
-                readSharePreferenceMap
+            val currentFannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
             )
             return ReadText(
                 filterShellPath
@@ -584,12 +584,12 @@ private object CompPathManager {
         editFragment: EditFragment,
         initTsvPathObj: File,
     ): List<String> {
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         return ReadText(
             initTsvPathObj.absolutePath

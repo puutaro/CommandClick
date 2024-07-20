@@ -42,7 +42,7 @@ import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object JsPathHandlerForToolbarButton {
@@ -122,18 +122,18 @@ object JsPathHandlerForToolbarButton {
         jsActionMap: Map<String, String>
     ) {
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        val readSharePreffernceMap =
-            SharePrefTool.getReadSharePrefMap(
+        val fannelInfoMap =
+            FannelInfoTool.getFannelInfoMap(
                 fragment,
                 mainOrSubFannelPath,
             )
         val currentAppDirPath =
-            SharePrefTool.getCurrentAppDirPath(
-                readSharePreffernceMap
+            FannelInfoTool.getCurrentAppDirPath(
+                fannelInfoMap
             )
         val currentFannelName =
-            SharePrefTool.getCurrentFannelName(
-                readSharePreffernceMap,
+            FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap,
             )
         if(
             jsActionMap.isEmpty()
@@ -178,7 +178,7 @@ object JsPathHandlerForToolbarButton {
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
                     EditFragmentArgs(
-                        readSharePreffernceMap,
+                        fannelInfoMap,
                         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                     )
                 )
@@ -190,7 +190,7 @@ object JsPathHandlerForToolbarButton {
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
                     EditFragmentArgs(
-                        readSharePreffernceMap,
+                        fannelInfoMap,
                         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                     )
                 )

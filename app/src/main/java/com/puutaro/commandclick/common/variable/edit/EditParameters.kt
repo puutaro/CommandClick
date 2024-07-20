@@ -8,7 +8,7 @@ data class EditParameters(
     val currentShellContentsList: List<String>,
     val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
     val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
-    val readSharePreffernceMap: Map<String, String>,
+    val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     val onFixNormalSpinner: Boolean,
     val hideSettingVariableList: List<String>

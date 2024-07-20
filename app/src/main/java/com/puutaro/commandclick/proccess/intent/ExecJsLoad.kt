@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -19,7 +19,7 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -103,9 +103,9 @@ object ExecJsLoad {
         ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
         val sharePref = currentFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        val currentFannelName = SharePrefTool.getStringFromSharePref(
+        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
         val isCmdIndex = selectedJsFileName == UsePath.cmdclickPreferenceJsName
                 && currentFannelName != UsePath.cmdclickPreferenceJsName
@@ -257,17 +257,17 @@ object ExecJsLoad {
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
-        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(fragment, String())
+        val fannelInfoMap = FannelInfoTool.getFannelInfoMap(fragment, String())
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,
             File(scriptDirPath, scriptName).absolutePath
         )
         val currentSettingFannelPath = FannelStateRooterManager.getSettingFannelPath(
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap
         )
         val settingSectionVariableList = FannelStateRooterManager.makeSettingVariableList(
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             settingSectionStart,
             settingSectionEnd,

@@ -21,7 +21,7 @@ class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
 ) {
-    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
+    private val fannelInfoMap = editFragment.fannelInfoMap
     private val context = editFragment.context
     private val insertImageButtonParam = LinearLayout.LayoutParams(
         0,
@@ -32,7 +32,7 @@ class ToolbarButtonProducerForEdit(
     )
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
         editFragment,
-        readSharePreffernceMap,
+        fannelInfoMap,
     )
 
 

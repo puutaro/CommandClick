@@ -4,7 +4,7 @@ import android.widget.Toast
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +14,14 @@ import kotlinx.coroutines.withContext
 object ExecMonitorSizeChangeForTerm {
     fun change(
         activity: MainActivity,
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ){
         try {
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
                     execChange(
                         activity,
-                        readSharePreffernceMap
+                        fannelInfoMap
                     )
                 }
             }
@@ -39,17 +39,17 @@ object ExecMonitorSizeChangeForTerm {
     }
     private fun execChange(
         activity: MainActivity,
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ){
         val targetFragmentInstance = TargetFragmentInstance()
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val currentFannelState = SharePrefTool.getCurrentStateName(
-            readSharePreffernceMap
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
 
         val cmdIndexFragment =

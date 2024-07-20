@@ -16,7 +16,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object ToolbarSubMenuDialog {
 
@@ -128,11 +128,11 @@ object ToolbarSubMenuDialog {
         jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
     ) {
-        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+        val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             fragment,
             mainOrSubFannelPath,
         )
-        val setReplaceVariableMap = SharePrefTool.getReplaceVariableMap(
+        val setReplaceVariableMap = FannelInfoTool.getReplaceVariableMap(
             fragment,
             mainOrSubFannelPath,
         )
@@ -144,7 +144,7 @@ object ToolbarSubMenuDialog {
                 ?: return@setOnItemClickListener
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 fragment,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ListIndexArgsMaker.makeListIndexClickMenuPairList(
                         fragment,

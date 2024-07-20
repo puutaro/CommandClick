@@ -24,7 +24,7 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
@@ -48,8 +48,8 @@ object ListIndexEditConfig {
 //            ListIndexForEditAdapter.indexListMap,
 //            ListIndexForEditAdapter.listIndexTypeKey
 //        )
-        val readSharePreferenceMap =
-            editFragment.readSharePreferenceMap
+        val fannelInfoMap =
+            editFragment.fannelInfoMap
 //        val extraRepValMap = mapOf(
 //            "ITEM_NAME" to selectedItem,
 //            "INDEX_LIST_DIR_PATH" to filterDir,
@@ -66,12 +66,12 @@ object ListIndexEditConfig {
 //            ).joinToString("\n\n")
 //        )
         val mainFannelPath = File(
-            SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap),
-            SharePrefTool.getCurrentFannelName(readSharePreferenceMap)
+            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
-            readSharePreferenceMap,
+            fannelInfoMap,
             clickConfigListCon,
             editFragment.setReplaceVariableMap,
             mainFannelPath

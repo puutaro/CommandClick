@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.content.Context
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShe
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object ScriptFileEdit {
@@ -21,12 +21,12 @@ object ScriptFileEdit {
     ){
         val sharedPref =
             cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePrefTool.putAllSharePref(
+        FannelInfoTool.putAllFannelInfo(
             sharedPref,
             currentAppDirPath,
             fannelName,
-            SharePrefferenceSetting.on_shortcut.defalutStr,
-            SharePrefferenceSetting.current_fannel_state.defalutStr
+            FannelInfoSetting.on_shortcut.defalutStr,
+            FannelInfoSetting.current_fannel_state.defalutStr
         )
         val shellContentsList = ReadText(
             File(
@@ -52,14 +52,14 @@ object ScriptFileEdit {
             shellContentsList,
             currentAppDirPath,
             fannelName,
-            SharePrefferenceSetting.current_fannel_state.defalutStr,
+            FannelInfoSetting.current_fannel_state.defalutStr,
         ).decideForEdit()
             ?: return
-        val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+        val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
             currentAppDirPath,
             fannelName,
-            SharePrefferenceSetting.on_shortcut.defalutStr,
-            SharePrefferenceSetting.current_fannel_state.defalutStr,
+            FannelInfoSetting.on_shortcut.defalutStr,
+            FannelInfoSetting.current_fannel_state.defalutStr,
         )
         val context = cmdIndexFragment.context
             ?: return
@@ -68,7 +68,7 @@ object ScriptFileEdit {
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
             EditFragmentArgs(
-                readSharePreferenceMap,
+                fannelInfoMap,
                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
             ),
             editFragmentTag,

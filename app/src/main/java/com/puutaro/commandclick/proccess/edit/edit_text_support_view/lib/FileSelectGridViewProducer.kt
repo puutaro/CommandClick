@@ -24,7 +24,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.Filter
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object FileSelectGridViewProducer {
@@ -161,8 +161,8 @@ object FileSelectGridViewProducer {
         Keyboard.hiddenKeyboardForFragment(
             editFragment
         )
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            editParameters.readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            editParameters.fannelInfoMap
         )
         val filterDir = getSelectDirPath(
             fcbMap,
@@ -329,8 +329,8 @@ object FileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            editParameters.readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            editParameters.fannelInfoMap
         )
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name

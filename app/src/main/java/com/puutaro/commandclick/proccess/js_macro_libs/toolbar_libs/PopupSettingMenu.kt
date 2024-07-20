@@ -71,12 +71,12 @@ object PopupSettingMenu {
         val menuListMap = MenuSettingTool.createListMenuListMap(
             menuPairList
         )
-        val readSharePreferenceMap =
-            editFragment.readSharePreferenceMap
+        val fannelInfoMap =
+            editFragment.fannelInfoMap
         if (menuListMap.size == 1) {
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 MenuSettingTool.convertMenuPairListToJsKeyToSubCon(
                     menuPairList.first()
                 ),
@@ -221,11 +221,11 @@ object PopupSettingMenu {
                 )
 
             else -> {
-                val readSharePreferenceMap =
-                    editFragment.readSharePreferenceMap
+                val fannelInfoMap =
+                    editFragment.fannelInfoMap
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
-                    readSharePreferenceMap,
+                    fannelInfoMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName
@@ -326,7 +326,7 @@ object PopupSettingMenu {
             listener?.onToolbarMenuCategoriesForEdit(
                 toolbarMenuCategoriesVariantForCmdIndex,
                 EditFragmentArgs(
-                    editFragment.readSharePreferenceMap,
+                    editFragment.fannelInfoMap,
                     EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                 ),
             )

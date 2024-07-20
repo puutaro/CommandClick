@@ -4,18 +4,14 @@ import android.R
 import android.widget.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.*
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
-import java.io.File
 
 
 class EditTextProducerForEdit(
@@ -26,9 +22,9 @@ class EditTextProducerForEdit(
     private val currentScriptContentsList = editFragment.currentFannelConList
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
-    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    private val fannelInfoMap = editFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
 
     private val setReplaceVariableMap = editFragment.setReplaceVariableMap
@@ -40,7 +36,7 @@ class EditTextProducerForEdit(
         currentScriptContentsList,
         editFragment.recordNumToMapNameValueInCommandHolder,
         editFragment.recordNumToMapNameValueInSettingHolder,
-        readSharePreffernceMap,
+        fannelInfoMap,
         setReplaceVariableMap,
         false,
         editFragment.hideSettingVariableList,
@@ -215,7 +211,7 @@ class EditTextProducerForEdit(
         editFragment: EditFragment,
     ): Button {
         val context = editFragment.context
-        val readSharePreffernceMap = editFragment.readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
         val descriptionButton = Button(context)
         val buttonLabel = "Description"
         descriptionButton.text = buttonLabel
@@ -238,8 +234,8 @@ class EditTextProducerForEdit(
                 editFragment,
                 editFragment.currentFannelConList,
                 currentAppDirPath,
-                SharePrefTool.getCurrentFannelName(
-                    readSharePreffernceMap
+                FannelInfoTool.getCurrentFannelName(
+                    fannelInfoMap
                 )
             )
         }

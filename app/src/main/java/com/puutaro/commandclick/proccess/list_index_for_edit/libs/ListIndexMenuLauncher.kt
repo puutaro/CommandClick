@@ -177,11 +177,11 @@ object ListIndexMenuLauncher {
                 )
 
             else -> {
-                val readSharePreferenceMap =
-                    editFragment.readSharePreferenceMap
+                val fannelInfoMap =
+                    editFragment.fannelInfoMap
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
-                    readSharePreferenceMap,
+                    fannelInfoMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName

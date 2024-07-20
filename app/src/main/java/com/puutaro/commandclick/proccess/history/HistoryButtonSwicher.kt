@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
@@ -22,11 +22,11 @@ object HistoryBottunSwitcher {
         urlHistoryButtonEvent: UrlHistoryButtonEvent,
         clickType: CLICLTYPE
     ) {
-        val readSharePreffernceMap = when(
+        val fannelInfoMap = when(
             fragment
         ){
-            is CommandIndexFragment -> fragment.readSharePreferenceMap
-            is EditFragment -> fragment.readSharePreferenceMap
+            is CommandIndexFragment -> fragment.fannelInfoMap
+            is EditFragment -> fragment.fannelInfoMap
             else -> return
         }
         val activity = fragment.activity
@@ -57,7 +57,7 @@ object HistoryBottunSwitcher {
         urlHistoryButtonHandler(
             fragment,
             innerView,
-            readSharePreffernceMap,
+            fannelInfoMap,
             urlHistoryButtonEvent,
         )
     }
@@ -67,7 +67,7 @@ object HistoryBottunSwitcher {
 private fun urlHistoryButtonHandler(
     fragment: androidx.fragment.app.Fragment,
     innerView: View,
-    readSharePreffernceMap: Map<String, String>,
+    fannelInfoMap: Map<String, String>,
     urlHistoryButtonEvent: UrlHistoryButtonEvent,
 ) {
 
@@ -110,8 +110,8 @@ private fun urlHistoryButtonHandler(
         return
     }
 
-    val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
     val currentShellFileName = UsePath.cmdclickButtonExecShellFileName
     if(

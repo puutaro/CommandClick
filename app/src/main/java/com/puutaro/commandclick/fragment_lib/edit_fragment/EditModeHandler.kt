@@ -14,7 +14,7 @@ class EditModeHandler(
     private val editFragment: EditFragment,
 ) {
     private val context = editFragment.context
-    private val readSharePreferenceMap = editFragment.readSharePreferenceMap
+    private val fannelInfoMap = editFragment.fannelInfoMap
     private val editExecuteValue = editFragment.editExecuteValue
     private val binding = editFragment.binding
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
@@ -45,7 +45,7 @@ class EditModeHandler(
         }
         UpdateLastModifiedForAppHistory.update(
             editExecuteValue,
-            readSharePreferenceMap,
+            fannelInfoMap,
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,

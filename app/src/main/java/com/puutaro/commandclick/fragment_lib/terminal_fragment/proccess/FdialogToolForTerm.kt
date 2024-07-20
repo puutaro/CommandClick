@@ -4,7 +4,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object FdialogToolForTerm {
 
@@ -23,8 +23,8 @@ object FdialogToolForTerm {
         if(
             !isCmdValEdit
         ) return true
-        val isShortcut = SharePrefTool.getOnShortcut(
-            terminalFragment.readSharePreferenceMap
+        val isShortcut = FannelInfoTool.getOnShortcut(
+            terminalFragment.fannelInfoMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         if(
             !isShortcut

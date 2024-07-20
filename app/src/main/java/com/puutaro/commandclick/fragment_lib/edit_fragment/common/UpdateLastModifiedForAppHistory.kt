@@ -1,42 +1,42 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object UpdateLastModifiedForAppHistory {
     fun update (
         editExecuteValue: String,
-        readSharePreffernceMap: Map<String, String>
+        fannelInfoMap: Map<String, String>
     ){
-        val onShortCut = SharePrefTool.getOnShortcut(
-            readSharePreffernceMap
+        val onShortCut = FannelInfoTool.getOnShortcut(
+            fannelInfoMap
         )
         if(
             onShortCut ==
-            SharePrefferenceSetting.on_shortcut.defalutStr
+            FannelInfoSetting.on_shortcut.defalutStr
         ) return
         if(
             editExecuteValue !=
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val fannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val fannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         if(
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
             && !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
         ) return
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
 //        val isFDialogFannel = FDialogTempFile.howFDialogFile(currentFannelName)
 //        if(

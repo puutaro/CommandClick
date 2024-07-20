@@ -26,7 +26,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 
 object ConfigFromScriptFileSetter {
@@ -35,13 +35,13 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         mainFannelConList: List<String>
     ){
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
-        val onShortcut = SharePrefTool.getOnShortcut(
-            readSharePreferenceMap
+        val onShortcut = FannelInfoTool.getOnShortcut(
+            fannelInfoMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
@@ -52,13 +52,13 @@ object ConfigFromScriptFileSetter {
         editFragment.setVariableTypeList =
             SetVariableTypesSetterForEdit.set(
                 editFragment,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 settingVariableList,
             )
         editFragment.hideSettingVariableList =
             ListSettingVariableListMaker.makeFromSettingVariableList(
                 CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 editFragment.setReplaceVariableMap,
                 settingVariableList
             )
@@ -77,7 +77,7 @@ object ConfigFromScriptFileSetter {
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
             settingVariableList,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             String(),
         ).let {
@@ -118,7 +118,7 @@ object ConfigFromScriptFileSetter {
         editFragment.listIndexConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.LIST_INDEX_CONFIG,
             settingVariableList,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             String(),
         ).let {
@@ -139,7 +139,7 @@ object ConfigFromScriptFileSetter {
         editFragment.qrDialogConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
             settingVariableList,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             String(),
         ).let {
@@ -650,7 +650,7 @@ object ConfigFromScriptFileSetter {
         return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             targetSettingConfigValName,
             settingVariableList,
-            editFragment.readSharePreferenceMap,
+            editFragment.fannelInfoMap,
             editFragment.setReplaceVariableMap,
             defaultButtonConfigCon,
         )
@@ -680,7 +680,7 @@ object ConfigFromScriptFileSetter {
                 ListSettingVariableListMaker.makeConfigMapFromSettingValList(
                     CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
                     settingVariableList,
-                    editFragment.readSharePreferenceMap,
+                    editFragment.fannelInfoMap,
                     editFragment.setReplaceVariableMap,
                     String(),
                 )
@@ -694,12 +694,12 @@ object ConfigFromScriptFileSetter {
         settingValName: String,
         defaultPath: String,
     ): List<String> {
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val bottomScriptUrlPath =  SettingVariableReader.getStrValue(
             settingVariableList,

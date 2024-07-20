@@ -126,12 +126,13 @@ object StorageAccessSetter {
                 com.puutaro.commandclick.R.id.confirm_text_dialog_title
             )
         confirmTitleTextView?.text =
-            "Enable manage all storage permission, ok?"
+            "Confirm storage permission"
         val confirmContentTextView =
             getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
             )
-        confirmContentTextView?.isVisible = false
+        confirmContentTextView?.text =
+            "Enable manage all storage permission, ok?"
         val confirmCancelButton =
             getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_cancel

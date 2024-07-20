@@ -16,17 +16,17 @@ object FannelStateRooterManager {
         "default"
 
     fun makeSettingVariableList(
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingSectionStart: String,
         settingSectionEnd: String,
         settingFannelPath: String,
     ): List<String>? {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val settingVariableBeforeImportList = getSettingVariableList(
             settingFannelPath,
@@ -38,7 +38,7 @@ object FannelStateRooterManager {
         )
         val importDisableValList = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             settingVariableBeforeImportList
         )
@@ -54,14 +54,14 @@ object FannelStateRooterManager {
     }
 
     fun getSettingFannelPath(
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val defaultSettingFilePath =
             File(
@@ -69,12 +69,12 @@ object FannelStateRooterManager {
                 currentFannelName
             ).absolutePath
 
-        val onShortcut = SharePrefTool.getOnShortcut(
-            readSharePreferenceMap
+        val onShortcut = FannelInfoTool.getOnShortcut(
+            fannelInfoMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val currentFannelState =
-            SharePrefTool.getCurrentStateName(
-                readSharePreferenceMap
+            FannelInfoTool.getCurrentStateName(
+                fannelInfoMap
             )
         if(
             !onShortcut

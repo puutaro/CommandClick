@@ -7,7 +7,7 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object ListSettingVariableListMaker {
@@ -19,14 +19,14 @@ object ListSettingVariableListMaker {
     fun makeConfigMapFromSettingValList(
         targetSettingConfigValName: String,
         settingVariableList: List<String>?,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         defaultButtonConfigCon: String,
     ): Map<String, String> {
         val settingButtonConfigMapStr =
             makeFromSettingVariableList(
                 targetSettingConfigValName,
-                readSharePreferenceMap,
+                fannelInfoMap,
                 setReplaceVariableMap,
                 settingVariableList
             ).joinToString(",")
@@ -39,22 +39,22 @@ object ListSettingVariableListMaker {
         return createFromSettingVal(
             settingButtonConfigMapStr,
             String(),
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap
         )
     }
     fun makeFromSettingVariableList(
         settingVariableName: String,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingVariablesList: List<String>?,
         onImport: Boolean = true
     ): List<String> {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val listSettingVariableListSource =
             SettingVariableReader.getStrListByReplace(
@@ -109,15 +109,15 @@ object ListSettingVariableListMaker {
     private fun createFromSettingVal(
         settingValConSrc: String,
         defaultConfigMapStr: String,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val settingValCon = ScriptPreWordReplacer.replace(
             settingValConSrc,

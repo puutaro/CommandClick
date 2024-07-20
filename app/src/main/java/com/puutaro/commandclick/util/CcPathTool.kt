@@ -4,7 +4,7 @@ import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object CcPathTool {
@@ -16,7 +16,7 @@ object CcPathTool {
         val extend = subExtend(fileName)
         val parentDirPath = filePathObj.parent
         val rndFileName =
-            "${fileRawName}_${CommandClickScriptVariable.makeCopyPrefix()}${extend}"
+            "${fileRawName}_${CommandClickScriptVariable.makeRndPrefix()}${extend}"
         return when(parentDirPath.isNullOrEmpty()){
             true -> rndFileName
             else -> "${parentDirPath}/" +
@@ -255,10 +255,10 @@ object CcPathTool {
     }
 
     fun getCurrentScriptFileName(
-        readSharePreffernceMap: Map<String, String>
+        fannelInfoMap: Map<String, String>
     ): String {
-        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         if(
             currentScriptFileName.isEmpty()

@@ -91,7 +91,7 @@ class DirectoryAndCopyGetter(
             targetScriptFilePathSource == sourceScriptFilePath
         ) {
             true -> "${targetDirectoryPath}/" +
-                    "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
+                    "${CommandClickScriptVariable.makeRndPrefix()}_${selectedItemForCopy}"
             else -> targetScriptFilePathSource
         }
         val insertFilePath = FileSystems.execCopyFileWithDir(

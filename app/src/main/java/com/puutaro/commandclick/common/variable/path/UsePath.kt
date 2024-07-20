@@ -15,7 +15,7 @@ object UsePath {
     val emulatedPath = Environment.getExternalStorageDirectory().absolutePath
     val rootPath = emulatedPath +
             "/" + Environment.DIRECTORY_DOCUMENTS
-    private const val cmdclickDirName = "cmdclick"
+    const val cmdclickDirName = "cmdclick"
     val cmdclickDirPath = "$rootPath/$cmdclickDirName"
     private const val cmdclickConfDirName = "conf"
     private const val cmdclickConfRelativePath = "$cmdclickDirName/$cmdclickConfDirName"
@@ -107,6 +107,11 @@ object UsePath {
     private const val cmdclickJsImportDirName = "jsimport"
     private val cmdclickJsImportRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickJsImportDirName"
     val cmdclickJsImportDirPath =  "$rootPath/$cmdclickJsImportRelativeDirPath"
+    private const val cmdclickSharePrefDirName = "sharePref"
+    private val cmdclickSharePrefRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickSharePrefDirName"
+    val cmdclickSharePrefDirPath =  "$rootPath/$cmdclickSharePrefRelativeDirPath"
+    private val sdRootDirTxtName = "sdRootDirPath.txt"
+    val sdRootDirTxtPath = "${cmdclickSharePrefDirPath}/${sdRootDirTxtName}"
     private const val cmdclickNonitorDirName = "monitor"
     private val cmdclickMonitorRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickNonitorDirName"
     val cmdclickMonitorDirPath =  "$rootPath/$cmdclickMonitorRelativeDirPath"

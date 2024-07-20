@@ -4,13 +4,13 @@ import com.puutaro.commandclick.util.CcPathTool
 
 object VirtualSubFannel {
     fun makePath(
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ): String {
         val fannelDirName = CcPathTool.makeFannelDirName(
-            SharePrefTool.getCurrentFannelName(readSharePreferenceMap),
+            FannelInfoTool.getCurrentFannelName(fannelInfoMap),
         )
         return listOf(
-            SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap),
+            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
             fannelDirName,
             "virtualSubFannel.js",
         ).joinToString("/")

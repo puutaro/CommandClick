@@ -16,7 +16,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
@@ -32,12 +32,12 @@ object ListContentsSelectSpinnerViewProducer {
         val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val fannelInfoMap = editParameters.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val scriptName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val scriptName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -165,13 +165,13 @@ object ListContentsSelectSpinnerViewProducer {
         ) return
         val itemTextListCon = when(compListOneLineCon.startsWith(filePrefix)){
             true -> {
-                val readSharePreferenceMap = editParameters.readSharePreffernceMap
+                val fannelInfoMap = editParameters.fannelInfoMap
                 val setReplaceVariableMap = editParameters.setReplaceVariableMap
-                val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-                    readSharePreferenceMap
+                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+                    fannelInfoMap
                 )
-                val currentFannelName = SharePrefTool.getCurrentFannelName(
-                    readSharePreferenceMap
+                val currentFannelName = FannelInfoTool.getCurrentFannelName(
+                    fannelInfoMap
                 )
                 val compListFilePathObj = File(compListOneLineCon.removePrefix(filePrefix))
                 ReadText(

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
@@ -14,7 +14,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,12 +74,12 @@ object IndexInitHandler {
         FileSystems.createDirs(
             "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
         )
-        SharePrefTool.putAllSharePref(
+        FannelInfoTool.putAllFannelInfo(
             startUpPref,
             currentAppDirPath,
-            SharePrefferenceSetting.current_fannel_name.defalutStr,
-            SharePrefferenceSetting.on_shortcut.defalutStr,
-            SharePrefferenceSetting.current_fannel_state.defalutStr
+            FannelInfoSetting.current_fannel_name.defalutStr,
+            FannelInfoSetting.on_shortcut.defalutStr,
+            FannelInfoSetting.current_fannel_state.defalutStr
         )
 
         val pageSearchToolbarManager =
@@ -130,7 +130,7 @@ object IndexInitHandler {
             }
             CmdClickSystemAppDir.createPreferenceFannel(
                 context,
-                cmdIndexFragment.readSharePreferenceMap,
+                cmdIndexFragment.fannelInfoMap,
             )
 
             StartFileMaker.makeCmdTerminalListFiles(

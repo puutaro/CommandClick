@@ -9,7 +9,7 @@ import android.os.Bundle
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
@@ -17,8 +17,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
+import com.puutaro.commandclick.util.SharePrefTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,21 +58,21 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        val preferenceAppDirPath = SharePrefTool.getStringFromSharePref(
+        val preferenceAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
-        val preferenceScriptFileName = SharePrefTool.getStringFromSharePref(
+        val preferenceScriptFileName = FannelInfoTool.getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
-        val onShortcut = SharePrefTool.getStringFromSharePref(
+        val onShortcut = FannelInfoTool.getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.on_shortcut
+            FannelInfoSetting.on_shortcut
         )
-        val fannelState = SharePrefTool.getStringFromSharePref(
+        val fannelState = FannelInfoTool.getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.current_fannel_state
+            FannelInfoSetting.current_fannel_state
         )
 
         val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
@@ -107,7 +108,7 @@ class InitFragmentManager(
             preferenceScriptFileName,
             fannelState,
         )
-        val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
+        val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
             preferenceAppDirPath,
             preferenceScriptFileName,
             onShortcut,
@@ -128,7 +129,7 @@ class InitFragmentManager(
                     cmdVariableEditFragmentTag,
                     activity.getString(R.string.edit_terminal_fragment),
                     EditFragmentArgs(
-                        readSharePreferenceMapForNext,
+                        fannelInfoMapForNext,
                         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
                     ),
                     true
@@ -146,12 +147,12 @@ class InitFragmentManager(
         SharePrefTool.putSharePref(
             startUpPref,
             mapOf(
-                SharePrefferenceSetting.current_fannel_name.name
-                        to SharePrefferenceSetting.current_fannel_name.defalutStr,
-                SharePrefferenceSetting.on_shortcut.name
-                        to SharePrefferenceSetting.on_shortcut.defalutStr,
-                SharePrefferenceSetting.current_fannel_state.name
-                        to SharePrefferenceSetting.current_fannel_state.defalutStr
+                FannelInfoSetting.current_fannel_name.name
+                        to FannelInfoSetting.current_fannel_name.defalutStr,
+                FannelInfoSetting.on_shortcut.name
+                        to FannelInfoSetting.on_shortcut.defalutStr,
+                FannelInfoSetting.current_fannel_state.name
+                        to FannelInfoSetting.current_fannel_state.defalutStr
             )
         )
         exedRestartIntent(
@@ -162,19 +163,19 @@ class InitFragmentManager(
 
     private fun execShortcutIntent() {
         val recieveAppDirPath = intent.getStringExtra(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
         )
         val fannelState = intent.getStringExtra(
-            SharePrefferenceSetting.current_fannel_state.name
-        ) ?: SharePrefferenceSetting.current_fannel_state.defalutStr
+            FannelInfoSetting.current_fannel_state.name
+        ) ?: FannelInfoSetting.current_fannel_state.defalutStr
         if (
             recieveAppDirPath.isNullOrEmpty()
         ) return
 
         val currentShellFileName = intent.getStringExtra(
-            SharePrefferenceSetting.current_fannel_name.name
-        ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
-        SharePrefTool.putAllSharePref(
+            FannelInfoSetting.current_fannel_name.name
+        ) ?: FannelInfoSetting.current_fannel_name.defalutStr
+        FannelInfoTool.putAllFannelInfo(
             startUpPref,
             recieveAppDirPath,
             currentShellFileName,

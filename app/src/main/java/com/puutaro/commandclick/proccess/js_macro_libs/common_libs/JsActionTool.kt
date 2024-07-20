@@ -5,7 +5,6 @@ import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,10 +17,9 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,13 +50,13 @@ object JsActionTool {
 
     private fun makeSetRepValMap(
         fragment: Fragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         extraRepValMap: Map<String, String>?
     ): Map<String, String>? {
         val virtualSubFannelPath = VirtualSubFannel.makePath(
-            readSharePreferenceMap
+            fannelInfoMap
         )
-        val setReplaceVariableMapSrc = SharePrefTool.getReplaceVariableMap(
+        val setReplaceVariableMapSrc = FannelInfoTool.getReplaceVariableMap(
             fragment,
             virtualSubFannelPath
         )
@@ -85,14 +83,14 @@ object JsActionTool {
 
     fun makeJsActionMap(
         fragment: Fragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMapSrc: Map<String, String>?,
         mainOrSubFannelPath: String,
     ): Map<String, String>? {
         val setReplaceVariableMap = makeSetRepValMap(
             fragment,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMapSrc
         )
         makeReplaceVariableTsv(
@@ -104,7 +102,7 @@ object JsActionTool {
             null
         )
         val keyToSubMapTypeMapToKeyToSubKeyConListByValidKey = createKeyToSubMapTypeMap(
-            readSharePreferenceMap,
+            fannelInfoMap,
             keyToSubKeyConWithReflectRepValDefalt,
             setReplaceVariableMap,
         ) ?: return null
@@ -164,7 +162,7 @@ object JsActionTool {
         }
         val jsActionMapToJsConOnlyReplace = extractJsDataMap(
             fragment,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
@@ -403,14 +401,14 @@ object JsActionTool {
 
     private fun extractJsDataMap(
         fragment: Fragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
     ): Pair<Map<String, String>, String?>? {
         val jsConToJsConOnlyReplace = convertJsCon(
             fragment,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
@@ -507,7 +505,7 @@ object JsActionTool {
     }
 
     private fun createKeyToSubMapTypeMap(
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<
@@ -516,7 +514,7 @@ object JsActionTool {
             >? {
         val keyToSubKeyMapListToKeyToSubKeyConListByValidKey = KeyToSubKeyMapListMaker.make(
             keyToSubKeyCon,
-            readSharePreferenceMap,
+            fannelInfoMap,
             setReplaceVariableMap,
         )
         val keyToSubKeyMapList =
@@ -650,7 +648,7 @@ object JsActionTool {
 
     private fun convertJsCon(
         fragment: Fragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
@@ -708,15 +706,15 @@ object JsActionTool {
 //        )
         val jsCon = JavaScriptLoadUrl.makeRawJsConFromContents(
             fragment,
-            readSharePreferenceMap,
+            fannelInfoMap,
             jsConBeforeJsImport,
             setReplaceVariableMap,
         )
         val jsConOnlyReplace = SetReplaceVariabler.execReplaceByReplaceVariables(
             jsConBeforeJsImport,
             setReplaceVariableMap,
-            SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap),
-            SharePrefTool.getCurrentFannelName(readSharePreferenceMap),
+            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            FannelInfoTool.getCurrentFannelName(fannelInfoMap),
         )
         return jsCon to jsConOnlyReplace
     }
@@ -753,14 +751,14 @@ private object KeyToSubKeyMapListMaker {
 
     fun make(
         keyToSubKeyCon: String?,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<List<Pair<String, Map<String, String>>>, List<Pair<String, String>>> {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val keyToSubKeyConListSrc = makeKeyToSubConPairListByValidKey(
             keyToSubKeyCon

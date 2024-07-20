@@ -8,7 +8,6 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,12 +29,11 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.io.File
 
@@ -50,7 +48,7 @@ class CommandIndexFragment: Fragment() {
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var readSharePreferenceMap: Map<String, String> = mapOf()
+    var fannelInfoMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
@@ -136,7 +134,7 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        readSharePreferenceMap = SharePrefTool.makeReadSharePrefMapByShare(
+        fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             startUpPref
         )
 //        FDialogTempFile.removeByCoroutine(
@@ -149,7 +147,7 @@ class CommandIndexFragment: Fragment() {
         val makeListView = MakeListView(
             binding,
             this,
-            readSharePreferenceMap
+            fannelInfoMap
         )
         val fannelIndexListAdapter = makeListView.makeList(
             requireContext()
@@ -313,7 +311,7 @@ class CommandIndexFragment: Fragment() {
 
         val toolBarInternetButtonControl = ToolBarInternetButtonControl(
             this,
-            readSharePreferenceMap
+            fannelInfoMap
         )
         toolBarInternetButtonControl.interneButtontSetOnClickListener()
     }

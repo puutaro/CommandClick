@@ -2,19 +2,21 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
-import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.SettingVariableReader
+import com.puutaro.commandclick.util.file.SdCardTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+
 
 object ConfigFromPreferenceFileSetterForTerm {
 
@@ -38,12 +40,12 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val readSharedPreferences = terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharedPreferences
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharedPreferences
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
 
         val settingVariableListFromConfig = CommandClickVariables.extractValListFromHolder(
@@ -115,6 +117,25 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_COLOR,
             CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
         )
+        val onRootfsSdCardSaveSelectsOn = SettingVariableSelects.OnRootfsSdCardSaveSelects.ON.name
+        SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.ON_ROOTFS_SDCARD_SAVE,
+            String(),
+            String(),
+            String(),
+            listOf(onRootfsSdCardSaveSelectsOn),
+        ).let {
+            val isRootfsSdCardSave =
+                it == onRootfsSdCardSaveSelectsOn
+            val isCreate =
+                isRootfsSdCardSave
+                        && SdCardTool.isAvailable(context)
+            val listener =
+                context as? TerminalFragment.GetSdcardDirListenerForTerm
+            listener?.getSdcardDirForTerm(isCreate)
+        }
+
         terminalFragment.terminalFontColor = SettingVariableReader.getStrValue(
             settingVariableListFromConfig,
             CommandClickScriptVariable.TERMINAL_FONT_COLOR,
@@ -123,7 +144,7 @@ object ConfigFromPreferenceFileSetterForTerm {
 
         CmdClickSystemAppDir.createPreferenceFannel(
             context,
-            readSharedPreferences,
+            fannelInfoMap,
         )
         val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
         val currentScriptFileName = ValidFannelNameGetterForTerm.get(
@@ -207,7 +228,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         )
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
-            terminalFragment.readSharePreferenceMap,
+            terminalFragment.fannelInfoMap,
             terminalFragment.setReplaceVariableMap,
             settingVariableList ?: emptyList(),
         )
@@ -437,7 +458,7 @@ private fun makeSettingVariableListForTerm(
         settingSectionEnd
     )
     return FannelStateRooterManager.makeSettingVariableList(
-        terminalFragment.readSharePreferenceMap,
+        terminalFragment.fannelInfoMap,
         terminalFragment.setReplaceVariableMap,
         settingSectionStart,
         settingSectionEnd,

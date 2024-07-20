@@ -12,7 +12,7 @@ import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
 
@@ -184,17 +184,17 @@ class GetFileForEdit(
     private fun getEditFragment(
     ): EditFragment? {
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val readSharePreferenceMap = SharePrefTool.makeReadSharePrefMapByShare(
+        val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             sharedPref
         )
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val currentFannelState = SharePrefTool.getCurrentStateName(
-            readSharePreferenceMap
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
         return TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,

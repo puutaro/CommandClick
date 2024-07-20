@@ -14,7 +14,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_l
 import com.puutaro.commandclick.proccess.history.UrlHistoryRegister
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.*
 
@@ -90,15 +90,15 @@ object WrapWebHistoryUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val readSharedPreferences = terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharedPreferences
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharedPreferences
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val fannelState = SharePrefTool.getCurrentStateName(
-            readSharedPreferences
+        val fannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

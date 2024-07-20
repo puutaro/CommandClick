@@ -5,7 +5,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object FindListenerSetter {
@@ -17,15 +17,15 @@ object FindListenerSetter {
         binding.terminalWebView.setFindListener {
                 activeMatchOrdinal, numberOfMatches, isDoneCounting ->
             if(!isDoneCounting) return@setFindListener
-            val readSharedPreferences = terminalFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-                readSharedPreferences
+            val fannelInfoMap = terminalFragment.fannelInfoMap
+            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+                fannelInfoMap
             )
-            val currentFannelName = SharePrefTool.getCurrentFannelName(
-                readSharedPreferences
+            val currentFannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
             )
-            val fannelState = SharePrefTool.getCurrentStateName(
-                readSharedPreferences
+            val fannelState = FannelInfoTool.getCurrentStateName(
+                fannelInfoMap
             )
             val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
                 currentAppDirPath,

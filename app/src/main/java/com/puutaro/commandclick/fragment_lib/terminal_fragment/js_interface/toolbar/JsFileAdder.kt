@@ -16,7 +16,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
 
@@ -25,16 +25,16 @@ class JsFileAdder(
 ) {
 
     private val activity = terminalFragment.activity
-    private val readSharePreferenceMap =
-        terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreferenceMap
+    private val fannelInfoMap =
+        terminalFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
-    private val currentFannelName = SharePrefTool.getCurrentFannelName(
-        readSharePreferenceMap
+    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
+        fannelInfoMap
     )
-    private val currentFannelState = SharePrefTool.getCurrentStateName(
-        readSharePreferenceMap
+    private val currentFannelState = FannelInfoTool.getCurrentStateName(
+        fannelInfoMap
     )
 
     @JavascriptInterface

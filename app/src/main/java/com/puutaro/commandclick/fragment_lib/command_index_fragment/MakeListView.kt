@@ -15,16 +15,16 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnQrLongClickDo
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 
 class MakeListView(
     private val binding: CommandIndexFragmentBinding,
     private val cmdIndexFragment: CommandIndexFragment,
-    readSharePreffernceMap: Map<String, String>,
+    fannelInfoMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharePreffernceMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
     private val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
     private val cmdListView = binding.cmdList

@@ -5,16 +5,16 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object ExecOkForEdit{
     fun execOkForEdit(
         activity: MainActivity,
         callOwnerFragmentTag : String?,
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ) {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
         val supportFragmentManager = activity.supportFragmentManager
         if(

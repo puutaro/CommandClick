@@ -2,17 +2,18 @@ package com.puutaro.commandclick.util.state
 
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.SharePrefTool
 import java.io.File
 
 object FannelInfoTool {
 
-    fun getReadSharePrefMap(
+    fun getFannelInfoMap(
         fragment: Fragment,
         mainOrSubFannelPath: String?,
     ): Map<String, String> {
@@ -20,9 +21,9 @@ object FannelInfoTool {
             mainOrSubFannelPath.isNullOrEmpty()
         ){
             return when(fragment){
-                is CommandIndexFragment -> fragment.readSharePreferenceMap
-                is EditFragment -> fragment.readSharePreferenceMap
-                is TerminalFragment -> fragment.readSharePreferenceMap
+                is CommandIndexFragment -> fragment.fannelInfoMap
+                is EditFragment -> fragment.fannelInfoMap
+                is TerminalFragment -> fragment.fannelInfoMap
                 else -> mapOf()
             }
         }
@@ -33,56 +34,56 @@ object FannelInfoTool {
             CcPathTool.getMainFannelFilePath(mainOrSubFannelPath)
         ).name
         return mapOf(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
                     to currentAppDirPath,
-            SharePrefferenceSetting.current_fannel_name.name
+            FannelInfoSetting.current_fannel_name.name
                     to currentFannelName,
         )
 
     }
 
     fun getCurrentAppDirPath(
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ): String {
-        return getValFromReadSharePrefMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        return getValFromFannelInfoMap(
+            fannelInfoMap,
+            FannelInfoSetting.current_app_dir
         )
     }
 
     fun getCurrentFannelName(
-        readSharePreferenceMap: Map<String, String>?,
+        fannelInfoMap: Map<String, String>?,
     ): String {
         if(
-            readSharePreferenceMap.isNullOrEmpty()
+            fannelInfoMap.isNullOrEmpty()
         ) return String()
-        return getValFromReadSharePrefMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        return getValFromFannelInfoMap(
+            fannelInfoMap,
+            FannelInfoSetting.current_fannel_name
         )
     }
 
     fun getCurrentStateName(
-        readSharePreferenceMap: Map<String, String>?,
+        fannelInfoMap: Map<String, String>?,
     ): String {
         if(
-            readSharePreferenceMap.isNullOrEmpty()
+            fannelInfoMap.isNullOrEmpty()
         ) return String()
-        return getValFromReadSharePrefMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_state
+        return getValFromFannelInfoMap(
+            fannelInfoMap,
+            FannelInfoSetting.current_fannel_state
         )
     }
 
     fun getOnShortcut(
-        readSharePreferenceMap: Map<String, String>?,
+        fannelInfoMap: Map<String, String>?,
     ): String {
         if(
-            readSharePreferenceMap.isNullOrEmpty()
+            fannelInfoMap.isNullOrEmpty()
         ) return String()
-        return getValFromReadSharePrefMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.on_shortcut
+        return getValFromFannelInfoMap(
+            fannelInfoMap,
+            FannelInfoSetting.on_shortcut
         )
     }
 
@@ -104,19 +105,19 @@ object FannelInfoTool {
         )
     }
 
-    fun getStringFromSharePref(
+    fun getStringFromFannelInfo(
         sharedPref: SharedPreferences?,
-        sharePreferenceSetting: SharePrefferenceSetting
+        fannelInfoSetting: FannelInfoSetting
     ): String {
-        val defaultStrValue = sharePreferenceSetting.defalutStr
+        val defaultStrValue = fannelInfoSetting.defalutStr
         if(sharedPref == null) return defaultStrValue
         return sharedPref.getString(
-            sharePreferenceSetting.name,
+            fannelInfoSetting.name,
             defaultStrValue
         ) ?: defaultStrValue
     }
 
-    fun putAllSharePref(
+    fun putAllFannelInfo(
         sharedPref: SharedPreferences?,
         currentAppDirPath: String,
         currentScriptFileName: String,
@@ -125,97 +126,80 @@ object FannelInfoTool {
 
     ){
         val sharePrefMap = mapOf(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
                     to currentAppDirPath,
-            SharePrefferenceSetting.current_fannel_name.name
+            FannelInfoSetting.current_fannel_name.name
                     to currentScriptFileName,
-            SharePrefferenceSetting.on_shortcut.name
+            FannelInfoSetting.on_shortcut.name
                     to onShortcutValue,
-            SharePrefferenceSetting.current_fannel_state.name
+            FannelInfoSetting.current_fannel_state.name
                     to currentFannelState,
         )
-        putSharePref (
+        SharePrefTool.putSharePref (
             sharedPref,
             sharePrefMap
         )
     }
 
-
-    fun putSharePref (
-        sharedPref: SharedPreferences?,
-        sharedPrefKeyValeuMap: Map<String, String>
-    ){
-        if(sharedPref == null) return
-        with(sharedPref.edit()) {
-            sharedPrefKeyValeuMap.forEach { currentKey, currentValue ->
-                putString(
-                    currentKey,
-                    currentValue
-                )
-            }
-            commit()
-        }
-    }
-
-    fun makeReadSharePrefMapByShare(
+    fun makeFannelInfoMapByShare(
         startUpPref: SharedPreferences?
     ): Map<String, String> {
-        val sharedCurrentAppPath = getStringFromSharePref(
+        val sharedCurrentAppPath = getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
 
-        val sharedCurrentShellFileName = getStringFromSharePref(
+        val sharedCurrentShellFileName = getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
 
-        val sharedOnShortcut = getStringFromSharePref(
+        val sharedOnShortcut = getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.on_shortcut
+            FannelInfoSetting.on_shortcut
         )
-        val currentFannelState = getStringFromSharePref(
+        val currentFannelState = getStringFromFannelInfo(
             startUpPref,
-            SharePrefferenceSetting.current_fannel_state
+            FannelInfoSetting.current_fannel_state
         )
 
         return mapOf(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
                     to sharedCurrentAppPath,
-            SharePrefferenceSetting.current_fannel_name.name
+            FannelInfoSetting.current_fannel_name.name
                     to sharedCurrentShellFileName,
-            SharePrefferenceSetting.on_shortcut.name
+            FannelInfoSetting.on_shortcut.name
                     to sharedOnShortcut,
-            SharePrefferenceSetting.current_fannel_state.name
+            FannelInfoSetting.current_fannel_state.name
                     to currentFannelState
         )
     }
 
-    fun makeReadSharePrefMapByString(
+    fun makeFannelInfoMapByString(
         currentAppDirPath: String = String(),
         currentFannelName: String = String(),
         currentFannelState: String = String()
     ): Map<String, String> {
         return mapOf(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
                     to currentAppDirPath,
-            SharePrefferenceSetting.current_fannel_name.name
+            FannelInfoSetting.current_fannel_name.name
                     to currentFannelName,
-            SharePrefferenceSetting.current_fannel_state.name
+            FannelInfoSetting.current_fannel_state.name
                     to currentFannelState,
         )
     }
 
-    private fun getValFromReadSharePrefMap(
-        readSharePreferenceMap: Map<String, String>,
-        sharePrefferenceSetting: SharePrefferenceSetting
+    private fun getValFromFannelInfoMap(
+        fannelInfoMap: Map<String, String>,
+        fannelInfoSetting: FannelInfoSetting
     ): String {
         return try {
-            readSharePreferenceMap.get(
-                sharePrefferenceSetting.name
-            ) ?: sharePrefferenceSetting.defalutStr
+            fannelInfoMap.get(
+                fannelInfoSetting.name
+            ) ?: fannelInfoSetting.defalutStr
         } catch (e: Exception){
-            sharePrefferenceSetting.defalutStr
+            fannelInfoSetting.defalutStr
         }
     }
 }

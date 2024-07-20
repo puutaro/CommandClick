@@ -7,14 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.VolumeUtils
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object ExecBackstackHandle {
@@ -155,17 +155,17 @@ private object BackstackManager {
         supportFragmentManager: FragmentManager,
     ){
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
-            SharePrefferenceSetting.current_app_dir
+            FannelInfoSetting.current_app_dir
         )
-        val currentFannelName = SharePrefTool.getStringFromSharePref(
+        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
-            SharePrefferenceSetting.current_fannel_name
+            FannelInfoSetting.current_fannel_name
         )
-        val currentFannelState = SharePrefTool.getStringFromSharePref(
+        val currentFannelState = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
-            SharePrefferenceSetting.current_fannel_state
+            FannelInfoSetting.current_fannel_state
         )
         val targetFragmentInstance = TargetFragmentInstance()
         val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(

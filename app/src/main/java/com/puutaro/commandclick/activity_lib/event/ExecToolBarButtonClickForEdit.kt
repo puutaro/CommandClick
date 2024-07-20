@@ -7,11 +7,11 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCommandEdit
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecCancel
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOkForEdit
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 
 object ExecToolBarButtonClickForEdit {
@@ -19,7 +19,7 @@ object ExecToolBarButtonClickForEdit {
         activity: MainActivity,
         callOwnerFragmentTag : String?,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         enableCmdEdit: Boolean,
     ){
         when(toolbarButtonBariantForEdit){
@@ -27,7 +27,7 @@ object ExecToolBarButtonClickForEdit {
                 ExecOkForEdit.execOkForEdit(
                     activity,
                     callOwnerFragmentTag,
-                    readSharePreferenceMap,
+                    fannelInfoMap,
                 )
             ToolbarButtonBariantForEdit.HISTORY ->
                 cancelHandler(
@@ -36,29 +36,29 @@ object ExecToolBarButtonClickForEdit {
                 )
             ToolbarButtonBariantForEdit.EDIT -> {
                 val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
-                val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-                    readSharePreferenceMap
+                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+                    fannelInfoMap
                 )
 
-                val currentFannelName = SharePrefTool.getCurrentFannelName(
-                    readSharePreferenceMap
+                val currentFannelName = FannelInfoTool.getCurrentFannelName(
+                    fannelInfoMap
                 )
 
                 val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
                     currentAppDirPath,
                     currentFannelName,
                 )
-                val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
+                val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
                     currentAppDirPath,
                     currentFannelName,
                     onShortcutOff,
-                    SharePrefferenceSetting.current_fannel_state.defalutStr,
+                    FannelInfoSetting.current_fannel_state.defalutStr,
                 )
                 ExecCommandEdit.execCommandEdit(
                     activity,
                     settingEditFragmentTag,
                     EditFragmentArgs(
-                        readSharePreferenceMapForNext,
+                        fannelInfoMapForNext,
                         EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT,
                     ),
                     activity.getString(R.string.edit_terminal_fragment)

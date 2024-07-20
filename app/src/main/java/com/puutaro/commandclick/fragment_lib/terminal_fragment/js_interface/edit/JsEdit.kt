@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupp
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import java.io.File
@@ -62,17 +62,17 @@ class JsEdit(
     fun getFromEditText(
         targetVariableName: String,
     ): String {
-        val readSharedPreferences =
-            terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharedPreferences
+        val fannelInfoMap =
+            terminalFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
 
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharedPreferences
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val fannelState = SharePrefTool.getCurrentStateName(
-            readSharedPreferences
+        val fannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,

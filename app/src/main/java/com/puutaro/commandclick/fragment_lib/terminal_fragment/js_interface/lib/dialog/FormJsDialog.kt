@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -167,7 +167,7 @@ class FormJsDialog(
                 R.id.form_dialog_contents_linear
             ) ?: return
         val virtualReadPreffrenceMap = mapOf(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
                 to terminalFragment.currentAppDirPath
         )
         val editParameters = EditParameters(

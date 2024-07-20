@@ -59,7 +59,7 @@ object DeleteSettingsForListIndex {
         ) return
         JsActionHandler.handle(
             editFragment,
-            editFragment.readSharePreferenceMap,
+            editFragment.fannelInfoMap,
             String(),
             editFragment.setReplaceVariableMap,
             jsActionCon

@@ -21,7 +21,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
@@ -153,12 +153,12 @@ object EditableListContentsSelectGridViewProducer {
         gridView: GridView,
         elcbMap: Map<String, String>?,
     ){
-        val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val fannelInfoMap = editParameters.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val scriptName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val scriptName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val listContentsFilePath = elcbMap?.get(
             ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name

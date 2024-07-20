@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 
@@ -12,15 +12,15 @@ class JsUrlAdder(
     terminalFragment: TerminalFragment
 ) {
     private val activity = terminalFragment.activity
-    private val readSharedPreferences = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-        readSharedPreferences
+    private val fannelInfoMap = terminalFragment.fannelInfoMap
+    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+        fannelInfoMap
     )
-    private val currentFannelName = SharePrefTool.getCurrentFannelName(
-        readSharedPreferences
+    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
+        fannelInfoMap
     )
-    private val currentFannelState = SharePrefTool.getCurrentStateName(
-        readSharedPreferences
+    private val currentFannelState = FannelInfoTool.getCurrentStateName(
+        fannelInfoMap
     )
 
     @JavascriptInterface

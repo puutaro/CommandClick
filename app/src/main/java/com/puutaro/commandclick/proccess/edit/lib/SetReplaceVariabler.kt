@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.edit.lib
 import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
@@ -28,14 +28,14 @@ object SetReplaceVariabler {
             settingVariableList.isNullOrEmpty()
         ) return null
 
-        val readSharePrefMap = mapOf(
-            SharePrefferenceSetting.current_app_dir.name to currentAppDirPath,
-            SharePrefferenceSetting.current_fannel_name.name to currentScriptFileName,
+        val fannelInfoMap = mapOf(
+            FannelInfoSetting.current_app_dir.name to currentAppDirPath,
+            FannelInfoSetting.current_fannel_name.name to currentScriptFileName,
         )
         val noImportRepValMap = execMakeSetReplaceVariableMap(
             context,
             settingVariableList,
-            readSharePrefMap,
+            fannelInfoMap,
             null,
             false
         )
@@ -62,7 +62,7 @@ object SetReplaceVariabler {
         return execMakeSetReplaceVariableMap(
             context,
             settingVariableList,
-            readSharePrefMap,
+            fannelInfoMap,
             noImportRepValMap,
             true
         )
@@ -71,7 +71,7 @@ object SetReplaceVariabler {
     private fun execMakeSetReplaceVariableMap(
         context: Context?,
         settingVariableList: List<String>?,
-        readSharePrefMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         noImportRepValMap: Map<String, String>?,
         onImport: Boolean
     ): Map<String, String>? {
@@ -80,7 +80,7 @@ object SetReplaceVariabler {
         ) return null
         val setReplaceVariableMapBeforeRecursiveReplace = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.SET_REPLACE_VARIABLE,
-            readSharePrefMap,
+            fannelInfoMap,
             noImportRepValMap,
             settingVariableList,
             onImport

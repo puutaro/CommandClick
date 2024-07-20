@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
@@ -50,10 +50,10 @@ object CmdClickSystemAppDir {
 
     fun createPreferenceFannel(
         context: Context?,
-        readSharePrefMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
     ){
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePrefMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
         FannelVersion.create(
             context,

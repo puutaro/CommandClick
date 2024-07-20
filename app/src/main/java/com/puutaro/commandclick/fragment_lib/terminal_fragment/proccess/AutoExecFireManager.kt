@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
@@ -9,7 +8,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import java.io.File
@@ -106,7 +104,7 @@ object AutoExecFireManager {
                 cmdclickPreferenceJsName
             ).absolutePath
             else -> FannelStateRooterManager.getSettingFannelPath(
-                terminalFragment.readSharePreferenceMap,
+                terminalFragment.fannelInfoMap,
                 terminalFragment.setReplaceVariableMap
             )
         }
@@ -126,7 +124,7 @@ object AutoExecFireManager {
                 )
             else ->
                 FannelStateRooterManager.makeSettingVariableList(
-                    terminalFragment.readSharePreferenceMap,
+                    terminalFragment.fannelInfoMap,
                     terminalFragment.setReplaceVariableMap,
                     terminalFragment.settingSectionStart,
                     terminalFragment.settingSectionEnd,

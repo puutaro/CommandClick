@@ -9,7 +9,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,12 +21,12 @@ object OkButtonHandler {
         editFragment: EditFragment,
     ) {
         val context = editFragment.context
-        val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val enableCmdEdit = editFragment.enableCmdEdit
         val onPassCmdVariableEdit =

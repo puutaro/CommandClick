@@ -3,12 +3,13 @@
 exec repbash "${0}" \
 	-t "\${UBUNTU_ENV_TSV_PATH}"
 
-echo "extract.." >> "${MONITOR_FILE_PATH}"
+echo "[1/4] setup.." >> "${MONITOR_FILE_PATH}"
 sudo apt-get clean
 sudo apt-get autoremove
 sudo pip cache purge
 sudo pip3 cache purge
 dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d' | xargs sudo apt-get -y purge
+echo "[2/4] extract.." >> "${MONITOR_FILE_PATH}"
 mkdir -p "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}"
 cd / 
 readonly ORDINALY_EXCLUDE_CON="$(\
@@ -69,7 +70,7 @@ awk \
 	 		tar_cmd_body = sprintf("sudo tar -cpPf \x22%s\x22", rootfs_path)
 	 		total_exclude_con = sprintf("%s %s", ORDINALY_EXCLUDE_CON, exclude_ops)
 	 		tar_ops = "--one-file-system "
-	 		output_cmd = sprintf("echo \x22[%d/%d]\x22", k, len_extra_exclude_list)
+	 		output_cmd = sprintf("echo \x22(%d/%d)\x22", k, len_extra_exclude_list)
 	 		tar_cmd = sprintf("%s %s %s /", \
 	 			tar_cmd_body, \
 	 			total_exclude_con, \
@@ -94,12 +95,27 @@ awk \
 
 rm -rf "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}"
 mkdir "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}"
-echo "cp rootfs.." >> "${MONITOR_FILE_PATH}"
-sudo cp -rvf \
-	"${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
-	"${UBUNTU_BACKUP_DIR_PATH}/" \
-	>> "${MONITOR_FILE_PATH}"
-echo "crean up.." >> "${MONITOR_FILE_PATH}"
+echo "[3/4] cp rootfs.." >> "${MONITOR_FILE_PATH}"
+readonly is_inner_storage="$(\
+	echo "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}" \
+	| grep -E "^${APP_ROOT_PATH}"\
+)"
+case "${is_inner_storage}" in
+	"") 
+		cp2sd \
+			-w "${UBUNTU_SERVICE_TEMP_DIR_PATH}/backup_watch.txt" \
+			-f "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
+			-t "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}" \
+			>> "${MONITOR_FILE_PATH}"
+		;;
+	*)
+		sudo cp -rvf \
+			"${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
+			"${UBUNTU_BACKUP_DIR_PATH}/" \
+			>> "${MONITOR_FILE_PATH}"
+		;;
+esac
+echo "[4/4] crean up.." >> "${MONITOR_FILE_PATH}"
 rm -rf "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}"
 echo "Comp & Click CANCEL" >> "${MONITOR_FILE_PATH}"
 bash "${NOTI_MANAGER_SHELL_PATH}"

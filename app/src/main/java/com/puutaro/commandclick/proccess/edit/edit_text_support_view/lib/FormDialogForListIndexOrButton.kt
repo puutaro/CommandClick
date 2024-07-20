@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn.*
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -139,9 +139,9 @@ class FormDialogForListIndexOrButton(
 
 
         val virtualReadPreffrenceMap = mapOf(
-            SharePrefferenceSetting.current_app_dir.name
+            FannelInfoSetting.current_app_dir.name
                     to parentDirPath,
-            SharePrefferenceSetting.current_fannel_name.name
+            FannelInfoSetting.current_fannel_name.name
                     to selectedScriptName
         )
 

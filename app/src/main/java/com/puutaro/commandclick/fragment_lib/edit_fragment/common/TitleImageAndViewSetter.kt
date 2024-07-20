@@ -4,12 +4,11 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object TitleImageAndViewSetter {
 
@@ -52,14 +51,14 @@ object TitleImageAndViewSetter {
     fun makeDefaultTitle(
         editFragment: EditFragment,
     ): String {
-        val readSharePreferenceMap =
-            editFragment.readSharePreferenceMap
+        val fannelInfoMap =
+            editFragment.fannelInfoMap
 
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val backstackOrder = makeBackstackCount(
             editFragment
@@ -103,14 +102,14 @@ object TitleImageAndViewSetter {
     private fun setTitleImage(
         editFragment: EditFragment,
     ){
-        val readSharePreferenceMap =
-            editFragment.readSharePreferenceMap
+        val fannelInfoMap =
+            editFragment.fannelInfoMap
 
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val binding = editFragment.binding
         val editTitleImageView = binding.editTitleImage
@@ -158,14 +157,14 @@ private object EditTextMaker {
         val setReplaceVariableMap =
             editFragment.setReplaceVariableMap
 
-        val readSharePreferenceMap =
-            editFragment.readSharePreferenceMap
+        val fannelInfoMap =
+            editFragment.fannelInfoMap
 
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val shellConSrc = editTextPropertyMap.get(
             TitleTextSettingKey.SHELL_CON.key

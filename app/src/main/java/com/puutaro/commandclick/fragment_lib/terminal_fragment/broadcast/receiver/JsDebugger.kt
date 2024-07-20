@@ -284,7 +284,7 @@ object JsDebugger {
             ?: return
         removeScrollPosiFile(
             terminalFragment.activity,
-            terminalFragment.readSharePreferenceMap
+            terminalFragment.fannelInfoMap
         )
         val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
             UsePath.jsSrcAcDebugReportPath,
@@ -322,7 +322,7 @@ object JsDebugger {
     ){
         removeScrollPosiFile(
             terminalFragment.activity,
-            terminalFragment.readSharePreferenceMap
+            terminalFragment.fannelInfoMap
         )
         val context = terminalFragment.context
             ?: return
@@ -407,12 +407,12 @@ object JsDebugger {
 
     private fun removeScrollPosiFile(
         activity: FragmentActivity?,
-        readSharePreferenceMap: Map<String, String>
+        fannelInfoMap: Map<String, String>
     ){
         val currentFannelHtmlPosiDirPath =
             TxtHtmlDescriber.makeCurrentFannelHtmlPosiDirPath(
                 activity,
-                readSharePreferenceMap,
+                fannelInfoMap,
             )
         listOf(
             UsePath.execJsDebugName,

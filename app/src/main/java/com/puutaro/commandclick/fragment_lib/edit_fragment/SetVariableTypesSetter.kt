@@ -5,25 +5,25 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object SetVariableTypesSetterForEdit {
 
     fun set(
         editFragment: EditFragment,
-        readSharePreferenceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         settingVariableList: List<String>?,
     ): List<String> {
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
 
         val setVariableTypeListSrc = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.SET_VARIABLE_TYPE,
-            readSharePreferenceMap,
+            fannelInfoMap,
             editFragment.setReplaceVariableMap,
             settingVariableList,
         )

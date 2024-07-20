@@ -4,7 +4,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
-enum class SharePrefferenceSetting(
+enum class FannelInfoSetting(
     val defalutStr: String
 ) {
     current_app_dir(UsePath.cmdclickDefaultAppDirPath),

@@ -5,7 +5,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object FilePrefixGetter {
 
@@ -15,12 +15,12 @@ object FilePrefixGetter {
         keyName: String,
     ): String? {
         val filePrefix = EditSettings.filePrefix
-        val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         val listDirGetValue = configMap?.get(keyName)
@@ -50,12 +50,12 @@ object FilePrefixGetter {
         replaceListDirValue: String,
         keyName: String,
     ): String? {
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
         val listDirFilePath = replaceListDirValue.removePrefix(ConfigMapTool.filePrefix)
         return ReadText(listDirFilePath).readText().let {

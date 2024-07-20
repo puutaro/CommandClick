@@ -46,7 +46,7 @@ object ExecCopyFileHere {
             listIndexForEditAdapter.listIndexList[listIndexPosition].let {
                 val titleConList = it.split("\t")
                 val title = titleConList.firstOrNull()?.let {
-                    "${it}_${CommandClickScriptVariable.makeCopyPrefix()}"
+                    "${it}_${CommandClickScriptVariable.makeRndPrefix()}"
                 }
                 val con = titleConList.lastOrNull()
                 listOf(

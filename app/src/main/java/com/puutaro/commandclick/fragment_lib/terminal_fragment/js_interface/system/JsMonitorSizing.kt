@@ -21,7 +21,7 @@ class JsMonitorSizing(
         val listener = context as? TerminalFragment.OnMonitorSizeChangeingForTerm
             ?: return
         listener.onMonitorSizeChangeingForTerm(
-            terminalFragment.readSharePreferenceMap
+            terminalFragment.fannelInfoMap
         )
     }
 }

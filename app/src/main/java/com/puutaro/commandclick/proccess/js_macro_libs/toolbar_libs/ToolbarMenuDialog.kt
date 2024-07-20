@@ -12,7 +12,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
@@ -20,9 +19,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.SharePrefTool
-import java.io.File
+import com.puutaro.commandclick.util.state.FannelInfoTool
 
 
 object ToolbarMenuDialog {
@@ -194,17 +191,17 @@ object ToolbarMenuDialog {
                 )
 
             else -> {
-                val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+                val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
                     fragment,
                     mainOrSubFannelPath,
                 )
-                val setReplaceVariableMap = SharePrefTool.getReplaceVariableMap(
+                val setReplaceVariableMap = FannelInfoTool.getReplaceVariableMap(
                     fragment,
                     mainOrSubFannelPath,
                 )
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     fragment,
-                    readSharePreferenceMap,
+                    fannelInfoMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName

@@ -16,7 +16,7 @@ class JsValEdit(
     private val context = terminalFragment.context
     private val okReturnCode = "0"
     private val cancelReturnCode = "1"
-    private val readSharePreffernceMap = terminalFragment.readSharePreferenceMap
+    private val fannelInfoMap = terminalFragment.fannelInfoMap
 
 
     @JavascriptInterface
@@ -50,7 +50,7 @@ class JsValEdit(
     ){
         val listener = context as? TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm
         listener?.onEditFannelContentsListUpdateForTerm(
-            readSharePreffernceMap ,
+            fannelInfoMap ,
             changedFannelCon.split("\n")
         )
     }

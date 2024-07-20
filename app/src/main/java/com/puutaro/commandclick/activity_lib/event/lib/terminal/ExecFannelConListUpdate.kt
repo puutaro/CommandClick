@@ -1,23 +1,23 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object ExecFannelConListUpdate {
     fun update(
         activity: MainActivity,
-        readSharePreffernceMap: Map<String, String>,
+        fannelInfoMap: Map<String, String>,
         updateFannelConList: List<String>
     ){
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
-        val fannelState = SharePrefTool.getCurrentStateName(
-            readSharePreffernceMap
+        val fannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,

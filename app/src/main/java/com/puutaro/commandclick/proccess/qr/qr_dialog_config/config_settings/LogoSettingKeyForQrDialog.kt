@@ -9,14 +9,12 @@ import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
@@ -25,11 +23,10 @@ import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.ScreenSizeCalculator
-import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
@@ -553,9 +550,9 @@ object QrLogoSettingsForQrDialog {
             if(
                 !iconNameConfigPath.isNullOrEmpty()
             ) {
-                val readSharePreferenceMap = editFragment.readSharePreferenceMap
-                val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap)
-                val currentFannelName = SharePrefTool.getCurrentFannelName(readSharePreferenceMap)
+                val fannelInfoMap = editFragment.fannelInfoMap
+                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
+                val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val iconNameMapTsvCon =
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         ReadText(iconNameConfigPath).readText(),

@@ -5,7 +5,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.AddUrlConKey
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 
 object AddUrlCon {
@@ -28,9 +28,9 @@ object AddUrlCon {
         ) ?: emptyMap()
         val urlStringOrMacro = argsMap.get(urlExtraKey)
             ?: String()
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+            fannelInfoMap
         )
         val urlString = HistoryUrlContents.extract(
             currentAppDirPath,

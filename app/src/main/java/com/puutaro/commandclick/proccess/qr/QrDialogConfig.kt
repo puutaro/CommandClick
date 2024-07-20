@@ -26,7 +26,6 @@ object QrDialogConfig {
     class QrLogoHandlerArgsMaker(
         val fragment: Fragment,
         val recentAppDirPath: String,
-        val readSharePreffernceMap: Map<String, String>,
         val qrLogoConfigMap: Map<String, String>,
         val parentDirPath: String,
         val fileName: String,
