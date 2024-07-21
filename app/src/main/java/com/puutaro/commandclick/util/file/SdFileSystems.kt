@@ -8,6 +8,7 @@ import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.MimeType
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.Job
 import java.io.File
 import java.io.FileInputStream
@@ -25,14 +26,25 @@ object SdFileSystems {
         deleteDirOrFileName: String,
         watchFilePathObj: File?,
     ){
-        val dir = createDir(
-            context,
-            ubuntuBackupSharePref,
-            dirName
-        ) ?: return
-        dir.findFile(deleteDirOrFileName)?.delete()
-        watchFilePathObj?.absolutePath?.let {
-            FileSystems.removeFiles(it)
+        try {
+            val dir = createDir(
+                context,
+                ubuntuBackupSharePref,
+                dirName
+            ) ?: return
+            dir.findFile(deleteDirOrFileName)?.delete()
+            watchFilePathObj?.absolutePath?.let {
+                FileSystems.removeFiles(it)
+            }
+        } catch (e: Exception){
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
+        }  finally {
+            watchFilePathObj?.absolutePath?.let {
+                FileSystems.removeFiles(it)
+            }
         }
     }
 
@@ -75,28 +87,36 @@ object SdFileSystems {
                 relativePathObj.name,
                 null
             )
-            val destinationUri = createDir(
-                context,
-                ubuntuBackupSharePref,
-                relativeDirPath,
-            )?.uri ?: return
-            val isSdSrc =
-                isSdPath(sourceFilePath)
-            when (isSdSrc) {
-                true -> execCopyInSd(
+            try {
+                val destinationUri = createDir(
                     context,
-                    sourceFilePath,
-                    destinationUri,
-                )
+                    ubuntuBackupSharePref,
+                    relativeDirPath,
+                )?.uri ?: return
+                val isSdSrc =
+                    isSdPath(sourceFilePath)
+                when (isSdSrc) {
+                    true -> execCopyInSd(
+                        context,
+                        sourceFilePath,
+                        destinationUri,
+                    )
 
-                else -> execCopy(
+                    else -> execCopy(
+                        context,
+                        sourceFilePath,
+                        destinationUri,
+                    )
+                }
+            } catch (e: Exception){
+                LogSystems.stdErr(
                     context,
-                    sourceFilePath,
-                    destinationUri,
+                    e.toString()
                 )
-            }
-            watchFilePathObj?.absolutePath?.let {
-                FileSystems.removeFiles(it)
+            } finally {
+                watchFilePathObj?.absolutePath?.let {
+                    FileSystems.removeFiles(it)
+                }
             }
         }
 
@@ -168,32 +188,40 @@ object SdFileSystems {
                 relativePathObj.name,
                 null
             )
-            val destinationUri = createDir(
-                context,
-                ubuntuBackupSharePref,
-                relativeDirPath,
-            )?.uri ?: return
-            val isSdSrc =
-                isSdPath(sourceDirPath)
-            when (isSdSrc) {
-                true -> execCopyInSd(
+            try {
+                val destinationUri = createDir(
                     context,
-                    sourceDirPath,
-                    destinationUri,
-                    watchFilePathObj,
-                    cpWatchJob,
-                )
+                    ubuntuBackupSharePref,
+                    relativeDirPath,
+                )?.uri ?: return
+                val isSdSrc =
+                    isSdPath(sourceDirPath)
+                when (isSdSrc) {
+                    true -> execCopyInSd(
+                        context,
+                        sourceDirPath,
+                        destinationUri,
+                        watchFilePathObj,
+                        cpWatchJob,
+                    )
 
-                else -> execCopy(
+                    else -> execCopy(
+                        context,
+                        sourceDirPath,
+                        destinationUri,
+                        watchFilePathObj,
+                        cpWatchJob,
+                    )
+                }
+            } catch (e: Exception){
+                LogSystems.stdErr(
                     context,
-                    sourceDirPath,
-                    destinationUri,
-                    watchFilePathObj,
-                    cpWatchJob,
+                    e.toString()
                 )
-            }
-            watchFilePathObj?.absolutePath?.let {
-                FileSystems.removeFiles(it)
+            } finally {
+                watchFilePathObj?.absolutePath?.let {
+                    FileSystems.removeFiles(it)
+                }
             }
         }
 
@@ -334,19 +362,6 @@ object SdFileSystems {
     ): Boolean {
         return !path.startsWith("/")
                 || path.startsWith(SdPath.getSdUseRootPath())
-    }
-
-    fun treeUriToPath(
-        context: Context?,
-        ubuntuBackupSharePref: SdCardTool.UbuntuBackupSharePref?,
-    ): String? {
-        if (
-            context == null
-        ) return null
-        return SdCardTool.getTreeUri(
-            context,
-            ubuntuBackupSharePref
-        )?.getAbsolutePath(context)
     }
 
     // Helper function to get mime type from file extension (optional)
