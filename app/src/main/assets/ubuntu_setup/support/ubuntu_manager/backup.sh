@@ -3,8 +3,7 @@
 exec repbash "${0}" \
 	-t "\${UBUNTU_ENV_TSV_PATH}"
 
-echo "#"
-echo "#"
+echo "#" >> "${MONITOR_FILE_PATH}"
 echo "[1/4] ready.." >> "${MONITOR_FILE_PATH}"
 sudo apt-get clean
 sudo apt-get autoremove
