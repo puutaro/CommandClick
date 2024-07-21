@@ -14,15 +14,11 @@ import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.SdPath
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
-object AutoSetupHandler {
+object AutoSetupManager {
 
-    fun monitor(ubuntuService: UbuntuService) {
+    fun manage(ubuntuService: UbuntuService) {
         val context = ubuntuService.applicationContext
         val ubuntuFiles = ubuntuService.ubuntuFiles
         if(
@@ -48,21 +44,13 @@ object AutoSetupHandler {
         if(
             autoSetup == ubuntuAutoSetupOff
         ) return
-        val autoSetupJobName = UbuntuProcessManager.UbuntuInitProcessType.AutoSetup.name
-        ubuntuService.ubuntuCoroutineJobsHashMap[
-                autoSetupJobName
-        ]?.cancel()
-        ubuntuService.ubuntuCoroutineJobsHashMap[
-                autoSetupJobName
-        ] = CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO) {
-                TriggerHandler.handle(
-                    context,
-                    autoSetup,
-                    settingValList,
-                )
-            }
-        }
+        TriggerHandler.handle(
+            context,
+            autoSetup,
+            settingValList,
+        )
+
+
     }
 
     private fun getAutoSetupValue(

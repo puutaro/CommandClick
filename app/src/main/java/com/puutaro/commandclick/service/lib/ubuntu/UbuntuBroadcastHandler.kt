@@ -246,7 +246,9 @@ object UbuntuBroadcastHandler {
                 it
             )
         }
-        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuProcessManager.UbuntuInitProcessType.SetUpMonitoring.name]?.cancel()
+        UbuntuProcessManager.UbuntuInitProcessType.values().forEach {
+            ubuntuService.ubuntuCoroutineJobsHashMap[it.name]?.cancel()
+        }
     }
 
     private fun execSleepingNotification(

@@ -104,4 +104,10 @@ object SettingVariableSelects {
         ON,
         OFF,
     }
+
+    enum class UbuntuAutoSetup {
+        OFF,
+        SETUP,
+        RESTORE,
+    }
 }

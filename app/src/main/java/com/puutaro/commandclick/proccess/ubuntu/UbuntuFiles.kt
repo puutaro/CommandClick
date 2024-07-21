@@ -6,6 +6,7 @@ import android.os.Environment
 import android.system.Os
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+
 import com.puutaro.commandclick.util.file.SdPath
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
@@ -41,23 +42,35 @@ class UbuntuFiles(
         const val rootfsDirName = "rootfs"
         val ubuntuBackupTempRootfsDirPath = File(UsePath.cmdclickUbuntuBackupTempDirPath, rootfsDirName).absolutePath
         fun getUbuntuBackupRootfsDirPath(): String {
-            val normalBackupPath =
-                File(
+            return when(
+                isBackupRootfsInSd()
+            ){
+                false -> File(
                     UsePath.cmdclickUbuntuBackupDirPath,
                     rootfsDirName
                 ).absolutePath
-            val sdRootDirPath =
-                SdPath.getSdUseRootPath().ifEmpty {
-                    return normalBackupPath
-                }
-            val ubuntuBackupDirInSharePref = File(
-                sdRootDirPath,
-                SdPath.rootfsRelativePath
-            ).absolutePath
-            if(
-               FileSystems.showDirList(ubuntuBackupDirInSharePref).isNotEmpty()
-            ) return ubuntuBackupDirInSharePref
-            return normalBackupPath
+                else -> File(
+                    SdPath.getSdUseRootPath(),
+                    SdPath.rootfsRelativePath
+                ).absolutePath
+            }
+        }
+
+        private fun isBackupRootfsInSd(): Boolean {
+            val useSdRootPath = SdPath.getSdUseRootPath().ifEmpty {
+                return false
+            }
+            val backupRootfsDirPathObj =
+                File(useSdRootPath, SdPath.rootfsRelativePath)
+            return FileSystems.showDirList(
+                backupRootfsDirPathObj.absolutePath
+            ).isNotEmpty()
+        }
+
+        fun isUbuntuRestore(): Boolean {
+            return FileSystems.showDirList(
+                getUbuntuBackupRootfsDirPath()
+            ).isNotEmpty()
         }
 
         fun getUbuntuBackupRootfsDirPathOnlyWrite(): String {

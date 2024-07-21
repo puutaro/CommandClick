@@ -73,7 +73,6 @@ object UbuntuServiceManager {
                     !onBasicProcessMonitor
                 ) true
                 else LinuxCmd.isBasicProcess(activity)
-
                 if(
                     isUbuntuService
                     && isBasicProcess

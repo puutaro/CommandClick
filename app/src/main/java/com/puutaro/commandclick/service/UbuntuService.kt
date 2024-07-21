@@ -27,6 +27,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.UbuntuBroadcastHandler
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuInitProcess
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuSetUp
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
+import com.puutaro.commandclick.service.lib.ubuntu.libs.AutoSetupManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
@@ -35,7 +36,6 @@ import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Job
-import java.io.File
 import java.net.ServerSocket
 
 
@@ -207,22 +207,12 @@ class UbuntuService:
                 UbuntuNotiButtonLabel.SETUP.label,
                 startUbuntuServicePendingIntent
             )
-            val ubuntuBackupRootfsDirPathObj = File(UbuntuFiles.getUbuntuBackupRootfsDirPath())
-            val isUbuntuBackupRootfsDir = ubuntuBackupRootfsDirPathObj.isDirectory
-                    && FileSystems.showDirList(
-                ubuntuBackupRootfsDirPathObj.absolutePath
-            ).isNotEmpty()
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "mubuntuBackupRootfsDirPathObj.txt").absolutePath,
-                listOf(
-                    "ubuntuBackupRootfsDirPathObj: ${ubuntuBackupRootfsDirPathObj.absolutePath}"
-                ).joinToString("\n")
-            )
-            if(isUbuntuBackupRootfsDir) {
+            val isUbuntuRestore = UbuntuFiles.isUbuntuRestore()
+            if(isUbuntuRestore) {
                 val extraList = listOf(
                     UbuntuServerIntentExtra.ubuntuRestoreSign.schema to "on"
                 )
-                val restorebuntuServicePendingIntent = PendingIntentCreator.create(
+                val restoreUbuntuServicePendingIntent = PendingIntentCreator.create(
                     applicationContext,
                     BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action,
                     extraList
@@ -230,7 +220,7 @@ class UbuntuService:
                 notificationBuilder?.addAction(
                     com.puutaro.commandclick.R.drawable.icons8_cancel,
                     UbuntuNotiButtonLabel.RESTORE.label,
-                    restorebuntuServicePendingIntent
+                    restoreUbuntuServicePendingIntent
                 )
             }
             val notificationInstance = notificationBuilder?.build()
@@ -244,6 +234,7 @@ class UbuntuService:
                     it
                 )
             }
+            AutoSetupManager.manage(this)
             UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY
