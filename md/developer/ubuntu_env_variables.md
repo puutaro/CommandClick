@@ -14,6 +14,7 @@ Table
 * [MONITOR_DIR_PATH](#monitor_dir_path)
 * [REPLACE_VARIABLES_TSV_RELATIVE_PATH](#replace_variables_tsv_relative_path)
 * [UBUNTU_ENV_TSV_NAME](#ubuntu_env_tsv_name)
+* [SD_ROOT_DIR_PATH](#sd_root_dir_path)
 * [ssh user](#ssh-user)
 * [ssh pasword](#ssh-pasword)
 
@@ -39,6 +40,12 @@ Relative [replace variable tsv](https://github.com/puutaro/CommandClick/blob/mas
 ## UBUNTU_ENV_TSV_NAME
 
 -> [`ubuntu_env.tsv`](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntuFileApis.md#ubuntu_env_varialbles)
+
+## SD_ROOT_DIR_PATH
+
+Sd root dir path, as long as user set by dialog
+
+- only enable [onRootfsSdCardSave](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onrootfssdcardsave) is `ON`
 
 ## ssh user
 

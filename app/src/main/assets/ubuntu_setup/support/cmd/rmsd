@@ -51,7 +51,7 @@ display_help(){
 			print "--from|-f"
 			print "\t-> from path"
 			print "[Optional] --vervose-mode|-v"
-			print "\tshow vervose"
+			print "\t-> show vervose"
 		}'
 		exit 0
 }

@@ -432,6 +432,10 @@ Ubuntu Sleep delay minutes is set for battery life.  default `20` min
 
 - 0: no sleep
 
+- [onRootfsSdCardSave]()
+- [ubuntuAutoSetup]()
+
+
 ### Termux Setting
 
 -> [About termux setup](https://github.com/puutaro/CommandClick/blob/master/md/usage/termux_setup.md)

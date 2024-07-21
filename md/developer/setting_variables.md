@@ -450,6 +450,18 @@ Ubuntu Sleep delay minutes in screen off, Config only value.
 
 -> [ubuntuSleepDelayMinInScreenOff](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#change-ubuntu-sleep-minutes)
 
+## onRootfsSdCardSave
+
+Ubuntu backup rootfs save switch for sd card
+
+- ref: [Backup ubuntu rootfs](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#backup-ubuntu-rootfs)
+
+## ubuntuAutoSetup
+
+Enable auto setup when ubuntu start
+
+- ref: [Ubuntu Setup](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
+
 ## passCmdVariableEdit
 
 Switch pass [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit) for [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables)

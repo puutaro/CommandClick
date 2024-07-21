@@ -58,7 +58,7 @@ display_help(){
 			print "--to|-t"
 			print "\t-> dest sd dir path"
 			print "[Optional] --vervose-mode|-v"
-			print "\tshow vervose"
+			print "\t-> show vervose"
 		}'
 	exit 0
 }
