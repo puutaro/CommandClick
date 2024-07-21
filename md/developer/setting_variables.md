@@ -460,6 +460,7 @@ Ubuntu backup rootfs save switch for sd card
 
 Enable auto setup when ubuntu start
 
+- If you `onRootfsSdCardSave` is `ON`, available only when an SD card is inserted
 - ref: [Ubuntu Setup](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
 ## passCmdVariableEdit
