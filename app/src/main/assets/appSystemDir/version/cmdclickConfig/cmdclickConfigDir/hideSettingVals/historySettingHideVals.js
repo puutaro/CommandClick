@@ -12,3 +12,4 @@ onTermShortWhenLoad,
 // ubuntu setting
 ubuntuSleepDelayMinInScreenOff,
 onRootfsSdCardSave,
+ubuntuAutoSetup,

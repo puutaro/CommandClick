@@ -7,6 +7,7 @@ terminalFontColor,
 // ubuntu setting
 ubuntuSleepDelayMinInScreenOff,
 onRootfsSdCardSave,
+ubuntuAutoSetup,
 // history setting
 homeFannelsPath,
 historySwitch,

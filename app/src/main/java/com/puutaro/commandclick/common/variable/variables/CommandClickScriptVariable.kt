@@ -107,6 +107,7 @@ object CommandClickScriptVariable {
     val IMPORT_DISABLE_VAL_LIST = "importDisableValList"
     val ON_TOOLBAR_BTN_CUSTOM_IN_SETTING = "onToolbarBtnCustomInSetting"
     val ON_ROOTFS_SDCARD_SAVE = "onRootfsSdCardSave"
+    val UBUNTU_AUTO_SETUP = "ubuntuAutoSetup"
     val jsActionShiban = "js/action"
     val CMDCLICK_LONG_PRESS_LINK_URL = "LONG_PRESS_LINK_URL"
     val CMDCLICK_LONG_PRESS_IMAGE_URL = "LONG_PRESS_IMAGE_URL"
@@ -137,6 +138,7 @@ object CommandClickScriptVariable {
         ON_ROOTFS_SDCARD_SAVE,
         DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
         UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
+        UBUNTU_AUTO_SETUP,
         CMDCLICK_TERMINAL_FONT_ZOOM,
         EDIT_BOX_TITLE_CONFIG,
         ON_URL_LAUNCH_MACRO,
@@ -206,6 +208,9 @@ object CommandClickScriptVariable {
     private val onUrlHistoryRegisterOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
     private val onRootfsSdcardSaveOn = SettingVariableSelects.OnRootfsSdCardSaveSelects.ON.name
     private val onRootfsSdcardSaveOff = SettingVariableSelects.OnRootfsSdCardSaveSelects.OFF.name
+    private val ubuntuAutoSetupOff = SettingVariableSelects.UbuntuAutoSetup.OFF.name
+    private val ubuntuAutoSetupSetup = SettingVariableSelects.UbuntuAutoSetup.SETUP.name
+    private val ubuntuAutoSetupRestore = SettingVariableSelects.UbuntuAutoSetup.RESTORE.name
     val SHELL_EXEC_ENV_DEFAULT_VALUE = shellExecEnvUbuntu
     val UBUNTU_EXEC_MODE_DEFAULT_VALUE = ubuntuExecModeSelectsBackground
     val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
@@ -344,6 +349,7 @@ object CommandClickScriptVariable {
         "$ON_URL_HISTORY_REGISTER:CB=$onUrlHistoryRegisterOn?$onUrlHistoryRegisterOff",
         "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}?${UsePath.cmdClickMonitorFileName_2}?${UsePath.cmdClickMonitorFileName_3}?${UsePath.cmdClickMonitorFileName_4}",
         "${ON_ROOTFS_SDCARD_SAVE}:CB=${onRootfsSdcardSaveOn}?${onRootfsSdcardSaveOff}",
+        "${UBUNTU_AUTO_SETUP}:CB=${ubuntuAutoSetupOff}?${ubuntuAutoSetupSetup}?${ubuntuAutoSetupRestore}",
         "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000?1",
         "$TERMINAL_COLOR:TXT:CLR=",
         "$TERMINAL_FONT_COLOR:TXT:CLR=",

@@ -25,6 +25,7 @@ urlHistoryOrButtonExec=""
 // ubuntu setting
 ubuntuSleepDelayMinInScreenOff="20"
 onRootfsSdCardSave="OFF"
+ubuntuAutoSetup="OFF"
 /// SETTING_SECTION_END
 
 
@@ -45,6 +46,7 @@ urlHistoryOrButtonExec=""
 // ubuntu setting
 ubuntuSleepDelayMinInScreenOff="20"
 onRootfsSdCardSave="OFF"
+ubuntuAutoSetup="OFF"
 // edit vals
 appHeader=""
 table=""
