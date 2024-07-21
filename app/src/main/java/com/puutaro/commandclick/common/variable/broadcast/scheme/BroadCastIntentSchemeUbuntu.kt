@@ -16,10 +16,6 @@ enum class BroadCastIntentSchemeUbuntu(
         "com.puutaro.commandclick.ubuntu_service.update_process_num",
         "update_process_num",
     ),
-    IS_ACTIVE_UBUNTU_SERVICE(
-        "com.puutaro.commandclick.ubuntu_service.is_active",
-        "is_active",
-    ),
     CMD_KILL_BY_ADMIN(
         "com.puutaro.commandclick.ubuntu_service.background_cmd_kill",
         "background_cmd_kill",

@@ -67,8 +67,6 @@ object UbuntuBroadcastHandler {
             -> execOnUbuntuSetupQuizNotification(
                 ubuntuService
             )
-            BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE
-            -> execIsActiveUbuntuService()
             BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE
             -> execStopUbuntuService(
                 ubuntuService
@@ -262,17 +260,6 @@ object UbuntuBroadcastHandler {
                 it
             )
         }
-    }
-
-    private fun execIsActiveUbuntuService(
-    ){
-        FileSystems.writeFile(
-            File(
-                UsePath.cmdclickTempUbuntuServiceDirPath,
-                UsePath.cmdclickTmpUbuntuServiceActiveFileName
-            ).absolutePath,
-            String()
-        )
     }
 
     private fun execStopUbuntuService(

@@ -3,7 +3,8 @@
 exec repbash "${0}" \
 	-t "\${UBUNTU_ENV_TSV_PATH}"
 
-echo "[1/4] setup.." >> "${MONITOR_FILE_PATH}"
+echo ""
+echo "[1/4] ready.." >> "${MONITOR_FILE_PATH}"
 sudo apt-get clean
 sudo apt-get autoremove
 sudo pip cache purge
@@ -104,8 +105,7 @@ case "${is_inner_storage}" in
 	"") 
 		cp2sd \
 			-f "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
-			-t "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}" \
-			>> "${MONITOR_FILE_PATH}"
+			-t "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}"
 		;;
 	*)
 		sudo cp -rvf \

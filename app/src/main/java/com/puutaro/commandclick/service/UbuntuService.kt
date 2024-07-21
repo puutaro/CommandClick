@@ -104,7 +104,6 @@ class UbuntuService:
                 BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action,
                 BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action,
                 BroadCastIntentSchemeUbuntu.ON_RUNNING_NOTIFICATION.action,
-                BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE.action,
                 BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action,
                 BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION.action,
                 BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action,
@@ -151,6 +150,7 @@ class UbuntuService:
                 it
             )
         }
+        FileSystems.removeAndCreateDir(UsePath.cmdclickTempUbuntuServiceDirPath)
     }
 
     override fun onStartCommand(

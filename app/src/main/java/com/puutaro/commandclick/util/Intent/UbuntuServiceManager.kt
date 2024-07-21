@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.ServiceUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
 import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
@@ -30,10 +31,9 @@ object UbuntuServiceManager {
         onInitDelay: Boolean,
         onBasicProcessMonitor: Boolean
     ) {
-        if(activity == null) return
-        val cmdclickTempUbuntuServiceDirPath = UsePath.cmdclickTempUbuntuServiceDirPath
-        val cmdclickTmpUbuntuServiceActiveFileName = UsePath.cmdclickTmpUbuntuServiceActiveFileName
-        val cmdclickTmpUbuntuServiceActiveFile = File("${cmdclickTempUbuntuServiceDirPath}/${cmdclickTmpUbuntuServiceActiveFileName}")
+        if(
+            activity == null
+        ) return
         CoroutineScope(Dispatchers.IO).launch {
 
             val isLaunch = withContext(Dispatchers.IO) {
@@ -59,22 +59,14 @@ object UbuntuServiceManager {
 //                delay(8000)
 //            }
             withContext(Dispatchers.IO){
-                FileSystems.removeFiles(
-                    File(
-                        cmdclickTempUbuntuServiceDirPath,
-                        cmdclickTmpUbuntuServiceActiveFileName
-                    ).absolutePath
-                )
-            }
-            withContext(Dispatchers.IO){
                 delay(200)
-                val ubuntuIntent = Intent()
-                ubuntuIntent.action = BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE.action
+                var isUbuntuService = false
                 for(i in 1..3) {
-                    activity.sendBroadcast(ubuntuIntent)
                     delay(300)
-                    if (
-                        cmdclickTmpUbuntuServiceActiveFile.isFile
+                    isUbuntuService =
+                        ServiceUtils.isServiceRunning(UbuntuService::class.java)
+                    if(
+                        isUbuntuService
                     ) break
                 }
                 val isBasicProcess = if(
@@ -83,7 +75,7 @@ object UbuntuServiceManager {
                 else LinuxCmd.isBasicProcess(activity)
 
                 if(
-                    cmdclickTmpUbuntuServiceActiveFile.isFile
+                    isUbuntuService
                     && isBasicProcess
                 ) return@withContext
                 launch(activity)
