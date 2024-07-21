@@ -24,7 +24,7 @@ var=commandVariableCon
 
 ## Src
 
--> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsScript.kt#L87)
+-> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsScript.kt#L85)
 
 ## Detail
 
