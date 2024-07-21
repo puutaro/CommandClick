@@ -5,9 +5,9 @@ set -ue
 HELP=""
 FROM_PATH=""
 TO_DIR_PATH=""
-WATCH_FILE_PATH=""
 VERVOSE_MODE=""
 readonly PARENT_PID="${PPID}"
+readonly WATCH_FILE_PATH="${UBUNTU_SERVICE_TEMP_DIR_PATH}/$((${RANDOM} %	10000 )).txt"
 
 read_args(){
 	local STR=""
@@ -23,10 +23,6 @@ read_args(){
 			;;
 		--from|-f)
 			FROM_PATH="${2}"
-			shift
-			;;
-		--watch-file_path|-w)
-			WATCH_FILE_PATH="${2}"
 			shift
 			;;
 		--vervose-mode|-v)
@@ -55,14 +51,12 @@ display_help(){
 			print ""
 			print ""
 			print "## Usage"
-			printf "%s  --from \x22${dir}\x22 --to \x22${sd dir}\x22 --watch-file_path \x22${watch file path}\x22", cmd_name
+			printf "%s  --from \x22${dir}\x22 --to \x22${sd dir}\x22", cmd_name
 			print ""
 			print "--from|-f"
 			print "\t-> from dir"
 			print "--to|-t"
 			print "\t-> dest sd dir path"
-			print "--watch-file_path|-w"
-			print "\t-> watch file path"
 			print "[Optional] --vervose-mode|-v"
 			print "\tshow vervose"
 		}'
@@ -131,13 +125,6 @@ exit_judge(){
 			exit 1
 			;;
 	esac
-	case "$(echo "${WATCH_FILE_PATH}" | grep "/")" in
-		"") 
-			echo "must --watch-file_path|-w option or must be path string"
-			exit 1
-			;;
-	esac
-
 }
 
 read_args "$@"

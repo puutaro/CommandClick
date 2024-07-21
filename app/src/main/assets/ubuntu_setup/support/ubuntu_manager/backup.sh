@@ -103,7 +103,6 @@ readonly is_inner_storage="$(\
 case "${is_inner_storage}" in
 	"") 
 		cp2sd \
-			-w "${UBUNTU_SERVICE_TEMP_DIR_PATH}/backup_watch.txt" \
 			-f "${UBUNTU_BACKUP_TEMP_ROOTFS_DIR_PATH}" \
 			-t "${UBUNTU_BACKUP_ROOTFS_DIR_PATH}" \
 			>> "${MONITOR_FILE_PATH}"

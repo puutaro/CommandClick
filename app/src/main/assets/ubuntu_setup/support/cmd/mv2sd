@@ -1,0 +1,98 @@
+#!/bin/bash
+
+set -ue
+
+HELP=""
+FROM_PATH=""
+TO_DIR_PATH=""
+VERVOSE_MODE=""
+readonly PARENT_PID="${PPID}"
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--to|-t)
+			TO_DIR_PATH="${2}"
+			shift
+			;;
+		--from|-f)
+			FROM_PATH="${2}"
+			shift
+			;;
+		--vervose-mode|-v)
+			VERVOSE_MODE="-v"
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+
+display_help(){
+	case "${HELP}" in
+		"") return ;;
+	esac
+	awk -v cmd_name="$(basename "${0}")" \
+		'BEGIN{
+			print "### Move dir or file to sd card dir"
+			print ""
+			print ""
+			print "## Usage"
+			printf "%s  --from \x22${dir}\x22 --to \x22${sd dir}\x22", cmd_name
+			print ""
+			print "--from|-f"
+			print "\t-> from dir"
+			print "--to|-t"
+			print "\t-> dest sd dir path"
+			print "[Optional] --vervose-mode|-v"
+			print "\tshow vervose"
+		}'
+	exit 0
+}
+
+remove(){
+	local is_sd_path=$(\
+		echo "${FROM_PATH}" \
+		| awk -v SD_ROOT_DIR_PATH="${SD_ROOT_DIR_PATH}" '{
+			if(!$0) next
+			sd_root_dir_path_regex = "^"SD_ROOT_DIR_PATH
+			if($0 ~ sd_root_dir_path_regex){
+				print $0
+				next
+			}
+			if($0 ~ /^\//) next
+			print $0
+		}'\
+	)
+	case "${is_sd_path}" in
+		"") 
+			rm -rf "${FROM_PATH}"
+			;;
+		*)
+			rmsd ${VERVOSE_MODE} \
+				-f "${FROM_PATH}"
+			;;
+	esac
+}
+
+
+read_args "$@"
+display_help
+
+cp2sd ${VERVOSE_MODE} \
+	-f "${FROM_PATH}" \
+	-t "${TO_DIR_PATH}" \
+&& remove
