@@ -17,6 +17,8 @@ Table of Contents
 * [Ubuntu](#ubuntu)
   * [Setup ubuntu](#setup-ubuntu)
   * [Backup ubuntu rootfs](#backup-ubuntu-rootfs)
+  * [Custom shell command](#custom-shell-command)
+  * [Ubuntu more](#ubuntu-more)
 * [Historys](#history)
   * [History](#history)
   * [Url history](#url-history)
@@ -114,12 +116,29 @@ sshpass -p cmdclick \
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/15bfaadb-bb6d-454b-86a0-f4f11c196423" width="250">  
 
+### Custom shell command
+
+It is a useful tool for `CommandClick`.
+For example, send broadcast, toast, and etc.
+
+-> [About custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
+
+
+### Ubuntu more
+
+Cc ubuntu has original feature like bellow
+
+-> [Ubuntu feature](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#ubuntu)
+
+
+
 ## Index mode
 
 ---------------
 
 This mode is main mode. Top is `web monitor view`, down is `fannel(addon) name list`, bottom is toolbar.  
-Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.  
+Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.
+
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/12ebcad4-b447-4c5f-ad4c-3ad1a685d606" width="400">  
 
