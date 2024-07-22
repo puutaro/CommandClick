@@ -3,6 +3,11 @@ package com.puutaro.commandclick.common.variable.extra
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToListFilter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToListMap
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuExtraSystemShells
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 
 object WaitQuizPair {
 
@@ -27,15 +32,244 @@ object WaitQuizPair {
     private val tsvar = "tsvar"
     private val isend = "isend"
     private val killPtree = "kill_ptree"
+    private val rmsd = "rmsd"
+    private val cp2sd = "cp2sd"
+    private val mv2sd = "mv2sd"
+    private val repbash = "repbash"
+    private val jsAction = "js action"
     private val cmdTerminal = SystemFannel.cmdTerminal
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(
-            "What's one of CC feature",
+            "Why introduce Ubuntu?",
+            "-> To realize multiple feature",
+        ),
+        Pair(
+            "What's Ubuntu positioning?",
+            "-> Backend for all",
+        ),
+        Pair(
+            "What's Ubuntu positioning?",
+            "-> Backend for fannel, service",
+        ),
+        Pair(
+            "What's frontend core library?",
+            "-> ${jsAction}",
+        ),
+        Pair(
+            "What are the funnel types?",
+            "-> Box, list, and grid",
+        ),
+        Pair(
+            "What's js original framework?",
+            "-> ${jsAction}",
+        ),
+        Pair(
+            "How to create fannel?",
+            "-> TUTORIAL on github",
+        ),
+        Pair(
+            "How to know fannel mechanism?",
+            "-> TUTORIAL on github",
+        ),
+        Pair(
+            "What's ${jsAction} feature?",
+            "-> One of config in ${appName}",
+        ),
+        Pair(
+            "What's ${jsAction} feature?",
+            "-> Trigger from config",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.LIST_INDEX_CONFIG}?",
+            "-> List config in fannel",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.LIST_INDEX_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.LIST_INDEX_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",
+            "-> Logo config in ${CommandClickScriptVariable.LIST_INDEX_CONFIG}",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.QR_DIALOG_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.PLAY_BUTTON_CONFIG}?",
+            "-> Play button config in fannel",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.PLAY_BUTTON_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.PLAY_BUTTON_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.EDIT_BUTTON_CONFIG}?",
+            "-> Edit button config in fannel",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.EDIT_BUTTON_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.EDIT_BUTTON_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.SETTING_BUTTON_CONFIG}?",
+            "-> Setting button config in fannel",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.SETTING_BUTTON_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.SETTING_BUTTON_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.EXTRA_BUTTON_CONFIG}?",
+            "-> Setting button config in fannel",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.EXTRA_BUTTON_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.EXTRA_BUTTON_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's menu config?",
+            "-> Menu config in fannel",
+        ),
+        Pair(
+            "How to specify menu?",
+            "-> Use menu macro in ${jsAction} or config",
+        ),
+        Pair(
+            "What's ${CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG}?",
+            "-> Fannel title config",
+        ),
+        Pair(
+            "How to specify ${CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG} in setting vars",
+        ),
+        Pair(
+            "What's motif in ${jsAction}?",
+            "-> github action",
+        ),
+        Pair(
+            "What's ${jsAction} feature?",
+            "-> Put annotation to all js code.",
+        ),
+        Pair(
+            "What's ${JsActionKeyManager.JsActionsKey.ACTION_VAR.key} merit in ${jsAction}?",
+            "-> Var definition is pipe able",
+        ),
+        Pair(
+            "What's ${JsActionKeyManager.JsActionsKey.TSV_VARS.key} merit in ${jsAction}?",
+            "-> Bulk definite var by key-value tsv",
+        ),
+        Pair(
+            "What's key-value tsv?",
+            "-> Two column tsv",
+        ),
+        Pair(
+            "What's key-value tsv?",
+            "-> Var name and var value tsv",
+        ),
+        Pair(
+            "What's ${jsAction} feature?",
+            "-> Var definition language",
+        ),
+        Pair(
+            "How to import other ${jsAction}?",
+            "-> Use ${JsActionKeyManager.JsActionsKey.ACTION_VAR.key}",
+        ),
+        Pair(
+            "What's ${jsAction}'s merit?",
+            "-> Put annotation to all js code.",
+        ),
+        Pair(
+            "How to use list by ${jsAction}",
+            "-> Use ${JsToListFilter::javaClass.name} or  ${JsToListMap::javaClass.name}",
+        ),
+        Pair(
+            "How to use map by ${jsAction}",
+            "-> Use ${JsToListFilter::javaClass.name} or  ${JsToListMap::javaClass.name}",
+        ),
+        Pair(
+            "What's ${jsAction}?",
+            "-> Annotation oriented language",
+        ),
+        Pair(
+            "What's ${jsAction}?",
+            "-> Js framework in ${appName}",
+        ),
+        Pair(
+            "What's ${repbash}?",
+            "-> Bulk definition cmd in Ubuntu",
+        ),
+        Pair(
+            "How to bulk difinition shell var in Ubuntu?",
+            "-> Use ${repbash} cmd",
+        ),
+        Pair(
+            "How to definite val from key-value tsv in Ubuntu?",
+            "-> Use ${repbash} cmd",
+        ),
+        Pair(
+            "How to definite val from key-value args in Ubuntu?",
+            "-> Use ${repbash} cmd",
+        ),
+        Pair(
+            "How to definite val from key-value args in Ubuntu?",
+            "-> Use ${repbash} cmd",
+        ),
+        Pair(
+            "How to restore rootfs in sd card?",
+            "-> Switch ${CommandClickScriptVariable.ON_ROOTFS_SDCARD_SAVE} config op",
+        ),
+        Pair(
+            "How to auto restore rootfs?",
+            "-> Switch ${CommandClickScriptVariable.AUTO_EXEC_PATH} config op",
+        ),
+        Pair(
+            "Cannot auto restore from sdcard!",
+            "-> Confirm ON in ${CommandClickScriptVariable.ON_ROOTFS_SDCARD_SAVE}",
+        ),
+        Pair(
+            "How to remove from sdcard in Ubuntu?",
+            "-> Use ${rmsd} cmd",
+        ),
+        Pair(
+            "How to move to sdcard in Ubuntu?",
+            "-> Use ${mv2sd} cmd",
+        ),
+        Pair(
+            "How to copy to sdcard in Ubuntu?",
+            "-> Use ${cp2sd} cmd",
+        ),
+        Pair(
+            "How to use pulseaudio in Ubuntu?",
+            "-> Set ${UbuntuExtraSystemShells.UbuntuExtraSystemShellMacro.PULSE.macro} in ${UbuntuFiles.ubuntuExtraStartupShellPathsTsvName}",
+        ),
+        Pair(
+            "How to make service in Ubuntu?",
+            "-> Set ${UbuntuFiles.ubuntuExtraStartupShellPathsTsvName}",
+        ),
+        Pair(
+            "What's Ubuntu position?",
+            "-> Core"
+        ),
+        Pair(
+            "Ubuntu rootfs setup span",
+            "-> Avr 1 ~ 2min"
+        ),
+        Pair(
+            "Ubuntu rootfs restore span",
+            "-> Avr 20 ~ 1min"
+        ),
+        Pair(
+            "Ubuntu rootfs backup span",
+            "-> Avr 3 ~ 4min"
+        ),
+        Pair(
+            "What's one of ${appName} feature",
             "-> File/Dir share by QR"
         ),
         Pair(
-            "What's one of CC feature",
+            "What's one of ${appName} feature",
             "-> File/Dir share by QR"
         ),
         Pair(
@@ -646,7 +880,7 @@ object WaitQuizPair {
         ),
         Pair(
             "What's cmd exec env?",
-            "-> proot, ssh, shell2http"
+            "-> proot, ssh, httpshd"
         ),
         Pair(
             "What's ${appName}?",
@@ -1061,8 +1295,8 @@ object WaitQuizPair {
             "-> proot"
         ),
         Pair(
-            "What's the position of shell2http?",
-            "-> foreground cmd env"
+            "What's the position of httpshd?",
+            "-> foreground and backgroud cmd env"
         ),
         Pair(
             "What's the position of ssh?",
@@ -1077,12 +1311,8 @@ object WaitQuizPair {
             "-> slow but admin management"
         ),
         Pair(
-            "What's the fature of shell2http?",
+            "What's the fature of httpshd?",
             "-> Fast"
-        ),
-        Pair(
-            "What's the fature of ssh?",
-            "-> speedy for background"
         ),
         Pair(
             "What's system configure env?",
@@ -1101,7 +1331,7 @@ object WaitQuizPair {
             "-> Yes, because of slow"
         ),
         Pair(
-            "How shell2http speed is?",
+            "How httpshd speed is?",
             "-> 10 times faster than proot"
         ),
         Pair(
@@ -1113,56 +1343,28 @@ object WaitQuizPair {
             "-> Speed is life"
         ),
         Pair(
-            "What's disadvantate shell2http?",
+            "What's disadvantate httpshd?",
             "-> Cannot use background"
-        ),
-        Pair(
-            "What if I use shll2http in backgroud?",
-            "-> Hang system, so limit in 2 sec"
-        ),
-        Pair(
-            "Where's shell2http used location?",
-            "-> Like launch script, this is most usage"
-        ),
-        Pair(
-            "Where's ssh used location?",
-            "-> Background"
         ),
         Pair(
             "Where's difference proot and ssh?",
             "-> proot for startup, ssh for routine"
         ),
         Pair(
-            "Where's difference ssh and shell2http?",
-            "-> ssh for almighty, shell2http for trigger"
-        ),
-        Pair(
-            "How ssh cmd speed is?",
-            "-> 3 times faster than proot"
-        ),
-        Pair(
-            "What's background exec env?",
-            "-> ssh"
-        ),
-        Pair(
             "What's foreground exec env?",
-            "-> http2shell"
+            "-> httpshd"
         ),
         Pair(
             "How to make this sound system?",
-            "-> Transfer to port by pulseaudio"
+            "-> Media player and tts"
+        ),
+        Pair(
+            "What's mechanism streaming in media player?",
+            "-> Use yt-dlp in Ubuntu"
         ),
         Pair(
             "Why insert sound system?",
             "-> Need for background service"
-        ),
-        Pair(
-            "Is only one sound system by pulse audio",
-            "-> Can you count it on fingers?"
-        ),
-        Pair(
-            "Is sound quolity by pulse audio",
-            "-> Clear"
         ),
         Pair(
             "What's difference between this and termux?",

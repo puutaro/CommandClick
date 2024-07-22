@@ -28,9 +28,10 @@ class UbuntuFiles(
         const val supportDirInUbuntu = "/${supportDirName}"
         const val startupFilePath = "${supportDirInUbuntu}/startup.sh"
         const val extractAudioStreamingMapShellName = "extract_audio_streaming_map.sh"
+        val ubuntuExtraStartupShellPathsTsvName = "ubuntuExtraStartupShellPaths.tsv"
         val ubuntuExtraStartupShellsTsvPath = let {
             ScriptPreWordReplacer.replace(
-                "${UsePath.fannelSettingsDirPath}/ubuntuExtraStartupShellPaths.tsv",
+                "${UsePath.fannelSettingsDirPath}/${ubuntuExtraStartupShellPathsTsvName}",
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
             )

@@ -55,7 +55,11 @@ awk \
 		len_extra_exclude_list = split(EXTRA_EXCLUDE_CON, extra_exclude_list, "\n")
 		cd_cmd="cd /"
 		for(k=1; k <= len_extra_exclude_list; k++){
-			printf "echo \x22(%d/%d)\x22\n", k, len_extra_exclude_list
+			if(\
+	 			k % concurrency == 1\
+	 		){
+	 			printf "echo \x22(%d/%d)\x22\n", k, len_extra_exclude_list
+	 		}
 			exclude_ops = ""
 	 		for(i=1; i <= len_extra_exclude_list; i++){
 	 			if(k == i) {

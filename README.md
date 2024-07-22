@@ -10,11 +10,22 @@
 <br>
 <br>
 
-Are you satisfied with existing web browsers life ?
+Android browser for addons, by addons, and for addons.
 <br>
 <br>
 <br>
-`CommandClick` has been developing to overcome question about existing browsers.
+I think existing browser abuse addons.  
+<br>
+<br>
+Originally, existing browser benefits from addons.   
+However, it cannot support the creation, collaboration or distribution of addons.   
+Furthermore, it is not possible to create an app using addon alone.  
+<br>
+<br>
+I hoped.   
+Being able to create multiple apps with one app. Then, I focused on addon.   
+This is because I thought that by expanding this function, I could create an app that would become an app maker.  
+Thus, `CommandClick` has multiple standalone addon: Ubuntu, Terminal, File manager, etc... 
 <br>
 <br>
 <br>
@@ -60,8 +71,7 @@ CommandClick
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
-  
-- With existing browsers, `add-ons` can only play an active role within that framework. But, with `CommandClick`, `add-ons` can have **infinite roll**. ex) **`Ubuntu`**, `Terminal`, file manager and more.  
+
 - Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development** by low code.
 - Existing browsers do not support cooperation between add-ons. But, `CommandClick` **can link `add-ons`**.  ex) Other addons can use `Ubuntu` as a backend.. etc  
 - Existing browsers don't even think about distributing `add-ons`. But, `CommandClick` **strongly supports `add-ons` distributing** by builin QR `add-on`.
