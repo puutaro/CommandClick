@@ -37,6 +37,8 @@ Table of Contents
 * [playButtonConfig](#playbuttonconfig)
 * [editButtonConfig](#editbuttonconfig)
 * [settingButtonConfig](#settingbuttonconfig)
+* [extraButtonConfig](#extrabuttonconfig)
+* [editBoxTitleConfig](#editboxtitleconfig)
 * [noScrollSaveUrls](#noscrollsaveurls)
 * [terminalFontZoom](#terminalfontzoom)
 * [terminalFontColor](#terminalfontcolor)
@@ -421,6 +423,12 @@ extraButtonConfig="icon=setup,click=MENU..."
 extraButtonConfig="file://{extra button config path} 
 /// SETTING_SECTION_END
 ```
+
+## editBoxTitleConfig
+
+Manage fannel title
+
+-> [edit box title config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/editBoxTitleConfig.md)
 
 ## fannelStateConfig
 
