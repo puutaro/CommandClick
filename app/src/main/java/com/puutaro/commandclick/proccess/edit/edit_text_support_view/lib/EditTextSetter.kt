@@ -125,7 +125,7 @@ object EditTextSetter {
 
 private object EditTextMaker {
 
-    private val argsSeparator = '&'
+    private const val argsSeparator = '&'
 
     fun make(
         fragment: Fragment,

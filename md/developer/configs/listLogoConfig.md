@@ -57,7 +57,13 @@ Table
 
 ## How to specify
 
-Specify by setting variables([qrDialogConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#playbuttonconfig)),[editButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editbuttonconfig)), [settingButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#settingbuttonconfig)), [extraButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#qrdialogconfig))) in fannel
+1. Set [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) like bellow
+
+```js.js
+{variableName}:LI=
+```
+
+2. Specify by setting variables([qrDialogConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#playbuttonconfig)),[editButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editbuttonconfig)), [settingButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#settingbuttonconfig)), [extraButtonConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#qrdialogconfig))) in fannel
 
 ```js.js
 /// SETTING_SECTION_START

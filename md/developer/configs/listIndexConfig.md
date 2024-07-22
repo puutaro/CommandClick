@@ -45,7 +45,13 @@ Table
 
 ## How to specify
 
-Specify by setting variables([listIndexConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#listindexconfig))) in fannel
+1. Set [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) like bellow
+
+```js.js
+{variableName}:LI=
+```
+
+2. Specify by setting variables([listIndexConfig]((https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#listindexconfig))) in fannel
 
 ```js.js
 /// SETTING_SECTION_START

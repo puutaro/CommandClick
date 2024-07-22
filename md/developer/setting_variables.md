@@ -44,6 +44,8 @@ Table of Contents
 * [terminalFontColor](#terminalfontcolor)
 * [terminalColor](#terminalcolor)
 * [ubuntuSleepDelayMinInScreenOff](#ubuntusleepdelaymininscreenoff)
+* [onRootfsSdCardSave](onrootfssdcardsave)
+* [ubuntuAutoSetup](ubuntuautosetup)
 * [passCmdVariableEdit](#passcmdvariableedit)
 * [urlHistoryOrButtonExec](#urlhistoryorbuttonexec)
 * [terminalDo](#terminal_do)
