@@ -26,7 +26,7 @@ I hoped.
 Being able to create multiple apps with one app. Then, I focused on `add-on`.   
 This is because I thought that by expanding `add-on`, I could create an app that would become an app maker.  
 Thus, `CommandClick` has multiple standalone `add-on`: Ubuntu, Terminal, File manager, etc...  
-And you can create app using these add-ons
+And you can create app using these add-ons.  
 <br>
 <br>
 <br>
