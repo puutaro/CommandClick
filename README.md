@@ -17,15 +17,16 @@ Android browser for addons, by addons, and for addons.
 I think existing browser abuse addons.  
 <br>
 <br>
-Originally, existing browser benefits from addons.   
-However, it cannot support the creation, collaboration or distribution of addons.   
-Furthermore, it is not possible to create an app using addon alone.  
+Originally, existing browser benefits from `add-ons`.   
+However, it cannot support the creation, collaboration or distribution of `add-ons`.   
+Furthermore, it is not possible to create an app using `add-on` alone.  
 <br>
 <br>
 I hoped.   
-Being able to create multiple apps with one app. Then, I focused on addon.   
-This is because I thought that by expanding this function, I could create an app that would become an app maker.  
-Thus, `CommandClick` has multiple standalone addon: Ubuntu, Terminal, File manager, etc... 
+Being able to create multiple apps with one app. Then, I focused on `add-on`.   
+This is because I thought that by expanding `add-on`, I could create an app that would become an app maker.  
+Thus, `CommandClick` has multiple standalone `add-on`: Ubuntu, Terminal, File manager, etc...  
+And you can create app using these add-ons
 <br>
 <br>
 <br>
