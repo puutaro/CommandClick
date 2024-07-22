@@ -55,6 +55,7 @@ awk \
 		len_extra_exclude_list = split(EXTRA_EXCLUDE_CON, extra_exclude_list, "\n")
 		cd_cmd="cd /"
 		for(k=1; k <= len_extra_exclude_list; k++){
+			printf "echo \x22(%d/%d)\x22\n", k, len_extra_exclude_list
 			exclude_ops = ""
 	 		for(i=1; i <= len_extra_exclude_list; i++){
 	 			if(k == i) {
@@ -71,18 +72,16 @@ awk \
 	 		tar_cmd_body = sprintf("sudo tar -cpPf \x22%s\x22", rootfs_path)
 	 		total_exclude_con = sprintf("%s %s", ORDINALY_EXCLUDE_CON, exclude_ops)
 	 		tar_ops = "--one-file-system "
-	 		output_cmd = sprintf("echo \x22(%d/%d)\x22", k, len_extra_exclude_list)
 	 		tar_cmd = sprintf("%s %s %s /", \
 	 			tar_cmd_body, \
 	 			total_exclude_con, \
 	 			tar_ops\
 	 		)
 	 		pipe_cmd = "e=$?"
-	 		printf "%s && %s && %s && %s || %s &\n", 
+	 		printf "%s && %s && %s || %s &\n", 
 	 			cd_cmd,
 	 			mkdir_cmd, 
-	 			tar_cmd, 
-	 			output_cmd,
+	 			tar_cmd,
 	 			pipe_cmd
 	 		if(\
 	 			k % concurrency == 0\
