@@ -10,11 +10,11 @@
 <br>
 <br>
 
-**"Android browser for addons, by addons, and for addons"**
+**"Android browser for add-ons, by add-ons, and for add-ons"**
 <br>
 <br>
 <br>
-I think existing browser abuse addons.  
+I think existing browser abuse `add-ons`.  
 <br>
 <br>
 Originally, existing browser benefits from `add-ons`.   
