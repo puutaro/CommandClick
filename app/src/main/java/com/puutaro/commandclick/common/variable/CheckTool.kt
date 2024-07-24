@@ -2206,8 +2206,10 @@ object CheckTool {
             if(
                 actionImportedKeyToSubKeyConList.isEmpty()
             ) return null
-            val varReturnKeyEqual = "?${JsActionKeyManager.OnlyVarSubKey.VAR_RETURN.key}="
-            val varReturnRegex = Regex("\\?${JsActionKeyManager.OnlyVarSubKey.VAR_RETURN.key}=[^?|\n]+")
+            val varReturnKeyEqual =
+                "?${JsActionKeyManager.OnlyVarSubKey.VAR_RETURN.key}="
+            val varReturnRegex =
+                Regex("\\?${JsActionKeyManager.OnlyVarSubKey.VAR_RETURN.key}=[^?|\n]+")
             actionImportedKeyToSubKeyConList.forEach {
                     keyToSubKeyCon ->
                 val mainKey = keyToSubKeyCon.first
@@ -2235,8 +2237,10 @@ object CheckTool {
                         }
                         return@has
                     }
+                    val findVarNameWithRunPrefixRegex =
+                        Regex("[^a-zA-Z0-9_]${varNameWithRunPrefix}[^a-zA-Z0-9_]")
                     val hasNotVarNameWithRunPrefix =
-                        !subKeyCon.contains(varNameWithRunPrefix)
+                        !findVarNameWithRunPrefixRegex.containsMatchIn("%${subKeyCon}%")
                     if(
                         hasNotVarNameWithRunPrefix
                     ) return@has
