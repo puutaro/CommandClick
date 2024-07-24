@@ -411,8 +411,8 @@ class TerminalFragment: Fragment() {
         )
     }
 
-    interface OnMonitorSizeChangeingForTerm {
-        fun onMonitorSizeChangeingForTerm(
+    interface OnMonitorSizeChangingForTerm {
+        fun onMonitorSizeChangingForTerm(
             fannelInfoMap: Map<String, String>,
         )
     }

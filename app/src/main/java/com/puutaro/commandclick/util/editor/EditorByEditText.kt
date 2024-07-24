@@ -252,7 +252,9 @@ private class UndoTextWatcher(
     var saveButtonEnable = false
 
     fun redo(editable: Editable) {
-        if (redos.isEmpty()) return
+        if (
+            redos.isEmpty()
+        ) return
         val event = redos.removeLast()
         undos.addLast(event)
         undoing = true

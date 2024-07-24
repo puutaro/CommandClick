@@ -12,16 +12,14 @@ object ExecTermLongChangeHandlerForTerm {
         bottomFragment: Fragment?
     ){
         when(bottomFragment) {
-            is CommandIndexFragment -> {
+            is CommandIndexFragment ->
                 ExecUrlLoadFragmentProccess.execUrlLoadCmdIndexFragment(
                     activity,
                 )
-            }
-            is EditFragment -> {
+            is EditFragment ->
                 ExecUrlLoadFragmentProccess.execUrlLoadCmdVriableEditFragment(
                     activity,
                 )
-            }
             else -> {}
         }
     }

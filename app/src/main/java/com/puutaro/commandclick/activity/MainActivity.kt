@@ -92,7 +92,7 @@ class MainActivity:
     TerminalFragment.OnAdBlockListener,
     TerminalFragment.OnChangeEditFragmentListenerForTerm,
     TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm,
-    TerminalFragment.OnMonitorSizeChangeingForTerm,
+    TerminalFragment.OnMonitorSizeChangingForTerm,
     TerminalFragment.OnPopStackImmediateListenerForTerm,
     TerminalFragment.OnCmdValSaveAndBackListenerForTerm,
     TerminalFragment.OnGetFileListenerForTerm,
@@ -708,7 +708,7 @@ class MainActivity:
         )
     }
 
-    override fun onMonitorSizeChangeingForTerm(
+    override fun onMonitorSizeChangingForTerm(
         fannelInfoMap: Map<String, String>,
     ) {
         ExecMonitorSizeChangeForTerm.change(

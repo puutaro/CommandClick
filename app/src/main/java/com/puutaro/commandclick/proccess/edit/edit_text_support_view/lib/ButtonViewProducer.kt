@@ -709,9 +709,6 @@ object ButtonViewProducer {
                 jsFilePathIndex
             ).replace(blankString, " ")
         )
-//        val isJsMacro = JsPathForEditButton.JsPathMacroForEditButton.values().map{
-//            it.name
-//        }.contains(jsFilePath)
         if(
             !File(jsActionFilePath).isFile
         ) return
@@ -719,7 +716,6 @@ object ButtonViewProducer {
             editFragment,
             buttonMap
         )
-//        terminalViewModel.jsArguments = makeArgs(execCmdReplaceBlankList)
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
                 editFragment.context,

@@ -18,9 +18,9 @@ class JsMonitorSizing(
         if(
             linearLayoutParam.weight == 0f
         ) return
-        val listener = context as? TerminalFragment.OnMonitorSizeChangeingForTerm
+        val listener = context as? TerminalFragment.OnMonitorSizeChangingForTerm
             ?: return
-        listener.onMonitorSizeChangeingForTerm(
+        listener.onMonitorSizeChangingForTerm(
             terminalFragment.fannelInfoMap
         )
     }

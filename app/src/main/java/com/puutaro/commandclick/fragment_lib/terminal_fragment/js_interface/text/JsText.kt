@@ -9,11 +9,7 @@ class JsText(
 
     @JavascriptInterface
     fun trimNewLine(con: String): String{
-        /*
-        desctiontion aa
-        bb
-        cc
-        */
+
         val conByTrimNewLine = con.split("\n").map {
             it.trim()
         }.filter {
