@@ -3,7 +3,7 @@
 
 MusicPlayer management command
 
-```shell.shell
+```sh.sh
 --launch-type
 -t
 : launch/exit
