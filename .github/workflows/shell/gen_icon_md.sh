@@ -94,8 +94,11 @@ readonly UPDATE_MD_CON=$(\
 			gsub(/[ ]+/, " ", $0)
 			if(!$0) next
 			if($0 !~ /^\|/) next
-			icon_name = \
-				gensub(/^[|] `([a-zA-Z_-]+)` \|.*/, "\\1", "1", $0)
+			icon_name = $0
+      gsub(/^[ \t]+/, "", icon_name)
+      gsub(/[ \t]+$/, "", icon_name)
+      icon_name = \
+        gensub(/^[|] `([a-zA-Z_-]+)` \|.*/, "\\1", "1", $0)
 			nr_icon_name_array[NR] = icon_name
 			split($0, line_array, "|")
 			icon_con = trim(line_array[3])
@@ -114,7 +117,7 @@ readonly UPDATE_MD_CON=$(\
 					icon_name == next_icon_name\
 				) continue
 				icon_con = icon_name_value_array[icon_name]
-				printf "| %s | %s |\n", icon_name, icon_con
+				printf "| `%s` | %s |\n", icon_name, icon_con
 			}
 			print ""
 		}' \
