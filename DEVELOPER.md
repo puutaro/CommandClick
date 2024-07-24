@@ -252,6 +252,10 @@ Usecase is startup script, service, and daemon etc...
 
 ## QR code format
 
+QR code has excellent carrying capacity.  So, suit for fannel distribution.    
+By `CC` qr system, you can easily distribute your app (fannel).   
+Bellow, that format.  
+
 -> [qr code](https://github.com/puutaro/CommandClick/blob/master/md/developer/qrcode/qrcode.md)
 
 ## Directory structure
