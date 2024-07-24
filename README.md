@@ -188,9 +188,11 @@ Usage
 For Addon developer
 --------
 
-<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
+### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file#installation)
 
-<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md" target="_blank">DEVELOPER.md</a></p>   
+### -> [Tutorial](https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md)
+
+### -> [Reference](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
 
 
 Acknowledge
