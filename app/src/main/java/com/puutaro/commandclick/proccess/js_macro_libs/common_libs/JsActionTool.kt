@@ -44,7 +44,7 @@ object JsActionTool {
         val isExistJsAcShiban = firstLine
             .trim()
             .removePrefix("//")
-            .trim() == jsActionShiban
+            .trim().startsWith(jsActionShiban)
         return isExistJsAcShiban
     }
 
