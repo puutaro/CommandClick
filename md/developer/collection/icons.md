@@ -1,3 +1,9 @@
+
+# Pre reserved icon names table
+
+
+| icon macro name | Description |  
+| --------- | --------- | 
 | `about` | <img src="https://github.com/puutaro/CommandClick/assets/55217593/01587b3d-9b14-4038-b29b-f8952282600d" width="40"> |
 | `back` | ← |
 | `cancel` | <img src="https://github.com/puutaro/CommandClick/assets/55217593/86f01002-d40c-441e-b464-e2ae54a83285" width="40"> |
