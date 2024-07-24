@@ -60,7 +60,7 @@ Table of Contents
   * [Preference](#preference)
 * [Internet Button exec script](#internet-button-exec-script)
 * [Button exec script](#button-exec-script)
-* [Developer page](#developer-page)
+* [For developer](#for-developer)
 * [CommandClick repository](#commandclick-repository)
 * [Generally TroubleShooting](#generally-troubleshooting)
 * [Ubuntu, debian or widnows version](#ubuntu-debian-or-widnows-version)
@@ -558,10 +558,15 @@ This script is executed when history buton click or long click, if you select  `
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 ).
 
-Developer page
+For developer
 -----------------
 
--> [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
+### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file#installation)
+
+### -> [Tutorial](https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md)
+
+### -> [Reference](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
+
 
 `CommandClick` is powered by javascript mainly. For that, This has many javascript interface and option.
 These enforce browser feature like addon. If you had made nice script, `Commandclick` is more suitable browser for you. 
