@@ -29,9 +29,7 @@ object IndexInitHandler {
         val context = cmdIndexFragment.context
             ?: return
         val activity = cmdIndexFragment.activity
-        val startUpPref = cmdIndexFragment.activity?.getPreferences(
-            Context.MODE_PRIVATE
-        )
+        val startUpPref = FannelInfoTool.getSharePref(context)
 
         TerminalShower.show(
             cmdIndexFragment

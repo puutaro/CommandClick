@@ -1,7 +1,7 @@
-package com.puutaro.commandclick.util.file
+package com.puutaro.commandclick.util.sd
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import java.io.File
+import com.puutaro.commandclick.util.file.ReadText
 
 object SdPath {
     const val rootfsRelativePath = "${UsePath.cmdclickDirName}/ubuntu/backup/rootfs"

@@ -168,7 +168,7 @@ class EditFragment: Fragment() {
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
         directoryAndCopyGetter = DirectoryAndCopyGetter(this)
-        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharePref = FannelInfoTool.getSharePref(context)
         fannelInfoMap =
             EditFragmentArgs.getFannelInfoMap(arguments)
         srcFannelInfoMap =

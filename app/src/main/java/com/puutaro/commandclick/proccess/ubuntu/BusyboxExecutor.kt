@@ -3,14 +3,16 @@ package com.puutaro.commandclick.proccess.ubuntu
 import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.file.SdPath
+import com.puutaro.commandclick.util.sd.SdPath
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -476,6 +478,11 @@ class BusyboxExecutor(
             ubuntuFiles.filesOneRootfsEtcProfile.absolutePath
         ).textToList()
         val ubuntuIntentMonitorPort = UsePort.UBUNTU_INTENT_MONITOR_PORT.num.toString()
+        val fannelInfoSharePref = FannelInfoTool.getSharePref(context)
+        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+            fannelInfoSharePref,
+            FannelInfoSetting.current_app_dir
+        )
         val exportList = listOf(
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
@@ -486,6 +493,7 @@ class BusyboxExecutor(
             "UBUNTU_ENV_TSV_NAME" to UbuntuFiles.ubuntuEnvTsvName,
             "UBUNTU_SERVICE_TEMP_DIR_PATH" to UsePath.cmdclickTempUbuntuServiceDirPath,
             "SD_ROOT_DIR_PATH" to SdPath.getSdUseRootPath(),
+            "CUR_APP_DIR_PATH" to currentAppDirPath,
         )
         val exportCmd = "export"
         val existEnvMark = "EXIST_ENV_MARK"

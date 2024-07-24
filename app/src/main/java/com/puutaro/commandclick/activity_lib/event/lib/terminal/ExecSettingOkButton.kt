@@ -11,7 +11,7 @@ object ExecSettingOkButton {
     fun handle(
         activity: MainActivity
     ){
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = FannelInfoTool.getSharePref(activity)
         val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
             FannelInfoSetting.current_app_dir

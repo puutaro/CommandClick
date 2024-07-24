@@ -168,7 +168,7 @@ object TxtHtmlDescriber {
         activity: FragmentActivity?,
         fannelInfoMap: Map<String, String>? = null
     ): String {
-        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharePref = FannelInfoTool.getSharePref(activity)
         val fannelRawName = when(fannelInfoMap.isNullOrEmpty()) {
             true -> FannelInfoTool.getStringFromFannelInfo(
                 sharePref,

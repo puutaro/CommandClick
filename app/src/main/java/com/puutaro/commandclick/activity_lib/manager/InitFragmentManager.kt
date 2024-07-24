@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity_lib.manager
 
 import android.app.ActivityManager
-import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.net.Uri
@@ -32,7 +31,7 @@ class InitFragmentManager(
     private val activity: MainActivity
 ) {
     private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
-    private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
+    private val startUpPref = FannelInfoTool.getSharePref(activity)
     private val intent = activity.intent
     private val fragmentLaunchDelayTime = 300L
 
@@ -144,16 +143,13 @@ class InitFragmentManager(
         setDataString(intent)?.let {
             execIntent.data = it
         }
-        SharePrefTool.putSharePref(
+        FannelInfoTool.putAllFannelInfo(
             startUpPref,
-            mapOf(
-                FannelInfoSetting.current_fannel_name.name
-                        to FannelInfoSetting.current_fannel_name.defalutStr,
-                FannelInfoSetting.on_shortcut.name
-                        to FannelInfoSetting.on_shortcut.defalutStr,
-                FannelInfoSetting.current_fannel_state.name
-                        to FannelInfoSetting.current_fannel_state.defalutStr
-            )
+            currentAppDirPath = null,
+            currentFannelName = FannelInfoSetting.current_fannel_name.defalutStr,
+            onShortcutValue = FannelInfoSetting.on_shortcut.defalutStr,
+            currentFannelState = FannelInfoSetting.current_fannel_state.defalutStr
+
         )
         exedRestartIntent(
             execIntent

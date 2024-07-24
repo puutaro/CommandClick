@@ -20,10 +20,9 @@ object OnEditExecuteEvent {
     ) {
         val context = fragment.context
             ?: return
-        val sharedPref =  fragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = FannelInfoTool.getSharePref(fragment.context)
         val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-        FannelInfoTool.putAllFannelInfo(
-            sharedPref,
+        FannelInfoTool.putAllFannelInfo(sharedPref,
             currentAppDirPath,
             selectedShellFileName,
             shortcutOnMark,

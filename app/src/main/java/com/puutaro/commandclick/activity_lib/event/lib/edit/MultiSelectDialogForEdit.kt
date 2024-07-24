@@ -34,7 +34,7 @@ object MultiSelectDialogForEdit {
                     selectedNames: ArrayList<String>,
                     dataString: String
                 ) {
-                    val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+                    val sharePref = FannelInfoTool.getSharePref(activity)
                     val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
                         sharePref,
                         FannelInfoSetting.current_app_dir

@@ -11,8 +11,10 @@ class RestartWhenPreferenceCheckErr {
         fun restartWhenPreferenceCheckErr(
             activity: MainActivity?
         ){
-            val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)
-            if(sharePref == null) return
+            if(
+                activity == null
+            ) return
+            val sharePref = FannelInfoTool.getSharePref(activity)
             FannelInfoTool.putAllFannelInfo(
                 sharePref,
                 FannelInfoSetting.current_app_dir.defalutStr,

@@ -57,7 +57,7 @@ class ShortCutManager(
 
     private fun createExecIntent(
     ): Intent {
-        val startUpPref =  activity.getPreferences(Context.MODE_PRIVATE)
+        val startUpPref = FannelInfoTool.getSharePref(activity)
         val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             startUpPref
         )

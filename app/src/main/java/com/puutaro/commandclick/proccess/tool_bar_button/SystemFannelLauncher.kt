@@ -81,7 +81,7 @@ object SystemFannelLauncher {
         appDirPath: String,
         fannelName: String,
     ){
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = FannelInfoTool.getSharePref(activity)
 
         val mainFannelConList = ReadText(
             File(appDirPath, fannelName).absolutePath

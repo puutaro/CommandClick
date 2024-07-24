@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.state
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -12,6 +13,25 @@ import com.puutaro.commandclick.util.SharePrefTool
 import java.io.File
 
 object FannelInfoTool {
+
+    private enum class SdCardKey(
+        val key: String,
+    ) {
+        FannelInfo("fannelInfo")
+    }
+
+    class FannelInfoSharePref(
+        val sharePref: SharedPreferences?
+    )
+    fun getSharePref(
+        context: Context?
+    ): FannelInfoSharePref {
+        val sharePref = context?.getSharedPreferences(
+            SdCardKey.FannelInfo.key,
+            Context.MODE_PRIVATE
+        )
+        return FannelInfoSharePref(sharePref)
+    }
 
     fun getFannelInfoMap(
         fragment: Fragment,
@@ -106,60 +126,64 @@ object FannelInfoTool {
     }
 
     fun getStringFromFannelInfo(
-        sharedPref: SharedPreferences?,
+        fannelInfoSharePref: FannelInfoSharePref?,
         fannelInfoSetting: FannelInfoSetting
     ): String {
         val defaultStrValue = fannelInfoSetting.defalutStr
-        if(sharedPref == null) return defaultStrValue
-        return sharedPref.getString(
+        if(fannelInfoSharePref == null) return defaultStrValue
+        return fannelInfoSharePref.sharePref?.getString(
             fannelInfoSetting.name,
             defaultStrValue
         ) ?: defaultStrValue
     }
 
     fun putAllFannelInfo(
-        sharedPref: SharedPreferences?,
-        currentAppDirPath: String,
-        currentScriptFileName: String,
-        onShortcutValue: String,
-        currentFannelState: String,
-
+        fannelInfoSharePref: FannelInfoSharePref?,
+        currentAppDirPath: String?,
+        currentFannelName: String?,
+        onShortcutValue: String?,
+        currentFannelState: String?,
     ){
-        val sharePrefMap = mapOf(
+        val nullStr = "NULL_STR"
+        val fannelInfoMap = listOf(
             FannelInfoSetting.current_app_dir.name
-                    to currentAppDirPath,
+                    to (currentAppDirPath ?: nullStr),
             FannelInfoSetting.current_fannel_name.name
-                    to currentScriptFileName,
+                    to (currentFannelName ?: nullStr),
             FannelInfoSetting.on_shortcut.name
-                    to onShortcutValue,
+                    to (onShortcutValue ?: nullStr),
             FannelInfoSetting.current_fannel_state.name
-                    to currentFannelState,
-        )
+                    to (currentFannelState ?: nullStr),
+        ).filter {
+           it.second != nullStr
+        }.map {
+            it.first to it.second
+        }.toMap()
         SharePrefTool.putSharePref (
-            sharedPref,
-            sharePrefMap
+            fannelInfoSharePref?.sharePref,
+            fannelInfoMap
         )
     }
 
     fun makeFannelInfoMapByShare(
-        startUpPref: SharedPreferences?
+        fannelInfoSharePref: FannelInfoSharePref?
     ): Map<String, String> {
         val sharedCurrentAppPath = getStringFromFannelInfo(
-            startUpPref,
+            fannelInfoSharePref,
             FannelInfoSetting.current_app_dir
         )
 
         val sharedCurrentShellFileName = getStringFromFannelInfo(
-            startUpPref,
+            fannelInfoSharePref,
             FannelInfoSetting.current_fannel_name
         )
 
         val sharedOnShortcut = getStringFromFannelInfo(
-            startUpPref,
+            fannelInfoSharePref,
             FannelInfoSetting.on_shortcut
         )
         val currentFannelState = getStringFromFannelInfo(
-            startUpPref,
+            fannelInfoSharePref,
             FannelInfoSetting.current_fannel_state
         )
 

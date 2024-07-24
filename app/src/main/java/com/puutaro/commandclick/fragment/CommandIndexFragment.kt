@@ -88,7 +88,7 @@ class CommandIndexFragment: Fragment() {
         terminalViewModel.onDialog = false
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
-        val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val startUpPref = FannelInfoTool.getSharePref(context)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
         val defaultSystemPath =

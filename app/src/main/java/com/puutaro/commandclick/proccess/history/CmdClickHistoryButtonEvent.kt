@@ -28,6 +28,7 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,7 @@ import java.io.File
 class CmdClickHistoryButtonEvent (
 //    historyButtonInnerView: View,
     private val fragment: Fragment,
-    private val sharedPref: SharedPreferences?,
+    private val sharedPref: FannelInfoTool.FannelInfoSharePref?,
     )
 {
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath

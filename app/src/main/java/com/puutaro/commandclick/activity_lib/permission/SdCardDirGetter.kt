@@ -3,7 +3,6 @@ package com.puutaro.commandclick.activity_lib.permission
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.view.Gravity
@@ -14,22 +13,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.init.ActivityFinisher
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
-import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.SdCardTool
+import com.puutaro.commandclick.util.sd.SdCardTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.OutputStreamWriter
 
 
 class SdCardDirGetter(

@@ -5,15 +5,16 @@ import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.NoUpdatelastModifyForCmdIndex
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object UpdateLastModifyFromSharePrefDir {
 
     fun update(
-        sharePref: SharedPreferences?,
+        sharePref: FannelInfoTool.FannelInfoSharePref?,
     ) {
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-        val checkCurrentAppDirPathSource = sharePref?.getString(
+        val checkCurrentAppDirPathSource = sharePref?.sharePref?.getString(
             FannelInfoSetting.current_app_dir.name,
             FannelInfoSetting.current_app_dir.defalutStr
         ) ?: FannelInfoSetting.current_app_dir.defalutStr

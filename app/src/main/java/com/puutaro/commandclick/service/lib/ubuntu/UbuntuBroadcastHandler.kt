@@ -26,9 +26,9 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.file.SdCardTool
-import com.puutaro.commandclick.util.file.SdFileSystems
-import com.puutaro.commandclick.util.file.SdPath
+import com.puutaro.commandclick.util.sd.SdCardTool
+import com.puutaro.commandclick.util.sd.SdFileSystems
+import com.puutaro.commandclick.util.sd.SdPath
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

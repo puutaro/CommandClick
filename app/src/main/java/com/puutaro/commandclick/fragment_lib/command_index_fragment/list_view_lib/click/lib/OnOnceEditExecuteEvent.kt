@@ -12,17 +12,17 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 object OnOnceEditExecuteEvent {
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
-        sharedPref: SharedPreferences?,
+        sharedPref: FannelInfoTool.FannelInfoSharePref?,
         selectedShellFileName: String,
         editFragmentTag: String,
     ) {
         val context = cmdIndexFragment.context ?: return
-        SharePrefTool.putSharePref(
+        FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            mapOf(
-                FannelInfoSetting.current_fannel_name.name
-                        to selectedShellFileName,
-            )
+            currentAppDirPath = null,
+            currentFannelName = selectedShellFileName,
+            onShortcutValue = null,
+            currentFannelState = null
         )
         val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,

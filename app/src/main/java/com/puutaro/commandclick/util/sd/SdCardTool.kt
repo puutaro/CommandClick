@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util.file
+package com.puutaro.commandclick.util.sd
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,7 +8,7 @@ import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.SharePrefTool
-import java.io.File
+import com.puutaro.commandclick.util.file.FileSystems
 
 object SdCardTool {
     

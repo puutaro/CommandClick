@@ -14,7 +14,7 @@ import java.io.File
 
 object AppHistoryAdminEvent {
     fun register(
-        sharedPref: SharedPreferences?,
+        sharedPref: FannelInfoTool.FannelInfoSharePref?,
         selectedAppDirPath: String,
         selectedFannelName: String,
         mainFannelSettingConList: List<String>,

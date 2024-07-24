@@ -253,7 +253,7 @@ class MainActivity:
         toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
         editFragmentArgs: EditFragmentArgs,
     ) {
-        val startUpPref = getPreferences(Context.MODE_PRIVATE)
+        val startUpPref = FannelInfoTool.getSharePref(this)
         val cmdEditFragmentTag =
             FragmentTagManager.makeCmdValEditTag(
                 FannelInfoTool.getStringFromFannelInfo(

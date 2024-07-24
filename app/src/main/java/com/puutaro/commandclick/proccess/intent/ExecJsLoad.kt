@@ -102,7 +102,7 @@ object ExecJsLoad {
             CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
         ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
-        val sharePref = currentFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharePref = FannelInfoTool.getSharePref(currentFragment.context)
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name

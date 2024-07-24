@@ -22,7 +22,7 @@ object SpinnerUpdaterForTerminalFragment {
         variableValue: String
     ) {
         if(spinnerId == null) return
-        val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val sharePref = FannelInfoTool.getSharePref(activity)
         val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_app_dir

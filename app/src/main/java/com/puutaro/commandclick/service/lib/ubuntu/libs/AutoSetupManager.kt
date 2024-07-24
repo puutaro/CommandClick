@@ -13,7 +13,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.file.SdPath
+import com.puutaro.commandclick.util.sd.SdPath
 import java.io.File
 
 object AutoSetupManager {

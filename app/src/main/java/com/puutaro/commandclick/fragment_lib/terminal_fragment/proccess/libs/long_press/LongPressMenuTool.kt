@@ -142,14 +142,12 @@ object LongPressMenuTool {
     ): String {
         val context = terminalFragment.context
             ?: return String()
-        val activity = terminalFragment.activity
-            ?: return String()
         val editExecuteFragmentTag = context.getString(R.string.edit_terminal_fragment)
         return when(
             terminalFragment.tag == editExecuteFragmentTag
         ){
             true -> {
-                val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+                val sharePref = FannelInfoTool.getSharePref(context)
                 FannelInfoTool.getStringFromFannelInfo(
                     sharePref,
                     FannelInfoSetting.current_fannel_name

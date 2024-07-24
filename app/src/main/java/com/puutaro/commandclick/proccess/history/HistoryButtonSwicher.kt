@@ -30,7 +30,7 @@ object HistoryBottunSwitcher {
             else -> return
         }
         val activity = fragment.activity
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = FannelInfoTool.getSharePref(fragment.context)
         val switchOnSource = (
                 historySwitch ==
                         SettingVariableSelects.HistorySwitchSelects.ON.name

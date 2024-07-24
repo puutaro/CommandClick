@@ -7,7 +7,7 @@ import android.system.Os
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 
-import com.puutaro.commandclick.util.file.SdPath
+import com.puutaro.commandclick.util.sd.SdPath
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 import java.lang.NullPointerException

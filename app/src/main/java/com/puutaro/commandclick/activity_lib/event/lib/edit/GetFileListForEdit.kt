@@ -131,7 +131,7 @@ class GetFileListForEdit (
 
     private fun getEditFragment(
     ): EditFragment? {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = FannelInfoTool.getSharePref(activity)
         val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             sharedPref
         )

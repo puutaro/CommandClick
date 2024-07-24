@@ -3,11 +3,9 @@ package com.puutaro.commandclick.service.lib.ubuntu
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
-import android.content.SharedPreferences
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
 import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -19,9 +17,6 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.SdCardTool
-import com.puutaro.commandclick.util.file.SdFileSystems
-import com.puutaro.commandclick.util.file.SdPath
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

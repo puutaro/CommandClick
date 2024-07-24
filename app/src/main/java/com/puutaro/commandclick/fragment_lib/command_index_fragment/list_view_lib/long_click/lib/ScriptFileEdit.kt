@@ -20,7 +20,7 @@ object ScriptFileEdit {
         fannelName: String,
     ){
         val sharedPref =
-            cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+            FannelInfoTool.getSharePref(cmdIndexFragment.context)
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
             currentAppDirPath,
