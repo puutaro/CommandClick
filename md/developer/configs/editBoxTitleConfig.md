@@ -13,6 +13,9 @@ Table
         * [Format for text](#format-for-text)
         * [Key-value table for text](#key-value-table-for-text)
         * [key-value table for shellPath](#key-value-table-for-shellpath)
+    * [image](#image)
+        * [Format for image](#format-for-image)
+        * [Key-value table for image](#key-value-table-for-image)
 
 
 ## How to specify
@@ -61,10 +64,11 @@ key-value[key-value]
 
 #### Key-value table for text
 
-| Key name                | value               | Description                         | 
-|-------------------------|---------------------|-------------------------------------|
-| `shellPath`             | path string / macro | make title string by shell script   |
-| (Deprecated) `shellCon` | shell contents      | make title string by shell contents |
+| Key name                | value               | Description                                | 
+|-------------------------|---------------------|--------------------------------------------|
+| `disable`               | `ON` / `OFF`        | disable title itself (contain title image) |
+| `shellPath`             | path string / macro | make title string by shell script          |
+| (Deprecated) `shellCon` | shell contents      | make title string by shell contents        |
 
 
 #### key-value table for shellPath
@@ -75,3 +79,17 @@ key-value[key-value]
 | `args`             | variableName-variableValue | add arg to shellscript |
 
 - Reflect args by replacing shell arg variable
+
+### image
+
+Title text
+
+#### Format for image
+
+key-value
+
+#### Key-value table for image
+
+| Key name                | value               | Description                              | 
+|-------------------------|---------------------|------------------------------------------|
+| `disable`               | `ON` / `OFF`        | disable title image |
