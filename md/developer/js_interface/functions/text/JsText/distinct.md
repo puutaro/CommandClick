@@ -26,6 +26,6 @@ var=distinctCon
 
 ## Src
 
--> [jsText.distinct](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L72)
+-> [jsText.distinct](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L68)
 
 
