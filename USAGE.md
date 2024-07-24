@@ -561,7 +561,7 @@ Also whether click or long click torigger, due to `historySwitch` setting  (refe
 For developer
 -----------------
 
-### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file#installation)
+### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file)
 
 ### -> [Tutorial](https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md)
 
