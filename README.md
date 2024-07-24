@@ -185,7 +185,7 @@ Usage
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
-For Addon developer
+For add-on developer
 --------
 
 ### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file#installation)
