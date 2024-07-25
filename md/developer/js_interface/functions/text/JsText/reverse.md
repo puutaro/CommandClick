@@ -26,6 +26,6 @@ var=reverseCon
 
 ## Src
 
--> [jsText.reverse](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L35)
+-> [jsText.reverse](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L31)
 
 

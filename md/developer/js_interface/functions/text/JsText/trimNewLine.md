@@ -20,11 +20,6 @@ var=conByTrimNewLine
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-## Description
-
-desctiontion aa
-bb
-cc
 
 
 ## Src
