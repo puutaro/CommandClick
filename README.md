@@ -190,8 +190,6 @@ For add-on developer
 
 ### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file)
 
-### -> [Tutorial](https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md)
-
 ### -> [Reference](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
 
 
