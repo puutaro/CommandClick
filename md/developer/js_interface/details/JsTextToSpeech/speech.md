@@ -7,6 +7,10 @@ Table
 * [Argument](#argument)
   * [playListFilePath](#playlistfilepath)
   * [extraSettingMapStr](#extrasettingmapstr)
+  * [shellPath](#shellpath)
+  * [SAVE_PLAY_LIST macro](#save_play_list-macro)
+  * [shellArgs](#shellargs)
+  * [SAVE_PLAY_LIST arg table](#save_play_list-arg-table)
 
 ## Result
 
@@ -31,16 +35,19 @@ play list path [string]
 
 Setting ${key}=${value} pair to concat by `|`
 
-| key | type | description |
-| -------- | -------- | -------- |
-| importance | string | notification importance: `high` (default) / `low`
-| playMode | string | [Optional] play mode switch: `ordinaly`(default), `shuffle`, `reverse`, `number` |
-| onRoop | string | [Optional] some string: roop, `""`: no roop |
-| playNumber | string | [Optional] play list order number  string |
-| toLang | string | [Optional] Select language: `en`(english), `zw`(chinese), `sp`(spanish), `ko`(korean), `ja`(japanese) |
-| onTrack | string | [Optional] save track switch: `""`, `on` |
-| speed | string | [Optional] speech speed int string, base '50',  |
-| pitch | string | [Optional] speech pitch int string, base '50' |
+| key          | type           | description                                                                                           |
+|--------------|----------------|-------------------------------------------------------------------------------------------------------|
+| importance   | string         | notification importance: `high` (default) / `low`                                                     |
+| playMode     | string         | [Optional] play mode switch: `ordinaly`(default), `shuffle`, `reverse`, `number`                      |
+| onRoop       | `on` <br> None | [Optional] some string: roop, `""`: no roop                                                           |
+| playNumber   | Int            | [Optional] play list order number  string                                                             |
+| toLang       | string         | [Optional] Select language: `en`(english), `zw`(chinese), `sp`(spanish), `ko`(korean), `ja`(japanese) |
+| onTrack      | `on` <br> None | [Optional] save track switch: `""`, `on`                                                              |
+| speed        | Int            | [Optional] speech speed int string, base '50',                                                        |
+| pitch        | Int            | [Optional] speech pitch int string, base '50'                                                         |
+| extraContent | string         | [Optional] Extara notification con which display content text in noti.                                |
+| shellPath    | string         | [Optional] [detail](#shellpath)                                                                       |
+| shellArgs    | string         | [Optional] [detail](shellargs)                                                                        |
 
 
 ex1) speech from play list 
@@ -103,3 +110,27 @@ play text file path 3
 .
 .
 ```
+
+
+
+### shellPath
+
+Trigger when playing one music start
+Mainly, used to store previous play info
+
+### SAVE_PLAY_LIST macro
+
+Used to store previous play info
+
+
+### shellArgs
+
+Shell args  
+Mainly, used for `SAVE_PLAY_LIST`
+
+
+### SAVE_PLAY_LIST arg table
+
+| arg name | type                                                                                                                      | description                                       |
+| -------- |---------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| savePath | previous play info save path                                                                                              | notification importance level: default is `hight` |
