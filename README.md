@@ -10,7 +10,7 @@
 <br>
 <br>
 
-**"Android browser for add-ons, by add-ons, and for add-ons"**
+**"Android browser of add-ons, by add-ons, and for add-ons"**
 <br>
 <br>
 <br>
