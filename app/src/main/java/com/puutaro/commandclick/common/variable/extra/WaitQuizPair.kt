@@ -1299,10 +1299,6 @@ object WaitQuizPair {
             "-> foreground and backgroud cmd env"
         ),
         Pair(
-            "What's the position of ssh?",
-            "-> background cmd env"
-        ),
-        Pair(
             "What's the position of proot?",
             "-> admin cmd env"
         ),
