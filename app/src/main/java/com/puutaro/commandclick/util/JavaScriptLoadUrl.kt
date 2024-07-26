@@ -102,11 +102,38 @@ object JavaScriptLoadUrl {
             )
         }
 
+        val loadJsUrl = excludeSettingVariable(
+            context,
+            jsList,
+            execJsPath,
+            setReplaceVariableMap,
+        ).joinToString(" ")
+            .let {
+                SetReplaceVariabler.execReplaceByReplaceVariables(
+                    it,
+                    setReplaceVariableMap,
+                    recentAppDirPath,
+                    scriptFileName
+                )
+            }
+        if(
+            loadJsUrl.isEmpty()
+            || loadJsUrl.isBlank()
+        ) return null
+        return makeLastJsCon(loadJsUrl)
+    }
+
+    private fun excludeSettingVariable(
+        context: Context?,
+        jsList: List<String>,
+        execJsPath: String,
+        setReplaceVariableMap: Map<String, String>?,
+    ): List<String> {
         var countSettingSectionStart = 0
         var countSettingSectionEnd = 0
         var countCmdSectionStart = 0
         var countCmdSectionEnd = 0
-        val loadJsUrl = jsList.map {
+        return jsList.map {
             val afterJsImport = JsImportManager.import(
                 context,
                 it,
@@ -161,20 +188,7 @@ object JavaScriptLoadUrl {
                 0..trimJsRowListSize - 2
             ).joinToString(";") + ";"
             sliceTrimJsRowList
-        }.joinToString(" ")
-            .let {
-                SetReplaceVariabler.execReplaceByReplaceVariables(
-                    it,
-                    setReplaceVariableMap,
-                    recentAppDirPath,
-                    scriptFileName
-                )
-            }
-        if(
-            loadJsUrl.isEmpty()
-            || loadJsUrl.isBlank()
-        ) return null
-        return makeLastJsCon(loadJsUrl)
+        }
     }
 
 

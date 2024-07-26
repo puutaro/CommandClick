@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
+import android.content.Context
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
@@ -19,6 +20,7 @@ import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -110,7 +112,7 @@ object JavascriptExecuter {
                 execJsPath
             ).textToList()
         }
-        val isJsAction = JsActionTool.judgeJsAction(
+        val jsType = JsActionTool.JsActionJudge.judge(
             execJsConList
         )
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
@@ -123,50 +125,46 @@ object JavascriptExecuter {
 //                "execJsPath: ${execJsPath}",
 //                "jsContentsListSource: ${execJsConList}",
 //                "extraMapCon: ${extraMapCon}",
-//                "isJsAction: ${isJsAction}"
+//                "fannelInfoMap: ${fannelInfoMap}",
+//                "jsType: ${jsType.key}",
 //            ).joinToString("\n\n")
 //        )
-        when(isJsAction){
-            true -> {
-                val setReplaceVariableMap =
-                    SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                        context,
-                        execJsPath
-                    )
-                val jsKeyToSubKeyListCon = SettingFile.readFromList(
-                    execJsConList,
-                    execJsPath,
-                    setReplaceVariableMap
+        when(jsType){
+            JsActionTool.JsActionJudge.JsType.JS_ACTION
+            -> execJsAction(
+                fragment,
+                execJsPath,
+                execJsConList,
+                fannelInfoMap,
+                extraMapCon,
+                webView
+            )
+            JsActionTool.JsActionJudge.JsType.FANNEL_JS_ACTION
+            -> {
+                val execExcludeJsConList = JsActionTool.ExcludeSettingVariable.exclude(
+                    execJsConList
                 )
 //                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
+//                    File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad000_.txt").absolutePath,
 //                    listOf(
 //                        "execJsPath: ${execJsPath}",
 //                        "jsContentsListSource: ${execJsConList}",
 //                        "extraMapCon: ${extraMapCon}",
-//                        "isJsAction: ${isJsAction}",
-//                        "setReplaceVariableMap: ${setReplaceVariableMap}",
-//                        "jsKeyToSubKeyListCon: ${jsKeyToSubKeyListCon}",
-//                        "jsKeyToSubKeyListCon: ${SetReplaceVariabler.execReplaceByReplaceVariables(
-//                            jsKeyToSubKeyListCon,
-//                            setReplaceVariableMap,
-//                            String(),
-//                            String()
-//                        )}",
+//                        "fannelInfoMap: ${fannelInfoMap}",
+//                        "execExcludeJsConList: ${execExcludeJsConList}",
+//                        "jsType: ${jsType.key}",
 //                    ).joinToString("\n\n")
 //                )
-
-                JsActionHandler.handle(
+                execJsAction(
                     fragment,
-                    fannelInfoMap,
                     execJsPath,
-                    setReplaceVariableMap,
-                    jsKeyToSubKeyListCon,
+                    execExcludeJsConList,
+                    fannelInfoMap,
                     extraMapCon,
                     webView
                 )
             }
-            else -> {
+            JsActionTool.JsActionJudge.JsType.NORMAL_JS -> {
                 val execJsCon = JavaScriptLoadUrl.make(
                     context,
                     execJsPath,
@@ -192,6 +190,36 @@ object JavascriptExecuter {
                 )
             }
         }
+    }
+
+    private fun execJsAction(
+        fragment: Fragment,
+        execJsPath: String,
+        execJsConList: List<String>,
+        fannelInfoMap: Map<String, String>,
+        extraMapCon: Map<String, String>?,
+        webView: WebView?
+    ){
+        val context = fragment.context
+        val setReplaceVariableMap =
+            SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                context,
+                execJsPath
+            )
+        val jsKeyToSubKeyListCon = SettingFile.readFromList(
+            execJsConList,
+            execJsPath,
+            setReplaceVariableMap
+        )
+        JsActionHandler.handle(
+            fragment,
+            fannelInfoMap,
+            execJsPath,
+            setReplaceVariableMap,
+            jsKeyToSubKeyListCon,
+            extraMapCon,
+            webView
+        )
     }
 
     fun enableJsLoadInWebView(

@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -28,24 +29,120 @@ import java.io.File
 
 object JsActionTool {
 
-    private val jsActionShiban =
-        CommandClickScriptVariable.jsActionShiban
     private val jsKeyName = JsActionKeyManager.JsActionsKey.JS.key
     private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_FUNC.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
 
 
-    fun judgeJsAction(
-        jsList: List<String>
-    ): Boolean {
-        val firstLine = jsList
-            .firstOrNull()
-            ?: return false
-        val isExistJsAcShiban = firstLine
-            .trim()
-            .removePrefix("//")
-            .trim().startsWith(jsActionShiban)
-        return isExistJsAcShiban
+    object JsActionJudge {
+        private val jsActionShiban =
+            CommandClickScriptVariable.jsActionShiban
+
+        enum class JsType(
+            val key: String
+        ){
+            JS_ACTION("action"),
+            FANNEL_JS_ACTION("fannel"),
+            NORMAL_JS("js"),
+        }
+        fun judge(
+            jsList: List<String>
+        ): JsType {
+            val firstLine = jsList
+                .firstOrNull()
+                ?: return JsType.NORMAL_JS
+            val shiban = firstLine
+                .trim()
+                .removePrefix("//")
+                .trim()
+            val isNotExistJsAcShiban =
+                !shiban.startsWith(jsActionShiban)
+            if(
+                isNotExistJsAcShiban
+            ) return JsType.NORMAL_JS
+            val shibanPrefix = shiban.split("/").lastOrNull()
+            return JsType.values().firstOrNull {
+                it.key == shibanPrefix
+            } ?: JsType.NORMAL_JS
+        }
+    }
+
+    object ExcludeSettingVariable {
+
+        private val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+        private val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+        ) as String
+        private val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+        ) as String
+        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+        ) as String
+        private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+        ) as String
+        fun exclude(
+            jsList: List<String>,
+        ): List<String> {
+            var countLabelingSectionStart = 0
+            var countLabelingSectionEnd = 0
+            var countSettingSectionStart = 0
+            var countSettingSectionEnd = 0
+            var countCmdSectionStart = 0
+            var countCmdSectionEnd = 0
+            return jsList.map {
+                line ->
+                if (
+                    line.startsWith(labelingSectionStart)
+                    && line.endsWith(labelingSectionStart)
+                ) countLabelingSectionStart++
+                if (
+                    line.startsWith(labelingSectionEnd)
+                    && line.endsWith(labelingSectionEnd)
+                ) countLabelingSectionEnd++
+                if (
+                    line.startsWith(settingSectionStart)
+                    && line.endsWith(settingSectionStart)
+                ) countSettingSectionStart++
+                if (
+                    line.startsWith(settingSectionEnd)
+                    && line.endsWith(settingSectionEnd)
+                ) countSettingSectionEnd++
+                if (
+                    line.startsWith(commandSectionStart)
+                    && line.endsWith(commandSectionStart)
+                ) countCmdSectionStart++
+                if (
+                    line.startsWith(commandSectionEnd)
+                    && line.endsWith(commandSectionEnd)
+                ) countCmdSectionEnd++
+                val isInnerLabelingSection = countLabelingSectionStart > 0
+                        && countLabelingSectionEnd == 0
+                val isInnerSettingSection = countSettingSectionStart > 0
+                        && countSettingSectionEnd == 0
+                val isInnerCmdSection = countCmdSectionStart > 0
+                        && countCmdSectionEnd == 0
+                return@map when(true) {
+                    isInnerLabelingSection -> String()
+                    isInnerSettingSection -> String()
+                    isInnerCmdSection -> String()
+                    else -> line
+                }
+            }.filter {
+                val trimLine = it.trim()
+                !trimLine.startsWith("///")
+                        && trimLine.isNotEmpty()
+            }
+        }
     }
 
     private fun makeSetRepValMap(
