@@ -22,6 +22,8 @@ Table of Contents
         * [toolbar button config](#toolbar-button-config)
         * [More for setting variables](#more-for-setting-variables)
 * [Javascript](#javascript)
+    * [Js action](#js-action)
+    * [Js shiban](#js-shiban)
     * [JavaScript interface](#javascript-interface)
     * [Javascript pre reserved word](#javascript-pre-reserved-word)
     * [Import js library](#import-js-library)
@@ -174,6 +176,13 @@ var=isOkHelloWorld
 
 -> detail is constructing...
 
+### Js shiban
+
+CC has shiban for javascript.  
+This is used to handle normal js or js action or etc.  
+
+-> [js shiban](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_shiban.md)
+
 ### JavaScript interface
 
 -> [javascript interfaces](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions)
@@ -294,6 +303,6 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 
 ### Glossary
 
--> [About glossary](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel)
+-> [About glossary](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md)
 
 
