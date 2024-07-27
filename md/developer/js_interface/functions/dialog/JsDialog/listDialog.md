@@ -26,7 +26,7 @@ var=selectedItem
 
 ## Description
 
-## About listSource
+### About listSource
 list item string separated by newline
 
 - Enable icon specify by tab second field
