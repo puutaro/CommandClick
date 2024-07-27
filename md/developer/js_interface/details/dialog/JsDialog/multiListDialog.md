@@ -14,8 +14,8 @@ Show multi select list dialog
 
 jsDialog.multiListDialog(
 	title: String,  
-	currentItemListStr: String,  
-	preSelectedItemListStr: String,  
+	currentItemListNewlineSepaStr: String,  
+	preSelectedItemListNewlineSepaStr: String,  
     )
 ```
 
@@ -24,8 +24,8 @@ jsDialog.multiListDialog(
 | arg name | type | description                               |
 | -------- | -------- |-------------------------------------------|
 | title | string | title string                              |
-| currentItemListStr | string | list string sepalated by newline          |
-| preSelectedItemListStr | string | selected elements string sepalated by newline |
+| currentItemListNewlineSepaStr | string | list string sepalated by newline          |
+| preSelectedItemListNewlineSepaStr | string | selected elements string sepalated by newline |
 
 
 ex1)   
@@ -34,13 +34,13 @@ ex1)
 
 jsDialog.multiListDialog(
 	"sample",  
-	"item1\titem2\titem3\titem4\titem5"  
-	"item1\titem3",  
+	"item1\nitem2\nitem3\nitem4\nitem5"  
+	"item1\nitem3",  
 );
 
 (select item3 item5)
 
-	-> "item3\titem5";
+	-> "item3\nitem5";
 
 ```
 

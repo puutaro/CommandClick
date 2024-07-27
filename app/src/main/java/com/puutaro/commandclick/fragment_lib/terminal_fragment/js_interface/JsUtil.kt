@@ -14,12 +14,10 @@ class JsUtil(
 ) {
 
     @JavascriptInterface
-    fun sleep(sleepMiriTime: Int){
-        Thread.sleep(sleepMiriTime.toLong())
-    }
-
-    @JavascriptInterface
-    fun copyToClipboard(text: String?, fontSize: Int) {
+    fun copyToClipboard(
+        text: String?,
+        fontSize: Int
+    ) {
         val clipboard: ClipboardManager? =
             fragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
         val textView = TextView(fragment.context)

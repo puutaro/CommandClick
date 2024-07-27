@@ -23,6 +23,9 @@ class JsUrl(
     fun makeJsUrl(
         jsPath: String
     ): String {
+        /*
+        Make load js contents from js path
+       */
         val jsConList =
             ReadText(jsPath).textToList()
         val loadJsCon = JavaScriptLoadUrl.make(
@@ -37,6 +40,9 @@ class JsUrl(
     fun makeJsRawCon(
         jsPath: String
     ): String {
+        /*
+        Make raw js contents before load
+       */
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             terminalFragment,
             jsPath
@@ -59,6 +65,13 @@ class JsUrl(
         jsPath: String,
         replaceMapCon: String,
     ) {
+        /*
+        Load js path
+
+        ### replaceMapCon arg
+
+        -> [replace variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md)
+        */
         val replaceMap = CmdClickMap.createMap(
             replaceMapCon,
             '|'
@@ -87,6 +100,9 @@ class JsUrl(
     fun loadQrUrl(
         loadConSrc: String
     ) {
+        /*
+        [Deprecated] Load QR code contents about js or url
+        */
         QrUriHandler.load(
             terminalFragment,
             terminalFragment.currentAppDirPath,
@@ -98,6 +114,9 @@ class JsUrl(
     fun loadScanCon(
         loadConSrc: String,
     ){
+        /*
+        Load QR code contents about Url or javascript
+        */
         val loadCon = loadConSrc.trim()
         when(true) {
             loadCon.startsWith(QrLaunchType.Http.prefix),
@@ -116,6 +135,10 @@ class JsUrl(
     fun loadUrl(
         urlStr: String
     ) {
+        /*
+        Load Url
+        This is one of the most used js interface.
+        */
         BroadCastIntent.sendUrlCon(
             terminalFragment,
             urlStr
@@ -128,6 +151,9 @@ class JsUrl(
         pageFinishedLoadCon: String,
         beforeDelayMiliSec: String
     ){
+        /*
+        Load js contents when page load finish
+        */
         val urlBroadcastExtra = listOf(
             Pair(
                 BroadCastIntentSchemeTerm.ULR_LAUNCH.scheme,
@@ -151,6 +177,9 @@ class JsUrl(
 
     @JavascriptInterface
     fun exit_S(){
+        /*
+        Exit javascript loading
+        */
         terminalFragment.binding.terminalWebView.loadUrl(
             "about:blank"
         )
@@ -160,6 +189,9 @@ class JsUrl(
     fun loadFromJsCon(
         jsCon: String,
     ){
+        /*
+        Load js contents
+        */
         loadUrl(
             makeJsUrlFromCon(jsCon)
         )

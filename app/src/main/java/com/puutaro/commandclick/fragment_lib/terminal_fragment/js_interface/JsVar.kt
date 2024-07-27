@@ -10,6 +10,12 @@ class JsVar(
     fun echo(
         valueStr: String
     ): String {
+
+        /*
+        Echo valueStr contents
+        This exist for debug
+        */
+
         return valueStr
     }
 }

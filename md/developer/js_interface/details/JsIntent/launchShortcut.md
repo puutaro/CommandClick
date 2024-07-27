@@ -16,17 +16,19 @@ Launch fannel
 
 jsIntent.launchShortcut(
 	currentAppDirPath: String,
-	currentFannelName: String
+	currentFannelName: String,
+	currentFannelState: String,
 ) 
 
 ```
 
 ## Argument
 
-| arg name | type | description |
-| -------- | -------- | -------- |
-| currentAppDirPath | string | current [app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) path |
-| currentFannelName | string | current [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name |
+| arg name | type | description                                                                                                                                                                                                       |
+| -------- | -------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| currentAppDirPath | string | current [app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) path                                                                                                |
+| currentFannelName | string | current [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name                                                                                                        |
+| currentFannelState | string | current [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) [state](https://github.com/puutaro/CommandClick/blob/master/md/developer/state/fannelStateRootTableTsv.md#whats-fannel-state) |
 
 
 ex1)

@@ -40,7 +40,7 @@ ex1)
 jsDialog.multiSelectOnlyImageGridDialog(
 	"title1",
 	"message1",
-	"${iamge path1}\t${iamge path2}\t${iamge path3}\t..."
+	"${iamge path1}\n${iamge path2}\n${iamge path3}\n..."
 );
 -> selected image path
 ```

@@ -34,41 +34,6 @@ class JsIntent(
         )
     }
 
-//    @JavascriptInterface
-//    fun launchFzSite(
-//        editPath: String,
-//        promptMessage: String,
-//        itemClickJs: String,
-//        itemLongClickJs: String,
-//        realTimeListSetJs: String
-//    ) {
-//        val jsIntent = Intent()
-//        jsIntent.action = BroadCastIntentSchemeTerm.FZHTML_LAUNCH.action
-//        jsIntent.putExtra(
-//            BroadCastIntentSchemeTerm.FZHTML_LAUNCH.scheme,
-//            editPath
-//        )
-//        jsIntent.putExtra(
-//            BroadCastIntentExtraForFzHtml.TEMPLATE_PROMPT_MESSAGE.scheme,
-//            promptMessage
-//        )
-//        jsIntent.putExtra(
-//            BroadCastIntentExtraForFzHtml.ITEM_CLICK_JAVASCRIPT.scheme,
-//            itemClickJs
-//        )
-//        jsIntent.putExtra(
-//            BroadCastIntentExtraForFzHtml.ITEM_LONG_CLICK_JAVASCRIPT.scheme,
-//            itemLongClickJs
-//        )
-//        jsIntent.putExtra(
-//            BroadCastIntentExtraForFzHtml.REAL_TIME_LIST_SET_JAVASCRIPT.scheme,
-//            realTimeListSetJs
-//        )
-//        terminalFragment.activity?.sendBroadcast(jsIntent)
-//    }
-
-
-
     @JavascriptInterface
     fun launchUrl(
         currentPageUrl: String
@@ -103,7 +68,8 @@ class JsIntent(
     @JavascriptInterface
     fun launchShortcut(
         currentAppDirPath: String,
-        currentScriptFileName: String
+        currentScriptFileName: String,
+        currentFannelState: String,
     ){
         val execIntent = Intent(terminalFragment.activity, MainActivity::class.java)
         execIntent
@@ -118,6 +84,10 @@ class JsIntent(
             FannelInfoSetting.current_fannel_name.name,
             currentScriptFileName
         )
+        execIntent.putExtra(
+            FannelInfoSetting.current_fannel_state.name,
+            currentFannelState
+        )
         terminalFragment.activity?.startActivity(execIntent)
     }
 
@@ -125,6 +95,9 @@ class JsIntent(
     fun shareImage(
         imageFilePath: String,
     ){
+        /*
+        Launch share image intent
+        */
         val imageFilePathObj = File(imageFilePath)
         if(
             !imageFilePathObj.isFile

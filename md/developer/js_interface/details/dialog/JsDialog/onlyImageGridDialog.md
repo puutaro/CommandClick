@@ -40,7 +40,7 @@ ex1)
 jsDialog.onlyImageGridDialog(
 	"ex 1",
 	"message1",
-	"${image path1}\t${image path1}\t..."
+	"${image path1}\n${image path1}\n..."
 );
 
 -> selected image path

@@ -45,6 +45,9 @@ class JsDirect (
         mainUrl: String,
         fullPathOrFannelRawName: String,
     ){
+        /*
+        Get fannel from other smart phone by p2p
+        */
         val intent = Intent(
             context,
             fileDownloadService

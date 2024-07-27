@@ -104,6 +104,7 @@ class JsDialog(
         list item string separated by newline
 
         - Enable icon specify by tab second field
+        - ref [icon](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md)
 
         ```js.js
         listSource=`
@@ -197,16 +198,16 @@ class JsDialog(
     @JavascriptInterface
     fun multiListDialog(
         title: String,
-        currentItemListStr: String,
-        preSelectedItemListStr: String,
+        currentItemListNewlineSepaStr: String,
+        preSelectedItemListNewlineSepaStr: String,
     ): String {
         if(
-            preSelectedItemListStr.trim().isEmpty()
+            preSelectedItemListNewlineSepaStr.trim().isEmpty()
         ) return String()
         val selectedLine = multiSelectJsDialog.create(
             title,
-            currentItemListStr,
-            preSelectedItemListStr,
+            currentItemListNewlineSepaStr,
+            preSelectedItemListNewlineSepaStr,
         )
         return selectedLine
     }
@@ -362,6 +363,10 @@ class JsDialog(
 
     @JavascriptInterface
     fun webViewDismiss_S(){
+
+        /*
+        This function is used to dismiss [pocket webview](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#highlight-search
+        */
         webViewJsDialog.dismiss()
     }
 
@@ -382,13 +387,13 @@ class JsDialog(
     @JavascriptInterface
     fun qrScan_S(
         title: String,
-        currentScriptPath: String,
+        currentFannelPath: String,
         callBackJsPath: String,
         menuMapStrListStr: String,
     ) {
         qrScanJsDialog.create(
             title,
-            currentScriptPath,
+            currentFannelPath,
             callBackJsPath,
             menuMapStrListStr
         )

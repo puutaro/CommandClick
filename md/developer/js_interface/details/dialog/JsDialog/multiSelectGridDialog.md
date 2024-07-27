@@ -18,7 +18,7 @@ Show spannable multi select grid dialog
 jsDialog.multiSelectGridDialog(
 	title: String,
 	message: String,
-	imagePathListTabSepalateString: String
+	imagePathListNewlineSepaStr: String
 )
 -> selected spannable image paths
 
@@ -31,7 +31,7 @@ jsDialog.multiSelectGridDialog(
 | -------- | -------- | -------- |
 | title | string | string |
 | message | string | string |
-| imagePathListTabSepalateString | string | src image path strings sepalated by tab |
+| imagePathListNewlineSepaStr | string | src image path strings sepalated by tab |
 
 ex1)
 
@@ -39,7 +39,7 @@ ex1)
 jsDialog.multiSelectGridDialog(
 	"title1",
 	"message1",
-	"${iamge path1}\t${iamge path2}\t${iamge path3}\t..."
+	"${iamge path1}\n${iamge path2}\n${iamge path3}\n..."
 );
 -> src image path
 ```

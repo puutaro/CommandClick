@@ -40,7 +40,7 @@ class JsCurl(
 
     @JavascriptInterface
     fun getAndSave (
-        path: String,
+        savePath: String,
         mainUrl: String,
         queryParameter: String,
         header: String,
@@ -57,7 +57,7 @@ class JsCurl(
                 !CurlManager.isConnOk(it)
             ) return@let
             FileSystems.writeFromByteArray(
-                path,
+                savePath,
                 it
             )
         }
@@ -167,7 +167,9 @@ class JsCurl(
     }
 
     @JavascriptInterface
-    fun isConnOk(res: String): Boolean {
+    fun isConnOk(
+        res: String
+    ): Boolean {
         return CurlManager.isConnOk(res.toByteArray())
     }
 }

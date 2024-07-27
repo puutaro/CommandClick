@@ -5,13 +5,13 @@
 Rooting fannel state
 
 * [OVERVIEW](#overview)
-* [What's fannel state ?](#what's-fannel-state-?)
+* [What's fannel state ?](#whats-fannel-state)
 * [fannelStateRootTable tsv ex](#fannelstateroottable-tsv-ex)
 * [Format for fannelStateRootTable.tsv](#format-for-fannelstateroottable.tsv)
 * [Macro path](#macro-path)
 * [Controller](#controller)
 
-## What's fannel state ?
+## What's fannel state ? <a id="whats-fannel-state"></a>
 
 Normally, [setting variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md) is set by main fannel.  
 But, sometime, require other [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)   

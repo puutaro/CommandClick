@@ -9,10 +9,13 @@ class JsHtml(
     val context = terminalFragment.context
 
     @JavascriptInterface
-    fun txtHtml(
+    fun txt2Html(
         contents: String,
         isScrollBottom: Boolean,
     ): String {
+        /*
+        Convert text to html
+        */
         return """
 <!DOCTYPE html>
 <html>

@@ -22,14 +22,14 @@ class JsValEdit(
     @JavascriptInterface
     fun editAndSaveCmdVar(
         title: String,
-        fContents: String,
+        fannelPath: String,
         setVariableTypes: String,
         targetVariables: String,
     ): String {
         val isOk = try {
             execEditAndSaveCmdVar(
                 title,
-                fContents,
+                fannelPath,
                 setVariableTypes,
                 targetVariables,
             )
@@ -48,9 +48,12 @@ class JsValEdit(
     fun registerFannelConChange(
         changedFannelCon: String
     ){
+        /*
+        Register fannel con change to Edit fragment
+        */
         val listener = context as? TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm
         listener?.onEditFannelContentsListUpdateForTerm(
-            fannelInfoMap ,
+            fannelInfoMap,
             changedFannelCon.split("\n")
         )
     }

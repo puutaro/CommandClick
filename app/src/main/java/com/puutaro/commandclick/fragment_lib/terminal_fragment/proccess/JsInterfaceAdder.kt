@@ -33,7 +33,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.J
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsReplaceVariables
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsScript
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsSendKey
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsStop
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsTextToSpeech
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
@@ -49,7 +48,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsF
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.judge.JsBeforeInfo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsCcUsage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsCopyItem
@@ -124,10 +122,6 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsToast(terminalFragment),
-        )
-        ExecJsInterfaceAdder.add(
-            webView,
-            JsStop(terminalFragment),
         )
         ExecJsInterfaceAdder.add(
             webView,
@@ -276,10 +270,6 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsFileSystem(terminalFragment),
-        )
-        ExecJsInterfaceAdder.add(
-            webView,
-            JsF(terminalFragment)
         )
     }
 

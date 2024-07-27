@@ -8,7 +8,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class JsCmdIntent(
-    private val terminalFragment: TerminalFragment
+    terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
@@ -18,6 +18,17 @@ class JsCmdIntent(
     fun run_S(
         execCmdSource: String
     ){
+        /*
+        Run command by termux
+
+        ### Example
+        JsCmdIntent.run_S(
+            "bash \"$[bash script path}\"
+        )
+
+        - Enable `> /dev/null` or `> /dev/null 2>&1`
+
+        */
         val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
         val execCmd = if(
             execCmdSource.endsWith("> /dev/null")

@@ -4,7 +4,6 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -106,32 +105,16 @@ class JsScript(
     @JavascriptInterface
     fun subValOnlyValue(
         targetValName: String,
-        valString: String
+        settingValsString: String
     ): String {
         val targetValPrefix = "${targetValName}="
-        val targetSettingVariableValue = valString.split("\n").filter {
+        val targetSettingVariableValue = settingValsString.split("\n").filter {
             it.startsWith(targetValPrefix)
         }.map {
             val removedValName = it.removePrefix(targetValPrefix)
             QuoteTool.trimBothEdgeQuote(removedValName)
         }.joinToString("\n")
         return targetSettingVariableValue
-    }
-
-    @JavascriptInterface
-    fun convertSetValPathToOneLine(
-        currentFannelPath: String,
-        setVariableFilePath: String,
-    ): String {
-        val oneLineSetVariableCon = listOf(
-            CommandClickScriptVariable.SET_VARIABLE_TYPE,
-            SettingFile.read(
-                setVariableFilePath,
-                currentFannelPath,
-                setReplaceVariableMap,
-            )
-        ).filter{ it.isNotEmpty() }.joinToString("=")
-        return oneLineSetVariableCon
     }
 
     @JavascriptInterface

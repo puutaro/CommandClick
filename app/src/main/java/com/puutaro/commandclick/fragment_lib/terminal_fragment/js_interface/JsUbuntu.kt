@@ -42,13 +42,14 @@ class JsUbuntu(
                 null
             )
         ) return String()
-        return Shell2Http.runScript(
+        val output = Shell2Http.runScript(
             context,
             executeShellPath,
             tabSepaArgs,
             2000,
             null,
         )
+        return output
     }
 
 
@@ -78,32 +79,6 @@ class JsUbuntu(
             monitorName,
         )
     }
-
-
-//    @JavascriptInterface
-//    fun execScriptBySsh(
-//        executeShellPath:String,
-//        tabSepaArgs: String,
-//        monitorNum: Int,
-//    ): String {
-//        if(
-//            context == null
-//        ) return  String()
-//        if(
-//            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
-//        ) {
-//            ToastUtils.showShort("Launch ubuntu")
-//            return  String()
-//        }
-//        val monitorFileName = UsePath.decideMonitorName(monitorNum)
-//        return SshManager.execScript(
-//            context,
-//            executeShellPath,
-//            tabSepaArgs,
-//            monitorFileName,
-//            true,
-//        )
-//    }
 
     @JavascriptInterface
     fun execScriptByBackground(
@@ -302,11 +277,53 @@ class JsUbuntu(
         installOneList: String,
         cautionTitleAndMessage: String,
     ): Boolean {
+        /*
+        Dialog prompting installation.
+        Mainly, used to install pkg to Ubuntu
+
+        ### installStampFilePath arg
+
+        Stamp file path indicating that user has installed
+
+        ### expectStampCon
+
+        Stamp file contents
+
+        ### installConfirmTitleAndMessage
+
+        Install confirm title and message separated by `|`
+
+        ### installOneList
+
+        Install button label
+
+        ### cautionTitleAndMessage
+
+        Caution Dialog title and msg separated by `|`, when user don't install
+
+
+        ## Example
+
+        ```js.js
+        var=isInstall
+            ?func=jsUbuntu.isInstall
+            ?args=
+                installStampFilePath=`${cmdYoutuberInstallStampFilePath}`
+                &expectStampCon=`${INSTALL_STAMP_CON}`
+                &confirmTitleAndMsg="Press install button|"
+                &installOneList="install\tpuzzle"
+                &cautionTitleAndMsg="Caution!|Install by ⚙️ button"
+        ```
+        */
+        var isInstall = false
         val stampCon =
             ReadText(installStampFilePath).readText().trim()
         if(
             stampCon == expectStampCon
-        ) return true
+        ) {
+            isInstall = true
+            return isInstall
+        }
         val jsDialog = JsDialog(terminalFragment)
         val installTitleToMsg = makeTitleToMsg(installConfirmTitleAndMessage)
         val el = jsDialog.listDialog(
@@ -316,7 +333,10 @@ class JsUbuntu(
         )
         if(
             el.isNotEmpty()
-        ) return false
+        ) {
+            isInstall = false
+            return isInstall
+        }
         val cautionTitleToMsg = makeTitleToMsg(cautionTitleAndMessage)
         JsDialog(terminalFragment).listDialog(
             cautionTitleToMsg.first,
@@ -324,7 +344,8 @@ class JsUbuntu(
             String()
         )
         JsUrl(terminalFragment).exit_S()
-        return false
+        isInstall = false
+        return isInstall
     }
 
     private fun makeTitleToMsg(

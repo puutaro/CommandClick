@@ -24,22 +24,24 @@ execEditTargetFileName(
   commandVariables: string, 
   prefix: file select string,  
   suffix: file select string,  
-  scriptFilePath: string
+  scriptFilePath: string,
+  title: string
 )
 
 ```
 
 ## Argument
 
-| arg name | type | description |
-| -------- | -------- | -------- |
-| targetVariable | string | rename target command variable name |
-| renameVariable | string | rename destination command variable name |
+| arg name         | type | description                                                                                                             |
+|------------------| -------- |-------------------------------------------------------------------------------------------------------------------------|
+| targetVariable   | string | rename target command variable name                                                                                     |
+| renameVariable   | string | rename destination command variable name                                                                                |
 | settingVariables | string | [setting variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#setting-variable) sepalated by tab |
-| commandVariables | string | [command variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) sepalated by tab |
-| prefix | string | grep this prefix string |
-| suffix | string | grep this suffix string |
-| scriptFilePath | string | [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) path string |
+| commandVariables | string | [command variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) sepalated by tab    |
+| prefix           | string | grep this prefix string                                                                                                 |
+| suffix           | string | grep this suffix string                                                                                                 |
+| scriptFilePath   | string | [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) path string               |
+| title            | string | title string                                                                                                            |
 
 - suffix macro: `NoExtend`: no extend
 

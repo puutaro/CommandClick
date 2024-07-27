@@ -15,6 +15,9 @@ object ListContentsSelectBoxTool {
         editFragment: EditFragment,
         currentButtonTag: String?
     ){
+        /*
+        Save [list contents select box]() on click button with tag
+        */
         val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
         if(
             currentButtonTag.isNullOrEmpty()

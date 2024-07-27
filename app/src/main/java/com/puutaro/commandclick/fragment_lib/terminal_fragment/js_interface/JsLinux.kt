@@ -16,7 +16,27 @@ class JsLinux(
     fun runCmd(
         cmdStr: String
     ): String {
-        ToastUtils.showShort(cmdStr)
+        /*
+        Run cmd by native android shell
+
+        ### Example
+
+        ```js.js
+        jsLinux.runCmd(
+           "ls"
+        )
+        ```
+
+        ### Example js action version
+
+        ```js.js
+        var=runCmd
+           ?func=jsLinux.runCmd
+           ?args=
+                cmdStr="ls"
+        ```
+
+        */
         val cmdOutput = LinuxCmd.execCommand(
             context,
             listOf("sh", "-c", cmdStr).joinToString("\t")

@@ -102,28 +102,4 @@ class JsEdit(
             updateVariableValue
         )
     }
-
-    @JavascriptInterface
-    fun removeFromEditHtml(
-        editPath: String,
-        removeUri: String
-    ){
-        val editPathObj = File(editPath)
-        if(
-            !editPathObj.isFile
-        ) {
-            ToastUtils.showLong("no exist\n ${editPath}")
-            return
-        }
-        val removedUrlList = ReadText(
-            editPath
-        ).textToList().filter {
-            val path = it.split("\t").lastOrNull()
-            path != removeUri
-        }.joinToString("\n")
-        FileSystems.writeFile(
-            editPath,
-            removedUrlList
-        )
-    }
 }

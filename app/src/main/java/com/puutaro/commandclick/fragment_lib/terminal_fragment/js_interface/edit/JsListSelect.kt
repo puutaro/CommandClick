@@ -30,6 +30,18 @@ class JsListSelect(
         targetListFilePath: String,
         itemTextListCon: String
     ){
+        /*
+        Complete list contents select box with item test list con (item separated by newline)
+
+        ### targetListFilePath arg
+        list (item separated by newline) file list contents select box
+
+        ### itemTextListCon
+
+        item test list con (item separated by newline)
+
+        */
+
         ListContentsSelectBoxTool.compListFile(
             targetListFilePath,
             itemTextListCon
@@ -82,6 +94,25 @@ class JsListSelect(
         replaceTargetVariable: String,
         defaultVariable: String
     ){
+        /*
+        Wrap remove item from list contents in select box and set recent item to one
+
+        ### targetListFilePath arg
+        Remove target list file path in list contents select box
+
+        ### removeTargetItem
+        Remove target item
+
+        ### currentScriptPath
+        current fannel path
+
+        ### replaceTargetVariable
+        Set recent item to here variable name's edit text
+
+        ### replaceTargetVariable
+        Set blank value to here variable name's edit text
+        */
+
         val searchListFileObj = File(
             targetListFilePath
         )

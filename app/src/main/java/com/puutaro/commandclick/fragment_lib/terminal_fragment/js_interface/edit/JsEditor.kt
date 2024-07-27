@@ -21,6 +21,10 @@ class JsEditor(
     fun open_S(
         filePath: String,
     ){
+        /*
+        Edit file by editor app
+        */
+
         val filePathObj = File(filePath)
         val parentDirPath = filePathObj.parent
             ?: return
@@ -36,6 +40,11 @@ class JsEditor(
     fun byEditText(
         textPath: String,
     ){
+
+        /*
+        Edit file by edit text
+        */
+
         val textPathObj = File(textPath)
         val parentDirPath = textPathObj.parent
             ?: return

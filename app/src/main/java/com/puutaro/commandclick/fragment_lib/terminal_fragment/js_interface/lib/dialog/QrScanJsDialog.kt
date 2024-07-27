@@ -48,7 +48,7 @@ class QrScanJsDialog(
 
     fun create(
         title: String,
-        currentScriptPath: String,
+        currentFannelPath: String,
         callBackJsPath: String,
         menuMapStrListStr: String,
     ) {
@@ -57,7 +57,7 @@ class QrScanJsDialog(
             withContext(Dispatchers.Main){
                 execCreate(
                     title,
-                    currentScriptPath,
+                    currentFannelPath,
                     callBackJsPath,
                     menuMapStrListStr,
                 )
@@ -67,7 +67,7 @@ class QrScanJsDialog(
 
     private fun execCreate(
         title: String,
-        currentScriptPath: String,
+        currentFannelPath: String,
         callBackJsPath: String,
         menuMapStrListStr: String,
     ){
@@ -115,7 +115,7 @@ class QrScanJsDialog(
                 qrScanDialogObj = null
                 terminalViewModel.onDialog = false
                 loadJsForQrMenu(
-                    currentScriptPath,
+                    currentFannelPath,
                     callBackJsPath,
                     webView,
                     decodeText
@@ -145,14 +145,14 @@ class QrScanJsDialog(
         ) ?: return
         menuMapStrList.forEach {
             val btnMenuMap = makeBtnOptionMap(
-                currentScriptPath,
+                currentFannelPath,
                 it
             )
             val imageButton = qrBtnSetter(
                 webView,
                 btnMenuMap,
                 btnWeight,
-                currentScriptPath
+                currentFannelPath
             )
             qrScanBottomLinearLayout.addView(imageButton)
         }
@@ -324,7 +324,7 @@ class QrScanJsDialog(
     }
 
     private fun loadJsForQrMenu(
-        currentScriptPath: String,
+        currentFannelPath: String,
         jsPath: String,
         webView: WebView,
         decodedText: String = String(),
@@ -332,10 +332,10 @@ class QrScanJsDialog(
     ){
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,
-            currentScriptPath,
+            currentFannelPath,
         )
         val fannelPath = CcPathTool.getMainFannelFilePath(
-            currentScriptPath
+            currentFannelPath
         )
         val fannelPathObj = File(fannelPath)
         if(!fannelPathObj.isFile) return
@@ -393,7 +393,7 @@ class QrScanJsDialog(
     }
 
 
-    private fun makeBtnOptionMap(
+    private fun  makeBtnOptionMap(
         currentFannelPath: String,
         centerMenuMapStr: String
     ): Map<String, String>? {
