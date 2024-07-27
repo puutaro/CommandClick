@@ -24,6 +24,24 @@ var=selectedItem
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
+## Description
+
+## About listSource
+list item string separated by newline
+
+- Enable icon specify by tab second field
+
+```js.js
+listSource=`
+    ${item1}	{icon name1}
+    ${item2}	{icon name2}
+    3${item3}	{icon name3}
+    .
+    .
+    .
+`
+```
+
 
 
 ## Src
