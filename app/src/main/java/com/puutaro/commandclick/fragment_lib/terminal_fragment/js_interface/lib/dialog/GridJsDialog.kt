@@ -105,10 +105,10 @@ class GridJsDialog(
     private fun execCreate(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ) {
         val imagePathList =
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
                 .split("\n")
                 .toMutableList()
         val context = context ?: return

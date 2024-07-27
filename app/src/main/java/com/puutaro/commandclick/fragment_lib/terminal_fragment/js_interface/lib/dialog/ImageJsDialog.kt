@@ -143,7 +143,6 @@ class ImageJsDialog(
                     to okButton,
         )
         HideDialogButton.buttonVisualHandler(
-            imageDialogObj,
             imageDialogMap,
             hideButtonMap,
             3,

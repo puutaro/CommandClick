@@ -135,7 +135,6 @@ class AsciiArtJsDialog(
                     to okButton,
         )
         HideDialogButton.buttonVisualHandler(
-            spannableDialogObj,
             asciiArtMap,
             hideButtonMap,
             3,

@@ -98,6 +98,25 @@ class JsDialog(
         message: String,
         listSource: String
     ): String {
+
+        /*
+        ## About listSource
+        list item string separated by newline
+
+        - Enable icon specify by tab second field
+
+        ```js.js
+        listSource=`
+            ${item1}\t{icon name1}
+            ${item2}\t{icon name2}
+            3${item3}\t{icon name3}
+            .
+            .
+            .
+        `
+        ```
+
+        */
         val selectedItem = listJsDialog.create(
             title,
             message,

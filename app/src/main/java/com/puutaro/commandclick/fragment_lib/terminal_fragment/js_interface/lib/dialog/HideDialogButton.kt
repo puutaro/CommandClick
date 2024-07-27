@@ -1,13 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
-import android.app.Dialog
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 
 object HideDialogButton {
@@ -23,7 +19,6 @@ object HideDialogButton {
 
 
     fun buttonVisualHandler(
-        dialogObj: Dialog?,
         jsDialogMap: Map<String, String>?,
         hideButtonMap: Map<String, AppCompatImageButton?>,
         totalButtonNum: Int,
