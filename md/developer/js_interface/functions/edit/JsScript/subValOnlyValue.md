@@ -5,7 +5,7 @@
 ```js.js
 function jsScript.subValOnlyValue(
 	${targetValNameString},
-	${valStringString},
+	${settingValsStringString},
 ) -> targetSettingVariableValue
 ```
 
@@ -17,7 +17,7 @@ var=targetSettingVariableValue
 	?func=jsScript.subValOnlyValue
 	?args=
 		&targetValName=${String}
-		&valString=${String}
+		&settingValsString=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
@@ -26,7 +26,7 @@ var=targetSettingVariableValue
 
 ## Src
 
--> [jsScript.subValOnlyValue](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsScript.kt#L107)
+-> [jsScript.subValOnlyValue](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsScript.kt#L106)
 
 ## Detail
 

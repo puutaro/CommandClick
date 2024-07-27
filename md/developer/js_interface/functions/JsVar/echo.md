@@ -20,6 +20,10 @@ var=valueStr
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
+## Description
+
+Echo valueStr contents
+This exist for debug
 
 
 ## Src

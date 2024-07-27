@@ -30,6 +30,7 @@ var=selectedItem
 list item string separated by newline
 
 - Enable icon specify by tab second field
+- ref [icon](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md)
 
 ```js.js
 listSource=`
@@ -48,6 +49,4 @@ listSource=`
 
 -> [jsDialog.listDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L96)
 
-## Detail
 
--> [jsDialog.listDialog](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/dialog/JsDialog/listDialog.md)

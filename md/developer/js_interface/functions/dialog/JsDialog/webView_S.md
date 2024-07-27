@@ -32,6 +32,8 @@ var=runWebView_S
 
 ## Src
 
--> [jsDialog.webView_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L347)
+-> [jsDialog.webView_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L348)
 
+## Detail
 
+-> [jsDialog.webView_S](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/dialog/JsDialog/webView_S.md)

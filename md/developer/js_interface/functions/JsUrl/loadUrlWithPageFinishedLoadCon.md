@@ -24,11 +24,14 @@ var=runLoadUrlWithPageFinishedLoadCon
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Load js contents when page load finish
+
 
 ## Src
 
--> [jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L126)
+-> [jsUrl.loadUrlWithPageFinishedLoadCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L149)
 
 ## Detail
 

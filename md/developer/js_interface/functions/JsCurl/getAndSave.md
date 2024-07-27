@@ -4,7 +4,7 @@
 
 ```js.js
 function jsCurl.getAndSave (
-	${pathString},
+	${savePathString},
 	${mainUrlString},
 	${queryParameterString},
 	${headerString},
@@ -19,7 +19,7 @@ function jsCurl.getAndSave (
 var=runGetAndSave
 	?func=jsCurl.getAndSave 
 	?args=
-		&path=${String}
+		&savePath=${String}
 		&mainUrl=${String}
 		&queryParameter=${String}
 		&header=${String}

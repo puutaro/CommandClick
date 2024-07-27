@@ -20,6 +20,27 @@ var=cmdOutput
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
+## Description
+
+Run cmd by native android shell
+
+### Example
+
+```js.js
+jsLinux.runCmd(
+   "ls"
+)
+```
+
+### Example js action version
+
+```js.js
+var=runCmd
+   ?func=jsLinux.runCmd
+   ?args=
+        cmdStr="ls"
+```
+
 
 
 ## Src

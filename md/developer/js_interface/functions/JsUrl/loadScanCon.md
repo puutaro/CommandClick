@@ -20,10 +20,13 @@ var=runLoadScanCon
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Load QR code contents about Url or javascript
+
 
 ## Src
 
--> [jsUrl.loadScanCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L98)
+-> [jsUrl.loadScanCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L114)
 
 

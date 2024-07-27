@@ -19,10 +19,13 @@ var=runWebViewDismiss_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+This function is used to dismiss [pocket webview](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#highlight-search
+
 
 ## Src
 
--> [jsDialog.webViewDismiss_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L364)
+-> [jsDialog.webViewDismiss_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L365)
 
 

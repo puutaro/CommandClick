@@ -26,7 +26,7 @@ var=runCopyToClipboard
 
 ## Src
 
--> [jsUtil.copyToClipboard](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUtil.kt#L22)
+-> [jsUtil.copyToClipboard](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUtil.kt#L17)
 
 ## Detail
 

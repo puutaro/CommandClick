@@ -5,7 +5,7 @@
 ```js.js
 function jsValEdit.editAndSaveCmdVar(
 	${titleString},
-	${fContentsString},
+	${fannelPathString},
 	${setVariableTypesString},
 	${targetVariablesString},
 ) -> isOk
@@ -19,7 +19,7 @@ var=isOk
 	?func=jsValEdit.editAndSaveCmdVar
 	?args=
 		&title=${String}
-		&fContents=${String}
+		&fannelPath=${String}
 		&setVariableTypes=${String}
 		&targetVariables=${String}
 ```

@@ -5,8 +5,8 @@
 ```js.js
 function jsDialog.multiListDialog(
 	${titleString},
-	${currentItemListStrString},
-	${preSelectedItemListStrString},
+	${currentItemListNewlineSepaStrString},
+	${preSelectedItemListNewlineSepaStrString},
 ) -> selectedLine
 ```
 
@@ -18,8 +18,8 @@ var=selectedLine
 	?func=jsDialog.multiListDialog
 	?args=
 		&title=${String}
-		&currentItemListStr=${String}
-		&preSelectedItemListStr=${String}
+		&currentItemListNewlineSepaStr=${String}
+		&preSelectedItemListNewlineSepaStr=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
@@ -28,7 +28,7 @@ var=selectedLine
 
 ## Src
 
--> [jsDialog.multiListDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L198)
+-> [jsDialog.multiListDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L199)
 
 ## Detail
 

@@ -6,14 +6,14 @@
 function jsUbuntu.execScript(
 	${executeShellPathString},
 	${tabSepaArgsString},
-) -> Shell2Http
+) -> output
 ```
 
 
 ## Definition by js action
 
 ```js.js
-var=Shell2Http
+var=output
 	?func=jsUbuntu.execScript
 	?args=
 		&executeShellPath=${String}

@@ -5,7 +5,7 @@
 ```js.js
 function jsDialog.qrScan_S(
 	${titleString},
-	${currentScriptPathString},
+	${currentFannelPathString},
 	${callBackJsPathString},
 	${menuMapStrListStrString},
 ) -> runQrScan_S
@@ -19,7 +19,7 @@ var=runQrScan_S
 	?func=jsDialog.qrScan_S
 	?args=
 		&title=${String}
-		&currentScriptPath=${String}
+		&currentFannelPath=${String}
 		&callBackJsPath=${String}
 		&menuMapStrListStr=${String}
 ```
@@ -30,6 +30,8 @@ var=runQrScan_S
 
 ## Src
 
--> [jsDialog.qrScan_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L383)
+-> [jsDialog.qrScan_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L388)
 
+## Detail
 
+-> [jsDialog.qrScan_S](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/details/dialog/JsDialog/qrScan_S.md)

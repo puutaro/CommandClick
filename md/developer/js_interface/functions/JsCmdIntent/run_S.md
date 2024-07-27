@@ -20,7 +20,18 @@ var=runRun_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Run command by termux
+
+### Example
+JsCmdIntent.run_S(
+    "bash "$[bash script path}"
+)
+
+- Enable `> /dev/null` or `> /dev/null 2>&1`
+
+
 
 ## Src
 

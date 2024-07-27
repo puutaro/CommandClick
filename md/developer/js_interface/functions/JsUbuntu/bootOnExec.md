@@ -26,7 +26,7 @@ var=runBootOnExec
 
 ## Src
 
--> [jsUbuntu.bootOnExec](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L141)
+-> [jsUbuntu.bootOnExec](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L116)
 
 ## Detail
 

@@ -6,6 +6,7 @@
 function jsIntent.launchShortcut(
 	${currentAppDirPathString},
 	${currentScriptFileNameString},
+	${currentFannelStateString},
 ) -> runLaunchShortcut
 ```
 
@@ -18,6 +19,7 @@ var=runLaunchShortcut
 	?args=
 		&currentAppDirPath=${String}
 		&currentScriptFileName=${String}
+		&currentFannelState=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
@@ -26,7 +28,7 @@ var=runLaunchShortcut
 
 ## Src
 
--> [jsIntent.launchShortcut](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L104)
+-> [jsIntent.launchShortcut](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L69)
 
 ## Detail
 

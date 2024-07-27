@@ -22,7 +22,18 @@ var=runInitListFile
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Complete list contents select box with item test list con (item separated by newline)
+
+### targetListFilePath arg
+list (item separated by newline) file list contents select box
+
+### itemTextListCon
+
+item test list con (item separated by newline)
+
+
 
 ## Src
 
