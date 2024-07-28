@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import android.content.Intent
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.service.FannelRepoDownloadService
 
 object SyncFannelRepo {
     fun sync(
@@ -12,7 +12,7 @@ object SyncFannelRepo {
             ?: return
         val intent = Intent(
             context,
-            GitCloneService::class.java
+            FannelRepoDownloadService::class.java
         )
         context.startForegroundService(intent)
     }

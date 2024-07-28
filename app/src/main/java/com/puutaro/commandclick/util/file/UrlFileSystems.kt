@@ -14,7 +14,7 @@ class UrlFileSystems {
     private val gitUserContentManagePrefix =
         "$cmdclickRepoGitUserContentPrefix/manage"
 
-    private val gitUserContentFannelPrefix =
+    val gitUserContentFannelPrefix =
         "$cmdclickRepoGitUserContentPrefix/fannel"
 
     companion object {
@@ -60,21 +60,29 @@ class UrlFileSystems {
         if(
             fannelListCon.isNotEmpty()
         ) return
+        fannelListCon = withContext(Dispatchers.IO) {
+            exeGetFannelList(
+                context
+            )
+        }
+    }
+
+    fun exeGetFannelList(
+        context: Context?
+    ): String {
         val fannelListUrl =
             "$gitUserContentManagePrefix/fannels/list/fannels.txt"
-        fannelListCon = withContext(Dispatchers.IO) {
-            CurlManager.get(
-                context,
-                fannelListUrl,
-                String(),
-                String(),
-                2000,
-            ).let {
-                if(
-                    !CurlManager.isConnOk(it)
-                ) return@let String()
-                String(it)
-            }
+        return CurlManager.get(
+            context,
+            fannelListUrl,
+            String(),
+            String(),
+            2000,
+        ).let {
+            if(
+                !CurlManager.isConnOk(it)
+            ) return@let String()
+            String(it)
         }
     }
 

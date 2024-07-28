@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.variable
 
 object ServiceChannelNum {
-    val gitClone = 1
+    val fannelRepoDownload = 1
     val textToMp3 = 2
     val textToSpeech = 3
     val pulseReciever = 4

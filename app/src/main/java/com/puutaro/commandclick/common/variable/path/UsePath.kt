@@ -125,8 +125,8 @@ object UsePath {
     val cmdclickFannelDirPath =  "$rootPath/$cmdclickFannelRelativeDirPath"
 
     private const val cmdclickFannelListDirName = "fannelList"
-    private val cmdclickcmdclickFannelListDirNameRelativeDirPath = "$cmdclickRepositoryRelativeDirPath/$cmdclickFannelListDirName"
-    val cmdclickFannelListDirPath =  "$rootPath/$cmdclickcmdclickFannelListDirNameRelativeDirPath"
+    private val cmdclickFannelListDirNameRelativeDirPath = "$cmdclickRepositoryRelativeDirPath/$cmdclickFannelListDirName"
+    val cmdclickFannelListDirPath =  "$rootPath/$cmdclickFannelListDirNameRelativeDirPath"
     val fannelListMemoryName = "fannelListMemory"
     val fannelListMemoryPath = "$cmdclickFannelListDirPath/fannelListMemoryName"
 

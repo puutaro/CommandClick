@@ -61,7 +61,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
-import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.service.FannelRepoDownloadService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -212,7 +212,7 @@ class MainActivity:
     override fun onDestroy() {
         super.onDestroy()
         adBlockJob?.cancel()
-        val intent = Intent(this, GitCloneService::class.java)
+        val intent = Intent(this, FannelRepoDownloadService::class.java)
         this.stopService(intent)
         BroadcastRegister.unregisterBroadcastReceiverForActivity(
             this,

@@ -10,9 +10,8 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.github.syari.kgit.KGit
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeGitClone
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeFannelRepoDownload
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
@@ -21,23 +20,24 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import java.io.File
-import kotlin.math.ln
 
 
-class GitCloneService: Service() {
+class FannelRepoDownloadService: Service() {
 
-    private val channelNum = ServiceChannelNum.gitClone
+    private val channelNum = ServiceChannelNum.fannelRepoDownload
     private val notificationIdToImportance =  NotificationIdToImportance.HIGH
     private var notificationManager: NotificationManagerCompat? = null
-    private var gitCloneJob: Job? = null
-    private var execGitCloneJob: Job? = null
-    private var kGit: KGit? = null
+    private var fannelRepoDownloadJob: Job? = null
+    private var execDownloadJob: Job? = null
     private val waitQuiz = WaitQuiz()
-    private var broadcastReceiverForGitCloneStop: BroadcastReceiver = object : BroadcastReceiver() {
+    private var broadcastReceiverForRepoDownloadStop: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             exit(true)
         }
@@ -46,8 +46,8 @@ class GitCloneService: Service() {
     override fun onCreate() {
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
-            broadcastReceiverForGitCloneStop,
-            BroadCastIntentSchemeGitClone.values().map {
+            broadcastReceiverForRepoDownloadStop,
+            BroadCastIntentSchemeFannelRepoDownload.values().map {
                 it.action
             }
 
@@ -57,13 +57,13 @@ class GitCloneService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         exit(false)
 
-        val gitCloneStopIntent = Intent()
-        gitCloneStopIntent.action = BroadCastIntentSchemeGitClone.STOP_GIT_CLONE.action
+        val fanenlRepoDownloadStopIntent = Intent()
+        fanenlRepoDownloadStopIntent.action = BroadCastIntentSchemeFannelRepoDownload.STOP_FANNEL_REPO_DOWNLOAD.action
         val context = applicationContext
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             0,
-            gitCloneStopIntent,
+            fanenlRepoDownloadStopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val channel = NotificationChannel(
@@ -91,10 +91,9 @@ class GitCloneService: Service() {
 
         val cmdclickFannelAppsDirPath = UsePath.cmdclickFannelAppsDirPath
         val cmdclickFannelListDirPath = UsePath.cmdclickFannelListDirPath
-        val repoFileObj = File(cmdclickFannelAppsDirPath)
         var cloneComp = false
-        gitCloneJob = CoroutineScope(Dispatchers.IO).launch {
-            execGitCloneJob = launch {
+        fannelRepoDownloadJob = CoroutineScope(Dispatchers.IO).launch {
+            execDownloadJob = launch {
                 withContext(Dispatchers.IO){
                     FileSystems.removeAndCreateDir(cmdclickFannelAppsDirPath)
                     FileSystems.removeAndCreateDir(cmdclickFannelListDirPath)
@@ -108,8 +107,8 @@ class GitCloneService: Service() {
                     )
                 }
                 withContext(Dispatchers.IO) {
-                    kGitClone(
-                        repoFileObj,
+                    fannelRepoDownload(
+                        context
                     )
                 }
                 withContext(Dispatchers.IO){
@@ -141,12 +140,9 @@ class GitCloneService: Service() {
                 var curSec = 0
                 while(true){
                     if(
-                        execGitCloneJob?.isCancelled == true
+                        execDownloadJob?.isCancelled == true
                         || cloneComp
-                    ) {
-                        kGit?.close()
-                        break
-                    }
+                    ) break
                     updateCloneProgress(
                         notificationBuilder,
                         notificationManager,
@@ -182,28 +178,51 @@ class GitCloneService: Service() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         try {
-            unregisterReceiver(broadcastReceiverForGitCloneStop)
+            unregisterReceiver(broadcastReceiverForRepoDownloadStop)
         } catch(e: Exception){
             println("pass")
         }
         exit(true)
     }
 
-    private fun kGitClone(
-        repoFileObj: File,
-    ) {
-        try {
-            kGit = KGit.cloneRepository {
-                setURI(WebUrlVariables.commandClickRepositoryUrl)
-                setDirectory(repoFileObj)
-            }
-        } catch (e: Exception) {
-            LogSystems.stdSys(
-                "close git"
-            )
-        } finally {
-            kGit?.close()
+    private suspend fun fannelRepoDownload(
+        context: Context
+    ){
+        val urlFileSystems = UrlFileSystems()
+        val concurrentLimit = 10
+        val semaphore = Semaphore(concurrentLimit)
+        val fannelList = withContext(Dispatchers.IO) {
+            urlFileSystems.exeGetFannelList(context).split("\n")
         }
+        withContext(Dispatchers.IO) {
+            val jobList = fannelList.map {
+                if(
+                    execDownloadJob?.isCancelled == true
+                ) return@map null
+                async {
+                    semaphore.withPermit {
+                        val downloadUrl = "${urlFileSystems.gitUserContentFannelPrefix}/${it}"
+                        val conByteArray = CurlManager.get(
+                            context,
+                            downloadUrl,
+                            String(),
+                            String(),
+                            10000,
+                        )
+                        if(
+                            !CurlManager.isConnOk(conByteArray)
+                        ) return@async
+                        val destiFileObj = File(UsePath.cmdclickFannelDirPath, it)
+                        FileSystems.writeFromByteArray(
+                            destiFileObj.absolutePath,
+                            conByteArray
+                        )
+                    }
+                }
+            }
+            jobList.forEach { it?.await() }
+        }
+
     }
 
     private fun updateCloneProgress(
@@ -248,17 +267,16 @@ class GitCloneService: Service() {
     }
 
     private fun exit(isLast: Boolean){
-        gitCloneJob?.cancel()
-        execGitCloneJob?.cancel()
-        kGit?.close()
-        kGit = null
+        fannelRepoDownloadJob?.cancel()
+        execDownloadJob?.cancel()
         notificationManager?.cancel(channelNum)
         if(isLast) {
             BroadcastManagerForService.unregisterBroadcastReceiver(
                 this,
-                broadcastReceiverForGitCloneStop
+                broadcastReceiverForRepoDownloadStop
             )
             stopForeground(Service.STOP_FOREGROUND_DETACH)
+            notificationManager?.cancel(channelNum)
             stopSelf()
         }
     }
@@ -284,9 +302,5 @@ class GitCloneService: Service() {
     }
 }
 
-// my intend to log2 120 = 100%?
-private fun log105(n: Int): Double {
-    return ln(n.toDouble()) / ln(1.049)
-}
 
 

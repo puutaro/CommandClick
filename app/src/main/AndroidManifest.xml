@@ -94,7 +94,7 @@
                 android:value="" />
         </activity>
 
-        <service android:name=".service.GitCloneService"/>
+        <service android:name=".service.FannelRepoDownloadService"/>
         <service android:name=".service.TextToSpeechService"/>
         <service android:name=".service.MusicPlayerService"/>
         <service android:name=".service.PulseReceiverService"/>
