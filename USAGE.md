@@ -347,13 +347,12 @@ Enable scan bellow type qr
 
 [Procedure]    
 
-1. Long press right bottom gear button  
-2. click `install_fannel`   
-3. You can install `fannel` by clicking.   
+1. Long press right bottom gear button
+2. Click `install_fannel`
+3. Click sync button in left bottom sync button
+4. You can install `fannel` by clicking.
 
-When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by left bottom sync button  and wait until `fannel` list update.   
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/4589a003-3eb5-46d9-a981-ad00930923ca" width="400">  
+<img src="https://github.com/user-attachments/assets/a347990d-6988-4b0b-87cb-23d554a3328b" width="400">  
 
 ### Reflesh monitor
 

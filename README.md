@@ -162,13 +162,12 @@ get it on bellow link
 
 -> detail is [this issue](https://github.com/puutaro/CommandClick/issues/11)
 
-[Recommend] Install WebView Canary
---------
+### [Optional] Change WebView
 
 By edge, webView javascript feature is limited.  
-So, javascript not working, recommend to install [webView canary](https://play.google.com/store/apps/details?id=com.google.android.webview.canary&hl=ja&gl=US) or other.
+So, javascript not working, recommend to change by [google play](https://play.google.com/store/apps).
 
-- I found this case in samsung galaxy.  
+- I found this case in samsung galaxy.
 
 
 Setup Ubuntu addon
@@ -177,6 +176,18 @@ Setup Ubuntu addon
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
 -> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
+
+Setup other addon (fannel)
+------
+
+[Procedure]
+
+1. Long press right bottom gear button
+2. Click `install_fannel`
+3. Click sync button in left bottom sync button  
+4. You can install `fannel` by clicking.
+
+<img src="https://github.com/user-attachments/assets/a347990d-6988-4b0b-87cb-23d554a3328b" width="400">  
 
 
 Usage
