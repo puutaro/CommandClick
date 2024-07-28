@@ -147,6 +147,7 @@ object ToolbarMenuDialog {
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
             listIndexMenuDialog?.dismiss()
+            listIndexMenuDialog = null
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
