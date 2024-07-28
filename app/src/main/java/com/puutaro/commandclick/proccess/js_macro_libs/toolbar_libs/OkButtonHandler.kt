@@ -71,7 +71,7 @@ object OkButtonHandler {
             isSettingEdit,
             -> {
                 val listener =
-                    context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                    context as? EditFragment.OnToolBarButtonClickListenerForEditFragment
                 listener?.onToolBarButtonClickForEditFragment(
                     String(),
                     ToolbarButtonBariantForEdit.CANCEL,
@@ -96,7 +96,7 @@ object OkButtonHandler {
             }
             withContext(Dispatchers.Main) {
                 val listener =
-                    context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                    context as? EditFragment.OnToolBarButtonClickListenerForEditFragment
                 listener?.onToolBarButtonClickForEditFragment(
                     String(),
                     ToolbarButtonBariantForEdit.CANCEL,

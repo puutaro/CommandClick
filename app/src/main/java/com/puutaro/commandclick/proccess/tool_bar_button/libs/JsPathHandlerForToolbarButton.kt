@@ -4,6 +4,7 @@ import android.view.View
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -215,7 +216,7 @@ object JsPathHandlerForToolbarButton {
             -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
-                UsePath.fannelRepoFannelName
+                SystemFannel.fannelRepoFannelName
             )
 
             MacroForToolbarButton.Macro.ADD
@@ -242,14 +243,14 @@ object JsPathHandlerForToolbarButton {
             -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
-                UsePath.jsImportManagerFannelName
+                SystemFannel.jsImportManagerFannelName
             )
 
             MacroForToolbarButton.Macro.APP_DIR_MANAGER
             -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
-                UsePath.appDirManagerFannelName
+                SystemFannel.appDirManagerFannelName
             )
 
             MacroForToolbarButton.Macro.SIZING

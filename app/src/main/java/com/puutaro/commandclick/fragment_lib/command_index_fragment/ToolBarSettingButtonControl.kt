@@ -9,6 +9,7 @@ import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
@@ -169,7 +170,7 @@ class ToolBarSettingButtonControl(
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
-                        UsePath.fannelRepoFannelName
+                        SystemFannel.fannelRepoFannelName
                     )
                 MenuEnums.QR_SCAN.itemName ->
                     QrScanner.scanFromCamera(

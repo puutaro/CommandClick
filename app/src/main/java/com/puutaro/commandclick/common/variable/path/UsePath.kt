@@ -169,12 +169,6 @@ object UsePath {
     val fannelSettingsDirPath = "\${01}/\${001}/settings"
     val homeFannelsFilePath =
         "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
-    val jsImportManagerFannelName = "jsImportManager.js"
-    val jsImportAdminFannelPath = "$cmdclickSystemAppDirPath/$jsImportManagerFannelName"
-    val appDirManagerFannelName = "appDirManager.js"
-    val appDirManagerFannelPath = "$cmdclickSystemAppDirPath/$appDirManagerFannelName"
-    val fannelRepoFannelName = "fannelRepo.js"
-    val fannelRepoFannelPath = "$cmdclickSystemAppDirPath/$fannelRepoFannelName"
     val saveWebConDialogFannelName = "saveWebConDialog.js"
     val savePageUrlDialogFannelName = "savePageUrlDialog.js"
     val saveGmailConDialogFannelName = "saveGmailConDialog.js"

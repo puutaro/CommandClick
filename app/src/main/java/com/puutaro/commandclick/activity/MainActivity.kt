@@ -109,7 +109,7 @@ class MainActivity:
     CommandIndexFragment.OnUpdateNoSaveUrlPathsListener,
     CommandIndexFragment.OnGetPermissionListenerForCmdIndex,
     CommandIndexFragment.OnConnectWifiListenerForCmdIndex,
-    EditFragment.onToolBarButtonClickListenerForEditFragment,
+    EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
     EditFragment.OnInitEditFragmentListener,

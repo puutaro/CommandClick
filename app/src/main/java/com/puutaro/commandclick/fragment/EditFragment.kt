@@ -287,11 +287,6 @@ class EditFragment: Fragment() {
             webSearchToolbarManagerForEdit.setCancelListener()
             webSearchToolbarManagerForEdit.setGoogleSuggest()
         }
-//        TitleImageAndViewSetter.set(
-//            this,
-//            currentAppDirPath,
-//            currentFannelName
-//        )
 
         val window = activity?.window
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -380,55 +375,7 @@ class EditFragment: Fragment() {
                     )
                 }
             )
-//            KeyboardVisibilityEvent.setEventListener(it) { isOpen ->
-//
-//                if (editorDialog?.isShowing != true) return@setEventListener
-//                confirmTitleTextView?.isVisible = !isOpen
-//            }
         }
-//        KeyboardVisibilityEvent.setEventListener(activity) {
-//                isOpen ->
-//            if(!this.isVisible) return@setEventListener
-//            if(disableKeyboardFragmentChange) return@setEventListener
-////            if(terminalViewModel.onDialog) return@setEventListener
-//            binding.editTitleLinearlayout.isVisible = !isOpen
-//            val linearLayoutParam =
-//                binding.editFragment.layoutParams as LinearLayout.LayoutParams
-//            val editFragmentWeight = linearLayoutParam.weight
-//            if(
-//                editFragmentWeight != ReadLines.LONGTH
-//            ) {
-//                KeyboardWhenTermLongForEdit.handle(
-//                    this,
-//                    isOpen
-//                )
-//                return@setEventListener
-//            }
-//            ListIndexSizingToKeyboard.handle(
-//                this,
-//                isOpen
-//            )
-//            binding.editToolBarLinearLayout.isVisible =
-//                when(isOpen) {
-//                    true -> {
-//                        val isNotSearchTextWhenIndexList =
-//                            (existIndexList && !binding.editListSearchEditText.isVisible)
-//                        !existIndexList
-//                                || isNotSearchTextWhenIndexList
-//                    }
-//                    else -> true
-//                }
-//            val isOpenKeyboard =
-//                when(isOpen) {
-//                    true -> onTermVisibleWhenKeyboard !=
-//                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-//                    else -> isOpen
-//                }
-//            listener?.onKeyBoardVisibleChangeForEditFragment(
-//                isOpenKeyboard,
-//                this.isVisible
-//            )
-//        }
     }
 
     override fun onPause() {
@@ -451,9 +398,6 @@ class EditFragment: Fragment() {
         val settingFannelConList = SettingFannelConHandlerForEdit.handle(
             this
         )
-//        val shellScriptContentsList = ReadText(
-//            File(currentAppDirPath, currentFannelName).absolutePath
-//        ).textToList()
         TerminalShowByTerminalDoWhenReuse.show(
             this,
             settingFannelConList
@@ -499,7 +443,7 @@ class EditFragment: Fragment() {
         binding.editToolBarLinearLayout.removeAllViews()
     }
 
-    interface onToolBarButtonClickListenerForEditFragment {
+    interface OnToolBarButtonClickListenerForEditFragment {
         fun onToolBarButtonClickForEditFragment(
             callOwnerFragmentTag : String?,
             toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,

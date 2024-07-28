@@ -108,7 +108,6 @@ class UbuntuService:
                 BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION.action,
                 BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action,
                 BroadCastIntentSchemeUbuntu.OPEN_FANNEL.action,
-//                BroadCastIntentSchemeUbuntu.ADMIN_CMD_START.action,
                 BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
                 BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action,
                 BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,

@@ -8,6 +8,7 @@ import android.widget.ListView
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -140,7 +141,7 @@ object ManageSubMenuDialog {
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
-                        UsePath.jsImportManagerFannelName
+                        SystemFannel.jsImportManagerFannelName
                     )
                 }
                 ManageSubMenuEnums.REFRESH_MONITOR -> {

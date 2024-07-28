@@ -7,7 +7,6 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -19,13 +18,13 @@ import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.service.lib.BroadcastManagerForService
+import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.*
-import org.eclipse.jgit.lib.ProgressMonitor
 import java.io.File
-import java.util.concurrent.TimeUnit
 import kotlin.math.ln
 
 
@@ -33,56 +32,52 @@ class GitCloneService: Service() {
 
     private val channelNum = ServiceChannelNum.gitClone
     private val notificationIdToImportance =  NotificationIdToImportance.HIGH
-    private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     private var notificationManager: NotificationManagerCompat? = null
     private var gitCloneJob: Job? = null
-    private var notificationManagefilter: IntentFilter? = null
-    private var isProgressCancel = true
-    private val cloneDisplayStr = "Cloning..."
+    private var execGitCloneJob: Job? = null
+    private var kGit: KGit? = null
+    private val waitQuiz = WaitQuiz()
     private var broadcastReceiverForGitCloneStop: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            gitCloneJob?.cancel()
-            isProgressCancel = true
-            notificationManager?.cancel(channelNum)
-            stopForeground(Service.STOP_FOREGROUND_DETACH)
+            exit(true)
         }
     }
 
     override fun onCreate() {
-        notificationManagefilter = IntentFilter()
-        notificationManagefilter?.addAction(BroadCastIntentSchemeGitClone.STOP_GIT_CLONE.action)
-        try {
-            registerReceiver(broadcastReceiverForGitCloneStop, notificationManagefilter)
-        } catch(e: Exception){
-            println("pass")
-        }
+        BroadcastManagerForService.registerActionListBroadcastReceiver(
+            this,
+            broadcastReceiverForGitCloneStop,
+            BroadCastIntentSchemeGitClone.values().map {
+                it.action
+            }
+
+        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        isProgressCancel = true
-        notificationManager?.cancel(channelNum)
-        gitCloneJob?.cancel()
+        exit(false)
 
         val gitCloneStopIntent = Intent()
         gitCloneStopIntent.action = BroadCastIntentSchemeGitClone.STOP_GIT_CLONE.action
-
+        val context = applicationContext
         val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext, 0, gitCloneStopIntent, PendingIntent.FLAG_UPDATE_CURRENT
-                    or PendingIntent.FLAG_IMMUTABLE
+            context,
+            0,
+            gitCloneStopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val channel = NotificationChannel(
             notificationIdToImportance.id,
             notificationIdToImportance.id,
             notificationIdToImportance.importance
         )
-        val context = applicationContext
 
         notificationManager = NotificationManagerCompat.from(context)
 
         notificationManager?.createNotificationChannel(channel)
         val notificationBuilder = NotificationCompat.Builder(context,notificationIdToImportance.id)
         notificationBuilder.setSmallIcon(R.drawable.stat_sys_download)
-        notificationBuilder.setContentTitle("Cloning...")
+        notificationBuilder.setContentTitle(setNotiTitleMessage(1))
         notificationBuilder.setAutoCancel(true)
         notificationBuilder.setOnlyAlertOnce(true)
         notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
@@ -95,40 +90,71 @@ class GitCloneService: Service() {
         startForeground(channelNum, notificationBuilder.build())
 
         val cmdclickFannelAppsDirPath = UsePath.cmdclickFannelAppsDirPath
+        val cmdclickFannelListDirPath = UsePath.cmdclickFannelListDirPath
         val repoFileObj = File(cmdclickFannelAppsDirPath)
-        FileSystems.removeDir(cmdclickFannelAppsDirPath)
-        FileSystems.createDirs(cmdclickFannelAppsDirPath)
+        var cloneComp = false
         gitCloneJob = CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO) {
-                isProgressCancel = false
-                kGitClone(
-                    context,
-                    repoFileObj,
-                    notificationBuilder,
-                    notificationManager
-                )
+            execGitCloneJob = launch {
+                withContext(Dispatchers.IO){
+                    FileSystems.removeAndCreateDir(cmdclickFannelAppsDirPath)
+                    FileSystems.removeAndCreateDir(cmdclickFannelListDirPath)
+                }
+                withContext(Dispatchers.IO){
+                    updateNotiTitle(
+                        notificationBuilder,
+                        notificationManager,
+                        pendingIntent,
+                        setNotiTitleMessage(2)
+                    )
+                }
+                withContext(Dispatchers.IO) {
+                    kGitClone(
+                        repoFileObj,
+                    )
+                }
+                withContext(Dispatchers.IO){
+                    updateNotiTitle(
+                        notificationBuilder,
+                        notificationManager,
+                        pendingIntent,
+                        setNotiTitleMessage(3)
+                    )
+                }
+                withContext(Dispatchers.IO){
+                    FileSystems.writeFile(
+                        File(
+                            cmdclickFannelListDirPath,
+                            UsePath.fannelListMemoryName
+                        ).absolutePath,
+                        FannelListVariable.makeFannelListMemoryContents(
+                            context
+                        ).joinToString(
+                            FannelListVariable.cmdclickFannelListSeparator
+                        )
+                    )
+                }
+                withContext(Dispatchers.IO) {
+                    cloneComp = true
+                }
             }
             withContext(Dispatchers.IO){
-                notificationBuilder.setContentTitle("Update fannel list..")
-                notificationBuilder.setContentText("Update fannel list..")
-                notificationBuilder.setSmallIcon(R.drawable.stat_sys_download)
-                notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-                notificationBuilder.setProgress(100, 100, false)
-                notificationBuilder.setAutoCancel(true)
-                notificationBuilder.clearActions()
-                val notification = notificationBuilder.build()
-                notificationManager?.notify(channelNum, notification)
-            }
-            withContext(Dispatchers.IO){
-                FileSystems.writeFile(
-                    File(
-                        UsePath.cmdclickFannelListDirPath,
-                        UsePath.fannelListMemoryName
-                    ).absolutePath,
-                    FannelListVariable.makeFannelListMemoryContents(applicationContext)
-                        .joinToString(cmdclickFannelListSeparator)
-                )
-                isProgressCancel = true
+                var curSec = 0
+                while(true){
+                    if(
+                        execGitCloneJob?.isCancelled == true
+                        || cloneComp
+                    ) {
+                        kGit?.close()
+                        break
+                    }
+                    updateCloneProgress(
+                        notificationBuilder,
+                        notificationManager,
+                        curSec
+                    )
+                    delay(3000)
+                    curSec += 3
+                }
             }
             withContext(Dispatchers.IO){
                 BroadcastSender.normalSend(
@@ -137,9 +163,7 @@ class GitCloneService: Service() {
                 )
             }
             withContext(Dispatchers.IO){
-                notificationManager?.cancel(channelNum)
-                stopForeground(Service.STOP_FOREGROUND_DETACH)
-                stopSelf()
+                exit(true)
             }
         }
         return START_NOT_STICKY
@@ -152,14 +176,7 @@ class GitCloneService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        try {
-            unregisterReceiver(broadcastReceiverForGitCloneStop)
-        } catch(e: Exception){
-            println("pass")
-        }
-        notificationManager?.cancel(channelNum)
-        gitCloneJob?.cancel()
-        stopForeground(Service.STOP_FOREGROUND_DETACH)
+        exit(true)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -169,101 +186,101 @@ class GitCloneService: Service() {
         } catch(e: Exception){
             println("pass")
         }
-        notificationManager?.cancel(channelNum)
-        gitCloneJob?.cancel()
-        stopForeground(Service.STOP_FOREGROUND_DETACH)
-        stopSelf()
+        exit(true)
     }
 
     private fun kGitClone(
-        context: Context?,
         repoFileObj: File,
-        notificationBuilder: NotificationCompat.Builder,
-        notificationManager: NotificationManagerCompat?,
-    ){
-        if(
-            notificationManager == null
-        ) return
-        var git: KGit? = null
+    ) {
         try {
-            git = execKGitClone(
-                repoFileObj,
-                notificationBuilder,
-                notificationManager,
-            )
+            kGit = KGit.cloneRepository {
+                setURI(WebUrlVariables.commandClickRepositoryUrl)
+                setDirectory(repoFileObj)
+            }
         } catch (e: Exception) {
-            LogSystems.stdErr(
-                context,
+            LogSystems.stdSys(
                 "close git"
             )
-            return
         } finally {
-            git?.close()
+            kGit?.close()
         }
     }
 
-
-    private fun execKGitClone(
-        repoFileObj: File,
+    private fun updateCloneProgress(
         notificationBuilder: NotificationCompat.Builder,
-        notificationManager: NotificationManagerCompat,
-    ): KGit {
-        return KGit.cloneRepository {
-            setURI(WebUrlVariables.commandClickRepositoryUrl)
-            setDirectory(repoFileObj)
-            setProgressMonitor(object : ProgressMonitor {
-                var initWorkedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+        notificationManager: NotificationManagerCompat?,
+        seconds: Int,
+    ){
+        val limitSeconds = 120
+        val displayPercentage = (seconds * 100) / limitSeconds
+        val notification = notificationBuilder.apply {
+            setAutoCancel(true)
+            setContentText(waitQuiz.echoQorA())
+            setProgress(
+                100,
+                displayPercentage,
+                false
+            )
+        }.build()
+        notificationManager?.notify(channelNum, notification)
+    }
 
-                var displayTimesForUpdate = 0
-                override fun start(totalTasks: Int) {}
-                override fun beginTask(title: String?, totalWork: Int) {
-                    if(isProgressCancel) return
-                    notificationBuilder.setContentTitle(cloneDisplayStr)
-                    notificationBuilder.setAutoCancel(true)
-                    notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-                    notificationBuilder.setProgress(100, 0, true)
-                    val notification = notificationBuilder.build()
-                    notificationManager.notify(channelNum, notification)
-                }
-
-                override fun update(completed: Int) {
-                    if(isProgressCancel) return
-                    if(
-                        displayTimesForUpdate % 10000 != 0
-                    ) return
-                    val secondsDiff =
-                        TimeUnit.MILLISECONDS.toSeconds(
-                            System.currentTimeMillis()
-                        ) - initWorkedTime
-                    val displayPercentComplete = log105(secondsDiff.toInt()).toInt()
-                    notificationBuilder
-                        .setContentTitle(
-                            "$cloneDisplayStr $displayPercentComplete% / 120s"
-                        )
-                    notificationBuilder
-                        .setContentText(
-                            "$cloneDisplayStr $displayPercentComplete% / 120s"
-                        )
-                    notificationBuilder.setAutoCancel(true)
-                    notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-                    notificationBuilder.setProgress(
-                        100,
-                        displayPercentComplete,
-                        false
-                    )
-                    val notification = notificationBuilder.build()
-                    notificationManager.notify(channelNum, notification)
-                }
-
-                override fun endTask() {
-                    if(isProgressCancel) return
-                    isProgressCancel = true
-                }
-                override fun isCancelled(): Boolean {
-                    return false
-                }
-            })
+    private fun updateNotiTitle(
+        notificationBuilder: NotificationCompat.Builder?,
+        notificationManager: NotificationManagerCompat?,
+        pendingIntent: PendingIntent,
+        title: String
+    ){
+        val notification = notificationBuilder?.apply {
+            setSmallIcon(R.drawable.stat_sys_download)
+            setAutoCancel(true)
+            setContentTitle(title)
+            clearActions()
+            addAction(
+                R.drawable.ic_menu_close_clear_cancel,
+                "cancel",
+                pendingIntent
+            )
+        }?.build()
+        notification?.let {
+            notificationManager?.notify(channelNum, it)
         }
+    }
+
+    private fun exit(isLast: Boolean){
+        gitCloneJob?.cancel()
+        execGitCloneJob?.cancel()
+        kGit?.close()
+        kGit = null
+        notificationManager?.cancel(channelNum)
+        if(isLast) {
+            BroadcastManagerForService.unregisterBroadcastReceiver(
+                this,
+                broadcastReceiverForGitCloneStop
+            )
+            stopForeground(Service.STOP_FOREGROUND_DETACH)
+            stopSelf()
+        }
+    }
+
+    private fun setNotiTitleMessage(
+        order: Int
+    ): String{
+        val titleMsgList = listOf(
+            "Ready...",
+            "Cloning...",
+            "Update fannel list..."
+        )
+        val lenMsgList = titleMsgList.size
+        val indexSrc = order - 1
+        val index = try {
+            titleMsgList[indexSrc]
+            indexSrc
+        } catch (e: Exception){
+            titleMsgList.lastIndex
+        }
+        val title = titleMsgList[index]
+        return "[${index + 1}/${lenMsgList}] ${title}"
     }
 }
 

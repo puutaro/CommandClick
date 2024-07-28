@@ -16,7 +16,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.activity_lib.init.ActivityFinisher
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.sd.SdCardTool
 import kotlinx.coroutines.CoroutineScope
@@ -132,7 +131,6 @@ class SdCardDirGetter(
             confirmCancelButton?.setOnClickListener {
                 getSdcardTreeUriConfirmDialog?.dismiss()
                 getSdcardTreeUriConfirmDialog = null
-                ActivityFinisher.finish(activity)
             }
             val confirmOkButton =
                 getSdcardTreeUriConfirmDialog?.findViewById<AppCompatImageButton>(

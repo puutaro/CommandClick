@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.util.file
 
 import android.graphics.Bitmap
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
 import org.apache.commons.io.FileUtils
@@ -16,6 +16,7 @@ import java.nio.file.StandardCopyOption
 import java.security.DigestInputStream
 import java.security.MessageDigest
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 object FileSystems {
@@ -514,5 +515,19 @@ object FileSystems {
         val toLastModify = toFileObj.lastModified()
         fromFileObj.setLastModified(toLastModify)
         toFileObj.setLastModified(fromLastModify)
+    }
+
+    fun getLocalDatetimeFromString(): LocalDateTime {
+        //現在日時を取得
+        val now = LocalDateTime.now()
+        println(now)
+
+
+        //フォーマットを指定
+        val format = "yyyy/MM/dd HH:mm:ss"
+        val f: DateTimeFormatter = DateTimeFormatter.ofPattern(format)
+        val localDatetimeStr = now.format(f)
+        val dtf = DateTimeFormatter.ofPattern(format)
+        return LocalDateTime.parse(localDatetimeStr, dtf)
     }
 }

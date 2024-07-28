@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -101,7 +102,7 @@ object SettingSubMenuDialog {
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
-                        UsePath.appDirManagerFannelName
+                        SystemFannel.appDirManagerFannelName
                     )
                 }
                 SettingSubMenuEnums.SHORTCUT -> {
