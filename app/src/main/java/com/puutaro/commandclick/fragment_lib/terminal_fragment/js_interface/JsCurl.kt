@@ -152,13 +152,28 @@ class JsCurl(
                         tempFileList.isEmpty()
                     ) continue
                     val downloadImageName =
-                        tempFileList.getOrNull(0)
+                        tempFileList.firstOrNull()
                             ?: String()
                     downloadImagePath =
                         File(
                             cmdclickTempDownloadDirPath,
                             downloadImageName
                         ).absolutePath
+                    break
+                }
+            }
+            withContext(Dispatchers.IO) {
+                val downloadImageFile = File(downloadImagePath)
+                var prevImageSize = downloadImageFile.length()
+                for (i in 1..10){
+                    delay(200)
+                    val curImageSize = downloadImageFile.length()
+                    if(
+                        prevImageSize != curImageSize
+                    ) {
+                        prevImageSize = curImageSize
+                        continue
+                    }
                     break
                 }
             }
