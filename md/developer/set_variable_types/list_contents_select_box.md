@@ -64,17 +64,17 @@ key-value
 
 ## Key-value table for ELSB
 
-| Key name        | value             | Description                                             | 
-|-----------------|-------------------|---------------------------------------------------------|
-| `listPath`        | select list path  | Select list path that each item is separated by newline |
-| `limitNum`        | Int               | Select list limit num                                   |
-| `selectJsPath` | js path           | js path triggered by being selected                     |
-| `initMark`  | string            | Specify init mark to select list                        |
-| `initValue`             | string            | Edit text init string triggered by init mark            |
-| `saveTags` | string            | [detail](#savetags)                                     |
-| `saveFilterShellPath` | shell path        | [detail](savefiltershellpath)                           |
-| `saveValName` | val name for save | Val name value specified here is saved to list path     |
-| `compList` | string <br> path  | [detail](#complist)                                     |
+| Key name        | value                     | Description                                                      | 
+|-----------------|---------------------------|------------------------------------------------------------------|
+| `listPath`        | select list contents path | Select list contents path that each item is separated by newline |
+| `limitNum`        | Int                       | Select list limit num                                            |
+| `selectJsPath` | js path                   | js path triggered by being selected                              |
+| `initMark`  | string                    | Specify init mark to select list                                 |
+| `initValue`             | string                    | Edit text init string triggered by init mark                     |
+| `saveTags` | string                    | [detail](#savetags)                                              |
+| `saveFilterShellPath` | shell path                | [detail](savefiltershellpath)                                    |
+| `saveValName` | val name for save         | Val name value specified here is saved to list contents path     |
+| `compList` | string <br> path          | [detail](#complist)                                              |
 
 
 ### saveTags
@@ -143,7 +143,7 @@ echo "${CMDCLICK_TEXT_CONTENTS}" | ${b} sed `s/aaa//g`
 
 ### compList
 
-Comp list path by comp list specified here
+Comp list contents by comp list specified here
 
 - Enable to specify file path by `file://` prefix
 
