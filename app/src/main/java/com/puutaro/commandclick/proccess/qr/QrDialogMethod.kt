@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import coil.load
 import com.blankj.utilcode.util.ToastUtils
@@ -95,6 +96,9 @@ object QrDialogMethod {
             fragment,
             qrBitMap
         )
+        imageDialogObj?.findViewById<AppCompatImageButton>(
+            R.id.image_dialog_cancel
+        )?.isVisible = false
         val cancelButton = imageDialogObj?.findViewById<AppCompatImageButton>(
             R.id.image_dialog_ok
         )
