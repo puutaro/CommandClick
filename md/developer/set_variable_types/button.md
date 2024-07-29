@@ -64,15 +64,15 @@ key-[key-value]
 
 ## Key-value table for button value
 
-| Key name                | value                         | Description                                      | 
-|-------------------------|-------------------------------|--------------------------------------------------|
-| `cmd`                   | command string and macro      | command <br> -> [detail](#cmd)                |
-| `label`                 | button label string and emoji | Set button label                                 |
-| `isConsec`              | true / other                  | Enable continuous press                          |
-| `textSize`              | Int                           | text (label) size                                |
-| `onBorder`              | `OFF` / other                 | Hide border line                                 |
-| `disableKeyboardHidden` | true / other                  | Hide keyboard on click button                    |
-| `tag`                   | path string                   | Save to list con box on click <br> -> [detail]() |
+| Key name                | value                         | Description                                                                                                                                                      | 
+|-------------------------|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `cmd`                   | command string and macro      | command <br> -> [detail](#cmd)                                                                                                                                   |
+| `label`                 | button label string and emoji | Set button label                                                                                                                                                 |
+| `isConsec`              | true / other                  | Enable continuous press                                                                                                                                          |
+| `textSize`              | Int                           | text (label) size                                                                                                                                                |
+| `onBorder`              | `OFF` / other                 | Hide border line                                                                                                                                                 |
+| `disableKeyboardHidden` | true / other                  | Hide keyboard on click button                                                                                                                                    |
+| `tag`                   | path string                   | Save to list con box on click <br> -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types/list_contents_select_box.md#savetags) |
 
 
 ### cmd
