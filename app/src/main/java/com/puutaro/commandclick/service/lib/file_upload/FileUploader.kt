@@ -84,10 +84,6 @@ object CopyFannelServer {
                     )
                     fileUploadService.copyFannelSocket?.accept()
                 } catch (e:Exception){
-                    LogSystems.stdErr(
-                        context,
-                        "${e}"
-                    )
                     isTerminated = true
                     null
                 }
