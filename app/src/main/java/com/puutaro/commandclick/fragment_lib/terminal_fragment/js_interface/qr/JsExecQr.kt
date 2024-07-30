@@ -25,6 +25,29 @@ class JsExecQr(
     fun exec_S(
         clickFileName: String,
     ){
+        /*
+        Exec qr contents from file in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Corresponding macro
+
+        -> [EXEC_QR](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_logo.md#exec_qr)
+
+        ### clickFileName arg
+
+        clicked file name
+
+        ### Example
+
+        ```js.js
+        var=runExecQr
+           ?func=jsExecQr.exec_S
+           ?args=
+               &clickFileName=${file name}
+
+        ```
+
+        */
+
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,

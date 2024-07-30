@@ -14,10 +14,38 @@ class JsAddGmailCon(
     @JavascriptInterface
     fun add(
         gmailAd: String,
-//        urlConSaveParentDirPath: String,
-//        compSuffix: String,
         extraMapCon: String,
     ){
+        /*
+        Add gmail contents from url
+
+        ### Corresponding macro
+
+        -> [ADD_GMAIL_CON](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#add_gmail_con)
+
+        ### gmailAd arg
+
+        Target gmail url address
+
+        ### extraMapCon arg
+
+        -> [Args for ADD_GMAIL_CON macro](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add_gmail_con)
+
+        ### Example
+
+        ```js.js
+        var=runAddGmailAdCon
+            ?func=jsAddGmailCon.add
+            ?args=
+                &gmailAd="http://gmail.com/~"
+                &extraMapCon=`
+                    urlConSaveParentDirPath=${cmdTtsPlayerSaveUrlConDirPath}
+                    |compSuffix=${TXT_SUFFIX}
+                `
+        ```
+
+        */
+
         if(
             gmailAd.isEmpty()
         ) return

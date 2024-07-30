@@ -9,6 +9,11 @@ class JsConfigEdit(
 ) {
     @JavascriptInterface
     fun edit_S() {
+
+        /*
+        Edit Config in CommandClick
+        */
+
         ConfigEdit.edit(terminalFragment)
     }
 }

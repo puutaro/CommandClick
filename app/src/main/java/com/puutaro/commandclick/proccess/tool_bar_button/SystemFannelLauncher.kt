@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.tool_bar_button
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager

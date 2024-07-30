@@ -14,6 +14,16 @@ class JsMonitorRefresh(
 
     @JavascriptInterface
     fun refresh(){
+
+        /*
+        Refresh current monitor
+
+        ### Corresponding macro
+
+        -> [REFRESH_MONITOR](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#refresh_monitor)
+
+        */
+
         TermRefresh.refresh(
             terminalViewModel.currentMonitorFileName
         )

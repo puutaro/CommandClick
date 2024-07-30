@@ -13,6 +13,14 @@ class JsProcessKiller(
         currentAppDirPath: String,
         fannelName: String,
     ){
+        /*
+        Kill process by dialog
+
+        ### Corresponding macro
+
+        -> [KILL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#kill)
+
+        */
         AppProcessManager.killDialog(
             terminalFragment,
             currentAppDirPath,

@@ -138,10 +138,10 @@ object SettingSubMenuDialog {
         val itemName: String,
         val imageId: Int
     ){
-        APP_DIR_MANAGER("app dir manager", R.drawable.icons8_support),
-        SHORTCUT("create short cut", R.drawable.icons8_shortcut),
-        TERMUX_SETUP("termux setup", R.drawable.icons8_setup),
-        CONFIG("config", R.drawable.icons8_edit),
+        APP_DIR_MANAGER("App dir manager", R.drawable.icons8_support),
+        SHORTCUT("Create short cut", R.drawable.icons8_shortcut),
+        TERMUX_SETUP("Termux setup", R.drawable.icons8_setup),
+        CONFIG("Config", R.drawable.icons8_edit),
     }
 
 }

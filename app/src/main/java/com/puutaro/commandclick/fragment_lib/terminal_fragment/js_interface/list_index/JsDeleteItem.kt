@@ -30,6 +30,35 @@ class JsDeleteItem(
         parentDirPath: String,
         selectedItem: String
     ){
+
+        /*
+        Delete item from list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Corresponding macro
+
+        -> [DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#delete)
+
+        ### parentDirPath arg
+
+        parent dir path of file name for delete
+
+        ### selectedItem arg
+
+        file name for delete
+
+        ### Example
+
+        ```js.js
+        var=runDelete
+            ?func=jsDeleteItem.delete_S
+            ?args=
+                &parentDirPath=${parent dir path}
+                &selectedItem=${file name}
+
+        ```
+
+        */
+
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,
@@ -54,6 +83,34 @@ class JsDeleteItem(
         selectedItem: String,
         listIndexListPosition: Int,
     ){
+        /*
+        Delete item from list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Corresponding macro
+
+        -> [SIMPLE_DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#simple_delete)
+
+        ### selectedItem arg
+
+        file name for delete
+
+        ### listIndexListPosition arg
+
+        list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Example
+
+        ```js.js
+        var=runDelete
+            ?func=jsDeleteItem.simpleDelete_S
+            ?args=
+                &selectedItem=${item name}
+                &listIndexListPosition=NO_QUOTE:${item index}
+
+        ```
+
+        */
+
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,

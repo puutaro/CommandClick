@@ -217,11 +217,11 @@ private enum class MenuEnums(
     val itemName: String,
     val imageId: Int,
 ) {
+    INSTALL_FANNEL("Install fannel", R.drawable.icons8_puzzle),
     USAGE("Usage", R.drawable.icons8_info),
-    EDIT_PREFERENCE("preference", R.drawable.icons8_setup),
-    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
-    INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
-    QR_SCAN("scan QR", R.drawable.icons_qr_code),
-    MANAGE("manage", R.drawable.icons8_setup),
-    SETTING("setting",R.drawable.icons8_setting),
+    EDIT_PREFERENCE("Preference", R.drawable.icons8_setup),
+    NO_SCROLL_SAVE_URL("No scroll save url", R.drawable.icons8_check_ok),
+    QR_SCAN("Scan QR", R.drawable.icons_qr_code),
+    MANAGE("Manage", R.drawable.icons8_setup),
+    SETTING("Setting",R.drawable.icons8_setting),
 }

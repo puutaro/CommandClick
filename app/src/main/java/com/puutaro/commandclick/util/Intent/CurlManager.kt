@@ -70,8 +70,6 @@ object CurlManager {
         return invalidResponse.toByteArray()
     }
 
-
-
     fun post(
         context: Context?,
         mainUrl: String,

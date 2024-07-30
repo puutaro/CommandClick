@@ -431,7 +431,7 @@ object CommandClickScriptVariable {
             |# ### $SHELL_EXEC_ENV
             |# Set shell exec enviroment
             |
-            |# | option | descripton |
+            |# | option | description |
             |# | $mdDash | $mdDash |
             |# | `$shellExecEnvUbuntu` | ubuntu |
             |# | `$shellExecEnvTermux` | termux |
@@ -439,7 +439,7 @@ object CommandClickScriptVariable {
             |# ### $UBUNTU_EXEC_MODE
             |# Set shell exec mode
             |
-            |# | option | descripton |
+            |# | option | description |
             |# | $mdDash | $mdDash |
             |# | `$ubuntuExecModeSelectsBackground` | fast exec mode |
             |# | `$ubuntuExecModeSelectsForeground` | back ground exec mode |
@@ -447,7 +447,7 @@ object CommandClickScriptVariable {
             |# ### $UBUNTU_OUTPUT_FILE
             |# Set ubuntu output file
             |
-            |# | option | descripton |
+            |# | option | description |
             |# | $mdDash | $mdDash |
             |# | `${UsePath.cmdClickMonitorFileName_1}` | stdout |
             |# | `${UsePath.cmdClickMonitorFileName_2}` | strerr or syslog |

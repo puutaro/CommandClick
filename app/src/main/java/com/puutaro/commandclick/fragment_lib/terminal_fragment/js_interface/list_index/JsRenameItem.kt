@@ -27,6 +27,34 @@ class JsRenameItem(
         selectedItem: String,
         listIndexPosition: Int
     ){
+        /*
+        Rename item in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Corresponding macro
+
+        -> [RENAME](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#rename)
+
+        ### selectedItem arg
+
+        file name for rename
+
+        ### listIndexListPosition arg
+
+        list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Example
+
+        ```js.js
+        var=runCopyFile
+           ?func=jsRenameItem.rename_S
+           ?args=
+               &selectedItem=${item name}
+               &listIndexListPosition=NO_QUOTE:${item index}
+
+        ```
+
+        */
+
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,

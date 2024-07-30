@@ -11,6 +11,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolbarSwitcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.AppProcessManager
@@ -361,12 +362,12 @@ object JsPathHandlerForToolbarButton {
             MacroForToolbarButton.Macro.NORMAL
             -> {
                 val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-                    JsQrGetter::class.java.simpleName
+                    JsToolbarSwitcher::class.java.simpleName
                 )
                 ExecJsLoad.jsConLaunchHandler(
                     fragment,
                     """
-                        ${useClassName}.get_S(
+                        ${useClassName}.switch_S(
                             "${macro.name}"
                         );
                     """.trimIndent()

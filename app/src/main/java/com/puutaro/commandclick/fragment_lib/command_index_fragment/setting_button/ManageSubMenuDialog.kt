@@ -157,12 +157,12 @@ object ManageSubMenuDialog {
         val itemName: String,
         val imageId: Int
     ){
-        KILL("kill", R.drawable.icons8_cancel),
-        REFRESH_MONITOR("refresh monitor", R.drawable.icons8_refresh),
-        SELECT_MONITOR("select monitor", R.drawable.icons8_file),
-        RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
-        LAUNCH_DEBUGGER("launch debugger", R.drawable.icon_debug),
-        JS_IMPORT("js import manager", R.drawable.icons8_folda),
-        ADD("add", R.drawable.icons8_plus),
+        KILL("Kill", R.drawable.icons8_cancel),
+        REFRESH_MONITOR("Refresh monitor", R.drawable.icons8_refresh),
+        SELECT_MONITOR("Select monitor", R.drawable.icons8_file),
+        RESTART_UBUNTU("Restart ubuntu", R.drawable.icons8_launch),
+        LAUNCH_DEBUGGER("Launch debugger", R.drawable.icon_debug),
+        JS_IMPORT("Js import manager", R.drawable.icons8_folda),
+        ADD("Add", R.drawable.icons8_plus),
     }
 }

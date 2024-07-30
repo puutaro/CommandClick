@@ -12,6 +12,10 @@ class JsSystemFannel(
         appDirPath: String,
         fannelName: String,
     ){
+        /*
+        Launch system {fannel}(https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel)
+        */
+
         SystemFannelLauncher.launch(
             terminalFragment,
             appDirPath,

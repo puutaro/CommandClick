@@ -75,8 +75,11 @@ object EditToolbarSwitcher {
         val onTermSizeLongListenerForEdit =
             context as? EditFragment.OnTermSizeLongListenerForEdit
                 ?: return
-        when(execPlayBtnLongPress){
-            EditLongPressType.WEB_SEARCH.jsMacro -> {
+        val editLongPressType = EditLongPressType.values().firstOrNull {
+            it.jsMacro == execPlayBtnLongPress
+        } ?: return
+        when(editLongPressType){
+            EditLongPressType.WEB_SEARCH -> {
                 onTermSizeLongListenerForEdit.onTermSizeLongForEdit(cmdEditFragment)
                 webSearchToolbar.isVisible = true
                 cmdclickPageSearchToolBar.isVisible = false
@@ -88,7 +91,7 @@ object EditToolbarSwitcher {
                 cmdWebSearchEditText.requestFocus()
                 cmdPageSearchEditText.clearFocus()
             }
-            EditLongPressType.PAGE_SEARCH.jsMacro -> {
+            EditLongPressType.PAGE_SEARCH -> {
                 onTermSizeLongListenerForEdit.onTermSizeLongForEdit(cmdEditFragment)
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = true
@@ -100,7 +103,7 @@ object EditToolbarSwitcher {
                 cmdWebSearchEditText.clearFocus()
                 cmdPageSearchEditText.requestFocus()
             }
-            EditLongPressType.NORMAL.jsMacro -> {
+            EditLongPressType.NORMAL -> {
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = false
                 cmdclickToolBar.isVisible = true
@@ -110,38 +113,6 @@ object EditToolbarSwitcher {
                 linearLayoutParamToolbar.weight = 1F
                 cmdWebSearchEditText.clearFocus()
                 cmdPageSearchEditText.requestFocus()
-            }
-            else -> {
-//                if(
-//                    !File(execPlayBtnLongPress).isFile
-//                ) return
-//                if(
-//                    !execPlayBtnLongPress.endsWith(
-//                        UsePath.JSX_FILE_SUFFIX
-//                    )
-//                    || !execPlayBtnLongPress.endsWith(
-//                        UsePath.JS_FILE_SUFFIX
-//                    )
-//                ) return
-//                cmdEditFragment.jsExecuteJob?.cancel()
-//                cmdEditFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-//                    val onLaunchUrl = EnableTerminalWebView.check(
-//                        cmdEditFragment,
-//                        context.getString(
-//                            R.string.edit_terminal_fragment
-//                        )
-//                    )
-//                    if(!onLaunchUrl) return@launch
-//                    withContext(Dispatchers.Main) {
-//                        val listenerForWebLaunch = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-//                        listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
-//                            JavaScriptLoadUrl.make(
-//                                context,
-//                                execPlayBtnLongPress,
-//                            ).toString()
-//                        )
-//                    }
-//                }
             }
         }
     }

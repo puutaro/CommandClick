@@ -93,7 +93,7 @@ object TsvLineRenamer {
         promptOkButtonView?.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
-                    execRenameProcess(
+                    ExecRenameProcess.rename(
                         editFragment,
                         tsvPath,
                         tsvLine,
@@ -118,65 +118,80 @@ object TsvLineRenamer {
         renamePromptDialog?.show()
     }
 
-    private fun execRenameProcess(
-        editFragment: EditFragment,
-        tsvPath: String,
-        tsvLine: String,
-        promptEditText: AutoCompleteTextView?,
+    private object ExecRenameProcess {
+        fun rename(
+            editFragment: EditFragment,
+            tsvPath: String,
+            tsvLine: String,
+            promptEditText: AutoCompleteTextView?,
 
-    ){
-        val inputEditable = promptEditText?.text
-        if(
-            inputEditable.isNullOrEmpty()
-        ) {
-            ToastUtils.showShort("No type item name")
-            return
-        }
-        val titleFileNameAndPathConPair =
-            TitleFileNameAndPathConPairForListIndexAdapter.get(tsvLine)
-                ?: return
-        val fileNameOrTitle = titleFileNameAndPathConPair.first
-        val compExtend = CcPathTool.subExtend(fileNameOrTitle)
-        val renamedFileNameOrTitle = UsePath.compExtend(
-            inputEditable.toString(),
-            compExtend
-        )
-        if(
-            fileNameOrTitle == renamedFileNameOrTitle
-        ) return
-        val filePathOrCon = titleFileNameAndPathConPair.second
-        val filePathOrConObj = File(filePathOrCon)
-        val isTitleEqualPathOrCon =
-            fileNameOrTitle == filePathOrConObj.name
-        val isWithFileRename =
-            filePathOrConObj.isFile
-                    && isTitleEqualPathOrCon
-        val renameFilePathOrCon = when(isWithFileRename){
-            true -> {
-                val tsvParentDirPath = filePathOrConObj.parent
-                    ?: return
-                File(tsvParentDirPath, renamedFileNameOrTitle).absolutePath
+            ) {
+            val inputEditable = promptEditText?.text
+            if (
+                inputEditable.isNullOrEmpty()
+            ) {
+                ToastUtils.showShort("No type item name")
+                return
             }
-            else -> filePathOrCon
-        }
-        val renameTsvLine = "${renamedFileNameOrTitle}\t${renameFilePathOrCon}"
-        val srcAndRepLinePairList = listOf(
-            tsvLine to renameTsvLine,
-        )
-        TsvTool.updateTsvByReplace(
-            tsvPath,
-            srcAndRepLinePairList
-        )
-        if(isWithFileRename){
-            FileSystems.moveFile(
+            val titleFileNameAndPathConPair =
+                TitleFileNameAndPathConPairForListIndexAdapter.get(tsvLine)
+                    ?: return
+            val fileNameOrTitle = titleFileNameAndPathConPair.first
+            val compExtend = CcPathTool.subExtend(fileNameOrTitle)
+            val renamedFileNameOrTitle = UsePath.compExtend(
+                inputEditable.toString(),
+                compExtend
+            )
+            if (
+                fileNameOrTitle == renamedFileNameOrTitle
+            ) return
+            val filePathOrCon = titleFileNameAndPathConPair.second
+            val filePathOrConObj = File(filePathOrCon)
+            val isTitleEqualPathOrCon =
+                fileNameOrTitle == filePathOrConObj.name
+            val isWithFileRename =
+                filePathOrConObj.isFile
+                        && isTitleEqualPathOrCon
+            val renameFilePathOrCon = renameConOrPath(
+                renamedFileNameOrTitle,
                 filePathOrCon,
-                renameFilePathOrCon
+                isWithFileRename,
+            )
+            val renameTsvLine = "${renamedFileNameOrTitle}\t${renameFilePathOrCon}"
+            val srcAndRepLinePairList = listOf(
+                tsvLine to renameTsvLine,
+            )
+            TsvTool.updateTsvByReplace(
+                tsvPath,
+                srcAndRepLinePairList
+            )
+            if (isWithFileRename) {
+                FileSystems.moveFile(
+                    filePathOrCon,
+                    renameFilePathOrCon
+                )
+            }
+            ExecReWriteForListIndexAdapter.replaceListElementForTsv(
+                editFragment,
+                srcAndRepLinePairList
             )
         }
-        ExecReWriteForListIndexAdapter.replaceListElementForTsv(
-            editFragment,
-            srcAndRepLinePairList
-        )
+
+        private fun renameConOrPath(
+            renamedFileNameOrTitle: String,
+            filePathOrCon: String,
+            isWithFileRename: Boolean,
+        ): String {
+            val filePathOrConObj = File(filePathOrCon)
+            return when (isWithFileRename) {
+                true -> {
+                    val tsvParentDirPath = filePathOrConObj.parent
+                        ?: return String()
+                    File(tsvParentDirPath, renamedFileNameOrTitle).absolutePath
+                }
+                else -> filePathOrCon
+            }
+        }
     }
 
     private fun dismissProcess(

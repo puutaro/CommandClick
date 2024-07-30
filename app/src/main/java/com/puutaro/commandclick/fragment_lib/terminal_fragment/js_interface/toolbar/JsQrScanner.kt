@@ -28,6 +28,16 @@ class JsQrScanner(
 
     @JavascriptInterface
     fun scan_S(){
+
+        /*
+        Scan QR code and execute
+
+        ### Corresponding macro
+
+        -> [QR_SCAN](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#qr_scan)
+
+        */
+
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,

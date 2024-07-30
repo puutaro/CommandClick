@@ -77,9 +77,10 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSharePref
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsStateChange
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolbarSwitcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsUrlHistory
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddGmailCon
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddToUrlHistory
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddFromUrlHistory
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddUrlCon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsEditToolbarSwitcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileAdder
@@ -413,6 +414,10 @@ object JsInterfaceAdder {
             webView,
             JsUrlHistory(terminalFragment)
         )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsToolbarSwitcher(terminalFragment)
+        )
     }
 
     private fun toolbarAdder(
@@ -457,7 +462,7 @@ object JsInterfaceAdder {
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsAddToUrlHistory(terminalFragment)
+            JsAddFromUrlHistory(terminalFragment)
         )
         ExecJsInterfaceAdder.add(
             webView,

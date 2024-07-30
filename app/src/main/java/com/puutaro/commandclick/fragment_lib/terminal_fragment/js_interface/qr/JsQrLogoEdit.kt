@@ -32,6 +32,29 @@ class JsQrLogoEdit(
     fun edit_S(
         clickFileName: String,
     ){
+        /*
+        Edit QR image by dialog in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Corresponding macro
+
+        -> [EDIT_LOGO](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_logo.md#edit_logo)
+
+        ### clickFileName arg
+
+        clicked file name
+
+        ### Example
+
+        ```js.js
+        var=runExecQr
+           ?func=jsQrLogoEdit.exec_S
+           ?args=
+               &clickFileName=${file name}
+
+        ```
+
+        */
+
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,

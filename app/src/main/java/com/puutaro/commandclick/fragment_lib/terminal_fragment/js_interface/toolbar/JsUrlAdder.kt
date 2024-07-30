@@ -28,6 +28,32 @@ class JsUrlAdder(
         urlStringOrMacro: String,
         onSearchBtn: String,
     ){
+        /*
+        Add url to list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+        ### Corresponding macro
+
+        -> [ADD_URL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#add_url)
+
+        ### urlStringOrMacro arg
+
+        -> [Args for add url con](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add_url_con)
+
+        ### onSearchBtn arg
+
+        -> [Args for add url con](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add_url_con)
+
+        ### Example
+
+        ```js.js
+        var=runAddUrl
+            ?args=
+                urlStringOrMacro="https://www.youtube.com/"
+                &onSearchBtn=OFF
+        ```
+
+        */
+
         val urlString = HistoryUrlContents.extract(
             currentAppDirPath,
             urlStringOrMacro

@@ -42,6 +42,35 @@ class JsFileAdder(
         compFileNameMapCon: String,
         separator: String,
     ){
+        /*
+        Add file or tsv line by [type](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md##type) listIndex
+
+        ### Corresponding macro
+
+        -> [ADD](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#add)
+
+        ### compFileNameMapCon arg
+
+        -> [args for add macro in toolbar macro](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add)
+
+        ### separator arg
+
+        separator for compFileNameMapCon
+
+        ### Example
+
+        ```js.js
+        var=runAdd
+            ?func=jsFleAdder.add
+            ?args=
+                &compFileNameMapCon=`
+                    dirPath="${image2AsciiArtGalleryDirPath}"\n
+                    titleArgs="macro=CAMEL_TO_BLANK_SNAKE?compSuffix=List"\\n
+                    `
+            ?separator=`\n`
+        ```
+
+        */
 
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
