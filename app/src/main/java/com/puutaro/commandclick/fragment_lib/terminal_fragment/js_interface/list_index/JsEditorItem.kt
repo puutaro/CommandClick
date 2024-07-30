@@ -30,22 +30,24 @@ class JsEditorItem(
     ){
 
         /*
+        ## Description
+
         Edit file by edit text in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [SIMPLE_EDIT](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#simple_edit)
 
-        ### selectedItem arg
+        ## selectedItem arg
 
         file name for desc
 
-         ### listIndexListPosition arg
+        ## listIndexListPosition arg
 
         list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
 
-        ### Example
+        ## Example
 
         ```js.js
         var=runSimpleEdit
@@ -77,22 +79,24 @@ class JsEditorItem(
         listIndexPosition: Int,
     ){
         /*
+        ## Description
+
         Edit file by editor app in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [WRITE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#write)
 
-        ### selectedItem arg
+        ## selectedItem arg
 
         file name for desc
 
-         ### listIndexListPosition arg
+        ## listIndexListPosition arg
 
         list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
 
-        ### Example
+        ## Example
 
         ```js.js
         var=runEdit

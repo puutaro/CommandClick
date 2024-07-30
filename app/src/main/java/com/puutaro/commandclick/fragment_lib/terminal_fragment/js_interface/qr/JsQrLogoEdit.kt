@@ -33,17 +33,20 @@ class JsQrLogoEdit(
         clickFileName: String,
     ){
         /*
+
+        ## Description
+
         Edit QR image by dialog in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [EDIT_LOGO](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_logo.md#edit_logo)
 
-        ### clickFileName arg
+        ## clickFileName arg
 
         clicked file name
 
-        ### Example
+        ## Example
 
         ```js.js
         var=runExecQr

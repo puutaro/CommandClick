@@ -30,9 +30,11 @@ class JsToolbarSwitcher(
         execPlayBtnLongPress: String
     ){
         /*
+        ## Description
+
         Change toolbar on edit box
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [WEB_SEARCH](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#web_search)
 
@@ -40,7 +42,7 @@ class JsToolbarSwitcher(
 
         -> [NORMAL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#normal)
 
-        ### execPlayBtnLongPress
+        ## execPlayBtnLongPress
 
         Specify long press type string
 

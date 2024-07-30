@@ -29,21 +29,23 @@ class JsUrlAdder(
         onSearchBtn: String,
     ){
         /*
+        ## Description
+
         Add url to list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [ADD_URL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#add_url)
 
-        ### urlStringOrMacro arg
+        ## urlStringOrMacro arg
 
         -> [Args for add url con](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add_url_con)
 
-        ### onSearchBtn arg
+        ## onSearchBtn arg
 
         -> [Args for add url con](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add_url_con)
 
-        ### Example
+        ## Example
 
         ```js.js
         var=runAddUrl

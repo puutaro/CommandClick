@@ -14,9 +14,11 @@ class JsProcessKiller(
         fannelName: String,
     ){
         /*
+        ## Description
+
         Kill process by dialog
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [KILL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#kill)
 

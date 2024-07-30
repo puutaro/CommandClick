@@ -30,9 +30,11 @@ class JsQrScanner(
     fun scan_S(){
 
         /*
+        ## Description
+
         Scan QR code and execute
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [QR_SCAN](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#qr_scan)
 

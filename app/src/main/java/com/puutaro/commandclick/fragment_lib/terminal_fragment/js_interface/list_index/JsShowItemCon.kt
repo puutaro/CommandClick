@@ -30,30 +30,32 @@ class JsShowItemCon(
 
 
         /*
-       Show item contents
+        ## Description
 
-       ### Corresponding macro
+        Show item contents
 
-       -> [CAT](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#cat)
+        ## Corresponding macro
 
-       ### selectedItem arg
+        -> [CAT](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#cat)
 
-       file name for delete
+        ## selectedItem arg
 
-       ### listIndexListPosition arg
+        file name for delete
 
-       list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+        ## listIndexListPosition arg
 
-       ### Example
+        list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-       ```js.js
-       var=runCat
+        ## Example
+
+        ```js.js
+        var=runCat
            ?func=jsDeleteItem.show_S
            ?args=
                &selectedItem=${item name}
                &listIndexListPosition=NO_QUOTE:${item index}
 
-       ```
+        ```
 
        */
 

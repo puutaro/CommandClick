@@ -13,7 +13,10 @@ class JsSystemFannel(
         fannelName: String,
     ){
         /*
+        ## Description
+
         Launch system {fannel}(https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel)
+
         */
 
         SystemFannelLauncher.launch(

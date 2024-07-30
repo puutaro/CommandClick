@@ -39,26 +39,28 @@ class JsQrGetter(
         compSuffix: String,
     ){
         /*
+        ## Description
+
         Get contents from QR code
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [GET_QR_CON](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#get_qr_con)
 
-        ### stockConDirPathForTsv arg
+        ## stockConDirPathForTsv arg
 
       　-> [parentDirPath in args for GET_QR_CON macro in toolbar](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-get_qr_con)
 
-        ### compPrefix arg
+        ## compPrefix arg
 
         -> [compPrefix in args for GET_QR_CON macro in toolbar](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-get_qr_con)
 
-        ### compSuffix arg
+        ## compSuffix arg
 
         -> [compSuffix in args for GET_QR_CON macro in toolbar](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-get_qr_con)
 
 
-        ### Example
+        ## Example
 
         ```js.js
         run=getFile

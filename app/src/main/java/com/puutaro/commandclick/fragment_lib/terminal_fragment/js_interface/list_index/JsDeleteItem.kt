@@ -32,21 +32,24 @@ class JsDeleteItem(
     ){
 
         /*
+        ## Description
+
+
         Delete item from list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#delete)
 
-        ### parentDirPath arg
+        ## parentDirPath arg
 
         parent dir path of file name for delete
 
-        ### selectedItem arg
+        ## selectedItem arg
 
         file name for delete
 
-        ### Example
+        ## Example
 
         ```js.js
         var=runDelete
@@ -84,21 +87,23 @@ class JsDeleteItem(
         listIndexListPosition: Int,
     ){
         /*
+        ## Description
+
         Delete item from list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Corresponding macro
+        ## Corresponding macro
 
         -> [SIMPLE_DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#simple_delete)
 
-        ### selectedItem arg
+        ## selectedItem arg
 
         file name for delete
 
-        ### listIndexListPosition arg
+        ## listIndexListPosition arg
 
         list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-        ### Example
+        ## Example
 
         ```js.js
         var=runDelete
