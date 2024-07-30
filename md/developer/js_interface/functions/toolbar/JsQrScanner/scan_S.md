@@ -19,7 +19,15 @@ var=runScan_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Scan QR code and execute
+
+### Corresponding macro
+
+-> [QR_SCAN](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#qr_scan)
+
+
 
 ## Src
 

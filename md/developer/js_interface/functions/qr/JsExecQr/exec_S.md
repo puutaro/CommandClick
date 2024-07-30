@@ -20,7 +20,29 @@ var=runExec_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Exec qr contents from file in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+### Corresponding macro
+
+-> [EXEC_QR](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_logo.md#exec_qr)
+
+### clickFileName arg
+
+clicked file name
+
+### Example
+
+```js.js
+var=runExecQr
+   ?func=jsExecQr.exec_S
+   ?args=
+       &clickFileName=${file name}
+
+```
+
+
 
 ## Src
 

@@ -22,10 +22,37 @@ var=runSimpleDelete_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Delete item from list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+### Corresponding macro
+
+-> [SIMPLE_DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#simple_delete)
+
+### selectedItem arg
+
+file name for delete
+
+### listIndexListPosition arg
+
+list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+### Example
+
+```js.js
+var=runDelete
+    ?func=jsDeleteItem.simpleDelete_S
+    ?args=
+        &selectedItem=${item name}
+        &listIndexListPosition=NO_QUOTE:${item index}
+
+```
+
+
 
 ## Src
 
--> [jsDeleteItem.simpleDelete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L53)
+-> [jsDeleteItem.simpleDelete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L82)
 
 

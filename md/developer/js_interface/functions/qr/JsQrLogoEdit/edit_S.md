@@ -20,7 +20,29 @@ var=runEdit_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Edit QR image by dialog in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
+
+### Corresponding macro
+
+-> [EDIT_LOGO](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_logo.md#edit_logo)
+
+### clickFileName arg
+
+clicked file name
+
+### Example
+
+```js.js
+var=runExecQr
+   ?func=jsQrLogoEdit.exec_S
+   ?args=
+       &clickFileName=${file name}
+
+```
+
+
 
 ## Src
 

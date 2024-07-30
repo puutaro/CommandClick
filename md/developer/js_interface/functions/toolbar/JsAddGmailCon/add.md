@@ -22,7 +22,36 @@ var=runAdd
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Add gmail contents from url
+
+### Corresponding macro
+
+-> [ADD_GMAIL_CON](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#add_gmail_con)
+
+### gmailAd arg
+
+Target gmail url address
+
+### extraMapCon arg
+
+-> [Args for ADD_GMAIL_CON macro](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add_gmail_con)
+
+### Example
+
+```js.js
+var=runAddGmailAdCon
+    ?func=jsAddGmailCon.add
+    ?args=
+        &gmailAd="http://gmail.com/~"
+        &extraMapCon=`
+            urlConSaveParentDirPath=${cmdTtsPlayerSaveUrlConDirPath}
+            |compSuffix=${TXT_SUFFIX}
+        `
+```
+
+
 
 ## Src
 

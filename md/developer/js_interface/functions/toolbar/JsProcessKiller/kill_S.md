@@ -22,7 +22,15 @@ var=runKill_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Kill process by dialog
+
+### Corresponding macro
+
+-> [KILL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#kill)
+
+
 
 ## Src
 

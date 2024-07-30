@@ -22,7 +22,44 @@ var=runGet_S
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
-- The `run` prefix definition on `var` is a process annotation, not a variable definition
+- The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
+
+Get files or dirs by filej picker
+
+### Corresponding macro
+
+-> [GET_FILES](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#get_files)
+
+-> [GET_DIRS](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#get_dirs)
+
+### onDirectoryPick arg
+
+| Type        | Description                               |
+|-------------|------------------------------------------|
+| `true` | Pick dir |
+| `false` | Pick file |
+
+### filterMapCon arg
+
+-> [args for GET_FILES macro in toolbar](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-get_files)
+
+- Each key-value is separated by `|`
+
+### Example
+
+```js.js
+run=getFile
+    ?func=jsFileOrDirGetter.kt.get_S
+    ?args=
+        &onDirectoryPick=false
+        &filterMapCon=`
+            |suffix=".mp3&m4a"
+            |initialPath="${STORAGE}/Music"
+            |macro=FROM_RECENT_DIR
+            |tag=addByOne
+```
+        `
+
 
 ## Src
 
