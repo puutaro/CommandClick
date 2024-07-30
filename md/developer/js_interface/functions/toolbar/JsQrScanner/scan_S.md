@@ -21,9 +21,11 @@ var=runScan_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Scan QR code and execute
 
-### Corresponding macro
+## Corresponding macro
 
 -> [QR_SCAN](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#qr_scan)
 

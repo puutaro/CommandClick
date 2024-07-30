@@ -24,9 +24,11 @@ var=runKill_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Kill process by dialog
 
-### Corresponding macro
+## Corresponding macro
 
 -> [KILL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#kill)
 

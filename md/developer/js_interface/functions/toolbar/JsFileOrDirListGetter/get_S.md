@@ -24,28 +24,30 @@ var=runGet_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Get files or dirs by filej picker
 
-### Corresponding macro
+## Corresponding macro
 
 -> [GET_FILES](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#get_files)
 
 -> [GET_DIRS](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#get_dirs)
 
-### onDirectoryPick arg
+## onDirectoryPick arg
 
 | Type        | Description                               |
 |-------------|------------------------------------------|
 | `true` | Pick dir |
 | `false` | Pick file |
 
-### filterMapCon arg
+## filterMapCon arg
 
 -> [args for GET_FILES macro in toolbar](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-get_files)
 
 - Each key-value is separated by `|`
 
-### Example
+## Example
 
 ```js.js
 run=getFile

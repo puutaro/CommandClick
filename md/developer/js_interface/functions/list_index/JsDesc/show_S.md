@@ -24,22 +24,24 @@ var=runShow_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Show description for [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel)
 
-### Corresponding macro
+## Corresponding macro
 
 -> [DESC](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#descdesc)
 
-### selectedItem arg
+## selectedItem arg
 
 file name for desc
 
- ### listIndexListPosition arg
+## listIndexListPosition arg
 
 list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
 
-### Example
+## Example
 
 ```js.js
 var=runDesc

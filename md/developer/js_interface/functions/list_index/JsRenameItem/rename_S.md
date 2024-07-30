@@ -24,21 +24,23 @@ var=runRename_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Rename item in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-### Corresponding macro
+## Corresponding macro
 
 -> [RENAME](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#rename)
 
-### selectedItem arg
+## selectedItem arg
 
 file name for rename
 
-### listIndexListPosition arg
+## listIndexListPosition arg
 
 list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-### Example
+## Example
 
 ```js.js
 var=runCopyFile

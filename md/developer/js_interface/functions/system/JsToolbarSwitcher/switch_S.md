@@ -22,9 +22,11 @@ var=runSwitch_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Change toolbar on edit box
 
-### Corresponding macro
+## Corresponding macro
 
 -> [WEB_SEARCH](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#web_search)
 
@@ -32,7 +34,7 @@ Change toolbar on edit box
 
 -> [NORMAL](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#normal)
 
-### execPlayBtnLongPress
+## execPlayBtnLongPress
 
 Specify long press type string
 

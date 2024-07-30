@@ -24,21 +24,23 @@ var=runSimpleDelete_S
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Delete item from list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-### Corresponding macro
+## Corresponding macro
 
 -> [SIMPLE_DELETE](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_list_index.md#simple_delete)
 
-### selectedItem arg
+## selectedItem arg
 
 file name for delete
 
-### listIndexListPosition arg
+## listIndexListPosition arg
 
 list position in list in [list index](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md)
 
-### Example
+## Example
 
 ```js.js
 var=runDelete
@@ -53,6 +55,6 @@ var=runDelete
 
 ## Src
 
--> [jsDeleteItem.simpleDelete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L82)
+-> [jsDeleteItem.simpleDelete_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsDeleteItem.kt#L85)
 
 

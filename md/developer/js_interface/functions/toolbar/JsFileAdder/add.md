@@ -24,21 +24,23 @@ var=runAdd
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Add file or tsv line by [type](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md##type) listIndex
 
-### Corresponding macro
+## Corresponding macro
 
 -> [ADD](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#add)
 
-### compFileNameMapCon arg
+## compFileNameMapCon arg
 
 -> [args for add macro in toolbar macro](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#args-for-add)
 
-### separator arg
+## separator arg
 
 separator for compFileNameMapCon
 
-### Example
+## Example
 
 ```js.js
 var=runAdd

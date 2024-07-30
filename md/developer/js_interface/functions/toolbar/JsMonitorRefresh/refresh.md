@@ -21,9 +21,11 @@ var=runRefresh
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Refresh current monitor
 
-### Corresponding macro
+## Corresponding macro
 
 -> [REFRESH_MONITOR](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_action/js_action_macro_for_toolbar.md#refresh_monitor)
 
