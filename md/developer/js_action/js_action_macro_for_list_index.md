@@ -69,7 +69,7 @@ Cat file contents
 
 ### type support table for CAT
 
-| type | descripton                                             |
+| type | description                                             |
 | --------- |--------------------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Cat file contents                                      |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Cat file contents, if second field is exist file path |
@@ -86,7 +86,7 @@ Copy path to clipboard
 
 ### type support table for COPY_PATH
 
-| type | descripton                                   |
+| type | description                                   |
 | --------- |----------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy selected file                           |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy line and file, if second field is exist file path |
@@ -103,14 +103,14 @@ Copy file to other dir
 
 ### type support table for COPY_FILE
 
-| type | descripton                                                |
+| type | description                                                |
 | --------- |-----------------------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy selected file                                        |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy line and file, if second field is selected file path | 
 
 ### COPY_FILE args
 
-| type        | descripton                 |
+| type        | description                 |
 |-------------|----------------------------|
 | initialPath | Initial copy dest dir path |
 | macro       | Macro for dest dir path    |
@@ -120,7 +120,7 @@ Copy file to other dir
 
 Macro for dest dir path
 
-| type        | descripton                               |
+| type        | description                               |
 |-------------|------------------------------------------|
 | `FROM_RECENT_DIR` | Get dest dir from recent select dest dir |
 
@@ -145,7 +145,7 @@ Copy selected file in current dir
 
 ### type support table for COPY_FILE_HERE
 
-| type | descripton                                 |
+| type | description                                 |
 | --------- |--------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy selected file                         |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy line and file, if second field is exist file path |
@@ -166,7 +166,7 @@ Copy file to dir or tsv that you select from customize dir or tsv list
 
 ### type support table for COPY_FILE_SIMPLE
 
-| type | descripton                                 |
+| type | description                                 |
 | --------- |--------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy file                                  |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Copy line, if second field is exist file path | 
@@ -189,7 +189,7 @@ copyDestiTsvPathCon=`
 
 key-value con
 
-| key      | descripton                                                                                                                                            |
+| key      | description                                                                                                                                            |
 |----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | withFile | Copy with file when [type is tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | 
 
@@ -234,7 +234,7 @@ Delete selected file
 ### type support table for DELETE
 
 
-| type | descripton          |
+| type | description          |
 | --------- |---------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Delete file |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | None                | 
@@ -255,7 +255,7 @@ Delete selected file
 
 ### type support table for SIMPLE_DELETE
 
-| type | descripton                          |
+| type | description                          |
 | --------- |-------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Delete selected file                |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Delete line and file, if second field is file | 
@@ -305,7 +305,7 @@ Edit [command varialble](https://github.com/puutaro/CommandClick/blob/master/DEV
 ### type support table for EDIT_C
 
 
-| type | descripton       |
+| type | description       |
 | --------- |------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Edit [cmd vals](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | None             | 
@@ -322,7 +322,7 @@ Edit [setting varialble](https://github.com/puutaro/CommandClick/blob/master/DEV
 
 ### type support table for EDIT_S
 
-| type | descripton       |
+| type | description       |
 | --------- |------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Edit [cmd vals](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | None             | 
@@ -339,7 +339,7 @@ Launch menu
 
 ### MENU args
 
-| arg     | descripton           |
+| arg     | description           |
 |---------|----------------------|
 | `menuPath` | [menu config path](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/menuConfig.md) |
 | `title`    | string               | title            |
@@ -360,7 +360,7 @@ Rename file name
 ### type support table for RENAME
 
 
-| type | descripton                                                                 |
+| type | description                                                                 |
 | --------- |----------------------------------------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Rename file name                                                           |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Rename first field. <br> If this field is exist file path, rename file name | 
@@ -381,7 +381,7 @@ Edit file contents
 
 ### type support table for SIMPLE_EDIT
 
-| type | descripton                                                                          |
+| type | description                                                                          |
 | --------- |-------------------------------------------------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Edit file contents                                                                  |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Edit second field path contents, if this field is exist file path | 
@@ -402,7 +402,7 @@ Edit file contents by another edit app
 
 ### type support table for WRITE
 
-| type | descripton                                                                          |
+| type | description                                                                          |
 | --------- |-------------------------------------------------------------------------------------|
 | [normal](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Edit file contents   |
 | [tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type) | Edit second field path contents, if this field is exist file path | 

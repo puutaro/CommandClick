@@ -110,15 +110,15 @@ Add item
 
 ### args for ADD
 
-| Arg            | Type                     | Description                                                        |
-|----------------|--------------------------|-------------------------------------------------------------------|
-| `removeSuffix` | string separated by `&`  | Erase in specified suffix order                                   |
-| `removePrefix` | string separated by `&`  | Erase in specified prefix order                                   |
-| `compPrefix`   | string                   | comp prefix                                                       |
-| `compSuffix`   | string                   | comp suffix                                                       |
-| `shellPath`    | shell script path string | pre reserved word: <br> `${FILE_NAME}` -> file name or title name |
-| `dirPath`      | dir path to prepend      | complete dir path to prepend to file name                         |
-| `titleArgs`    | title args               | title setting args                                                |
+| Arg            | Type                     | Description                                                                                                                                                                                               |
+|----------------|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `removeSuffix` | string separated by `&`  | Erase in specified suffix order                                                                                                                                                                           |
+| `removePrefix` | string separated by `&`  | Erase in specified prefix order                                                                                                                                                                           |
+| `compPrefix`   | string                   | comp prefix                                                                                                                                                                                               |
+| `compSuffix`   | string                   | comp suffix                                                                                                                                                                                               |
+| `shellPath`    | shell script path string | pre reserved word: <br> `${FILE_NAME}` -> file name or title name                                                                                                                                         |
+| `dirPath`      | dir path to prepend      | complete dir path to prepend to file name <br> Enable when [type is tsvEdit]([tsvEdit](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/listIndexConfig.md#value-table-for-type)) |
+| `titleArgs`    | title args               | title setting args                                                                                                                                                                                        |
 
 - Concat by `?`
 
@@ -182,7 +182,7 @@ Add title url line
 
 #### url marco table in ADD_URL
 
-| Macro       | Descripton        |
+| Macro       | Description        |
 |-------------|-------------------|
 | `RECENT`    | Recent visit url  |
 | `FREQUENCY` | Most frequent url |
@@ -295,7 +295,7 @@ Add url history to tsv
 
 ### Ex for ADD_URL_HISTORY
 
-```js.js
+```js.jsf
 func=ADD_URL_HISTORY
 ```
 
@@ -320,7 +320,7 @@ Edit original setting variable in [fannel](https://github.com/puutaro/CommandCli
 ### Ex for EDIT
 
 ```js.js
-func=ADD_URL_HISTORY
+func=EDIT
 ```
 
 ## GET_FILE
@@ -341,7 +341,7 @@ Add file from directory
 
 Macro for dest dir path
 
-| type        | descripton                               |
+| type        | Description                               |
 |-------------|------------------------------------------|
 | `FROM_RECENT_DIR` | Get dest dir from recent select dest dir |
 
@@ -386,7 +386,7 @@ Add dir in other directory
 
 Macro for dest dir path
 
-| type        | descripton                               |
+| type        | Description                               |
 |-------------|------------------------------------------|
 | `FROM_RECENT_DIR` | Get dest dir from recent select dest dir |
 
@@ -424,7 +424,7 @@ Add files by bulk
 
 Macro for dest dir path
 
-| type        | descripton                               |
+| type        | Description                               |
 |-------------|------------------------------------------|
 | `FROM_RECENT_DIR` | Get dest dir from recent select dest dir |
 
@@ -462,7 +462,7 @@ Add dirs by bulk
 
 Macro for dest dir path
 
-| type        | descripton                               |
+| type        | Description                               |
 |-------------|------------------------------------------|
 | `FROM_RECENT_DIR` | Get dest dir from recent select dest dir |
 
@@ -530,7 +530,7 @@ Launch menu
 
 ### MENU args
 
-| arg        | value  | descripton                                                                                                 |
+| arg        | value  | Description                                                                                                 |
 |------------|--------|------------------------------------------------------------------------------------------------------------|
 | `menuPath` | path   | [Menu config path](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/menuConfig.md) |
 | `title`    | string | Title                                                                                                      |
@@ -556,7 +556,7 @@ Launch menu by dialog
 
 ### D_MENU args
 
-| arg        | value        | descripton                                                                                                 |
+| arg        | value        | Description                                                                                                 |
 |------------|--------------|------------------------------------------------------------------------------------------------------------|
 | `menuPath` | path         | [Menu config path](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/menuConfig.md) |
 | `title`    | string       | Title                                                                                                      |
@@ -575,6 +575,11 @@ Launch menu by dialog
 
 Switch toolbar to normal
 
+
+### js interface supporting NORMAL
+
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/toolbar/JsToolbarSwitcher/switch_S.md)
+
 ### NORMAL ex
 
 ```js.js
@@ -585,6 +590,11 @@ Switch toolbar to normal
 
 Switch toolbar to page search box
 
+
+### js interface supporting PAGE_SEARCH
+
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/toolbar/JsToolbarSwitcher/switch_S.md)
+
 ### PAGE_SEARCH ex
 
 ```js.js
@@ -594,6 +604,12 @@ Switch toolbar to page search box
 ## WEB_SEARCH
 
 Switch toolbar to web search box
+
+
+### js interface supporting WEB_SEARCH
+
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/toolbar/JsToolbarSwitcher/switch_S.md)
+
 
 ### WEB_SEARCH ex
 
