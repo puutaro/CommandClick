@@ -43,7 +43,7 @@ object FileRenamer {
             }
         }
     }
-    fun execRename(
+    private fun execRename(
         fragment: Fragment,
         parentDirPath: String,
         fileName: String,
@@ -98,12 +98,23 @@ object FileRenamer {
                 return@setOnClickListener
             }
             val renamedFileName = UsePath.compExtend(
-                inputEditable.toString(),
+                inputEditable.toString().trim(),
                 extend
             )
             if(
                 fileName == renamedFileName
-            ) return@setOnClickListener
+            ) {
+                alreadyExistToast(renamedFileName)
+                return@setOnClickListener
+            }
+            if (
+                FileSystems.sortedFiles(
+                    parentDirPath
+                ).contains(renamedFileName)
+            ){
+                alreadyExistToast(renamedFileName)
+                return@setOnClickListener
+            }
             FileSystems.moveFileWithDir(
                 File(parentDirPath, fileName),
                 File(parentDirPath, renamedFileName)
@@ -135,6 +146,12 @@ object FileRenamer {
             Gravity.BOTTOM
         )
         promptDialog?.show()
+    }
+
+    private fun alreadyExistToast(con: String){
+        CoroutineScope(Dispatchers.Main).launch{
+            ToastUtils.showLong("Already exist: ${con}")
+        }
     }
 
 }

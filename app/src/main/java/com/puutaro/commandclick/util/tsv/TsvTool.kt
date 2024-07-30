@@ -275,4 +275,17 @@ object TsvTool {
             ?.lastOrNull()
             ?: String()
     }
+
+    fun flattenKeyValue(
+        tsvPath: String
+    ): List<String> {
+        return ReadText(tsvPath).textToList().map {
+                line ->
+            line.trim()
+                .split("\t")
+                .map {it.trim() }
+        }.flatten().filter {
+            it.isNotEmpty()
+        }
+    }
 }

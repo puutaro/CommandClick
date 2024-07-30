@@ -194,6 +194,7 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertLine: String,
     ){
+        val context = editFragment.context
         val listIndexForEditAdapter =
             editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
         val tsvPath =
@@ -242,14 +243,17 @@ object ExecAddForListIndexAdapter {
         )
         when(sortType){
             ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
-                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                    editFragment,
-                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                        editFragment,
-                        ListIndexForEditAdapter.indexListMap,
-                        ListIndexForEditAdapter.listIndexTypeKey
-                    )
-                )
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO){
+                        delay(200)
+                    }
+                    withContext(Dispatchers.IO) {
+                        BroadcastSender.normalSend(
+                            context,
+                            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+                        )
+                    }
+                }
             ListSettingsForListIndex.SortByKey.SORT,
             ListSettingsForListIndex.SortByKey.REVERSE ->
                 listUpdateByInsertItem(

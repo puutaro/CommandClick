@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecReWriteForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexTsvDetector
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CcPathTool
@@ -42,7 +43,7 @@ object TsvLineRenamer {
         }
     }
     
-    fun execRename(
+    private fun execRename(
         editFragment: EditFragment,
         tsvPath: String,
         tsvLine: String,
@@ -139,7 +140,7 @@ object TsvLineRenamer {
             val fileNameOrTitle = titleFileNameAndPathConPair.first
             val compExtend = CcPathTool.subExtend(fileNameOrTitle)
             val renamedFileNameOrTitle = UsePath.compExtend(
-                inputEditable.toString(),
+                inputEditable.toString().trim(),
                 compExtend
             )
             if (
@@ -157,6 +158,16 @@ object TsvLineRenamer {
                 filePathOrCon,
                 isWithFileRename,
             )
+            ListIndexTsvDetector.isDuplicate(
+                tsvPath,
+                renamedFileNameOrTitle,
+                renameFilePathOrCon
+            ).let {
+                isDetect ->
+                if(
+                    isDetect
+                ) return
+            }
             val renameTsvLine = "${renamedFileNameOrTitle}\t${renameFilePathOrCon}"
             val srcAndRepLinePairList = listOf(
                 tsvLine to renameTsvLine,
@@ -204,6 +215,12 @@ object TsvLineRenamer {
                 delay(200)
                 editFragment.disableKeyboardFragmentChange = false
             }
+        }
+    }
+
+    private fun alreadyExistToast(con: String){
+        CoroutineScope(Dispatchers.Main).launch{
+            ToastUtils.showLong("Already exist: ${con}")
         }
     }
 

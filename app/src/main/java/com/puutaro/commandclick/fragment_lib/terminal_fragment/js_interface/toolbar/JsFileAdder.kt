@@ -1,9 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexTsvDetector
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -16,8 +18,14 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class JsFileAdder(
@@ -97,7 +105,7 @@ class JsFileAdder(
             "Type item name",
             String(),
             String()
-        )
+        ).trim()
         if(
             fileName.isEmpty()
         ) return
@@ -146,6 +154,14 @@ class JsFileAdder(
             fileName,
             compFileNameMap,
         )
+        if (
+            FileSystems.sortedFiles(
+                parentDirPath
+            ).contains(compFileName)
+        ){
+            alreadyExistToast(compFileName)
+            return
+        }
         FileSystems.writeFile(
             File(
                 parentDirPath,
@@ -153,10 +169,17 @@ class JsFileAdder(
             ).absolutePath,
             String()
         )
-        BroadcastSender.normalSend(
-            context,
-            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                delay(200)
+            }
+            withContext(Dispatchers.IO) {
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+                )
+            }
+        }
     }
 
     private fun execAddForTsv(
@@ -170,17 +193,33 @@ class JsFileAdder(
             compFileNameMapCon,
             separator,
         ).toMap()
-        val compFilePath = makeCompFilePath(
-            editFragment,
-            fileName,
-            compFileNameMap,
-        )
         val title = makeCompTitle(
             editFragment,
             fileName,
             compFileNameMap,
             separator,
         )
+        val compFilePath = makeCompFilePath(
+            editFragment,
+            fileName,
+            compFileNameMap,
+        )
+        val tsvPath =
+            FilePrefixGetter.get(
+                editFragment,
+                ListIndexForEditAdapter.indexListMap,
+                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+            )  ?: String()
+        ListIndexTsvDetector.isDuplicate(
+            tsvPath,
+            title,
+            compFilePath
+        ).let {
+                isDetect ->
+            if(
+                isDetect
+            ) return
+        }
         val insertLine = "${title}\t${compFilePath}"
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "add_makeCompfileName.txt").absolutePath,
@@ -250,5 +289,11 @@ class JsFileAdder(
             fileName,
             compTitleMap,
         )
+    }
+
+    private fun alreadyExistToast(con: String){
+        CoroutineScope(Dispatchers.Main).launch{
+            ToastUtils.showLong("Already exist: ${con}")
+        }
     }
 }
