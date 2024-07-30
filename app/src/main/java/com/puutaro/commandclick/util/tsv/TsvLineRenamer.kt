@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecReWriteForListIndexAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexTsvDetector
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CcPathTool
@@ -158,7 +158,7 @@ object TsvLineRenamer {
                 filePathOrCon,
                 isWithFileRename,
             )
-            ListIndexTsvDetector.isDuplicate(
+            ListIndexDuplicate.isTsvDetect(
                 tsvPath,
                 renamedFileNameOrTitle,
                 renameFilePathOrCon
@@ -217,11 +217,4 @@ object TsvLineRenamer {
             }
         }
     }
-
-    private fun alreadyExistToast(con: String){
-        CoroutineScope(Dispatchers.Main).launch{
-            ToastUtils.showLong("Already exist: ${con}")
-        }
-    }
-
 }

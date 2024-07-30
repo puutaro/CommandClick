@@ -13,6 +13,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -107,13 +108,14 @@ object FileRenamer {
                 alreadyExistToast(renamedFileName)
                 return@setOnClickListener
             }
-            if (
-                FileSystems.sortedFiles(
-                    parentDirPath
-                ).contains(renamedFileName)
-            ){
-                alreadyExistToast(renamedFileName)
-                return@setOnClickListener
+            ListIndexDuplicate.isFileDetect(
+                parentDirPath,
+                renamedFileName,
+            ).let {
+                    isDetect ->
+                if(
+                    isDetect
+                ) return@setOnClickListener
             }
             FileSystems.moveFileWithDir(
                 File(parentDirPath, fileName),

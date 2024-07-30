@@ -1,13 +1,14 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-object ListIndexTsvDetector {
-    fun isDuplicate(
+object ListIndexDetector {
+    fun isTsvDuplicate(
         tsvPath: String,
         fileNameOrTitle: String,
         fileNameOrCon: String
@@ -24,6 +25,22 @@ object ListIndexTsvDetector {
             alreadyTitleAndConList.contains(fileNameOrCon)
         ){
             alreadyExistToast(fileNameOrCon)
+            return true
+        }
+        return false
+    }
+
+
+    fun isFileDuplication(
+        parentDirPath: String,
+        fileName: String
+    ): Boolean {
+        if (
+            FileSystems.sortedFiles(
+                parentDirPath
+            ).contains(fileName)
+        ){
+            alreadyExistToast(fileName)
             return true
         }
         return false

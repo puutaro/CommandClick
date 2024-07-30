@@ -1,11 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexTsvDetector
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -154,13 +153,14 @@ class JsFileAdder(
             fileName,
             compFileNameMap,
         )
-        if (
-            FileSystems.sortedFiles(
-                parentDirPath
-            ).contains(compFileName)
-        ){
-            alreadyExistToast(compFileName)
-            return
+        ListIndexDuplicate.isFileDetect(
+            parentDirPath,
+            compFileName,
+        ).let {
+            isDetect ->
+            if(
+                isDetect
+            ) return
         }
         FileSystems.writeFile(
             File(
@@ -210,7 +210,7 @@ class JsFileAdder(
                 ListIndexForEditAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
             )  ?: String()
-        ListIndexTsvDetector.isDuplicate(
+        ListIndexDuplicate.isTsvDetect(
             tsvPath,
             title,
             compFilePath
@@ -289,11 +289,5 @@ class JsFileAdder(
             fileName,
             compTitleMap,
         )
-    }
-
-    private fun alreadyExistToast(con: String){
-        CoroutineScope(Dispatchers.Main).launch{
-            ToastUtils.showLong("Already exist: ${con}")
-        }
     }
 }
