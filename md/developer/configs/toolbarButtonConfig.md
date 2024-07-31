@@ -12,7 +12,7 @@ Table
 		* [Js action macro](#js-action-macro)
 	* [Setting key ](#setting-key-)
 * [Example](#example)
-
+* [settingimport](#settingimport)
 
 ## Overview
 
@@ -177,3 +177,9 @@ click=
 icon=plus,
 
 ```
+
+
+## settingimport
+
+Import enable to this config, -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/settingImport.md)
+

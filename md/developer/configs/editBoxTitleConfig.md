@@ -16,6 +16,7 @@ Table
     * [image](#image)
         * [Format for image](#format-for-image)
         * [Key-value table for image](#key-value-table-for-image)
+* [settingimport](#settingimport)
 
 
 ## How to specify
@@ -93,3 +94,10 @@ key-value
 | Key name                | value               | Description                              | 
 |-------------------------|---------------------|------------------------------------------|
 | `disable`               | `ON` / `OFF`        | disable title image |
+
+
+
+## settingimport
+
+Import enable to this config, -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/settingImport.md)
+

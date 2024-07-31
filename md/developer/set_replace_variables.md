@@ -6,6 +6,7 @@ Table
 -----------------
 * [Overview](#overview)
 * [Specify file path](#specify-file-path)
+* [settingimport](#settingimport)
 
 
 ## Overview
@@ -66,7 +67,57 @@ settingVariables=
 currentAppDirPath=
 	"${01}",
 // replace variable3 description
-setReplaceVariables=
-	"currentFannelDirPath=${currentAppDirPath}/${001}",
+"currentFannelDirPath=${currentAppDirPath}/${001}",
 
 ```
+
+## settingimport
+
+Other Replace variable can import
+
+- This is second priority
+
+### example for settingimport
+
+#### src replace variables
+
+```setReplaceVariables.js
+settingVariables=
+	"editSettingVariables",
+currentAppDirPath=
+	"${01}",
+currentFannelDirPath=
+    "${currentAppDirPath}/${001}",
+settingimport=
+    "${import replace varialbe path}"
+```
+
+#### ${import replace variable path}
+
+```js.js
+currentAppDirPath=
+	"${import current app dir path}",
+{import variable name1}=
+    {import variable value1},
+{import variable name2}=
+    {import variable value2},
+```
+
+
+#### result replace variable
+
+```setReplaceVariables.js
+settingVariables=
+	"editSettingVariables",
+currentAppDirPath=
+	"${01}",
+currentAppDirPath=
+	"${import current app dir path}",
+{import variable name1}=
+    {import variable value1},
+{import variable name2}=
+    {import variable value2},
+```
+
+- Override `currentAppDirPath` variable with second click key
+- Add `{import variable name1}`, `{import variable name2}` key

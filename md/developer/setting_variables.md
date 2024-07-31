@@ -39,6 +39,7 @@ Table of Contents
 * [settingButtonConfig](#settingbuttonconfig)
 * [extraButtonConfig](#extrabuttonconfig)
 * [editBoxTitleConfig](#editboxtitleconfig)
+* [importDisableValList](#importdisablevallist)
 * [noScrollSaveUrls](#noscrollsaveurls)
 * [terminalFontZoom](#terminalfontzoom)
 * [terminalFontColor](#terminalfontcolor)
@@ -513,6 +514,77 @@ Where to display script result
 Import setting variable from js file
 
 - Set js file full paths by comma separated or multiple specify this variable
+- This is second priority
+
+### Example for editBoxTitleConfig
+
+- src con
+
+```js.js
+/// SETTING_SECTION_START
+settingImport=`${IMPORT_PATH}`
+importDisableValList="hideSettingVariables"
+terminalDo="OFF"
+setVariableTypes=`file://${setVariableTypesForTable}`
+qrDialogConfig=`file://${cmdYoutuberTableQrDialogConfigPath}`
+listIndexConfig=`file://${cmdYoutuberTableListIndexConfigPath}`
+settingButtonConfig=`file://${cmdYoutuberTableSettingBtnConfigPath}`
+hideSettingVariables="manager,playBtns"
+hideSettingVariables=`file://${configHidValPath}`
+/// SETTING_SECTION_END
+```
+
+-`${IMPORT_PATH}` con
+
+```js.js
+/// SETTING_SECTION_START
+editExecute="ALWAYS"
+onUpdateLastModify="ON"
+onAdBlock="OFF"
+playButtonConfig="visible=OFF,disable=ON,color=gray,icon=play"
+editButtonConfig="visible=OFF,disable=ON,color=gray,icon=list"
+settingButtonConfig=`file://${cmdYoutuberSettingButtonConfigPath}`
+fannelStateConfig=`file://`
+setReplaceVariables="file://"
+hideSettingVariables="file://"
+srcImageAnchorLongPressJsPath=`${cmdYoutuberLongPressAction}`
+srcAnchorLongPressJsPath=`${cmdYoutuberLongPressAction}`
+/// SETTING_SECTION_END
+```
+
+#### Result setting variable
+
+- src con side
+
+```js.js
+importDisableValList
+terminalDo
+setVariableTypes
+qrDialogConfig
+listIndexConfig
+settingButtonConfig
+hideSettingVariables
+hideSettingVariables
+```
+
+- import path con side
+
+```js.js
+editExecute
+onUpdateLastModify
+onAdBlock
+playButtonConfig
+editButtonConfig
+settingButtonConfig <- second setting contents
+fannelStateConfig
+setReplaceVariables
+hideSettingVariables  <- second setting contents
+srcImageAnchorLongPressJsPath
+srcAnchorLongPressJsPath
+```
+
+- `setReplaceVariables` import is forced. This is override src con.
+- Override `settingButtonConfig` and `hideSettingVariables` (inner config con import is depend on [setting import for config](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/settingImport.md))
 
 ## importDisableValList
 

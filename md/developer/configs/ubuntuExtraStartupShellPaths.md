@@ -72,3 +72,9 @@ Key-value that you want to set
 | `disable`        | `ON` <br> other          | disable to auto start                    |
 
 - Concat by `,`
+
+
+## settingimport
+
+Import enable to this config, -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/settingImport.md)
+

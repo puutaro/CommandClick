@@ -26,6 +26,7 @@ Table
         * [Format for parentName](#format-for-parentname)
         * [Ex for parentName](#ex-for-parentname)
     * [alter](#alter)
+* [settingimport](#settingimport)
 
 ## How to specify
 
@@ -222,3 +223,8 @@ name=edit
 ### alter
 
 Alter by condition [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/alter.md)
+
+## settingimport
+
+Import enable to this config, -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/settingImport.md)
+

@@ -54,6 +54,7 @@ Table
         * [Js action macro](#js-action-macro)
     * [longClick](#longclick)
     * [alter](#alter)
+* [settingimport](#settingimport)
 
 ## How to specify
 
@@ -475,3 +476,10 @@ Similar to [click](#click)
 ### alter
 
 Alter by condition [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/alter.md)
+
+
+## settingimport
+
+Import enable to this config, -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/configs/settingImport.md)
+
+
