@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
@@ -113,12 +114,14 @@ class JsQrGetter(
             ListIndexForEditAdapter.indexListMap,
             ListIndexForEditAdapter.listIndexTypeKey
         )
-        val filePath = "${parentDirPath}/${fileName}"
-        if(
-            File(filePath).isFile
-        ) {
-            ToastUtils.showShort("Already exist: ${filePath}")
-            return
+        ListIndexDuplicate.isFileDetect(
+            parentDirPath,
+            fileName
+        ).let {
+                isDetect ->
+            if(
+                isDetect
+            ) return
         }
         val stockDirAndCompMap = mapOf(
             EditSettingExtraArgsTool.ExtraKey.PARENT_DIR_PATH.key to stockConDirPathForTsv,

@@ -5,6 +5,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -94,13 +95,22 @@ class JsAppDirAdder(
             isJsSuffix
         ) newAppDirSrc
         else newAppDirSrc + jsFileSuffix
-
+        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
+        ListIndexDuplicate.isFileDetect(
+            cmdclickAppDirAdminPath,
+            scriptFileName
+        ).let {
+            isDetect ->
+            if(
+                isDetect
+            ) return
+        }
         CommandClickScriptVariable.makeAppDirAdminFile(
-            UsePath.cmdclickAppDirAdminPath,
+            cmdclickAppDirAdminPath,
             scriptFileName
         )
         val addAppDirNameFilePath = File(
-            UsePath.cmdclickAppDirAdminPath,
+            cmdclickAppDirAdminPath,
             scriptFileName
         ).absolutePath
         ExecAddForListIndexAdapter.sortInAddFile(

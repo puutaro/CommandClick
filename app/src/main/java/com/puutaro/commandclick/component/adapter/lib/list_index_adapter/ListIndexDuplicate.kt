@@ -6,9 +6,10 @@ import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
-object ListIndexDetector {
-    fun isTsvDuplicate(
+object ListIndexDuplicate {
+    fun isTsvDetect(
         tsvPath: String,
         fileNameOrTitle: String,
         fileNameOrCon: String
@@ -31,14 +32,12 @@ object ListIndexDetector {
     }
 
 
-    fun isFileDuplication(
+    fun isFileDetect(
         parentDirPath: String,
         fileName: String
     ): Boolean {
         if (
-            FileSystems.sortedFiles(
-                parentDirPath
-            ).contains(fileName)
+            File(parentDirPath, fileName).isFile
         ){
             alreadyExistToast(fileName)
             return true

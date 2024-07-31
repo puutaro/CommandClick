@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -100,6 +101,15 @@ class JsToolbar(
             fileName,
             extraMap
         )
+        ListIndexDuplicate.isFileDetect(
+            urlConSaveParentDirPath,
+            compFileName,
+        ).let {
+                isDetect ->
+            if(
+                isDetect
+            ) return
+        }
         FileSystems.writeFile(
             File(
                 urlConSaveParentDirPath,
@@ -147,6 +157,22 @@ class JsToolbar(
                     currentFannelName,
                     currentFannelState
                 ) ?: return@withContext
+                val tsvPath =
+                    FilePrefixGetter.get(
+                        editFragment,
+                        ListIndexForEditAdapter.indexListMap,
+                        ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+                    )  ?: String()
+                ListIndexDuplicate.isTsvDetect(
+                    tsvPath,
+                    siteTitle,
+                    urlString,
+                ).let {
+                        isDetect ->
+                    if(
+                        isDetect
+                    ) return@withContext
+                }
                 try {
                     ExecAddForListIndexAdapter.execAddForTsv(
                         editFragment,

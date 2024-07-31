@@ -203,9 +203,6 @@ object ExecAddForListIndexAdapter {
                 ListIndexForEditAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
             )  ?: String()
-        val currentTsvConList = ReadText(
-            tsvPath
-        ).textToList()
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "getFile.txt").absolutePath,
 //            listOf(
@@ -222,10 +219,22 @@ object ExecAddForListIndexAdapter {
         }
         if(
             tsvPath.trim().isEmpty()
-            || currentTsvConList.contains(insertLine)
         ) {
             ToastUtils.showShort("Already exist")
             return
+        }
+        val titleAndCon = insertLine.split("\t")
+        val title = titleAndCon.firstOrNull()?.trim() ?: String()
+        val con = titleAndCon.getOrNull(1)?.trim() ?: String()
+        ListIndexDuplicate.isTsvDetect(
+            tsvPath,
+            title,
+            con
+        ).let {
+                isDetect ->
+            if(
+                isDetect
+            ) return
         }
         val sortType = ListSettingsForListIndex.getSortType(
             editFragment,
