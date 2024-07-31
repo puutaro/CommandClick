@@ -21,7 +21,6 @@ Table
 
 ## Example
 
-- Ex
 
 ```js.js
 extraButton:

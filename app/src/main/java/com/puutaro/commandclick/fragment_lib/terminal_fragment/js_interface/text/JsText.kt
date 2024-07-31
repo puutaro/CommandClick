@@ -10,6 +10,12 @@ class JsText(
     @JavascriptInterface
     fun trimNewLine(con: String): String{
 
+        /*
+        ## Description
+
+        Remove blank line
+        */
+
         val conByTrimNewLine = con.split("\n").map {
             it.trim()
         }.filter {
@@ -23,6 +29,12 @@ class JsText(
         lines: String,
         separator: String,
     ): Int {
+
+        /*
+        ## Description
+
+        Count line num
+        */
         val linesSize = lines.split(separator).size
         return linesSize
     }
@@ -32,6 +44,13 @@ class JsText(
         lines: String,
         separator: String,
     ): String {
+
+        /*
+        ## Description
+
+        Reverse contents
+        */
+
         val reverseCon = lines
             .split(separator)
             .reversed()
@@ -45,6 +64,13 @@ class JsText(
         separator: String,
         takeNum: Int,
     ): String{
+
+        /*
+        ## Description
+
+        Take first ${takeNum} element
+        */
+
         val takenCon = con.split(separator)
             .take(takeNum)
             .joinToString(separator)
@@ -57,6 +83,13 @@ class JsText(
         separator: String,
         takeLastNum: Int,
     ): String{
+
+        /*
+        ## Description
+
+        Take last ${takeNum} element
+        */
+
         val lastTakenCon = con.split(separator)
             .reversed()
             .take(takeLastNum)
@@ -69,6 +102,13 @@ class JsText(
         con: String,
         separator: String,
     ): String {
+
+        /*
+        ## Description
+
+        Distinct contents
+        */
+
         val distinctCon = con.split(separator)
             .sorted()
             .distinct()
@@ -80,6 +120,13 @@ class JsText(
     fun trans(
         tsvStr: String
     ): String {
+
+        /*
+        ## Description
+
+        Trans contents
+        */
+
         val tsvMatrix = tsvStr
             .split("\n")
             .map {

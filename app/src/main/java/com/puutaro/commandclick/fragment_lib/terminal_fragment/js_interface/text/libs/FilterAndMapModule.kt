@@ -197,14 +197,14 @@ object FilterAndMapModule {
                 shellCon,
                 shellArgsMap
             )
-            FileSystems.writeFileToDirByTimeStamp(
-                File(UsePath.cmdclickDefaultAppDirPath, "jsMap").absolutePath,
-                listOf(
-                    "shellPreservedArgsMap: ${shellPreservedArgsMap}",
-                    "shellCon: ${shellCon}",
-                    "resultSrc: ${resultSrc}"
-                ).joinToString("\n\n")
-            )
+//            FileSystems.writeFileToDirByTimeStamp(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsMap").absolutePath,
+//                listOf(
+//                    "shellPreservedArgsMap: ${shellPreservedArgsMap}",
+//                    "shellCon: ${shellCon}",
+//                    "resultSrc: ${resultSrc}"
+//                ).joinToString("\n\n")
+//            )
             if (
                 resultSrc.isEmpty()
             ) return String()
