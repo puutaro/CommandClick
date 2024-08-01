@@ -43,6 +43,7 @@ And, I decided to entrust the distribution of bookmarklet to QR code.
 By CommmandClick's original QR code, we can distribute via github.
 <br>
 <br>
+<br>
 This android app is bookmarklet developer tool, and at the same time distribution tool.
 
 <br>
