@@ -101,14 +101,15 @@ Screenshots
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/65aceaee-5f6e-418b-9423-26b39cf31ed5"><img src="https://github.com/puutaro/CommandClick/assets/55217593/65aceaee-5f6e-418b-9423-26b39cf31ed5" width="30%" /></a> -->
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
 
+- In `CommandClick`, call bookmarklet `fannel`.
 
-Bookmarklet Table
+Fannel (bookmarklet) Table
 -----
 
 
 <details>
 
-<summary>Bookmarklet: <code>Ubuntu terminal</code>, ritch <code>QR</code> reader & creator, <code>youtube</code> scraping player, ubuntu file manager ...</summary>
+<summary>fannel: <code>Ubuntu terminal</code>, ritch <code>QR</code> reader & creator, <code>youtube</code> scraping player, ubuntu file manager ...</summary>
 
 <br>
 <br>
@@ -121,17 +122,13 @@ Detail is bellow.
 
 <br>
 
-- In `CommandClick`, call bookmarklet `fannel`.
-
-<br>
-
 
 | Janre                               | fannel(bookmarklet) name                                                                                                                                                                                        |
 |-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | File transfer                       | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader                                          | 
 | File transfer                       | [fileManager.js](https://github.com/puutaro/fileManager)                                                                                                                                                        | 
-| Bookmarklet store                   | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)                                                                                                                          |
-| Bookmarklet store                   | [fannelStore.js](https://github.com/puutaro/fannelStore)                                                                                                                                                        |
+| fannel (bookmarklet) store          | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)                                                                                                                          |
+| fannel (bookmarklet) store          | [fannelStore.js](https://github.com/puutaro/fannelStore)                                                                                                                                                        |
 | Typing tool                         | [selectTyper](https://github.com/puutaro/selectTyper)                                                                                                                                                           |   
 | Ubuntu terminal                     | [cmdTerminal.js](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu)                                                  | 
 | Ubuntu terminal                     | [sshTerminal.js](https://github.com/puutaro/sshTerminal)                                     |  
@@ -185,16 +182,16 @@ So, javascript not working, recommend to change by [google play](https://play.go
 Setup Ubuntu
 ------
 
-By set ubuntu, you can use all bookmarklet.   
+By set ubuntu, you can use all fannel (bookmarklet).   
 It enables without the need for `termux` or rooting.      
-And more, create custom command for bookmarklet development.  
+And more, create custom command for fannel (bookmarklet) development.  
 
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
 -> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
-Setup other bookmarklet (fannel)
+Setup other fannel (bookmarklet)
 ------
 
 [Procedure]
@@ -207,7 +204,7 @@ Setup other bookmarklet (fannel)
 <img src="https://github.com/user-attachments/assets/a347990d-6988-4b0b-87cb-23d554a3328b" width="400">  
 
 
-Bookmarklet Distribution
+Fannel (bookmarklet) Distribution
 -------------------
 
 Please follow bellow.
@@ -223,7 +220,7 @@ Usage
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
-For bookmarklet developer
+For fannel (bookmarklet) developer
 --------
 
 ### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file)
