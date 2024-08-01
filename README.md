@@ -91,7 +91,7 @@ CommandClick
 
 Screenshots
 --------
-<a href="https://github.com/user-attachments/assets/f80aaf8e-dce0-47d9-bbbb-b7bf5cc5b083"><img src="https://github.com/user-attachments/assets/f80aaf8e-dce0-47d9-bbbb-b7bf5cc5b083" width="30%" /></a>
+<a href="https://github.com/user-attachments/assets/a923b09c-e9b2-4742-b8c2-05f3803fc4f8"><img src="https://github.com/user-attachments/assets/a923b09c-e9b2-4742-b8c2-05f3803fc4f8" width="30%" /></a>
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e" width="30%" /></a>
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6" width="30%" /></a>
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568"><img src="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568" width="30%" />
