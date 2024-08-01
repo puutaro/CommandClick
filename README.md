@@ -34,10 +34,10 @@ However, I didn't just want to make it, I wanted to make it more readable.
 <br>
 <br>
 
-And more.  
-I cannot be satisfied with bookmark creation.  
-After all, if you make it, you'll want to spread it around, right?  
-So, I decided to entrust the distribution of bookmarklet to QR code.  
+By the way  
+if you make it, you'll want to spread it around, right?  
+Just as useful ubuntu packages were spread through the apt system, I felt the need to consider a distribution system for CC as well.   
+And, I decided to entrust the distribution of bookmarklet to QR code.  
 By CommmandClick's original QR code, we can distribute via github. 
 
 This android app is bookmarklet developer tool, and at the same time is distribution tool.
@@ -46,7 +46,7 @@ This android app is bookmarklet developer tool, and at the same time is distribu
 <br>
 <br>
 
-Welcome new bookmarklet developer world.
+Welcome bookmarklet total development world.
 
 <br>
 <br>
