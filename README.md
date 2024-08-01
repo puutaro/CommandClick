@@ -18,7 +18,7 @@ For example, ubuntu terminal emulator, ubuntu file manager, youtube scraping pla
 <br>
 <br>
 
-I hoped.
+I hoped.  
 By one app, create multiple applet.  
 So I put my eye at webview js interface.  
 If I use bookmarklet on webview js interface, bring out os feature: file system, media player, connection with other system via webview.      
@@ -36,7 +36,7 @@ However, I didn't just want to make it, I wanted to make it more readable.
 
 And more.  
 I cannot be satisfied with bookmark creation.  
-After all, if you make it, you'll want to spread it around, right?
+After all, if you make it, you'll want to spread it around, right?  
 So, I decided to entrust the distribution of bookmarklet to QR code.  
 By CommmandClick's original QR code, you can distribute via github. 
 
