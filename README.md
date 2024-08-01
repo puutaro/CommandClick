@@ -30,7 +30,9 @@ If we can do that, we can use and create high functionality bookmarklet.
 <br>
 <br>
 Furthermore, I create original js library for bookmarklet.  
-However, I didn't just want to make it, I wanted to make it more readable.
+However, I didn't just want to make it, I wanted to make it more readable.  
+Most of the engineers are mostly reading, even when they're writing code.  
+This is because we believe that improving readability is directly linked to productivity.  
 <br>
 <br>
 
