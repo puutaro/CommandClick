@@ -10,7 +10,7 @@
 <br>
 <br>
 
-Rich bookmarklet development android app.  
+`CommandClick` is rich bookmarklet development android app.    
 You can use and create a bookmarklet that goes beyond common sense.  
 For example, ubuntu terminal emulator, ubuntu file manager, youtube scraping player, etc...  
 
