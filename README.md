@@ -38,7 +38,7 @@ And more.
 I cannot be satisfied with bookmark creation.  
 After all, if you make it, you'll want to spread it around, right?  
 So, I decided to entrust the distribution of bookmarklet to QR code.  
-By CommmandClick's original QR code, you can distribute via github. 
+By CommmandClick's original QR code, we can distribute via github. 
 
 This android app is bookmarklet developer tool, and at the same time is distribution tool.
 
@@ -184,7 +184,7 @@ Setup Ubuntu
 
 By set ubuntu, you can use all fannel (bookmarklet).   
 It enables without the need for `termux` or rooting.      
-And more, create custom command for fannel (bookmarklet) development.  
+And more, we can use custom command for fannel (bookmarklet) development.  
 
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
