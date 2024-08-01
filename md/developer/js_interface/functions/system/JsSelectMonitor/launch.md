@@ -1,9 +1,9 @@
-# jsSelectTerm.launch
+# jsSelectMonitor.launch
 
 ## Definition
 
 ```js.js
-function jsSelectTerm.launch(
+function jsSelectMonitor.launch(
 
 ) -> runLaunch
 ```
@@ -13,7 +13,7 @@ function jsSelectTerm.launch(
 
 ```js.js
 var=runLaunch
-	?func=jsSelectTerm.launch
+	?func=jsSelectMonitor.launch
 
 ```
 
@@ -23,6 +23,6 @@ var=runLaunch
 
 ## Src
 
--> [jsSelectTerm.launch](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/system/JsSelectTerm.kt#L24)
+-> [jsSelectMonitor.launch](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/system/JsSelectMonitor.kt#L24)
 
 
