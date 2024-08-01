@@ -11,8 +11,8 @@ Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [System structure](#system-structure)
-* [Fannel(addon) structure](#fannel_structure)
-    * [Fannel (addon) dir structure](#fannel_dir_structure)
+* [Fannel(bookmarklet) structure](#fannel_structure)
+    * [Fannel (bookmarklet) dir structure](#fannel_dir_structure)
     * [Labeling section](#labeling-section)
     * [Cmd variables](#cmd-variables)
     * [Setting variables](#setting-variable)
@@ -48,9 +48,9 @@ Table of Contents
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/88af0178-4854-4f67-bf3a-928ba4519f27" width="500">  
 
-## Fannel (addon) dir structure <a id="fannel_dir_structure"></a>
+## Fannel (bookmarklet) dir structure <a id="fannel_dir_structure"></a>
 
-`fannel` is `add-on` in `ComamndClick`
+`fannel` is `bookmarklet` in `ComamndClick`
 
 Create bellow directory tree
 
@@ -67,7 +67,7 @@ Create bellow directory tree
 - Place other settings and data in `{fanneName}Dir` dir
 
 
-## Fannel(addon) structure <a id="fannel_structure"></a>
+## Fannel(bookmarklet) structure <a id="fannel_structure"></a>
 
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
@@ -199,7 +199,7 @@ Like `${0}` in shell, `CommandClick`'s js has pre reserved word
 ### Import js library
 
 `CommandClick` can import all file with uri. We can use javascript all of the world. This is `CommandClick` basic idea.  
-`CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
+`CommandClick` is open world app, as is, web browser, termux client, bookmarklet maker,  applicatoin store, and library terminal.    
 Bellow is how to import. You can enjoy this all range import application!
 
 -> [js import](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_import.md)
@@ -239,7 +239,7 @@ Bellow respectable package is inclided assets. you can import like bellow.
 ## Ubuntu
 
 CommadClick has ubuntu22.04.  
-So, this app is full end app from frontend (browser) + backend (ubuntu).
+So, this app is full end app from frontend (webview) + backend (ubuntu).
 
 ### Custom shell command
 

@@ -173,18 +173,18 @@ Trigger this js script primarlily than [`onAutoExec` js args](https://github.com
 - [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
 
 
-## `~/conf/monitor/term_[1-4]` <a id="output_monitor"></a>
+## `~/conf/monitor/monitor_[1-4]` <a id="output_monitor"></a>
 
 Output file for js and shell    
 
 - term type table
 
-| type | description |
-| --------- | --------- |
-| `term_1` | starndard output |
-| `term_2` | error and system output |
-| `term_3` | free |
-| `term_4` | /dev/null |
+| type        | description |
+|-------------| --------- |
+| `monitor_1` | starndard output |
+| `monitor_2`    | error and system output |
+| `monitor_3`    | free |
+| `monitor_4`    | /dev/null |
 
 ### `~/ubuntu/backup/rootfs.tar.gz` <a id="ubuntu_backup_rootfs"></a>
 

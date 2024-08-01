@@ -10,28 +10,43 @@
 <br>
 <br>
 
-**"Android browser of add-ons, by add-ons, and for add-ons"**
-<br>
-<br>
-<br>
-I think existing browser abuse `add-ons`.  
-<br>
-<br>
-Originally, existing browser benefits from `add-ons`.   
-However, it cannot support the creation, collaboration or distribution of `add-ons`.   
-Furthermore, it is not possible to create an app using `add-on` alone.  
-<br>
-<br>
-I hoped.   
-Being able to create multiple apps with one app. Then, I focused on `add-on`.   
-This is because I thought that by expanding `add-on`, I could create an app that would become an app maker.  
-Thus, `CommandClick` has multiple standalone `add-on`: Ubuntu, Terminal, File manager, etc...  
-And you can create app using these add-ons.  
+Rich bookmarklet development android app.  
+You can use and create a bookmarklet that goes beyond common sense.  
+For example, ubuntu terminal emulator, ubuntu file manager, youtube scraping player, etc...  
+
 <br>
 <br>
 <br>
 
-Welcome to the new browser era 
+I hoped.
+By one app, create multiple applet.  
+So I put my eye at webview js interface.  
+If I use bookmarklet on webview js interface, bring out os feature: file system, media player, connection with other system via webview.      
+<br>
+<br>
+Although its implementation did well, I want to get more extensibility, for example, like the linux package system.   
+If we could use apt package or other programing feature on ubuntu from bookmarklet, how splendid!   
+If we can do that, we can use and create high functionality bookmarklet.  
+<br>
+<br>
+Furthermore, I create original js library for bookmarklet.  
+However, I didn't just want to make it, I wanted to make it more readable.
+<br>
+<br>
+
+And more.  
+I cannot be satisfied with bookmark creation.  
+After all, if you make it, you'll want to spread it around, right?
+So, I decided to entrust the distribution of bookmarklet to QR code.  
+By CommmandClick's original QR code, you can distribute via github. 
+
+This android app is bookmarklet developer tool, and at the same time is distribution tool.
+
+<br>
+<br>
+<br>
+
+Welcome new bookmarklet developer world.
 
 <br>
 <br>
@@ -73,10 +88,6 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
-- Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development** by low code.
-- Existing browsers do not support cooperation between add-ons. But, `CommandClick` **can link `add-ons`**.  ex) Other addons can use `Ubuntu` as a backend.. etc  
-- Existing browsers don't even think about distributing `add-ons`. But, `CommandClick` **strongly supports `add-ons` distributing** by builin QR `add-on`.
-
 
 Screenshots
 --------
@@ -91,18 +102,18 @@ Screenshots
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
 
 
-Addon Table
+Bookmarklet Table
 -----
 
 
 <details>
 
-<summary>Add-ons: <strong><code>Ubuntu</code></strong>, <code>Terminal</code>, ritch <code>QR</code> reader & creator, <code>youtube</code> player, file manager ...</summary>
+<summary>Bookmarklet: <code>Ubuntu terminal</code>, ritch <code>QR</code> reader & creator, <code>youtube</code> scraping player, ubuntu file manager ...</summary>
 
 <br>
 <br>
 
-`CommandClick` has multiple feature  by addon.   
+`CommandClick` has multiple feature  by bookmarklet.   
 
 <br>
 
@@ -110,36 +121,37 @@ Detail is bellow.
 
 <br>
 
-- In `CommandClick`, call addon `fannel`.
+- In `CommandClick`, call bookmarklet `fannel`.
 
 <br>
 
 
-| Janre | builtin fannel(addon) / external fannel(addon) name |
-| ------- | ---------------- |
-| History oriented Web browser | builtin |  
-| AdBlock | builtin |  
-| QR reader | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#scan-qr)  |  
-| File transfer | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader <br> [fileManager.js](https://github.com/puutaro/fileManager) | 
-| Addon store | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel) <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
-| Browser menu | [builtin](https://github.com/puutaro/selectTyper) |  
-| Ubuntu22.04 | builtin after [installing](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu-addon) | 
-| Ubuntu terminal | builtin after [installing ubuntu](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu-addon) <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
-| Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
-| Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
-| Youtube scraping player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
-| Text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
-| Pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
-| News scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
-| Google calendar register | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter) |
-| Clip board formater | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker) |  
-| Train route seacher | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher) |  
-| File manager | [fileManager.js](https://github.com/puutaro/fileManager) |  
-| Input support tool | [selectTyper.js](https://github.com/puutaro/selectTyper) |  
-| Pocket web search | [webSearcher.js](https://github.com/puutaro/webSearcher) | 
-| Gpt3.5 client | askGpt35.js (builtin) <br> [cmdGpt35.js](https://github.com/puutaro/cmdGpt35) |  
-| Ascii art maker  | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt) |  
-| Gmail draft saver | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail) |
+| Janre                               | fannel(bookmarklet) name                                                                                                                                                                                        |
+|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| File transfer                       | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader                                          | 
+| File transfer                       | [fileManager.js](https://github.com/puutaro/fileManager)                                                                                                                                                        | 
+| Bookmarklet store                   | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)                                                                                                                          |
+| Bookmarklet store                   | [fannelStore.js](https://github.com/puutaro/fannelStore)                                                                                                                                                        |
+| Typing tool                         | [selectTyper](https://github.com/puutaro/selectTyper)                                                                                                                                                           |   
+| Ubuntu terminal                     | [cmdTerminal.js](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu)                                                  | 
+| Ubuntu terminal                     | [sshTerminal.js](https://github.com/puutaro/sshTerminal)                                     |  
+| Music player                        | [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU)                                                                              |  
+| Youtube scraping player             | [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU)                                                                                          |  
+| Text to speech                      | textToSpeech.js (builtin)  |
+| Text to speech player               | [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer)  |
+| pdf to text reader and player       | [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer)|
+| total pdf to text reader and player | [ctsvViewer.js](https://github.com/puutaro/ctsvViewer)                                                                                           |
+| News scraping player                | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)                                                                                                                                                      |
+| Google calendar register            | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter)                                                                                                                                          |
+| Clip board formater                 | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker)                                                                                                                                                |  
+| Train route seacher                 | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher)                                                                                                                                           |  
+| File manager                        | [fileManager.js](https://github.com/puutaro/fileManager)                                                                                                                                                        |  
+| Input support tool                  | [selectTyper.js](https://github.com/puutaro/selectTyper)                                                                                                                                                        |  
+| Pocket web search                   | [webSearcher.js](https://github.com/puutaro/webSearcher)                                                                                                                                                        | 
+| Gpt3.5 client                       | askGpt35.js (builtin)                                                                                                                                   |
+| Gpt3.5 client                       | [cmdGpt35.js](https://github.com/puutaro/cmdGpt35)                                                                                                                                    |
+| Ascii art maker                     | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt)                                                                                                                                                  |  
+| Gmail draft saver                   | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail)                                                                                                                                                    |
 
 </details>
 
@@ -170,14 +182,19 @@ So, javascript not working, recommend to change by [google play](https://play.go
 - I found this case in samsung galaxy.
 
 
-Setup Ubuntu addon
+Setup Ubuntu
 ------
+
+By set ubuntu, you can use all bookmarklet.   
+It enables without the need for `termux` or rooting.      
+And more, create custom command for bookmarklet development.  
+
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
 -> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
-Setup other addon (fannel)
+Setup other bookmarklet (fannel)
 ------
 
 [Procedure]
@@ -190,13 +207,23 @@ Setup other addon (fannel)
 <img src="https://github.com/user-attachments/assets/a347990d-6988-4b0b-87cb-23d554a3328b" width="400">  
 
 
+Bookmarklet Distribution
+-------------------
+
+Please follow bellow.
+
+-> [Register fannel(bookmarklet) to repo](https://github.com/puutaro/commandclick-repository/tree/master?tab=readme-ov-file#your-fannel-register-condition).  
+
+-> [Qr reader](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#scan-qr)
+
+
 Usage
 ------
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
-For add-on developer
+For bookmarklet developer
 --------
 
 ### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file)

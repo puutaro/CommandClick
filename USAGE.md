@@ -22,7 +22,7 @@ Table of Contents
 * [Historys](#history)
   * [History](#history)
   * [Url history](#url-history)
-* [Fannel(addon) List](#fannel-list)
+* [Fannel(bookmarklet) List](#fannel-list)
   * [Image click](#image-click)
   * [Image long click](#image-long-click)
   * [Body Click](#body-click)
@@ -60,6 +60,7 @@ Table of Contents
   * [Preference](#preference)
 * [Internet Button exec script](#internet-button-exec-script)
 * [Button exec script](#button-exec-script)
+* [For auto load before visited url](#for-auto-load-before-visited-url)
 * [For developer](#for-developer)
 * [CommandClick repository](#commandclick-repository)
 * [Generally TroubleShooting](#generally-troubleshooting)
@@ -71,7 +72,9 @@ Table of Contents
 
 ### Setup ubuntu
 
-'CommandClick' is enable ubuntu as backend with sound.
+'CommandClick' is enable ubuntu as backend.  
+It is equipped with Ubuntu without the need for termux or rooting.      
+And more, create custom command for bookmarklet development.
 
 [Procedure]  
 
@@ -136,7 +139,7 @@ Cc ubuntu has original feature like bellow
 
 ---------------
 
-This mode is main mode. Top is `web monitor view`, down is `fannel(addon) name list`, bottom is toolbar.  
+This mode is main mode. Top is `web monitor view`, down is `fannel(bookmarklet) name list`, bottom is toolbar.  
 Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.
 
 
@@ -165,7 +168,7 @@ Above same.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e27ca648-e436-4b8d-a95f-3e17e5c06914" width="400">  
 
-## Fannel(addon) List <a id="fannel-list"></a>
+## Fannel(bookmarklet) List <a id="fannel-list"></a>
 
 ### Image click
 
@@ -286,7 +289,7 @@ Copy file path for script
 
 -----------------
 
-Mainly, setting browser and addon (fannel) 
+Mainly, setting webview and bookmarklet (fannel) 
 
 ### Change term size
 
@@ -307,7 +310,7 @@ Edit `preference`
 [Procedure]  
 
 1. Long press right buttom gear button  
-2. Click `edit_startup` in popup menu
+2. Click `Preference` in popup menu
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">
 
@@ -337,6 +340,13 @@ Enable scan bellow type qr
 | FILE DOWNLOAD   | file download by p2p <br> ref: [Fannel upload by P2P](#Image long click) |
 | SCP_DOWNLOAD    | file downlaod by rsync                                                   |
 | JAVASCRIPT      | Load javascript                                                          |
+
+
+[Procedure]
+
+1. Long press right buttom gear button
+2. Click `Scan QR` in popup menu
+
 
 ### Install fannel
 
@@ -557,6 +567,16 @@ This script is executed when history buton click or long click, if you select  `
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 ).
 
+### For auto load recent visited url
+
+[Procedure]
+
+1. Click [Preference](#edit-preference) in setting menu.  
+2. webview extra setting => [defaultMonitorFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#defaultmonitorfile) -> `monitor_1` => click ✓
+3. startup setting => [onAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec) -> `ON` => click ✓
+
+
+
 For developer
 -----------------
 
@@ -566,9 +586,9 @@ For developer
 
 
 `CommandClick` is powered by javascript mainly. For that, This has many javascript interface and option.
-These enforce browser feature like addon. If you had made nice script, `Commandclick` is more suitable browser for you. 
+These enforce browser feature via bookmarklet. If you had made nice script, `Commandclick` is more suitable browser for you. 
 I mean, `CommandClick` is customize browser.
-And, `CommandClick` is multi application. Beyond addon field, `CommandClick` is multiple standalone application(I call `fannel`).  
+And, `CommandClick` is multi application. Beyond bookmarklet field, `CommandClick` is multiple standalone application(I call `fannel`).  
 I mean, `CommandClick` is low code tool. You can make andorid application by less effort.  
 Welcome to above developer page that expands depending on you.  
 

@@ -7,7 +7,7 @@ However that alone don't know `CommandClick`'s true aim.
 It can also be made with surprisingly litle effort.   
 The less effort, the better.   
 Do you play date to prety girl and delicious lunch to decrease time for code implementation time?    
-Becuase `CommmandClick` itself include ubuntu and web browser, due to effort, you can do everything.   
+Becuase `CommmandClick` itself include ubuntu and webview, due to effort, you can do everything.   
 But, it's is worst.  
 `CommandClick`'s significance is less `effort` development.  
 Although this tool require understanding specification ofcourse, it's aime save your effort. 

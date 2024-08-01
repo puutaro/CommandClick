@@ -1,7 +1,7 @@
 # JS import
 
 `CommandClick` can import all file with uri. We can use javascript all of the world. This is `CommandClick` basic idea.  
-`CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
+`CommandClick` is open world app, as is, web browser, termux client, bookmaklet maker,  bookmarklet store, and library terminal.    
 Bellow is how to import. You can enjoy this all range import application!  
 
 

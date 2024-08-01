@@ -5,7 +5,7 @@
 `CommandClick`'s true value is low code tool.  
 Ofcourse, `CommandClick` can use as web browser, mobile ubuntu terminal. These feature is very useful.  
 However that alone don't know `CommandClick`'s true aim.   
-`CommandClick` is android app maker.   
+`CommandClick` is rich bookmarklet maker.   
 It can also be made with surprisingly litle effort.   
 The less effort, the better.   
 Do you play date to prety girl and delicious lunch to decrease time for code implementation time?    

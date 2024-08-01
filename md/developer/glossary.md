@@ -19,9 +19,9 @@ CC stand for `CommandClick`
 
 ## Fannel
 
-`CommandClcik`'s super addon.
+`CommandClcik`'s super bookmarklet.
 In fact, java script and shell script enforced by `CommandClck`.  
-This represent that `CommandClick` is D.I.Y addon maker. 
+This represent that `CommandClick` is D.I.Y bookmarklet maker. 
 
 ## Fannel directory
 
