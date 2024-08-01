@@ -22,10 +22,15 @@ var=linesSize
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
+## Description
+
+## Description
+
+Count line num
 
 
 ## Src
 
--> [jsText.countLines](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L22)
+-> [jsText.countLines](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L28)
 
 

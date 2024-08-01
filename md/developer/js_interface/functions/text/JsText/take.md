@@ -24,10 +24,15 @@ var=takenCon
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
 
+## Description
+
+## Description
+
+Take first ${takeNum} element
 
 
 ## Src
 
--> [jsText.take](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L43)
+-> [jsText.take](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L62)
 
 
