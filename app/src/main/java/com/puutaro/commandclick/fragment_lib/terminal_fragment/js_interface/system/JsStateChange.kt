@@ -144,8 +144,7 @@ class JsStateChange(
                 extraMap,
                 listDirTsvPathKey,
                 extraSaveInfoKey,
-            )
-                ?: return
+            ) ?: return
             FileSystems.writeFile(
                 saveInfoPath,
                 saveInfo,

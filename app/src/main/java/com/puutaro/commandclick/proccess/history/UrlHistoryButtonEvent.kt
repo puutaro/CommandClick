@@ -26,6 +26,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -355,10 +356,12 @@ class UrlHistoryButtonEvent(
     private fun makeBottomScriptUrlList(
     ): List<String> {
         val fannelName = when(fragment) {
-            is EditFragment -> FannelInfoTool.getCurrentFannelName(
+            is CommandIndexFragment
+            -> UsePath.cmdclickPreferenceJsName
+            else
+            -> FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
-            else -> String()
         }
         val replaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,

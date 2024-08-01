@@ -238,7 +238,7 @@ class JsUbuntu(
                         isBootSuccess = true
                         break
                     }
-                    delay(300)
+                    delay(2000)
                 }
             }
         }

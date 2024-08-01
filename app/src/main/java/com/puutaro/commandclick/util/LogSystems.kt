@@ -23,8 +23,10 @@ object LogSystems {
     fun stdSys(
         logContents: String,
     ){
-        val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName}\n${logContents}"
+        val line = StInfo.make(
+            String(),
+            logContents
+        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(
@@ -60,8 +62,10 @@ object LogSystems {
         debugNotiJanre: String = BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR.type,
         notiLevelSrc: String = BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level
     ){
-        val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${CheckTool.errMark}\n${errContents}"
+        val line = StInfo.make(
+            LogLebel.ERROR.name,
+            errContents
+        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(
@@ -92,8 +96,10 @@ object LogSystems {
         context: Context?,
         errContents: String,
     ){
-        val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ERROR\n${errContents}"
+        val line = StInfo.make(
+            LogLebel.ERROR.name,
+            errContents
+        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(
@@ -117,8 +123,10 @@ object LogSystems {
     fun stdErrByNoBroad(
         errContents: String,
     ){
-        val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ERROR\n${errContents}"
+        val line = StInfo.make(
+            LogLebel.ERROR.name,
+            errContents
+        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(
@@ -136,8 +144,10 @@ object LogSystems {
     fun stdWarn(
         errContents: String,
     ){
-        val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} WARNING\n${errContents}"
+        val line = StInfo.make(
+            LogLebel.WARNING.name,
+            errContents
+        )
         FileSystems.updateFile(
             File(
                 cmdclickMonitorDirPath,
@@ -157,6 +167,40 @@ object LogSystems {
             ).absolutePath,
             "ERR $errContents"
         )
+    }
+
+
+    private object StInfo {
+        fun make(
+            logLevel: String,
+            con: String
+        ): String {
+            val beforeLine = makeStLine(Thread.currentThread().stackTrace[5])
+            val targetStLine = makeStLine(Thread.currentThread().stackTrace[4])
+            return listOf(
+                "${logPrefix}${LocalDateTime.now()}",
+                "${beforeLine} -> ${targetStLine}",
+                "${logLevel}\n${con}"
+            ).joinToString(" ")
+        }
+
+        private fun makeStLine(
+            st: StackTraceElement
+        ): String {
+            val packageNameIndex = 2
+            return listOf(
+                "L${st.lineNumber}",
+                st.className.split(".").filterIndexed {
+                        index, _ ->  index > packageNameIndex
+                }.joinToString("."),
+                st.methodName
+            ).joinToString(" ")
+        }
+    }
+
+    private enum class LogLebel{
+        ERROR,
+        WARNING
     }
 
 }

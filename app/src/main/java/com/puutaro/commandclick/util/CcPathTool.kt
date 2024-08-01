@@ -97,7 +97,6 @@ object CcPathTool {
         currentSubFannelPath: String
     ): String {
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-        val fannelDirListLength = 2
         val pathListAfterAppDirName = currentSubFannelPath.replace(
             "${cmdclickAppDirPath}/",
             ""
@@ -110,6 +109,7 @@ object CcPathTool {
                 cmdclickAppDirPath,
                 pathListAfterAppDirName.first()
             ).absolutePath
+        val fannelDirListLength = 2
         if (
             pathListAfterAppDirName.size < fannelDirListLength
         ) {
@@ -123,7 +123,9 @@ object CcPathTool {
             pathListAfterAppDirName.first()
         val mainFannelName =
             pathListAfterAppDirName.take(2).last().let {
-                if(it.endsWith(js_suffix)) return@let it
+                if(
+                    it.endsWith(js_suffix)
+                ) return@let it
                 it.removeSuffix("Dir") + js_suffix
             }
         return listOf(
