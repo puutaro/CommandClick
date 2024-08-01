@@ -40,7 +40,7 @@ Just as useful ubuntu packages were spread through the apt system, I felt the ne
 And, I decided to entrust the distribution of bookmarklet to QR code.  
 By CommmandClick's original QR code, we can distribute via github. 
 
-This android app is bookmarklet developer tool, and at the same time is distribution tool.
+This android app is bookmarklet developer tool, and at the same time distribution tool.
 
 <br>
 <br>
