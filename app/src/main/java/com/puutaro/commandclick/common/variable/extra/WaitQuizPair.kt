@@ -651,10 +651,6 @@ object WaitQuizPair {
             "-> Yes, for js and shell developer"
         ),
         Pair(
-            "Is this web browser?",
-            "-> Yes, plus ubuntu"
-        ),
-        Pair(
             "Am I using only web browser?",
             "-> Ok, history oriented browser"
         ),
@@ -867,10 +863,6 @@ object WaitQuizPair {
             "-> History button"
         ),
         Pair(
-            "Which browser or ubuntu app is?",
-            "-> As you think"
-        ),
-        Pair(
             "How not to trim space on \"|\", \"!\", \"&\", \",\" in Notification title",
             "-> Sorry, no solution"
         ),
@@ -1059,10 +1051,6 @@ object WaitQuizPair {
             "-> Link to fannel system"
         ),
         Pair(
-            "What's this browser hot spot?",
-            "-> Highlight text -> press net mark!"
-        ),
-        Pair(
             "How long does ubuntu sound set?",
             "-> 5 seconds at the latest"
         ),
@@ -1208,7 +1196,7 @@ object WaitQuizPair {
         ),
         Pair(
             "What are the advantages of this ubuntu?",
-            "-> Use apt, programing from browser"
+            "-> Use apt, programing from webview"
         ),
         Pair(
             "Can you use shell from js?",
@@ -1284,7 +1272,7 @@ object WaitQuizPair {
         ),
         Pair(
             "How to use for expert?",
-            "-> Make addon by shell"
+            "-> Make bookmarklet by shell"
         ),
         Pair(
             "What's relationship between js and shell?",
@@ -1380,7 +1368,7 @@ object WaitQuizPair {
         ),
         Pair(
             "What create by ${appName}?",
-            "-> Standalone addon"
+            "-> Standalone bookmarklet"
         ),
         Pair(
             "What enable in ubuntu?",
@@ -1403,7 +1391,7 @@ object WaitQuizPair {
             "-> Most popular"
         ),
         Pair(
-            "Does we use shell from browser?",
+            "Does we use shell from webview?",
             "-> Yes, from js"
         ),
         Pair(
@@ -1483,20 +1471,12 @@ object WaitQuizPair {
             "-> Time for update and install"
         ),
         Pair(
-            "Are strengths of ${appName} as browser?",
-            "-> Web history oriented"
-        ),
-        Pair(
-            "Are strengths of ${appName}' addon?",
+            "Are strengths of ${appName}' bookmarklet?",
             "-> Enforced by not only js but also shell"
         ),
         Pair(
             "Is ${appName} not suitable for?",
             "-> Tab supremacist"
-        ),
-        Pair(
-            "Why omit tab feature as browser?",
-            "-> Priority history"
         ),
         Pair(
             "What's advantage in no tab?",
@@ -1517,10 +1497,6 @@ object WaitQuizPair {
         Pair(
             "What's highlight search?",
             "-> Speed search system"
-        ),
-        Pair(
-            "What kind of app is ${appName}?",
-            "-> Web browser enforced by js and shell"
         ),
         Pair(
             "Who is this app author?",
