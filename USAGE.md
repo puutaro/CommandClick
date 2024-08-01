@@ -567,7 +567,7 @@ This script is executed when history buton click or long click, if you select  `
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 ).
 
-### For auto load recent visited url
+### For auto load before visited url
 
 [Procedure]
 
