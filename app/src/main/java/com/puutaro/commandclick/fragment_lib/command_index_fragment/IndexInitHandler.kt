@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -9,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClic
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromPreferenceFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
@@ -18,9 +20,13 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.nio.file.attribute.DosFileAttributeView
 
 object IndexInitHandler {
     fun handle(
@@ -103,6 +109,12 @@ object IndexInitHandler {
         val urlFileSystems = UrlFileSystems()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
+                CmdClickSystemAppDir.createPreferenceFannel(
+                    context,
+                    cmdIndexFragment.fannelInfoMap,
+                )
+            }
+            withContext(Dispatchers.IO){
                 urlFileSystems.getFannelList(context)
             }
             StartFileMaker.makeForConfig(
@@ -117,19 +129,30 @@ object IndexInitHandler {
                 UsePath.cmdclickInternetButtonExecJsFileName,
                 UsePath.selectMenuFannelPath
             )
-            UrlFileSystems.Companion.FirstCreateFannels.values().forEach {
-                CoroutineScope(Dispatchers.IO).launch {
-                    urlFileSystems.createFile(
+            val concurrentLimit = 10
+            val semaphore = Semaphore(concurrentLimit)
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.IO) {
+                    val jobList = UrlFileSystems.Companion.FirstCreateFannels.values().map {
+                        async {
+                            semaphore.withPermit {
+                                urlFileSystems.createFile(
+                                    context,
+                                    currentAppDirPath,
+                                    it.str
+                                )
+                            }
+                        }
+                    }
+                    jobList.forEach { it.await() }
+                }
+                withContext(Dispatchers.IO){
+                    BroadcastSender.normalSend(
                         context,
-                        currentAppDirPath,
-                        it.str
+                        BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
                     )
                 }
             }
-            CmdClickSystemAppDir.createPreferenceFannel(
-                context,
-                cmdIndexFragment.fannelInfoMap,
-            )
 
             StartFileMaker.makeCmdTerminalListFiles(
                 cmdIndexFragment,

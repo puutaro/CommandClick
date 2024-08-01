@@ -132,77 +132,77 @@ object CmdClickSystemAppDir {
                     assetsVersion
                 )
             }
-            CoroutineScope(Dispatchers.IO).launch {
-                val escapeMapList = withContext(Dispatchers.IO) {
-                    val escapeTsvName = "escape.tsv"
-                    val assetsEscapeTsvPath =
-                        AssetsFileManager.concatAssetsPath(
-                            listOf(fannelInfoDirAssetsPath, escapeTsvName)
-                        )
-                    val curEscapeTsvPath = File(
-                        targetAppDirPath,
-                        infoDirAssetsPath
-                    ).absolutePath.let { curInfoDirPath ->
-                        File(
-                            curInfoDirPath,
-                            escapeTsvName,
-                        ).absolutePath
-                    }
-                    makeEscapeRelativeAssetsPathList(
+//            CoroutineScope(Dispatchers.IO).launch {
+//                    withContext(Dispatchers.IO) {
+            val escapeTsvName = "escape.tsv"
+            val assetsEscapeTsvPath =
+                AssetsFileManager.concatAssetsPath(
+                    listOf(fannelInfoDirAssetsPath, escapeTsvName)
+                )
+            val curEscapeTsvPath = File(
+                targetAppDirPath,
+                infoDirAssetsPath
+            ).absolutePath.let { curInfoDirPath ->
+                File(
+                    curInfoDirPath,
+                    escapeTsvName,
+                ).absolutePath
+            }
+            val escapeMapList = makeEscapeRelativeAssetsPathList(
                         context,
                         assetsEscapeTsvPath,
                         curEscapeTsvPath,
                     )
-                }
+//                }
 //            val escapeFilePathList =
 //                AssetsFileManager.readFromAssets(
 //                    context,
 //                    escapeFilePath
 //                ).split("\n").filter { it.isNotEmpty() }
-                withContext(Dispatchers.IO) {
+//                withContext(Dispatchers.IO) {
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "escape.txt").absolutePath,
 //                    listOf(
 //                        "${escapeMapList}"
 //                    ).joinToString("\n\b") + "\n-------------\n\n"
 //                )
-                    AssetsFileManager.copyFileOrDirFromAssets(
-                        context,
-                        fannelRawDirAssetsPath,
-                        fannelRawDirAssetsPath,
-                        targetAppDirPath,
-                        escapeMapList
-                    )
-                }
-            }
-        }
-
-        private fun makeEscapeRelativeAssetsPathList(
-            context: Context?,
-            assetsEscapeTsvPath: String,
-            curEscapeTsvPath: String,
-        ): List<String> {
-            return AssetsFileManager.readFromAssets(
+            AssetsFileManager.copyFileOrDirFromAssets(
                 context,
-                assetsEscapeTsvPath
-            ).split("\n").map { line ->
-                val trimLine = line.trim()
-                if (
-                    trimLine.isEmpty()
-                ) return@map String()
-                val relativePathAndVersion =
-                    trimLine.split("\t")
-                val relativePath = relativePathAndVersion
-                    .firstOrNull()
-                    ?.trim()
-                    ?: String()
-                val assetsVersion = relativePathAndVersion.getOrNull(1)
-                val curVersion = TsvTool.getKeyValue(
-                    curEscapeTsvPath,
-                    relativePath
-                ).let { QuoteTool.trimBothEdgeQuote(it) }
-                val isEscape = assetsVersion.isNullOrEmpty()
-                        || assetsVersion == curVersion
+                fannelRawDirAssetsPath,
+                fannelRawDirAssetsPath,
+                targetAppDirPath,
+                escapeMapList
+            )
+//                }
+        }
+    }
+
+    private fun makeEscapeRelativeAssetsPathList(
+        context: Context?,
+        assetsEscapeTsvPath: String,
+        curEscapeTsvPath: String,
+    ): List<String> {
+        return AssetsFileManager.readFromAssets(
+            context,
+            assetsEscapeTsvPath
+        ).split("\n").map { line ->
+            val trimLine = line.trim()
+            if (
+                trimLine.isEmpty()
+            ) return@map String()
+            val relativePathAndVersion =
+                trimLine.split("\t")
+            val relativePath = relativePathAndVersion
+                .firstOrNull()
+                ?.trim()
+                ?: String()
+            val assetsVersion = relativePathAndVersion.getOrNull(1)
+            val curVersion = TsvTool.getKeyValue(
+                curEscapeTsvPath,
+                relativePath
+            ).let { QuoteTool.trimBothEdgeQuote(it) }
+            val isEscape = assetsVersion.isNullOrEmpty()
+                    || assetsVersion == curVersion
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "escape_inner.txt").absolutePath,
 //                listOf(
@@ -213,13 +213,12 @@ object CmdClickSystemAppDir {
 //                    "isEscape: ${isEscape}",
 //                ).joinToString("\n\n") + "\n----\n"
 //            )
-                when (isEscape) {
-                    false -> String()
-                    else -> relativePath
-                }
-            }.filter {
-                it.isNotEmpty()
+            when (isEscape) {
+                false -> String()
+                else -> relativePath
             }
+        }.filter {
+            it.isNotEmpty()
         }
     }
 }

@@ -42,6 +42,10 @@ class UrlFileSystems {
             AskGpt35("askGpt35"),
             CopyLink("copyLink"),
             qrLReader("qrLReader"),
+            cmdYoutuberU("cmdYoutuberU"),
+            ttsPlayer("ttsPlayer"),
+            cmdMusicPlayerU("cmdMusicPlayerU"),
+            fileManager("fileManager"),
         }
     }
 
