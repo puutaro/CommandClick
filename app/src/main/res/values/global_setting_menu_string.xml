@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="global_setting_menu_string_add">add</string>
-    <string name="global_setting_menu_string_setting">setting</string>
-    <string name="global_setting_menu_string_setting_change_app_dir">change_app_dir</string>
-    <string name="global_setting_menu_string_setting_create_short_cut">create_short_cut</string>
-    <string name="global_setting_menu_string_setting_config">config</string>
-    <string name="global_setting_menu_string_select_term">select_term</string>
-    <string name="global_setting_menu_string_select_term_term1">term1</string>
-    <string name="global_setting_menu_string_select_term_term2">term2</string>
-    <string name="global_setting_menu_string_select_term_term3">term3</string>
-    <string name="global_setting_menu_string_select_term_term4">term4</string>
-    <string name="global_setting_menu_string_edit_startup">edit_startup</string>
-    <string name="global_setting_menu_string_forward">forward</string>
 </resources>

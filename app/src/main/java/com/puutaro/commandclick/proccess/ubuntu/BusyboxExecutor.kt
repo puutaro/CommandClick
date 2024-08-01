@@ -353,11 +353,18 @@ class BusyboxExecutor(
         process: Process,
         monitorName: String
     ){
+        val forbiddenOutputPrefixList = listOf(
+            "dpkg: warning: files list file for package"
+        )
         val inputStream = process.inputStream
         val reader = inputStream.bufferedReader(Charsets.UTF_8)
         reader.forEachLine { line ->
+            val trimLine = line.trim()
             if(
-                line.trim().isEmpty()
+                trimLine.isEmpty()
+                || forbiddenOutputPrefixList.any {
+                    trimLine.startsWith(it)
+                }
             ) return@forEachLine
             FileSystems.updateFile(
                 File(
@@ -373,8 +380,12 @@ class BusyboxExecutor(
         val errStream = process.errorStream
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
         errReader.forEachLine { line ->
+            val trimLine = line.trim()
             if(
-                line.trim().isEmpty()
+                trimLine.isEmpty()
+                || forbiddenOutputPrefixList.any {
+                    trimLine.startsWith(it)
+                }
             ) return@forEachLine
             FileSystems.updateFile(
                 File(

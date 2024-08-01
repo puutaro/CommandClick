@@ -425,11 +425,11 @@ object WaitQuizPair {
             "-> setting -> select term 2"
         ),
         Pair(
-            "Why set term_2 as sys log?",
+            "Why set monitor_2 as sys log?",
             "-> Debug easily"
         ),
         Pair(
-            "Why set term_2 as sys log?",
+            "Why set monitor_2 as sys log?",
             "-> Debug easily"
         ),
         Pair(

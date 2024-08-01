@@ -12,6 +12,13 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 object MonitorFileManager {
+
+    val monitorFileList = listOf(
+        UsePath.cmdClickMonitorFileName_1,
+        UsePath.cmdClickMonitorFileName_2,
+        UsePath.cmdClickMonitorFileName_3,
+        UsePath.cmdClickMonitorFileName_4,
+    )
     fun trim(
         terminalViewModel: TerminalViewModel,
     ){
@@ -19,13 +26,17 @@ object MonitorFileManager {
         val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                FileSystems.sortedFiles(cmdclickMonitorDirPath).filter {
+                    !monitorFileList.contains(it)
+                }.map{
+                    FileSystems.removeFiles(
+                        File(cmdclickMonitorDirPath, it).absolutePath
+                    )
+                }
+            }
             val trimMonitorFileList = withContext(Dispatchers.IO) {
-                listOf(
-                    UsePath.cmdClickMonitorFileName_1,
-                    UsePath.cmdClickMonitorFileName_2,
-                    UsePath.cmdClickMonitorFileName_3,
-                    UsePath.cmdClickMonitorFileName_4,
-                ).filter {
+                monitorFileList.filter {
                     it != currentMonitorFileName
                 }
             }

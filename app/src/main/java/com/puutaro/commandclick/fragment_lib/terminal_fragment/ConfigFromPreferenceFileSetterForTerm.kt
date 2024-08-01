@@ -208,7 +208,12 @@ object ConfigFromPreferenceFileSetterForTerm {
                     UsePath.cmdClickMonitorFileName_3,
                     UsePath.cmdClickMonitorFileName_4,
                 ),
-            )
+            ).let {
+                if(
+                    MonitorFileManager.monitorFileList.contains(it)
+                ) return@let it
+                UsePath.cmdClickMonitorFileName_1
+            }
         }
         val fannelContentsList = CommandClickVariables.makeMainFannelConList(
             terminalFragment.currentAppDirPath,
@@ -291,7 +296,12 @@ object ConfigFromPreferenceFileSetterForTerm {
                 UsePath.cmdClickMonitorFileName_3,
                 UsePath.cmdClickMonitorFileName_4,
             ),
-        )
+        ).let {
+            if(
+                MonitorFileManager.monitorFileList.contains(it)
+            ) return@let it
+            UsePath.cmdClickMonitorFileName_1
+        }
 
         terminalFragment.onUrlHistoryRegister = SettingVariableReader.getCbValue(
             settingVariableList,

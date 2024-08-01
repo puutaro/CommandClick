@@ -137,7 +137,7 @@ object UsePath {
     private val cmdclickFannelItselfRelativeDirPath = "$cmdclickFannelAppsRelativeDirPath/$cmdclickFannelItselfDirName"
     val cmdclickFannelItselfDirPath =  "$rootPath/$cmdclickFannelItselfRelativeDirPath"
     const val rootDirPathByTermux = "\$HOME/storage/shared"
-    private const val cmdclickMonitorFileNameSuffix = "term"
+    private const val cmdclickMonitorFileNameSuffix = "monitor"
     const val cmdClickMonitorFileName_1 = "${cmdclickMonitorFileNameSuffix}_1"
     const val cmdClickMonitorFileName_2 = "${cmdclickMonitorFileNameSuffix}_2"
     const val cmdClickMonitorFileName_3 = "${cmdclickMonitorFileNameSuffix}_3"

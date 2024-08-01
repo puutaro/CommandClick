@@ -219,13 +219,17 @@ class CmdClickHistoryButtonEvent (
                 val mainFannelConList = ReadText(
                     File(selectedAppDirPath, fannelName).absolutePath
                 ).textToList()
-                val setReplaceVariableMap =
-                    JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                val setReplaceVariableMap = when(
+                    fannelName.isEmpty()
+                ) {
+                    true -> null
+                    else -> JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                         context,
                         mainFannelConList,
                         appDirName,
                         fannelName,
                     )
+                }
 
                 val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
                     mainFannelConList,

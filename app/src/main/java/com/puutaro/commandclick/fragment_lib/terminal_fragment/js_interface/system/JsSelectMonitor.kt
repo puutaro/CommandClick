@@ -11,7 +11,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
-class JsSelectTerm(
+class JsSelectMonitor(
     private val terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context

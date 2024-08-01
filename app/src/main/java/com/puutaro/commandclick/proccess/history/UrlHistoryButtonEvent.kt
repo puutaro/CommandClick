@@ -357,16 +357,21 @@ class UrlHistoryButtonEvent(
     ): List<String> {
         val fannelName = when(fragment) {
             is CommandIndexFragment
-            -> UsePath.cmdclickPreferenceJsName
+            -> String()
             else
             -> FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
         }
-        val replaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            context,
-            "${currentAppDirPath}/${fannelName}",
-        )
+        val replaceVariableMap = when(
+            fannelName.isEmpty()
+        ) {
+            true -> null
+            else -> SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                context,
+                "${currentAppDirPath}/${fannelName}",
+            )
+        }
         val bottomScriptUrlList =
             when(fragment){
                 is CommandIndexFragment
