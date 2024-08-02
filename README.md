@@ -101,9 +101,12 @@ Screenshots
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568"><img src="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568" width="30%" />
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537"><img src="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537" width="30%" /></a>
 <a href="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612"><img src="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612" width="30%" /></a>
-<!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/f4d1263e-c390-4e45-b26f-8ae103a4f73a"><img src="https://github.com/puutaro/CommandClick/assets/55217593/f4d1263e-c390-4e45-b26f-8ae103a4f73a" width="30%" /></a> -->
-<!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/65aceaee-5f6e-418b-9423-26b39cf31ed5"><img src="https://github.com/puutaro/CommandClick/assets/55217593/65aceaee-5f6e-418b-9423-26b39cf31ed5" width="30%" /></a> -->
-<!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
+
+##### ●  Exist bookmarklet is simple. But `CommmandClick` bookmrklet is not only simple but also more functinal.  
+##### ●  Exist bookmarklet is used to vanila javascript. `CommmandClick` bookmarklet is used to original fragmework that is more readable and maintainable.  
+##### ●  Exist bookmarklet is limit feature. But, `CommmandClick` bookmarklet is versatile powerd by webview, ubuntu, media player.  
+##### ●  Exist bookmarklet is not supported with distribution. But, `CommmandClick` bookmarklet is supported with distribution by QR code.  
+
 
 - In `CommandClick`, call bookmarklet `fannel`.
 
