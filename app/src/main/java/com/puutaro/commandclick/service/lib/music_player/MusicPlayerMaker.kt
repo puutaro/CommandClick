@@ -6,19 +6,14 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayNotiLauncher
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.processNextEventInCurrentThread
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.time.LocalDateTime
 
 object MusicPlayerMaker {
 
@@ -120,11 +115,6 @@ object MusicPlayerMaker {
             val uriTitle = getUriTitleFromNoti(
                 musicPlayerService
             ) ?: return@setOnSeekCompleteListener
-            val musicPrepareLog = "musicLog_setOnSeekCompleteListener_log.txt"
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-                "${LocalDateTime.now()} setOnSeekCompleteListener"
-            )
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.action,
@@ -133,17 +123,8 @@ object MusicPlayerMaker {
                             to uriTitle
                 )
             )
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-                "${LocalDateTime.now()} setOnSeekCompleteListener finish"
-            )
         }
         mediaPlayer.setOnPreparedListener {
-            val musicPrepareLog = "musicLog_setOnPreparedListener_log.txt"
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-                "${LocalDateTime.now()} setOnPreparedListener"
-            )
             setPrepareDone()
             musicPlayerService.notiSetter?.setOnStart()
             musicPlayerService.currentTrackLength =
@@ -163,10 +144,6 @@ object MusicPlayerMaker {
                 musicPlayerService,
                 uriTitle,
             )
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-                "${LocalDateTime.now()} setOnPreparedListener done"
-            )
         }
         musicPlayerService.mediaPlayer = mediaPlayer
         setStateSetInitDone()
@@ -181,43 +158,19 @@ object MusicPlayerMaker {
         if(
             prepareState != MusicPlayerState.PREPARE_DONE
         ) return
-        val musicPrepareLog = "musicLog_start.txt"
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} start"
-        )
         musicPlayerService.mediaPlayer?.start()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} started"
-        )
     }
 
     fun setDatasource(
         musicPlayerService: MusicPlayerService,
         uri: String
     ){
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "psetDatasource.txt").absolutePath,
-//            listOf(
-//                "musicPlayerState: ${musicPlayerState}"
-//            ).joinToString("\n")
-//        )
         if(
             musicPlayerState != MusicPlayerState.INIT_DONE
         ) return
-        val musicPrepareLog = "musicLog_setDataSource.txt"
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} setDatasource"
-        )
         setStateSetDatasetDoing()
         musicPlayerService.mediaPlayer?.setDataSource(uri)
         setStateSetDatasetDone()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} setDatasourced"
-        )
     }
 
     fun prepare(
@@ -226,37 +179,19 @@ object MusicPlayerMaker {
         if(
             musicPlayerState != MusicPlayerState.SET_DATASET_DONE
         ) return
-        val musicPrepareLog = "musicLog_prepare.txt"
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} prepare"
-        )
         setPrepareDoing()
         musicPlayerService.mediaPlayer?.prepareAsync()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} prepared"
-        )
     }
 
     fun releaseMediaPlayer(
         musicPlayerService: MusicPlayerService,
     ){
-        val musicPrepareLog = "musicLog_releaseMediaPlayer_log.txt"
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} start releaseMediaPlayer"
-        )
         if(
             musicPlayerService.mediaPlayer == null
         ) return
         stop(musicPlayerService)
         musicPlayerService.mediaPlayer?.release()
         musicPlayerService.mediaPlayer = null
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, musicPrepareLog).absolutePath,
-            "${LocalDateTime.now()} end releaseMediaPlayer"
-        )
     }
 
     private fun stop(

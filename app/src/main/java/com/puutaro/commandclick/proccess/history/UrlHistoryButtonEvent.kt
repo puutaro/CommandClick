@@ -26,7 +26,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -179,7 +178,7 @@ class UrlHistoryButtonEvent(
                     ?: return@setOnItemClickListener
             val selectedUrl = selectedUrlSource.split(
                 tabReplaceStr
-            ).lastOrNull()
+            ).getOrNull(1)
                 ?.let {
                     ScriptPreWordReplacer.settingValReplace(
                         it,
@@ -226,9 +225,23 @@ class UrlHistoryButtonEvent(
     }
 
     private fun makeUrlHistoryList(): List<String> {
-        return makeCompleteListSourceNoJsExclude(
+        val urlHistoryList =  makeCompleteListSourceNoJsExclude(
             currentAppDirPath,
         ).reversed()
+        val iconHistoryList = UrlIconTool.makeUrlIconList(currentAppDirPath)
+        return urlHistoryList.map {
+            titleAndUrl ->
+            val url = titleAndUrl
+                .split("\t").getOrNull(1) ?: String()
+            val base64Str = iconHistoryList.firstOrNull {
+                val iconUrl = it.first
+                if(
+                    url != iconUrl
+                ) return@firstOrNull false
+                true
+            }?.second ?: String()
+            "${titleAndUrl}\t${base64Str}"
+        }
     }
 
     private fun makeCompleteListSourceNoJsExclude(
@@ -248,7 +261,7 @@ class UrlHistoryButtonEvent(
             .distinct()
             .take(takeUrlListNum)
             .filter {
-                makeUrlHistoryList(
+                isNotDuplicate(
                     it,
                     usedTitle,
                     usedUrl,
@@ -381,14 +394,14 @@ class UrlHistoryButtonEvent(
                 else
                 -> return emptyList()
             }
-        return ConvertBottomScriptUrlListToUrlList(
+        return convertBottomScriptUrlListToUrlList(
             bottomScriptUrlList,
             replaceVariableMap,
             fannelName,
         )
     }
 
-    private fun ConvertBottomScriptUrlListToUrlList(
+    private fun convertBottomScriptUrlListToUrlList(
         bottomScriptUrlList: List<String>,
         replaceVariableMap: Map<String, String>?,
         fannelName: String,
@@ -428,7 +441,7 @@ class UrlHistoryButtonEvent(
         }.split("\n")
     }
 
-    private fun makeUrlHistoryList(
+    private fun isNotDuplicate(
         historySourceRow: String,
         usedTitle: MutableSet<String>,
         usedUrl: MutableSet<String>,
@@ -494,7 +507,7 @@ class UrlHistoryButtonEvent(
     ){
         val bottomScriptUrlList = makeBottomScriptUrlList()
         val isBottomScript = bottomScriptUrlList.filter {
-            val url = it.split("\t").lastOrNull()
+            val url = it.split("\t").getOrNull(1)
             url == selectedUrl
         }.isNotEmpty()
         if(isBottomScript) {
@@ -545,7 +558,7 @@ class UrlHistoryButtonEvent(
         ).textToList().filter {
             val titleAndUrlList = it.split("\t")
             val title = titleAndUrlList.firstOrNull()
-            val url = titleAndUrlList.lastOrNull()
+            val url = titleAndUrlList.getOrNull(1)
             val isNotEqualTitle =
                 title != selectedTitle
                         && !title.isNullOrEmpty()

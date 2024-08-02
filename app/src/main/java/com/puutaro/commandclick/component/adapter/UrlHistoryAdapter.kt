@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
+import coil.load
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import java.io.File
 
 
@@ -46,6 +48,7 @@ class UrlHistoryAdapter(
         )
         val titleUrlLine = urlHistoryList[position].split("\t")
         val urlStr = titleUrlLine.getOrNull(1) ?: String()
+        val iconBase64Str = titleUrlLine.getOrNull(2)
         val title = titleUrlLine.firstOrNull().let {
             if(
                 it.isNullOrEmpty()
@@ -58,7 +61,8 @@ class UrlHistoryAdapter(
         setThumbnail(
             thumbnailView,
             title,
-            urlStr
+            urlStr,
+            iconBase64Str
         )
         val titleTextView = view.findViewById<AppCompatTextView>(
             R.id.url_history_title
@@ -102,15 +106,24 @@ class UrlHistoryAdapter(
     private fun setThumbnail(
         thumbnailView: ImageView,
         title: String,
-        url: String
+        url: String,
+        iconBase64Str: String?
     ) {
         if(
             url.startsWith(WebUrlVariables.httpsPrefix)
             || url.startsWith(WebUrlVariables.httpPrefix)
         ) {
-            thumbnailView.setImageResource(R.drawable.internet)
-            thumbnailView.imageTintList =
-                context.getColorStateList(R.color.web_icon_color)
+            BitmapTool.Base64UrlIconForHistory.decode(iconBase64Str)
+                ?.let{
+                    thumbnailView.imageTintList = null
+                    thumbnailView.load(it)
+                    return
+                } ?: let {
+                thumbnailView.load(R.drawable.internet)
+                thumbnailView.imageTintList =
+                    context.getColorStateList(R.color.web_icon_color)
+                return
+            }
             return
         }
         val isUrlFile = url.startsWith(WebUrlVariables.filePrefix)
@@ -120,19 +133,19 @@ class UrlHistoryAdapter(
         if(
             isFannel && isUrlFile
         ) {
-            thumbnailView.setImageResource(R.drawable.icons8_file)
+            thumbnailView.load(R.drawable.icons8_file)
             thumbnailView.imageTintList =
                 context.getColorStateList(R.color.fannel_icon_color)
             return
         }
         if(isUrlFile) {
-            thumbnailView.setImageResource(R.drawable.icons8_file)
+            thumbnailView.load(R.drawable.icons8_file)
             thumbnailView.imageTintList =
                 context.getColorStateList(R.color.file_icon_color)
             return
         }
 
-        thumbnailView.setImageResource(R.drawable.ic_terminal)
+        thumbnailView.load(R.drawable.ic_terminal)
         thumbnailView.imageTintList =
             context.getColorStateList(R.color.terminal_color)
     }

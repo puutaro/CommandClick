@@ -109,7 +109,6 @@ object WebViewClientSetter {
                 return super.shouldInterceptRequest(view, request)
             }
 
-
             override fun onPageFinished(
                 webview: WebView?,
                 url: String?

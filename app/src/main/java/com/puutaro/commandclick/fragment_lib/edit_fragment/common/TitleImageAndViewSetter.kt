@@ -8,10 +8,8 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import java.io.File
 
 object TitleImageAndViewSetter {
 
@@ -41,13 +39,6 @@ object TitleImageAndViewSetter {
         ).let {
            val onTitleSwitch =
                it != switchOff
-           FileSystems.writeFile(
-               File(UsePath.cmdclickDefaultAppDirPath, "title.txt").absolutePath,
-               listOf(
-                   "onTitleSwitch: ${onTitleSwitch}",
-                   "titleTextMap: ${titleTextMap}",
-               ).joinToString("\n")
-           )
            if (onTitleSwitch) return@let
            editFragment.binding.editTitleLinearlayout.isVisible = false
            return
@@ -106,18 +97,6 @@ object TitleImageAndViewSetter {
     ): String {
         return "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
     }
-//    fun makeTitleForEditTitle(
-//        editFragment: EditFragment,
-//        title: String
-//    ): String {
-//        val backstackOrder = makeBackstackCount(
-//            editFragment
-//        )
-//        return listOf(
-//            "(${backstackOrder})",
-//            title
-//        ).joinToString(backstackCountSeparator)
-//    }
 
     fun makeBackstackCount(
         fragment: Fragment

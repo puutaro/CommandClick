@@ -23,6 +23,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentE
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.history.UrlIconTool
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,18 @@ object WebChromeClientSetter {
         val packageName = context?.packageName
 
         webView.webChromeClient = object : WebChromeClient() {
+            override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
+                super.onReceivedIcon(view, icon)
+                CoroutineScope(Dispatchers.Main).launch {
+                    UrlIconTool.insertToHistory(
+                        terminalFragment.currentAppDirPath,
+                        view?.url,
+                        icon,
+                    )
+                }
+            }
+
+
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress == 100) {

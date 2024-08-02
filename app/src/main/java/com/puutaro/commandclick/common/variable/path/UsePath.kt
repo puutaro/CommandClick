@@ -194,6 +194,8 @@ object UsePath {
     const val cmdclickTempSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickTempSystemDirName"
     val cmdclickUrlHistoryFileName = "cmdclickUrlHistory$tsvExtend"
     val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory$tsvExtend"
+    val cmdclickUrlIconFileName = "cmdclickUrlIcon$tsvExtend"
+    val cmdclickUrlIconBackupFileName = "cmdclickUrlBuckupIcon$tsvExtend"
     val cmdclickQrHistoryFileName = "cmdclickQrHistory$tsvExtend"
     val cmdclickQrHistoryBackupFileName = "cmdclickQrBuckupHistory$tsvExtend"
     val cmdclickSiteScrollPosiFileName = "scrollPosi$tsvExtend"

@@ -194,7 +194,6 @@ class TerminalFragment: Fragment() {
         UrlHistoryBackUp.backup(this)
         ScrollYPosiBackUp.backup(this)
         AddBlockerHandler.handle(this)
-//        AdBlocker.init(this)
 
         WebChromeClientSetter.set(
             this,

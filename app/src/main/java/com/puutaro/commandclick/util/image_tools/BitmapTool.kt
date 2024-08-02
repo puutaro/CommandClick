@@ -1,14 +1,13 @@
 package com.puutaro.commandclick.util.image_tools
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.util.Log
+import android.util.Base64
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScreenSizeCalculator
+import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
 
@@ -66,6 +65,29 @@ object BitmapTool {
         val canvas = Canvas(screenshot)
         v.draw(canvas)
         return screenshot
+    }
+
+    object Base64UrlIconForHistory {
+
+        fun decode(base64Str: String?): Bitmap? {
+            if(
+                base64Str.isNullOrEmpty()
+            ) return null
+            val decodedBytes: ByteArray = Base64.decode(
+                base64Str,
+                Base64.NO_WRAP
+            )
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        }
+
+        fun encode(bitmap: Bitmap?): String? {
+            if(
+                bitmap == null
+            ) return null
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+        }
     }
 }
 
