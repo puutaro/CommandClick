@@ -1,21 +1,27 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
-import android.content.Context
 import android.media.AudioManager
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VolumeUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.ReadLines
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.time.LocalDateTime
 
 object ExecBackstackHandle {
     fun execBackstackHandle(
@@ -37,6 +43,11 @@ object ExecBackstackHandle {
 }
 
 private object BackstackManager {
+
+    private var prevBackTime = LocalDateTime.parse("2020-02-15T21:30:50")
+    private var beforeAndAfterUrlPair: Pair<String?, String?> = Pair(null, null)
+    private val monitorUrlPath = WebUrlVariables.monitorUrlPath
+
     fun exec(
         activity: MainActivity
     ){
@@ -72,22 +83,34 @@ private object BackstackManager {
             )
             return
         }
-        if(
+        when(
             currentTerminalFragment == null
             || currentBottomFragmentWeight == ReadLines.LONGTH
         ) {
-            execPopBackStackImmediate(
+            true -> {
+                val curBackstackTime = LocalDateTime.now()
+                if (
+                    !backstackExecuteJudge(
+                        activity,
+                        curBackstackTime,
+                    )
+                ) {
+                    prevBackTime = curBackstackTime
+                    ToastUtils.showShort("End by double tap")
+                    return
+                }
+                execPopBackStackImmediate(
+                    activity,
+                    supportFragmentManager,
+                )
+            }
+            else -> execBack(
                 activity,
-                supportFragmentManager,
+                currentTerminalFragment,
+                currentBottomFragment,
+                cmdVariableEditFragmentTag,
             )
-            return
         }
-        execBack(
-            activity,
-            currentTerminalFragment,
-            currentBottomFragment,
-            cmdVariableEditFragmentTag,
-        )
     }
 
     private fun execBack(
@@ -106,12 +129,24 @@ private object BackstackManager {
             )
             return
         }
+        updateBeforeAndAfterUrlPair(webVeiw.url)
         val enableGoBack = webVeiw.canGoBack()
         if (enableGoBack) {
             webVeiw.goBack()
-            terminalFragment.goBackFlag = enableGoBack
+            terminalFragment.goBackFlag = true
             return
         }
+        enableLaunchUrlHistory(terminalFragment).let {
+            isLaunchUrlHistory ->
+            if(!isLaunchUrlHistory) return@let
+            updateBeforeAndAfterUrlPair(monitorUrlPath)
+            launchUrlHistory(
+                activity,
+                currentBottomFragment,
+            )
+            return
+        }
+
         when(currentBottomFragment){
             is CommandIndexFragment -> {
                 MonitorSizeManager.changeForCmdIndexFragment(
@@ -132,6 +167,39 @@ private object BackstackManager {
         }
     }
 
+    private fun enableLaunchUrlHistory(
+        terminalFragment: TerminalFragment,
+    ):Boolean {
+        val disableLaunchUrlHistoryByBackstack =
+            terminalFragment.onLaunchUrlHistoryByBackstack !=
+                    SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON.name
+        if(
+            disableLaunchUrlHistoryByBackstack
+        ) return false
+        return EnableUrlPrefix.isHttpPrefix(beforeAndAfterUrlPair.first)
+                && "${beforeAndAfterUrlPair.second}" == "${monitorUrlPath}/"
+    }
+
+    private fun updateBeforeAndAfterUrlPair (
+        newUrl: String?
+    ){
+        val newBeforeAndAfterUrlPair = Pair(beforeAndAfterUrlPair.second, newUrl)
+        beforeAndAfterUrlPair = newBeforeAndAfterUrlPair
+    }
+
+
+    private fun backstackExecuteJudge(
+        activity: MainActivity,
+        curBackstackTime: LocalDateTime,
+    ): Boolean {
+        val currentBackStackCount =
+            activity.supportFragmentManager.backStackEntryCount
+        if(
+            currentBackStackCount > 0
+        ) return true
+        return LocalDatetimeTool.getDurationSec(prevBackTime, curBackstackTime) < 0.7
+    }
+
 
     private fun execPopBackStackImmediate(
         activity: MainActivity,
@@ -148,6 +216,23 @@ private object BackstackManager {
             supportFragmentManager,
         )
         supportFragmentManager.popBackStackImmediate()
+    }
+
+    private fun launchUrlHistory(
+        activity: MainActivity,
+        currentBottomFragment: Fragment,
+    ){
+        val sharePref = FannelInfoTool.getSharePref(activity)
+        val fannelInfoMap = FannelInfoSetting.values().map {
+            it.name to FannelInfoTool.getStringFromFannelInfo(
+                sharePref,
+                it
+            )
+        }.toMap()
+        UrlHistoryButtonEvent(
+            currentBottomFragment,
+            fannelInfoMap,
+        ).invoke()
     }
 
     private fun removeEditAndTermFragment(

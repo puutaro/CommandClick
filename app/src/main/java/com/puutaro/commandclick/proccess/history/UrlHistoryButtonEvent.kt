@@ -67,8 +67,10 @@ class UrlHistoryButtonEvent(
 
 
     fun invoke(
-        historyButtonInnerView: View,
     ){
+        if(
+            context == null
+        ) return
         when(fragment){
             is EditFragment -> {
                 val isCmdValEdit =
@@ -84,9 +86,8 @@ class UrlHistoryButtonEvent(
             }
         }
         terminalViewModel.onDialog = true
-        val historyButtonInnerViewContext = historyButtonInnerView.context
         urlHistoryDialog = Dialog(
-            historyButtonInnerViewContext,
+            context,
         )
         urlHistoryDialog?.setContentView(
             R.layout.url_history_list_view_layout
@@ -94,7 +95,7 @@ class UrlHistoryButtonEvent(
         val urlHistoryListView = urlHistoryDialog?.findViewById<RecyclerView>(
             R.id.url_history_list_view
         )
-        val catchSize = 50 * (context?.resources?.displayMetrics?.heightPixels ?: 0)
+        val catchSize = 50 * (context.resources?.displayMetrics?.heightPixels ?: 0)
         urlHistoryListView?.setItemViewCacheSize(catchSize)
         val urlHistoryListViewLinearParams =
             urlHistoryListView?.layoutParams as LinearLayout.LayoutParams
@@ -113,7 +114,7 @@ class UrlHistoryButtonEvent(
             false
         )
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
-            historyButtonInnerView.context,
+            context,
             urlHistoryList.toMutableList()
         )
         urlHistoryListView.adapter = urlHistoryDisplayListAdapter

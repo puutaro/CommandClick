@@ -89,10 +89,13 @@ class TerminalFragment: Fragment() {
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var firstDisplayUpdate = true
     var onAdBlock = CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE
+    var onLaunchUrlHistoryByBackstack =
+        CommandClickScriptVariable.ON_LAUNCH_URL_HISTORY_BY_BACKSTACK_DEFAULT_VALUE
     var onTermBackendWhenStart = CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START
     var onTermShortWhenLoad =
         CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE
-    var disableShowToolbarWhenHighlight = CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE
+    var disableShowToolbarWhenHighlight =
+        CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE
     var defaultMonitorFile = CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE

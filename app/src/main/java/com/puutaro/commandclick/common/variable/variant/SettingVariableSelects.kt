@@ -110,4 +110,9 @@ object SettingVariableSelects {
         SETUP,
         RESTORE,
     }
+
+    enum class OnLaunchUrlHistoryByBackstack {
+        ON,
+        OFF
+    }
 }

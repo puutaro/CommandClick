@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.history.CLICLTYPE
-import com.puutaro.commandclick.proccess.history.HistoryBottunSwitcher
+import com.puutaro.commandclick.proccess.history.HistoryButtonSwitcher
 import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonColorSettingForToolbarButton
@@ -109,7 +109,7 @@ class ToolbarButtonProducerForEdit(
                             true
                         )
                     }
-                    HistoryBottunSwitcher.switch(
+                    HistoryButtonSwitcher.switch(
                         editFragment,
                         view,
                         editFragment.context?.getString(
@@ -153,7 +153,7 @@ class ToolbarButtonProducerForEdit(
     ){
         when (toolbarButtonBariantForEdit) {
             ToolbarButtonBariantForEdit.HISTORY -> {
-                HistoryBottunSwitcher.switch(
+                HistoryButtonSwitcher.switch(
                     editFragment,
                     buttonInnerView,
                     editFragment.context?.getString(

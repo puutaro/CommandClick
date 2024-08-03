@@ -77,6 +77,7 @@ object CommandClickScriptVariable {
     val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
     val IGNORE_HISTORY_PATHS = "ignoreHistoryPaths"
     val ON_ADBLOCK = "onAdBlock"
+    val ON_LAUNCH_URL_HISTORY_BY_BACKSTACK = "onLaunchUrlHistoryByBackstack"
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT="disableShowToolbarWhenHighlight"
     val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
     val EDIT_BOX_TITLE_CONFIG = "editBoxTitleConfig"
@@ -136,6 +137,7 @@ object CommandClickScriptVariable {
         ON_TERM_VISIBLE_WHEN_KEYBOARD,
         ON_TERM_SHORT_WHEN_LOAD,
         ON_ROOTFS_SDCARD_SAVE,
+        ON_LAUNCH_URL_HISTORY_BY_BACKSTACK,
         DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
         UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
         UBUNTU_AUTO_SETUP,
@@ -189,6 +191,8 @@ object CommandClickScriptVariable {
     private val onAdBlockInherit = SettingVariableSelects.OnAdblockSelects.INHERIT.name
     private val onAdBlockOn = SettingVariableSelects.OnAdblockSelects.ON.name
     private val onAdBlockOff = SettingVariableSelects.OnAdblockSelects.OFF.name
+    private val onLaunchUrlHistoryByBackstackOn = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON
+    private val onLaunchUrlHistoryByBackstackOff = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF
     private val shellExecEnvUbuntu = SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
     private val shellExecEnvTermux = SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
     private val ubuntuExecModeSelectsBackground = SettingVariableSelects.UbuntuExecModeSelects.background.name
@@ -230,6 +234,7 @@ object CommandClickScriptVariable {
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
+    val ON_LAUNCH_URL_HISTORY_BY_BACKSTACK_DEFAULT_VALUE = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
@@ -342,6 +347,7 @@ object CommandClickScriptVariable {
         "$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC:CB=$urlHistoryOrButtonExecUrlHistory?$urlHistoryOrButtonExecUrlButtonExec?$urlHistoryOrButtonExecUrlInherit",
         "$ON_URL_LAUNCH_MACRO:TXT:ECB=$onUrlLaunchMacroOff?$onUrlLaunchMacroRecent?$onUrlLaunchMacroFrequency",
         "$ON_ADBLOCK:CB=$onAdBlockInherit?$onAdBlockOff?$onAdBlockOn",
+        "${ON_LAUNCH_URL_HISTORY_BY_BACKSTACK}:CB=${onLaunchUrlHistoryByBackstackOff}?${onLaunchUrlHistoryByBackstackOn}",
         "$ON_TERM_BACKEND_WHEN_START:CB=$onTermBackendWhenStartSelectsInherit?$onTermBackendWhenStartSelectsOff?$onTermBackendWhenStartSelectsOn",
         "$ON_TERM_VISIBLE_WHEN_KEYBOARD:CB=$onTermVisibleWhenKeyboardSelectsInherit?$onTermVisibleWhenKeyboardSelectsOn?$onTermVisibleWhenKeyboardSelectsOff",
         "$ON_TERM_SHORT_WHEN_LOAD:CB=$onTermShortWhenLoadSelectsInherit?$onTermShortWhenLoadSelectsOn?$onTermShortWhenLoadSelectsOff",

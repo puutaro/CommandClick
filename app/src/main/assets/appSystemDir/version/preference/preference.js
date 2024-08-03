@@ -35,6 +35,7 @@ homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
 ignoreHistoryPaths=""
 historySwitch="INHERIT"
 urlHistoryOrButtonExec="INHERIT"
+onLaunchUrlHistoryByBackstack="ON"
 /// SETTING_SECTION_END
 
 
@@ -65,6 +66,7 @@ homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
 ignoreHistoryPaths=""
 historySwitch="INHERIT"
 urlHistoryOrButtonExec="INHERIT"
+onLaunchUrlHistoryByBackstack="ON"
 // edit vals
 appHeader=""
 table=""

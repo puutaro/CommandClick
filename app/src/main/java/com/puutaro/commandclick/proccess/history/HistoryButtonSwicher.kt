@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.history
 
-import android.content.Context
 import android.view.View
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -12,7 +11,7 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
-object HistoryBottunSwitcher {
+object HistoryButtonSwitcher {
 
     fun switch(
         fragment: androidx.fragment.app.Fragment,
@@ -29,7 +28,6 @@ object HistoryBottunSwitcher {
             is EditFragment -> fragment.fannelInfoMap
             else -> return
         }
-        val activity = fragment.activity
         val sharedPref = FannelInfoTool.getSharePref(fragment.context)
         val switchOnSource = (
                 historySwitch ==
@@ -104,9 +102,7 @@ private fun urlHistoryButtonHandler(
     if(
         onUrlHistory
     ) {
-        urlHistoryButtonEvent.invoke(
-            innerView,
-        )
+        urlHistoryButtonEvent.invoke()
         return
     }
 

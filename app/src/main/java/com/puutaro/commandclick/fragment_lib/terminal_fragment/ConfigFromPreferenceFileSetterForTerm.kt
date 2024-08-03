@@ -179,7 +179,6 @@ object ConfigFromPreferenceFileSetterForTerm {
                     settingVariableListFromPreference,
                     CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
                 )
-
             terminalFragment.imageLongPressMenuFilePath =
                 LongPressPathDecider.decide(
                     terminalFragment,
@@ -246,6 +245,17 @@ object ConfigFromPreferenceFileSetterForTerm {
             listOf(
                 SettingVariableSelects.OnAdblockSelects.ON.name,
                 SettingVariableSelects.OnAdblockSelects.OFF.name,
+            ),
+        )
+        terminalFragment.onLaunchUrlHistoryByBackstack = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_LAUNCH_URL_HISTORY_BY_BACKSTACK,
+            terminalFragment.onLaunchUrlHistoryByBackstack,
+            terminalFragment.onLaunchUrlHistoryByBackstack,
+            terminalFragment.onLaunchUrlHistoryByBackstack,
+            listOf(
+                SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON.name,
+                SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF.name,
             ),
         )
 
