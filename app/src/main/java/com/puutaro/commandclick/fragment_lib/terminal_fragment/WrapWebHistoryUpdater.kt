@@ -12,7 +12,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.proccess.history.UrlHistoryRegister
-import com.puutaro.commandclick.proccess.history.UrlIconTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.FannelInfoTool

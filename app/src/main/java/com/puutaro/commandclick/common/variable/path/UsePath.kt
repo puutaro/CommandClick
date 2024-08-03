@@ -196,6 +196,8 @@ object UsePath {
     val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory$tsvExtend"
     val cmdclickUrlIconFileName = "cmdclickUrlIcon$tsvExtend"
     val cmdclickUrlIconBackupFileName = "cmdclickUrlBuckupIcon$tsvExtend"
+    val cmdclickUrlCaptureFileName = "cmdclickUrlCapture$tsvExtend"
+    val cmdclickUrlCaptureBackupFileName = "cmdclickUrlBuckupCapture$tsvExtend"
     val cmdclickQrHistoryFileName = "cmdclickQrHistory$tsvExtend"
     val cmdclickQrHistoryBackupFileName = "cmdclickQrBuckupHistory$tsvExtend"
     val cmdclickSiteScrollPosiFileName = "scrollPosi$tsvExtend"

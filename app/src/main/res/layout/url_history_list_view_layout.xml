@@ -8,21 +8,21 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     >
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/url_history_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_centerVertical="true"
         android:layout_weight="0.9"
-        android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
         />
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/url_history_search_edit_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
         android:imeOptions="actionDone"
+        android:inputType="text"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:paddingStart="10dp"

@@ -23,7 +23,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentE
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.history.UrlIconTool
+import com.puutaro.commandclick.proccess.history.UrlHistoryIconTool
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ object WebChromeClientSetter {
             override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
                 super.onReceivedIcon(view, icon)
                 CoroutineScope(Dispatchers.Main).launch {
-                    UrlIconTool.insertToHistory(
+                    UrlHistoryIconTool.insertToHistory(
                         terminalFragment.currentAppDirPath,
                         view?.url,
                         icon,

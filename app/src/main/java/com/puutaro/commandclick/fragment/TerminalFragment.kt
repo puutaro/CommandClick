@@ -185,6 +185,7 @@ class TerminalFragment: Fragment() {
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
         )
+        UrlCaptureWatcher.watch(this)
 
         ConfigFromPreferenceFileSetterForTerm.set(this)
         MonitorFileManager.switchCurMonitorFile(

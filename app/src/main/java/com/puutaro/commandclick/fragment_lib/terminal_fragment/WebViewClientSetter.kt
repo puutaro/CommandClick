@@ -10,8 +10,10 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
+import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +47,8 @@ object WebViewClientSetter {
                 val allowedRequest = false
                 val notAllowedRequest = true
 
-                val url = request?.url ?: return notAllowedRequest
+                val url = request?.url
+                    ?: return notAllowedRequest
 
                 validation.isTransitionToOtherApp(url).let {
                     when (it) {

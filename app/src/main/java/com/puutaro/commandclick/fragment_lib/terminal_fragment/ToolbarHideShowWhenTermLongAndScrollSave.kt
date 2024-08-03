@@ -9,6 +9,7 @@ import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -55,7 +56,7 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                             )
                             val url = terminalWebView.url
                             CoroutineScope(Dispatchers.IO).launch {
-                                ScrollPosition.save(
+                                    ScrollPosition.save(
                                     terminalFragment,
                                     url,
                                     terminalWebView.scrollY,

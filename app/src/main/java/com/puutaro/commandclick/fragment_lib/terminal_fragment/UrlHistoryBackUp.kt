@@ -2,7 +2,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.history.UrlIconTool
+import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
+import com.puutaro.commandclick.proccess.history.UrlHistoryIconTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -15,103 +16,84 @@ object UrlHistoryBackUp {
     fun backup(terminalFragment: TerminalFragment){
         bodyBackup(terminalFragment)
         iconBackup(terminalFragment)
+        captureBackup(terminalFragment)
     }
-    fun bodyBackup(
+    private fun bodyBackup(
         terminalFragment: TerminalFragment
     ){
-        val leavesLineForTerm = ReadText.leavesLineForTerm
-        val currentAppDirPath =
-            terminalFragment.currentAppDirPath
-        CoroutineScope(Dispatchers.Main).launch {
-            val appUrlSystemDirPath =
-                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-            val cmdclickUrlHistoryFileName =
-                UsePath.cmdclickUrlHistoryFileName
-            val urlHistoryConList = ReadText(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlHistoryFileName
-                ).absolutePath
-            ).textToList()
-            val urlHistoryConListSize = urlHistoryConList.size
-            val cmdclickUrlHistoryBackupFileName =
-                UsePath.cmdclickUrlHistoryBackupFileName
-            val urlHistoryBackupConList = ReadText(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlHistoryBackupFileName
-                ).absolutePath
-            ).textToList().take(leavesLineForTerm)
-            val urlHistoryBuckupConListSize =
-                urlHistoryBackupConList.size
-            if(
-                urlHistoryConListSize < urlHistoryBuckupConListSize
-            ) {
-                FileSystems.writeFile(
-                    File(
-                        appUrlSystemDirPath,
-                        cmdclickUrlHistoryFileName,
-                    ).absolutePath,
-                    urlHistoryBackupConList.joinToString("\n")
-                )
-                return@launch
-            }
-            FileSystems.writeFile(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlHistoryBackupFileName,
-                ).absolutePath,
-                urlHistoryConList.joinToString("\n")
-            )
-        }
+        execBackup(
+            terminalFragment,
+            UsePath.cmdclickUrlHistoryFileName,
+            UsePath.cmdclickUrlHistoryBackupFileName,
+            ReadText.leavesLineForTerm
+        )
     }
 
-    fun iconBackup(
+    private fun iconBackup(
         terminalFragment: TerminalFragment
     ){
-        val takeHistoryNum = UrlIconTool.takeHistoryNum
+        execBackup(
+            terminalFragment,
+            UsePath.cmdclickUrlIconFileName,
+            UsePath.cmdclickUrlIconBackupFileName,
+            UrlHistoryIconTool.takeHistoryNum,
+        )
+    }
+
+    private fun captureBackup(
+        terminalFragment: TerminalFragment
+    ){
+        execBackup(
+            terminalFragment,
+            UsePath.cmdclickUrlCaptureFileName,
+            UsePath.cmdclickUrlCaptureBackupFileName,
+            UrlCaptureHistoryTool.takeHistoryNum,
+        )
+    }
+
+    private fun execBackup(
+        terminalFragment: TerminalFragment,
+        backupSrcFileName: String,
+        backupDestiFileName: String,
+        takeSize: Int,
+    ){
         val currentAppDirPath =
             terminalFragment.currentAppDirPath
+        val appUrlSystemDirPath =
+            File(
+                currentAppDirPath,
+                UsePath.cmdclickUrlSystemDirRelativePath
+            )
+        val backupSrcFilePath = File(
+            appUrlSystemDirPath,
+            backupSrcFileName,
+        ).absolutePath
+        val backupDestFilePath = File(
+            appUrlSystemDirPath,
+            backupDestiFileName
+        ).absolutePath
         CoroutineScope(Dispatchers.Main).launch {
-            val appUrlSystemDirPath =
-                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-            val cmdclickUrlIconFileName =
-                UsePath.cmdclickUrlIconFileName
-            val urlIconList = ReadText(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlIconFileName
-                ).absolutePath
+            val backupSrcLineList = ReadText(
+                backupSrcFilePath
             ).textToList()
-            val urlIconListSize = urlIconList.size
-            val cmdclickUrlIconBackupFileName =
-                UsePath.cmdclickUrlIconBackupFileName
-            val urlIconBackupList = ReadText(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlIconBackupFileName
-                ).absolutePath
-            ).textToList().take(takeHistoryNum)
-            val urlIconBuckupListSize =
-                urlIconBackupList.size
+            val backupSrcLineListSize = backupSrcLineList.size
+            val backupDestLineList = ReadText(
+                backupDestFilePath
+            ).textToList().take(takeSize)
+            val backupDestLineListSize =
+                backupDestLineList.size
             if(
-                urlIconListSize < urlIconBuckupListSize
+                backupSrcLineListSize < backupDestLineListSize
             ) {
                 FileSystems.writeFile(
-                    File(
-                        appUrlSystemDirPath,
-                        cmdclickUrlIconFileName,
-                    ).absolutePath,
-                    urlIconBackupList.joinToString("\n")
+                    backupSrcFilePath,
+                    backupDestLineList.joinToString("\n")
                 )
                 return@launch
             }
             FileSystems.writeFile(
-                File(
-                    appUrlSystemDirPath,
-                    cmdclickUrlIconBackupFileName,
-                ).absolutePath,
-                urlIconList.joinToString("\n")
+                backupDestFilePath,
+                backupSrcLineList.joinToString("\n")
             )
         }
     }

@@ -2,12 +2,13 @@ package com.puutaro.commandclick.proccess.history
 
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import java.io.File
 
-object UrlIconTool {
+object UrlHistoryIconTool {
 
     const val takeHistoryNum = 200
 
@@ -20,7 +21,10 @@ object UrlIconTool {
             url.isNullOrEmpty()
             ||  url.contains("/maps/")
         ) return
-        val base64Str = BitmapTool.Base64UrlIconForHistory.encode(favicon)
+        val base64Str = BitmapTool.Base64UrlIconForHistory.encode(
+            favicon,
+            50
+        )
             ?: return
         val cmdclickUrlIconFilePath = makeIconHistoryPath(recentAppDirPath)
         val curIconHistory = ReadText(
@@ -42,8 +46,9 @@ object UrlIconTool {
 
     fun makeUrlIconList(
         currentAppDirPath: String
-    ): List<Pair<String, String>> {
-        val blankReturnPair = String() to String()
+    ): List<Map<String, String>> {
+        val urlKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.URL.key
+        val iconBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.ICON_BASE64_STR.key
         return ReadText(
             makeIconHistoryPath(currentAppDirPath)
         ).textToList()
@@ -51,11 +56,14 @@ object UrlIconTool {
             .take(takeHistoryNum).map {
                 val urlAndBase64Str = it.split("\t")
                 val url = urlAndBase64Str.firstOrNull()
-                    ?: return@map blankReturnPair
+                    ?: return@map emptyMap()
                 val base64Str = urlAndBase64Str.getOrNull(1)
-                    ?: return@map blankReturnPair
-                url to base64Str
-            }
+                    ?: return@map emptyMap()
+                mapOf(
+                    urlKey to url,
+                    iconBase64Key to base64Str
+                )
+            }.filter { it.isNotEmpty() }
     }
 
     private fun makeIconHistoryPath(

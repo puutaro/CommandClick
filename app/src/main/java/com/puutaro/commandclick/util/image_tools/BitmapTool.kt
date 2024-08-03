@@ -53,13 +53,35 @@ object BitmapTool {
     }
 
     fun getScreenShotFromView(
-        v: View
+        v: View?
     ): Bitmap? {
+        if(
+            v == null
+        ) return null
         // create a bitmap object
         val screenshot = Bitmap.createBitmap(
             v.measuredWidth,
             v.measuredHeight,
             Bitmap.Config.ARGB_8888
+        )
+        // Now draw this bitmap on a canvas
+        val canvas = Canvas(screenshot)
+        v.draw(canvas)
+        return screenshot
+    }
+
+
+    fun getLowScreenShotFromView(
+        v: View?
+    ): Bitmap? {
+        if(
+            v == null
+        ) return null
+        // create a bitmap object
+        val screenshot = Bitmap.createBitmap(
+            v.measuredWidth,
+            v.measuredHeight,
+            Bitmap.Config.RGB_565
         )
         // Now draw this bitmap on a canvas
         val canvas = Canvas(screenshot)
@@ -80,12 +102,15 @@ object BitmapTool {
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         }
 
-        fun encode(bitmap: Bitmap?): String? {
+        fun encode(
+            bitmap: Bitmap?,
+            quality: Int = 100
+        ): String? {
             if(
                 bitmap == null
             ) return null
             val outputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
             return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
         }
     }
