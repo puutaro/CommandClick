@@ -16,19 +16,30 @@ Table
     * [Value table for type](#value-table-for-type)
     * [layout](#layout)
         * [Format for layout](#format-for-layout)
-        * [Value table for layout](#value-table-for-layout)
+        * [type key for layout](#type-key-for-layout)
+    * [col key for layout](#col-key-for-layout)
     * [name](#name)
         * [Format for name](#format-for-name)
         * [Key-value table for name](#key-value-table-for-name)
         * [Ex for name](#ex-for-name)
+            * [`${SHELL_PATH}` contents](#`${shell_path}`-contents)
     * [desc](#desc)
         * [Format for desc](#format-for-desc)
         * [Key-value table for desc](#key-value-table-for-desc)
         * [Ex for desc](#ex-for-desc)
+            * [${SHELL_PATH} contents](#${shell_path}-contents)
     * [list](#list)
         * [Format for list](#format-for-list)
         * [Key-value table for list](#key-value-table-for-list)
         * [Ex for list](#ex-for-list)
+            * [[[type](#type) is normal] case](#[[type](#type)-is-normal]-case)
+                * [COMP_PATH contents](#comp_path-contents)
+            * [[[type](#type) is `tsvEdit` and file prefix specify] case](#[[type](#type)-is-`tsvedit`-and-file-prefix-specify]-case)
+                * [SETTING_PATH contents](#setting_path-contents)
+                * [COMP_PATH contents](#comp_path-contents)
+            * [[[layout](#layout) is grid and file prefix specify] case](#[[layout](#layout)-is-grid-and-file-prefix-specify]-case)
+                * [SETTING_PATH contents](#setting_path-contents)
+                * [COMP_PATH contents](#comp_path-contents)
     * [searchBox](#searchbox)
         * [Format for searchBox](#format-for-searchbox)
         * [Key-value table](#key-value-table)
@@ -138,14 +149,20 @@ Decide layout
 
 #### Format for layout
 
-value
+key-value
 
-#### Value table for layout
+#### type key for layout
+
+Set layout type like bellow.  
 
 | value        | Description                        | 
 |-----------------|------------------------------------|
 | `linear` | Display as linear layout (default) |
 | `grid` | Display as grid layout             |
+
+### col key for layout
+
+Col num for grid layout
 
 
 ### name
