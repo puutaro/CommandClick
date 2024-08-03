@@ -358,10 +358,10 @@ class UrlHistoryButtonEvent(
         ).getOrNull(position)?.let {
             val titleAndUrlList = it.split("\t")
             if (
-                titleAndUrlList.size != 2
+                titleAndUrlList.size < 2
             ) return@let null to null
             val title = titleAndUrlList.first()
-            val url = titleAndUrlList.last()
+            val url = titleAndUrlList.getOrNull(1)
             title to url
         } ?: (null to null)
     }
