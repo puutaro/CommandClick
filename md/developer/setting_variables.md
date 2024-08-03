@@ -52,6 +52,7 @@ Table of Contents
 * [terminalDo](#terminal_do)
 * [settingImport](#settingimport)
 * [importDisableValList](#importdisablevallist)
+* [onLaunchUrlHistoryByBackstack](#onlaunchurlhistorybybackstack)
 
  
 ## editExecute
@@ -96,17 +97,17 @@ Switch mode to output script result
 Auto exec js script on startup     
 
 | Value | Description |
-| -------- | --------- |
+|-------| --------- |
 | `OFF` | off (default) |
-| `NO` | on |
+| `ON`  | on |
 
 ## onUpdateLastModify
 
 Switch updating file last modified status when executing     
 
 | Value | Description |
-| -------- | --------- |
-| `NO` | on (default) |
+|-------| --------- |
+| `ON`  | on (default) |
 | `OFF` | off |
 
 ## historySwitch
@@ -114,18 +115,18 @@ Switch updating file last modified status when executing
 Switch app history with [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)     
 
 | Value | Description |
-| -------- | --------- |
-| `NO` | on |
+|-------| --------- |
+| `ON`  | on |
 | `OFF` | off (default) |
 
 ## onAdBlock
 
 Switch adBlock     
 
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default) |
-| `NO` | on |
+| Value     | Description |
+|-----------| --------- |
+| `OFF`     | off (default) |
+| `ON`      | on |
 | `INHERIT` | inherit config setting |
 
 ## onUrlHistoryRegister
@@ -133,8 +134,8 @@ Switch adBlock
 Switch [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) update     
 
 | Value | Description |
-| -------- | --------- |
-| `NO` | on (default) |
+|-------| --------- |
+| `ON`  | on (default) |
 | `OFF` | off  |
 
 ## onUrlLaunchMacro
@@ -152,30 +153,30 @@ Url launch macro (When set, cmdclick web terminal don't output)
 
 Switch display terminal backend when start
 
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default)  |
-| `NO` | on |
+| Value     | Description |
+|-----------| --------- |
+| `OFF`     | off (default)  |
+| `ON`      | on |
 | `Inherit` | Inherit config setting |
 
 ## onTermVisibleWhenKeyboard
 
 Switch terminal visible when keyboard open
 
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default)  |
-| `NO` | on |
+| Value     | Description |
+|-----------| --------- |
+| `OFF`     | off (default)  |
+| `ON`      | on |
 | `Inherit` | Inherit config setting |
 
 ## onTermShortWhenLoad
 
 Switch terminal sizging short when load url
 
-| Value | Description |
-| -------- | --------- |
-| `OFF` | off (default)  |
-| `NO` | on |
+| Value     | Description |
+|-----------| --------- |
+| `OFF`     | off (default)  |
+| `ON`       | on |
 | `Inherit` | Inherit config setting |
     
 ## disableShowToolbarWhenHighlight
@@ -183,9 +184,9 @@ Switch terminal sizging short when load url
 Switch disable to show toolbar when highlight text in webview  
 
 | Value | Description |
-| -------- | --------- |
+|-------| --------- |
 | `OFF` | off (default)  |
-| `NO` | on |
+| `ON`  | on |
 
 
 ## defaultMonitorFile
@@ -591,3 +592,12 @@ srcAnchorLongPressJsPath
 `settingImport` cancel
 
 - Set `setting variable name` by comma separated or multiple specify this variable
+
+## onLaunchUrlHistoryByBackstack
+
+Switch to launch url history when bottom fragment is long on http url -> monitor uri (file://monitor_path)
+
+| Value | Description |
+|-------| --------- |
+| `OFF` | off (default)  |
+| `ON`  | on |
