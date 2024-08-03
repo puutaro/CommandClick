@@ -29,6 +29,11 @@ object UrlCaptureWatcher {
                 withContext(Dispatchers.IO){
                     while(true) {
                         delay(300)
+                        if(
+                            !terminalFragment.isVisible
+                            || terminalFragment.view == null
+                            || terminalFragment.view?.height == 0
+                        ) continue
                         val progress = withContext(Dispatchers.Main) {
                             terminalWebView.progress
                         }
