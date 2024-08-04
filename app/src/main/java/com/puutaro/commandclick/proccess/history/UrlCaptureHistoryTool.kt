@@ -7,6 +7,7 @@ import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
 object UrlCaptureHistoryTool {
@@ -35,19 +36,10 @@ object UrlCaptureHistoryTool {
         if(
             isNotHttp
         ) return
-        val insertLine = "${currentUrl}\t${base64Str}"
-        val urlCaptureStrLineList = ReadText(
-            cmdclickUrlCaptureFilePath
-        ).textToList()
-            .take(takeHistoryNum)
-        val urlCaptureStrLineListFiltered = urlCaptureStrLineList.filter {
-            !it.startsWith("${currentUrl}\t")
-        }
-        val updateUrlCaptureStrList = listOf(insertLine) + urlCaptureStrLineListFiltered
-        val updateUrlCaptureCon = updateUrlCaptureStrList.joinToString("\n")
-        FileSystems.writeFile(
+        TsvTool.updateByKeyDistinct(
             cmdclickUrlCaptureFilePath,
-            updateUrlCaptureCon
+            currentUrl,
+            base64Str,
         )
     }
 

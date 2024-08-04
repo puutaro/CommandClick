@@ -6,6 +6,7 @@ import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
 object UrlHistoryIconTool {
@@ -27,20 +28,10 @@ object UrlHistoryIconTool {
         )
             ?: return
         val cmdclickUrlIconFilePath = makeIconHistoryPath(recentAppDirPath)
-        val curIconHistory = ReadText(
-            cmdclickUrlIconFilePath
-        ).readText()
-        if(
-            curIconHistory.contains(url)
-        ) return
-        val updatingHistoryCon =
-            "${url}\t${base64Str}\n" +
-                    curIconHistory.split("\n")
-                        .take(takeHistoryNum)
-                        .joinToString("\n")
-        FileSystems.writeFile(
+        TsvTool.updateByKeyDistinct(
             cmdclickUrlIconFilePath,
-            updatingHistoryCon
+            url,
+            base64Str,
         )
     }
 
