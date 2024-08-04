@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ import java.io.File
 
 object ScrollPosition {
 
-    val takePosiLines = 50
+    val takePosiLines = 100
 
     fun execScroll(
         terminalFragment: TerminalFragment,
@@ -126,27 +127,35 @@ object ScrollPosition {
             !isRegisterPrefix
         ) return
         FileSystems.createDirs(cmdclickSiteScrollPosiDirPath)
-        val insertLine = "${currentUrl}\t${scrollPosi}"
-        val sitePosiLineList = ReadText(
-            File(
-                cmdclickSiteScrollPosiDirPath,
-                cmdclickSiteScrollPosiFileName
-            ).absolutePath
-        )
-            .textToList()
-            .take(takePosiLines)
-        val sitePosiLineListFiltered = sitePosiLineList.filter {
-            !it.startsWith(currentUrl)
-        }
-        val updateScrollPosList = listOf(insertLine) + sitePosiLineListFiltered
-        val updateScrollPosCon = updateScrollPosList.joinToString("\n")
-        FileSystems.writeFile(
+        TsvTool.updateByKeyDistinct(
             File(
                 cmdclickSiteScrollPosiDirPath,
                 cmdclickSiteScrollPosiFileName
             ).absolutePath,
-            updateScrollPosCon
+            currentUrl,
+            scrollPosi,
         )
+//        val insertLine = "${currentUrl}\t${scrollPosi}"
+//        val sitePosiLineList = ReadText(
+//            File(
+//                cmdclickSiteScrollPosiDirPath,
+//                cmdclickSiteScrollPosiFileName
+//            ).absolutePath
+//        )
+//            .textToList()
+//            .take(takePosiLines)
+//        val sitePosiLineListFiltered = sitePosiLineList.filter {
+//            !it.startsWith("${currentUrl}\t")
+//        }
+//        val updateScrollPosList = listOf(insertLine) + sitePosiLineListFiltered
+//        val updateScrollPosCon = updateScrollPosList.joinToString("\n")
+//        FileSystems.writeFile(
+//            File(
+//                cmdclickSiteScrollPosiDirPath,
+//                cmdclickSiteScrollPosiFileName
+//            ).absolutePath,
+//            updateScrollPosCon
+//        )
     }
 
     private fun readYPosi(
@@ -171,7 +180,7 @@ object ScrollPosition {
             ).absolutePath
         ).textToList()
         val urlPosiLine = sitePosiLineList.filter {
-            it.startsWith(currentUrl)
+            it.startsWith("${currentUrl}\t")
         }.firstOrNull()
             ?: return 0f
         if(
