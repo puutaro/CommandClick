@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -67,19 +68,42 @@ object UrlCaptureWatcher {
                         }
                         if(isSameCapture) continue
                         previousYPosition = yPosition
-                        val capture = withContext(Dispatchers.Main) {
-                            BitmapTool.getLowScreenShotFromView(terminalFragment.view)
-                        } ?: continue
-                        UrlCaptureHistoryTool.insertToHistory(
+                        val saveOk = CaptureSaver.save(
+                            terminalFragment.view,
                             terminalFragment.currentAppDirPath,
                             url,
-                            capture
                         )
+                        if(!saveOk) continue
                         isSameCapture = true
 
                     }
                 }
             }
+        }
+    }
+
+    object CaptureSaver {
+
+        private var isSaving = false
+        suspend fun save(
+            terminalFragmentView: View?,
+            currentAppDirPath: String,
+            url: String,
+        ): Boolean {
+            if(
+                isSaving
+            ) return false
+            isSaving = true
+            val capture = withContext(Dispatchers.Main) {
+                BitmapTool.getLowScreenShotFromView(terminalFragmentView)
+            } ?: return false
+            UrlCaptureHistoryTool.insertToHistory(
+                currentAppDirPath,
+                url,
+                capture
+            )
+            isSaving = false
+            return true
         }
     }
 }
