@@ -3,11 +3,8 @@ package com.puutaro.commandclick.proccess.history
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
 object UrlCaptureHistoryTool {
@@ -22,12 +19,12 @@ object UrlCaptureHistoryTool {
         if(
             currentUrl.isNullOrEmpty()
             ||  currentUrl.contains("/maps/")
+            || favicon == null
         ) return
         val base64Str = BitmapTool.Base64UrlIconForHistory.encode(
             favicon,
             10
         ) ?: return
-        val cmdclickUrlCaptureFilePath = makeCaptureHistoryPath(currentAppDirPath)
         if(
             base64Str.isEmpty()
         ) return
@@ -36,43 +33,35 @@ object UrlCaptureHistoryTool {
         if(
             isNotHttp
         ) return
-        TsvTool.updateByKeyDistinct(
-            cmdclickUrlCaptureFilePath,
-            currentUrl,
+        val base64TxtName = UrlHistoryPath.makeBase64TxtFileNameByUrl(currentUrl)
+        val captureHisDirPath = makeCaptureHistoryDirPath(currentAppDirPath)
+        FileSystems.writeFile(
+            File(captureHisDirPath, base64TxtName).absolutePath,
             base64Str,
         )
     }
 
+    fun getCaptureBase64TxtPathByUrl(
+        currentAppDirPath: String,
+        url: String,
+    ): File? {
+        val base64TxtFile = File(
+            makeCaptureHistoryDirPath(currentAppDirPath),
+            UrlHistoryPath.makeBase64TxtFileNameByUrl(url),
+        )
+        if(
+            !base64TxtFile.isFile
+        ) return null
+        return base64TxtFile
 
-    fun makeUrlCaptureList(
-        currentAppDirPath: String
-    ): List<Map<String, String>> {
-        val urlKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.URL.key
-        val captureBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.CAPTURE_BASE64_STR.key
-        return ReadText(
-            makeCaptureHistoryPath(currentAppDirPath)
-        ).textToList()
-            .distinct()
-            .take(takeHistoryNum).map {
-                val urlAndBase64Str = it.split("\t")
-                val url = urlAndBase64Str.firstOrNull()
-                    ?: return@map emptyMap()
-                val base64Str = urlAndBase64Str.getOrNull(1)
-                    ?: return@map emptyMap()
-                url to base64Str
-                mapOf(
-                    urlKey to url,
-                    captureBase64Key to base64Str,
-                )
-            }
     }
 
-    private fun makeCaptureHistoryPath(
+    fun makeCaptureHistoryDirPath(
         currentAppDirPath: String
     ): String {
         return File(
-            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
-            UsePath.cmdclickUrlCaptureFileName
+            File(currentAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
+            "capture"
         ).absolutePath
     }
 }

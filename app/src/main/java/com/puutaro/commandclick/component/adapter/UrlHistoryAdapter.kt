@@ -5,14 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
+import com.puutaro.commandclick.proccess.history.UrlLogoHistoryTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,16 +23,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UrlHistoryAdapter(
-    val context: Context?,
-    var urlHistoryMapList: MutableList<Map<String, String>>
+    private val context: Context?,
+    private val currentAppDirPath: String,
+    var urlHistoryMapList: MutableList<Map<String, String>>,
+    private val currentUrl: String?,
 ): RecyclerView.Adapter<UrlHistoryAdapter.UrlHistoryViewHolder>(){
 
     class UrlHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+        val urlHistoryAdapterLinearLayout = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_linear_layout)
         val urlCaptureView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_capture)
         val urlTitleTextView = view.findViewById<OutlineTextView>(R.id.url_history_adapter_title)
+        val urlHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_bottom_linear_inner)
         val urlSiteLogoView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_site_logo)
-        val copyImageView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_copy)
-        val deleteImageView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_delete)
+        val copyImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_copy)
+        val deleteImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_delete)
     }
 
     companion object {
@@ -86,17 +93,48 @@ class UrlHistoryAdapter(
         CoroutineScope(Dispatchers.IO).launch {
             val urlHistoryMap = urlHistoryMapList[position]
             val urlStr = withContext(Dispatchers.IO) {
-                urlHistoryMap.get(UrlHistoryMapKey.URL.key) ?: String()
+                urlHistoryMap.get(UrlHistoryMapKey.URL.key)
+                    ?: String()
+            }
+            if(urlStr == currentUrl) {
+                withContext(Dispatchers.Main) {
+                    val hitUrlColor = R.color.gold_yellow
+                    holder.urlHistoryAdapterLinearLayout.backgroundTintList =
+                        context?.getColorStateList(hitUrlColor)
+                    holder.urlHistoryAdapterBottomLinearInner.backgroundTintList =
+                        context?.getColorStateList(hitUrlColor)
+                    holder.copyImageButtonView.backgroundTintList =
+                        context?.getColorStateList(hitUrlColor)
+                    holder.deleteImageButtonView.backgroundTintList =
+                        context?.getColorStateList(hitUrlColor)
+                    holder.urlSiteLogoView.backgroundTintList =
+                        context?.getColorStateList(hitUrlColor)
+                }
             }
             val iconBase64Str = withContext(Dispatchers.IO) {
                 urlHistoryMap.get(UrlHistoryMapKey.ICON_BASE64_STR.key)
+                    ?: let {
+                        val logoBase64TxtPath = UrlLogoHistoryTool.getCaptureBase64TxtPathByUrl(
+                            currentAppDirPath,
+                            urlStr,
+                        )?.absolutePath
+                            ?: return@let null
+                        ReadText(logoBase64TxtPath).readText()
+                    }
             }
-            val captureBase64Str = withContext(Dispatchers.IO) {
+            val capturePngPathOrMacro =
                 urlHistoryMap.get(UrlHistoryMapKey.CAPTURE_BASE64_STR.key)
-            }
+                    ?: let {
+                        val captureBase64TxtPath = UrlCaptureHistoryTool.getCaptureBase64TxtPathByUrl(
+                            currentAppDirPath,
+                            urlStr,
+                        )?.absolutePath
+                            ?: return@let null
+                        ReadText(captureBase64TxtPath).readText()
+                    }
             setCaptureImage(
                 holder,
-                captureBase64Str,
+                capturePngPathOrMacro,
             )
             setSiteLogo(
                 holder,
@@ -112,10 +150,10 @@ class UrlHistoryAdapter(
                 holder.itemView.setOnClickListener {
                     itemClickListener?.onItemClick(holder)
                 }
-                holder.copyImageView.setOnClickListener {
+                holder.copyImageButtonView.setOnClickListener {
                     copyItemClickListener?.onItemClick(holder)
                 }
-                holder.deleteImageView.setOnClickListener {
+                holder.deleteImageButtonView.setOnClickListener {
                     deleteItemClickListener?.onItemClick(holder)
                 }
             }
@@ -138,25 +176,25 @@ class UrlHistoryAdapter(
 
     private suspend fun setCaptureImage(
         holder: UrlHistoryViewHolder,
-        captureBase64Str: String?,
+        capturePngPathOrMacro: String?,
     ){
         if (
             context == null
         ) return
         val captureBitMap = withContext(Dispatchers.IO) {
             BitmapTool.Base64UrlIconForHistory.decode(
-                captureBase64Str
+                capturePngPathOrMacro
             )
         }
         withContext(Dispatchers.Main) {
-            when (captureBitMap == null) {
+            when (capturePngPathOrMacro.isNullOrEmpty()) {
                 false -> {
                     holder.urlCaptureView.imageTintList = null
                     Glide
                         .with(context)
                         .load(captureBitMap)
-                        .centerCrop()
-                        .into(holder.urlCaptureView);
+//                        .centerCrop()
+                        .into(holder.urlCaptureView)
 //                    holder.urlCaptureView.load(captureBitMap)
                 }
 
@@ -193,7 +231,7 @@ class UrlHistoryAdapter(
                     .into(holder.urlSiteLogoView)
 //                holder.urlSiteLogoView.load(R.drawable.icons8_file)
                 holder.urlSiteLogoView.imageTintList =
-                    context?.getColorStateList(color)
+                    context.getColorStateList(color)
             }
             return
         }
@@ -226,7 +264,7 @@ class UrlHistoryAdapter(
                             .centerCrop()
                             .into(holder.urlSiteLogoView)
 //                        holder.urlSiteLogoView.load(R.drawable.icons8_file)
-                        context?.getColorStateList(R.color.orange)
+                        context.getColorStateList(R.color.orange)
                     }
                     else -> {
                         Glide
@@ -235,7 +273,7 @@ class UrlHistoryAdapter(
                             .centerCrop()
                             .into(holder.urlSiteLogoView)
 //                        holder.urlSiteLogoView.load(R.drawable.internet)
-                        context?.getColorStateList(R.color.web_icon_color)
+                        context.getColorStateList(R.color.web_icon_color)
                     }
                 }
         }

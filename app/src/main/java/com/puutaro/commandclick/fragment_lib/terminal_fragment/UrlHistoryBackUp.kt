@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
-import com.puutaro.commandclick.proccess.history.UrlHistoryIconTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -15,8 +14,8 @@ object UrlHistoryBackUp {
 
     fun backup(terminalFragment: TerminalFragment){
         bodyBackup(terminalFragment)
-        iconBackup(terminalFragment)
-        captureBackup(terminalFragment)
+        trimLogoBase64TxtFiles(terminalFragment)
+        trimCaptureBase64TxtFiles(terminalFragment)
     }
     private fun bodyBackup(
         terminalFragment: TerminalFragment
@@ -29,26 +28,40 @@ object UrlHistoryBackUp {
         )
     }
 
-    private fun iconBackup(
+    private fun trimLogoBase64TxtFiles(
         terminalFragment: TerminalFragment
     ){
-        execBackup(
-            terminalFragment,
-            UsePath.cmdclickUrlIconFileName,
-            UsePath.cmdclickUrlIconBackupFileName,
-            UrlHistoryIconTool.takeHistoryNum,
-        )
+        val captureHistoryPngDirPath =
+            UrlCaptureHistoryTool.makeCaptureHistoryDirPath(
+                terminalFragment.currentAppDirPath
+            )
+        execTrimFiles(captureHistoryPngDirPath)
     }
 
-    private fun captureBackup(
+    private fun trimCaptureBase64TxtFiles(
         terminalFragment: TerminalFragment
     ){
-        execBackup(
-            terminalFragment,
-            UsePath.cmdclickUrlCaptureFileName,
-            UsePath.cmdclickUrlCaptureBackupFileName,
-            UrlCaptureHistoryTool.takeHistoryNum,
-        )
+        val captureHistoryPngDirPath =
+            UrlCaptureHistoryTool.makeCaptureHistoryDirPath(
+                terminalFragment.currentAppDirPath
+            )
+        execTrimFiles(captureHistoryPngDirPath)
+    }
+
+    private fun execTrimFiles(
+        targetHistoryFileDirPath: String
+    ){
+        val lastModifiedCapturePngPathList =
+            FileSystems.sortedFiles(targetHistoryFileDirPath)
+        val totalNum = lastModifiedCapturePngPathList.size
+        val limitNum = 200
+        val removeNum = totalNum - limitNum
+        if(removeNum <= 0) return
+        lastModifiedCapturePngPathList.takeLast(removeNum).forEach {
+            FileSystems.removeFiles(
+                File(targetHistoryFileDirPath, it).absolutePath
+            )
+        }
     }
 
     private fun execBackup(

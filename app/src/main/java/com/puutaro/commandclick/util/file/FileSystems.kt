@@ -382,7 +382,8 @@ object FileSystems {
 
     fun savePngFromBitMap(
         filePath: String,
-        bitmap: Bitmap
+        bitmap: Bitmap,
+        quality: Int = 100
     ){
         try {
             val filePathObj = File(filePath)
@@ -393,7 +394,7 @@ object FileSystems {
             )
             removeFiles(filePath)
             val outputStream = FileOutputStream(filePathObj)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
             //outputStream.flush()
             outputStream.close()
         } catch (e: java.lang.Exception) {

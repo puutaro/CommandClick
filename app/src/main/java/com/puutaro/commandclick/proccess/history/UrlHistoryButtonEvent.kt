@@ -7,13 +7,13 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
@@ -34,6 +34,7 @@ import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.LocalDateTime
 
 class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
@@ -58,19 +58,18 @@ class UrlHistoryButtonEvent(
     private val listLinearWeight = 1F - searchTextLinearWeight
     private val takeUrlListNum = 400
     private var urlHistoryDialog: Dialog? = null
-    private val urlHistoryMapKeys = UrlHistoryAdapter.Companion.UrlHistoryMapKey.values().map {
-        it.key
-    }
     private val titleKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.TITLE.key
     private val urlKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.URL.key
     private val iconBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.ICON_BASE64_STR.key
-    private val captureBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.CAPTURE_BASE64_STR.key
     private val bottomFannelFileType = UrlHistoryAdapter.Companion.FileType.BOTTOM_FANNEL
+    private val urlHistoryMapKeys = listOf(
+        titleKey,
+        urlKey,
+    )
 
 
     fun invoke(
     ){
-        val start = LocalDateTime.now()
         if(
             context == null
         ) return
@@ -103,13 +102,7 @@ class UrlHistoryButtonEvent(
         val urlHistoryListViewLinearParams =
             urlHistoryListView?.layoutParams as LinearLayout.LayoutParams
         urlHistoryListViewLinearParams.weight = listLinearWeight
-        val liststart = LocalDateTime.now()
-        val el = mapOf(
-            titleKey to "test",
-            urlKey to "https",
-        )
         val urlHistoryList = makeUrlHistoryList()
-        val listEnd = LocalDateTime.now()
         val searchText = urlHistoryDialog?.findViewById<AppCompatEditText>(
             R.id.url_history_search_edit_text
         )
@@ -122,9 +115,20 @@ class UrlHistoryButtonEvent(
             LinearLayoutManager.VERTICAL,
             false
         )
+        val currentUrl = TargetFragmentInstance().getCurrentTerminalFragmentFromFrag(fragment.activity).let {
+            terminalFragment ->
+            if(
+                terminalFragment == null
+                || !terminalFragment.isVisible
+                || terminalFragment.view?.height == 0
+            ) return@let null
+            terminalFragment.binding.terminalWebView.url
+        }
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
             context,
-            urlHistoryList.toMutableList()
+            currentAppDirPath,
+            urlHistoryList.toMutableList(),
+            currentUrl,
         )
         urlHistoryListView.adapter = urlHistoryDisplayListAdapter
         urlHistoryListView.layoutManager?.scrollToPosition(
@@ -134,6 +138,11 @@ class UrlHistoryButtonEvent(
             urlHistoryDisplayListAdapter,
             urlHistoryListView,
             searchText
+        )
+        setItemTouchHelper(
+            urlHistoryListView,
+            urlHistoryDisplayListAdapter,
+            searchText,
         )
         urlHistoryDialog?.setOnCancelListener {
             editDialog()
@@ -145,16 +154,6 @@ class UrlHistoryButtonEvent(
             )
         urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog?.show()
-        val end = LocalDateTime.now()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "recyler_dialog.txt").absolutePath,
-            listOf(
-                "start: ${start}",
-                "liststart: ${liststart}",
-                "listEnd: ${listEnd}",
-                "end: ${end}",
-            ).joinToString("\n") + "\n-----\n"
-        )
         setUrlHistoryListViewOnItemClickListener(
             urlHistoryDisplayListAdapter,
             searchText
@@ -167,6 +166,62 @@ class UrlHistoryButtonEvent(
             urlHistoryDisplayListAdapter,
             searchText
         )
+    }
+
+    private fun setItemTouchHelper(
+        recyclerView: RecyclerView,
+        urlHistoryAdapter: UrlHistoryAdapter,
+        searchText: EditText,
+    ){
+        val mIth = ItemTouchHelper(
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.ACTION_STATE_IDLE,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+                    if(
+                        direction != ItemTouchHelper.LEFT
+                        && direction != ItemTouchHelper.RIGHT
+                    ) return
+                    val position = viewHolder.layoutPosition
+                    execDeleteUrl(
+                        urlHistoryAdapter,
+                        searchText,
+                        position
+                    )
+                }
+
+                override fun onSelectedChanged(
+                    viewHolder: RecyclerView.ViewHolder?,
+                    actionState: Int
+                ) {
+                    super.onSelectedChanged(viewHolder, actionState)
+                    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.5f
+                    }
+                }
+
+                override fun clearView(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ) {
+                    super.clearView(recyclerView, viewHolder)
+                    viewHolder.itemView.alpha = 1.0f
+                }
+            })
+        mIth.attachToRecyclerView(recyclerView)
     }
 
     private fun makeSearchEditText(
@@ -328,95 +383,19 @@ class UrlHistoryButtonEvent(
     ){
         urlHistoryDisplayListAdapter.deleteItemClickListener = object: UrlHistoryAdapter.OnDeleteItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
-                val bindingAdapterPosition = holder.bindingAdapterPosition
-                val filteredUrlHistoryMap =
-                    makeSearchFilteredUrlHistoryList(
-                        searchText
-                    ).getOrNull(bindingAdapterPosition)
-                        ?: return
-                val selectedUrlHistoryMap =
-                    urlHistoryDisplayListAdapter.urlHistoryMapList.filter {
-                        urlHistoryMap ->
-                        equalUrlHistoryMapKeys(
-                            urlHistoryMap,
-                            filteredUrlHistoryMap
-                        )
-                    }.firstOrNull()
-                        ?: return
-
-                val selectedTitle = selectedUrlHistoryMap.get(titleKey)
-                    ?.let {
-                        ScriptPreWordReplacer.settingValReplace(
-                            it,
-                            currentAppDirPath
-                        )
-                    } ?: return
-                val selectedUrl = selectedUrlHistoryMap.get(urlKey)
-                    ?.let {
-                        ScriptPreWordReplacer.settingValReplace(
-                            it,
-                            currentAppDirPath
-                        )
-                    } ?: return
                 execDeleteUrl(
-                    selectedTitle,
-                    selectedUrl,
                     urlHistoryDisplayListAdapter,
-                    bindingAdapterPosition
+                    searchText,
+                    holder.bindingAdapterPosition
                 )
             }
         }
     }
 
     private fun makeUrlHistoryList(): List<Map<String, String>> {
-        val urlhisListStart = LocalDateTime.now()
-        val urlHistoryList = makeCompleteListSourceNoJsExclude(
+        return makeCompleteListSourceNoJsExclude(
             currentAppDirPath,
         ).reversed()
-        val iconHistoryListStart = LocalDateTime.now()
-        val iconHistoryList = UrlHistoryIconTool.makeUrlIconList(currentAppDirPath)
-        val urlCaptureListStart = LocalDateTime.now()
-        val urlCaptureList = UrlCaptureHistoryTool.makeUrlCaptureList(currentAppDirPath)
-        val concatListStart = LocalDateTime.now()
-        val list = urlHistoryList.map {
-            map ->
-            val url = map.get(urlKey) ?: String()
-            val base64IconStr =
-                map.get(iconBase64Key) ?: iconHistoryList.firstOrNull {
-                    val iconUrl = it.get(urlKey)
-                    if (
-                        url != iconUrl
-                    ) return@firstOrNull false
-                    true
-                }?.get(iconBase64Key) ?: String()
-            val base64UrlCaptureStr = urlCaptureList.firstOrNull {
-                val iconUrl = it.get(urlKey)
-                if(
-                    url != iconUrl
-                ) return@firstOrNull false
-                true
-            }?.get(captureBase64Key) ?: String()
-            val title = map.get(titleKey)
-                ?: String()
-            mapOf(
-                titleKey to title,
-                urlKey to url,
-                iconBase64Key to base64IconStr,
-                captureBase64Key to base64UrlCaptureStr,
-            )
-        }
-        val concatListEnd = LocalDateTime.now()
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "recycler_inner_lst.txt").absolutePath,
-            listOf(
-                "urlhisListStart: ${urlhisListStart}",
-                "iconHistoryListStart: ${iconHistoryListStart}",
-                "urlCaptureListStart: ${urlCaptureListStart}",
-                "concatListStart: ${concatListStart}",
-                "concatListEnd: ${concatListEnd}",
-            ).joinToString("\n")
-        )
-        return list
     }
 
     private fun makeCompleteListSourceNoJsExclude(
@@ -596,11 +575,39 @@ class UrlHistoryButtonEvent(
     }
 
     private fun execDeleteUrl(
-        selectedTitle: String?,
-        selectedUrl: String?,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
-        bindingAdapterPosition: Int,
+        searchText: EditText,
+        position: Int,
     ){
+        val filteredUrlHistoryMap =
+            makeSearchFilteredUrlHistoryList(
+                searchText
+            ).getOrNull(position)
+                ?: return
+        val selectedUrlHistoryMap =
+            urlHistoryDisplayListAdapter.urlHistoryMapList.filter {
+                    urlHistoryMap ->
+                equalUrlHistoryMapKeys(
+                    urlHistoryMap,
+                    filteredUrlHistoryMap
+                )
+            }.firstOrNull()
+                ?: return
+
+        val selectedTitle = selectedUrlHistoryMap.get(titleKey)
+            ?.let {
+                ScriptPreWordReplacer.settingValReplace(
+                    it,
+                    currentAppDirPath
+                )
+            } ?: return
+        val selectedUrl = selectedUrlHistoryMap.get(urlKey)
+            ?.let {
+                ScriptPreWordReplacer.settingValReplace(
+                    it,
+                    currentAppDirPath
+                )
+            } ?: return
         val bottomScriptUrlList = makeBottomScriptUrlList()
         val isBottomScript = bottomScriptUrlList.filter {
             map ->
@@ -639,8 +646,8 @@ class UrlHistoryButtonEvent(
             cmdclickUrlHistoryBkFilePath,
             urlHistoryCon
         )
-        urlHistoryDisplayListAdapter.urlHistoryMapList.removeAt(bindingAdapterPosition)
-        urlHistoryDisplayListAdapter.notifyItemRemoved(bindingAdapterPosition)
+        urlHistoryDisplayListAdapter.urlHistoryMapList.removeAt(position)
+        urlHistoryDisplayListAdapter.notifyItemRemoved(position)
     }
 
     private fun makeDeletedUrlHistoryCon(
@@ -670,9 +677,9 @@ class UrlHistoryButtonEvent(
         filteredUrlHistoryMap: Map<String, String>,
     ): Boolean{
         return urlHistoryMapKeys.all {
-            val title = urlHistoryMap.get(titleKey)
+            val value = urlHistoryMap.get(it)
                 ?: return@all false
-            title == filteredUrlHistoryMap.get(titleKey)
+            value == filteredUrlHistoryMap.get(it)
 
         }
     }
