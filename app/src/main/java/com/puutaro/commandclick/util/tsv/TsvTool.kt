@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.tsv
 
+import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -287,5 +288,26 @@ object TsvTool {
         }.flatten().filter {
             it.isNotEmpty()
         }
+    }
+
+    fun updateByKeyDistinct(
+        tsvPath: String,
+        key: String,
+        value: String,
+    ){
+        val insertLine = "${key}\t${value}"
+        val tsvLineList = ReadText(
+            tsvPath
+        ).textToList()
+            .take(UrlCaptureHistoryTool.takeHistoryNum)
+        val tsvLineListFiltered = tsvLineList.filter {
+            !it.startsWith("${key}\t")
+        }
+        val updateTsvLineList = listOf(insertLine) + tsvLineListFiltered
+        val updateTsvCon = updateTsvLineList.joinToString("\n")
+        FileSystems.writeFile(
+            tsvPath,
+            updateTsvCon
+        )
     }
 }
