@@ -187,7 +187,8 @@ class MainActivity:
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-        savedInstanceStateVal = savedInstanceState
+        savedInstanceStateVal = null
+//        savedInstanceState
         val actionBar = supportActionBar
         actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC

@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.history
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.tsv.TsvTool
@@ -27,7 +26,7 @@ object UrlHistoryIconTool {
             50
         )
             ?: return
-        val cmdclickUrlIconFilePath = makeIconHistoryPath(recentAppDirPath)
+        val cmdclickUrlIconFilePath = makeIconBase64TxtPath(recentAppDirPath)
         TsvTool.updateByKeyDistinct(
             cmdclickUrlIconFilePath,
             url,
@@ -41,7 +40,7 @@ object UrlHistoryIconTool {
         val urlKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.URL.key
         val iconBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.ICON_BASE64_STR.key
         return ReadText(
-            makeIconHistoryPath(currentAppDirPath)
+            makeIconBase64TxtPath(currentAppDirPath)
         ).textToList()
             .distinct()
             .take(takeHistoryNum).map {
@@ -57,12 +56,12 @@ object UrlHistoryIconTool {
             }.filter { it.isNotEmpty() }
     }
 
-    private fun makeIconHistoryPath(
+    private fun makeIconBase64TxtPath(
         currentAppDirPath: String
     ): String {
         return File(
             "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
-            UsePath.cmdclickUrlIconFileName
+            ""
         ).absolutePath
     }
 }
