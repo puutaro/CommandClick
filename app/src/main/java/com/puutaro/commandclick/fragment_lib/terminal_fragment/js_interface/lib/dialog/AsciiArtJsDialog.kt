@@ -194,7 +194,6 @@ class AsciiArtJsDialog(
                 IntentVariant.sharePngImage(
                     spannableImagePathObj,
                     context,
-                    activity
                 )
             }
         }

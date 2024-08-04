@@ -107,7 +107,6 @@ class JsIntent(
         IntentVariant.sharePngImage(
             imageFilePathObj,
             context,
-            activity
         )
     }
 }

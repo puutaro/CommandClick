@@ -188,7 +188,6 @@ class ImageJsDialog(
             IntentVariant.sharePngImage(
                 file,
                 context,
-                activity
             )
         }
         return shareButton

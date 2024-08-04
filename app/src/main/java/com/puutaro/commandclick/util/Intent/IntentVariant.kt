@@ -13,22 +13,21 @@ object IntentVariant {
     fun sharePngImage(
         file: File,
         context: Context?,
-        activity: FragmentActivity?
     ){
         if(
-            activity == null
+            context == null
         ) return
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "image/png"
         val photoFile: File = file
         val photoURI = FileProvider.getUriForFile(
-            activity,
-            activity.applicationContext.packageName + ".provider",
+            context,
+            context.applicationContext.packageName + ".provider",
             photoFile
         )
         shareIntent.putExtra(Intent.EXTRA_STREAM, photoURI)
         try {
-            activity.startActivity(
+            context.startActivity(
                 Intent.createChooser(shareIntent, "Share image using")
             )
         } catch (e: Exception){

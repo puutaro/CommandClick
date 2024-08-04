@@ -23,7 +23,7 @@ object UrlCaptureHistoryTool {
         ) return
         val base64Str = BitmapTool.Base64UrlIconForHistory.encode(
             favicon,
-            10
+            80
         ) ?: return
         if(
             base64Str.isEmpty()

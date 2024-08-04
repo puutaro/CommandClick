@@ -81,7 +81,7 @@ object BitmapTool {
         val screenshot = Bitmap.createBitmap(
             v.measuredWidth,
             v.measuredHeight,
-            Bitmap.Config.RGB_565
+            Bitmap.Config.ARGB_8888
         )
         // Now draw this bitmap on a canvas
         val canvas = Canvas(screenshot)

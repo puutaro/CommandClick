@@ -236,7 +236,6 @@ object QrDialogMethod {
             IntentVariant.sharePngImage(
                 file,
                 context,
-                activity
             )
         }
     }

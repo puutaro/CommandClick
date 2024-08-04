@@ -3,6 +3,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -31,10 +32,11 @@ class UrlHistoryAdapter(
 
     class UrlHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val urlHistoryAdapterLinearLayout = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_linear_layout)
+        val urlHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.url_history_adapter_relative_layout)
         val urlCaptureView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_capture)
         val urlTitleTextView = view.findViewById<OutlineTextView>(R.id.url_history_adapter_title)
         val urlHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_bottom_linear_inner)
-        val urlSiteLogoView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_site_logo)
+        val urlSiteLogoView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_site_logo)
         val copyImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_copy)
         val deleteImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_delete)
     }
@@ -150,6 +152,9 @@ class UrlHistoryAdapter(
                 holder.itemView.setOnClickListener {
                     itemClickListener?.onItemClick(holder)
                 }
+                holder.urlSiteLogoView.setOnClickListener {
+                    logoItemClickListener?.onItemClick(holder)
+                }
                 holder.copyImageButtonView.setOnClickListener {
                     copyItemClickListener?.onItemClick(holder)
                 }
@@ -162,6 +167,11 @@ class UrlHistoryAdapter(
 
     var itemClickListener: OnItemClickListener? = null
     interface OnItemClickListener {
+        fun onItemClick(holder: UrlHistoryViewHolder)
+    }
+
+    var logoItemClickListener: OnLogoItemClickListener? = null
+    interface OnLogoItemClickListener {
         fun onItemClick(holder: UrlHistoryViewHolder)
     }
 

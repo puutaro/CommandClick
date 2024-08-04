@@ -4,12 +4,14 @@ import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,10 +29,13 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.util.Intent.IntentVariant
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.UrlTool
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -43,6 +48,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 
 class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
@@ -157,6 +163,9 @@ class UrlHistoryButtonEvent(
         setUrlHistoryListViewOnItemClickListener(
             urlHistoryDisplayListAdapter,
             searchText
+        )
+        setUrlHistoryListViewOnLogoItemClickListener (
+            urlHistoryDisplayListAdapter,
         )
         setUrlHistoryListViewOnCopyItemClickListener (
             urlHistoryDisplayListAdapter,
@@ -333,6 +342,78 @@ class UrlHistoryButtonEvent(
                 }
             }
         }
+    }
+
+    private fun setUrlHistoryListViewOnLogoItemClickListener (
+        urlHistoryDisplayListAdapter: UrlHistoryAdapter,
+    ){
+        urlHistoryDisplayListAdapter.logoItemClickListener = object: UrlHistoryAdapter.OnLogoItemClickListener {
+            override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
+                val urlHistoryAdapterRelativeLayout = holder.urlHistoryAdapterRelativeLayout
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main){
+                        ToastUtils.showShort("share")
+                    }
+                    val pngImagePathObj = makePngImageFromView(
+                        urlHistoryAdapterRelativeLayout
+                    ) ?: return@launch
+                    withContext(Dispatchers.Main) {
+                        IntentVariant.sharePngImage(
+                            pngImagePathObj,
+                            context,
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
+    private suspend fun makePngImageFromView(
+        urlHistoryAdapterRelativeLayout: RelativeLayout
+    ): File? {
+        withContext(Dispatchers.IO) {
+            FileSystems.removeAndCreateDir(
+                UsePath.cmdclickTempCreateDirPath
+            )
+        }
+        val bitmap = withContext(Dispatchers.Main) {
+            for(i in 1..10) {
+                try {
+                    val bm = BitmapTool.getScreenShotFromView(
+                        urlHistoryAdapterRelativeLayout
+                    )
+                    return@withContext bm
+                } catch (e: Exception) {
+                    delay(100)
+                    continue
+                }
+            }
+            LogSystems.stdErr(
+                context,
+                "Cannot save screen shot"
+            )
+            null
+        } ?: return null
+        val imageName = withContext(Dispatchers.IO) {
+            BitmapTool.hash(
+                bitmap
+            ) + ".png"
+        }
+        val file = File(
+            UsePath.cmdclickTempCreateDirPath,
+            imageName
+        )
+        withContext(Dispatchers.IO) {
+            FileOutputStream(file).use { stream ->
+                bitmap.compress(
+                    Bitmap.CompressFormat.PNG,
+                    100,
+                    stream
+                )
+            }
+        }
+        return file
     }
 
     private fun setUrlHistoryListViewOnCopyItemClickListener (
