@@ -15,12 +15,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-object IntentAction {
+object UrlLaunchIntentAction {
 
     fun handle(
         terminalFragment: TerminalFragment,
     ) {
-        val context = terminalFragment.context
         val activity = terminalFragment.activity
         val webView = terminalFragment.binding.terminalWebView
         val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
@@ -35,6 +34,7 @@ object IntentAction {
                 ) {
                     val urlString = activity.intent?.dataString
                     urlString?.let {
+//                        ToastUtils.showShort("urlString: ${urlString}")
                         terminalFragment.firstDisplayUpdate = false
                         terminalViewModel.launchUrl = urlString
 //                    webView.loadUrl(it)
@@ -48,8 +48,8 @@ object IntentAction {
                     ?.getString(
                         SearchManager.QUERY,
                         null
-                    )
-                    ?: return
+                    ) ?: return
+//                ToastUtils.showShort("query: ${query}")
                 terminalFragment.firstDisplayUpdate = false
                 terminalViewModel.launchUrl = "${WebUrlVariables.queryUrl}${query}"
 //                webView.loadUrl("${WebUrlVariables.queryUrl}${query}")

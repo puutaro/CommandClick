@@ -13,10 +13,9 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
-import com.puutaro.commandclick.util.SharePrefTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -37,15 +36,17 @@ class InitFragmentManager(
 
     fun registerSharePreferenceFromIntentExtra() {
         val normalTaskNum = 1
-        val okOneTask = activityManager?.appTasks?.size == normalTaskNum
-        val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
+        val okOneTask =
+            activityManager?.appTasks?.size == normalTaskNum
+        val disableOneTaskForUrlLaunch =
+            UrlLaunchIntentAction.judge(activity) && !okOneTask
         if (disableOneTaskForUrlLaunch) {
             removeTask(activityManager)
             execUrlIntent()
             return
         }
         val disableTaskRootForUrlLaunch =
-            IntentAction.judge(activity) && !activity.isTaskRoot
+            UrlLaunchIntentAction.judge(activity) && !activity.isTaskRoot
         if (disableTaskRootForUrlLaunch) {
             execUrlIntent()
             return

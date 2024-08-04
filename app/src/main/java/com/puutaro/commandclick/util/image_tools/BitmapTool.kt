@@ -95,11 +95,15 @@ object BitmapTool {
             if(
                 base64Str.isNullOrEmpty()
             ) return null
-            val decodedBytes: ByteArray = Base64.decode(
-                base64Str,
-                Base64.NO_WRAP
-            )
-            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+            return try {
+                val decodedBytes: ByteArray = Base64.decode(
+                    base64Str,
+                    Base64.NO_WRAP
+                )
+                BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+            } catch (e: Exception){
+                null
+            }
         }
 
         fun encode(
@@ -109,9 +113,13 @@ object BitmapTool {
             if(
                 bitmap == null
             ) return null
-            val outputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
-            return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+            return try {
+                val outputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
+                Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+            } catch (e: Exception){
+                null
+            }
         }
     }
 }

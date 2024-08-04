@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bumptech.glide.Glide
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.custom_view.OutlineTextView
@@ -25,8 +26,8 @@ class UrlHistoryAdapter(
 
     class UrlHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val urlCaptureView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_capture)
-        val urlTitleImageView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_title_image)
         val urlTitleTextView = view.findViewById<OutlineTextView>(R.id.url_history_adapter_title)
+        val urlSiteLogoView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_site_logo)
         val copyImageView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_copy)
         val deleteImageView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_delete)
     }
@@ -97,7 +98,7 @@ class UrlHistoryAdapter(
                 holder,
                 captureBase64Str,
             )
-            setIcon(
+            setSiteLogo(
                 holder,
                 iconBase64Str,
                 urlStr,
@@ -139,6 +140,9 @@ class UrlHistoryAdapter(
         holder: UrlHistoryViewHolder,
         captureBase64Str: String?,
     ){
+        if (
+            context == null
+        ) return
         val captureBitMap = withContext(Dispatchers.IO) {
             BitmapTool.Base64UrlIconForHistory.decode(
                 captureBase64Str
@@ -148,21 +152,31 @@ class UrlHistoryAdapter(
             when (captureBitMap == null) {
                 false -> {
                     holder.urlCaptureView.imageTintList = null
-                    holder.urlCaptureView.load(captureBitMap)
+                    Glide
+                        .with(context)
+                        .load(captureBitMap)
+                        .centerCrop()
+                        .into(holder.urlCaptureView);
+//                    holder.urlCaptureView.load(captureBitMap)
                 }
 
                 else -> {
-                    holder.urlCaptureView.load(fileMarkbitmap)
+                    Glide
+                        .with(context)
+                        .load(fileMarkbitmap)
+                        .into(holder.urlCaptureView)
+//                    holder.urlCaptureView.load(fileMarkbitmap)
                 }
             }
         }
     }
 
-    private suspend fun setIcon(
+    private suspend fun setSiteLogo(
         holder: UrlHistoryViewHolder,
         iconBase64Str: String?,
         urlStr: String,
     ){
+        if(context == null) return
         val fileType = FileType.values().firstOrNull {
             it.name == iconBase64Str
         }
@@ -172,8 +186,13 @@ class UrlHistoryAdapter(
                 FileType.NORMAL_FANNEL -> R.color.orange
             }
             withContext(Dispatchers.Main) {
-                holder.urlTitleImageView.load(R.drawable.icons8_file)
-                holder.urlTitleImageView.imageTintList =
+                Glide
+                    .with(context)
+                    .load(R.drawable.icons8_file)
+                    .centerCrop()
+                    .into(holder.urlSiteLogoView)
+//                holder.urlSiteLogoView.load(R.drawable.icons8_file)
+                holder.urlSiteLogoView.imageTintList =
                     context?.getColorStateList(color)
             }
             return
@@ -187,20 +206,35 @@ class UrlHistoryAdapter(
             if (
                 iconBitMap != null
             ) {
-                holder.urlTitleImageView.imageTintList = null
-                holder.urlTitleImageView.load(iconBitMap)
+                holder.urlSiteLogoView.imageTintList = null
+                Glide
+                    .with(context)
+                    .load(iconBitMap)
+                    .centerCrop()
+                    .into(holder.urlSiteLogoView)
+//                holder.urlSiteLogoView.load(iconBitMap)
                 return@withContext
             }
-            holder.urlTitleImageView.imageTintList =
+            holder.urlSiteLogoView.imageTintList =
                 when(
                     EnableUrlPrefix.isHttpPrefix(urlStr)
                 ) {
                     false -> {
-                        holder.urlTitleImageView.load(R.drawable.icons8_file)
+                        Glide
+                            .with(context)
+                            .load(R.drawable.icons8_file)
+                            .centerCrop()
+                            .into(holder.urlSiteLogoView)
+//                        holder.urlSiteLogoView.load(R.drawable.icons8_file)
                         context?.getColorStateList(R.color.orange)
                     }
                     else -> {
-                        holder.urlTitleImageView.load(R.drawable.internet)
+                        Glide
+                            .with(context)
+                            .load(R.drawable.internet)
+                            .centerCrop()
+                            .into(holder.urlSiteLogoView)
+//                        holder.urlSiteLogoView.load(R.drawable.internet)
                         context?.getColorStateList(R.color.web_icon_color)
                     }
                 }

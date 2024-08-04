@@ -779,5 +779,4 @@ class MainActivity:
             isCreate,
         )
     }
-
  }

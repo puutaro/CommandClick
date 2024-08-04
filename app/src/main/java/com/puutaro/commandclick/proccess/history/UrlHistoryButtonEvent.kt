@@ -37,10 +37,12 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
 
 class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
@@ -68,6 +70,7 @@ class UrlHistoryButtonEvent(
 
     fun invoke(
     ){
+        val start = LocalDateTime.now()
         if(
             context == null
         ) return
@@ -95,12 +98,18 @@ class UrlHistoryButtonEvent(
         val urlHistoryListView = urlHistoryDialog?.findViewById<RecyclerView>(
             R.id.url_history_list_view
         )
-        val catchSize = 50 * (context.resources?.displayMetrics?.heightPixels ?: 0)
-        urlHistoryListView?.setItemViewCacheSize(catchSize)
+//        val catchSize = 50 * (context.resources?.displayMetrics?.heightPixels ?: 0)
+//        urlHistoryListView?.setItemViewCacheSize(catchSize)
         val urlHistoryListViewLinearParams =
             urlHistoryListView?.layoutParams as LinearLayout.LayoutParams
         urlHistoryListViewLinearParams.weight = listLinearWeight
+        val liststart = LocalDateTime.now()
+        val el = mapOf(
+            titleKey to "test",
+            urlKey to "https",
+        )
         val urlHistoryList = makeUrlHistoryList()
+        val listEnd = LocalDateTime.now()
         val searchText = urlHistoryDialog?.findViewById<AppCompatEditText>(
             R.id.url_history_search_edit_text
         )
@@ -136,6 +145,16 @@ class UrlHistoryButtonEvent(
             )
         urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog?.show()
+        val end = LocalDateTime.now()
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "recyler_dialog.txt").absolutePath,
+            listOf(
+                "start: ${start}",
+                "liststart: ${liststart}",
+                "listEnd: ${listEnd}",
+                "end: ${end}",
+            ).joinToString("\n") + "\n-----\n"
+        )
         setUrlHistoryListViewOnItemClickListener(
             urlHistoryDisplayListAdapter,
             searchText
@@ -155,6 +174,7 @@ class UrlHistoryButtonEvent(
         urlHistoryListView: RecyclerView?,
         searchText: EditText
     ) {
+        var updateRecyclerJob: Job? = null
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -178,9 +198,10 @@ class UrlHistoryButtonEvent(
                 urlHistoryListAdapter.urlHistoryMapList.clear()
                 urlHistoryListAdapter.urlHistoryMapList.addAll(filteredCmdStrList)
                 urlHistoryListAdapter.notifyDataSetChanged()
-                CoroutineScope(Dispatchers.Main).launch {
+                updateRecyclerJob?.cancel()
+                updateRecyclerJob = CoroutineScope(Dispatchers.Main).launch {
                     withContext(Dispatchers.IO){
-                        delay(300)
+                        delay(200)
                     }
                     urlHistoryListView?.layoutManager?.scrollToPosition(
                         urlHistoryListAdapter.itemCount - 1
@@ -348,12 +369,16 @@ class UrlHistoryButtonEvent(
     }
 
     private fun makeUrlHistoryList(): List<Map<String, String>> {
+        val urlhisListStart = LocalDateTime.now()
         val urlHistoryList = makeCompleteListSourceNoJsExclude(
             currentAppDirPath,
         ).reversed()
+        val iconHistoryListStart = LocalDateTime.now()
         val iconHistoryList = UrlHistoryIconTool.makeUrlIconList(currentAppDirPath)
+        val urlCaptureListStart = LocalDateTime.now()
         val urlCaptureList = UrlCaptureHistoryTool.makeUrlCaptureList(currentAppDirPath)
-        return urlHistoryList.map {
+        val concatListStart = LocalDateTime.now()
+        val list = urlHistoryList.map {
             map ->
             val url = map.get(urlKey) ?: String()
             val base64IconStr =
@@ -380,6 +405,18 @@ class UrlHistoryButtonEvent(
                 captureBase64Key to base64UrlCaptureStr,
             )
         }
+        val concatListEnd = LocalDateTime.now()
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "recycler_inner_lst.txt").absolutePath,
+            listOf(
+                "urlhisListStart: ${urlhisListStart}",
+                "iconHistoryListStart: ${iconHistoryListStart}",
+                "urlCaptureListStart: ${urlCaptureListStart}",
+                "concatListStart: ${concatListStart}",
+                "concatListEnd: ${concatListEnd}",
+            ).joinToString("\n")
+        )
+        return list
     }
 
     private fun makeCompleteListSourceNoJsExclude(

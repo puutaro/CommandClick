@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.history.CLICLTYPE

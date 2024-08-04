@@ -31,7 +31,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
-import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -270,7 +270,7 @@ class TerminalFragment: Fragment() {
         terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
-        IntentAction.handle(this)
+        UrlLaunchIntentAction.handle(this)
         displayUpdateCoroutineJob?.cancel()
         displayUpdateCoroutineJob = DisplaySwitch.update(
             this,

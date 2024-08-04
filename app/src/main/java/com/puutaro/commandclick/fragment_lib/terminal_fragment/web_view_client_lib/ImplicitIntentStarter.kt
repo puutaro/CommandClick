@@ -25,7 +25,7 @@ class ImplicitIntentStarter(private val wContext: Context?) {
         startGooglePlayStoreActivity(uri.toString())
     }
 
-    fun startGooglePlayStoreActivity(uriSource: String) {
+    private fun startGooglePlayStoreActivity(uriSource: String) {
         val context = wContext?: return
         val packageManager = context.packageManager
         val marketPrefix = "market://details?id="

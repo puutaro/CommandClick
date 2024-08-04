@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.content.Context
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -9,7 +8,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromPreferenceFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
-import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -26,7 +25,6 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.nio.file.attribute.DosFileAttributeView
 
 object IndexInitHandler {
     fun handle(
@@ -46,7 +44,7 @@ object IndexInitHandler {
 //            listener?.onBackstackDelete()
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-        val onUrlLaunchIntent = IntentAction.judge(
+        val onUrlLaunchIntent = UrlLaunchIntentAction.judge(
             activity
         )
 
