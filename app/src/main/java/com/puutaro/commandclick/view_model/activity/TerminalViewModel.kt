@@ -17,7 +17,6 @@ class TerminalViewModel: ViewModel() {
     var dialogReturnValue = String()
     var jsArguments = String()
     var blockListCon = String()
-    var isStop = false
     var multiSelectTabString = String()
     var jsExecuteJob: Job? = null
     var onPermDialog = false

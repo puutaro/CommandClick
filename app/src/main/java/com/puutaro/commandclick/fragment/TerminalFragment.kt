@@ -188,7 +188,6 @@ class TerminalFragment: Fragment() {
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
         )
-        UrlCaptureWatcher.watch(this)
 
         ConfigFromPreferenceFileSetterForTerm.set(this)
         MonitorFileManager.switchCurMonitorFile(
@@ -218,13 +217,13 @@ class TerminalFragment: Fragment() {
         super.onStart()
         TerminalOnHandlerForEdit.handle(this)
         JsDebugger.stockLogSender(this)
+        UrlCaptureWatcher.watch(this)
     }
 
 
     override fun onPause() {
         super.onPause()
         val terminalViewModel: TerminalViewModel by activityViewModels()
-        terminalViewModel.isStop = true
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
         webViewDialogInstance?.findViewById<WebView>(
@@ -261,7 +260,6 @@ class TerminalFragment: Fragment() {
             onTermBackendWhenStart == SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
         } else firstDisplayUpdate
         InitCurrentMonitorFile.trim(this)
-        terminalViewModel.isStop = false
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
         webViewDialogInstance?.findViewById<WebView>(
@@ -269,7 +267,7 @@ class TerminalFragment: Fragment() {
         )?.onResume()
         terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
-        activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
+        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
         UrlLaunchIntentAction.handle(this)
         displayUpdateCoroutineJob?.cancel()
         displayUpdateCoroutineJob = DisplaySwitch.update(
@@ -365,6 +363,7 @@ class TerminalFragment: Fragment() {
             this,
             broadcastReceiverForTerm
         )
+        UrlCaptureWatcher.exit()
         this.onPageFinishedCoroutineJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()

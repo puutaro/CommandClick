@@ -20,7 +20,7 @@ object UrlLogoHistoryTool {
             url.isNullOrEmpty()
             ||  url.contains("/maps/")
         ) return
-        val base64Str = BitmapTool.Base64UrlIconForHistory.encode(
+        val base64Str = BitmapTool.Base64UrlImageForHistory.encode(
             favicon,
             50
         ) ?: return

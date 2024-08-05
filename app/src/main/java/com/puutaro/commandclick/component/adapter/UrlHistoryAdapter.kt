@@ -192,7 +192,7 @@ class UrlHistoryAdapter(
             context == null
         ) return
         val captureBitMap = withContext(Dispatchers.IO) {
-            BitmapTool.Base64UrlIconForHistory.decode(
+            BitmapTool.Base64UrlImageForHistory.decode(
                 capturePngPathOrMacro
             )
         }
@@ -246,7 +246,7 @@ class UrlHistoryAdapter(
             return
         }
         val iconBitMap = withContext(Dispatchers.IO) {
-            BitmapTool.Base64UrlIconForHistory.decode(
+            BitmapTool.Base64UrlImageForHistory.decode(
                 iconBase64Str
             )
         }

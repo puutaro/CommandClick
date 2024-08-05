@@ -1,82 +1,97 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.lang.Math.abs
 
 object UrlCaptureWatcher {
+
+    private var captureJob: Job? = null
+
+    fun exit(){
+        captureJob?.cancel()
+    }
+
+
     fun watch(
-        terminalFragment: TerminalFragment
-    ): Job {
-        val binding = terminalFragment.binding
-        val terminalWebView = binding.terminalWebView
-        terminalFragment.lifecycleScope
-        var previousYPosition = 0
-        var previousUrl = String()
-        var isSameCapture = false
-        return terminalFragment.lifecycleScope.launch {
-            terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                withContext(Dispatchers.IO){
-                    while(true) {
-                        delay(300)
-                        if(
+        terminalFragment: TerminalFragment,
+    ) {
+        exit()
+        captureJob = CoroutineScope(Dispatchers.IO).launch {
+            val terminalWebView = withContext(Dispatchers.IO) {
+                terminalFragment.binding.terminalWebView
+            }
+            val previousUrl = withContext(Dispatchers.Main) {
+                terminalWebView.url
+            }
+            var previousYPosition = 0
+            var isSameCapture = false
+            withContext(Dispatchers.IO){
+                while(true) {
+                    delay(300)
+                    val isNotWatch = withContext(Dispatchers.Main) isWatch@ {
+                        if (
                             !terminalFragment.isVisible
                             || terminalFragment.view == null
                             || terminalFragment.view?.height == 0
-                        ) continue
-                        val progress = withContext(Dispatchers.Main) {
-                            terminalWebView.progress
-                        }
-                        if(progress < 100) {
-                            continue
-                        }
-                        val url = withContext(Dispatchers.Main) {
-                            terminalWebView.url
-                        }
-                        if(
-                            url.isNullOrEmpty()
-                            || !EnableUrlPrefix.isHttpPrefix(url)
-                            || url.contains("/maps/")
-                        ) continue
-                        if(
-                            url != previousUrl
-                        ){
-                            previousYPosition = 0
-                            previousUrl = url
-                            delay(2000)
-                            continue
-                        }
-                        val yPosition = withContext(Dispatchers.Main) {
-                            terminalWebView.scrollY
-                        }
-                        val yPosiDiff = abs(yPosition - previousYPosition)
-                        if(yPosiDiff != 0) {
-                            previousYPosition = yPosition
-                            isSameCapture = false
-                            continue
-                        }
-                        if(isSameCapture) continue
-                        previousYPosition = yPosition
-                        val saveOk = CaptureSaver.save(
-                            terminalFragment.view,
-                            terminalFragment.currentAppDirPath,
-                            url,
-                        )
-                        if(!saveOk) continue
-                        isSameCapture = true
-
+                        ) return@isWatch true
+                        false
                     }
+                    if(
+                        isNotWatch
+                    ) {
+                        return@withContext
+                    }
+                    val url = withContext(Dispatchers.Main) {
+                        terminalWebView.url
+                    }
+                    if(
+                        url.isNullOrEmpty()
+                        || !EnableUrlPrefix.isHttpPrefix(url)
+                        || url.contains("/maps/")
+                        || url == "${WebUrlVariables.monitorUrlPath}/"
+                        || url != previousUrl
+
+                    ) {
+                        return@withContext
+                    }
+                    val yPosition = withContext(Dispatchers.Main) {
+                        terminalWebView.scrollY
+                    }
+                    val yPosiDiff = abs(yPosition - previousYPosition)
+                    if(yPosiDiff != 0) {
+                        previousYPosition = yPosition
+                        isSameCapture = false
+                        continue
+                    }
+                    if(
+                        isSameCapture
+                    ) continue
+                    previousYPosition = yPosition
+                    val saveOk = CaptureSaver.save(
+                        terminalFragment.view,
+                        terminalFragment.currentAppDirPath,
+                        url,
+                    )
+                    if(
+                        !saveOk
+                    ) continue
+                    isSameCapture = true
+
                 }
             }
         }

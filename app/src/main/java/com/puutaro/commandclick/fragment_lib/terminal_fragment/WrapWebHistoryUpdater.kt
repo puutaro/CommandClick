@@ -70,7 +70,10 @@ object WrapWebHistoryUpdater {
                     })
             }
             delay(500)
-            if(urlTitleString.isNullOrEmpty()) return@launch
+            if(
+                urlTitleString.isNullOrEmpty()
+            ) return@launch
+            UrlCaptureWatcher.watch(terminalFragment)
             withContext(Dispatchers.IO) {
                 execUpdate(
                     terminalFragment,

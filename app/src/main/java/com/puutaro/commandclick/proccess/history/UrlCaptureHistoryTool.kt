@@ -10,35 +10,51 @@ import java.io.File
 object UrlCaptureHistoryTool {
 
     const val takeHistoryNum = 200
+    var previousBase64Prefix = String()
 
     fun insertToHistory(
         currentAppDirPath: String,
         currentUrl: String?,
-        favicon: Bitmap?,
+        capture: Bitmap?,
     ){
         if(
             currentUrl.isNullOrEmpty()
             ||  currentUrl.contains("/maps/")
-            || favicon == null
+            || capture == null
         ) return
-        val base64Str = BitmapTool.Base64UrlIconForHistory.encode(
-            favicon,
+        val base64Str = BitmapTool.Base64UrlImageForHistory.encode(
+            capture,
             80
         ) ?: return
+        val curBase64Prefix = takeFirst200Str(base64Str)
         if(
             base64Str.isEmpty()
+            || curBase64Prefix == previousBase64Prefix
         ) return
+        previousBase64Prefix = curBase64Prefix
         val isNotHttp = !currentUrl.startsWith(WebUrlVariables.httpsPrefix)
                 && !currentUrl.startsWith(WebUrlVariables.httpsPrefix)
         if(
             isNotHttp
         ) return
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "capture_url.txt").absolutePath,
+//            currentUrl
+//        )
+//        FileSystems.savePngFromBitMap(
+//            File(UsePath.cmdclickDefaultAppDirPath, "capture.png").absolutePath,
+//            capture
+//        )
         val base64TxtName = UrlHistoryPath.makeBase64TxtFileNameByUrl(currentUrl)
         val captureHisDirPath = makeCaptureHistoryDirPath(currentAppDirPath)
         FileSystems.writeFile(
             File(captureHisDirPath, base64TxtName).absolutePath,
             base64Str,
         )
+    }
+
+    private fun takeFirst200Str(base64Str: String): String {
+        return base64Str.take(200)
     }
 
     fun getCaptureBase64TxtPathByUrl(

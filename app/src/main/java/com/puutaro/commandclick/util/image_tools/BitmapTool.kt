@@ -89,7 +89,7 @@ object BitmapTool {
         return screenshot
     }
 
-    object Base64UrlIconForHistory {
+    object Base64UrlImageForHistory {
 
         fun decode(base64Str: String?): Bitmap? {
             if(
