@@ -54,7 +54,7 @@
         android:weightSum="1"
         >
         <RelativeLayout
-            android:id="@+id/container"
+            android:id="@+id/url_history_adapter_site_logo_container"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="0.3333"
