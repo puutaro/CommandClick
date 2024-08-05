@@ -15,7 +15,7 @@ object UrlHistoryPath {
         return url.replace(
             Regex("[^a-zA-Z0-9_-]"),
             "_"
-        ) + ".txt"
+        ).takeLast(20) + ".txt"
     }
 
 }

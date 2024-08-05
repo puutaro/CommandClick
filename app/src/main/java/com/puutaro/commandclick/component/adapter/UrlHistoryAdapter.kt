@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.component.adapter
+
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.custom_view.OutlineTextView
@@ -22,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class UrlHistoryAdapter(
     private val context: Context?,
@@ -188,23 +192,26 @@ class UrlHistoryAdapter(
         holder: UrlHistoryViewHolder,
         capturePngPathOrMacro: String?,
     ){
-        if (
-            context == null
-        ) return
         val captureBitMap = withContext(Dispatchers.IO) {
             BitmapTool.Base64UrlImageForHistory.decode(
                 capturePngPathOrMacro
             )
         }
         withContext(Dispatchers.Main) {
+            val urlCaptureView = holder.urlCaptureView
+            val context = urlCaptureView.context
+            val requestBuilder: RequestBuilder<Drawable> = Glide.with(context)
+                .asDrawable().sizeMultiplier(0.1f)
             when (capturePngPathOrMacro.isNullOrEmpty()) {
                 false -> {
-                    holder.urlCaptureView.imageTintList = null
+                    urlCaptureView.imageTintList = null
                     Glide
                         .with(context)
                         .load(captureBitMap)
+                        .thumbnail(requestBuilder)
+//                        .skipMemoryCache( true )
 //                        .centerCrop()
-                        .into(holder.urlCaptureView)
+                        .into(urlCaptureView)
 //                    holder.urlCaptureView.load(captureBitMap)
                 }
 
@@ -212,7 +219,9 @@ class UrlHistoryAdapter(
                     Glide
                         .with(context)
                         .load(fileMarkbitmap)
-                        .into(holder.urlCaptureView)
+                        .thumbnail(requestBuilder)
+//                        .skipMemoryCache( true )
+                        .into(urlCaptureView)
 //                    holder.urlCaptureView.load(fileMarkbitmap)
                 }
             }
@@ -224,7 +233,8 @@ class UrlHistoryAdapter(
         iconBase64Str: String?,
         urlStr: String,
     ){
-        if(context == null) return
+        val urlSiteLogoView = holder.urlSiteLogoView
+        val context = urlSiteLogoView.context
         val fileType = FileType.values().firstOrNull {
             it.name == iconBase64Str
         }
@@ -238,9 +248,9 @@ class UrlHistoryAdapter(
                     .with(context)
                     .load(R.drawable.icons8_file)
                     .centerCrop()
-                    .into(holder.urlSiteLogoView)
+                    .into(urlSiteLogoView)
 //                holder.urlSiteLogoView.load(R.drawable.icons8_file)
-                holder.urlSiteLogoView.imageTintList =
+                urlSiteLogoView.imageTintList =
                     context.getColorStateList(color)
             }
             return
@@ -259,11 +269,11 @@ class UrlHistoryAdapter(
                     .with(context)
                     .load(iconBitMap)
                     .centerCrop()
-                    .into(holder.urlSiteLogoView)
+                    .into(urlSiteLogoView)
 //                holder.urlSiteLogoView.load(iconBitMap)
                 return@withContext
             }
-            holder.urlSiteLogoView.imageTintList =
+            urlSiteLogoView.imageTintList =
                 when(
                     EnableUrlPrefix.isHttpPrefix(urlStr)
                 ) {
@@ -272,7 +282,7 @@ class UrlHistoryAdapter(
                             .with(context)
                             .load(R.drawable.icons8_file)
                             .centerCrop()
-                            .into(holder.urlSiteLogoView)
+                            .into(urlSiteLogoView)
 //                        holder.urlSiteLogoView.load(R.drawable.icons8_file)
                         context.getColorStateList(R.color.orange)
                     }
@@ -281,7 +291,7 @@ class UrlHistoryAdapter(
                             .with(context)
                             .load(R.drawable.internet)
                             .centerCrop()
-                            .into(holder.urlSiteLogoView)
+                            .into(urlSiteLogoView)
 //                        holder.urlSiteLogoView.load(R.drawable.internet)
                         context.getColorStateList(R.color.web_icon_color)
                     }
