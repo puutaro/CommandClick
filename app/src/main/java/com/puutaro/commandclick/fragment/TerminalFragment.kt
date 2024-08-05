@@ -231,6 +231,7 @@ class TerminalFragment: Fragment() {
         )?.onPause()
         terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
+        UrlCaptureWatcher.exit()
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
