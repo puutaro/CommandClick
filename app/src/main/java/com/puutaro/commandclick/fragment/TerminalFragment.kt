@@ -211,6 +211,7 @@ class TerminalFragment: Fragment() {
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
+        GifCreateMonitor.watch(this)
     }
 
     override fun onStart() {

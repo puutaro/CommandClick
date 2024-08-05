@@ -121,7 +121,7 @@ class GetFileListForEdit (
     ){
         val updateInsertLineList = sourceFilePathList.map {
             val insertFileObj = File(it)
-            "${insertFileObj.name}\t${insertFileObj.absoluteFile}"
+            "${insertFileObj.name}\t${insertFileObj.absolutePath}"
         }
         ExecAddForListIndexAdapter.execAddListForTsv(
             editFragment,

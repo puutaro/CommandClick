@@ -66,6 +66,9 @@ object UrlCaptureWatcher {
                         || url != previousUrl
 
                     ) {
+                        withContext(Dispatchers.Main){
+                            ToastUtils.showShort("exit1")
+                        }
                         return@withContext
                     }
                     val yPosition = withContext(Dispatchers.Main) {
@@ -80,9 +83,30 @@ object UrlCaptureWatcher {
                     if(
                         isSameCapture
                     ) continue
+                    val confirmUrl = withContext(Dispatchers.Main) {
+                        terminalWebView.url
+                    }
+                    if(
+                        confirmUrl.isNullOrEmpty()
+                        || !EnableUrlPrefix.isHttpPrefix(confirmUrl)
+                        || confirmUrl.contains("/maps/")
+                        || confirmUrl == "${WebUrlVariables.monitorUrlPath}/"
+                        || confirmUrl != previousUrl
+                    ) {
+                        withContext(Dispatchers.Main){
+                            ToastUtils.showShort("exit2")
+                        }
+                        return@withContext
+                    }
+                    val captureView = withContext(Dispatchers.Main){
+                        terminalFragment.requireView()
+                    }
                     previousYPosition = yPosition
+                    withContext(Dispatchers.Main){
+                        ToastUtils.showShort("shot")
+                    }
                     val saveOk = CaptureSaver.save(
-                        terminalFragment.view,
+                        captureView,
                         terminalFragment.currentAppDirPath,
                         url,
                     )

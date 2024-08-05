@@ -168,7 +168,7 @@ object AssetsFileManager {
             newFilePathObj.isFile
             && isContainEscapeRelativePathList
         ) return
-        val newFilePath = newFilePathObj.absoluteFile
+        val newFilePath = newFilePathObj.absolutePath
         val assetManager = context?.getAssets()
             ?: return
         var `in`: InputStream? = null

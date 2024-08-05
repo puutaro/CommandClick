@@ -126,7 +126,7 @@ dependencies {
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
     implementation("org.jsoup:jsoup:1.7.3")
     implementation("com.itextpdf:itextg:5.5.10")
-    implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
     implementation("org.rauschig:jarchivelib:0.8.0")
@@ -147,7 +147,6 @@ dependencies {
 //    implementation("io.ktor:ktor-server-netty:1.4.3")
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("androidx.documentfile:documentfile:1.0.1")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
 
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")

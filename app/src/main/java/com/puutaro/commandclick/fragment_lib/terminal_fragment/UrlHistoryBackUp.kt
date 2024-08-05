@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
+import com.puutaro.commandclick.proccess.history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +32,7 @@ object UrlHistoryBackUp {
         terminalFragment: TerminalFragment
     ){
         val captureHistoryPngDirPath =
-            UrlCaptureHistoryTool.makeCaptureHistoryDirPath(
+            UrlHistoryPath.makeCaptureHistoryDirPath(
                 terminalFragment.currentAppDirPath
             )
         execTrimFiles(captureHistoryPngDirPath)
@@ -42,17 +42,20 @@ object UrlHistoryBackUp {
         terminalFragment: TerminalFragment
     ){
         val captureHistoryPngDirPath =
-            UrlCaptureHistoryTool.makeCaptureHistoryDirPath(
+            UrlHistoryPath.makeCaptureHistoryDirPath(
                 terminalFragment.currentAppDirPath
             )
-        execTrimFiles(captureHistoryPngDirPath)
+        execTrimFilesAndDir(captureHistoryPngDirPath)
     }
 
     private fun execTrimFiles(
         targetHistoryFileDirPath: String
     ){
         val lastModifiedCapturePngPathList =
-            FileSystems.sortedFiles(targetHistoryFileDirPath)
+            FileSystems.sortedFiles(
+                targetHistoryFileDirPath,
+                "on"
+            )
         val totalNum = lastModifiedCapturePngPathList.size
         val limitNum = 200
         val removeNum = totalNum - limitNum
@@ -60,6 +63,33 @@ object UrlHistoryBackUp {
         lastModifiedCapturePngPathList.takeLast(removeNum).forEach {
             FileSystems.removeFiles(
                 File(targetHistoryFileDirPath, it).absolutePath
+            )
+        }
+    }
+
+    private fun execTrimFilesAndDir(
+        targetHistoryFileDirPath: String
+    ){
+        val lastModifyExtend = UrlHistoryPath.lastModifyExtend
+        val lastModifiedCapturePngPathList =
+            FileSystems.sortedFiles(
+                targetHistoryFileDirPath,
+                "on",
+            ).filter {
+                it.endsWith(lastModifyExtend)
+            }
+        val totalNum = lastModifiedCapturePngPathList.size
+        val limitNum = 100
+        val removeNum = totalNum - limitNum
+        if(removeNum <= 0) return
+        lastModifiedCapturePngPathList.takeLast(removeNum).forEach {
+            lastModifiedFileName ->
+            FileSystems.removeFiles(
+                File(targetHistoryFileDirPath, lastModifiedFileName).absolutePath
+            )
+            val dirName = lastModifiedFileName.removeSuffix(lastModifyExtend)
+            FileSystems.removeDir(
+                File(targetHistoryFileDirPath, dirName).absolutePath
             )
         }
     }

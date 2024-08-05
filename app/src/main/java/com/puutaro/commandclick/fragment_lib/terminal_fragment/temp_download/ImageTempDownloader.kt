@@ -1,12 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +59,7 @@ object ImageTempDownloader {
             makeBitMap(
                 terminalFragment,
                 url
-            )
+            ) ?: return
         val imageName = BitmapTool.hash(
             bitmap
         )
@@ -127,8 +129,19 @@ object ImageTempDownloader {
     private suspend fun makeBitMap(
         terminalFragment: TerminalFragment,
         url: String
-    ): Bitmap {
+    ): Bitmap? {
         return withContext(Dispatchers.IO) {
+//            CurlManager.get(
+//                terminalFragment.context,
+//                url,
+//                timeout = 2000
+//            ).let {
+//                bitmapdata ->
+//                if(
+//                    !CurlManager.isConnOk(bitmapdata)
+//                ) return@let null
+//                BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.size);
+//            }
                 Glide.with(terminalFragment.activity as FragmentActivity)
                     .asBitmap()
                     .load(url)
