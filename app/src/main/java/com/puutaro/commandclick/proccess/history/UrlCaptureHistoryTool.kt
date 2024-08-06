@@ -2,82 +2,130 @@ package com.puutaro.commandclick.proccess.history
 
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import java.io.File
 
+
 object UrlCaptureHistoryTool {
 
     const val takeHistoryNum = 200
-    var previousBase64Prefix = String()
+    private var beforeHash = String()
 
     fun insertToHistory(
         currentAppDirPath: String,
         currentUrl: String?,
         capture: Bitmap?,
     ){
+//        val start = LocalDateTime.now()
         if(
             currentUrl.isNullOrEmpty()
             ||  currentUrl.contains("/maps/")
             || capture == null
-        ) return
-        val base64Str = BitmapTool.Base64UrlImageForHistory.encode(
-            capture,
-            80
-        ) ?: return
-        val curBase64Prefix = takeFirst200Str(base64Str)
-        if(
-            base64Str.isEmpty()
-            || curBase64Prefix == previousBase64Prefix
-        ) return
-        previousBase64Prefix = curBase64Prefix
-        val isNotHttp = !currentUrl.startsWith(WebUrlVariables.httpsPrefix)
-                && !currentUrl.startsWith(WebUrlVariables.httpsPrefix)
+        ) {
+//            CoroutineScope(Dispatchers.Main).launch{
+//                ToastUtils.showShort("exit ${currentUrl}")
+//            }
+            return
+        }
+        val isNotHttp = !EnableUrlPrefix.isHttpPrefix(currentUrl)
         if(
             isNotHttp
-        ) return
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "capture_url.txt").absolutePath,
-//            currentUrl
-//        )
-//        FileSystems.savePngFromBitMap(
-//            File(UsePath.cmdclickDefaultAppDirPath, "capture.png").absolutePath,
-//            capture
-//        )
-        val base64TxtName = UrlHistoryPath.makeBase64TxtFileNameByUrl(currentUrl)
-        val captureHisDirPath = makeCaptureHistoryDirPath(currentAppDirPath)
-        FileSystems.writeFile(
-            File(captureHisDirPath, base64TxtName).absolutePath,
-            base64Str,
-        )
-    }
-
-    private fun takeFirst200Str(base64Str: String): String {
-        return base64Str.take(200)
-    }
-
-    fun getCaptureBase64TxtPathByUrl(
-        currentAppDirPath: String,
-        url: String,
-    ): File? {
-        val base64TxtFile = File(
-            makeCaptureHistoryDirPath(currentAppDirPath),
-            UrlHistoryPath.makeBase64TxtFileNameByUrl(url),
-        )
+        ) {
+//            CoroutineScope(Dispatchers.Main).launch{
+//                ToastUtils.showShort("exit isNotHttp: ${currentUrl}")
+//            }
+            return
+        }
+        val curHash = BitmapTool.hash(capture)
         if(
-            !base64TxtFile.isFile
-        ) return null
-        return base64TxtFile
-
+            curHash == beforeHash
+        ) {
+//            CoroutineScope(Dispatchers.Main).launch {
+//                ToastUtils.showShort("cannot save curHash")
+//            }
+            return
+        }
+        beforeHash = curHash
+        val smallBitmap = BitmapTool.resizeByMaxHeight(capture, 700.0)
+        val byteArray = BitmapTool.convertBitmapToByteArray(smallBitmap, 100)
+        val captureUniqueDirPath = UrlHistoryPath.getCaptureUniqueDirPath(
+            currentAppDirPath,
+            currentUrl
+        )
+        FileSystems.createDirs(captureUniqueDirPath)
+        val partsPngDirPath = UrlHistoryPath.getCapturePartsPngDirPath(
+            currentAppDirPath,
+            currentUrl,
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "g_url_dir.txt").absolutePath,
+//            listOf(
+//                "partsPngDirPath: ${partsPngDirPath}",
+//                "currentAppDirPath: ${currentAppDirPath}",
+//                "currentUrl: ${currentUrl}"
+//            ).joinToString("\n")
+//        )
+        execTrimFiles(partsPngDirPath)
+        val partPngName = "${curHash}.png"
+//        CoroutineScope(Dispatchers.Main).launch {
+//            ToastUtils.showShort("save ${File(partsPngDirPath, partPngName).absolutePath}")
+//        }
+        FileSystems.writeFromByteArray(
+            File(partsPngDirPath, partPngName).absolutePath,
+            byteArray,
+        )
+        FileSystems.writeFromByteArray(
+            File(UsePath.cmdclickDefaultAppDirPath, "gif.png").absolutePath,
+            byteArray,
+        )
+        val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
+            currentAppDirPath,
+            currentUrl,
+        )
+//        val gifPath = UrlHistoryPath.getCaptureGifPath(
+//            currentAppDirPath,
+//            currentUrl,
+//        )
+        FileSystems.writeFile(
+            UrlHistoryPath.makeCaptureHistoryLastModifiedFilePath(
+                currentAppDirPath,
+                currentUrl,
+            ),
+            String()
+        )
+        if(!File(gifTxtPath).isFile){
+//            FileSystems.writeFromByteArray(
+//                gifPath,
+//                BitmapTool.convertBitmapToByteArray(smallBitmap)
+//            )
+            BitmapTool.Base64Tool.encode(smallBitmap)?.let {
+                FileSystems.writeFile(
+                    gifTxtPath,
+                    it,
+                )
+            }
+            return
+        }
     }
 
-    fun makeCaptureHistoryDirPath(
-        currentAppDirPath: String
-    ): String {
-        return File(
-            File(currentAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
-            "capture"
-        ).absolutePath
+    private fun execTrimFiles(
+        captureSaveDir: String
+    ){
+        val lastModifiedCapturePngPathList =
+            FileSystems.sortedFiles(
+                captureSaveDir,
+                "on"
+            )
+        val totalNum = lastModifiedCapturePngPathList.size
+        val limitNum = 2
+        val removeNum = totalNum - limitNum
+        if(removeNum <= 0) return
+        lastModifiedCapturePngPathList.takeLast(removeNum).forEach {
+            FileSystems.removeFiles(
+                File(captureSaveDir, it).absolutePath
+            )
+        }
     }
 }

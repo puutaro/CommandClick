@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.history
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -37,15 +36,12 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class CmdClickHistoryButtonEvent (
-//    historyButtonInnerView: View,
     private val fragment: Fragment,
     private val sharedPref: FannelInfoTool.FannelInfoSharePref?,
     )
 {
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
-//    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
     private val context = fragment.context
-//    private val currentViewContext = historyButtonInnerView.context
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
     private var fannelHistoryDialog: Dialog? = null
@@ -127,8 +123,9 @@ class CmdClickHistoryButtonEvent (
             object : DialogInterface.OnCancelListener {
                 override fun onCancel(dialog: DialogInterface?) {
 //                    terminalViewModel.onDialog = false
-                    fannelHistoryDialog?.dismiss()
-                    fannelHistoryDialog = null
+                    exitDialog(
+                        historyListView
+                    )
                 }
             })
 //        terminalViewModel.onDialog = true
@@ -139,6 +136,7 @@ class CmdClickHistoryButtonEvent (
             cmdclickAppHistoryDirAdminPath
         )
         invokeItemSetClickListenerForHistory(
+            historyListView,
             historyListAdapter
         )
     }
@@ -181,12 +179,11 @@ class CmdClickHistoryButtonEvent (
     }
 
     private fun invokeItemSetClickListenerForHistory(
+        historyListView: RecyclerView,
         historyListAdapter: FannelHistoryAdapter,
     ) {
         historyListAdapter.itemClickListener = object: FannelHistoryAdapter.OnItemClickListener {
             override fun onItemClick(holder: FannelHistoryAdapter.HistoryViewHolder) {
-                fannelHistoryDialog?.dismiss()
-                fannelHistoryDialog = null
 //                terminalViewModel.onDialog = false
                 val appDirName = holder.appDirNameTextView.text.toString()
                 val fannelName = holder.fannelNameTextView.text.toString()
@@ -209,6 +206,9 @@ class CmdClickHistoryButtonEvent (
                     ToastUtils.showLong("No exist: ${selectedAppDirPath}")
                     FileSystems.removeFiles(
                         selectedHistoryFilePath
+                    )
+                    exitDialog(
+                        historyListView
                     )
                     return
                 }
@@ -255,6 +255,9 @@ class CmdClickHistoryButtonEvent (
                     fannelName,
                     mainFannelSettingConList,
                     setReplaceVariableMap
+                )
+                exitDialog(
+                    historyListView
                 )
             }
         }
@@ -398,6 +401,17 @@ class CmdClickHistoryButtonEvent (
                 selectedAppDirName + UsePath.JS_FILE_SUFFIX
             ).absolutePath
         )
+    }
+
+    private fun exitDialog(
+        historyListView: RecyclerView
+    ){
+        historyListView.layoutManager = null
+        historyListView.adapter = null
+        historyListView.recycledViewPool.clear()
+        historyListView.removeAllViews()
+        fannelHistoryDialog?.dismiss()
+        fannelHistoryDialog = null
     }
 }
 

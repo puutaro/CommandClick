@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -259,6 +260,9 @@ class CommandIndexFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+        exitDialog(
+            binding.cmdList
+        )
         cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
         _binding = null
@@ -371,5 +375,14 @@ class CommandIndexFragment: Fragment() {
             ssid: String,
             pin: String
         )
+    }
+
+    private fun exitDialog(
+        cmdList: RecyclerView
+    ){
+        cmdList.layoutManager = null
+        cmdList.adapter = null
+        cmdList.recycledViewPool.clear()
+        cmdList.removeAllViews()
     }
 }

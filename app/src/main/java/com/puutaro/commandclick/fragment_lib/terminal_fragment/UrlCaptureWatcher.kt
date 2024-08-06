@@ -1,13 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.View
-import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Math.abs
+import java.time.LocalDateTime
 
 object UrlCaptureWatcher {
 
@@ -24,7 +23,6 @@ object UrlCaptureWatcher {
     fun exit(){
         captureJob?.cancel()
     }
-
 
     fun watch(
         terminalFragment: TerminalFragment,
@@ -38,6 +36,7 @@ object UrlCaptureWatcher {
                 terminalWebView.url
             }
             var previousYPosition = 0
+            var prevCaptureTime = LocalDateTime.parse("2020-02-15T21:30:50")
             var isSameCapture = false
             withContext(Dispatchers.IO){
                 while(true) {
@@ -66,6 +65,9 @@ object UrlCaptureWatcher {
                         || url != previousUrl
 
                     ) {
+//                        withContext(Dispatchers.Main){
+//                            ToastUtils.showShort("exit1")
+//                        }
                         return@withContext
                     }
                     val yPosition = withContext(Dispatchers.Main) {
@@ -77,12 +79,25 @@ object UrlCaptureWatcher {
                         isSameCapture = false
                         continue
                     }
+                    previousYPosition = yPosition
                     if(
                         isSameCapture
                     ) continue
-                    previousYPosition = yPosition
+                    val curCaptureTime = LocalDateTime.now()
+                    if(
+                        LocalDatetimeTool.getDurationSec(prevCaptureTime, curCaptureTime) < 2
+                    ){
+                        continue
+                    }
+                    prevCaptureTime = curCaptureTime
+                    val captureView = withContext(Dispatchers.Main){
+                        terminalFragment.requireView()
+                    }
+//                    withContext(Dispatchers.Main){
+//                        ToastUtils.showShort("shot")
+//                    }
                     val saveOk = CaptureSaver.save(
-                        terminalFragment.view,
+                        captureView,
                         terminalFragment.currentAppDirPath,
                         url,
                     )
@@ -90,33 +105,32 @@ object UrlCaptureWatcher {
                         !saveOk
                     ) continue
                     isSameCapture = true
-
+//
                 }
             }
         }
     }
 
-    object CaptureSaver {
+    private object CaptureSaver {
 
-        private var isSaving = false
         suspend fun save(
             terminalFragmentView: View?,
             currentAppDirPath: String,
             url: String,
         ): Boolean {
-            if(
-                isSaving
-            ) return false
-            isSaving = true
             val capture = withContext(Dispatchers.Main) {
                 BitmapTool.getLowScreenShotFromView(terminalFragmentView)
-            } ?: return false
+            } ?: let {
+//                withContext(Dispatchers.Main){
+//                    ToastUtils.showShort("exit getLowScreenShotFromView")
+//                }
+                return false
+            }
             UrlCaptureHistoryTool.insertToHistory(
                 currentAppDirPath,
                 url,
                 capture
             )
-            isSaving = false
             return true
         }
     }

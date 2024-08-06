@@ -6,10 +6,16 @@ import android.graphics.Canvas
 import android.util.Base64
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
+
 
 object BitmapTool {
 
@@ -36,6 +42,56 @@ object BitmapTool {
             (beforeResizeBitMap.height * resizeScale).toInt(),
             true
         )
+    }
+
+    fun convertFileToBitmap(path: String): Bitmap? {
+        return try {
+            BitmapFactory.decodeFile(path)
+        } catch (e: Exception){
+            null
+        }
+    }
+
+    fun convertFileToByteArray(
+        path: String,
+        quality: Int = 100,
+    ): ByteArray? {
+        if(
+            !File(path).isFile
+        ) return null
+        return try {
+            val stream = ByteArrayOutputStream()
+            val bitmap = BitmapFactory.decodeFile(path)
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, stream)
+            val byteArray = stream.toByteArray()
+            stream.close()
+            byteArray
+        } catch (e: Exception){
+            null
+        }
+    }
+
+    fun convertBitmapToByteArrayForGif(
+        path: String,
+    ): ByteArray? {
+        if(
+            !File(path).isFile
+        ) return null
+        return try {
+            val inputStream = FileInputStream(path)
+            val buffer = ByteArray(1024)
+            var bytesRead: Int
+            val output = ByteArrayOutputStream()
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                output.write(buffer, 0, bytesRead)
+            }
+            val byteArray = output.toByteArray()
+            output.close()
+            inputStream.close()
+            byteArray
+        } catch (e: Exception){
+            null
+        }
     }
 
     fun resizeByMaxHeight(
@@ -70,6 +126,17 @@ object BitmapTool {
         return screenshot
     }
 
+    fun convertBitmapToByteArray(
+        myBitmap: Bitmap,
+        quality: Int = 100,
+    ): ByteArray {
+        val stream = ByteArrayOutputStream()
+        myBitmap.compress(Bitmap.CompressFormat.PNG, quality, stream)
+        val byteArray = stream.toByteArray()
+        stream.close()
+        return byteArray
+    }
+
 
     fun getLowScreenShotFromView(
         v: View?
@@ -89,7 +156,7 @@ object BitmapTool {
         return screenshot
     }
 
-    object Base64UrlImageForHistory {
+    object Base64Tool {
 
         fun decode(base64Str: String?): Bitmap? {
             if(
@@ -106,6 +173,20 @@ object BitmapTool {
             }
         }
 
+        fun decodeAsByteArray(base64Str: String?): ByteArray? {
+            if(
+                base64Str.isNullOrEmpty()
+            ) return null
+            return try {
+                Base64.decode(
+                    base64Str,
+                    Base64.NO_WRAP
+                )
+            } catch (e: Exception){
+                null
+            }
+        }
+
         fun encode(
             bitmap: Bitmap?,
             quality: Int = 100
@@ -116,10 +197,74 @@ object BitmapTool {
             return try {
                 val outputStream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
-                Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+                encodeFromByteArray(outputStream.toByteArray())
             } catch (e: Exception){
                 null
             }
+        }
+
+        fun encodeFromByteArray(
+            byteArray: ByteArray?,
+        ): String? {
+            if(
+                byteArray == null
+            ) return null
+            return try {
+                Base64.encodeToString(byteArray, Base64.NO_WRAP)
+            } catch (e: Exception){
+                FileSystems.writeFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "gitErr_encodeFromByteArray.txt").absolutePath,
+                    e.toString()
+                )
+                null
+            }
+        }
+    }
+
+    fun generateGIF(bitMapList: List<Bitmap?>): ByteArray? {
+        val bos = ByteArrayOutputStream()
+        val encoder = AnimatedGifEncoder()
+        encoder.setDelay(800)
+//        encoder.setQuality(10)
+
+        encoder.start(bos)
+        for (bitmap in bitMapList) {
+            if(bitmap == null) continue
+            encoder.addFrame(bitmap)
+        }
+        encoder.finish()
+        return bos.toByteArray()
+    }
+
+    fun saveGif(
+        path: String,
+        byteArray: ByteArray?
+    ) {
+        try {
+            val outStream = FileOutputStream(path)
+            outStream.write(byteArray)
+            outStream.close()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun saveGifTxt(
+        path: String,
+        byteArray: ByteArray?
+    ) {
+        try {
+            val base64Str = Base64Tool.encodeFromByteArray(byteArray)
+                ?: return
+            FileSystems.writeFile(
+                path,
+                base64Str
+            )
+        } catch (e: java.lang.Exception) {
+           FileSystems.writeFile(
+               File(UsePath.cmdclickDefaultAppDirPath, "gitErr.txt").absolutePath,
+               e.toString()
+           )
         }
     }
 }

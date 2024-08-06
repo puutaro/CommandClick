@@ -20,21 +20,15 @@ object UrlLogoHistoryTool {
             url.isNullOrEmpty()
             ||  url.contains("/maps/")
         ) return
-        val base64Str = BitmapTool.Base64UrlImageForHistory.encode(
+        val base64Str = BitmapTool.Base64Tool.encode(
             favicon,
             50
         ) ?: return
-        val base64TxtName = UrlHistoryPath.makeBase64TxtFileNameByUrl(url)
+        val base64TxtName = makeBase64TxtName(url)
         val logoHisDirPath =
             makeLogoHistoryDirPath(recentAppDirPath)
         FileSystems.writeFile(
             File(logoHisDirPath, base64TxtName).absolutePath,
-            base64Str,
-        )
-        val cmdclickUrlIconFilePath = makeIconBase64TxtPath(recentAppDirPath)
-        TsvTool.updateByKeyDistinct(
-            cmdclickUrlIconFilePath,
-            url,
             base64Str,
         )
     }
@@ -45,12 +39,16 @@ object UrlLogoHistoryTool {
     ): File? {
         val base64TxtFile = File(
             makeLogoHistoryDirPath(currentAppDirPath),
-            UrlHistoryPath.makeBase64TxtFileNameByUrl(url),
+            makeBase64TxtName(url),
         )
         if(
             !base64TxtFile.isFile
         ) return null
         return base64TxtFile
+    }
+
+    private fun makeBase64TxtName(url: String): String {
+        return UrlHistoryPath.makePathNameFromUrl(url) + ".txt"
     }
 
     private fun makeIconBase64TxtPath(

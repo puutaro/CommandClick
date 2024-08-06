@@ -31,15 +31,15 @@ import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -136,6 +136,9 @@ class UrlHistoryButtonEvent(
             urlHistoryList.toMutableList(),
             currentUrl,
         )
+        urlHistoryListView.setItemViewCacheSize(Integer.MIN_VALUE)
+        urlHistoryListView.recycledViewPool.clear()
+        urlHistoryListView.setItemViewCacheSize(0)
         urlHistoryListView.adapter = urlHistoryDisplayListAdapter
         urlHistoryListView.layoutManager?.scrollToPosition(
             urlHistoryDisplayListAdapter.itemCount - 1
@@ -151,7 +154,7 @@ class UrlHistoryButtonEvent(
             searchText,
         )
         urlHistoryDialog?.setOnCancelListener {
-            editDialog()
+            exitDialog(urlHistoryListView)
         }
         urlHistoryDialog?.window
             ?.setLayout(
@@ -161,6 +164,7 @@ class UrlHistoryButtonEvent(
         urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog?.show()
         setUrlHistoryListViewOnItemClickListener(
+            urlHistoryListView,
             urlHistoryDisplayListAdapter,
             searchText
         )
@@ -276,12 +280,12 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnItemClickListener (
+        urlHistoryListView: RecyclerView,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
         searchText: EditText,
     ){
         urlHistoryDisplayListAdapter.itemClickListener = object: UrlHistoryAdapter.OnItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
-                editDialog()
                 val bindingAdapterPosition = holder.bindingAdapterPosition
                 val filteredUrlHistoryMap =
                     makeSearchFilteredUrlHistoryList(
@@ -303,7 +307,10 @@ class UrlHistoryButtonEvent(
                             it,
                             currentAppDirPath
                         )
-                    } ?: return
+                    } ?: let {
+                    exitDialog(urlHistoryListView)
+                    return
+                    }
                 if (
                     selectedUrl.endsWith(
                         UsePath.SHELL_FILE_SUFFIX
@@ -316,6 +323,7 @@ class UrlHistoryButtonEvent(
                     )
                 ) {
                     execScriptFile(selectedUrl)
+                    exitDialog(urlHistoryListView)
                     return
                 }
 
@@ -328,6 +336,7 @@ class UrlHistoryButtonEvent(
                     listener?.onLaunchUrlByWebView(
                         selectedUrl,
                     )
+                    exitDialog(urlHistoryListView)
                     return
                 } else if (
                     fragmentTag?.startsWith(
@@ -338,8 +347,10 @@ class UrlHistoryButtonEvent(
                     listener?.onLaunchUrlByWebViewForEdit(
                         selectedUrl,
                     )
+                    exitDialog(urlHistoryListView)
                     return
                 }
+                exitDialog(urlHistoryListView)
             }
         }
     }
@@ -765,7 +776,13 @@ class UrlHistoryButtonEvent(
         }
     }
 
-    private fun editDialog(){
+    private fun exitDialog(
+        urlHistoryListView: RecyclerView
+    ){
+        urlHistoryListView.layoutManager = null
+        urlHistoryListView.adapter = null
+        urlHistoryListView.recycledViewPool.clear()
+        urlHistoryListView.removeAllViews()
         urlHistoryDialog?.dismiss()
         urlHistoryDialog = null
     }

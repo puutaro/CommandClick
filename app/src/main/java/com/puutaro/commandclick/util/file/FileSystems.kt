@@ -70,7 +70,10 @@ object FileSystems {
             fileName == "-"
             || fileName.isEmpty()
         ) return
-        createDirs(dirPath)
+        createDirs(dirPath).let {
+            isCreate ->
+            if(!isCreate) return
+        }
         try {
             filePathObj.writeText(contents)
         } catch (e: java.lang.Exception){
@@ -88,7 +91,10 @@ object FileSystems {
             dirPath.isEmpty()
             || File(dirPath).isFile
         ) return
-        createDirs(dirPath)
+        createDirs(dirPath).let {
+                isCreate ->
+            if(!isCreate) return
+        }
         val fileName = "${LocalDateTime.now()}.txt"
         val filePathObj = File(dirPath, fileName)
         try {
@@ -329,7 +335,10 @@ object FileSystems {
         try {
             val parentDirPath = File(destiShellFilePath).parent
                 ?: return
-            createDirs(parentDirPath)
+            createDirs(parentDirPath).let {
+                    isCreate ->
+                if(!isCreate) return
+            }
             Files.copy(
                 File(sourceShellFilePath).toPath(),
                 File(destiShellFilePath).toPath(),
@@ -375,9 +384,16 @@ object FileSystems {
         val file = File(filePath)
         removeFiles(file.absolutePath)
         val dirPath = file.parent ?: return
-        createDirs(dirPath)
+        createDirs(dirPath).let {
+                isCreate ->
+            if(!isCreate) return
+        }
         if(file.isDirectory) return
-        FileUtils.writeByteArrayToFile(file, byteArrayCon)
+        try {
+            FileUtils.writeByteArrayToFile(file, byteArrayCon)
+        } catch(e: Exception){
+            LogSystems.stdWarn(e.toString())
+        }
     }
 
     fun savePngFromBitMap(

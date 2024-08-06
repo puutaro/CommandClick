@@ -1,7 +1,10 @@
 package com.puutaro.commandclick.util.file
 
 import android.content.Context
+import android.content.res.AssetFileDescriptor
+import android.net.Uri
 import android.util.Log
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -10,8 +13,11 @@ import java.io.OutputStream
 
 object AssetsFileManager {
     private const val assetsFannelsDirName = "fannels"
-    const val textImagePingPath = "res/png/text_image.png"
-    const val pdfImagePingPath = "res/png/pdf_image.png"
+    const val resPngDirPath = "res/png"
+    const val textImagePingPath = "${resPngDirPath}/text_image.png"
+    const val pdfImagePingPath = "${resPngDirPath}/pdf_image.png"
+    const val resGifDirPath = "res/gif"
+    const val urlHistoryGifPath = "${resGifDirPath}/url_history.gif"
     private const val assetsBookmarkDirPath = "$assetsFannelsDirName/bookmark"
     const val assetsClipToHistoryForBookmark = "$assetsBookmarkDirPath/clipToHistory.js"
     private const val assetsDialogWebViewDirPath = "$assetsFannelsDirName/dialog_webview"
@@ -30,6 +36,11 @@ object AssetsFileManager {
     const val cmdListTxt = "$cmdTerminalDirPath/list/cmdList.txt"
     const val extraKeyListTxt = "$cmdTerminalDirPath/list/extraKeyList.txt"
 
+    fun assetsUri(
+        assetRelativePath: String,
+    ): Uri {
+        return Uri.parse("file:///android_asset/${assetRelativePath}")
+    }
     fun concatAssetsPath(
         pathList: List<String>
     ): String {
@@ -37,6 +48,26 @@ object AssetsFileManager {
             Regex("[/]+"),
             "/"
         ).removePrefix("/")
+    }
+
+    fun assetsByteArray(
+        context: Context?,
+        assetRelativePath: String,
+    ): ByteArray? {
+        if(
+            context == null
+        ) return null
+        val inputStream = context.assets.open(assetRelativePath)
+        val buffer = ByteArray(1024)
+        var bytesRead: Int
+        val output = ByteArrayOutputStream()
+        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+            output.write(buffer, 0, bytesRead)
+        }
+        val byteArray = output.toByteArray()
+        output.close()
+        inputStream.close()
+        return byteArray
     }
 
     fun readFromAssets(
@@ -168,7 +199,7 @@ object AssetsFileManager {
             newFilePathObj.isFile
             && isContainEscapeRelativePathList
         ) return
-        val newFilePath = newFilePathObj.absoluteFile
+        val newFilePath = newFilePathObj.absolutePath
         val assetManager = context?.getAssets()
             ?: return
         var `in`: InputStream? = null
