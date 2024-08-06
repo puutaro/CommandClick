@@ -389,7 +389,11 @@ object FileSystems {
             if(!isCreate) return
         }
         if(file.isDirectory) return
-        FileUtils.writeByteArrayToFile(file, byteArrayCon)
+        try {
+            FileUtils.writeByteArrayToFile(file, byteArrayCon)
+        } catch(e: Exception){
+            LogSystems.stdWarn(e.toString())
+        }
     }
 
     fun savePngFromBitMap(

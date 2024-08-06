@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
@@ -436,6 +437,7 @@ class EditFragment: Fragment() {
     }
 
     private fun destroyViews(){
+        exitDialog(binding.editListRecyclerView)
         binding.editLinearLayout.removeAllViews()
         binding.editListInnerTopLinearLayout.removeAllViews()
         binding.editListInnerBottomLinearLayout.removeAllViews()
@@ -533,5 +535,14 @@ class EditFragment: Fragment() {
         fun onGetPermissionForEdit(
             permissionStr: String
         )
+    }
+
+    private fun exitDialog(
+        editListRecyclerView: RecyclerView
+    ){
+        editListRecyclerView.layoutManager = null
+        editListRecyclerView.adapter = null
+        editListRecyclerView.recycledViewPool.clear()
+        editListRecyclerView.removeAllViews()
     }
 }

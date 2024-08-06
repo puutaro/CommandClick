@@ -11,6 +11,7 @@ import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
@@ -46,6 +47,48 @@ object BitmapTool {
     fun convertFileToBitmap(path: String): Bitmap? {
         return try {
             BitmapFactory.decodeFile(path)
+        } catch (e: Exception){
+            null
+        }
+    }
+
+    fun convertFileToByteArray(
+        path: String,
+        quality: Int = 100,
+    ): ByteArray? {
+        if(
+            !File(path).isFile
+        ) return null
+        return try {
+            val stream = ByteArrayOutputStream()
+            val bitmap = BitmapFactory.decodeFile(path)
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, stream)
+            val byteArray = stream.toByteArray()
+            stream.close()
+            byteArray
+        } catch (e: Exception){
+            null
+        }
+    }
+
+    fun convertBitmapToByteArrayForGif(
+        path: String,
+    ): ByteArray? {
+        if(
+            !File(path).isFile
+        ) return null
+        return try {
+            val inputStream = FileInputStream(path)
+            val buffer = ByteArray(1024)
+            var bytesRead: Int
+            val output = ByteArrayOutputStream()
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                output.write(buffer, 0, bytesRead)
+            }
+            val byteArray = output.toByteArray()
+            output.close()
+            inputStream.close()
+            byteArray
         } catch (e: Exception){
             null
         }

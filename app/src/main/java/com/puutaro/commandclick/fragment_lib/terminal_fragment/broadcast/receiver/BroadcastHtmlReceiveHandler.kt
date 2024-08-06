@@ -36,7 +36,9 @@ object BroadcastHtmlReceiveHandler {
 
         if(
             !LoadUrlPrefixSuffix.judge(urlStr)
+            || binding.terminalWebView.url == urlStr
         ) return
+
         binding.terminalWebView.loadUrl(urlStr)
         execPageFinishedLoadCon(
             terminalFragment,

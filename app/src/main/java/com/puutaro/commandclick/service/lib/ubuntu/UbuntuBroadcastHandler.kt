@@ -121,7 +121,6 @@ object UbuntuBroadcastHandler {
                 intent,
             )
         }
-
     }
 
     private fun execStartUbuntuService(

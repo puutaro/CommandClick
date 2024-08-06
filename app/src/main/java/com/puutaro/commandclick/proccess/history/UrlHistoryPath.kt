@@ -13,7 +13,7 @@ object UrlHistoryPath {
         url: String
     ): String {
         return url.replace(
-            Regex("[^a-zA-Z0-9_-]"),
+            Regex("[^a-zA-Z0-9_%-]+"),
             ""
         ).takeLast(20)
     }
@@ -53,6 +53,16 @@ object UrlHistoryPath {
             makeCaptureHistoryDirPath(currentAppDirPath),
             makePathNameFromUrl(url),
         ).absolutePath + lastModifyExtend
+    }
+
+    fun getCaptureUniqueDirPath(
+        currentAppDirPath: String,
+        url: String
+    ): String {
+        return File(
+            makeCaptureHistoryDirPath(currentAppDirPath),
+            makePathNameFromUrl(url),
+        ).absolutePath
     }
 
 

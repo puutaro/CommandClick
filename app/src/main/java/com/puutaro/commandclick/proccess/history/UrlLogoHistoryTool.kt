@@ -31,12 +31,6 @@ object UrlLogoHistoryTool {
             File(logoHisDirPath, base64TxtName).absolutePath,
             base64Str,
         )
-        val cmdclickUrlIconFilePath = makeIconBase64TxtPath(recentAppDirPath)
-        TsvTool.updateByKeyDistinct(
-            cmdclickUrlIconFilePath,
-            url,
-            base64Str,
-        )
     }
 
     fun getCaptureBase64TxtPathByUrl(

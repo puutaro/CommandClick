@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,23 +10,22 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.UrlHistoryPath
 import com.puutaro.commandclick.proccess.history.UrlLogoHistoryTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.image_tools.GlideTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+
 
 class UrlHistoryAdapter(
     private val context: Context?,
@@ -61,9 +61,9 @@ class UrlHistoryAdapter(
         }
     }
 
-    private val fileMarkbitmap = ImageAdapterTool.makeFileMarkBitMap(
+    private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
         context,
-        AssetsFileManager.textImagePingPath
+        AssetsFileManager.urlHistoryGifPath
     )
 
     override fun onCreateViewHolder(
@@ -98,10 +98,6 @@ class UrlHistoryAdapter(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val urlHistoryMap = urlHistoryMapList[position]
-//            context?.let {
-//                Glide.with(it)
-//                    .clear(holder.urlCaptureView)
-//            }
 
             val urlStr = withContext(Dispatchers.IO) {
                 urlHistoryMap.get(UrlHistoryMapKey.URL.key)
@@ -135,21 +131,10 @@ class UrlHistoryAdapter(
             }
             val capturePngPathOrMacro =
                 urlHistoryMap.get(UrlHistoryMapKey.CAPTURE_BASE64_STR.key)
-                    ?: let {
-                        UrlHistoryPath.getCaptureGifPath(
-                            currentAppDirPath,
-                            urlStr,
-                        )
-//                        val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
-//                            currentAppDirPath,
-//                            urlStr,
-//                        )
-//                        FileSystems.updateFile(
-//                            File(UsePath.cmdclickDefaultAppDirPath, "gifTxtPath.txt").absolutePath,
-//                            gifTxtPath
-//                        )
-//                        ReadText(gifTxtPath).readText()
-                    }
+                    ?: UrlHistoryPath.getCaptureGifPath(
+                        currentAppDirPath,
+                        urlStr,
+                    )
 
             setCaptureImage(
                 holder,
@@ -208,35 +193,34 @@ class UrlHistoryAdapter(
         if (
             context == null
         ) return
-//        val captureBitmap = withContext(Dispatchers.IO) {
-//            BitmapTool.Base64Tool.decodeAsByteArray(
-//                capturePngPathOrMacro
-//            ) ?: return@withContext null
-//        }
+
+        val urlCaptureView = holder.urlCaptureView
+        val context = urlCaptureView.context
+        val isFile = !capturePngPathOrMacro.isNullOrEmpty()
+                && File(capturePngPathOrMacro).isFile
+
         withContext(Dispatchers.Main) {
-            when (capturePngPathOrMacro.isNullOrEmpty()) {
-                false -> {
+            when (isFile) {
+                true -> {
                     holder.urlCaptureView.imageTintList = null
-                    GlideTool.setImageOrGif(
-                        context,
-                        capturePngPathOrMacro,
-//                        captureBitmap,
-                        holder.urlCaptureView
-                    )
-//                    Glide
-//                        .with(context)
-//                        .load(captureBitmapList)
-////                        .centerCrop()
-//                        .into(holder.urlCaptureView)
-////                    holder.urlCaptureView.load(captureBitMap)
+                    val requestBuilder: RequestBuilder<Drawable> =
+                        Glide.with(context)
+                            .asDrawable()
+                            .sizeMultiplier(0.1f)
+                    Glide
+                        .with(context)
+                        .load(capturePngPathOrMacro)
+                        .skipMemoryCache( true )
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .thumbnail( requestBuilder )
+                        .into(urlCaptureView)
                 }
 
                 else -> {
                     Glide
                         .with(holder.urlCaptureView.context)
-                        .load(fileMarkbitmap)
+                        .load(urlHistoryGifByteArray)
                         .into(holder.urlCaptureView)
-//                    holder.urlCaptureView.load(fileMarkbitmap)
                 }
             }
         }
