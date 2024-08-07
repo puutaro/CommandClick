@@ -18,6 +18,7 @@ object AssetsFileManager {
     const val pdfImagePingPath = "${resPngDirPath}/pdf_image.png"
     const val resGifDirPath = "res/gif"
     const val urlHistoryGifPath = "${resGifDirPath}/url_history.gif"
+    const val internetGifPath = "${resGifDirPath}/internet.gif"
     private const val assetsBookmarkDirPath = "$assetsFannelsDirName/bookmark"
     const val assetsClipToHistoryForBookmark = "$assetsBookmarkDirPath/clipToHistory.js"
     private const val assetsDialogWebViewDirPath = "$assetsFannelsDirName/dialog_webview"

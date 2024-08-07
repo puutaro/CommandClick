@@ -22,6 +22,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -64,6 +65,10 @@ class UrlHistoryAdapter(
     private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
         context,
         AssetsFileManager.urlHistoryGifPath
+    )
+    private val internetGifByteArray = AssetsFileManager.assetsByteArray(
+        context,
+        AssetsFileManager.internetGifPath
     )
 
     override fun onCreateViewHolder(
@@ -139,6 +144,7 @@ class UrlHistoryAdapter(
             setCaptureImage(
                 holder,
                 capturePngPathOrMacro,
+                urlStr
             )
             setSiteLogo(
                 holder,
@@ -189,6 +195,7 @@ class UrlHistoryAdapter(
     private suspend fun setCaptureImage(
         holder: UrlHistoryViewHolder,
         capturePngPathOrMacro: String?,
+        url: String,
     ){
         if (
             context == null
@@ -198,8 +205,9 @@ class UrlHistoryAdapter(
         val context = urlCaptureView.context
         val isFile = !capturePngPathOrMacro.isNullOrEmpty()
                 && File(capturePngPathOrMacro).isFile
-
+        val delayTime = (0..200L).random()
         withContext(Dispatchers.Main) {
+            delay(delayTime)
             when (isFile) {
                 true -> {
                     holder.urlCaptureView.imageTintList = null
@@ -217,9 +225,14 @@ class UrlHistoryAdapter(
                 }
 
                 else -> {
+                    val byteArray =
+                        if(
+                            EnableUrlPrefix.isHttpPrefix(url)
+                        ) internetGifByteArray
+                        else urlHistoryGifByteArray
                     Glide
                         .with(holder.urlCaptureView.context)
-                        .load(urlHistoryGifByteArray)
+                        .load(byteArray)
                         .into(holder.urlCaptureView)
                 }
             }
