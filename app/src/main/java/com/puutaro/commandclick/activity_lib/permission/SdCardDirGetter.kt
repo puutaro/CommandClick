@@ -12,11 +12,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
+import com.bumptech.glide.Glide
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.sd.SdCardTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -111,22 +115,35 @@ class SdCardDirGetter(
                 activity
             )
             getSdcardTreeUriConfirmDialog?.setContentView(
-                com.puutaro.commandclick.R.layout.confirm_text_dialog
+                R.layout.confirm_text_gif_dialog
             )
-            val confirmTitleTextView =
-                getSdcardTreeUriConfirmDialog?.findViewById<AppCompatTextView>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_title
+//            val confirmTitleTextView =
+//                getSdcardTreeUriConfirmDialog?.findViewById<AppCompatTextView>(
+//                    com.puutaro.commandclick.R.id.confirm_text_dialog_title
+//                )
+//            confirmTitleTextView?.text = title
+            getSdcardTreeUriConfirmDialog?.findViewById<AppCompatImageView>(
+                R.id.confirm_text_gif_dialog_bk_image
+            )?.let {
+                val foldaGifByteArray = AssetsFileManager.assetsByteArray(
+                    activity,
+                    AssetsFileManager.foldaGifPath
                 )
-            confirmTitleTextView?.text = title
+                Glide
+                    .with(it.context)
+                    .load(foldaGifByteArray)
+                    .centerCrop()
+                    .into(it)
+            }
             val confirmContentTextView =
                 getSdcardTreeUriConfirmDialog?.findViewById<AppCompatTextView>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+                    R.id.confirm_text_gif_dialog_text_view
                 )
             confirmContentTextView?.text =
-                "Specify use dir in sd card, ok?"
+                "\n".repeat(4) + "Specify use dir in sd card, ok?"
             val confirmCancelButton =
                 getSdcardTreeUriConfirmDialog?.findViewById<AppCompatImageButton>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+                    R.id.confirm_text_gif_dialog_cancel
                 )
             confirmCancelButton?.setOnClickListener {
                 getSdcardTreeUriConfirmDialog?.dismiss()
@@ -134,7 +151,7 @@ class SdCardDirGetter(
             }
             val confirmOkButton =
                 getSdcardTreeUriConfirmDialog?.findViewById<AppCompatImageButton>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+                    R.id.confirm_text_gif_dialog_ok
                 )
             confirmOkButton?.setOnClickListener {
                 getSdcardTreeUriConfirmDialog?.dismiss()

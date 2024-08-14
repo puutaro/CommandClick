@@ -1,6 +1,5 @@
-package com.puutaro.commandclick.proccess.history
+package com.puutaro.commandclick.proccess.history.url_history
 
-import android.content.SharedPreferences
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting

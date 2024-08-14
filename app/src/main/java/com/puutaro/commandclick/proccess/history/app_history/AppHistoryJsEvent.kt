@@ -1,8 +1,7 @@
-package com.puutaro.commandclick.proccess.history
+package com.puutaro.commandclick.proccess.history.url_history
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems

@@ -16,13 +16,16 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
 import com.puutaro.commandclick.BuildConfig
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecRestartIntent
 import com.puutaro.commandclick.activity_lib.init.ActivityFinisher
+import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.util.file.AssetsFileManager
 
 object StorageAccessSetter {
 
@@ -119,23 +122,30 @@ object StorageAccessSetter {
             activity
         )
         getPermissionConfirmDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.confirm_text_dialog
+            R.layout.confirm_text_gif_dialog
         )
-        val confirmTitleTextView =
-            getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_title
+        getPermissionConfirmDialog?.findViewById<AppCompatImageView>(
+            R.id.confirm_text_gif_dialog_bk_image
+        )?.let {
+            val foldaGifByteArray = AssetsFileManager.assetsByteArray(
+                activity,
+                AssetsFileManager.foldaGifPath
             )
-        confirmTitleTextView?.text =
-            "Confirm storage permission"
+            Glide
+                .with(it.context)
+                .load(foldaGifByteArray)
+                .centerCrop()
+                .into(it)
+        }
         val confirmContentTextView =
-            getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+            getPermissionConfirmDialog?.findViewById<OutlineTextView>(
+                R.id.confirm_text_gif_dialog_text_view
             )
         confirmContentTextView?.text =
-            "Enable manage all storage permission, ok?"
+            "\n".repeat(4) + "Enable manage all storage permission, ok?"
         val confirmCancelButton =
             getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+                R.id.confirm_text_gif_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
             getPermissionConfirmDialog?.dismiss()
@@ -144,7 +154,7 @@ object StorageAccessSetter {
         }
         val confirmOkButton =
             getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+                R.id.confirm_text_gif_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
             getPermissionConfirmDialog?.dismiss()

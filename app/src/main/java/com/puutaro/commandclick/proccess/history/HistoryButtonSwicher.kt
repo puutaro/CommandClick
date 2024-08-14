@@ -1,11 +1,15 @@
 package com.puutaro.commandclick.proccess.history
 
+import android.graphics.Bitmap
 import android.view.View
+import androidx.core.view.ViewCompat
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
+import com.puutaro.commandclick.proccess.history.url_history.CmdClickHistoryButtonEvent
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
@@ -58,6 +62,16 @@ object HistoryButtonSwitcher {
             fannelInfoMap,
             urlHistoryButtonEvent,
         )
+    }
+}
+
+fun View.drawToBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
+    if (!ViewCompat.isLaidOut(this)) {
+        throw IllegalStateException("View needs to be laid out before calling drawToBitmap()")
+    }
+    return Bitmap.createBitmap(width, height, config).applyCanvas {
+        translate(-scrollX.toFloat(), -scrollY.toFloat())
+        draw(this)
     }
 }
 
