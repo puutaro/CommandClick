@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.permission
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.view.Gravity
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
@@ -129,9 +131,15 @@ class SdCardDirGetter(
                     activity,
                     AssetsFileManager.foldaGifPath
                 )
+                val requestBuilder: RequestBuilder<Drawable> =
+                    Glide.with(activity)
+                        .asDrawable()
+                        .sizeMultiplier(0.1f)
                 Glide
                     .with(it.context)
                     .load(foldaGifByteArray)
+                    .placeholder(R.mipmap.ic_cmdclick_launcher)
+                    .thumbnail(requestBuilder)
                     .centerCrop()
                     .into(it)
             }
