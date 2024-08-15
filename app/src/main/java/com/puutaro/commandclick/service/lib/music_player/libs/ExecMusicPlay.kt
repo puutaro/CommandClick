@@ -5,9 +5,9 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerInte
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.ResAndProcess
-import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
@@ -130,11 +130,20 @@ object ExecMusicPlay {
             }
             musicPlayerService.streamingPreloadFileMakeJob = stUrlMapToPreloadJob.second
             val streamingMap = stUrlMapToPreloadJob.first
-            if(
-                streamingMap.isNullOrEmpty()
-            ) {
+            val isEnd = endByMapCheck(streamingMap)
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "vAudio_url_map.txt").absolutePath,
+//                listOf(
+//                    "stUrl: ${streamingMap?.get(
+//                        AudioStreamingMapExtractor.AudioStreamingKey.STREAMING_URL.key
+//                    )}",
+//                    "streamingMap: ${streamingMap}",
+//                    "isEnd: ${isEnd}",
+//                ).joinToString("\n") + "\n-----------\n"
+//            )
+            if(isEnd){
                 LogSystems.stdWarn(
-                    "extract failure"
+                    "extract failure, check connect env"
                 )
                 BroadcastSender.normalSend(
                     context,
@@ -142,7 +151,7 @@ object ExecMusicPlay {
                 )
                 return@launch
             }
-            val uriTitle = streamingMap.get(
+            val uriTitle = streamingMap?.get(
                 AudioStreamingMapExtractor.AudioStreamingKey.TITLE.key
             ) ?: String()
             withContext(Dispatchers.IO) {
@@ -155,7 +164,7 @@ object ExecMusicPlay {
                 )
             }
             withContext(Dispatchers.IO) {
-                val videoLength = streamingMap.get(
+                val videoLength = streamingMap?.get(
                     AudioStreamingMapExtractor.AudioStreamingKey.DURATION.key
                 )
                 musicPlayerService.currentTrackLength =
@@ -175,7 +184,7 @@ object ExecMusicPlay {
 //                        )}",
 //                    ).joinToString("\n")
 //                )
-                streamingMap.get(
+                streamingMap?.get(
                     AudioStreamingMapExtractor.AudioStreamingKey.STREAMING_URL.key
                 )?.let {
                     execPlay(
@@ -186,6 +195,58 @@ object ExecMusicPlay {
                 }
             }
         }
+    }
+
+    private fun endByMapCheck(
+        streamingMap: Map<String, String>?
+    ): Boolean {
+        if(
+            streamingMap.isNullOrEmpty()
+        ) return true
+        val audioStreamingKeyList =
+            AudioStreamingMapExtractor.AudioStreamingKey.values()
+        audioStreamingKeyList.forEach {
+                audioStreamingKey ->
+            when(audioStreamingKey){
+                AudioStreamingMapExtractor.AudioStreamingKey.TITLE -> {
+                    val uriTitle =
+                        streamingMap.get(audioStreamingKey.key)
+                    if (
+                        uriTitle.isNullOrEmpty()
+                        || EnableUrlPrefix.isHttpPrefix(uriTitle)
+                    ) return true
+                }
+                AudioStreamingMapExtractor.AudioStreamingKey.STREAMING_URL -> {
+                    val stUrl =
+                        streamingMap.get(audioStreamingKey.key)
+                    if (
+                        stUrl.isNullOrEmpty()
+                        || !EnableUrlPrefix.isHttpPrefix(stUrl)
+                    ) return true
+                }
+                AudioStreamingMapExtractor.AudioStreamingKey.SRC_URL -> {
+                    val srcUrl =
+                        streamingMap.get(audioStreamingKey.key)
+                    if (
+                        srcUrl.isNullOrEmpty()
+                        || !EnableUrlPrefix.isHttpPrefix(srcUrl)
+                    ) return true
+                }
+                AudioStreamingMapExtractor.AudioStreamingKey.DURATION -> {
+                    val duration =
+                        streamingMap.get(audioStreamingKey.key)
+                    if (
+                        duration.isNullOrEmpty()
+                    ) return true
+                    try {
+                        duration.toInt()
+                    } catch (e: Exception) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
 
     private fun miliSecToSec(
