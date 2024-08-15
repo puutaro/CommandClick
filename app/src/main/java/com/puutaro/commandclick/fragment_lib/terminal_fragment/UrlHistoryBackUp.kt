@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.history.UrlHistoryPath
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope

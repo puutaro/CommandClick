@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.history.url_history
+package com.puutaro.commandclick.proccess.history.fannel_history
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -11,7 +11,7 @@ import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
-object AppHistoryAdminEvent {
+object FannelHistoryAdminEvent {
     fun register(
         sharedPref: FannelInfoTool.FannelInfoSharePref?,
         selectedAppDirPath: String,

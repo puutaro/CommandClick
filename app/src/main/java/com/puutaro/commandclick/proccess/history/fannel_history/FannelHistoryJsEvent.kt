@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.history.url_history
+package com.puutaro.commandclick.proccess.history.fannel_history
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
-object AppHistoryJsEvent {
+object FannelHistoryJsEvent {
 
     private val appHistoryClickJsName = UsePath.appHistoryClickJsName
 
@@ -24,10 +24,10 @@ object AppHistoryJsEvent {
                 selectedHistoryFile
             ).absolutePath
         )
-        val selectedAppDirName = AppHistoryManager.getAppDirNameFromAppHistoryFileName(
+        val selectedAppDirName = FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
             selectedHistoryFile
         )
-        val scriptFileName = AppHistoryManager.getScriptFileNameFromAppHistoryFileName(
+        val scriptFileName = FannelHistoryManager.getFannelNameFromAppHistoryFileName(
             selectedHistoryFile
         )
         val fannelDirName = CcPathTool.makeFannelDirName(scriptFileName)

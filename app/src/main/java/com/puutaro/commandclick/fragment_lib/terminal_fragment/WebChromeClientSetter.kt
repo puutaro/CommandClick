@@ -23,7 +23,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentE
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.history.UrlLogoHistoryTool
+import com.puutaro.commandclick.proccess.history.url_history.UrlLogoHistoryTool
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

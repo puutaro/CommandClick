@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.history
+package com.puutaro.commandclick.proccess.history.url_history
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems

@@ -11,7 +11,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
-import com.puutaro.commandclick.proccess.history.UrlHistoryRegister
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryRegister
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.FannelInfoTool

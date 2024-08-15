@@ -27,7 +27,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.re
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.history.AppHistoryManager
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -106,7 +106,7 @@ class CommandIndexFragment: Fragment() {
         FileSystems.createFiles(
             File(
                 cmdclickAppHistoryDirAdminPath,
-                AppHistoryManager.makeAppHistoryFileNameForInit(
+                FannelHistoryManager.makeAppHistoryFileNameForInit(
                     UsePath.cmdclickDefaultAppDirName,
                 )
             ).absolutePath
@@ -375,6 +375,10 @@ class CommandIndexFragment: Fragment() {
             ssid: String,
             pin: String
         )
+    }
+
+    interface OnCaptureActivityListenerForIndex {
+        fun onCaptureActivityForIndex()
     }
 
     private fun exitDialog(

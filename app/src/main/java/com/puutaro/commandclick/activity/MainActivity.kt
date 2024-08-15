@@ -60,6 +60,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.service.FannelRepoDownloadService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
@@ -109,6 +110,7 @@ class MainActivity:
     CommandIndexFragment.OnUpdateNoSaveUrlPathsListener,
     CommandIndexFragment.OnGetPermissionListenerForCmdIndex,
     CommandIndexFragment.OnConnectWifiListenerForCmdIndex,
+    CommandIndexFragment.OnCaptureActivityListenerForIndex,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -121,7 +123,8 @@ class MainActivity:
     EditFragment.OnLongPressPlayOrEditButtonListener,
     EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit,
     EditFragment.OnUpdateNoSaveUrlPathsListenerForEdit,
-    EditFragment.OnGetPermissionListenerForEdit {
+    EditFragment.OnGetPermissionListenerForEdit,
+    EditFragment.OnCaptureActivityListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     private var filePath: ValueCallback<Array<Uri>>? = null
@@ -203,6 +206,22 @@ class MainActivity:
             false
         )
         InitManager(this).invoke()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val view = withContext(Dispatchers.IO) {
+//                while (true) {
+//                    delay(1000)
+//                    if (
+//                        ::activityMainBinding.isInitialized
+//                    ) return@withContext activityMainBinding.rootContainer
+//                }
+//                null
+//            }
+//            AppHistoryCapture.watch(
+//                this@MainActivity,
+//                this@MainActivity.window.decorView.rootView,
+//                FannelInfoTool.getSharePref(this@MainActivity),
+//            )
+//        }
     }
 
     override fun onResume() {
@@ -778,6 +797,22 @@ class MainActivity:
         sdcardDirGetter.handle(
             this,
             isCreate,
+        )
+    }
+
+    override fun onCaptureActivityForIndex() {
+        val startUpPref = FannelInfoTool.getSharePref(this)
+        FannelHistoryCaptureTool.getCapture(
+            startUpPref,
+            activityMainBinding.rootContainer
+        )
+    }
+
+    override fun onCaptureActivityForEdit() {
+        val startUpPref = FannelInfoTool.getSharePref(this)
+        FannelHistoryCaptureTool.getCapture(
+            startUpPref,
+            activityMainBinding.rootContainer
         )
     }
  }

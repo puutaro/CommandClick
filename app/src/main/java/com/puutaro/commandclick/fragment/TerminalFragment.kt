@@ -212,6 +212,7 @@ class TerminalFragment: Fragment() {
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
         GifCreateMonitor.watch(this)
+        FannelHistoryGifCreator.watch(this)
     }
 
     override fun onStart() {

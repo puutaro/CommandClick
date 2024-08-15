@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.file
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.util.Intent.CurlManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -65,13 +66,13 @@ class UrlFileSystems {
             fannelListCon.isNotEmpty()
         ) return
         fannelListCon = withContext(Dispatchers.IO) {
-            exeGetFannelList(
+            execGetFannelList(
                 context
             )
         }
     }
 
-    fun exeGetFannelList(
+    fun execGetFannelList(
         context: Context?
     ): String {
         val fannelListUrl =
@@ -105,6 +106,9 @@ class UrlFileSystems {
             val destiFileObj = File("$destiDirPath/$it")
             if(
                 destiFileObj.isFile
+                || destiFileObj.absolutePath.contains(
+                    "/${FannelHistoryPath.makePartPngDirCut()}/"
+                )
             ) return@forEach
             val downloadUrl = "$gitUserContentFannelPrefix/$it"
             val conByteArray = CurlManager.get(

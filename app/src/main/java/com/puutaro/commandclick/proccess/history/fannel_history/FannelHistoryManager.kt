@@ -1,19 +1,19 @@
-package com.puutaro.commandclick.proccess.history.url_history
+package com.puutaro.commandclick.proccess.history.fannel_history
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 
-object AppHistoryManager {
+object FannelHistoryManager {
 
     private val jsSuffix = UsePath.JS_FILE_SUFFIX
     fun makeAppHistoryFileNameForInit (
         currentAppDirPath: String,
-        currentScriptFileName: String = String()
+        currentScriptFileName: String? = null
     ): String {
         val currentAppDirName = File(currentAppDirPath).name
         if(
-            currentScriptFileName.isEmpty()
+            currentScriptFileName.isNullOrEmpty()
         ) return "${currentAppDirName}__${UsePath.JS_FILE_SUFFIX}"
         return "${currentAppDirName}__${currentScriptFileName}"
     }
@@ -27,7 +27,7 @@ object AppHistoryManager {
         ).firstOrNull() ?: CommandClickScriptVariable.EMPTY_STRING
     }
 
-    fun getScriptFileNameFromAppHistoryFileName(
+    fun getFannelNameFromAppHistoryFileName(
         currentAppHistoryFileName: String
     ): String {
         val appHistoryList =

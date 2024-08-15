@@ -2,7 +2,6 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent.getIntent
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.KeyEvent
@@ -22,7 +21,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
-import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.FileSystems

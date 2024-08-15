@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.history.UrlHistoryRegister
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryRegister
 import com.puutaro.commandclick.util.state.FannelInfoTool
 
 class JsUrlHistory(

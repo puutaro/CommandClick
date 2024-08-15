@@ -148,7 +148,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("androidx.documentfile:documentfile:1.0.1")
 
-
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 

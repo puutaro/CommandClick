@@ -192,7 +192,7 @@ class FannelRepoDownloadService: Service() {
         val concurrentLimit = 10
         val semaphore = Semaphore(concurrentLimit)
         val fannelList = withContext(Dispatchers.IO) {
-            urlFileSystems.exeGetFannelList(context).split("\n")
+            urlFileSystems.execGetFannelList(context).split("\n")
         }
         withContext(Dispatchers.IO) {
             val jobList = fannelList.map {

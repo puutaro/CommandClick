@@ -3,9 +3,15 @@ package com.puutaro.commandclick.util.image_tools
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
+import android.view.PixelCopy
 import android.view.View
+import android.view.Window
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.file.FileSystems

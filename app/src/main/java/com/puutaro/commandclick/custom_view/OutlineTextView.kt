@@ -18,21 +18,40 @@ class OutlineTextView : AppCompatTextView {
         defStyleAttr
     )
 
+    private var isRevOutLine = false
+
     private val outlineWidth = 2 * context.resources.displayMetrics.density
 
     override fun onDraw(canvas: Canvas?) {
-        setTextColor(Color.WHITE)
+        val strokeColor = when(
+            isRevOutLine
+        ){
+            true -> Color.BLACK
+            else -> Color.WHITE
+        }
+        setTextColor(strokeColor)
         paint.apply {
             style = Paint.Style.FILL_AND_STROKE
             strokeWidth = outlineWidth
         }
         super.onDraw(canvas)
 
-        setTextColor(Color.BLACK)
+        val fillColor = when(
+            isRevOutLine
+        ){
+            true -> Color.WHITE
+            else -> Color.BLACK
+        }
+        setTextColor(fillColor)
         paint.apply {
             style = Paint.Style.FILL
             strokeWidth = 0f
         }
         super.onDraw(canvas)
+    }
+
+    fun revOutline(isRev: Boolean){
+        isRevOutLine = isRev
+
     }
 }

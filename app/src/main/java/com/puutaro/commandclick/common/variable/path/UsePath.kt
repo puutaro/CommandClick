@@ -172,6 +172,8 @@ object UsePath {
     val fannelSettingsDirPath = "\${01}/\${001}/settings"
     val homeFannelsFilePath =
         "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
+    val settingImagesDirName = "settingImages"
+    val fannelSettingImagesDirPath = "\${01}/\${001}/${settingImagesDirName}"
     val saveWebConDialogFannelName = "saveWebConDialog.js"
     val savePageUrlDialogFannelName = "savePageUrlDialog.js"
     val saveGmailConDialogFannelName = "saveGmailConDialog.js"
@@ -182,6 +184,9 @@ object UsePath {
     private const val cmdclickSystemDirName = "system"
     private const val cmdclickJsSystemDirName = "js"
     const val cmdclickJsSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickJsSystemDirName"
+    private const val cmdclickAppSystemDirName = "app"
+    const val cmdclickAppSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickAppSystemDirName"
+    const val cmdclickAppSystemDirPath = "\${01}/${cmdclickAppSystemDirRelativePath}"
     private const val cmdclickUrlSystemDirName = "url"
     const val cmdclickUrlSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickUrlSystemDirName"
     private const val cmdclickQrSystemDirName = "qr"

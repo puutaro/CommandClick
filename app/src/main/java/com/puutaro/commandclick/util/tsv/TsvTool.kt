@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util.tsv
 
-import com.puutaro.commandclick.proccess.history.UrlCaptureHistoryTool
+import com.puutaro.commandclick.proccess.history.url_history.UrlCaptureHistoryTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap

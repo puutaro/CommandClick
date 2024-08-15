@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util.file
 
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.net.Uri
 import android.util.Log
 import java.io.ByteArrayOutputStream
@@ -19,6 +18,9 @@ object AssetsFileManager {
     const val resGifDirPath = "res/gif"
     const val urlHistoryGifPath = "${resGifDirPath}/url_history.gif"
     const val internetGifPath = "${resGifDirPath}/internet.gif"
+    const val intrudeGifPath = "${resGifDirPath}/intrude.gif"
+    const val ccRoboGifPath = "${resGifDirPath}/cc_robo.gif"
+    const val foldaGifPath = "${resGifDirPath}/folda.gif"
     private const val assetsBookmarkDirPath = "$assetsFannelsDirName/bookmark"
     const val assetsClipToHistoryForBookmark = "$assetsBookmarkDirPath/clipToHistory.js"
     private const val assetsDialogWebViewDirPath = "$assetsFannelsDirName/dialog_webview"

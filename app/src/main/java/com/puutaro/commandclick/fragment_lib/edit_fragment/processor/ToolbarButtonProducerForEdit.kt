@@ -11,7 +11,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.history.CLICLTYPE
 import com.puutaro.commandclick.proccess.history.HistoryButtonSwitcher
-import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonColorSettingForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonStatusSettingsForToolbarButton

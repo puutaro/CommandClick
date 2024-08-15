@@ -1,14 +1,13 @@
 package com.puutaro.commandclick.proccess.history
 
-import android.graphics.Bitmap
 import android.view.View
-import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
-import com.puutaro.commandclick.proccess.history.url_history.CmdClickHistoryButtonEvent
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -18,13 +17,16 @@ import java.io.File
 object HistoryButtonSwitcher {
 
     fun switch(
-        fragment: androidx.fragment.app.Fragment,
+        fragment: Fragment,
         innerView: View,
         terminalFragmentTag: String?,
         historySwitch: String,
         urlHistoryButtonEvent: UrlHistoryButtonEvent,
         clickType: CLICLTYPE
     ) {
+        launchCapture(
+            fragment,
+        )
         val fannelInfoMap = when(
             fragment
         ){
@@ -43,7 +45,7 @@ object HistoryButtonSwitcher {
         else !switchOnSource
 
         if(switchOn) {
-            CmdClickHistoryButtonEvent(
+            FannelHistoryButtonEvent(
 //                innerView,
                 fragment,
                 sharedPref,
@@ -63,21 +65,28 @@ object HistoryButtonSwitcher {
             urlHistoryButtonEvent,
         )
     }
-}
 
-fun View.drawToBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
-    if (!ViewCompat.isLaidOut(this)) {
-        throw IllegalStateException("View needs to be laid out before calling drawToBitmap()")
-    }
-    return Bitmap.createBitmap(width, height, config).applyCanvas {
-        translate(-scrollX.toFloat(), -scrollY.toFloat())
-        draw(this)
+    private fun launchCapture(
+        fragment: Fragment,
+    ){
+       when(fragment){
+            is CommandIndexFragment -> {
+                val listener = fragment.context as? CommandIndexFragment.OnCaptureActivityListenerForIndex
+                    ?: return
+                listener.onCaptureActivityForIndex()
+            }
+            is EditFragment -> {
+                val listener = fragment.context as? EditFragment.OnCaptureActivityListenerForEdit
+                    ?: return
+                listener.onCaptureActivityForEdit()
+            }
+            else -> return
+        }
     }
 }
-
 
 private fun urlHistoryButtonHandler(
-    fragment: androidx.fragment.app.Fragment,
+    fragment: Fragment,
     innerView: View,
     fannelInfoMap: Map<String, String>,
     urlHistoryButtonEvent: UrlHistoryButtonEvent,

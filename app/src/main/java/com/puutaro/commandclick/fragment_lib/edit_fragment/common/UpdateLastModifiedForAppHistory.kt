@@ -4,7 +4,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.history.AppHistoryManager
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
@@ -45,7 +45,7 @@ object UpdateLastModifiedForAppHistory {
         FileSystems.updateLastModified(
             File(
                 UsePath.cmdclickAppHistoryDirAdminPath,
-                AppHistoryManager.makeAppHistoryFileNameForInit(
+                FannelHistoryManager.makeAppHistoryFileNameForInit(
                     currentAppDirPath,
                     currentFannelName
                 )

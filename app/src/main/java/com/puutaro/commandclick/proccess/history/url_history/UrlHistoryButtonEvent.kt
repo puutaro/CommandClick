@@ -1,17 +1,14 @@
-package com.puutaro.commandclick.proccess.history
+package com.puutaro.commandclick.proccess.history.url_history
 
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,6 +24,7 @@ import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.Intent.IntentVariant
@@ -115,7 +113,7 @@ class UrlHistoryButtonEvent(
         val searchTextLinearParams =
             searchText?.layoutParams as LinearLayout.LayoutParams
         searchTextLinearParams.weight = searchTextLinearWeight
-        urlHistoryListView.layoutManager =  GridLayoutManager(
+        urlHistoryListView.layoutManager = GridLayoutManager(
             context,
             2,
             LinearLayoutManager.VERTICAL,
@@ -184,7 +182,7 @@ class UrlHistoryButtonEvent(
     private fun setItemTouchHelper(
         recyclerView: RecyclerView,
         urlHistoryAdapter: UrlHistoryAdapter,
-        searchText: EditText,
+        searchText: AppCompatEditText,
     ){
         val mIth = ItemTouchHelper(
             object : ItemTouchHelper.SimpleCallback(
@@ -240,7 +238,7 @@ class UrlHistoryButtonEvent(
     private fun makeSearchEditText(
         urlHistoryListAdapter: UrlHistoryAdapter,
         urlHistoryListView: RecyclerView?,
-        searchText: EditText
+        searchText: AppCompatEditText
     ) {
         var updateRecyclerJob: Job? = null
         searchText.addTextChangedListener(object : TextWatcher {
@@ -282,7 +280,7 @@ class UrlHistoryButtonEvent(
     private fun setUrlHistoryListViewOnItemClickListener (
         urlHistoryListView: RecyclerView,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
-        searchText: EditText,
+        searchText: AppCompatEditText,
     ){
         urlHistoryDisplayListAdapter.itemClickListener = object: UrlHistoryAdapter.OnItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
@@ -365,7 +363,8 @@ class UrlHistoryButtonEvent(
                     withContext(Dispatchers.Main){
                         ToastUtils.showShort("share")
                     }
-                    val pngImagePathObj = makePngImageFromView(
+                    val pngImagePathObj = HistoryShareImage.makePngImageFromView(
+                        context,
                         urlHistoryAdapterRelativeLayout
                     ) ?: return@launch
                     withContext(Dispatchers.Main) {
@@ -380,56 +379,9 @@ class UrlHistoryButtonEvent(
         }
     }
 
-    private suspend fun makePngImageFromView(
-        urlHistoryAdapterRelativeLayout: RelativeLayout
-    ): File? {
-        withContext(Dispatchers.IO) {
-            FileSystems.removeAndCreateDir(
-                UsePath.cmdclickTempCreateDirPath
-            )
-        }
-        val bitmap = withContext(Dispatchers.Main) {
-            for(i in 1..10) {
-                try {
-                    val bm = BitmapTool.getScreenShotFromView(
-                        urlHistoryAdapterRelativeLayout
-                    )
-                    return@withContext bm
-                } catch (e: Exception) {
-                    delay(100)
-                    continue
-                }
-            }
-            LogSystems.stdErr(
-                context,
-                "Cannot save screen shot"
-            )
-            null
-        } ?: return null
-        val imageName = withContext(Dispatchers.IO) {
-            BitmapTool.hash(
-                bitmap
-            ) + ".png"
-        }
-        val file = File(
-            UsePath.cmdclickTempCreateDirPath,
-            imageName
-        )
-        withContext(Dispatchers.IO) {
-            FileOutputStream(file).use { stream ->
-                bitmap.compress(
-                    Bitmap.CompressFormat.PNG,
-                    100,
-                    stream
-                )
-            }
-        }
-        return file
-    }
-
     private fun setUrlHistoryListViewOnCopyItemClickListener (
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
-        searchText: EditText,
+        searchText: AppCompatEditText,
     ){
         urlHistoryDisplayListAdapter.copyItemClickListener = object: UrlHistoryAdapter.OnCopyItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
@@ -471,7 +423,7 @@ class UrlHistoryButtonEvent(
 
     private fun setUrlHistoryListViewOnDeleteItemClickListener (
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
-        searchText: EditText,
+        searchText: AppCompatEditText,
     ){
         urlHistoryDisplayListAdapter.deleteItemClickListener = object: UrlHistoryAdapter.OnDeleteItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
@@ -648,7 +600,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun makeSearchFilteredUrlHistoryList(
-        searchText: EditText
+        searchText: AppCompatEditText
     ): List<Map<String, String>> {
         return makeUrlHistoryList().filter {
             val urlTitleSource =
@@ -668,7 +620,7 @@ class UrlHistoryButtonEvent(
 
     private fun execDeleteUrl(
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
-        searchText: EditText,
+        searchText: AppCompatEditText,
         position: Int,
     ){
         val filteredUrlHistoryMap =

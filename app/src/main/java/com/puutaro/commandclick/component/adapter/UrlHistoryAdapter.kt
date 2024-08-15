@@ -15,14 +15,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
-import com.puutaro.commandclick.proccess.history.UrlHistoryPath
-import com.puutaro.commandclick.proccess.history.UrlLogoHistoryTool
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
+import com.puutaro.commandclick.proccess.history.url_history.UrlLogoHistoryTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -70,6 +69,17 @@ class UrlHistoryAdapter(
         context,
         AssetsFileManager.internetGifPath
     )
+
+    private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
+        context,
+        AssetsFileManager.intrudeGifPath
+    )
+
+    private val ccRoboGifByteArray = AssetsFileManager.assetsByteArray(
+        context,
+        AssetsFileManager.ccRoboGifPath
+    )
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -205,9 +215,7 @@ class UrlHistoryAdapter(
         val context = urlCaptureView.context
         val isFile = !capturePngPathOrMacro.isNullOrEmpty()
                 && File(capturePngPathOrMacro).isFile
-        val delayTime = (0..200L).random()
         withContext(Dispatchers.Main) {
-            delay(delayTime)
             when (isFile) {
                 true -> {
                     holder.urlCaptureView.imageTintList = null
@@ -228,7 +236,7 @@ class UrlHistoryAdapter(
                     val byteArray =
                         if(
                             EnableUrlPrefix.isHttpPrefix(url)
-                        ) internetGifByteArray
+                        ) ccRoboGifByteArray
                         else urlHistoryGifByteArray
                     Glide
                         .with(holder.urlCaptureView.context)

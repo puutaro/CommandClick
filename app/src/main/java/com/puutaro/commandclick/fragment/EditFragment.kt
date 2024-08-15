@@ -537,6 +537,10 @@ class EditFragment: Fragment() {
         )
     }
 
+    interface OnCaptureActivityListenerForEdit {
+        fun onCaptureActivityForEdit()
+    }
+
     private fun exitDialog(
         editListRecyclerView: RecyclerView
     ){

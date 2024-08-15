@@ -12,7 +12,7 @@ import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.proccess.history.AppHistoryManager
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -99,7 +99,7 @@ object IndexInitHandler {
         FileSystems.updateLastModified(
             File(
                 UsePath.cmdclickAppHistoryDirAdminPath,
-                AppHistoryManager.makeAppHistoryFileNameForInit(
+                FannelHistoryManager.makeAppHistoryFileNameForInit(
                     currentAppDirPath,
                 )
             ).absolutePath

@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.history
+package com.puutaro.commandclick.proccess.history.url_history
 
 private val mainMenuGroupId = 70000
 
