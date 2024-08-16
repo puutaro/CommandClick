@@ -99,7 +99,7 @@ Support certain js script name macro
 
 #### Format
 
-Use `!` as sepalator
+Use `?` as sepalator
 
 ex1)
 ```
@@ -107,7 +107,7 @@ ex1)
 jsDialog.webView_S(
     launchUrlString,
     "${0}",
-    "clickMenuFilePath=${01}/${001}/clickMenu.txt!longPressMenuFilePath=${01}/${001}/longPressMenu.txt!dismissType=both!dismissDelayMiliTime=300!label=⬇",
+    "clickMenuFilePath=${01}/${001}/clickMenu.txt?longPressMenuFilePath=${01}/${001}/longPressMenu.txt?dismissType=both?dismissDelayMiliTime=300?label=⬇",
     "",
     "",
 );
@@ -118,7 +118,7 @@ ex2)
 jsDialog.webView_S(
     launchUrlString,
     "${0}",
-    "dismissType=both!label=☓",
+    "dismissType=both?label=☓",
     "",
     "",
 );
@@ -132,7 +132,7 @@ ex2)
 jsDialog.webView_S(
     launchUrlString,
     "${0}",
-    "dismissType=longpress!label=⬅",
+    "dismissType=longpress?label=⬅",
     "",
     "",
 );
@@ -156,7 +156,7 @@ ex1)
 jsDialog.webView_S(
     launchUrlString,
     "${0}",
-    "clickMenuFilePath=${01}/${001}/clickMenu1.txt!dismissType=longpress!label=⬅|clickMenuFilePath=${01}/${001}/clickMenu.txt!longPressMenuFilePath=${01}/${001}/longPressMenu.txt!dismissType=both!|dismissDelayMiliTime=300!label=wheel|dismissDelayMiliTime=300!label=wheel|clickMenuFilePath=${01}/${001}/clickMenu3.txt!label=☓!dismissType=both",
+    "clickMenuFilePath=${01}/${001}/clickMenu1.txt?dismissType=longpress?label=⬅|clickMenuFilePath=${01}/${001}/clickMenu.txt?longPressMenuFilePath=${01}/${001}/longPressMenu.txt?dismissType=both?|dismissDelayMiliTime=300?label=wheel|dismissDelayMiliTime=300?label=wheel|clickMenuFilePath=${01}/${001}/clickMenu3.txt?label=☓?dismissType=both",
     "",
     "",
 );
@@ -184,7 +184,7 @@ This is about long press menu in webview
 
 #### Format
 
-Use `!` as sepalator
+Use `?` as sepalator
 
 ex)
 
@@ -192,7 +192,7 @@ ex)
 jsDialog.webView_S(
     launchUrlString,
     "${0}",
-    "`clickMenuFilePath=${leftMenuListPath}!longPressMenuFilePath=${leftLongPressMenuListPath}!dismissType=longpress!label=⬅`|`clickMenuFilePath=${centerMenuListPath}!longPressMenuFilePath=${centerLongPressMenuListPath}!label=🔍`|`clickMenuFilePath=${rightMenuListPath}!label=⬇`",
+    "`clickMenuFilePath=${leftMenuListPath}?longPressMenuFilePath=${leftLongPressMenuListPath}?dismissType=longpress?label=⬅`|`clickMenuFilePath=${centerMenuListPath}?longPressMenuFilePath=${centerLongPressMenuListPath}?label=🔍`|`clickMenuFilePath=${rightMenuListPath}?label=⬇`",
     "`srcImageAnchorMenuFilePath=${srcImageAnchorMenuListPath}`|`srcAnchorMenuFilePath=${srcAnchorMenuListPath}`|`imageMenuFilePath=${imageMenuListPath}`",
     "",
 );
