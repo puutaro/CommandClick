@@ -44,7 +44,7 @@
                 android:id="@+id/fannel_history_app_dir"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_marginBottom="15dp"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="19sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
