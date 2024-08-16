@@ -70,15 +70,15 @@ class UrlHistoryAdapter(
         AssetsFileManager.internetGifPath
     )
 
-    private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
-        context,
-        AssetsFileManager.intrudeGifPath
-    )
-
-    private val ccRoboGifByteArray = AssetsFileManager.assetsByteArray(
-        context,
-        AssetsFileManager.ccRoboGifPath
-    )
+//    private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
+//        context,
+//        AssetsFileManager.intrudeGifPath
+//    )
+//
+//    private val ccRoboGifByteArray = AssetsFileManager.assetsByteArray(
+//        context,
+//        AssetsFileManager.ccRoboGifPath
+//    )
 
 
     override fun onCreateViewHolder(
@@ -236,7 +236,7 @@ class UrlHistoryAdapter(
                     val byteArray =
                         if(
                             EnableUrlPrefix.isHttpPrefix(url)
-                        ) ccRoboGifByteArray
+                        ) internetGifByteArray
                         else urlHistoryGifByteArray
                     Glide
                         .with(holder.urlCaptureView.context)

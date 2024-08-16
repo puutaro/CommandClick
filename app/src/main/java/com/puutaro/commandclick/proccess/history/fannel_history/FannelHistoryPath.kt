@@ -21,40 +21,6 @@ object FannelHistoryPath {
         ).joinToString("/")
     }
 
-    fun makeFannelSettingImagesDirPath(
-        currentAppDirPath: String,
-        currentFannelName: String?,
-    ): String {
-        return when(
-            currentFannelName.isNullOrEmpty()
-                    || currentFannelName == FannelInfoSetting.current_fannel_name.defalutStr
-        ) {
-            true -> ScriptPreWordReplacer.replace(
-                UsePath.cmdclickAppSystemDirPath,
-                currentAppDirPath,
-                String()
-            )
-            else -> ScriptPreWordReplacer.replace(
-                UsePath.fannelSettingImagesDirPath,
-                currentAppDirPath,
-                currentFannelName
-            )
-        }
-    }
-
-    fun makeFannelSettingImagesCaptureDirPath(
-        currentAppDirPath: String,
-        currentFannelName: String?,
-    ): String {
-        return File(
-            makeFannelSettingImagesDirPath(
-                currentAppDirPath,
-                currentFannelName,
-            ),
-            captureDirName
-        ).absolutePath
-    }
-
 
     fun getCapturePartsPngDirPath(
         currentAppDirPath: String,
@@ -114,6 +80,37 @@ object FannelHistoryPath {
             gifDesignName
         ).joinToString("/").replace(
             Regex("[/]+"), "/"
+        )
+    }
+
+    private fun makeFannelSettingImagesCaptureDirPath(
+        currentAppDirPath: String,
+        currentFannelName: String?,
+    ): String {
+        return File(
+            makeFannelSettingImagesDirPath(
+                currentAppDirPath,
+                currentFannelName,
+            ),
+            captureDirName
+        ).absolutePath
+    }
+
+    private fun makeFannelSettingImagesDirPath(
+        currentAppDirPath: String,
+        currentFannelName: String?,
+    ): String {
+        val replaceFannelName = when(
+            currentFannelName.isNullOrEmpty()
+                    || currentFannelName == FannelInfoSetting.current_fannel_name.defalutStr
+        ) {
+            true -> UsePath.cmdclickAppDirSystemFannelName
+            else -> currentFannelName
+        }
+        return ScriptPreWordReplacer.replace(
+            UsePath.fannelSettingImagesDirPath,
+            currentAppDirPath,
+            replaceFannelName
         )
     }
 }

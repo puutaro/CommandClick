@@ -448,7 +448,16 @@ class UrlHistoryButtonEvent(
         if(
             currentAppDirPath.isNullOrEmpty()
         ) return emptyList()
-        return makeBottomScriptUrlList() + makeUrlListFromHistory()
+        val urlList = makeUrlListFromHistory()
+        val urlHistoryList = makeBottomScriptUrlList() + urlList
+        val urlHistoryListSize = urlHistoryList.size
+        return when(
+            urlHistoryListSize > 3
+                    || urlHistoryListSize % 2 == 1
+        ){
+            true -> urlHistoryList + urlList.last()
+            else -> urlHistoryList
+        }
     }
 
     private fun makeUrlListFromHistory(): List<Map<String, String>>{

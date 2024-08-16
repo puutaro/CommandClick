@@ -159,16 +159,18 @@ object FannelHistoryGifCreator {
             appDirPath,
             fannelName,
         )
-        val capturePartsPngList = when(
-            fannelName.isEmpty()
-                    || fannelName == FannelInfoSetting.current_fannel_name.defalutStr
-        ) {
-            true -> FileSystems.sortedFiles(capturePartsPngDirPath)
-            else ->
-                urlPngPathList.map { File(it).name }.sortedBy { it }
-        }.sortedBy { it }.map {
-            File(capturePartsPngDirPath, it).absolutePath
-        }
+        val capturePartsPngList =
+            urlPngPathList.map { File(it).name }.sortedBy { it }.sortedBy { it }.map {
+                File(capturePartsPngDirPath, it).absolutePath
+            }
+//            when(
+//            fannelName.isEmpty()
+//                    || fannelName == FannelInfoSetting.current_fannel_name.defalutStr
+//        ) {
+//            true -> FileSystems.sortedFiles(capturePartsPngDirPath)
+//            else ->
+//                urlPngPathList.map { File(it).name }.sortedBy { it }
+//        }
         val facePngPath = FannelHistoryPath.getCaptureFacePngDirPath(
             appDirPath,
             fannelName,

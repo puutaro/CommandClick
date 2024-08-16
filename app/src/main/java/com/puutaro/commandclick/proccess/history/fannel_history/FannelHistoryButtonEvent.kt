@@ -54,7 +54,7 @@ class FannelHistoryButtonEvent (
     private val fragment: Fragment,
     private val sharedPref: FannelInfoTool.FannelInfoSharePref?,
     )
-{
+ {
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
     private val context = fragment.context
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
@@ -222,12 +222,20 @@ class FannelHistoryButtonEvent (
     }
 
     private fun makeUpdateHistoryList(): List<String> {
-        val historyListSource =  FileSystems.filterSuffixShellOrJsFiles(
+        val fannelList = FileSystems.filterSuffixShellOrJsFiles(
             cmdclickAppHistoryDirAdminPath
         ).filter {
             !homeFannelList.contains(it)
-        } + homeFannelList.reversed()
-        return historyListSource
+        }
+        val historyListSource =  fannelList + homeFannelList.reversed()
+        val historyListSourceSize = historyListSource.size
+        return when(
+            historyListSourceSize % 2 == 1
+                    &&  historyListSourceSize > 3
+        ){
+            true -> historyListSource + homeFannelList.last()
+            else -> historyListSource
+        }
     }
 
     private fun invokeItemSetClickListenerForHistory(
