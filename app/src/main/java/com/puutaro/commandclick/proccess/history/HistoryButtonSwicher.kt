@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.history
 
-import android.view.View
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -18,7 +17,6 @@ object HistoryButtonSwitcher {
 
     fun switch(
         fragment: Fragment,
-        innerView: View,
         terminalFragmentTag: String?,
         historySwitch: String,
         urlHistoryButtonEvent: UrlHistoryButtonEvent,
@@ -44,26 +42,27 @@ object HistoryButtonSwitcher {
         ) switchOnSource
         else !switchOnSource
 
-        if(switchOn) {
-            FannelHistoryButtonEvent(
-//                innerView,
+        when(switchOn) {
+            true -> FannelHistoryButtonEvent(
                 fragment,
                 sharedPref,
             ).invoke()
-            return
+           else -> urlHistoryButtonHandler(
+               fragment,
+               fannelInfoMap,
+               urlHistoryButtonEvent,
+               terminalFragmentTag,
+           ).let {
+                   onUrlHistory ->
+               if(
+                   onUrlHistory
+               ) return@let
+               FannelHistoryButtonEvent(
+                   fragment,
+                   sharedPref,
+               ).invoke()
+           }
         }
-
-        ExistTerminalFragment.how(
-            fragment,
-            terminalFragmentTag,
-        )
-            ?: return
-        urlHistoryButtonHandler(
-            fragment,
-            innerView,
-            fannelInfoMap,
-            urlHistoryButtonEvent,
-        )
     }
 
     private fun launchCapture(
@@ -87,11 +86,14 @@ object HistoryButtonSwitcher {
 
 private fun urlHistoryButtonHandler(
     fragment: Fragment,
-    innerView: View,
     fannelInfoMap: Map<String, String>,
     urlHistoryButtonEvent: UrlHistoryButtonEvent,
-) {
-
+    terminalFragmentTag: String?,
+): Boolean {
+    ExistTerminalFragment.how(
+        fragment,
+        terminalFragmentTag,
+    ) ?: return false
     val urlHistoryOrButtonExecUrlHistory =
         SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val urlHistoryOrButtonExec = when(
@@ -121,12 +123,12 @@ private fun urlHistoryButtonHandler(
     if(
         !onTerminal
         && onUrlHistory
-    ) return
+    ) return false
     if(
         onUrlHistory
     ) {
         urlHistoryButtonEvent.invoke()
-        return
+        return true
     }
 
     val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
@@ -138,12 +140,13 @@ private fun urlHistoryButtonHandler(
             currentAppDirPath,
             currentShellFileName
         ).isFile
-    ) return
+    ) return false
     ExecJsOrSellHandler.handle(
         fragment,
         currentAppDirPath,
         currentShellFileName,
     )
+    return true
 }
 
 

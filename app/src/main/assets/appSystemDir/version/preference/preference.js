@@ -22,10 +22,10 @@ srcAnchorLongPressMenuFilePath=""
 imageLongPressMenuFilePath=""
 // startup setting
 onUrlLaunchMacro="RECENT"
-onAutoExec="OFF"
+onAutoExec="ON"
 execJsOrHtmlPath=""
 // webview extra setting
-defaultMonitorFile="monitor_2"
+defaultMonitorFile="monitor_1"
 disableShowToolbarWhenHighlight="OFF"
 onTermBackendWhenStart="OFF"
 onTermVisibleWhenKeyboard="OFF"
@@ -33,7 +33,7 @@ onTermShortWhenLoad="OFF"
 // history setting
 homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
 ignoreHistoryPaths=""
-historySwitch="INHERIT"
+historySwitch="ON"
 urlHistoryOrButtonExec="INHERIT"
 onLaunchUrlHistoryByBackstack="ON"
 /// SETTING_SECTION_END
@@ -53,10 +53,10 @@ srcAnchorLongPressMenuFilePath=""
 imageLongPressMenuFilePath=""
 // startup setting
 onUrlLaunchMacro="RECENT"
-onAutoExec="OFF"
+onAutoExec="ON"
 execJsOrHtmlPath=""
 // webview extra setting
-defaultMonitorFile="monitor_2"
+defaultMonitorFile="monitor_1"
 disableShowToolbarWhenHighlight="OFF"
 onTermBackendWhenStart="OFF"
 onTermVisibleWhenKeyboard="OFF"
@@ -64,7 +64,7 @@ onTermShortWhenLoad="OFF"
 // history setting
 homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
 ignoreHistoryPaths=""
-historySwitch="INHERIT"
+historySwitch="ON"
 urlHistoryOrButtonExec="INHERIT"
 onLaunchUrlHistoryByBackstack="ON"
 // edit vals

@@ -27,7 +27,6 @@ class ToolBarHistoryButtonControl(
             historyButtonInnerView ->
             HistoryButtonSwitcher.switch(
                 cmdIndexFragment,
-                historyButtonInnerView,
                 cmdIndexFragment.context?.getString(
                     R.string.index_terminal_fragment
                 ),
@@ -41,7 +40,6 @@ class ToolBarHistoryButtonControl(
                 historyButtonInnerView ->
             HistoryButtonSwitcher.switch(
                 cmdIndexFragment,
-                historyButtonInnerView,
                 cmdIndexFragment.context?.getString(
                     R.string.index_terminal_fragment
                 ),

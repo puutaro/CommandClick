@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -83,7 +82,6 @@ class ToolbarButtonProducerForEdit(
                 buttonInnerView ->
             onLongClickHandler(
                 editFragment,
-                buttonInnerView,
                 makeButtonView,
                 toolbarButtonBariantForEdit,
 //                recordNumToMapNameValueInCommandHolder,
@@ -111,7 +109,6 @@ class ToolbarButtonProducerForEdit(
                     }
                     HistoryButtonSwitcher.switch(
                         editFragment,
-                        view,
                         editFragment.context?.getString(
                             R.string.edit_terminal_fragment
                         ),
@@ -147,7 +144,6 @@ class ToolbarButtonProducerForEdit(
 
     private fun onLongClickHandler(
         editFragment: EditFragment,
-        buttonInnerView: View,
         settingButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     ){
@@ -155,7 +151,6 @@ class ToolbarButtonProducerForEdit(
             ToolbarButtonBariantForEdit.HISTORY -> {
                 HistoryButtonSwitcher.switch(
                     editFragment,
-                    buttonInnerView,
                     editFragment.context?.getString(
                         R.string.edit_terminal_fragment
                     ),
