@@ -452,8 +452,8 @@ class UrlHistoryButtonEvent(
         val urlHistoryList = makeBottomScriptUrlList() + urlList
         val urlHistoryListSize = urlHistoryList.size
         return when(
-            urlHistoryListSize > 3
-                    || urlHistoryListSize % 2 == 1
+            urlHistoryListSize % 2 == 1
+                    && urlHistoryListSize > 3
         ){
             true -> urlHistoryList + urlList.last()
             else -> urlHistoryList
