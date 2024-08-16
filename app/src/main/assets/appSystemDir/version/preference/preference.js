@@ -33,7 +33,7 @@ onTermShortWhenLoad="OFF"
 // history setting
 homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
 ignoreHistoryPaths=""
-historySwitch="ON"
+historySwitch="INHERIT"
 urlHistoryOrButtonExec="INHERIT"
 onLaunchUrlHistoryByBackstack="ON"
 /// SETTING_SECTION_END
@@ -64,7 +64,7 @@ onTermShortWhenLoad="OFF"
 // history setting
 homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
 ignoreHistoryPaths=""
-historySwitch="ON"
+historySwitch="INHERIT"
 urlHistoryOrButtonExec="INHERIT"
 onLaunchUrlHistoryByBackstack="ON"
 // edit vals

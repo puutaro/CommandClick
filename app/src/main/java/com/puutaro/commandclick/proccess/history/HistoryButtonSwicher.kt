@@ -38,7 +38,7 @@ object HistoryButtonSwitcher {
                         SettingVariableSelects.HistorySwitchSelects.ON.name
                 )
         val switchOn = if(
-            clickType == CLICLTYPE.LONG
+            clickType == CLICLTYPE.SHORT
         ) switchOnSource
         else !switchOnSource
 
