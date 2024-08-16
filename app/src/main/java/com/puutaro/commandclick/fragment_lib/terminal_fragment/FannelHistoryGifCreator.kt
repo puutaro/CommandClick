@@ -1,21 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Context
-import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -85,48 +83,50 @@ object FannelHistoryGifCreator {
                             semaphore.withPermit {
                                 val historyName = map.key
                                 val urlPngPathList = map.value
-                            val appDirName = withContext(Dispatchers.IO) {
-                                FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
-                                    historyName
+                                val appDirName = withContext(Dispatchers.IO) {
+                                    FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
+                                        historyName
+                                    )
+                                }
+                                val appDirPath = File(cmdclickAppDirPath, appDirName).absolutePath
+                                val fannelName = withContext(Dispatchers.IO){
+                                    FannelHistoryManager.getFannelNameFromAppHistoryFileName(
+                                        historyName
+                                    )
+                                }
+                                val designList = makeDesignConList(
+                                    historyName,
+                                    appDirName,
+                                    urlPngPathList,
                                 )
-                            }
-                            val appDirPath = File(cmdclickAppDirPath, appDirName).absolutePath
-                            val fannelName = withContext(Dispatchers.IO){
-                                FannelHistoryManager.getFannelNameFromAppHistoryFileName(
-                                    historyName
+                                val captureGifDesignConList = FannelHistoryPath.getCaptureGifDesignPath(
+                                    appDirPath,
+                                    fannelName,
+                                ).let {
+                                    ReadText(it).textToList()
+                                }
+                                val gifPath = FannelHistoryPath.getCaptureGifPath(
+                                    appDirPath,
+                                    fannelName,
                                 )
-                            }
-                            val designList = makeDesignConList(
-                                historyName,
-                                appDirName,
-                                urlPngPathList,
-                            )
-                            val captureGifDesignConList = FannelHistoryPath.getCaptureGifDesignPath(
-                                appDirPath,
-                                fannelName,
-                            ).let {
-                                ReadText(it).textToList()
-                            }
-                            val gifPath = FannelHistoryPath.getCaptureGifPath(
-                                appDirPath,
-                                fannelName,
-                            )
-                            val isRecreateGif =
-                                !File(gifPath).isFile
-                                        || captureGifDesignConList != designList
-//                            FileSystems.updateFile(
-//                                File(
-//                                    UsePath.cmdclickDefaultAppDirPath,
-//                                    "gif_makeUrlPrtPngMapList_watch2.txt"
-//                                ).absolutePath,
-//                                listOf(
-//                                    "historyName: ${historyName}",
-//                                    "urlPngPathList: ${urlPngPathList}",
-//                                    "captureGifDesignConList: ${captureGifDesignConList}",
-//                                    "designList: ${designList}",
-//                                    "isRecreateGif: ${isRecreateGif}",
-//                                ).joinToString("\n") + "\n-----------\n"
-//                            )
+                                val isRecreateGif =
+                                    !File(gifPath).isFile
+                                            || captureGifDesignConList != designList
+//                                if(historyName.contains("newsSpeecher")) {
+//                                    FileSystems.updateFile(
+//                                        File(
+//                                            UsePath.cmdclickDefaultAppDirPath,
+//                                            "gif_makeUrlPrtPngMapList_watch2.txt"
+//                                        ).absolutePath,
+//                                        listOf(
+//                                            "historyName: ${historyName}",
+//                                            "urlPngPathList: ${urlPngPathList}",
+//                                            "captureGifDesignConList: ${captureGifDesignConList}",
+//                                            "designList: ${designList}",
+//                                            "isRecreateGif: ${isRecreateGif}",
+//                                        ).joinToString("\n") + "\n-----------\n"
+//                                    )
+//                                }
                             if (
                                 !isRecreateGif
                             ) return@async
@@ -213,8 +213,8 @@ object FannelHistoryGifCreator {
             FileSystems.removeAndCreateDir(
                 partPngDirPath
             )
-            val pngPathToBitmapList = withContext(Dispatchers.IO) {
-                downloadPngBitmapList(
+            val pngPathToByteArrayList = withContext(Dispatchers.IO) {
+                downloadPngByteArrayList(
                     context,
                     appDirPath,
                     urlPngPathList
@@ -226,12 +226,12 @@ object FannelHistoryGifCreator {
 //                    "pngPathToBitmapList: ${pngPathToBitmapList.map { it.first }}"
 //                ).joinToString("\n") + "\n----------\n"
 //            )
-            pngPathToBitmapList.forEach {
+            pngPathToByteArrayList.forEach {
                 val pngPath = it.first
-                val bitmap = it.second
+                val byteArray = it.second ?: return@forEach
                 FileSystems.writeFromByteArray(
                     pngPath,
-                    BitmapTool.convertBitmapToByteArray(bitmap)
+                    byteArray
                 )
             }
             val faceDirPath = FannelHistoryPath.getCaptureFacePngDirPath(
@@ -247,18 +247,20 @@ object FannelHistoryGifCreator {
                 appDirPath,
                 fannelName,
                 facePngPath,
-                pngPathToBitmapList
+                pngPathToByteArrayList.map {
+                    it.first
+                }
             )
             val bitmapList = when (facePngPath.isNullOrEmpty()) {
                 true
-                -> pngPathToBitmapList.take(3).map {
+                -> pngPathToByteArrayList.take(3).map {
                     it.second
                 }
 
                 else
                 -> listOf(
-                    BitmapTool.convertFileToBitmap(facePngPath)
-                ) + pngPathToBitmapList.takeLast(2).map {
+                    BitmapTool.convertFileToByteArray(facePngPath)
+                ) + pngPathToByteArrayList.takeLast(2).map {
                     it.second
                 }
             }
@@ -273,13 +275,11 @@ object FannelHistoryGifCreator {
             appDirPath: String,
             fannelName: String,
             facePngPath: String?,
-            pngPathToBitmapList: List<Pair<String, Bitmap>>
+            pngPathList: List<String>,
 
         ) {
             val designList = designCreateHandler(
-                pngPathToBitmapList.map {
-                    it.first
-                },
+                pngPathList,
                 facePngPath
             )
             FannelHistoryPath.getCaptureGifDesignPath(
@@ -294,12 +294,12 @@ object FannelHistoryGifCreator {
         }
 
         private fun createGifFromPngs(
-            bitMapList: List<Bitmap?>,
+            byteArrayMapList: List<ByteArray?>,
             currentAppDirPath: String,
             fannelName: String,
         ) {
             if (
-                bitMapList.isEmpty()
+                byteArrayMapList.isEmpty()
             ) {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "gif_failue.txt").absolutePath,
@@ -309,6 +309,13 @@ object FannelHistoryGifCreator {
 //                ).joinToString("\n")
 //            )
                 return
+            }
+            val bitMapList = byteArrayMapList.map {
+                if(
+                    it == null
+                ) return@map null
+                val bitmapSrc = BitmapFactory.decodeByteArray(it, 0, it.size)
+                BitmapTool.resizeByMaxHeight(bitmapSrc, 800.0)
             }
             val bo = BitmapTool.generateGIF(bitMapList)
             val gifPath = FannelHistoryPath.getCaptureGifPath(
@@ -337,11 +344,11 @@ object FannelHistoryGifCreator {
         }
     }
 
-    private fun downloadPngBitmapList(
+    private fun downloadPngByteArrayList(
         context: Context,
         appDirPath: String,
         urlPngPathList: List<String>
-    ): List<Pair<String, Bitmap>> {
+    ): List<Pair<String, ByteArray?>> {
         val pngBitMapList = urlPngPathList.map {
                 pngPath ->
             val relativePath = pngPath.replace(
@@ -352,17 +359,28 @@ object FannelHistoryGifCreator {
                 urlFileSystems.gitUserContentFannelPrefix,
                 relativePath
             ).joinToString("/")
-            val bitmap = Glide.with(context)
-                .asBitmap()
-                .load(pngUrl)
-                .submit()
-                .get().let {
-                    BitmapTool.resizeByMaxHeight(
-                        it,
-                        800.0
-                    )
-                }
-            pngPath to bitmap
+            val byteArray = CurlManager.get(
+                context,
+                pngUrl,
+                String(),
+                String(),
+                5_000
+            ).let {
+                val isConnOk = CurlManager.isConnOk(it)
+                if(!isConnOk) return@let null
+               it
+            }
+//            val bitmap = Glide.with(context)
+//                .asBitmap()
+//                .load(pngUrl)
+//                .submit()
+//                .get().let {
+//                    BitmapTool.resizeByMaxHeight(
+//                        it,
+//                        800.0
+//                    )
+//                }
+            pngPath to byteArray
         }
         return pngBitMapList.sortedBy {
                 File(it.first).name
