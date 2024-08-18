@@ -14,7 +14,7 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeFannelRepoDownload
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService

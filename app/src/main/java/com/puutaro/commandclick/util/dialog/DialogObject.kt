@@ -19,7 +19,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.util.MarkDownTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope

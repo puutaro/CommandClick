@@ -16,7 +16,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap

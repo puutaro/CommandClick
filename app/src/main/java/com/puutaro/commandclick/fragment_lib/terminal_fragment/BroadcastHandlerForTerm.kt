@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Intent
+import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
@@ -67,10 +69,13 @@ object BroadcastHandlerForTerm {
                 intent
             )
             BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL
-            -> PocketWebViewUrlLoader.load(
-                terminalFragment,
-                intent.getStringExtra(termBroadcastType.scheme),
-            )
+            -> {
+                PocketWebViewUrlLoader.load(
+                    terminalFragment,
+                    intent.getStringExtra(PocketWebviewExtra.url.schema),
+                    !intent.getStringExtra(PocketWebviewExtra.onSaveHistory.schema).isNullOrEmpty(),
+                )
+            }
         }
     }
 }

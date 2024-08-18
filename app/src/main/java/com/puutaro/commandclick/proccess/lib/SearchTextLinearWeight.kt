@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.lib
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 
 object SearchTextLinearWeight {
 

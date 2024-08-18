@@ -22,11 +22,12 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -937,7 +938,7 @@ class WebViewJsDialog(
 //                disableScrollQueryParameter,
             )
             val extraStrPairList = listOf(
-                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.scheme
+                PocketWebviewExtra.url.schema
                         to launchUrl
             )
             BroadcastSender.normalSend(

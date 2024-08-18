@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerInte
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.ResAndProcess
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles

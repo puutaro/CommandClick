@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.import
 
 import android.content.Context
 import android.util.Log
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.str.QuoteTool

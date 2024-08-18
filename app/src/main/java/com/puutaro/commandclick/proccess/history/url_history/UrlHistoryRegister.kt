@@ -6,12 +6,12 @@ import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object UrlHistoryRegister {
+
+    private const val takeHistoryNum = 500
     fun insertJsPath(
         recentAppDirPath: String,
         jsFileName: String,
     ) {
-//        val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-//        val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         if(
             jsFileName == UsePath.cmdclickPreferenceJsName
         ) return
@@ -35,7 +35,6 @@ object UrlHistoryRegister {
         val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         val cmdclickUrlHistoryFilePath = File(appUrlSystemPath, cmdclickUrlHistoryFileName).absolutePath
-        val takeHistoryNum = 500
         val updatingHistoryCon =
             "${title}\t${uri}\n" + ReadText(
                 cmdclickUrlHistoryFilePath
@@ -44,5 +43,39 @@ object UrlHistoryRegister {
             cmdclickUrlHistoryFilePath,
             updatingHistoryCon
         )
+    }
+
+    fun insertByUnique(
+        recentAppDirPath: String,
+        title: String,
+        uri: String,
+    ){
+        val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+        val cmdclickUrlHistoryFilePath = File(appUrlSystemPath, cmdclickUrlHistoryFileName).absolutePath
+        val insertLine = "${title}\t${uri}"
+        val historyConList = ReadText(
+            cmdclickUrlHistoryFilePath
+        ).textToList().take(takeHistoryNum)
+        val isContainFirstHistoryLine =
+            getUrlFromLine(
+                historyConList.firstOrNull()
+            ) == uri
+        if(
+            isContainFirstHistoryLine
+        ) return
+        val updatingHistoryCon =
+            "${insertLine}\n" + historyConList.filter {
+                getUrlFromLine(it) != uri
+            }.joinToString("\n")
+        FileSystems.writeFile(
+            cmdclickUrlHistoryFilePath,
+            updatingHistoryCon
+        )
+    }
+
+
+    private fun getUrlFromLine(historyLine: String?): String? {
+        return historyLine?.split("\t")?.getOrNull(2)
     }
 }

@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.variables
+package com.puutaro.commandclick.util.url
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings

@@ -6,8 +6,6 @@ import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
-import com.puutaro.commandclick.common.variable.variables.QrLaunchType
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.net.Inet4Address

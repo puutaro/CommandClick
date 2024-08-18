@@ -2,9 +2,9 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.View
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlCaptureHistoryTool
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.FileSystems

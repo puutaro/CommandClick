@@ -1,6 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
-
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+package com.puutaro.commandclick.util.url
 
 object EnableUrlPrefix {
     fun isHttpOrFilePrefix(

@@ -1,14 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope

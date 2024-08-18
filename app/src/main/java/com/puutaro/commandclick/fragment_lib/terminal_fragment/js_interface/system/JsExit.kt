@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 
 class JsExit(
@@ -20,7 +20,7 @@ class JsExit(
             exitConSrc.split("\n"),
         ) ?: return
         BroadCastIntent.sendUrlCon(
-            terminalFragment,
+            context,
             exitCon
         )
     }
@@ -38,7 +38,7 @@ class JsExit(
             exitConSrc.split("\n"),
         ) ?: return
         BroadCastIntent.sendUrlCon(
-            terminalFragment,
+            context,
             exitCon
         )
     }

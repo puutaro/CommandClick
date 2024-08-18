@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.view.View
 import android.widget.LinearLayout
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad

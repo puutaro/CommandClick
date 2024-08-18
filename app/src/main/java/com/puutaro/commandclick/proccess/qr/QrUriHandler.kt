@@ -21,7 +21,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.GitDownloadService
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
@@ -561,7 +561,7 @@ object QrUriHandler {
                 )
             }
             else -> BroadCastIntent.sendUrlCon(
-                fragment,
+                fragment.context,
                 loadUrl.trim()
             )
         }
@@ -585,7 +585,7 @@ object QrUriHandler {
             }.joinToString(jsDescSeparator)
             else replaceLoadUrlSrc
         BroadCastIntent.sendUrlCon(
-            fragment,
+            fragment.context,
             loadUrl.trim()
         )
     }

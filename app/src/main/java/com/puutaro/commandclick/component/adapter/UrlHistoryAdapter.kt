@@ -1,5 +1,4 @@
 package com.puutaro.commandclick.component.adapter
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +7,20 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.custom_view.OutlineTextView
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.proccess.history.url_history.UrlLogoHistoryTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ import java.io.File
 
 
 class UrlHistoryAdapter(
-    private val context: Context?,
+    private val fragment: Fragment,
     private val currentAppDirPath: String,
     var urlHistoryMapList: MutableList<Map<String, String>>,
     private val currentUrl: String?,
@@ -61,6 +62,8 @@ class UrlHistoryAdapter(
         }
     }
 
+    private val context = fragment.context
+
     private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
         context,
         AssetsFileManager.urlHistoryGifPath
@@ -69,6 +72,21 @@ class UrlHistoryAdapter(
         context,
         AssetsFileManager.internetGifPath
     )
+
+//    private val tileHeight = ScreenSizeCalculator.dpWidth(fragment).let {
+//        (it * 3) / 2
+//    }
+//
+//    private val tileRelativeLayoutParam = LinearLayoutCompat.LayoutParams(
+//        LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+//        tileHeight.toInt()
+//    )
+//
+//    private val recyclerViewLayoutParam = RecyclerView.LayoutParams(
+//        RecyclerView.LayoutParams.MATCH_PARENT,
+//        tileHeight.toInt() + ScreenSizeCalculator.toDp(fragment.context, 40)
+//    )
+
 
 //    private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
 //        context,
@@ -113,7 +131,10 @@ class UrlHistoryAdapter(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val urlHistoryMap = urlHistoryMapList[position]
-
+//            withContext(Dispatchers.Main){
+//                holder.urlHistoryAdapterLinearLayout.layoutParams = recyclerViewLayoutParam
+//                holder.urlHistoryAdapterRelativeLayout.layoutParams = tileRelativeLayoutParam
+//            }
             val urlStr = withContext(Dispatchers.IO) {
                 urlHistoryMap.get(UrlHistoryMapKey.URL.key)
                     ?: String()

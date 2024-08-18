@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.common.variable.variables
 
+import com.puutaro.commandclick.util.url.WebUrlVariables
+
 enum class QrLaunchType(
     val prefix: String,
 ) {

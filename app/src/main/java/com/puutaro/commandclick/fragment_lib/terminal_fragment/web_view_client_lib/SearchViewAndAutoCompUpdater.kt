@@ -2,11 +2,11 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_
 
 import android.webkit.WebView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.FannelInfoTool

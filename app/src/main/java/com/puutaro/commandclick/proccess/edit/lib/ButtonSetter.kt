@@ -6,7 +6,7 @@ import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 
 object ButtonSetter {
     fun set(

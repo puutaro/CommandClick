@@ -9,7 +9,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.qr.QrUriHandler
-import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -140,7 +140,7 @@ class JsUrl(
         This is one of the most used js interface.
         */
         BroadCastIntent.sendUrlCon(
-            terminalFragment,
+            context,
             urlStr
         )
     }

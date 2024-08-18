@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -14,7 +14,9 @@ object UrlLaunchMacro {
             recentAppDirPath,
             onUrlLaunchMacro
         )
-        if(!launchUrl.isNullOrEmpty()){
+        if(
+            !launchUrl.isNullOrEmpty()
+        ){
             terminalViewModel.launchUrl = launchUrl
             return
         }

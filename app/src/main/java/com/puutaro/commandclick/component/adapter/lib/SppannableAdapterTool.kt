@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bachors.img2ascii.Img2Ascii
-import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 
 object SppannableAdapterTool {
 

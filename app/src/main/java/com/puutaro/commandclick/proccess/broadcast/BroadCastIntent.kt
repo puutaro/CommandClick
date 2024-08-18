@@ -1,12 +1,12 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.proccess.broadcast
 
+import android.content.Context
 import android.content.Intent
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 
 object BroadCastIntent {
     fun sendUrlCon(
-        fragment: Fragment,
+        context: Context?,
         urlCon: String?
     ) {
         if(
@@ -18,6 +18,6 @@ object BroadCastIntent {
             BroadCastIntentSchemeTerm.ULR_LAUNCH.scheme,
             urlCon
         )
-        fragment.activity?.sendBroadcast(jsIntent)
+        context?.sendBroadcast(jsIntent)
     }
 }

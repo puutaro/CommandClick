@@ -2,17 +2,15 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import androidx.lifecycle.*
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import java.io.File
-import java.nio.file.FileSystem
 
 
 object DisplaySwitch {

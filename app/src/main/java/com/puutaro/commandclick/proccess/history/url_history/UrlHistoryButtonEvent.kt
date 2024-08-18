@@ -129,7 +129,7 @@ class UrlHistoryButtonEvent(
             terminalFragment.binding.terminalWebView.url
         }
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
-            context,
+            fragment,
             currentAppDirPath,
             urlHistoryList.toMutableList(),
             currentUrl,

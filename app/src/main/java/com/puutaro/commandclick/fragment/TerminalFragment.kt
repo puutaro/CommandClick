@@ -31,7 +31,6 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
-import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -84,6 +83,7 @@ class TerminalFragment: Fragment() {
     var onPageFinishedCoroutineJob: Job? = null
     var registerUrlHistoryTitleCoroutineJob: Job? = null
     var onWebHistoryUpdaterJob: Job? = null
+    var onRegisterPocketWebViewUrl: Job? = null
     var previousTerminalTag: String? = null
     private var outputFileLength: Int = 0
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
@@ -271,7 +271,8 @@ class TerminalFragment: Fragment() {
         terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
-        UrlLaunchIntentAction.handle(this)
+//        UrlLaunchIntentAction.handle(this)
+        StartupHandler.invoke(this)
         displayUpdateCoroutineJob?.cancel()
         displayUpdateCoroutineJob = DisplaySwitch.update(
             this,
@@ -371,6 +372,7 @@ class TerminalFragment: Fragment() {
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
+        onRegisterPocketWebViewUrl?.cancel()
         _binding = null
         webViewDialogInstance?.dismiss()
         webViewDialogInstance = null

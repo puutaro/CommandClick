@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.qr
 
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 

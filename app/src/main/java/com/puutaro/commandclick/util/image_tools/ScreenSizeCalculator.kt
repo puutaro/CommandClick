@@ -1,12 +1,9 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.image_tools
 
 import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 import kotlin.math.roundToInt
 
 object ScreenSizeCalculator {

@@ -1,10 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
-import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
 import com.puutaro.commandclick.util.CcPathTool

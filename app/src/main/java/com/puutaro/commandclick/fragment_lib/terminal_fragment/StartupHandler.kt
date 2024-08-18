@@ -2,9 +2,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AutoExecFireManager
+import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,6 +15,8 @@ object StartupHandler {
     fun invoke(
         terminalFragment: TerminalFragment
     ) {
+//        val isUrlIntent = UrlLaunchIntentAction.judge(terminalFragment.activity)
+//        if(isUrlIntent) return
         CoroutineScope(Dispatchers.Main).launch {
             execInvoke(
                 terminalFragment,

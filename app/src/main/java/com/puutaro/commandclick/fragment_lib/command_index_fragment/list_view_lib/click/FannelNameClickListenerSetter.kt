@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
@@ -58,7 +59,7 @@ object FannelNameClickListenerSetter {
                     )
                 ) {
                     BroadCastIntent.sendUrlCon(
-                        cmdIndexFragment,
+                        context,
                         "${currentAppDirPath}/$selectedShellFileName"
                     )
                     updateLastModifiedListView(
