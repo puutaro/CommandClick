@@ -7,6 +7,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,7 +21,6 @@ import com.puutaro.commandclick.proccess.history.url_history.UrlLogoHistoryTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,11 +36,11 @@ class UrlHistoryAdapter(
 ): RecyclerView.Adapter<UrlHistoryAdapter.UrlHistoryViewHolder>(){
 
     class UrlHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-        val urlHistoryAdapterLinearLayout = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_linear_layout)
+        val urlHistoryAdapterConstraintLayout = view.findViewById<ConstraintLayout>(R.id.url_history_adapter_constraint_layout)
         val urlHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.url_history_adapter_relative_layout)
         val urlCaptureView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_capture)
         val urlTitleTextView = view.findViewById<OutlineTextView>(R.id.url_history_adapter_title)
-        val urlHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_bottom_linear_inner)
+//        val urlHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_bottom_linear_inner)
         val urlSiteLogoView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_site_logo)
         val copyImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_copy)
         val deleteImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_delete)
@@ -142,10 +142,10 @@ class UrlHistoryAdapter(
             if(urlStr == currentUrl) {
                 withContext(Dispatchers.Main) {
                     val hitUrlColor = R.color.gold_yellow
-                    holder.urlHistoryAdapterLinearLayout.backgroundTintList =
+                    holder.urlHistoryAdapterConstraintLayout.backgroundTintList =
                         context?.getColorStateList(hitUrlColor)
-                    holder.urlHistoryAdapterBottomLinearInner.backgroundTintList =
-                        context?.getColorStateList(hitUrlColor)
+//                    holder.urlHistoryAdapterBottomLinearInner.backgroundTintList =
+//                        context?.getColorStateList(hitUrlColor)
                     holder.copyImageButtonView.backgroundTintList =
                         context?.getColorStateList(hitUrlColor)
                     holder.deleteImageButtonView.backgroundTintList =

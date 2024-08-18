@@ -9,6 +9,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -38,12 +39,12 @@ class FannelHistoryAdapter(
     class FannelHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
 
-        val fannelHistoryAdapterLinearLayout = view.findViewById<LinearLayoutCompat>(R.id.fannel_history_adapter_linear_layout)
+        val fannelHistoryAdapterConstraintLayout = view.findViewById<ConstraintLayout>(R.id.fannel_history_adapter_constraint_layout)
         val fannelHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.fannel_history_adapter_relative_layout)
         val fannelCaptureView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_capture)
         val appDirNameTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_app_dir)
         val fannelNameTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_name)
-        val fannelHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.fannel_history_adapter_bottom_linear_inner)
+//        val fannelHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.fannel_history_adapter_bottom_linear_inner)
         val shareImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_share)
         val deleteImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_delete)
     }
@@ -185,10 +186,10 @@ class FannelHistoryAdapter(
     ){
         withContext(Dispatchers.Main){
             val hitFannelColor = R.color.web_icon_color
-            holder.fannelHistoryAdapterLinearLayout.backgroundTintList =
+            holder.fannelHistoryAdapterConstraintLayout.backgroundTintList =
                 context?.getColorStateList(hitFannelColor)
-            holder.fannelHistoryAdapterBottomLinearInner.backgroundTintList =
-                context?.getColorStateList(hitFannelColor)
+//            holder.fannelHistoryAdapterBottomLinearInner.backgroundTintList =
+//                context?.getColorStateList(hitFannelColor)
             holder.shareImageButtonView.backgroundTintList =
                 context?.getColorStateList(hitFannelColor)
             holder.deleteImageButtonView.backgroundTintList =
