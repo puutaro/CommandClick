@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
 import android.webkit.WebView
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -15,12 +14,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 object PocketWebViewUrlLoader {
-
-    private var registerUrlHistoryLine = String()
 
     fun load(
         terminalFragment: TerminalFragment,
@@ -54,41 +50,47 @@ object PocketWebViewUrlLoader {
                     url,
                 )
             }
-            withContext(Dispatchers.IO){
-                if(
-                    !isHistorySave
-                ) {
-                    return@withContext
-                }
-                val gglQueryUrl = WebUrlVariables.queryUrl
-                val title = when(
-                    url.startsWith(gglQueryUrl)
-                ){
-                    true -> "${url.removePrefix(gglQueryUrl)} - Google search"
-                    else -> url
-                }
-                val currentAppDirPath = terminalFragment.currentAppDirPath
-                val appUrlSystemPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-                val cmdclickUrlHistoryFilePath = File(appUrlSystemPath, UsePath.cmdclickUrlHistoryFileName).absolutePath
-                val beforeChecksum = FileSystems.checkSum(
-                    cmdclickUrlHistoryFilePath
-                )
-                for (i in 1..6) {
-                    delay(1000)
-                    val curCheckSum = FileSystems.checkSum(
-                        cmdclickUrlHistoryFilePath
-                    )
-                    if(
-                        curCheckSum != beforeChecksum
-                    ) break
-                }
-                UrlHistoryRegister.insertByUnique(
-                    terminalFragment.currentAppDirPath,
-                    title,
-                    url,
-                )
+            if(
+                !isHistorySave
+            ) {
+                return@launch
             }
+            saveToUrlHistory(
+                terminalFragment.currentAppDirPath,
+                url,
+            )
         }
+    }
 
+    private suspend fun saveToUrlHistory(
+        currentAppDirPath: String,
+        url: String,
+    ){
+        val gglQueryUrl = WebUrlVariables.queryUrl
+        val title = when(
+            url.startsWith(gglQueryUrl)
+        ){
+            true -> "${url.removePrefix(gglQueryUrl)} - Google search"
+            else -> url
+        }
+        val appUrlSystemPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val cmdclickUrlHistoryFilePath = File(appUrlSystemPath, UsePath.cmdclickUrlHistoryFileName).absolutePath
+        val beforeChecksum = FileSystems.checkSum(
+            cmdclickUrlHistoryFilePath
+        )
+        for (i in 1..6) {
+            delay(1000)
+            val curCheckSum = FileSystems.checkSum(
+                cmdclickUrlHistoryFilePath
+            )
+            if(
+                curCheckSum != beforeChecksum
+            ) break
+        }
+        UrlHistoryRegister.insertByUnique(
+            currentAppDirPath,
+            title,
+            url,
+        )
     }
 }
