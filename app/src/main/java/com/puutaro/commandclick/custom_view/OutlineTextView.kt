@@ -20,7 +20,8 @@ class OutlineTextView : AppCompatTextView {
 
     private var isRevOutLine = false
 
-    private val outlineWidth = 2 * context.resources.displayMetrics.density
+    var outlineWidthSrc = 2
+    private val density = context.resources.displayMetrics.density
 
     override fun onDraw(canvas: Canvas?) {
         val strokeColor = when(
@@ -32,7 +33,7 @@ class OutlineTextView : AppCompatTextView {
         setTextColor(strokeColor)
         paint.apply {
             style = Paint.Style.FILL_AND_STROKE
-            strokeWidth = outlineWidth
+            strokeWidth = outlineWidthSrc * density
         }
         super.onDraw(canvas)
 

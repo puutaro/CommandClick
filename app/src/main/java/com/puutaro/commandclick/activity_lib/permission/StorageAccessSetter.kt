@@ -141,6 +141,7 @@ object StorageAccessSetter {
             getPermissionConfirmDialog?.findViewById<OutlineTextView>(
                 R.id.confirm_text_gif_dialog_text_view
             )
+        confirmContentTextView?.outlineWidthSrc = 5
         confirmContentTextView?.text =
             "\n".repeat(4) + "Enable manage all storage permission, ok?"
         val confirmCancelButton =

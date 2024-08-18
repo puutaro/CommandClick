@@ -14,13 +14,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.sd.SdCardTool
@@ -144,9 +144,10 @@ class SdCardDirGetter(
                     .into(it)
             }
             val confirmContentTextView =
-                getSdcardTreeUriConfirmDialog?.findViewById<AppCompatTextView>(
+                getSdcardTreeUriConfirmDialog?.findViewById<OutlineTextView>(
                     R.id.confirm_text_gif_dialog_text_view
                 )
+            confirmContentTextView?.outlineWidthSrc = 5
             confirmContentTextView?.text =
                 "\n".repeat(4) + "Specify use dir in sd card, ok?"
             val confirmCancelButton =
