@@ -401,7 +401,6 @@ private fun execMainActivityUrlIntent(
         currentFannelName = FannelInfoSetting.current_fannel_name.defalutStr,
         onShortcutValue = FannelInfoSetting.on_shortcut.defalutStr,
         currentFannelState = FannelInfoSetting.current_fannel_state.defalutStr
-
     )
     execRestartIntent(
         activity,

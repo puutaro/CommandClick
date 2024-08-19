@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VolumeUtils
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.activity_lib.ExecMainActivityLaunchIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.util.url.WebUrlVariables
@@ -123,10 +124,17 @@ private object BackstackManager {
                     ToastUtils.showShort("End by double tap")
                     return
                 }
-                execPopBackStackImmediate(
-                    activity,
-                    supportFragmentManager,
-                )
+                if(
+                    currentBottomFragment is CommandIndexFragment
+                ) {
+                    execPopBackStackImmediate(
+                        activity,
+                        supportFragmentManager,
+                    )
+                    return
+                }
+                ExecMainActivityLaunchIntent.launch(activity)
+
             }
             else -> execBack(
                 activity,
