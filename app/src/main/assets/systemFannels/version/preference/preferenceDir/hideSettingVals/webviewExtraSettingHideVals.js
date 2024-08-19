@@ -1,4 +1,3 @@
-
 // webview setting
 onAdBlock,
 terminalFontZoom,
@@ -10,15 +9,18 @@ noScrollSaveUrls,
 srcImageAnchorLongPressMenuFilePath,
 srcAnchorLongPressMenuFilePath,
 imageLongPressMenuFilePath,
-// webview extra setting
-defaultMonitorFile,
-disableShowToolbarWhenHighlight,
-onTermBackendWhenStart,
-onTermVisibleWhenKeyboard,
-onTermShortWhenLoad,
+// startup setting
+onUrlLaunchMacro,
+onAutoExec,
+execJsOrHtmlPath,
 // history setting
+homeFannelsPath,
 homeScriptUrlsPath,
 ignoreHistoryPaths,
 historySwitch,
 urlHistoryOrButtonExec,
 onLaunchUrlHistoryByBackstack,
+// ubuntu setting
+ubuntuSleepDelayMinInScreenOff,
+onRootfsSdCardSave,
+ubuntuAutoSetup,

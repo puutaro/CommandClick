@@ -1,4 +1,3 @@
-
 // webview setting
 onAdBlock,
 terminalFontZoom,
@@ -20,9 +19,7 @@ disableShowToolbarWhenHighlight,
 onTermBackendWhenStart,
 onTermVisibleWhenKeyboard,
 onTermShortWhenLoad,
-// history setting
-homeScriptUrlsPath,
-ignoreHistoryPaths,
-historySwitch,
-urlHistoryOrButtonExec,
-onLaunchUrlHistoryByBackstack,
+// ubuntu setting
+ubuntuSleepDelayMinInScreenOff,
+onRootfsSdCardSave,
+ubuntuAutoSetup,

@@ -39,7 +39,6 @@ acVar="diffSettingVals"
 	?args=
 		path=`${preferenceBeforeEditSettingValsPath}`
 		&con=`${editSettingValsCon}`
-
 |var=factEditHideSettingValsCon
 	?func=jsFileSystem.read
 	?args=

@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromPreferenceFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
@@ -107,7 +107,7 @@ object IndexInitHandler {
         val urlFileSystems = UrlFileSystems()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                CmdClickSystemAppDir.createPreferenceFannel(
+                CmdClickSystemFannelManager.createPreferenceFannel(
                     context,
                     cmdIndexFragment.fannelInfoMap,
                 )

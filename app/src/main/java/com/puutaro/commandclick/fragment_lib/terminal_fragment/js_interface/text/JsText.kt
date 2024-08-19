@@ -8,6 +8,19 @@ class JsText(
 ) {
 
     @JavascriptInterface
+    fun removeAllQuote(
+        con: String
+    ): String {
+
+        /*
+       ## Description
+
+       Remove all quote (double quote ,single quote, back quote)
+       */
+        return con.replace(Regex("[\"'`]"), String())
+    }
+
+    @JavascriptInterface
     fun trimNewLine(con: String): String{
 
         /*

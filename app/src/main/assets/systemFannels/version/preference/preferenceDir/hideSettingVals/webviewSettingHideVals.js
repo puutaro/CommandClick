@@ -14,8 +14,13 @@ onTermBackendWhenStart,
 onTermVisibleWhenKeyboard,
 onTermShortWhenLoad,
 // history setting
+homeFannelsPath,
 homeScriptUrlsPath,
 ignoreHistoryPaths,
 historySwitch,
 urlHistoryOrButtonExec,
 onLaunchUrlHistoryByBackstack,
+// ubuntu setting
+ubuntuSleepDelayMinInScreenOff,
+onRootfsSdCardSave,
+ubuntuAutoSetup,

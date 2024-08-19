@@ -24,7 +24,7 @@ import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
@@ -111,7 +111,7 @@ class CommandIndexFragment: Fragment() {
                 )
             ).absolutePath
         )
-        CmdClickSystemAppDir.create(context)
+        CmdClickSystemFannelManager.create(context)
 
         CommandClickScriptVariable.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,

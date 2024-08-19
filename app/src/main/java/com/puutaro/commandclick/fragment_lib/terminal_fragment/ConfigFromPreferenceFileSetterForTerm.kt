@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -24,7 +24,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         terminalFragment: TerminalFragment,
     ){
         val context = terminalFragment.context
-        CmdClickSystemAppDir.createConfigFannel(
+        CmdClickSystemFannelManager.createConfigFannel(
             context
         )
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
@@ -142,7 +142,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        CmdClickSystemAppDir.createPreferenceFannel(
+        CmdClickSystemFannelManager.createPreferenceFannel(
             context,
             fannelInfoMap,
         )

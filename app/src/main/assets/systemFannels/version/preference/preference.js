@@ -10,7 +10,7 @@ fannelStateConfig=`file://`
 setReplaceVariables="file://"
 onUpdateLastModify="OFF"
 // webview setting
-onAdBlock="INHERIT"
+onAdBlock="ON"
 terminalFontZoom=""
 terminalFontColor=""
 terminalColor=""
@@ -31,17 +31,22 @@ onTermBackendWhenStart="OFF"
 onTermVisibleWhenKeyboard="OFF"
 onTermShortWhenLoad="OFF"
 // history setting
-homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
+homeFannelsPath=`${preferenceHomeFannelsPath}`
+homeScriptUrlsPath=`${preferenceHomeScriptUrlsPath}`
 ignoreHistoryPaths=""
-historySwitch="INHERIT"
-urlHistoryOrButtonExec="INHERIT"
+historySwitch="OFF"
+urlHistoryOrButtonExec="URL_HISTORY"
 onLaunchUrlHistoryByBackstack="ON"
+// ubuntu setting
+ubuntuSleepDelayMinInScreenOff="20"
+onRootfsSdCardSave="OFF"
+ubuntuAutoSetup="OFF"
 /// SETTING_SECTION_END
 
 
 /// CMD_VARIABLE_SECTION_START
 // webview setting
-onAdBlock="INHERIT"
+onAdBlock="ON"
 terminalFontZoom=""
 terminalFontColor=""
 terminalColor=""
@@ -62,11 +67,16 @@ onTermBackendWhenStart="OFF"
 onTermVisibleWhenKeyboard="OFF"
 onTermShortWhenLoad="OFF"
 // history setting
-homeScriptUrlsPath=`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`
+homeFannelsPath=`${preferenceHomeFannelsPath}`
+homeScriptUrlsPath=`${preferenceHomeScriptUrlsPath}`
 ignoreHistoryPaths=""
-historySwitch="INHERIT"
-urlHistoryOrButtonExec="INHERIT"
+historySwitch="OFF"
+urlHistoryOrButtonExec="URL_HISTORY"
 onLaunchUrlHistoryByBackstack="ON"
+// ubuntu setting
+ubuntuSleepDelayMinInScreenOff="20"
+onRootfsSdCardSave="OFF"
+ubuntuAutoSetup="OFF"
 // edit vals
 appHeader=""
 table=""

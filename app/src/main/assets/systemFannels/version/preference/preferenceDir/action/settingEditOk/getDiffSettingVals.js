@@ -4,6 +4,7 @@
 	?args=
 		lines=`
 			homeFannelsPath\t${preferenceHomeFannelsPath}\n
+			homeScriptUrlsPath\t${preferenceHomeScriptUrlsPath}\n
 			srcImageAnchorLongPressMenuFilePath\t${srcImageAnchorLongPressMenuPath}\n
 			srcAnchorLongPressMenuFilePath\t${srcAnchorLongPressMenuPath}\n
 			imageLongPressMenuFilePath\t${imageLongPressMenuPath}\n
@@ -23,11 +24,17 @@
 	?func=jsScript.subSettingVars
 	?args=
 		&con=`${it}`
+	?func=jsText.removeAllQuote
+	?args=
+		&con=`${it}`
 |var=curFannelSettingValsCon
 	?func=jsFileSystem.read
 	?args=
 		path=`${FANNEL_PATH}`
 	?func=jsScript.subSettingVars
+	?args=
+		&con=`${it}`
+	?func=jsText.removeAllQuote
 	?args=
 		&con=`${it}`
 

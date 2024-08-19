@@ -14,21 +14,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-object CmdClickSystemAppDir {
+object CmdClickSystemFannelManager {
 
-    private val appSystemDirName = "appSystemDir"
+    private const val systemFannelDirName = "systemFannels"
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     fun create(
         context: Context?,
     ){
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                val assetsPrefix = "${appSystemDirName}/system"
+                val assetsPrefix = "${systemFannelDirName}/${UsePath.cmdclickDefaultAppDirName}"
                 val systemZipPath = assetsPrefix
                 AssetsFileManager.copyFileOrDirFromAssets(
                     context,
                     systemZipPath,
                     assetsPrefix,
-                    UsePath.cmdclickSystemAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     emptyList()
                 )
             }
@@ -43,7 +44,7 @@ object CmdClickSystemAppDir {
     ){
         FannelVersion.create(
             context,
-            UsePath.cmdclickSystemAppDirPath,
+            cmdclickDefaultAppDirPath,
             "cmdclickConfig",
         )
     }
@@ -68,7 +69,7 @@ object CmdClickSystemAppDir {
             targetAppDirPath: String,
             fannelRawName: String,
         ) {
-            val assetsPrefix = "${appSystemDirName}/version"
+            val assetsPrefix = "${systemFannelDirName}/version"
             val fannelRawDirAssetsPath =
                 AssetsFileManager.concatAssetsPath(
                     listOf(assetsPrefix, fannelRawName)

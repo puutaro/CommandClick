@@ -14,7 +14,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.ManageSubMenuDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.SettingSubMenuDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -201,7 +201,7 @@ class ToolBarSettingButtonControl(
     }
 
     private fun preferenceEdit(){
-        CmdClickSystemAppDir.createPreferenceFannel(
+        CmdClickSystemFannelManager.createPreferenceFannel(
             context,
             cmdIndexFragment.fannelInfoMap
         )

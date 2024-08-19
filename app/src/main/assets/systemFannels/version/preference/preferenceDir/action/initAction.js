@@ -8,6 +8,10 @@
 	?importPath=`${copyBeforeFileToTempDir}`
 	?replace=
 		&SRC_FILE_PATH=`${preferenceHomeFannelsPath}`
+|acVar=runCopyHomeScriptUrlsPathToTempDir
+	?importPath=`${copyBeforeFileToTempDir}`
+		?replace=
+			&SRC_FILE_PATH=`${preferenceHomeScriptUrlsPath}`
 |acVar=runCopySrcImageAnchorLongPressMenuToTempDir
 	?importPath=`${copyBeforeFileToTempDir}`
 	?replace=

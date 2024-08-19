@@ -6,7 +6,8 @@ SETTING_EDIT=
 
 // setting
 coreTitle="preference",
-hideValsLimitNum=18,
+// hideValsLimitNum +  recentLimitNum = all vals num
+hideValsLimitNum=20,
 recentLimitNum=6,
 iconColor="lightGreen",
 historyIconColor="blue",
@@ -45,6 +46,8 @@ webviewSettingHideSettingVariablePath=
     `${preferenceHideSettingValsDirPath}/webviewSettingHideVals.js`,
 webviewExtraSettingHideSettingVariablePath=
     `${preferenceHideSettingValsDirPath}/webviewExtraSettingHideVals.js`,
+ubuntuSettingHideSettingVariablePath=
+	`${preferenceHideSettingValsDirPath}/ubuntuSettingHideVals.js`,
 historySettingHideSettingVariablePath=
     `${preferenceHideSettingValsDirPath}/historySettingHideVals.js`,
 longPressSettingHideSettingVariablePath=
@@ -61,6 +64,8 @@ preferenceEditInfoPath=
     `${preferenceTempDirPath}/editInfo.txt`,
 preferenceHomeFannelsPath=
     `${preferenceSettingsDirPath}/homeFannelsFilePaths.txt`,
+preferenceHomeScriptUrlsPath=
+	`${preferenceSettingsDirPath}/homeScriptUrlsPath.txt`,
 srcImageAnchorLongPressMenuPath=
     `${preferenceLongPressMenuDirPath}/srcImageAnchorLongPressMenu.txt`,
 imageLongPressMenuPath=
