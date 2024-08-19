@@ -19,6 +19,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.button.MaterialButton
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
@@ -46,6 +47,7 @@ import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -59,6 +61,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.time.LocalDateTime
 
 
 class WebViewJsDialog(
@@ -886,6 +889,8 @@ class WebViewJsDialog(
         when(macro){
             JsMacroType.GO_BACK_JS
             -> execGoBack(webView)
+            JsMacroType.GO_FORWARD_JS
+            -> execGoForward(webView)
             JsMacroType.HIGHLIGHT_SCH_JS -> highLightSearch(
                 context,
                 webView
@@ -991,13 +996,43 @@ class WebViewJsDialog(
         )
     }
 
-    private fun execGoBack(
+    fun execGoBack(webView: WebView){
+        val isDismiss = PocketWebviewGoBack.backOrDismiss(webView)
+        if(isDismiss) stopWebView(webView)
+    }
+
+    private object PocketWebviewGoBack {
+
+        private var prevBackTime = LocalDateTime.parse("2020-02-15T21:30:50")
+
+        fun backOrDismiss(
+            webView: WebView
+        ): Boolean {
+            if (
+                webView.canGoBack()
+            ) {
+                webView.goBack()
+                return false
+            }
+            val curBackTime = LocalDateTime.now()
+
+            val isNotDismiss = LocalDatetimeTool.getDurationSec(prevBackTime, curBackTime) > 0.7
+            if(isNotDismiss){
+                ToastUtils.showShort("Dismiss by double tap")
+                prevBackTime = curBackTime
+                return false
+            }
+            return true
+        }
+    }
+
+    private fun execGoForward(
         webView: WebView
     ){
         if(
-            !webView.canGoBack()
+            !webView.canGoForward()
         ) return
-        webView.goBack()
+        webView.goForward()
     }
 
     private fun assetsCopy(
@@ -1040,6 +1075,7 @@ private enum class DismissType {
 enum class JsMacroType(val str: String,) {
     HIGHLIGHT_SCH_JS("HIGHLIGHT_SCH.js"),
     GO_BACK_JS("GO_BACK.js"),
+    GO_FORWARD_JS("GO_FORWARD.js"),
     LAUNCH_LOCAL_JS("LAUNCH_LOCAL.js"),
     HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js"),
     OPEN_SRC_JS_ACTION_REPORT("OPEN_SRC_JS_ACTION_REPORT.js"),

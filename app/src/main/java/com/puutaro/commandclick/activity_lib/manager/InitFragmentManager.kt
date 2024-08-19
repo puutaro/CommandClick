@@ -86,8 +86,8 @@ class InitFragmentManager(
                     launchUrlByPocketWebView(
                         activity,
                         urlStr,
-                        true,
-//                        isFinish
+//                        true,
+                        isFinish
                     )
                     isFinish
                 }
@@ -168,8 +168,8 @@ class InitFragmentManager(
             launchUrlByPocketWebView(
                 activity,
                 urlStr,
-                false,
-//                isFinish
+//                false,
+                isFinish
             )
 //            val queryUrl =
 //                UrlOrQuery.convert(query) ?: String()
