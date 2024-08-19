@@ -47,5 +47,5 @@ enum class BroadCastIntentSchemeTerm(
     POCKET_WEBVIEW_LOAD_URL(
         "com.puutaro.commandclick.pocket_webview_loadurl.load",
         ""
-    )
+    ),
 }

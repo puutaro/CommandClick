@@ -21,7 +21,7 @@ object PocketWebViewUrlLoader {
     fun load(
         terminalFragment: TerminalFragment,
         url: String?,
-        isHistorySave: Boolean
+//        isHistorySave: Boolean
     ){
         if (
             url.isNullOrEmpty()
@@ -50,15 +50,15 @@ object PocketWebViewUrlLoader {
                     url,
                 )
             }
-            if(
-                !isHistorySave
-            ) {
-                return@launch
-            }
-            saveToUrlHistory(
-                terminalFragment.currentAppDirPath,
-                url,
-            )
+//            if(
+//                !isHistorySave
+//            ) {
+//                return@launch
+//            }
+//            saveToUrlHistory(
+//                terminalFragment.currentAppDirPath,
+//                url,
+//            )
         }
     }
 
@@ -70,7 +70,7 @@ object PocketWebViewUrlLoader {
         val title = when(
             url.startsWith(gglQueryUrl)
         ){
-            true -> "${url.removePrefix(gglQueryUrl)} - Google search"
+            true -> "${url.removePrefix(gglQueryUrl)} - Pocket search"
             else -> url
         }
         val appUrlSystemPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"

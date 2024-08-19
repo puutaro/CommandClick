@@ -87,7 +87,7 @@ class InitFragmentManager(
                         activity,
                         urlStr,
                         true,
-                        isFinish
+//                        isFinish
                     )
                     isFinish
                 }
@@ -169,7 +169,7 @@ class InitFragmentManager(
                 activity,
                 urlStr,
                 false,
-                isFinish
+//                isFinish
             )
 //            val queryUrl =
 //                UrlOrQuery.convert(query) ?: String()
@@ -412,7 +412,7 @@ private fun execMainActivityUrlIntent(
 private fun launchUrlByPocketWebView(
     activity: MainActivity,
     urlStr: String,
-    isSaveHistory: Boolean,
+//    isSaveHistory: Boolean,
     isFinish: Boolean
 ){
     if(
@@ -443,17 +443,16 @@ private fun launchUrlByPocketWebView(
                 delay(200)
             }
         }
-        val onHistorySave = when(isSaveHistory){
-            true -> "on"
-            else -> String()
-        }
+//        val onHistorySave = when(isSaveHistory){
+//            true -> "on"
+//            else -> String()
+//        }
         withContext(Dispatchers.IO) {
             BroadcastSender.normalSend(
                 activity,
                 BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
                 listOf(
                     PocketWebviewExtra.url.schema to urlStr,
-                    PocketWebviewExtra.onSaveHistory.schema to onHistorySave,
                 )
             )
         }

@@ -4,5 +4,5 @@ enum class PocketWebviewExtra(
     val schema: String
 ) {
     url("url"),
-    onSaveHistory("on_save_history"),
+//    onSaveHistory("on_save_history"),
 }

@@ -83,6 +83,7 @@ class TerminalFragment: Fragment() {
     var onPageFinishedCoroutineJob: Job? = null
     var registerUrlHistoryTitleCoroutineJob: Job? = null
     var onWebHistoryUpdaterJob: Job? = null
+    var onPocketWebHistoryUpdaterJob: Job? = null
     var onRegisterPocketWebViewUrl: Job? = null
     var previousTerminalTag: String? = null
     private var outputFileLength: Int = 0
@@ -242,6 +243,7 @@ class TerminalFragment: Fragment() {
         onPageFinishedCoroutineJob?.cancel()
         registerUrlHistoryTitleCoroutineJob?.cancel()
         onWebHistoryUpdaterJob?.cancel()
+        onPocketWebHistoryUpdaterJob?.cancel()
         displayUpdateCoroutineJob?.cancel()
     }
 
@@ -372,6 +374,7 @@ class TerminalFragment: Fragment() {
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
+        onPocketWebHistoryUpdaterJob?.cancel()
         onRegisterPocketWebViewUrl?.cancel()
         _binding = null
         webViewDialogInstance?.dismiss()

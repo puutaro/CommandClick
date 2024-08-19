@@ -31,6 +31,7 @@ import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.WrapWebHistoryUpdater
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog_js_interface.JsWebViewDialogManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.JsInterfaceAdder
@@ -541,6 +542,7 @@ class WebViewJsDialog(
         webView: WebView,
         urlToFinishJs: UrlToFinishJs?
     ){
+        var previousUrl: String? = null
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
@@ -597,6 +599,17 @@ class WebViewJsDialog(
                         }
                         webView.scrollY = it
                     }
+                }
+                WrapWebHistoryUpdater.updateForPocketWebview(
+                    terminalFragment,
+                    webView,
+                    url,
+                    previousUrl
+                )
+                if(
+                    previousUrl?.length != url?.length
+                ) {
+                    previousUrl = url
                 }
                 urlToFinishJs?.execPageFinishJs(
                     context,
