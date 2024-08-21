@@ -36,6 +36,16 @@ class FannelHistoryAdapter(
     var historyList: MutableList<String>
     ): RecyclerView.Adapter<FannelHistoryAdapter.FannelHistoryViewHolder>(){
 
+    companion object {
+
+
+        enum class FannelHistorySettingKey(val key: String){
+            ENABLE_LONG_PRESS_BUTTON("enableLongPressButton"),
+            ENABLE_EDIT_EXECUTE("enableEditExecute"),
+        }
+        val keySeparator = ","
+        const val switchOn = "ON"
+    }
     class FannelHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
 

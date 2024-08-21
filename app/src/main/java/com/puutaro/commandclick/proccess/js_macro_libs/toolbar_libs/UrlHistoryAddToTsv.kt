@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -186,8 +187,7 @@ class UrlHistoryAddToTsv (
             } ?: return@setOnItemLongClickListener false
             val selectedUrl = selectedUrlHistoryLine.split("\t").lastOrNull()
                 ?: return@setOnItemLongClickListener false
-            val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                    UsePath.JS_FILE_SUFFIX
+            val webSearcherName = SystemFannel.webSearcherFannelName
 //            val fannelInfoMap = editFragment.fannelInfoMap
 //            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //                fannelInfoMap

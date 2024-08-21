@@ -44,6 +44,9 @@ object FannelHistoryGifCreator {
         val semaphore = Semaphore(concurrentLimit)
         gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                if(
+                    terminalFragment.view?.height == 0
+                ) return@repeatOnLifecycle
                 val fannelList = withContext(Dispatchers.IO) {
                     urlFileSystems.execGetFannelList(
                         context
@@ -356,7 +359,7 @@ object FannelHistoryGifCreator {
                 String()
             ).removePrefix("/")
             val pngUrl = listOf(
-                urlFileSystems.gitUserContentFannelPrefix,
+                UrlFileSystems.gitUserContentFannelPrefix,
                 relativePath
             ).joinToString("/")
             val byteArray = CurlManager.get(
