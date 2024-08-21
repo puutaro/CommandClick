@@ -36,20 +36,20 @@ object ExecToolBarButtonClickForEdit {
                 )
             ToolbarButtonBariantForEdit.EDIT -> {
                 val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
-                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                    fannelInfoMap
-                )
+//                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                    fannelInfoMap
+//                )
 
                 val currentFannelName = FannelInfoTool.getCurrentFannelName(
                     fannelInfoMap
                 )
 
                 val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                 )
                 val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                     onShortcutOff,
                     FannelInfoSetting.current_fannel_state.defalutStr,

@@ -12,9 +12,9 @@ class JsListConSBSaver(
     val context = terminalFragment.context
     val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -28,7 +28,7 @@ class JsListConSBSaver(
     ){
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return

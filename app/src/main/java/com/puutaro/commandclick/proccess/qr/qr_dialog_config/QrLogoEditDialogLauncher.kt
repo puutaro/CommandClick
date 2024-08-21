@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
@@ -28,7 +27,7 @@ object QrLogoEditDialogLauncher {
 
     fun launch(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fannelName: String,
         qrDialogConfigMap: Map<String, String>,
     ){
@@ -39,12 +38,12 @@ object QrLogoEditDialogLauncher {
         when(disableLogo){
             true -> QrDialogMethod.launchPassDialog(
                 fragment,
-                parentDirPath,
+//                parentDirPath,
                 fannelName,
             )
             else -> launchQrConDialog(
                 fragment,
-                parentDirPath,
+//                parentDirPath,
                 fannelName,
                 logoConfigMap
             )
@@ -55,14 +54,15 @@ object QrLogoEditDialogLauncher {
 
     private fun launchQrConDialog(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fannelName: String,
         logoConfigMap: Map<String, String>,
     ){
         val context = fragment.context
             ?: return
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val qrLogoPath = "${parentDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+        val qrLogoPath = "${cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
         qrLogoDialogObj = Dialog(
             context
         )
@@ -83,7 +83,7 @@ object QrLogoEditDialogLauncher {
         val buttonWeight = decideButtonWeight(isFileCon)
         setPassButton(
             fragment,
-            parentDirPath,
+//            parentDirPath,
             fannelName,
             buttonWeight,
         )
@@ -94,14 +94,14 @@ object QrLogoEditDialogLauncher {
         )
         setConUpdateButton(
             fragment,
-            parentDirPath,
+//            parentDirPath,
             fannelName,
             buttonWeight,
             isFileCon
         )
         setChangeButton(
             fragment,
-            parentDirPath,
+//            parentDirPath,
             fannelName,
             buttonWeight,
             isFileCon
@@ -173,7 +173,7 @@ object QrLogoEditDialogLauncher {
 
     private fun setPassButton(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fannelName: String,
         buttonWeight: Float,
     ){
@@ -196,7 +196,7 @@ object QrLogoEditDialogLauncher {
                     withContext(Dispatchers.Main) {
                         QrDialogMethod.launchPassDialog(
                             fragment,
-                            parentDirPath,
+//                            parentDirPath,
                             fannelName,
                         )
                     }
@@ -207,7 +207,7 @@ object QrLogoEditDialogLauncher {
 
     private fun setChangeButton(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fannelName: String,
         buttonWeight: Float,
         isFileCon: Boolean
@@ -226,7 +226,7 @@ object QrLogoEditDialogLauncher {
                 CoroutineScope(Dispatchers.Main).launch {
                     QrDialogMethod.execChange(
                         fragment,
-                        parentDirPath,
+//                        parentDirPath,
                         fannelName,
                         qrLogoDialogObj,
                         R.id.qr_logo_list_index_dialog_top_image,
@@ -239,7 +239,7 @@ object QrLogoEditDialogLauncher {
 
     private fun setConUpdateButton(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fannelName: String,
         buttonWeight: Float,
         isFileCon: Boolean,
@@ -264,7 +264,7 @@ object QrLogoEditDialogLauncher {
                 CoroutineScope(Dispatchers.Main).launch {
                     QrDialogMethod.execConUpdate(
                         fragment,
-                        parentDirPath,
+//                        parentDirPath,
                         fannelName,
                         qrLogoDialogObj,
                         R.id.qr_logo_list_index_dialog_top_image

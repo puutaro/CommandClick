@@ -119,7 +119,7 @@ class CommandIndexFragment: Fragment() {
                     UsePath.JS_FILE_SUFFIX
         )
 
-        ConfigFromConfigFileSetter.set(this)
+//        ConfigFromConfigFileSetter.set(this)
 
         IndexInitHandler.handle(this)
 
@@ -148,7 +148,7 @@ class CommandIndexFragment: Fragment() {
         val makeListView = MakeListView(
             binding,
             this,
-            fannelInfoMap
+//            fannelInfoMap
         )
         val fannelIndexListAdapter = makeListView.makeList(
             requireContext()
@@ -359,7 +359,7 @@ class CommandIndexFragment: Fragment() {
 
     interface OnUpdateNoSaveUrlPathsListener {
         fun onUpdateNoSaveUrlPaths(
-            currentAppDirPath: String,
+//            currentAppDirPath: String,
             fannelName: String,
         )
     }

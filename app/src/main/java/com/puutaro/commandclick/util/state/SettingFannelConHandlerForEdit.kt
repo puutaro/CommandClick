@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.state
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
@@ -50,12 +51,12 @@ object SettingFannelConHandlerForEdit {
     ): String {
         val fannelInfoMap =
             editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
-        return File(currentAppDirPath, currentFannelName).absolutePath
+        return File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath
     }
 }

@@ -42,9 +42,9 @@ object ExecMonitorSizeChangeForTerm {
         fannelInfoMap: Map<String, String>,
     ){
         val targetFragmentInstance = TargetFragmentInstance()
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -62,7 +62,7 @@ object ExecMonitorSizeChangeForTerm {
         }
         val editFragment = targetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return

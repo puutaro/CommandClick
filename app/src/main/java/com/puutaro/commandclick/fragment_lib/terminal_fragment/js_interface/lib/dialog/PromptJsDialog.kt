@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -45,12 +46,13 @@ class PromptJsDialog(
     private val suggestPrefix = "suggest"
     private val suggestDirName = "${suggestPrefix}Text"
     private val suggestTxtSuffix = ".txt"
-    private val currentAppDirPath = terminalFragment.currentAppDirPath
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        terminalFragment.currentAppDirPath
     private val currentScriptName = terminalFragment.currentFannelName
     private val fannelDirName = CcPathTool.makeFannelDirName(
         currentScriptName
     )
-    private val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+    private val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
     private val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
     private val mapSeparator = ','
     private val firstSeparator = '|'
@@ -441,9 +443,9 @@ private object EditTextMakerForPrompt {
             terminalFragment,
             mainOrSubFannelPath
         )
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -456,7 +458,7 @@ private object EditTextMakerForPrompt {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             )
         } ?: return null

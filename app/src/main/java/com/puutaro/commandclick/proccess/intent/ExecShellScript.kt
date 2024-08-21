@@ -25,13 +25,14 @@ object ExecShellScript {
 
     fun execShellScript(
         currentFragment: Fragment,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         selectedShellFileName: String,
         shellContentsListSource: List<String>? = null
     ){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         if(
             !File(
-                recentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 selectedShellFileName
             ).isFile
         ) return
@@ -52,7 +53,7 @@ object ExecShellScript {
         val shellContentsList = if(shellContentsListSource.isNullOrEmpty()) {
             ReadText(
                 File(
-                    recentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     selectedShellFileName
                 ).absolutePath
             ).textToList()
@@ -81,7 +82,7 @@ object ExecShellScript {
 
         UrlLaunchMacro.launch(
             terminalViewModel,
-            recentAppDirPath,
+//            recentAppDirPath,
             onUrlLaunchMacro,
         )
 
@@ -96,26 +97,25 @@ object ExecShellScript {
             substituteSettingVariableList,
             CommandClickScriptVariable.SHELL_EXEC_ENV
         ) ?: CommandClickScriptVariable.SHELL_EXEC_ENV_DEFAULT_VALUE
-
         when(shellExecEnv){
             SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
             -> ubuntuExecHandler(
                 currentFragment,
-                recentAppDirPath,
+//                recentAppDirPath,
                 selectedShellFileName,
                 substituteSettingVariableList,
             )
             SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
             -> termuxExecer(
                 currentFragment,
-                recentAppDirPath,
+//                recentAppDirPath,
                 selectedShellFileName,
                 substituteSettingVariableList,
             )
         }
 
         ShellFilePathToHistory.insert(
-            recentAppDirPath,
+//            recentAppDirPath,
             selectedShellFileName,
         )
 
@@ -125,7 +125,7 @@ object ExecShellScript {
         ) return
         FileSystems.updateLastModified(
             File(
-                recentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 selectedShellFileName
             ).absolutePath
         )
@@ -133,7 +133,7 @@ object ExecShellScript {
 
     private fun ubuntuExecHandler(
         currentFragment: Fragment,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         selectedShellFileName: String,
         substituteSettingVariableList: List<String>?,
     ){
@@ -154,13 +154,14 @@ object ExecShellScript {
             substituteSettingVariableList,
             CommandClickScriptVariable.UBUNTU_OUTPUT_FILE
         ) ?: CommandClickScriptVariable.UBUNTU_OUTPUT_FILE_DEFAULT_VALUE
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         when(ubuntuExecMode){
             SettingVariableSelects.UbuntuExecModeSelects.background.name -> {
                 val backgroundCmdIntent = Intent()
                 backgroundCmdIntent.action = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
                 backgroundCmdIntent.putExtra(
                     UbuntuServerIntentExtra.backgroundShellPath.schema,
-                    "${recentAppDirPath}/${selectedShellFileName}"
+                    "${cmdclickDefaultAppDirPath}/${selectedShellFileName}"
                 )
                 backgroundCmdIntent.putExtra(
                     UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema,
@@ -177,7 +178,7 @@ object ExecShellScript {
                 foregroundCmdIntent.action = BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
                 foregroundCmdIntent.putExtra(
                     UbuntuServerIntentExtra.foregroundShellPath.schema,
-                    "${recentAppDirPath}/${selectedShellFileName}"
+                    "${cmdclickDefaultAppDirPath}/${selectedShellFileName}"
                 )
                 foregroundCmdIntent.putExtra(
                     UbuntuServerIntentExtra.foregroundArgsTabSepaStr.schema,
@@ -194,7 +195,7 @@ object ExecShellScript {
 
     private fun termuxExecer(
         currentFragment: Fragment,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         selectedShellFileName: String,
         substituteSettingVariableList: List<String>?,
     ){
@@ -213,7 +214,7 @@ object ExecShellScript {
             currentFragment,
             terminalDo,
             substituteSettingVariableList,
-            recentAppDirPath,
+//            recentAppDirPath,
             selectedShellFileName,
             runShell,
         )
@@ -231,15 +232,16 @@ object ExecShellScript {
 
 private object ShellFilePathToHistory {
     fun insert(
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         shellFileName: String,
     ) {
         if(
             shellFileName == UsePath.cmdclickPreferenceJsName
         ) return
-        val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val appUrlSystemPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
-        val shellFullPath = "${recentAppDirPath}/${shellFileName}"
+        val shellFullPath = "${cmdclickDefaultAppDirPath}/${shellFileName}"
         if(
             !File(shellFullPath).isFile
         ) return

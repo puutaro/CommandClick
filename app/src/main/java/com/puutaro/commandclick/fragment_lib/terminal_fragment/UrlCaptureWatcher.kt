@@ -101,7 +101,7 @@ object UrlCaptureWatcher {
 //                    }
                     val saveOk = CaptureSaver.save(
                         captureView,
-                        terminalFragment.currentAppDirPath,
+//                        terminalFragment.currentAppDirPath,
                         url,
                     )
                     if(
@@ -118,7 +118,7 @@ object UrlCaptureWatcher {
 
         suspend fun save(
             terminalFragmentView: View?,
-            currentAppDirPath: String,
+//            currentAppDirPath: String,
             url: String,
         ): Boolean {
             FileSystems.updateFile(
@@ -141,14 +141,14 @@ object UrlCaptureWatcher {
 //                }
                 return false
             }
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
-                listOf(
-                    "end ${LocalDateTime.now()}"
-                ).joinToString("\n")
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
+//                listOf(
+//                    "end ${LocalDateTime.now()}"
+//                ).joinToString("\n")
+//            )
             UrlCaptureHistoryTool.insertToHistory(
-                currentAppDirPath,
+//                currentAppDirPath,
                 url,
                 capture
             )

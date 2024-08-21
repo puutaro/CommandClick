@@ -16,6 +16,7 @@ import java.io.File
 object ScrollPosition {
 
     val takePosiLines = 100
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
     fun execScroll(
         terminalFragment: TerminalFragment,
@@ -36,19 +37,16 @@ object ScrollPosition {
             currentUrl.startsWith(WebUrlVariables.monitorUrlPath)
         ) return
         execScrollByMemory(
-            terminalFragment,
             webView,
             currentUrl,
         )
     }
 
     private fun execScrollByMemory(
-        terminalFragment: TerminalFragment,
         webView: WebView,
         currentUrl: String,
     ){
         webView.scrollY = readYPosi(
-            terminalFragment,
             currentUrl,
         ).toInt()
     }
@@ -80,7 +78,7 @@ object ScrollPosition {
             scrollY.toString(),
         )
         if(!url.startsWith(WebUrlVariables.monitorUrlPath)) return
-        val scrollPosiSaveDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/"
+        val scrollPosiSaveDirPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/"
         val cmdclickMonitorScrollPosiFileName = UsePath.cmdclickMonitorScrollPosiFileName
         CoroutineScope(Dispatchers.Main).launch {
             terminalFragment.binding.terminalWebView.evaluateJavascript(
@@ -105,8 +103,7 @@ object ScrollPosition {
         currentUrl: String,
         scrollPosi: String
     ){
-        val currentAppDirPath = terminalFragment.currentAppDirPath
-        val cmdclickSiteScrollPosiDirPath = "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+        val cmdclickSiteScrollPosiDirPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
         val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
         if(
             currentUrl.isEmpty()
@@ -159,15 +156,13 @@ object ScrollPosition {
     }
 
     private fun readYPosi(
-        terminalFragment: TerminalFragment,
         currentUrl: String,
     ): Float {
         if(
             currentUrl.isEmpty()
         ) return 0f
-        val currentAppDirPath = terminalFragment.currentAppDirPath
         val cmdclickSiteScrollPosiDirPath =
-            "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+            "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
         val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
         val isRegisterPrefix = howRegisterPrefix(
             currentUrl

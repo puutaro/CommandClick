@@ -13,9 +13,9 @@ class JsUrlAdder(
 ) {
     private val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -57,19 +57,19 @@ class JsUrlAdder(
         */
 
         val urlString = HistoryUrlContents.extract(
-            currentAppDirPath,
+//            currentAppDirPath,
             urlStringOrMacro
         ) ?: String()
         val targetFragmentInstance = TargetFragmentInstance()
         val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
         ExecJsLoad.execExternalJs(
             editFragment,
-            UsePath.cmdclickSystemAppDirPath,
+//            UsePath.cmdclickDefaultAppDirPath,
             UsePath.savePageUrlDialogFannelName,
             listOf(
                 urlString,

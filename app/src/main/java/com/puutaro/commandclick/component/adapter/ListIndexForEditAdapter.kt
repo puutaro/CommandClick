@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -469,7 +470,7 @@ class ListIndexForEditAdapter(
     }
 
     private fun setListProperty(){
-        recentAppDirPath = FileSystems.getRecentAppDirPath()
+        recentAppDirPath = UsePath.cmdclickDefaultAppDirPath
         performMap = PerformSettingForListIndex.makePerformMap(
             listIndexConfigMap
         )

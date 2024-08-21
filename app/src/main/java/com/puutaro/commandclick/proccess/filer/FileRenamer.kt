@@ -31,14 +31,14 @@ object FileRenamer {
 
     fun rename(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fileName: String,
     ){
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main){
                 execRename(
                     fragment,
-                    parentDirPath,
+//                    parentDirPath,
                     fileName,
                 )
             }
@@ -46,7 +46,7 @@ object FileRenamer {
     }
     private fun execRename(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fileName: String,
     ){
         val context = fragment.context
@@ -109,7 +109,7 @@ object FileRenamer {
                 return@setOnClickListener
             }
             ListIndexDuplicate.isFileDetect(
-                parentDirPath,
+//                parentDirPath,
                 renamedFileName,
             ).let {
                     isDetect ->
@@ -117,9 +117,10 @@ object FileRenamer {
                     isDetect
                 ) return@setOnClickListener
             }
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             FileSystems.moveFileWithDir(
-                File(parentDirPath, fileName),
-                File(parentDirPath, renamedFileName)
+                File(cmdclickDefaultAppDirPath, fileName),
+                File(cmdclickDefaultAppDirPath, renamedFileName)
             )
             when(fragment){
                 is CommandIndexFragment -> {

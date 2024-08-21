@@ -221,7 +221,7 @@ object ExecItemDelete {
                 val displayDeleteAppDirPath =
                     "${
                         UsePath.makeTermuxPathByReplace(
-                            cmdclickAppDirPath
+//                            cmdclickAppDirPath
                         )
                     }/${deleteAppDirName}"
 

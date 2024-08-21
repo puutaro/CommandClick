@@ -10,7 +10,6 @@ class JsProcessKiller(
 
     @JavascriptInterface
     fun kill_S(
-        currentAppDirPath: String,
         fannelName: String,
     ){
         /*
@@ -25,7 +24,7 @@ class JsProcessKiller(
         */
         AppProcessManager.killDialog(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
     }

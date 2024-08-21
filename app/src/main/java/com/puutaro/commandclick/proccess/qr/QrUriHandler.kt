@@ -41,7 +41,7 @@ object QrUriHandler {
 
     fun handle(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         loadConSrcWithNewline: String,
         isMoveCurrentDir: String? = null
     ) {
@@ -51,27 +51,27 @@ object QrUriHandler {
             loadConSrc.startsWith(QrLaunchType.Https.prefix),
                 -> loadUrl(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc
             )
             loadConSrc.startsWith(QrLaunchType.JsDesc.prefix),
             loadConSrc.startsWith(QrLaunchType.Javascript.prefix),
             -> load(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc
             )
             loadConSrc.startsWith(QrLaunchType.CpFile.prefix),
             -> execCpFile(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc,
                 isMoveCurrentDir
             )
             loadConSrc.startsWith(QrLaunchType.ScpDir.prefix),
             -> execScpDir(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc,
             )
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix),
@@ -109,7 +109,7 @@ object QrUriHandler {
             loadConSrc.startsWith(QrLaunchType.ON_GIT.prefix)
             -> execOnGit(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc,
             )
             else
@@ -131,7 +131,7 @@ object QrUriHandler {
 
     private fun execCpFile(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cpQrString: String,
         isMoveCurrentDirSrc: String? = null
     ){
@@ -147,8 +147,8 @@ object QrUriHandler {
             cpFileMap,
             CpFileKey.PATH.key,
         ) ?: return
-        val parentDirPath =
-            cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
+//        val parentDirPath =
+//            cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
         val isMoveCurrentDir =
             cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key)
                 ?: isMoveCurrentDirSrc
@@ -164,22 +164,22 @@ object QrUriHandler {
             FileDownloadExtra.FULL_PATH_OR_FANNEL_RAW_NAME.schema,
             filePath
         )
-        intent.putExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
-            currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
+//            currentAppDirPath
+//        )
         isMoveCurrentDir?.let {
             intent.putExtra(
                 FileDownloadExtra.IS_MOVE_TO_CURRENT_DIR.schema,
                 it
             )
         }
-        parentDirPath?.let {
-            intent.putExtra(
-                FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
-                it
-            )
-        }
+//        parentDirPath?.let {
+//            intent.putExtra(
+//                FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
+//                it
+//            )
+//        }
         try {
             context?.let {
                 ContextCompat.startForegroundService(context, intent)
@@ -194,7 +194,7 @@ object QrUriHandler {
 
     private fun execScpDir(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cpQrString: String,
     ) {
         val context = fragment.context
@@ -206,7 +206,7 @@ object QrUriHandler {
         ) ?: return
         val destiDirPath = CcPathTool.convertAppDirPathToLocal(
             srcDirPath,
-            currentAppDirPath,
+//            currentAppDirPath,
         )
         val ipv4Address = getRequireKey(
             scpDirMap,
@@ -292,7 +292,7 @@ object QrUriHandler {
 
     private fun execOnGit(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         onGitCon: String
     ){
         val gitDownloadService = GitDownloadService::class.java
@@ -323,10 +323,10 @@ object QrUriHandler {
             GitDownloadExtra.FANNEL_RAW_NAME.schema,
             fannelRawName
         )
-        intent.putExtra(
-            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
-            currentAppDirPath
-        )
+//        intent.putExtra(
+//            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
+//            currentAppDirPath
+//        )
         intent.putExtra(
             GitDownloadExtra.FANNEL_LIST_PATH.schema,
             fannelListPath
@@ -533,7 +533,7 @@ object QrUriHandler {
 
     fun loadUrl(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         loadConSrc: String
     ) {
         val targetFragmentInstance = TargetFragmentInstance()
@@ -546,7 +546,7 @@ object QrUriHandler {
         val loadUrl =
             ScriptPreWordReplacer.replaceForQr(
                 loadConSrc,
-                currentAppDirPath
+//                currentAppDirPath
             )
         val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
         when(onLaunchByWebViewDialog){
@@ -555,7 +555,7 @@ object QrUriHandler {
                         UsePath.JS_FILE_SUFFIX
                 ExecJsLoad.execExternalJs(
                     fragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     webSearcherName,
                     listOf(loadUrl)
                 )
@@ -568,14 +568,14 @@ object QrUriHandler {
     }
     fun load(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         loadConSrc: String
     ) {
         val jsDesc = QrLaunchType.JsDesc.prefix
         val replaceLoadUrlSrc =
             ScriptPreWordReplacer.replaceForQr(
                 loadConSrc,
-                currentAppDirPath
+//                currentAppDirPath
             )
         val loadUrl =
             if (

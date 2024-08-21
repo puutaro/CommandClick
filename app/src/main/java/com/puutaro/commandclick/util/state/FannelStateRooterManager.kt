@@ -22,15 +22,15 @@ object FannelStateRooterManager {
         settingSectionEnd: String,
         settingFannelPath: String,
     ): List<String>? {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val settingVariableBeforeImportList = getSettingVariableList(
             settingFannelPath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             setReplaceVariableMap,
             settingSectionStart,
@@ -45,7 +45,7 @@ object FannelStateRooterManager {
         return SettingVariableImportManager.import(
             settingVariableBeforeImportList,
             importDisableValList,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             setReplaceVariableMap,
             settingSectionStart,
@@ -57,15 +57,16 @@ object FannelStateRooterManager {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val defaultSettingFilePath =
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 currentFannelName
             ).absolutePath
 
@@ -82,7 +83,7 @@ object FannelStateRooterManager {
         ) return defaultSettingFilePath
         val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
             UsePath.fannelStateRootTableFilePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         )
 //        FileSystems.writeFile(
@@ -101,7 +102,7 @@ object FannelStateRooterManager {
         ) return defaultSettingFilePath
         val fannelStateRooterMap = createFannelStateRooterMap(
             fannelStateRootTableFilePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             setReplaceVariableMap
         )
@@ -123,7 +124,7 @@ object FannelStateRooterManager {
         ) return defaultSettingFilePath
         val defaultSettingValFilePath = fannelStateRooterMap.get(
             tsvDefaultKeyNameForFannelStateRooterMap
-        ) ?: File(currentAppDirPath, currentFannelName).absolutePath
+        ) ?: File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath
         val settingVariablePath =
             fannelStateRooterMap.get(
                 currentFannelState
@@ -186,7 +187,7 @@ object FannelStateRooterManager {
 
     private fun createFannelStateRooterMap(
         fannelStateRootTableFilePath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
     ): Map<String, String> {
@@ -201,7 +202,7 @@ object FannelStateRooterManager {
             val replaceMapSrc = SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
             CmdClickMap.createMap(
@@ -213,7 +214,7 @@ object FannelStateRooterManager {
 
     private fun getSettingVariableList(
         currentFannelPath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
         settingSectionStart: String,
@@ -229,7 +230,7 @@ object FannelStateRooterManager {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                 )
             }?.split("\n")

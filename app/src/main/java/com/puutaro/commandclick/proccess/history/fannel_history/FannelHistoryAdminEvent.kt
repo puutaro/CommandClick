@@ -28,7 +28,7 @@ object FannelHistoryAdminEvent {
         if (!onEditExecute) {
             FannelInfoTool.putAllFannelInfo(
                 sharedPref,
-                selectedAppDirPath,
+//                selectedAppDirPath,
                 FannelInfoSetting.current_fannel_name.defalutStr,
                 FannelInfoSetting.on_shortcut.defalutStr,
                 FannelInfoSetting.current_fannel_state.defalutStr,
@@ -54,14 +54,14 @@ object FannelHistoryAdminEvent {
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         }
         val fannelState = FannelStateManager.getState(
-            selectedAppDirPath,
+//            selectedAppDirPath,
             selectedFannelName,
             mainFannelSettingConList,
             setReplaceVariableMap,
         )
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            selectedAppDirPath,
+//            selectedAppDirPath,
             selectedFannelName,
             onShortCut,
             fannelState,

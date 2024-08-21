@@ -23,13 +23,13 @@ object TsvImportManager {
     ): Map<String, String>? {
         val jsFileObj = File(scriptPath)
         if(!jsFileObj.isFile) return setReplaceVariableCompleteMap
-        val recentAppDirPath = jsFileObj.parent
-            ?: return setReplaceVariableCompleteMap
+//        val recentAppDirPath = jsFileObj.parent
+//            ?: return setReplaceVariableCompleteMap
         val scriptFileName = jsFileObj.name
         val jsConForTsv = SetReplaceVariabler.execReplaceByReplaceVariables(
             trimJsConForTsv(jsList),
             setReplaceVariableCompleteMap,
-            recentAppDirPath,
+//            recentAppDirPath,
             scriptFileName
         )
         val result = tsvImportRegex.findAll("\n$jsConForTsv")
@@ -37,7 +37,7 @@ object TsvImportManager {
         val tsvKeyValueMap = makeTsvKeyValueMap(
             result,
             setReplaceVariableCompleteMap,
-            recentAppDirPath,
+//            recentAppDirPath,
             scriptFileName
         )
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
@@ -54,7 +54,7 @@ object TsvImportManager {
         val tsvKeyValueMap = makeTsvKeyValueMap(
             result,
             setReplaceVariableCompleteMap,
-            String(),
+//            String(),
             String()
         )
 //        FileSystems.writeFile(
@@ -73,14 +73,14 @@ object TsvImportManager {
     private fun makeTsvKeyValueMap(
         result: Sequence<MatchResult>,
         setReplaceVariableCompleteMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fanneName: String,
     ): Map<String, String> {
         val tsvKeyValueListSrc =
             makeTsvKeyValueListSrc(
                 result,
                 setReplaceVariableCompleteMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fanneName,
             )
         val tsvKeyValueList = tsvKeyValueListSrc
@@ -111,7 +111,7 @@ object TsvImportManager {
     private fun makeTsvKeyValueListSrc(
         result: Sequence<MatchResult>,
         setReplaceVariableCompleteMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fanneName: String,
     ): Sequence<String> {
         return result.map {
@@ -191,7 +191,7 @@ object TsvImportManager {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it,
                         setReplaceVariableCompleteMap,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         fanneName,
                     )
                 }.let {

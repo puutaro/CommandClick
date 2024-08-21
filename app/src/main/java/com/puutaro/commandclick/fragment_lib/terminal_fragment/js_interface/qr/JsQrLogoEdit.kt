@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 
 import android.webkit.JavascriptInterface
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.ActionToolForQr
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrLogoEditDialogLauncher
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -18,9 +16,9 @@ class JsQrLogoEdit(
     private val activity = terminalFragment.activity
     private val fannelInfoMap =
         terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -60,19 +58,19 @@ class JsQrLogoEdit(
 
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
-        val parentDirPath = ActionToolForQr.getParentDirPath(
-            editFragment
-        )
-        ToastUtils.showShort("show: ${parentDirPath}: ${clickFileName}")
+//        val parentDirPath = ActionToolForQr.getParentDirPath(
+//            editFragment
+//        )
+//        ToastUtils.showShort("show: ${parentDirPath}: ${clickFileName}")
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 QrLogoEditDialogLauncher.launch(
                     editFragment,
-                    parentDirPath,
+//                    parentDirPath,
                     clickFileName,
                     editFragment.qrDialogConfig ?: emptyMap(),
 //                    qrDialogConfigMap

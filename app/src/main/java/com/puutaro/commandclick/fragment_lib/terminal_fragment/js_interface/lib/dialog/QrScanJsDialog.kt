@@ -339,17 +339,17 @@ class QrScanJsDialog(
         )
         val fannelPathObj = File(fannelPath)
         if(!fannelPathObj.isFile) return
-        val currentAppDirPath = fannelPathObj.parent
-            ?: return
+//        val currentAppDirPath = fannelPathObj.parent
+//            ?: return
         val fannelName = fannelPathObj.name
         val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
             ScriptPreWordReplacer.replace(
                 jsPath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName
             ),
             setReplaceVariableMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
         terminalViewModel.jsArguments = decodedText
@@ -402,9 +402,9 @@ class QrScanJsDialog(
             !currentFannelPathObj.isFile
             && currentFannelPath.isNotEmpty()
         ) return null
-        val currentAppDirPath =
-            currentFannelPathObj.parent
-                ?: String()
+//        val currentAppDirPath =
+//            currentFannelPathObj.parent
+//                ?: String()
         val fannelName =
             currentFannelPathObj.name
                 ?: String()
@@ -412,7 +412,7 @@ class QrScanJsDialog(
         return centerMenuMapStr.let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName
             )
         }.let {

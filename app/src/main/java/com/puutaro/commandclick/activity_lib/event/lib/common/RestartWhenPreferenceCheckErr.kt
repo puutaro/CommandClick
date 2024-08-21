@@ -17,7 +17,7 @@ class RestartWhenPreferenceCheckErr {
             val sharePref = FannelInfoTool.getSharePref(activity)
             FannelInfoTool.putAllFannelInfo(
                 sharePref,
-                FannelInfoSetting.current_app_dir.defalutStr,
+//                FannelInfoSetting.current_app_dir.defalutStr,
                 FannelInfoSetting.current_fannel_name.defalutStr,
                 FannelInfoSetting.on_shortcut.defalutStr,
                 FannelInfoSetting.current_fannel_state.defalutStr

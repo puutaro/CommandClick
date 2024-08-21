@@ -35,12 +35,12 @@ object AppProcessManager {
 
     fun killDialog(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         execKillDialog(
             fragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             createKillTypeList()
         )
@@ -48,19 +48,19 @@ object AppProcessManager {
 
     fun killDialogForCmdIndex(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         execKillDialog(
             fragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             createKillTypeListForCmdIndex()
         )
     }
     private fun execKillDialog(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         killTypeList: List<Pair<String, Int>>
     ){
@@ -96,7 +96,7 @@ object AppProcessManager {
         setKillTypeListView(
             fragment,
             killTypeList,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         killDialog?.setOnCancelListener {
@@ -114,7 +114,7 @@ object AppProcessManager {
     private fun setKillTypeListView(
         fragment: Fragment,
         killTypeList: List<Pair<String, Int>>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         val context = fragment.context
@@ -131,7 +131,7 @@ object AppProcessManager {
         invokeKillTypeListItemSetClickListener(
             fragment,
             killTypeListView,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
     }
@@ -174,7 +174,7 @@ object AppProcessManager {
     private fun invokeKillTypeListItemSetClickListener(
         fragment: Fragment,
         dialogListView: ListView,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
 
@@ -188,7 +188,7 @@ object AppProcessManager {
             killTypeHandler(
                 fragment,
                 selectedProcess,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
             )
             return@setOnItemClickListener
@@ -198,7 +198,7 @@ object AppProcessManager {
     private fun killTypeHandler(
         fragment: Fragment,
         selectedProcess: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         when(selectedProcess){
@@ -206,7 +206,7 @@ object AppProcessManager {
             -> LinuxCmd.killAllProcess()
             KillType.KILL_THIS.str -> execKillThis(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
             )
             KillType.SELECT_KILL.str -> selectKillProcessDialog(
@@ -303,7 +303,7 @@ object AppProcessManager {
 
     private fun execKillThis(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val languageType =
@@ -313,7 +313,7 @@ object AppProcessManager {
         val settingVariable = CommandClickVariables.returnSettingVariableList(
             ReadText(
                 File(
-                    currentAppDirPath,
+                    UsePath.cmdclickDefaultAppDirPath,
                     fannelName
                 ).absolutePath,
             ).textToList(),
@@ -337,12 +337,13 @@ object AppProcessManager {
         val fannelDirName = CcPathTool.makeFannelDirName(
             fannelName
         )
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val killProcessListTabSepaStr = createProcessList().filter {
             val tergetFannelPath = it.first
             val isContainFannelDirPath = tergetFannelPath.contains(fannelDirPath)
             val isContainFannelPath = tergetFannelPath.contains(
-                "$currentAppDirPath/$fannelName"
+                "$cmdclickDefaultAppDirPath/$fannelName"
             )
             isContainFannelDirPath ||  isContainFannelPath
         }.map { it.first }.joinToString("\t")

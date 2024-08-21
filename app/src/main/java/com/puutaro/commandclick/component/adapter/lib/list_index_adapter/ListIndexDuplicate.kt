@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,11 +33,12 @@ object ListIndexDuplicate {
 
 
     fun isFileDetect(
-        parentDirPath: String,
+//        parentDirPath: String,
         fileName: String
     ): Boolean {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         if (
-            File(parentDirPath, fileName).isFile
+            File(cmdclickDefaultAppDirPath, fileName).isFile
         ){
             alreadyExistToast(fileName)
             return true

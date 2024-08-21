@@ -25,15 +25,14 @@ object UpdateLastModifiedForAppHistory {
             editExecuteValue !=
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val fannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         if(
-            currentAppDirPath == UsePath.cmdclickSystemAppDirPath
-            && !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
+            !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
         ) return
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
@@ -46,7 +45,7 @@ object UpdateLastModifiedForAppHistory {
             File(
                 UsePath.cmdclickAppHistoryDirAdminPath,
                 FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName
                 )
             ).absolutePath

@@ -27,9 +27,9 @@ class JsAppDirAdder(
     val context = terminalFragment.context
     val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -44,7 +44,7 @@ class JsAppDirAdder(
         ) return
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
@@ -97,7 +97,7 @@ class JsAppDirAdder(
         else newAppDirSrc + jsFileSuffix
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
         ListIndexDuplicate.isFileDetect(
-            cmdclickAppDirAdminPath,
+//            cmdclickAppDirAdminPath,
             scriptFileName
         ).let {
             isDetect ->

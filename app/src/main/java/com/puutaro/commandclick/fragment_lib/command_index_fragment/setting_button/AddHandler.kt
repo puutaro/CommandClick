@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 class AddScriptHandler(
     private val cmdIndexFragment: CommandIndexFragment,
-    private val currentAppDirPath: String,
+//    private val currentAppDirPath: String,
 ) {
     val context = cmdIndexFragment.context
     val binding = cmdIndexFragment.binding
@@ -114,16 +114,15 @@ class AddScriptHandler(
                 CommandClickScriptVariable.makeShellScriptName(
                     languageTypeSelects
                 )
-
             AddShellScript.addShellOrJavaScript (
                 cmdIndexFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 shellScriptName,
                 languageTypeSelects
             )
             AddConfirmDialogForSettingButton.invoke(
                 cmdIndexFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 shellScriptName,
                 languageTypeSelects
             )

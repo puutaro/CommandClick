@@ -23,15 +23,15 @@ object BroadcastReceiveHandlerForCmdIndex {
         when(action){
             BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
             -> {
-                val startUpPref =
-                    FannelInfoTool.getSharePref(cmdIndexFragment.context)
-                val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-                    startUpPref,
-                    FannelInfoSetting.current_app_dir
-                )
+//                val startUpPref =
+//                    FannelInfoTool.getSharePref(cmdIndexFragment.context)
+//                val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//                    startUpPref,
+//                    FannelInfoSetting.current_app_dir
+//                )
                 CoroutineScope(Dispatchers.Main).launch {
                     CommandListManager.execListUpdateForCmdIndex(
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         cmdIndexFragment.binding.cmdList,
                     )
                 }

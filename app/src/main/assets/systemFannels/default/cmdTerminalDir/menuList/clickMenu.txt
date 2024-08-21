@@ -1,1 +1,0 @@
-HIGHLIGHT_COPY.js

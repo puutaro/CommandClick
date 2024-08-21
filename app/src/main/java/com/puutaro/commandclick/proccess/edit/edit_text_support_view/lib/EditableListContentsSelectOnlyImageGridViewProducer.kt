@@ -135,9 +135,9 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
         elcbMap: Map<String, String>?,
     ){
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val scriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -151,7 +151,7 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
 
         val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
             elcbMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptName,
         )
 

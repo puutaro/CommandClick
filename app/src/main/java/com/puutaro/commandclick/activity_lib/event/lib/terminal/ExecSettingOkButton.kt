@@ -12,10 +12,10 @@ object ExecSettingOkButton {
         activity: MainActivity
     ){
         val sharedPref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharedPref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharedPref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
             FannelInfoSetting.current_fannel_name
@@ -27,7 +27,7 @@ object ExecSettingOkButton {
         val targetFragmentInstance = TargetFragmentInstance()
         val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState,
         ) ?: return

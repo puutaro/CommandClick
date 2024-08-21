@@ -74,7 +74,7 @@ class TerminalFragment: Fragment() {
     var srcFannelInfoMap: Map<String, String>? = null
     var editType =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-    var currentAppDirPath = String()
+//    var currentAppDirPath = String()
     var currentFannelName = String()
     var setReplaceVariableMap: Map<String, String>? = null
     var settingFannelPath: String = String()
@@ -155,9 +155,9 @@ class TerminalFragment: Fragment() {
         }
         fannelInfoMap = EditFragmentArgs.getFannelInfoMap(arguments)
         srcFannelInfoMap = EditFragmentArgs.getSrcFannelInfoMap(arguments)
-        currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -166,14 +166,13 @@ class TerminalFragment: Fragment() {
                 this
             )
         val fannelContentsList = CommandClickVariables.makeMainFannelConList(
-            currentAppDirPath,
             currentValidFannelName
         )
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 context,
                 fannelContentsList,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentValidFannelName,
             )
         settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
@@ -196,7 +195,7 @@ class TerminalFragment: Fragment() {
             terminalViewModel
         )
         UrlHistoryBackUp.backup(this)
-        ScrollYPosiBackUp.backup(this)
+        ScrollYPosiBackUp.backup()
         AddBlockerHandler.handle(this)
 
         WebChromeClientSetter.set(
@@ -307,7 +306,7 @@ class TerminalFragment: Fragment() {
 
     interface OnAutoCompUpdateListener {
         fun onAutoCompUpdate (
-            currentAppDirPath: String
+//            currentAppDirPath: String
         )
     }
 

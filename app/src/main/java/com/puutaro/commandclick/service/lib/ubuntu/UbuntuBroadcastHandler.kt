@@ -325,15 +325,15 @@ object UbuntuBroadcastHandler {
             }
             return
         }
-        val fannelDirPath = intent.getStringExtra(
-            UbuntuServerIntentExtra.fannelDirPath.schema
-        ) ?: return
+//        val fannelDirPath = intent.getStringExtra(
+//            UbuntuServerIntentExtra.fannelDirPath.schema
+//        ) ?: return
         val fannelName = intent.getStringExtra(
             UbuntuServerIntentExtra.fannelName.schema
         ) ?: String()
         IntentManager.launchFannelIntent(
             ubuntuService.applicationContext,
-            fannelDirPath,
+//            fannelDirPath,
             fannelName,
         )
     }

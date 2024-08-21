@@ -90,9 +90,9 @@ object FannelHistoryCaptureTool {
             val fannelInfoMap = withContext(Dispatchers.IO){
                 FannelInfoTool.makeFannelInfoMapByShare(startUpPref)
             }
-            val currentAppDirPath = withContext(Dispatchers.IO){
-                FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
-            }
+//            val currentAppDirPath = withContext(Dispatchers.IO){
+//                FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
+//            }
             val currentFannelName = withContext(Dispatchers.IO){
                 FannelInfoTool.getCurrentFannelName(fannelInfoMap).let {
                     val isEmpty = it.isEmpty()
@@ -105,7 +105,7 @@ object FannelHistoryCaptureTool {
             }
             val captureFacePngDirPath = withContext(Dispatchers.IO){
                 FannelHistoryPath.getCaptureFacePngDirPath(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                 )
             }
@@ -118,7 +118,7 @@ object FannelHistoryCaptureTool {
             }
             val captureGifPath = withContext(Dispatchers.IO){
                 FannelHistoryPath.getCaptureGifPath(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                 )
             }

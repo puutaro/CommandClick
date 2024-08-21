@@ -21,7 +21,7 @@ class JsFannelInstaller(
         if(
             !selectedFannelPathObj.isFile
         ) return
-        val recentAppDirPath = FileSystems.getRecentAppDirPath()
+        val recentAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val installFannelPathObj =  File("${recentAppDirPath}/${selectedFannel}")
         val compMessage = when(installFannelPathObj.isFile) {
             false -> "install ok: ${selectedFannel}"

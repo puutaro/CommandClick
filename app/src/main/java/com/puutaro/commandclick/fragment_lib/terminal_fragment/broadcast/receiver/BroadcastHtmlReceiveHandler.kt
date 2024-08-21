@@ -62,7 +62,7 @@ object BroadcastHtmlReceiveHandler {
             pageFinishedLoadCon.isNullOrEmpty()
         ) return
         val appUrlSystemDirPath =
-            "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+            "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val urlLoadFinished = UsePath.urlLoadFinished
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO) {

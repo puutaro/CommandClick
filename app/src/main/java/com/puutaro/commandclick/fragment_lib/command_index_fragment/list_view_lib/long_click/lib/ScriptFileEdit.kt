@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.content.Context
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
@@ -16,21 +17,22 @@ import java.io.File
 object ScriptFileEdit {
     fun edit(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val sharedPref =
             FannelInfoTool.getSharePref(cmdIndexFragment.context)
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             FannelInfoSetting.on_shortcut.defalutStr,
             FannelInfoSetting.current_fannel_state.defalutStr
         )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val shellContentsList = ReadText(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 fannelName
             ).absolutePath,
         ).textToList()
@@ -40,7 +42,7 @@ object ScriptFileEdit {
             fannelName
         )
         if(validateErrMessage.isNotEmpty()){
-            val shellScriptPath = "${currentAppDirPath}/${fannelName}"
+            val shellScriptPath = "${cmdclickDefaultAppDirPath}/${fannelName}"
             VariationErrDialog.show(
                 cmdIndexFragment,
                 shellScriptPath,
@@ -50,13 +52,13 @@ object ScriptFileEdit {
         }
         val editFragmentTag = DecideEditTag(
             shellContentsList,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             FannelInfoSetting.current_fannel_state.defalutStr,
         ).decideForEdit()
             ?: return
         val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             FannelInfoSetting.on_shortcut.defalutStr,
             FannelInfoSetting.current_fannel_state.defalutStr,

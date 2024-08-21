@@ -3,26 +3,30 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.common
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.recyclerview.widget.RecyclerView
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.util.file.FileSystems
 
 object CommandListManager {
 
     fun makeListSource(
-        currentAppDirPath: String
+//        currentAppDirPath: String
     ): List<String> {
-        FileSystems.createDirs(currentAppDirPath)
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        FileSystems.createDirs(UsePath.cmdclickDefaultAppDirPath)
         return FileSystems.filterSuffixShellOrJsOrHtmlFiles(
-            currentAppDirPath
+            cmdclickDefaultAppDirPath
         )
     }
 
     fun execListUpdateForCmdIndex(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cmdListView: RecyclerView,
     ){
         val fannelIndexListAdapter = cmdListView.adapter as FannelIndexListAdapter
-        val updateList = makeListSource(currentAppDirPath)
+        val updateList = makeListSource(
+//            cmdclickDefaultAppDirPath
+        )
         if(
             fannelIndexListAdapter.fannelIndexList == updateList
         ) return

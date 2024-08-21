@@ -26,11 +26,11 @@ class JsEditor(
         */
 
         val filePathObj = File(filePath)
-        val parentDirPath = filePathObj.parent
-            ?: return
+//        val parentDirPath = filePathObj.parent
+//            ?: return
         val fileName = filePathObj.name
         EditorByIntent(
-            parentDirPath,
+//            parentDirPath,
             fileName,
             context
         ).byIntent()

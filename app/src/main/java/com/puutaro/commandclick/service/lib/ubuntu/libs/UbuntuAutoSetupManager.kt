@@ -16,7 +16,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.sd.SdPath
 import java.io.File
 
-object AutoSetupManager {
+object UbuntuAutoSetupManager {
 
     fun manage(ubuntuService: UbuntuService) {
         val context = ubuntuService.applicationContext
@@ -28,8 +28,8 @@ object AutoSetupManager {
             !NetworkTool.isWifi(context)
         ) return
         val settingValList = File(
-            UsePath.cmdclickSystemAppDirPath,
-            UsePath.cmdclickConfigFileName
+            UsePath.cmdclickDefaultAppDirPath,
+            UsePath.cmdclickPreferenceJsName
         ).let {
             CommandClickVariables.extractSettingValListByFannelName(
                 ReadText(it.absolutePath).textToList(),

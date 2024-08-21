@@ -32,8 +32,8 @@ class UbuntuFiles(
         val ubuntuExtraStartupShellsTsvPath = let {
             ScriptPreWordReplacer.replace(
                 "${UsePath.fannelSettingsDirPath}/${ubuntuExtraStartupShellPathsTsvName}",
-                UsePath.cmdclickSystemAppDirPath,
-                UsePath.cmdclickConfigFileName
+//                UsePath.cmdclickDefaultAppDirPath,
+                UsePath.cmdclickPreferenceJsName
             )
         }
         const val pulseAudioStartUpShellPath = "${supportDirInUbuntu}/pulse_setup.sh"

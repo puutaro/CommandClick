@@ -27,12 +27,12 @@ object EditSettingExtraArgsTool {
 
     fun getParentDirPath(
         extraMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ): String {
         return extraMap?.get(ExtraKey.PARENT_DIR_PATH.key).let {
             if(
                 it.isNullOrEmpty()
-            ) return@let currentAppDirPath
+            ) return@let UsePath.cmdclickDefaultAppDirPath
             it
         }
     }
@@ -183,9 +183,9 @@ object EditSettingExtraArgsTool {
             val fannelInfoMap =
                 editFragment.fannelInfoMap
 
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             val currentFannelName = FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
@@ -195,7 +195,7 @@ object EditSettingExtraArgsTool {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariablesMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName
                 )
             }

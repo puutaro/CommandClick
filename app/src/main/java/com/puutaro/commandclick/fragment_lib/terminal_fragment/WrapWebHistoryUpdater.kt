@@ -156,9 +156,9 @@ object WrapWebHistoryUpdater {
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
         val fannelInfoMap = terminalFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -166,7 +166,7 @@ object WrapWebHistoryUpdater {
             fannelInfoMap
         )
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState,
         )
@@ -207,7 +207,7 @@ object WrapWebHistoryUpdater {
             searchViewText.isEmpty()
         ) return
         UrlHistoryRegister.insert(
-            currentAppDirPath,
+//            currentAppDirPath,
             ulrTitle,
             webViewUrl,
         )

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.EditFragment
@@ -9,7 +10,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.CcPathTool
@@ -39,9 +39,10 @@ class ToolbarButtonArgsMaker(
 
     val fannelInfoMap = editFragment.fannelInfoMap
 
-    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -49,7 +50,7 @@ class ToolbarButtonArgsMaker(
 
     private val currentScriptContentsList = ReadText(
         File(
-            currentAppDirPath,
+            cmdclickDefaultAppDirPath,
             currentScriptFileName
         ).absolutePath
     ).textToList()
@@ -62,7 +63,7 @@ class ToolbarButtonArgsMaker(
         SetReplaceVariabler.makeSetReplaceVariableMap(
             context,
             settingVariableList,
-            currentAppDirPath,
+//            cmdclickDefaultAppDirPath,
             currentScriptFileName,
         )
     }
@@ -106,9 +107,9 @@ class ToolbarButtonArgsMaker(
             jsActionMap: Map<String, String>?
         ): List<List<Pair<String, String>>> {
             val fannelInfoMap = editFragment.fannelInfoMap
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             val currentFannelName = FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
@@ -128,10 +129,11 @@ class ToolbarButtonArgsMaker(
                     true -> settingMenuSettingFilePathObj.isFile
                     else -> false
                 }
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             val settingMenuMapCon = when(isSettingMenuSettingFilePath){
                 true -> SettingFile.read(
                     settingMenuSettingFilePathObj.absolutePath,
-                    File(currentAppDirPath, currentFannelName).absolutePath,
+                    File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,
                 )
                 else -> SettingFile.formSettingContents(
@@ -142,7 +144,7 @@ class ToolbarButtonArgsMaker(
                 editFragment.context,
                 editFragment.busyboxExecutor,
                 settingMenuMapCon,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
                 setReplaceVariableMap
             )
@@ -153,12 +155,12 @@ class ToolbarButtonArgsMaker(
         }
     }
 
-    fun decideClickKey(): String {
-        return when(isLongClick){
-            true -> SettingButtonConfigMapKey.LONG_CLICK.key
-            else -> SettingButtonConfigMapKey.CLICK.key
-        }
-    }
+//    fun decideClickKey(): String {
+//        return when(isLongClick){
+//            true -> SettingButtonConfigMapKey.LONG_CLICK.key
+//            else -> SettingButtonConfigMapKey.CLICK.key
+//        }
+//    }
 }
 
 private fun makeSettingMenuDefaultConForEdit(): String {
@@ -199,13 +201,15 @@ private fun makeSettingMenuDefaultConForEdit(): String {
                     |${iconKey}=setting
                     |${jsPathKey}=${MacroForToolbarButton.Macro.SHORTCUT.name}
                     |${parentMenuKey}=setting,
-                ${menuNameKey}=termux setup
-                    |${iconKey}=setup
-                    |${jsPathKey}=${MacroForToolbarButton.Macro.TERMUX_SETUP.name}
-                    |${parentMenuKey}=setting,
-                ${menuNameKey}=config
-                    |${iconKey}=edit_frame
-                    |${jsPathKey}=${MacroForToolbarButton.Macro.CONFIG.name}
-                    |${parentMenuKey}=setting,
     """.trimIndent()
 }
+
+
+//${menuNameKey}=config
+//|${iconKey}=edit_frame
+//|${jsPathKey}=${MacroForToolbarButton.Macro.CONFIG.name}
+//|${parentMenuKey}=setting,
+//${menuNameKey}=termux setup
+//|${iconKey}=setup
+//|${jsPathKey}=${MacroForToolbarButton.Macro.TERMUX_SETUP.name}
+//|${parentMenuKey}=setting,

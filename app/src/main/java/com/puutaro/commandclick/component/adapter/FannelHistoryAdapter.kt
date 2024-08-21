@@ -115,22 +115,22 @@ class FannelHistoryAdapter(
             setCaptureImage(
                 holder,
                 FannelHistoryPath.getCaptureGifPath(
-                    File(UsePath.cmdclickAppDirPath, appDirName).absolutePath,
+//                    File(UsePath.cmdclickAppDirPath, appDirName).absolutePath,
                     fannelName,
                 ),
             )
             withContext(Dispatchers.IO){
-                val currentAppDirPath = File(
-                    FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
-                ).name
-                if(
-                    appDirName != currentAppDirPath
-                ) return@withContext
+//                val currentAppDirPath = File(
+//                    FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
+//                ).name
+//                if(
+//                    appDirName != currentAppDirPath
+//                ) return@withContext
                 val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 FileSystems.updateFile(
                     File(UsePath.cmdclickDefaultAppDirPath, "gFannelLit.txt").absolutePath,
                     listOf(
-                        "currentAppDirPath: ${currentAppDirPath}",
+//                        "currentAppDirPath: ${currentAppDirPath}",
                         "appDirName: ${appDirName}",
                         "currentFannelName: ${currentFannelName}",
                         "fannelName: ${fannelName}",

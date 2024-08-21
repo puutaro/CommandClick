@@ -286,7 +286,7 @@ object ButtonViewProducer {
             -> execShellScriptByTermux(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
-                innerExecCmd,
+//                innerExecCmd,
             )
             ButtonCmdType.bashb
             -> execShellScriptByBackground(
@@ -314,7 +314,7 @@ object ButtonViewProducer {
     private fun execShellScriptByTermux(
         editFragment: EditFragment,
         execCmdAfterTrimButtonEditExecVariant: String,
-        innerExecCmd: String,
+//        innerExecCmd: String,
     ){
         val context = editFragment.context
             ?: return
@@ -377,7 +377,7 @@ object ButtonViewProducer {
             -> execShellScriptByTermux(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
-                innerExecCmd,
+//                innerExecCmd,
             )
         }
     }
@@ -463,16 +463,17 @@ object ButtonViewProducer {
         execCmdAfterTrimButtonEditExecVariant: String,
     ): String {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val fannelDirName = CcPathTool.makeFannelDirName(
             currentScriptName
         )
-        val fannelDirPath = "${currentAppDirPath}/$fannelDirName"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/$fannelDirName"
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         val outputMonitorPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
         val execCmd = if(
@@ -900,9 +901,9 @@ object ButtonViewProducer {
         currentComponentIndex: Int
     ): Map<String, String> {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -923,7 +924,7 @@ object ButtonViewProducer {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             )
         }.let {

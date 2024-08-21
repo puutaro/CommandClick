@@ -15,10 +15,10 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
         weight: Float
     ){
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+        /*val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_app_dir
-        )
+        )*/
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -28,7 +28,7 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
             FannelInfoSetting.current_fannel_state
         )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState,
         )

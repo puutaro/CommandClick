@@ -12,9 +12,10 @@ import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 object ConfigFromPreferenceFileSetter {
     fun set(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ){
 
+//        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
@@ -31,7 +32,7 @@ object ConfigFromPreferenceFileSetter {
 
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
-                currentAppDirPath,
+//                currentAppDirPath,
                 cmdclickPreferenceJsName
             ),
             settingSectionStart,
@@ -41,21 +42,21 @@ object ConfigFromPreferenceFileSetter {
         cmdIndexFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD,
-            cmdIndexFragment.onTermVisibleWhenKeyboard,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
             SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
-            cmdIndexFragment.onTermVisibleWhenKeyboard,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
                 SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
             ),
         )
 
-        cmdIndexFragment.historySwitch = SettingVariableReader.getCbValue(
+        cmdIndexFragment.historySwitch =  SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
-            cmdIndexFragment.historySwitch,
+            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
             SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
-            cmdIndexFragment.historySwitch,
+            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.HistorySwitchSelects.OFF.name,
                 SettingVariableSelects.HistorySwitchSelects.ON.name
@@ -65,9 +66,9 @@ object ConfigFromPreferenceFileSetter {
         cmdIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-            cmdIndexFragment.urlHistoryOrButtonExec,
+            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
             SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
-            cmdIndexFragment.urlHistoryOrButtonExec,
+            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
@@ -77,12 +78,12 @@ object ConfigFromPreferenceFileSetter {
         cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,
-            cmdIndexFragment.terminalColor
+            CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
         )
         val bottomScriptUrlList = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(
                 UsePath.homeScriptUrlsFilePath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 cmdclickPreferenceJsName,
             )
         )
@@ -93,7 +94,7 @@ object ConfigFromPreferenceFileSetter {
         val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(
                 UsePath.homeFannelsFilePath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 cmdclickPreferenceJsName,
             )
         )

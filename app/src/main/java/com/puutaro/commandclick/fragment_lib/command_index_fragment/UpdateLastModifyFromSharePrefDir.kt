@@ -11,34 +11,34 @@ import java.io.File
 object UpdateLastModifyFromSharePrefDir {
 
     fun update(
-        sharePref: FannelInfoTool.FannelInfoSharePref?,
+//        sharePref: FannelInfoTool.FannelInfoSharePref?,
     ) {
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-        val checkCurrentAppDirPathSource = sharePref?.sharePref?.getString(
-            FannelInfoSetting.current_app_dir.name,
-            FannelInfoSetting.current_app_dir.defalutStr
-        ) ?: FannelInfoSetting.current_app_dir.defalutStr
-        val checkCurrentAppDirPath = if(
-            NoUpdatelastModifyForCmdIndex().judge(
-                checkCurrentAppDirPathSource
-            )
-        ) {
-            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-            val currentDirName = FileSystems.filterSuffixJsFiles(
-                cmdclickAppDirAdminPath,
-                "on"
-            ).first().removeSuffix(
-                UsePath.JS_FILE_SUFFIX
-            )
-            "${cmdclickAppDirPath}/${currentDirName}"
-        } else {
-            checkCurrentAppDirPathSource
-        }
-        val currenDirObj = File(checkCurrentAppDirPath)
-        if(
-            !currenDirObj.isDirectory
-        ) return
-        val currentDirName = currenDirObj.name
+//        val checkCurrentAppDirPathSource = sharePref?.sharePref?.getString(
+//            FannelInfoSetting.current_app_dir.name,
+//            FannelInfoSetting.current_app_dir.defalutStr
+//        ) ?: FannelInfoSetting.current_app_dir.defalutStr
+//        val checkCurrentAppDirPath = if(
+//            NoUpdatelastModifyForCmdIndex().judge(
+////                checkCurrentAppDirPathSource
+//            )
+//        ) {
+//            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+//            val currentDirName = FileSystems.filterSuffixJsFiles(
+//                cmdclickAppDirAdminPath,
+//                "on"
+//            ).first().removeSuffix(
+//                UsePath.JS_FILE_SUFFIX
+//            )
+//            "${cmdclickAppDirPath}/${currentDirName}"
+//        } else {
+//            checkCurrentAppDirPathSource
+//        }
+//        val currenDirObj = File(checkCurrentAppDirPath)
+//        if(
+//            !currenDirObj.isDirectory
+//        ) return
+        val currentDirName = File(UsePath.cmdclickDefaultAppDirPath).name
         FileSystems.updateLastModified(
             File(
                 cmdclickAppDirAdminPath,

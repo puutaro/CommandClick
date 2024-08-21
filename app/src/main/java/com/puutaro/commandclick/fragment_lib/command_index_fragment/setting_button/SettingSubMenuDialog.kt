@@ -12,7 +12,7 @@ import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
+//import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
 object SettingSubMenuDialog {
@@ -101,7 +101,7 @@ object SettingSubMenuDialog {
                 SettingSubMenuEnums.APP_DIR_MANAGER -> {
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
-                        UsePath.cmdclickSystemAppDirPath,
+//                        UsePath.cmdclickDefaultAppDirPath,
                         SystemFannel.appDirManagerFannelName
                     )
                 }
@@ -116,20 +116,20 @@ object SettingSubMenuDialog {
                         )
                     )
                 }
-                SettingSubMenuEnums.TERMUX_SETUP -> {
-                    val listener =
-                        cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
-                        EditFragmentArgs(
-                            cmdIndexFragment.fannelInfoMap,
-                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                        )
-                    )
-                }
-                SettingSubMenuEnums.CONFIG -> {
-                    ConfigEdit.edit(cmdIndexFragment)
-                }
+//                SettingSubMenuEnums.TERMUX_SETUP -> {
+//                    val listener =
+//                        cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+//                    listener?.onToolbarMenuCategories(
+//                        ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
+//                        EditFragmentArgs(
+//                            cmdIndexFragment.fannelInfoMap,
+//                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+//                        )
+//                    )
+//                }
+//                SettingSubMenuEnums.CONFIG -> {
+//                    ConfigEdit.edit(cmdIndexFragment)
+//                }
             }
         }
     }
@@ -140,8 +140,8 @@ object SettingSubMenuDialog {
     ){
         APP_DIR_MANAGER("App dir manager", R.drawable.icons8_support),
         SHORTCUT("Create short cut", R.drawable.icons8_shortcut),
-        TERMUX_SETUP("Termux setup", R.drawable.icons8_setup),
-        CONFIG("Config", R.drawable.icons8_edit),
+//        TERMUX_SETUP("Termux setup", R.drawable.icons8_setup),
+//        CONFIG("Config", R.drawable.icons8_edit),
     }
 
 }

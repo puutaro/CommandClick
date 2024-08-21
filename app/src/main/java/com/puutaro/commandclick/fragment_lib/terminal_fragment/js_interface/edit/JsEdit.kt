@@ -64,9 +64,9 @@ class JsEdit(
     ): String {
         val fannelInfoMap =
             terminalFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
 
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
@@ -76,7 +76,7 @@ class JsEdit(
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         ) ?: return String()

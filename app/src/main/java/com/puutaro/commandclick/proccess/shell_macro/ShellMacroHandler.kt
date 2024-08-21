@@ -322,7 +322,7 @@ object ShellMacroHandler {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             )
         }

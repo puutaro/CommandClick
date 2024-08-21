@@ -22,10 +22,10 @@ class JsDirect (
             context,
             fileUploadService
         )
-        intent.putExtra(
-            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
-            terminalFragment.currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
+//            terminalFragment.currentAppDirPath
+//        )
         context?.let {
             ContextCompat.startForegroundService(context, intent)
         }
@@ -46,6 +46,8 @@ class JsDirect (
         fullPathOrFannelRawName: String,
     ){
         /*
+        ## Description
+
         Get fannel from other smart phone by p2p
         */
         val intent = Intent(
@@ -60,10 +62,10 @@ class JsDirect (
             FileDownloadExtra.FULL_PATH_OR_FANNEL_RAW_NAME.schema,
             fullPathOrFannelRawName
         )
-        intent.putExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
-            terminalFragment.currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
+//            terminalFragment.currentAppDirPath
+//        )
         context?.let {
             ContextCompat.startForegroundService(context, intent)
         }

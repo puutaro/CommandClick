@@ -12,12 +12,12 @@ import java.io.File
 
 object ScrollYPosiBackUp {
     fun backup(
-        terminalFragment: TerminalFragment
+//        terminalFragment: TerminalFragment
     ){
         val takePosiLinesForBackup = ScrollPosition.takePosiLines
         CoroutineScope(Dispatchers.Main).launch {
-            val currentAppDirPath = terminalFragment.currentAppDirPath
-            val cmdclickSiteScrollPosiDirPath = "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+//            val currentAppDirPath = terminalFragment.currentAppDirPath
+            val cmdclickSiteScrollPosiDirPath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
             val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
             FileSystems.createDirs(cmdclickSiteScrollPosiDirPath)
             val scrollPosiConList = ReadText(

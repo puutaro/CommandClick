@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.map
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -18,15 +19,15 @@ object ConfigMapTool {
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val settingMenuSettingFilePath = ScriptPreWordReplacer.replace(
             configPath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentScriptFileName,
         )
         val settingMenuSettingFilePathObj = File(settingMenuSettingFilePath)
@@ -34,7 +35,7 @@ object ConfigMapTool {
             true -> {
                 SettingFile.read(
                     settingMenuSettingFilePathObj.absolutePath,
-                    File(currentAppDirPath, currentScriptFileName).absolutePath,
+                    File(UsePath.cmdclickDefaultAppDirPath, currentScriptFileName).absolutePath,
                     setReplaceVariableMap,
                 )
             }
@@ -50,14 +51,14 @@ object ConfigMapTool {
         }.let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentScriptFileName
             )
         }.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentScriptFileName
             )
         }.let {

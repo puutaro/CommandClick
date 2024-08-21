@@ -81,8 +81,8 @@ object FileDownloader {
         val context = fileDownloadService.applicationContext
         val mainUrl = fileDownloadService.mainUrl
         val getPathOrFannelRawName = fileDownloadService.fullPathPrFannelRawName
-        val parendDirPathForUploader =
-            fileDownloadService.currentAppDirPathForUploader ?: String()
+//        val parendDirPathForUploader =
+//            fileDownloadService.currentAppDirPathForUploader ?: String()
         val parentDirPathSrc = File(getPathOrFannelRawName).parent
             ?.removeSuffix("/")
             ?: String()
@@ -93,7 +93,7 @@ object FileDownloader {
         val cpFileMapStr = listOf(
             "${CpFileKey.CP_FILE_MACRO_FOR_SERVICE.key}=${ReceivePathMacroType.GET_FILE_LIST.name}",
             "${CpFileKey.PATH.key}=$parentDirPath",
-            "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}"
+//            "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}"
         ).joinToString("\t")
 //        FileSystems.writeFile(
 //            File(
@@ -171,7 +171,7 @@ object FileDownloader {
         fileListCon: String,
     ){
         val context = fileDownloadService.applicationContext
-        val currentAppDirPath = fileDownloadService.currentAppDirPath
+//        val currentAppDirPath = fileDownloadService.currentAppDirPath
         val mainUrl = fileDownloadService.mainUrl
         val getPathOrFannelRawName = fileDownloadService.fullPathPrFannelRawName
         val cpFileList = makeCpFileListCon(
@@ -204,8 +204,8 @@ object FileDownloader {
         else commonDirPath = null
 
         val cpFileListIndexSize = cpFileList.size - 1
-        val parendDirPathForUploader =
-            fileDownloadService.currentAppDirPathForUploader ?: String()
+//        val parendDirPathForUploader =
+//            fileDownloadService.currentAppDirPathForUploader ?: String()
 
 //        FileSystems.writeFile(
 //            UsePath.cmdclickDefaultAppDirPath,
@@ -217,7 +217,7 @@ object FileDownloader {
             val cpUploaderFilePath = cpFileList[it]
             val cpDownloaderFilePath = CcPathTool.convertAppDirPathToLocal(
                 cpUploaderFilePath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 commonDirPath
             )
 //            FileSystems.updateFile(
@@ -230,7 +230,7 @@ object FileDownloader {
                 getFileCon(
                     context,
                     mainUrl,
-                    parendDirPathForUploader,
+//                    parendDirPathForUploader,
                     cpUploaderFilePath,
                 )
             }
@@ -305,13 +305,13 @@ object FileDownloader {
     private suspend fun getFileCon(
         context: Context?,
         mainUrl: String,
-        parendDirPathForUploader: String,
+//        parendDirPathForUploader: String,
         cpUploaderFilePath: String,
     ): ByteArray {
 
         var conSrc = byteArrayOf()
         val cpFileMapStr = listOf(
-            "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}",
+//            "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}",
             "${CpFileKey.PATH.key}=${cpUploaderFilePath}",
         ).joinToString("\t")
         for (i in 1..3) {

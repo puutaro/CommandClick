@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -15,7 +16,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 object TextChangedListenerAdder {
     fun add (
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cmdListAdapter: FannelIndexListAdapter
     ){
         val context = cmdIndexFragment.context
@@ -81,7 +82,7 @@ object TextChangedListenerAdder {
                     cmdIndexFragmentWeight != ReadLines.LONGTH
                 ) return
                 val filteredCmdStrList = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
-                    currentAppDirPath
+                    UsePath.cmdclickDefaultAppDirPath
                 ).filter {
                     Regex(
                         s.toString().lowercase()

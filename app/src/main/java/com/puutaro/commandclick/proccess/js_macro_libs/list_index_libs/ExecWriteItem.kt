@@ -55,7 +55,7 @@ object ExecWriteItem {
             )
         ) return
         val editorByIntent = EditorByIntent(
-            parentDirPath,
+//            parentDirPath,
             selectedItem,
             context
         )
@@ -93,10 +93,10 @@ object ExecWriteItem {
         val filePathOrConObj = File(filePathOrCon)
         val isWithFileRename = filePathOrConObj.isFile
         if(!isWithFileRename) return
-        val parentDirPath = filePathOrConObj.parent ?: return
+//        val parentDirPath = filePathOrConObj.parent ?: return
         val fileName = filePathOrConObj.name
         val editorByIntent = EditorByIntent(
-            parentDirPath,
+//            parentDirPath,
             fileName,
             context
         )

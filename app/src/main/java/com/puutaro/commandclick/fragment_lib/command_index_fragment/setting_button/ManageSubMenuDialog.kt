@@ -26,7 +26,7 @@ object ManageSubMenuDialog {
 
     fun launch(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String
+//        currentAppDirPath: String
     ){
         val context = cmdIndexFragment.context
             ?: return
@@ -39,7 +39,7 @@ object ManageSubMenuDialog {
         )
         setListView(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
         )
         setCancelListener()
         manageSubMenuDialog?.window?.setLayout(
@@ -69,7 +69,7 @@ object ManageSubMenuDialog {
 
     private fun setListView(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ) {
         val context = cmdIndexFragment.context
             ?: return
@@ -87,14 +87,14 @@ object ManageSubMenuDialog {
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             subMenuListView
         )
     }
 
     private fun subMenuItemClickListener(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         subMenuListView: ListView?
     ){
         val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
@@ -112,7 +112,7 @@ object ManageSubMenuDialog {
                 ManageSubMenuEnums.KILL -> {
                     AppProcessManager.killDialogForCmdIndex(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         String(),
                     )
                 }
@@ -127,7 +127,7 @@ object ManageSubMenuDialog {
                 ManageSubMenuEnums.ADD -> {
                     AddScriptHandler(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                     ).handle()
                 }
                 ManageSubMenuEnums.LAUNCH_DEBUGGER -> {
@@ -137,13 +137,13 @@ object ManageSubMenuDialog {
                         BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level,
                     )
                 }
-                ManageSubMenuEnums.JS_IMPORT -> {
-                    SystemFannelLauncher.launch(
-                        cmdIndexFragment,
-                        UsePath.cmdclickSystemAppDirPath,
-                        SystemFannel.jsImportManagerFannelName
-                    )
-                }
+//                ManageSubMenuEnums.JS_IMPORT -> {
+//                    SystemFannelLauncher.launch(
+//                        cmdIndexFragment,
+////                        UsePath.cmdclickDefaultAppDirPath,
+//                        SystemFannel.jsImportManagerFannelName
+//                    )
+//                }
                 ManageSubMenuEnums.REFRESH_MONITOR -> {
                     TermRefresh.refresh(
                         terminalViewModel.currentMonitorFileName
@@ -162,7 +162,7 @@ object ManageSubMenuDialog {
         SELECT_MONITOR("Select monitor", R.drawable.icons8_file),
         RESTART_UBUNTU("Restart ubuntu", R.drawable.icons8_launch),
         LAUNCH_DEBUGGER("Launch debugger", R.drawable.icon_debug),
-        JS_IMPORT("Js import manager", R.drawable.icons8_folda),
+//        JS_IMPORT("Js import manager", R.drawable.icons8_folda),
         ADD("Add", R.drawable.icons8_plus),
     }
 }

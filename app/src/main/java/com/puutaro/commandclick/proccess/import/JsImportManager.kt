@@ -16,8 +16,8 @@ object JsImportManager {
 
     val jsImportPreWord = "jsimport"
     private val assetsPrefix = "/android_asset/"
-    val jsImportFindRegex =
-        "\n[ \t]*${jsImportPreWord}[^\n]+"
+//    val jsImportFindRegex =
+//        "\n[ \t]*${jsImportPreWord}[^\n]+"
 
     fun import(
         context: Context?,
@@ -43,14 +43,14 @@ object JsImportManager {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableCompleteMap,
-                    recentAppDirPath,
+//                    recentAppDirPath,
                     scriptFileName
                 )
             }
             .let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    recentAppDirPath,
+//                    recentAppDirPath,
                     scriptFileName
                 )
             }

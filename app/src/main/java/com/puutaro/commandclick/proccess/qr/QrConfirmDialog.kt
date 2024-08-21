@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 class QrConfirmDialog(
     private val fragment: Fragment,
     private val codeScanner: CodeScanner?,
-    private val currentAppDirPath: String,
+//    private val currentAppDirPath: String,
     private val title: String,
     private val body: String,
 ){
@@ -72,14 +72,14 @@ class QrConfirmDialog(
                 withContext(Dispatchers.Main) {
                     QrUriHandler.handle(
                         fragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         body,
                         isMoveCurrentDir
                     )
                 }
             }
             QrHistoryManager.registerQrUriToHistory(
-                currentAppDirPath,
+//                currentAppDirPath,
                 title,
                 body,
             )

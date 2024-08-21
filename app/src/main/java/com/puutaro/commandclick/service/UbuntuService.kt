@@ -27,7 +27,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.UbuntuBroadcastHandler
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuInitProcess
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuSetUp
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
-import com.puutaro.commandclick.service.lib.ubuntu.libs.AutoSetupManager
+import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuAutoSetupManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
@@ -233,7 +233,7 @@ class UbuntuService:
                     it
                 )
             }
-            AutoSetupManager.manage(this)
+            UbuntuAutoSetupManager.manage(this)
             UbuntuProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY

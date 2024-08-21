@@ -45,7 +45,7 @@ object QrDialogMethod {
 
     fun launchPassDialog(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         val context = fragment.context
@@ -53,7 +53,7 @@ object QrDialogMethod {
 
         val cpQrStr = makeCpFileQrStr(
             fragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
 
@@ -64,10 +64,10 @@ object QrDialogMethod {
             context,
             fileUploadService
         )
-        intent.putExtra(
-            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
-            currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
+//            currentAppDirPath
+//        )
         context.let {
             ContextCompat.startForegroundService(context, intent)
         }
@@ -81,7 +81,7 @@ object QrDialogMethod {
             R.id.image_dialog_title
         )
         titleTextView?.text = makePassDialogTitle(
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         val imageContentsView = imageDialogObj?.findViewById<AppCompatImageView>(
@@ -123,10 +123,10 @@ object QrDialogMethod {
     }
 
     private fun makePassDialogTitle(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): String {
-        val isAppDirAdmin = currentAppDirPath.removeSuffix("/") ==
+        val isAppDirAdmin = UsePath.cmdclickDefaultAppDirPath.removeSuffix("/") ==
                 UsePath.cmdclickAppDirAdminPath
         return when(isAppDirAdmin){
             true
@@ -138,13 +138,14 @@ object QrDialogMethod {
 
     private fun makeCpFileQrStr(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): String {
         val context = fragment.context
         val ipV4Address = NetworkTool.getIpv4Address(context)
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
-        val isAppDirAdmin = currentAppDirPath.removeSuffix("/") ==
+        val cmdclickDefaultAppDirPath =  UsePath.cmdclickDefaultAppDirPath
+        val isAppDirAdmin = cmdclickDefaultAppDirPath.removeSuffix("/") ==
                 UsePath.cmdclickAppDirAdminPath
         return when(isAppDirAdmin){
             true -> {
@@ -152,13 +153,13 @@ object QrDialogMethod {
                 QrLaunchType.CpFile.prefix + listOf(
                     "${CpFileKey.ADDRESS.key}=${ipV4Address}:${UsePort.COPY_FANNEL_PORT.num}",
                     "${CpFileKey.PATH.key}=$appDirPathForCpFile",
-                    "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${appDirPathForCpFile}"
+//                    "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${appDirPathForCpFile}"
                 ).joinToString(";")
             }
             else -> {
                 makeCpFileQrNormal(
                     fragment,
-                    "$currentAppDirPath/$fannelRawName",
+                    "${cmdclickDefaultAppDirPath}/$fannelRawName",
                 )
             }
         }
@@ -243,7 +244,7 @@ object QrDialogMethod {
 
     fun execChange(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
@@ -252,7 +253,8 @@ object QrDialogMethod {
 
         val context = fragment.context ?: return
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val qrLogoPath = "${fannelDirPath}/${UsePath.qrPngRelativePath}"
         val qrLogoPathObj = File(qrLogoPath)
         val qrLogoParentDirPath = qrLogoPathObj.parent
@@ -270,7 +272,7 @@ object QrDialogMethod {
             }
             withContext(Dispatchers.IO) {
                 qrLogo.createAndSaveWithGitCloneOrFileCon(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                     isFileCon,
                 )
@@ -318,18 +320,19 @@ object QrDialogMethod {
 
     fun execConUpdate(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
     ){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
         val qrLogo = QrLogo(fragment)
         val qrDesignMap = qrLogo.readQrDesignMapWithCreate(
             qrDesignFilePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         val qrLogoPath = "${fannelDirPath}/${UsePath.qrPngRelativePath}"
@@ -344,7 +347,7 @@ object QrDialogMethod {
             withContext(Dispatchers.IO) {
                 qrLogo.createAndSaveFromDesignMap(
                     qrDesignMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                 )
             }

@@ -25,9 +25,9 @@ object SearchViewAndAutoCompUpdater {
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
         val fannelInfoMap = terminalFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -35,7 +35,7 @@ object SearchViewAndAutoCompUpdater {
             fannelInfoMap
         )
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         )
@@ -81,14 +81,14 @@ object SearchViewAndAutoCompUpdater {
         autoCompUpdater(
             terminalFragment,
             commandIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
         )
     }
 
     private fun autoCompUpdater(
         terminalFragment: TerminalFragment,
         commandIndexFragment: CommandIndexFragment?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ){
         if(
             commandIndexFragment == null
@@ -98,7 +98,7 @@ object SearchViewAndAutoCompUpdater {
         ) return
         val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
         autoCompUpdateListner?.onAutoCompUpdate(
-            currentAppDirPath,
+//            currentAppDirPath,
         )
     }
 

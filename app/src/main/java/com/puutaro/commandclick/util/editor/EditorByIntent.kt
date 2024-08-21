@@ -6,16 +6,18 @@ import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.BuildConfig
+import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 
 class EditorByIntent(
-    private val parentDirPath: String,
+//    private val parentDirPath: String,
     private val fileName: String,
     private val context: Context?
 ) {
     fun byIntent(){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val openFile = File(
-            parentDirPath,
+            cmdclickDefaultAppDirPath,
             fileName
         )
         val uri = FileProvider.getUriForFile(

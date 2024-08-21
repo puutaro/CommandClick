@@ -66,7 +66,7 @@ object ListIndexEditConfig {
 //            ).joinToString("\n\n")
 //        )
         val mainFannelPath = File(
-            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            UsePath.cmdclickDefaultAppDirPath,
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
         val jsActionMap = JsActionTool.makeJsActionMap(

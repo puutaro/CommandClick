@@ -155,12 +155,12 @@ object UsePath {
     const val cmdclickDefaultAppDirName = "default"
     private val cmdclickDefaultAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickDefaultAppDirName"
     val cmdclickDefaultAppDirPath =  "$rootPath/$cmdclickDefaultAppRelativePath"
-    const val cmdclickSystemAppDirName = "system"
-    private val cmdclickSystemAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickSystemAppDirName"
-    val cmdclickSystemAppDirPath =  "$rootPath/$cmdclickSystemAppRelativePath"
-    val cmdclickConfigFileName = "cmdclickConfig$JS_FILE_SUFFIX"
-    private val cmdclickConfigFileRelativePath = "$cmdclickSystemAppRelativePath/$cmdclickConfigFileName"
-    val cmdclickConfigFilePath = "$rootPath/$cmdclickConfigFileRelativePath"
+//    const val cmdclickSystemAppDirName = "system"
+//    private val cmdclickSystemAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickSystemAppDirName"
+//    val cmdclickSystemAppDirPath =  "$rootPath/$cmdclickSystemAppRelativePath"
+//    val cmdclickConfigFileName = "cmdclickConfig$JS_FILE_SUFFIX"
+//    private val cmdclickConfigFileRelativePath = "$cmdclickSystemAppRelativePath/$cmdclickConfigFileName"
+//    val cmdclickConfigFilePath = "$cmdclickDefaultAppDirPath/$cmdclickConfigFileName"
     private val settingVariablesDirName = "settingVariables"
     val fannelSettingVariablsDirPath = "\${01}/\${001}/${settingVariablesDirName}"
     val replaceVariablesTsv = "replaceVariablesTable.tsv"
@@ -257,14 +257,12 @@ object UsePath {
     ): String {
         val pathList = path.split("/")
         return pathList.lastOrNull().toString()
-
     }
 
 
     fun makeTermuxPathByReplace(
-        path: String
     ): String {
-        return path.replace(
+        return cmdclickDefaultAppDirPath.replace(
             rootPath,
             rootDirPathByTermux
         )

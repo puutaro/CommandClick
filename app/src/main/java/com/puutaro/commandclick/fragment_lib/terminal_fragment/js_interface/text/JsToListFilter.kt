@@ -207,9 +207,9 @@ class JsToListFilter(
         val fannelPath = extraMap.get(
             FilterAndMapModule.ExtraMapBaseKey.SHELL_FANNEL_PATH.key
         )
-        val currentAppDirPath = fannelPath?.let {
-            CcPathTool.getMainFannelDirPath(it)
-        } ?: String()
+//        val currentAppDirPath = fannelPath?.let {
+//            CcPathTool.getMainFannelDirPath(it)
+//        } ?: String()
         val fannelName = fannelPath?.let {
             File(
                 CcPathTool.getMainFannelFilePath(it)
@@ -226,7 +226,7 @@ class JsToListFilter(
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     ReadText(it).readText(),
                     replaceVariableMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName
                 )
 

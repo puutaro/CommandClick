@@ -19,17 +19,17 @@ object OnOnceEditExecuteEvent {
         val context = cmdIndexFragment.context ?: return
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            currentAppDirPath = null,
+//            currentAppDirPath = null,
             currentFannelName = selectedShellFileName,
             onShortcutValue = null,
             currentFannelState = null
         )
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharedPref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharedPref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedShellFileName,
             String(),
             FannelInfoSetting.current_fannel_state.defalutStr,

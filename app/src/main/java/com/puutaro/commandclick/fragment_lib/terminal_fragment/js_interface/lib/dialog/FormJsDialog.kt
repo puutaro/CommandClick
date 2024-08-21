@@ -122,20 +122,20 @@ class FormJsDialog(
                 settingSectionStart,
                 settingSectionEnd
             ),
-            String(),
+//            String(),
             String(),
         )
 
         val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
             recordNumToMapNameValueInSettingHolder,
             String(),
-            String(),
+//            String(),
             null
         )?.joinToString("\n")?.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                String(),
+//                String(),
                 String()
             )
         }?.split("\n")
@@ -166,16 +166,16 @@ class FormJsDialog(
             formDialog?.findViewById<LinearLayout>(
                 R.id.form_dialog_contents_linear
             ) ?: return
-        val virtualReadPreffrenceMap = mapOf(
-            FannelInfoSetting.current_app_dir.name
-                to terminalFragment.currentAppDirPath
-        )
+//        val virtualReadPreffrenceMap = mapOf(
+//            FannelInfoSetting.current_app_dir.name
+//                to terminalFragment.currentAppDirPath
+//        )
         val editParameters = EditParameters(
             terminalFragment,
             virtualJsContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            virtualReadPreffrenceMap,
+            emptyMap(),
             setReplaceVariableMap,
             true,
             emptyList()

@@ -22,9 +22,9 @@ object OkButtonHandler {
     ) {
         val context = editFragment.context
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -62,7 +62,7 @@ object OkButtonHandler {
                 )
                 ExecJsOrSellHandler.handle(
                     editFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentScriptFileName,
                 )
             }

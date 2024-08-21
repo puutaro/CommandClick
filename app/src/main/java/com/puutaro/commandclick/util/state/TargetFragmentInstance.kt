@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util.state
 
 import android.app.Activity
-import android.content.Context
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -118,12 +117,12 @@ class TargetFragmentInstance {
 
     fun getCurrentEditFragmentFromActivity(
         activity: MainActivity,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelPath: String,
         fannelState: String,
     ): EditFragment? {
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
             fannelState,
         )
@@ -139,7 +138,7 @@ class TargetFragmentInstance {
             return cmdVariableEditFragment
         }
         val settingEditFragTag = FragmentTagManager.makeSettingValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
         )
         val settingVariableEditFragment = getFromActivity<EditFragment>(
@@ -157,7 +156,7 @@ class TargetFragmentInstance {
 
     fun getCurrentEditFragmentFromFragment(
         activity: FragmentActivity?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelPath: String,
         fannelState: String,
     ): EditFragment? {
@@ -165,7 +164,7 @@ class TargetFragmentInstance {
             activity == null
         ) return null
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
             fannelState,
         )
@@ -182,7 +181,7 @@ class TargetFragmentInstance {
             return cmdVariableEditFragment
         }
         val settingEditFragTag = FragmentTagManager.makeSettingValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
         )
         val settingVariableEditFragment = getFromFragment<EditFragment>(
@@ -223,10 +222,10 @@ class TargetFragmentInstance {
             activity == null
         ) return String()
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -236,7 +235,7 @@ class TargetFragmentInstance {
             FannelInfoSetting.current_fannel_state
         )
         return FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         )

@@ -276,10 +276,10 @@ class MainActivity:
         val startUpPref = FannelInfoTool.getSharePref(this)
         val cmdEditFragmentTag =
             FragmentTagManager.makeCmdValEditTag(
-                FannelInfoTool.getStringFromFannelInfo(
-                    startUpPref,
-                    FannelInfoSetting.current_app_dir
-                ),
+//                FannelInfoTool.getStringFromFannelInfo(
+//                    startUpPref,
+////                    FannelInfoSetting.current_app_dir
+//                ),
                 FannelInfoTool.getStringFromFannelInfo(
                     startUpPref,
                     FannelInfoSetting.current_fannel_name
@@ -643,23 +643,23 @@ class MainActivity:
     }
 
     override fun onUpdateNoSaveUrlPaths(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         ExecUpdateNoSaveUrlPaths.update(
             this,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
     }
 
     override fun onUpdateNoSaveUrlPathsForEdit(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         ExecUpdateNoSaveUrlPaths.update(
             this,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
     }

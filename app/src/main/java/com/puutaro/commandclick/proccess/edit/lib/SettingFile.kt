@@ -41,7 +41,7 @@ object SettingFile {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableCompleteMap,
-                recentAppDirPath,
+//                recentAppDirPath,
                 scriptFileName
             )
         }
@@ -70,7 +70,7 @@ object SettingFile {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableCompleteMap,
-                recentAppDirPath,
+//                recentAppDirPath,
                 scriptFileName
             )
         }
@@ -126,7 +126,7 @@ object SettingFile {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableCompleteMap,
-                    recentAppDirPath,
+//                    recentAppDirPath,
                     scriptFileName
                 )
             }.let {

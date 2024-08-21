@@ -4,7 +4,6 @@ import android.app.PendingIntent
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 
@@ -16,10 +15,10 @@ object PendingIntentForUbuntu {
             ubuntuService.applicationContext,
             BroadCastIntentSchemeUbuntu.OPEN_FANNEL.action,
             listOf(
-                Pair(
-                    UbuntuServerIntentExtra.fannelDirPath.schema,
-                    UsePath.cmdclickSystemAppDirPath
-                ),
+//                Pair(
+//                    UbuntuServerIntentExtra.fannelDirPath.schema,
+//                    UsePath.cmdclickDefaultAppDirPath
+//                ),
                 Pair(
                     UbuntuServerIntentExtra.fannelName.schema,
                     SystemFannel.cmdTerminal

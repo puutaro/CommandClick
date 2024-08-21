@@ -61,7 +61,7 @@ class QrLogo(
 
     fun setTitleQrLogo(
         titleImageView: AppCompatImageView?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptName: String,
     ){
         val context = fragment.context
@@ -70,11 +70,11 @@ class QrLogo(
             titleImageView == null
         ) return
         val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
-        val qrLogoPath = "$currentAppDirPath/$fannelDirName/${UsePath.qrPngRelativePath}"
+        val qrLogoPath = "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
         if(!File(qrLogoPath).isFile) return
 
         val isEditExecute = checkEditExecute(
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedScriptName,
         )
         titleImageView.setPadding(2, 2,2,2)
@@ -85,18 +85,19 @@ class QrLogo(
     }
 
     fun createAndSaveWithGitCloneOrFileCon(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         isFileCon: Boolean,
     ): Drawable? {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
         val qrContents = when(isFileCon) {
             true -> ReadText(
                 File(
-                    currentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     fannelName
                 ).absolutePath
             ).readText().take(maxQrConLength)
@@ -109,7 +110,7 @@ class QrLogo(
         )
         return createAndSaveFromDesignMap(
             qrDesignMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
     }
@@ -269,28 +270,29 @@ class QrLogo(
 
     fun createAndSaveFromDesignMap(
         qrDesignMap: Map<String, String>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): Drawable? {
         return qrDrawableSave(
             createFromQrDesignMap(qrDesignMap),
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
     }
 
     private fun qrDrawableSave(
         qrDrawableSrc: Drawable?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): Drawable? {
         try{
             val qrDrawable = qrDrawableSrc
                 ?: return null
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
                     val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-                    val qrPngPath = "${currentAppDirPath}/${fannelDirName}/$qrPngRelativePath"
+                    val qrPngPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}/$qrPngRelativePath"
                     val qrBitMap = toBitMapWrapper(qrDrawable)
                         ?: return@withContext
                     FileSystems.savePngFromBitMap(
@@ -332,12 +334,12 @@ class QrLogo(
     }
 
     private fun checkEditExecute(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptName: String,
     ): Boolean {
         val scriptContentsList = ReadText(
             File(
-                currentAppDirPath,
+                UsePath.cmdclickDefaultAppDirPath,
                 selectedScriptName
             ).absolutePath,
         ).textToList()
@@ -384,7 +386,7 @@ class QrLogo(
 
     fun readQrDesignMapWithCreate(
         qrDesignFilePath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): Map<String, String> {
         return readQrDesignMap(qrDesignFilePath).let {
@@ -392,12 +394,12 @@ class QrLogo(
                 true -> updateDesignMapWithCon(
                     it,
                     qrDesignFilePath,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                 )
                 else -> createConDesignMap(
                     qrDesignFilePath,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                 )
             }
@@ -407,7 +409,7 @@ class QrLogo(
     private fun updateDesignMapWithCon(
         qrDesignMap: Map<String, String>,
         qrDesignFilePath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): Map<String, String> {
         val contentsKeyName = QrDesignFileKey.CONTENTS.key
@@ -417,7 +419,7 @@ class QrLogo(
                 true -> {
                     currentKeyName to ReadText(
                         File(
-                            currentAppDirPath,
+                            UsePath.cmdclickDefaultAppDirPath,
                             fannelName
                         ).absolutePath,
                     ).readText()
@@ -435,7 +437,7 @@ class QrLogo(
 
     private fun createConDesignMap(
         qrDesignFilePath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): Map<String, String> {
         val rnd = Random(System.currentTimeMillis())
@@ -445,7 +447,7 @@ class QrLogo(
             decideDarkColor(rnd).toString(),
             ReadText(
                 File(
-                    currentAppDirPath,
+                    UsePath.cmdclickDefaultAppDirPath,
                     fannelName
                 ).absolutePath,
             ).readText()

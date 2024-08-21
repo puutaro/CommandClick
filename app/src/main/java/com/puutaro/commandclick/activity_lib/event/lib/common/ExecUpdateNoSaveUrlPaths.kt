@@ -16,7 +16,7 @@ import java.io.File
 object ExecUpdateNoSaveUrlPaths {
     fun update(
         activity: MainActivity?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val indexTerminalFragment =
@@ -31,7 +31,7 @@ object ExecUpdateNoSaveUrlPaths {
             execSave(
                 activity,
                 indexTerminalFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName
             )
             return
@@ -48,7 +48,7 @@ object ExecUpdateNoSaveUrlPaths {
             execSave(
                 activity,
                 editExecuteTerminalFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
             )
         }
@@ -58,7 +58,7 @@ object ExecUpdateNoSaveUrlPaths {
     private fun execSave(
         activity: MainActivity?,
         terminalFragment: TerminalFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val domain =
@@ -72,7 +72,7 @@ object ExecUpdateNoSaveUrlPaths {
             fannelName.ifEmpty { UsePath.cmdclickPreferenceJsName }
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         )
         val noScrollSaveUrlsFilePathObj = File(noScrollSaveUrlsFilePath)

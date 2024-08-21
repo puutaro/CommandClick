@@ -142,7 +142,7 @@ enum class CpFileKey(
     val key: String
 ){
     PATH("path"),
-    CURRENT_APP_DIR_PATH_FOR_SERVER("currentAppDirPathForServer"),
+//    CURRENT_APP_DIR_PATH_FOR_SERVER("currentAppDirPathForServer"),
     ADDRESS("address"),
     IS_MOVE_CURRENT_DIR("onMoveCurrentDir"),
     CP_FILE_MACRO_FOR_SERVICE("cpFileMacro"),

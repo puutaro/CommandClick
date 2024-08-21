@@ -73,9 +73,9 @@ object TitleImageAndViewSetter {
         val fannelInfoMap =
             editFragment.fannelInfoMap
 
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -85,17 +85,17 @@ object TitleImageAndViewSetter {
         return listOf(
             "(${backstackOrder})",
             makeCompressFannelPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             ),
         ).joinToString(backstackCountSeparator)
     }
 
     fun makeCompressFannelPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentScriptFileName: String
     ): String {
-        return "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
+        return "${UsePath.makeOmitPath(UsePath.cmdclickDefaultAppDirPath)}/${currentScriptFileName}"
     }
 
     fun makeBackstackCount(
@@ -117,9 +117,9 @@ object TitleImageAndViewSetter {
         val fannelInfoMap =
             editFragment.fannelInfoMap
 
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -127,7 +127,7 @@ object TitleImageAndViewSetter {
         val editTitleImageView = binding.editTitleImage
         QrLogo(editFragment).setTitleQrLogo(
             editTitleImageView,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         )
     }
@@ -172,9 +172,9 @@ private object EditTextMaker {
         val fannelInfoMap =
             editFragment.fannelInfoMap
 
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -195,7 +195,7 @@ private object EditTextMaker {
             editFragment,
             repValMap,
             shellConSrc,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentVariableValue
         )
@@ -223,14 +223,14 @@ private object EditTextMaker {
         editFragment: EditFragment,
         repValMap: Map<String, String>?,
         shellConSrc: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         currentVariableValue: String?
     ): String? {
         val shellCon = SetReplaceVariabler.execReplaceByReplaceVariables(
             shellConSrc,
             editFragment.setReplaceVariableMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         ).replace(
             "\${defaultEditBoxTitle}",

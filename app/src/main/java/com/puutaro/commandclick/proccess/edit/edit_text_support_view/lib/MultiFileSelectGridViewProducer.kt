@@ -10,6 +10,7 @@ import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
@@ -21,7 +22,6 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.str.QuoteTool
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object MultiFileSelectGridViewProducer {
@@ -50,7 +50,7 @@ object MultiFileSelectGridViewProducer {
         )
         val filterDir = getSelectDirPath(
             fcbMap,
-            editParameters,
+//            editParameters,
         )
         val filterPrefixListCon = getFilterPrefix(
             fcbMap,
@@ -254,19 +254,20 @@ object MultiFileSelectGridViewProducer {
 
     private fun getSelectDirPath(
         fcbMap: Map<String, String>?,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
         )?.let {
             if (
                 it.isEmpty()
-            ) return@let currentAppDirPath
+            ) return@let cmdclickDefaultAppDirPath
             it
-        } ?: currentAppDirPath
+        } ?: cmdclickDefaultAppDirPath
     }
 
     private fun getFilterPrefix(

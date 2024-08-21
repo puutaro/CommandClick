@@ -174,9 +174,9 @@ class EditFragment: Fragment() {
             EditFragmentArgs.getFannelInfoMap(arguments)
         srcFannelInfoMap =
             EditFragmentArgs.getSrcFannelInfoMap(arguments)
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -200,10 +200,10 @@ class EditFragment: Fragment() {
                 UbuntuFiles(it)
             )
         }
-        SetConfigInfo.set(this)
+//        SetConfigInfo.set(this)
         FannelInfoTool.putAllFannelInfo(
             sharePref,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             onShortcutValue,
             currentFannelState
@@ -226,15 +226,15 @@ class EditFragment: Fragment() {
         commandSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelPath =
-            File(currentAppDirPath, currentFannelName).absolutePath
+            File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath
         val mainFannelConList =
             ReadText(currentFannelPath).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 context,
                 mainFannelConList,
-                currentAppDirPath,
                 currentFannelName,
             )
         settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
@@ -260,18 +260,18 @@ class EditFragment: Fragment() {
         if(
             UpdateLastModifyForEdit().judge(
                 this,
-                currentAppDirPath,
+//                currentAppDirPath,
             )
         ) {
             FileSystems.updateLastModified(
                 File(
                     UsePath.cmdclickAppDirAdminPath,
-                    File(currentAppDirPath).name + UsePath.JS_FILE_SUFFIX
+                    File(cmdclickDefaultAppDirPath).name + UsePath.JS_FILE_SUFFIX
                 ).absolutePath
             )
             FileSystems.updateLastModified(
                 File(
-                    currentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     currentFannelName
                 ).absolutePath,
             )
@@ -526,7 +526,7 @@ class EditFragment: Fragment() {
 
     interface OnUpdateNoSaveUrlPathsListenerForEdit {
         fun onUpdateNoSaveUrlPathsForEdit(
-            currentAppDirPath: String,
+//            currentAppDirPath: String,
             fannelName: String,
         )
     }

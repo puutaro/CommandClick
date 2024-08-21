@@ -49,19 +49,19 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 val shortCutManager = ShortCutManager(activity)
                 shortCutManager.createShortCut()
             }
-            ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
-                SystemFannelLauncher.launchFromActivity(
-                    activity,
-                    editFragmentArgs,
-                    UsePath.cmdclickSystemAppDirPath,
-                    UsePath.cmdclickConfigFileName,
-                )
-            }
-            ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {
-                    RunCommandSetter.getPermissionAndSet(
-                    activity
-                )
-            }
+//            ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
+//                SystemFannelLauncher.launchFromActivity(
+//                    activity,
+//                    editFragmentArgs,
+////                    UsePath.cmdclickDefaultAppDirPath,
+//                    UsePath.cmdclickPreferenceJsName,
+//                )
+//            }
+//            ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {
+//                    RunCommandSetter.getPermissionAndSet(
+//                    activity
+//                )
+//            }
             ToolbarMenuCategoriesVariantForCmdIndex.INSTALL_FANNEL -> {
                 if(Build.VERSION.SDK_INT < 33) return
                 NotifierSetter.getPermissionAndSet(

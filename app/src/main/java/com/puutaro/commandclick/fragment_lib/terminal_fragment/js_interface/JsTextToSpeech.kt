@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.TextToSpeechIntentSender
 import com.puutaro.commandclick.service.TextToSpeechService
@@ -13,7 +14,7 @@ class JsTextToSpeech(
     private val terminalFragment: TerminalFragment,
 ) {
     private val context = terminalFragment.context
-    private val currentAppDirPath = terminalFragment.currentAppDirPath
+//    private val currentAppDirPath = terminalFragment.currentAppDirPath
     private val currentFannelName = terminalFragment.currentFannelName
 
     @JavascriptInterface
@@ -21,7 +22,7 @@ class JsTextToSpeech(
         listFilePath: String,
         extraSettingMapStr: String,
     ) {
-        val currentAppDirName = File(currentAppDirPath).name
+        val currentAppDirName = File(UsePath.cmdclickDefaultAppDirPath).name
         val fannelRawName = CcPathTool.trimAllExtend(currentFannelName)
         TextToSpeechIntentSender.send(
             context,

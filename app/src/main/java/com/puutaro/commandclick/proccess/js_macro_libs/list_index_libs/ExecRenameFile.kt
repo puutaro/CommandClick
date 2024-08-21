@@ -60,7 +60,7 @@ object ExecRenameFile {
         ) return
         FileRenamer.rename(
             editFragment,
-            parentDirPath,
+//            parentDirPath,
             selectedItem
         )
     }

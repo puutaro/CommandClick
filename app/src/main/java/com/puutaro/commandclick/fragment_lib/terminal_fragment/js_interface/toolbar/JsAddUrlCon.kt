@@ -5,18 +5,17 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 
 class JsAddUrlCon(
     private val terminalFragment: TerminalFragment
 ) {
 
-    private val fannelInfoMap =
-        terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val fannelInfoMap =
+//        terminalFragment.fannelInfoMap
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val keySeparator = '|'
 
     @JavascriptInterface
@@ -59,7 +58,7 @@ class JsAddUrlCon(
             AddUrlConKey.URL_STRING_OR_MACRO.key
         ) ?: String()
         val urlString = HistoryUrlContents.extract(
-            currentAppDirPath,
+//            currentAppDirPath,
             urlStrOrMacro
         ) ?: String()
         val onSearchBtn = extraMap.get(
@@ -76,7 +75,7 @@ class JsAddUrlCon(
         ) ?: "-"
         ExecJsLoad.execExternalJs(
             terminalFragment,
-            UsePath.cmdclickSystemAppDirPath,
+//            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveWebConDialogFannelName,
             listOf(
                 urlString,

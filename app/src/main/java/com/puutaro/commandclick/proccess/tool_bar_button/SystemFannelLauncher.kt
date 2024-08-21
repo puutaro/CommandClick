@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,25 +19,26 @@ import java.io.File
 object SystemFannelLauncher {
     fun launch(
         fragment: Fragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         fannelScriptName: String,
     ) {
         val context = fragment.context
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelConList = ReadText(
             File(
-                parentDirPath,
+                cmdclickDefaultAppDirPath,
                 fannelScriptName
             ).absolutePath
         ).textToList()
 
         val mainFannelConList = ReadText(
-            File(parentDirPath, fannelScriptName).absolutePath
+            File(cmdclickDefaultAppDirPath, fannelScriptName).absolutePath
         ).textToList()
         val setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 context,
                 mainFannelConList,
-                parentDirPath,
+//                parentDirPath,
                 fannelScriptName,
             )
 
@@ -47,20 +49,20 @@ object SystemFannelLauncher {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it?.joinToString("\n") ?: String(),
                 setReplaceVariableMap,
-                parentDirPath,
+//                parentDirPath,
                 fannelScriptName,
             ).split("\n")
         }
 
         val fannelState = FannelStateManager.getState(
-            parentDirPath,
+//            parentDirPath,
             fannelScriptName,
             mainFannelSettingConList,
             setReplaceVariableMap,
         )
         val editFragmentTag = DecideEditTag(
             fannelConList,
-            parentDirPath,
+//            parentDirPath,
             fannelScriptName,
             fannelState
         ).decide()
@@ -68,7 +70,7 @@ object SystemFannelLauncher {
         OnEditExecuteEvent.invoke(
             fragment,
             editFragmentTag,
-            parentDirPath,
+//            parentDirPath,
             fannelScriptName,
             fannelState,
         )
@@ -77,19 +79,20 @@ object SystemFannelLauncher {
     fun launchFromActivity(
         activity: MainActivity,
         editFragmentArgs: EditFragmentArgs,
-        appDirPath: String,
+//        appDirPath: String,
         fannelName: String,
     ){
         val sharedPref = FannelInfoTool.getSharePref(activity)
 
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val mainFannelConList = ReadText(
-            File(appDirPath, fannelName).absolutePath
+            File(cmdclickDefaultAppDirPath, fannelName).absolutePath
         ).textToList()
         val setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 activity,
                 mainFannelConList,
-                appDirPath,
+//                appDirPath,
                 fannelName,
             )
 
@@ -100,27 +103,27 @@ object SystemFannelLauncher {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it?.joinToString("\n") ?: String(),
                 setReplaceVariableMap,
-                appDirPath,
+//                appDirPath,
                 fannelName,
             ).split("\n")
         }
 
         val fannelState = FannelStateManager.getState(
-            appDirPath,
+//            appDirPath,
             fannelName,
             mainFannelSettingConList,
             setReplaceVariableMap
         )
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            appDirPath,
+//            appDirPath,
             fannelName,
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
             fannelState,
         )
         val cmdEditFragmentTag =
             FragmentTagManager.makeCmdValEditTag(
-                appDirPath,
+//                appDirPath,
                 fannelName,
                 fannelState
             )

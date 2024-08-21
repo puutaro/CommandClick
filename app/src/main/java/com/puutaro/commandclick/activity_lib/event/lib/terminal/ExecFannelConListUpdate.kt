@@ -10,9 +10,9 @@ object ExecFannelConListUpdate {
         fannelInfoMap: Map<String, String>,
         updateFannelConList: List<String>
     ){
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -21,7 +21,7 @@ object ExecFannelConListUpdate {
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         ) ?: return

@@ -28,11 +28,9 @@ import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.Intent.IntentVariant
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
@@ -46,15 +44,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
 
 class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
     private val fannelInfoMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val fragmentTag = fragment.tag
     private val context = fragment.context
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
@@ -130,7 +128,7 @@ class UrlHistoryButtonEvent(
         }
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
             fragment,
-            currentAppDirPath,
+//            cmdclickDefaultAppDirPath,
             urlHistoryList.toMutableList(),
             currentUrl,
         )
@@ -303,7 +301,7 @@ class UrlHistoryButtonEvent(
                     ?.let {
                         ScriptPreWordReplacer.settingValReplace(
                             it,
-                            currentAppDirPath
+                            cmdclickDefaultAppDirPath
                         )
                     } ?: let {
                     exitDialog(urlHistoryListView)
@@ -404,7 +402,7 @@ class UrlHistoryButtonEvent(
                     ?.let {
                         ScriptPreWordReplacer.settingValReplace(
                             it,
-                            currentAppDirPath
+                            cmdclickDefaultAppDirPath
                         )
                     } ?: return
                 ToastUtils.showShort("copy")
@@ -438,7 +436,7 @@ class UrlHistoryButtonEvent(
 
     private fun makeUrlHistoryList(): List<Map<String, String>> {
         return makeCompleteListSourceNoJsExclude(
-            currentAppDirPath,
+            cmdclickDefaultAppDirPath,
         ).reversed()
     }
 
@@ -465,7 +463,7 @@ class UrlHistoryButtonEvent(
         val usedUrl = mutableSetOf<String>()
         return ReadText(
             File(
-                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
+                "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
                 UsePath.cmdclickUrlHistoryFileName
             ).absolutePath
         ).textToList()
@@ -494,11 +492,11 @@ class UrlHistoryButtonEvent(
     ) {
         val shellFileObj = File(selectedUrlSource)
         if(!shellFileObj.isFile) return
-        val parentDirPath =
-            shellFileObj.parent ?: return
+//        val parentDirPath =
+//            shellFileObj.parent ?: return
         ExecJsOrSellHandler.handle(
             fragment,
-            parentDirPath,
+//            parentDirPath,
             shellFileObj.name,
             args = ScriptArgsMapList.ScriptArgsName.URL_HISTORY_CLICK.str
         )
@@ -520,7 +518,7 @@ class UrlHistoryButtonEvent(
             true -> null
             else -> SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
                 context,
-                "${currentAppDirPath}/${fannelName}",
+                "${cmdclickDefaultAppDirPath}/${fannelName}",
             )
         }
         val bottomScriptUrlList =
@@ -552,7 +550,7 @@ class UrlHistoryButtonEvent(
                 url ->
             val replaceUrl = ScriptPreWordReplacer.replace(
                 url,
-                currentAppDirPath,
+//                cmdclickDefaultAppDirPath,
                 String(),
             )
             val title = url.split("/")
@@ -577,7 +575,7 @@ class UrlHistoryButtonEvent(
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 replaceVariableMap,
-                currentAppDirPath,
+//                cmdclickDefaultAppDirPath,
                 fannelName
             )
         }.split("\n")
@@ -651,14 +649,14 @@ class UrlHistoryButtonEvent(
             ?.let {
                 ScriptPreWordReplacer.settingValReplace(
                     it,
-                    currentAppDirPath
+                    cmdclickDefaultAppDirPath
                 )
             } ?: return
         val selectedUrl = selectedUrlHistoryMap.get(urlKey)
             ?.let {
                 ScriptPreWordReplacer.settingValReplace(
                     it,
-                    currentAppDirPath
+                    cmdclickDefaultAppDirPath
                 )
             } ?: return
         val bottomScriptUrlList = makeBottomScriptUrlList()
@@ -676,7 +674,7 @@ class UrlHistoryButtonEvent(
             )
             return
         }
-        val urlHistoryDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val urlHistoryDirPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         val cmdclickUrlHistoryFilePath = File(
             urlHistoryDirPath,

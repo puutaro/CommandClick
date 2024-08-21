@@ -61,7 +61,7 @@ class JsAddGmailCon(
         ) ?: String()
         ExecJsLoad.execExternalJs(
             terminalFragment,
-            UsePath.cmdclickSystemAppDirPath,
+//            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveGmailConDialogFannelName,
             listOf(
                 gmailAd,

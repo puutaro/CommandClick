@@ -131,19 +131,19 @@ private fun urlHistoryButtonHandler(
         return true
     }
 
-    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     val currentShellFileName = UsePath.cmdclickButtonExecShellFileName
     if(
         !File(
-            currentAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             currentShellFileName
         ).isFile
     ) return false
     ExecJsOrSellHandler.handle(
         fragment,
-        currentAppDirPath,
+//        currentAppDirPath,
         currentShellFileName,
     )
     return true

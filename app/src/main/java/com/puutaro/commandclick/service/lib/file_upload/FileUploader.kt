@@ -5,9 +5,7 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.FileUploadService
-import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
@@ -113,7 +111,7 @@ object CopyFannelServer {
                     val receivePath = payload.toString()
                     val responseBodyByteArray = catResponseHandler(
                         fileUploadService,
-                        fileUploadService.currentAppDirPath,
+//                        fileUploadService.currentAppDirPath,
                         receivePath.trim(),
                     )
 
@@ -144,7 +142,7 @@ object CopyFannelServer {
 
     private fun catResponseHandler(
         fileUploadService: FileUploadService,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cpFileMapStr: String,
     ): ByteArray {
         val context = fileUploadService.applicationContext
@@ -163,7 +161,7 @@ object CopyFannelServer {
         return  when(cpFileMacro) {
             ReceivePathMacroType.GET_FILE_LIST.name
             -> catFileList(
-                currentAppDirPath,
+//                currentAppDirPath,
                 cpFileMap
             )
             ReceivePathMacroType.CLOSE_COPY_SERVER.name
@@ -172,27 +170,28 @@ object CopyFannelServer {
             )
             else -> catFileCon(
                 context,
-                currentAppDirPath,
+//                currentAppDirPath,
                 cpFileMap
             )
         }
     }
 
     private fun catFileList(
-        currentAppDirPathSrc: String,
+//        currentAppDirPathSrc: String,
         cpFileMap: Map<String, String>,
     ): ByteArray {
         val path = cpFileMap.get(
             CpFileKey.PATH.key
         ) ?: return byteArrayOf()
-        val currentAppDirPath = cpFileMap.get(
-            CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key
-        ).let {
-            if(
-                it.isNullOrEmpty()
-            ) return@let currentAppDirPathSrc
-            it
-        }
+        val currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//            cpFileMap.get(
+//            CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key
+//        ).let {
+//            if(
+//                it.isNullOrEmpty()
+//            ) return@let currentAppDirPathSrc
+//            it
+//        }
 
         val parentDirPath = makeParentDirPath(
             currentAppDirPath,
@@ -218,20 +217,21 @@ object CopyFannelServer {
 
     private fun catFileCon(
         context: Context?,
-        currentAppDirPathSrc: String,
+//        currentAppDirPathSrc: String,
         cpFileMap: Map<String, String>
     ): ByteArray {
         val path = cpFileMap.get(
             CpFileKey.PATH.key
         ) ?: return byteArrayOf()
-        val currentAppDirPath = cpFileMap.get(
-            CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key
-        ).let {
-            if(
-                it.isNullOrEmpty()
-            ) return@let currentAppDirPathSrc
-            it
-        }
+        val currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//            cpFileMap.get(
+//            CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key
+//        ).let {
+//            if(
+//                it.isNullOrEmpty()
+//            ) return@let currentAppDirPathSrc
+//            it
+//        }
         val catFilePath = convertServerFilePath(
             currentAppDirPath,
             path,

@@ -11,10 +11,10 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 class JsCcUsage(
     private val terminalFragment: TerminalFragment
 ) {
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val fannelInfoMap = terminalFragment.fannelInfoMap
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
 
     @JavascriptInterface
     fun launch_S(){
@@ -22,7 +22,7 @@ class JsCcUsage(
                 UsePath.JS_FILE_SUFFIX
         ExecJsLoad.execExternalJs(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             webSearcherName,
             listOf(WebUrlVariables.commandClickUsageUrl),
         )

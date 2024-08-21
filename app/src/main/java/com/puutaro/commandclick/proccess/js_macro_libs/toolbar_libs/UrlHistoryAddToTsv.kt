@@ -123,12 +123,12 @@ class UrlHistoryAddToTsv (
         }
         val takeLines = 5
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
 
         val urlHistoryParentDirPath = File(
-            currentAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
         ).absolutePath
         val srcTsvCon = ReadText(
@@ -188,13 +188,13 @@ class UrlHistoryAddToTsv (
                 ?: return@setOnItemLongClickListener false
             val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
                     UsePath.JS_FILE_SUFFIX
-            val fannelInfoMap = editFragment.fannelInfoMap
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val fannelInfoMap = editFragment.fannelInfoMap
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             ExecJsLoad.execExternalJs(
                 editFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 webSearcherName,
                 listOf(selectedUrl),
             )

@@ -139,8 +139,8 @@ class FormDialogForListIndexOrButton(
 
 
         val virtualReadPreffrenceMap = mapOf(
-            FannelInfoSetting.current_app_dir.name
-                    to parentDirPath,
+//            FannelInfoSetting.current_app_dir.name
+//                    to parentDirPath,
             FannelInfoSetting.current_fannel_name.name
                     to selectedScriptName
         )
@@ -163,7 +163,7 @@ class FormDialogForListIndexOrButton(
         ) {
             val setVariableForCmdHolder = SetVariableTyper.makeSetVariableTypeList(
                 recordNumToMapNameValueInSettingHolder,
-                parentDirPath,
+//                parentDirPath,
                 selectedScriptName,
                 editFragment.setReplaceVariableMap
             )
@@ -195,7 +195,7 @@ class FormDialogForListIndexOrButton(
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 context,
                 settingVariableList,
-                parentDirPath,
+//                parentDirPath,
                 selectedScriptName,
             )
         } else {

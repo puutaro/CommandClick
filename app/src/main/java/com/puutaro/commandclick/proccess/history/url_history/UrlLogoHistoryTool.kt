@@ -11,7 +11,7 @@ object UrlLogoHistoryTool {
     const val takeHistoryNum = 200
 
     fun insertToHistory(
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         url: String?,
         favicon: Bitmap?,
     ){
@@ -25,7 +25,7 @@ object UrlLogoHistoryTool {
         ) ?: return
         val base64TxtName = makeBase64TxtName(url)
         val logoHisDirPath =
-            makeLogoHistoryDirPath(recentAppDirPath)
+            makeLogoHistoryDirPath()
         FileSystems.writeFile(
             File(logoHisDirPath, base64TxtName).absolutePath,
             base64Str,
@@ -33,11 +33,11 @@ object UrlLogoHistoryTool {
     }
 
     fun getCaptureBase64TxtPathByUrl(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String,
     ): File? {
         val base64TxtFile = File(
-            makeLogoHistoryDirPath(currentAppDirPath),
+            makeLogoHistoryDirPath(),
             makeBase64TxtName(url),
         )
         if(
@@ -60,10 +60,10 @@ object UrlLogoHistoryTool {
     }
 
     fun makeLogoHistoryDirPath(
-        currentAppDirPath: String
+//        currentAppDirPath: String
     ): String {
         return File(
-            File(currentAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
+            File(UsePath.cmdclickDefaultAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
             "logo"
         ).absolutePath
     }

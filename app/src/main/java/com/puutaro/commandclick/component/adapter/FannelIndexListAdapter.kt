@@ -26,7 +26,7 @@ import java.io.File
 
 class FannelIndexListAdapter(
     val cmdIndexFragment: CommandIndexFragment,
-    val currentAppDirPath: String,
+//    val currentAppDirPath: String,
     var fannelIndexList: MutableList<String>
 ): RecyclerView.Adapter<FannelIndexListAdapter.FannelIndexListViewHolder>()
 {
@@ -79,6 +79,7 @@ class FannelIndexListAdapter(
         holder: FannelIndexListViewHolder,
         position: Int
     ) {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         CoroutineScope(Dispatchers.IO).launch {
             val fannelName = fannelIndexList[position]
             withContext(Dispatchers.Main) {
@@ -86,11 +87,11 @@ class FannelIndexListAdapter(
             }
             val fannelConList = withContext(Dispatchers.IO) {
                 ReadText(
-                    File(currentAppDirPath, fannelName).absolutePath,
+                    File(cmdclickDefaultAppDirPath, fannelName).absolutePath,
                 ).textToList().take(maxTakeSize)
             }
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-            val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
+            val qrPngPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
             val qrPngPathObj = File(qrPngPath)
 
             withContext(Dispatchers.Main) {
@@ -99,7 +100,7 @@ class FannelIndexListAdapter(
                     return@withContext
                 }
                 qrLogo.createAndSaveWithGitCloneOrFileCon(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                     false,
                 )?.let {

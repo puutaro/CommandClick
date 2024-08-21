@@ -24,7 +24,7 @@ class LongPressForSrcAnchor(
     private val context: Context?,
     private val srcAnchorMenuFilePath: String,
 )  {
-    private val currentAppDirPath = terminalFragment.currentAppDirPath
+//    private val currentAppDirPath = terminalFragment.currentAppDirPath
     private val srcAnchorLongPressMenuFilePathObj = File(srcAnchorMenuFilePath)
     private val srcAnchorLongPressMenuDirPath = srcAnchorLongPressMenuFilePathObj.parent
     private val srcAnchorLongPressMenuFileName = srcAnchorLongPressMenuFilePathObj.name
@@ -183,7 +183,7 @@ class LongPressForSrcAnchor(
         val selectedScriptNameOrPathObj = File(selectedJsPath)
         val execJsPath = LongPressMenuTool.makeExecJsPath(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedScriptNameOrPathObj,
         )
         val settingValList = LongPressMenuTool.extractSettingValList(

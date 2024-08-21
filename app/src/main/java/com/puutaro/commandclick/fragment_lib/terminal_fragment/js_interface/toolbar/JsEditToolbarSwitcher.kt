@@ -13,11 +13,11 @@ import kotlinx.coroutines.withContext
 class JsEditToolbarSwitcher(
     terminalFragment: TerminalFragment
 ) {
-    val activity = terminalFragment.activity
+    private val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -31,7 +31,7 @@ class JsEditToolbarSwitcher(
     ){
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return

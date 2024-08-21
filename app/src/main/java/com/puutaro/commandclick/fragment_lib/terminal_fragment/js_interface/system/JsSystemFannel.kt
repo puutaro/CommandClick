@@ -21,7 +21,7 @@ class JsSystemFannel(
 
         SystemFannelLauncher.launch(
             terminalFragment,
-            appDirPath,
+//            appDirPath,
             fannelName
         )
     }

@@ -39,7 +39,7 @@ object PocketWebViewUrlLoader {
 
                     ExecJsLoad.execExternalJs(
                         terminalFragment,
-                        terminalFragment.currentAppDirPath,
+//                        terminalFragment.currentAppDirPath,
                         webSearcherName,
                         systemExecRepTextList
                     )

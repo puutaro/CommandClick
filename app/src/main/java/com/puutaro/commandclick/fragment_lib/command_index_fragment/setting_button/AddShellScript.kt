@@ -9,19 +9,19 @@ import com.puutaro.commandclick.util.editor.EditorByIntent
 object AddShellScript {
     fun addShellOrJavaScript (
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String,
         languageTypeSelects: LanguageTypeSelects
     ){
 
         val context = cmdIndexFragment.context
         CommandClickScriptVariable.makeShellOrJsFile(
-            currentAppDirPath,
+//            currentAppDirPath,
             shellScriptName,
             shellOrJs = languageTypeSelects
         )
         val editorByIntent = EditorByIntent(
-            currentAppDirPath,
+//            currentAppDirPath,
             shellScriptName,
             context
         )

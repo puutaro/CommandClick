@@ -150,7 +150,7 @@ object WebViewClientSetter {
                         )
                     }
                 }
-                val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+                val appUrlSystemDirPath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                 terminalFragment.onPageFinishedCoroutineJob = CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.IO) {
                         if(

@@ -68,9 +68,9 @@ object DirOrFileChooseProducer {
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -82,7 +82,7 @@ object DirOrFileChooseProducer {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     editParameters.setReplaceVariableMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentScriptName,
                 )
             }?.let {

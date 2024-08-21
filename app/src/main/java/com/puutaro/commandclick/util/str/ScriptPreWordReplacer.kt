@@ -14,7 +14,7 @@ object ScriptPreWordReplacer {
     private val storagePath = UsePath.emulatedPath
 
     fun makeTsvTable(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         scriptName: String,
     ): String {
         return listOf(
@@ -26,20 +26,20 @@ object ScriptPreWordReplacer {
         ).map {
             "$it\t" + replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 scriptName,
             )
         }.joinToString("\n")
     }
     fun pathReplace(
         targetFilePath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         scriptName: String,
     ): String {
         return targetFilePath.let {
             replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 scriptName,
             )
         }
@@ -47,14 +47,15 @@ object ScriptPreWordReplacer {
 
     fun replace(
         tergetContents: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentScriptName: String
     ): String {
         val fannelDirName = CcPathTool.makeFannelDirName(currentScriptName)
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         return tergetContents
-            .replace(currentScriptPathMark, "$currentAppDirPath/$currentScriptName")
+            .replace(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName")
             .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
-            .replace(currentAppDirPathMark, currentAppDirPath)
+            .replace(currentAppDirPathMark, cmdclickDefaultAppDirPath)
             .replace(fannelDirNameMark, fannelDirName)
             .replace(currentScriptNameMark, currentScriptName)
             .replace(storagePathMark, storagePath)
@@ -62,11 +63,11 @@ object ScriptPreWordReplacer {
 
     fun replaceForQr(
         tergetString: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ): String {
         return tergetString
             .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
-            .replace(currentAppDirPathMark, currentAppDirPath)
+            .replace(currentAppDirPathMark, UsePath.cmdclickDefaultAppDirPath)
     }
 
     fun settingValReplace(

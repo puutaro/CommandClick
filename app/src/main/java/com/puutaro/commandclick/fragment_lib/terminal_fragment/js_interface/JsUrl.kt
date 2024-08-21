@@ -24,6 +24,8 @@ class JsUrl(
         jsPath: String
     ): String {
         /*
+        ## Description
+
         Make load js contents from js path
        */
         val jsConList =
@@ -41,6 +43,8 @@ class JsUrl(
         jsPath: String
     ): String {
         /*
+        ## Description
+
         Make raw js contents before load
        */
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
@@ -66,6 +70,8 @@ class JsUrl(
         replaceMapCon: String,
     ) {
         /*
+        ## Description
+
         Load js path
 
         ### replaceMapCon arg
@@ -101,11 +107,13 @@ class JsUrl(
         loadConSrc: String
     ) {
         /*
+        ## Description
+
         [Deprecated] Load QR code contents about js or url
         */
         QrUriHandler.load(
             terminalFragment,
-            terminalFragment.currentAppDirPath,
+//            terminalFragment.currentAppDirPath,
             loadConSrc
         )
     }
@@ -115,6 +123,8 @@ class JsUrl(
         loadConSrc: String,
     ){
         /*
+        ## Description
+
         Load QR code contents about Url or javascript
         */
         val loadCon = loadConSrc.trim()
@@ -136,6 +146,8 @@ class JsUrl(
         urlStr: String
     ) {
         /*
+        ## Description
+
         Load Url
         This is one of the most used js interface.
         */
@@ -152,6 +164,8 @@ class JsUrl(
         beforeDelayMiliSec: String
     ){
         /*
+        ## Description
+
         Load js contents when page load finish
         */
         val urlBroadcastExtra = listOf(
@@ -178,6 +192,8 @@ class JsUrl(
     @JavascriptInterface
     fun exit_S(){
         /*
+        ## Description
+
         Exit javascript loading
         */
         terminalFragment.binding.terminalWebView.loadUrl(
@@ -190,6 +206,8 @@ class JsUrl(
         jsCon: String,
     ){
         /*
+        ## Description
+
         Load js contents
         */
         loadUrl(

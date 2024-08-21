@@ -16,9 +16,9 @@ object FilePrefixGetter {
     ): String? {
         val filePrefix = EditSettings.filePrefix
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -30,7 +30,7 @@ object FilePrefixGetter {
         val replaceListDirValue = SetReplaceVariabler.execReplaceByReplaceVariables(
             listDirGetValue,
             setReplaceVariableMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
         )
         val listDirValue = QuoteTool.trimBothEdgeQuote(replaceListDirValue)
@@ -51,9 +51,9 @@ object FilePrefixGetter {
         keyName: String,
     ): String? {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -62,7 +62,7 @@ object FilePrefixGetter {
             val listSettingKeyMapCon = SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ).replace(
                 "\t",

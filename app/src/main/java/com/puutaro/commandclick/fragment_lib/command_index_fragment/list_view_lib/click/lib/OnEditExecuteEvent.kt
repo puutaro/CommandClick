@@ -14,7 +14,7 @@ object OnEditExecuteEvent {
     fun invoke(
         fragment: Fragment,
         editFragmentTag: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedShellFileName: String,
         fannelState: String,
     ) {
@@ -23,13 +23,13 @@ object OnEditExecuteEvent {
         val sharedPref = FannelInfoTool.getSharePref(fragment.context)
         val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         FannelInfoTool.putAllFannelInfo(sharedPref,
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedShellFileName,
             shortcutOnMark,
             fannelState
         )
         val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedShellFileName,
             shortcutOnMark,
             fannelState,

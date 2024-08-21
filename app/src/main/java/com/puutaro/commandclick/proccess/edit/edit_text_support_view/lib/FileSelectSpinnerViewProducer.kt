@@ -33,9 +33,9 @@ object FileSelectSpinnerViewProducer {
         val currentFragment = editParameters.currentFragment
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
 
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -52,7 +52,7 @@ object FileSelectSpinnerViewProducer {
         )
         val filterDir = getSelectDirPath(
             fcbMap,
-            editParameters,
+//            editParameters,
         )
         val filterPrefixListCon = getFilterPrefix(
             fcbMap,
@@ -106,7 +106,7 @@ object FileSelectSpinnerViewProducer {
                     ?: return
                 if(
                     selectedItem != throughMark
-                    && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
+//                    && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
                     && File(selectedItem).isFile
                 ) {
                     FileSystems.updateLastModified(
@@ -212,19 +212,20 @@ object FileSelectSpinnerViewProducer {
 
     private fun getSelectDirPath(
         fcbMap: Map<String, String>?,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
         )?.let {
                 if (
                     it.isEmpty()
-                ) return@let currentAppDirPath
+                ) return@let cmdclickDefaultAppDirPath
                 it
-            } ?: currentAppDirPath
+            } ?: cmdclickDefaultAppDirPath
     }
 
     private fun getFilterPrefix(
@@ -274,9 +275,9 @@ object FileSelectSpinnerViewProducer {
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -287,7 +288,7 @@ object FileSelectSpinnerViewProducer {
             ?.let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentScriptName
                 )
             }?.let{

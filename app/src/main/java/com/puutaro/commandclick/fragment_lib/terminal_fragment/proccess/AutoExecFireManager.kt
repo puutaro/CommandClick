@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
@@ -29,10 +30,10 @@ object AutoExecFireManager {
             terminalFragment
         )
 
-        val currentAppDirPath = terminalFragment.currentAppDirPath
+//        val currentAppDirPath = terminalFragment.currentAppDirPath
         val currentSettingFannelPath = makeSettingFannelPath(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             cmdclickPreferenceJsName,
             isCmdIndexTerminalFrag
         )
@@ -46,7 +47,7 @@ object AutoExecFireManager {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 terminalFragment.currentFannelName
             )
         }.split("\n")
@@ -76,7 +77,7 @@ object AutoExecFireManager {
         ) return
         ExecJsLoad.execJsLoad(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             cmdclickPreferenceJsName,
             jsContentsList,
             onAutoExecArg
@@ -94,13 +95,13 @@ object AutoExecFireManager {
 
     private fun makeSettingFannelPath(
         terminalFragment: TerminalFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cmdclickPreferenceJsName: String,
         isCmdIndexTerminalFrag: Boolean
     ): String {
         return when(isCmdIndexTerminalFrag) {
             true -> File(
-                currentAppDirPath,
+                UsePath.cmdclickDefaultAppDirPath,
                 cmdclickPreferenceJsName
             ).absolutePath
             else -> FannelStateRooterManager.getSettingFannelPath(

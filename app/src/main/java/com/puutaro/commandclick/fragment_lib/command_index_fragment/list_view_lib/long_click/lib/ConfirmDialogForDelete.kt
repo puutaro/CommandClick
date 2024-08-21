@@ -19,17 +19,17 @@ object ConfirmDialogForDelete {
     private var addConfirmDialog: Dialog? = null
     fun show(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         scriptFileName: String,
         cmdListView: RecyclerView
     ){
         val context =
             cmdIndexFragment.context
                 ?: return
-
-        val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace()
         val shellContents = ReadText(
-            File(currentAppDirPath, scriptFileName).absolutePath
+            File(cmdclickDefaultAppDirPath, scriptFileName).absolutePath
         ).readText()
         val displayContents = "\tpath: ${currentAppDirPathTermux}/${scriptFileName}" +
                 "\n---\n${shellContents}"
@@ -58,7 +58,7 @@ object ConfirmDialogForDelete {
             addConfirmDialog = null
         }
         deleteOkListener(
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptFileName,
             cmdListView
         )
@@ -77,7 +77,7 @@ object ConfirmDialogForDelete {
     }
 
     private fun deleteOkListener(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         scriptFileName: String,
         cmdListView: RecyclerView
     ){
@@ -85,12 +85,13 @@ object ConfirmDialogForDelete {
             addConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_ok
             )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         confirmOkButtonView?.setOnClickListener {
             addConfirmDialog?.dismiss()
             addConfirmDialog = null
             FileSystems.removeFiles(
                 File(
-                    currentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     scriptFileName,
                 ).absolutePath
             )
@@ -102,11 +103,11 @@ object ConfirmDialogForDelete {
                     UsePath.JS_FILE_SUFFIX
                 ) + UsePath.fannelDirSuffix
             FileSystems.removeDir(
-                "${currentAppDirPath}/${fannelDirName}"
+                "${cmdclickDefaultAppDirPath}/${fannelDirName}"
             )
 
             CommandListManager.execListUpdateForCmdIndex(
-                currentAppDirPath,
+//                currentAppDirPath,
                 cmdListView,
             )
         }

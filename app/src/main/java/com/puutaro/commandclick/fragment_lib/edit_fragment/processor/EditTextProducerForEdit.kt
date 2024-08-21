@@ -23,9 +23,9 @@ class EditTextProducerForEdit(
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     private val fannelInfoMap = editFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
 
     private val setReplaceVariableMap = editFragment.setReplaceVariableMap
     private val descriptionHidValName = "description"
@@ -233,7 +233,7 @@ class EditTextProducerForEdit(
             ScriptFileDescription.show(
                 editFragment,
                 editFragment.currentFannelConList,
-                currentAppDirPath,
+//                currentAppDirPath,
                 FannelInfoTool.getCurrentFannelName(
                     fannelInfoMap
                 )

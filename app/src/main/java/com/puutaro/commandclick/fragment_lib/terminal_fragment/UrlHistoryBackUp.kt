@@ -14,14 +14,14 @@ object UrlHistoryBackUp {
 
     fun backup(terminalFragment: TerminalFragment){
         bodyBackup(terminalFragment)
-        trimLogoBase64TxtFiles(terminalFragment)
-        trimCaptureBase64TxtFiles(terminalFragment)
+        trimLogoBase64TxtFiles()
+        trimCaptureBase64TxtFiles()
     }
     private fun bodyBackup(
         terminalFragment: TerminalFragment
     ){
         execBackup(
-            terminalFragment,
+//            terminalFragment,
             UsePath.cmdclickUrlHistoryFileName,
             UsePath.cmdclickUrlHistoryBackupFileName,
             ReadText.leavesLineForTerm
@@ -29,21 +29,21 @@ object UrlHistoryBackUp {
     }
 
     private fun trimLogoBase64TxtFiles(
-        terminalFragment: TerminalFragment
+//        terminalFragment: TerminalFragment
     ){
         val captureHistoryPngDirPath =
             UrlHistoryPath.makeCaptureHistoryDirPath(
-                terminalFragment.currentAppDirPath
+//                terminalFragment.currentAppDirPath
             )
         execTrimFiles(captureHistoryPngDirPath)
     }
 
     private fun trimCaptureBase64TxtFiles(
-        terminalFragment: TerminalFragment
+//        terminalFragment: TerminalFragment
     ){
         val captureHistoryPngDirPath =
             UrlHistoryPath.makeCaptureHistoryDirPath(
-                terminalFragment.currentAppDirPath
+//                terminalFragment.currentAppDirPath
             )
         execTrimFilesAndDir(captureHistoryPngDirPath)
     }
@@ -95,16 +95,17 @@ object UrlHistoryBackUp {
     }
 
     private fun execBackup(
-        terminalFragment: TerminalFragment,
+//        terminalFragment: TerminalFragment,
         backupSrcFileName: String,
         backupDestiFileName: String,
         takeSize: Int,
     ){
-        val currentAppDirPath =
-            terminalFragment.currentAppDirPath
+//        val currentAppDirPath =
+//            terminalFragment.currentAppDirPath
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val appUrlSystemDirPath =
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 UsePath.cmdclickUrlSystemDirRelativePath
             )
         val backupSrcFilePath = File(

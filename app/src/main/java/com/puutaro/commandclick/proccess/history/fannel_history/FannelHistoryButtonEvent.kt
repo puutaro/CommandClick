@@ -256,7 +256,7 @@ class FannelHistoryButtonEvent (
                         historyLine
                     )
                 val selectedHistoryFile = FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    appDirName,
+//                    appDirName,
                     fannelName
                 )
                 val selectedAppDirPath =
@@ -294,7 +294,7 @@ class FannelHistoryButtonEvent (
                     else -> JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                         context,
                         mainFannelConList,
-                        appDirName,
+//                        appDirName,
                         fannelName,
                     )
                 }
@@ -306,7 +306,7 @@ class FannelHistoryButtonEvent (
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it?.joinToString("\n") ?: String(),
                         setReplaceVariableMap,
-                        appDirName,
+//                        appDirName,
                         fannelName,
                     ).split("\n")
                 }
@@ -319,7 +319,7 @@ class FannelHistoryButtonEvent (
                 )
                 launchHandler(
                     selectedHistoryFile,
-                    selectedAppDirPath,
+//                    selectedAppDirPath,
                     fannelName,
                     mainFannelSettingConList,
                     setReplaceVariableMap
@@ -333,7 +333,7 @@ class FannelHistoryButtonEvent (
 
     private fun launchHandler(
         selectedHistoryFile: String,
-        selectedAppDirPath: String,
+//        selectedAppDirPath: String,
         fannelName: String,
         mainFannelSettingConList: List<String>?,
         setReplaceVariableMap: Map<String, String>?
@@ -343,13 +343,13 @@ class FannelHistoryButtonEvent (
             selectedHistoryFile,
         )
         val fannelState = FannelStateManager.getState(
-            selectedAppDirPath,
+//            selectedAppDirPath,
             fannelName,
             mainFannelSettingConList,
             setReplaceVariableMap
         )
         val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
-            selectedAppDirPath,
+//            selectedAppDirPath,
             fannelName,
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
             fannelState
@@ -396,16 +396,16 @@ class FannelHistoryButtonEvent (
             override fun onItemClick(holder: FannelHistoryAdapter.FannelHistoryViewHolder) {
                 val bindingAdapterPosition = holder.bindingAdapterPosition
                 val historyLine = fannelHistoryAdapter.historyList[bindingAdapterPosition]
-                val appDirName =
-                    FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
-                        historyLine
-                    )
+//                val appDirName =
+//                    FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
+//                        historyLine
+//                    )
                 val fannelName =
                     FannelHistoryManager.getFannelNameFromAppHistoryFileName(
                         historyLine
                     )
                 val selectedHistoryFile = FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    appDirName,
+//                    appDirName,
                     fannelName
                 )
                 execDeleteHistoryFile(
@@ -483,16 +483,16 @@ class FannelHistoryButtonEvent (
                     ) return
                     val position = viewHolder.layoutPosition
                     val historyLine = fannelHistoryAdapter.historyList[position]
-                    val appDirName =
-                        FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
-                            historyLine
-                        )
+//                    val appDirName =
+//                        FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
+//                            historyLine
+//                        )
                     val fannelName =
                         FannelHistoryManager.getFannelNameFromAppHistoryFileName(
                             historyLine
                         )
                     val selectedHistoryFile = FannelHistoryManager.makeAppHistoryFileNameForInit(
-                        appDirName,
+//                        appDirName,
                         fannelName
                     )
                     execDeleteHistoryFile(

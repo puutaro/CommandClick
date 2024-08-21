@@ -28,6 +28,7 @@ import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 
 object ConfigFromScriptFileSetter {
 
@@ -181,9 +182,9 @@ object ConfigFromScriptFileSetter {
         editFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD,
-            editFragment.onTermVisibleWhenKeyboard,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
             SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
-            editFragment.onTermVisibleWhenKeyboard,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
                 SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
@@ -193,9 +194,9 @@ object ConfigFromScriptFileSetter {
         editFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
-            editFragment.historySwitch,
+            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
             SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
-            editFragment.historySwitch,
+            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.HistorySwitchSelects.OFF.name,
                 SettingVariableSelects.HistorySwitchSelects.ON.name
@@ -205,14 +206,15 @@ object ConfigFromScriptFileSetter {
         editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-            editFragment.urlHistoryOrButtonExec,
+            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
             SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
-            editFragment.urlHistoryOrButtonExec,
+            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
             ),
         )
+        
 
         editFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
@@ -695,9 +697,9 @@ object ConfigFromScriptFileSetter {
         defaultPath: String,
     ): List<String> {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -713,7 +715,7 @@ object ConfigFromScriptFileSetter {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 repPath,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
         }
@@ -817,7 +819,7 @@ private object AlterToolForSetValType {
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             alterValue,
             replaceVariableMap,
-            String(),
+//            String(),
             String()
         ).let {
             CmdClickMap.createMap(

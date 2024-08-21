@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
@@ -198,29 +199,29 @@ object CommandClickVariables {
     }
 
     fun makeMainFannelConList(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         scriptName: String,
         setReplaceVariableMap: Map<String, String>? = null,
     ): List<String> {
-        val isMainFannelDir = currentAppDirPath.removePrefix(
-            UsePath.cmdclickAppDirPath
-        ).removePrefix("/").let{
-            File(it).parent
-        }.isNullOrEmpty()
-        val isFileName = File(scriptName).parent.isNullOrEmpty()
+//        val isMainFannelDir = currentAppDirPath.removePrefix(
+//            UsePath.cmdclickAppDirPath
+//        ).removePrefix("/").let{
+//            File(it).parent
+//        }.isNullOrEmpty()
+        val isFannelName = FannelInfoTool.isEmptyFannelName(scriptName)
         if(
-            !isMainFannelDir
-            && isFileName
+//            !isMainFannelDir
+            isFannelName
         ) return emptyList()
         val scriptConList = ReadText(
             File(
-                currentAppDirPath,
+                UsePath.cmdclickDefaultAppDirPath,
                 scriptName
             ).absolutePath
         ).readText().let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 scriptName,
             )
         }.split("\n")
@@ -231,7 +232,7 @@ object CommandClickVariables {
             else -> SetReplaceVariabler.execReplaceByReplaceVariables(
                 scriptConList.joinToString("\n"),
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 scriptName
             ).split("\n")
         }

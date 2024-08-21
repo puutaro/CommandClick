@@ -27,9 +27,9 @@ class LongPressForImage(
 )  {
     val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val imageLongPressMenuFilePathObj = File(imageMenuFilePath)
     private val imageLongPressMenuDirPath = imageLongPressMenuFilePathObj.parent
     private val imageLongPressMenuFileName = imageLongPressMenuFilePathObj.name
@@ -191,7 +191,7 @@ class LongPressForImage(
         val selectedScriptNameOrPathObj = File(selectedJsPath)
         val execJsPath = LongPressMenuTool.makeExecJsPath(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedScriptNameOrPathObj,
         )
         val settingValList = LongPressMenuTool.extractSettingValList(

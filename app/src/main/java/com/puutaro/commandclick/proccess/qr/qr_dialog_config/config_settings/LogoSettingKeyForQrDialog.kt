@@ -85,7 +85,8 @@ object QrLogoSettingsForQrDialog {
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
         val fileName =  qrLogoHandlerArgsMaker.fileName
         val fileDirName = CcPathTool.makeFannelDirName(fileName)
-        val parentDirPath =  qrLogoHandlerArgsMaker.parentDirPath
+        val parentDirPath =  UsePath.cmdclickDefaultAppDirPath
+//        qrLogoHandlerArgsMaker.parentDirPath
         val fileDirPath = "${parentDirPath}/${fileDirName}"
         val qrPngPath = "${fileDirPath}/${qrPngNameRelativePath}"
         val qrPngPathObj = File(qrPngPath)
@@ -99,7 +100,7 @@ object QrLogoSettingsForQrDialog {
                     QrTypeSettingsForQrDialog.QrTypeSettingKey.FILE_CON.type
         val fragment = qrLogoHandlerArgsMaker.fragment
         QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
-            parentDirPath,
+//            parentDirPath,
             fileName,
             isFileCon,
         )?.let {
@@ -134,9 +135,10 @@ object QrLogoSettingsForQrDialog {
             return
         }
         val fragment = qrLogoHandlerArgsMaker.fragment
-        val parentDirPath = qrLogoHandlerArgsMaker.parentDirPath
+//        val parentDirPath = UsePath.cmdclickDefaultAppDirPath
+//            qrLogoHandlerArgsMaker.parentDirPath
         QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
-            parentDirPath,
+//            parentDirPath,
             fannelName,
             false
         )?.let {
@@ -551,13 +553,13 @@ object QrLogoSettingsForQrDialog {
                 !iconNameConfigPath.isNullOrEmpty()
             ) {
                 val fannelInfoMap = editFragment.fannelInfoMap
-                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
+//                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
                 val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val iconNameMapTsvCon =
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         ReadText(iconNameConfigPath).readText(),
                         editFragment.setReplaceVariableMap,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         currentFannelName,
                     )
                 return CmdClickMap.createMapFromTsv(

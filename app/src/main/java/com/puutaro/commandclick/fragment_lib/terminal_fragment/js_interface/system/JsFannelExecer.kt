@@ -11,9 +11,9 @@ class JsFannelExecer(
 
     val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -22,7 +22,7 @@ class JsFannelExecer(
     fun exec_S(){
         ExecJsOrSellHandler.handle(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
         )
     }

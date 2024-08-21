@@ -50,7 +50,7 @@ object WebChromeClientSetter {
                 super.onReceivedIcon(view, icon)
                 CoroutineScope(Dispatchers.Main).launch {
                     UrlLogoHistoryTool.insertToHistory(
-                        terminalFragment.currentAppDirPath,
+//                        terminalFragment.currentAppDirPath,
                         view?.url,
                         icon,
                     )

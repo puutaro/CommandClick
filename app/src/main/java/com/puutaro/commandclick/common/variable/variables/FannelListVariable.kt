@@ -62,7 +62,7 @@ object FannelListVariable {
             )
             val descConSrc = ScriptFileDescription.makeDescriptionContents(
                 fannelConList,
-                cmdclickFannelItselfDirPath,
+//                cmdclickFannelItselfDirPath,
                 it
             )
             val readmeUrl = ScriptFileDescription.getReadmeUrl(descConSrc)

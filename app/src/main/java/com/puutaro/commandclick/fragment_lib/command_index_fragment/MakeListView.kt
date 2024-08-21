@@ -21,12 +21,11 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 class MakeListView(
     private val binding: CommandIndexFragmentBinding,
     private val cmdIndexFragment: CommandIndexFragment,
-    fannelInfoMap: Map<String, String>,
+//    fannelInfoMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-    private val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+
+    private val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace()
     private val cmdListView = binding.cmdList
     private val cmdSearchEditText = binding.cmdSearchEditText
 
@@ -34,16 +33,16 @@ class MakeListView(
     fun makeList(
         context: Context
     ): FannelIndexListAdapter {
-        FileSystems.createDirs(currentAppDirPath)
+        FileSystems.createDirs(cmdclickDefaultAppDirPath)
         val cmdList = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
-            currentAppDirPath
+            cmdclickDefaultAppDirPath
         )
         val baskstackOrder =
             cmdIndexFragment.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
         cmdSearchEditText.hint = "(${baskstackOrder}) ${UsePath.makeOmitPath(currentAppDirPathTermux)}"
         return FannelIndexListAdapter(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             cmdList.toMutableList()
         )
     }
@@ -56,13 +55,13 @@ class MakeListView(
 
         TextChangedListenerAdder.add(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             cmdListAdapter
         )
 
         KeyListenerSetter.set(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
         )
     }
 
@@ -71,12 +70,12 @@ class MakeListView(
     ){
         FannelNameClickListenerSetter.set(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelIndexListAdapter
         )
         FannelQrLogoClickListener.set(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelIndexListAdapter
         )
     }
@@ -87,7 +86,7 @@ class MakeListView(
         cmdListSwipeToRefresh.setOnRefreshListener(SwipyRefreshLayout.OnRefreshListener {
                 direction ->
             CommandListManager.execListUpdateForCmdIndex(
-                currentAppDirPath,
+//                currentAppDirPath,
                 cmdListView,
             )
             cmdListSwipeToRefresh.isRefreshing = false
@@ -99,7 +98,7 @@ class MakeListView(
     ) {
         ExecOnQrLongClickDo.invoke(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelIndexListAdapter
         )
     }
@@ -109,7 +108,7 @@ class MakeListView(
     ) {
         ExecOnLongClickDo.invoke(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelIndexListAdapter
         )
     }

@@ -24,7 +24,7 @@ object ScriptFileDescription {
     fun show(
         fragment: Fragment,
         currentScriptContentsList: List<String>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         val labelingSecConList = subLabelingSecConList(
@@ -34,7 +34,7 @@ object ScriptFileDescription {
 
         val descCon = makeDescriptionContents(
             labelingSecConList,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         val targetFragmentInstance = TargetFragmentInstance()
@@ -56,7 +56,7 @@ object ScriptFileDescription {
                     }
                 ExecJsLoad.execExternalJs(
                     fragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     webSearcherName,
                     systemExecRepTextList
                 )
@@ -73,7 +73,7 @@ object ScriptFileDescription {
                         fannelName,
                         extractMdContents(
                             String(),
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             fannelName,
                         )
                     )
@@ -84,7 +84,7 @@ object ScriptFileDescription {
                     fannelName,
                     makeDescriptionContents(
                         labelingSecConList,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         fannelName,
                     )
                 )
@@ -127,12 +127,12 @@ object ScriptFileDescription {
 
     fun makeDescriptionContents(
         labelingSecConList: List<String>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): String {
         return makeDescConFromLabelingSec(
             labelingSecConList,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         ).joinToString("\n")
     }
@@ -160,7 +160,7 @@ object ScriptFileDescription {
 
     private fun makeDescConFromLabelingSec(
         labelingSecConList: List<String>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): List<String> {
         val languageType =
@@ -200,7 +200,7 @@ object ScriptFileDescription {
             ) return@map inputDescLine
             extractMdContents(
                 inputDescLine,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
             )
         }
@@ -208,12 +208,12 @@ object ScriptFileDescription {
 
     private fun extractMdContents(
         inputDescLine: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): String {
         val fannelReadmePath = ScriptPreWordReplacer.replace(
             UsePath.fannelReadmePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         val mdPathObj = File(fannelReadmePath)

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -28,9 +29,9 @@ class JsToolbar(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -40,7 +41,7 @@ class JsToolbar(
     private val targetFragmentInstance = TargetFragmentInstance()
     private val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
         activity,
-        currentAppDirPath,
+//        currentAppDirPath,
         currentFannelName,
         currentFannelState
     )
@@ -70,7 +71,7 @@ class JsToolbar(
         val targetFragmentInstance = TargetFragmentInstance()
         val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
@@ -81,11 +82,11 @@ class JsToolbar(
             urlConSaveParentDirPathSrc,
             compSuffix,
         )
-        val urlConSaveParentDirPath = makeUrlConSaveParentDirPath(
-            extraMap,
-            listIndexType,
-            listIndexPath
-        ) ?: return
+//        val urlConSaveParentDirPath = makeUrlConSaveParentDirPath(
+//            extraMap,
+//            listIndexType,
+//            listIndexPath
+//        ) ?: return
         val fileName = when(
             title.isEmpty()
         ) {
@@ -102,7 +103,7 @@ class JsToolbar(
             extraMap
         )
         ListIndexDuplicate.isFileDetect(
-            urlConSaveParentDirPath,
+//            urlConSaveParentDirPath,
             compFileName,
         ).let {
                 isDetect ->
@@ -110,9 +111,10 @@ class JsToolbar(
                 isDetect
             ) return
         }
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         FileSystems.writeFile(
             File(
-                urlConSaveParentDirPath,
+                cmdclickDefaultAppDirPath,
                 compFileName
             ).absolutePath,
             con,
@@ -122,7 +124,6 @@ class JsToolbar(
                 addAndSort(
                     listIndexType,
                     listIndexPath,
-                    urlConSaveParentDirPath,
                     compFileName,
                 )
             }
@@ -153,7 +154,7 @@ class JsToolbar(
                 val targetFragmentInstance = TargetFragmentInstance()
                 val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
                     activity,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                     currentFannelState
                 ) ?: return@withContext
@@ -213,7 +214,7 @@ class JsToolbar(
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> EditSettingExtraArgsTool.getParentDirPath(
                     extraMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                 )
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> listIndexPath
@@ -223,7 +224,7 @@ class JsToolbar(
     private fun addAndSort(
         listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
         listIndexPath: String,
-        urlConSaveParentDirPath: String,
+//        urlConSaveParentDirPath: String,
         fileName: String,
     ){
         if(
@@ -235,7 +236,7 @@ class JsToolbar(
             -> {
                 val insertLine = listOf(
                     fileName,
-                    File(urlConSaveParentDirPath, fileName).absolutePath
+                    File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
                 ).joinToString("\t")
                 ExecAddForListIndexAdapter.execAddForTsv(
                     editFragment,

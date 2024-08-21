@@ -16,7 +16,7 @@ class MakeExecCmdForTermux {
             currentFragment: Fragment,
             terminalDo: String,
             substituteSettingVariableList: List<String>?,
-            recentAppdirPath: String,
+//            recentAppdirPath: String,
             selectedShellFileName: String,
             runShell: String,
         ): String {
@@ -58,7 +58,7 @@ class MakeExecCmdForTermux {
                 trimBothEdgeQuote(it)
             }?.trim() ?: String()
 
-            val execBashScript = "${recentAppdirPath}/" +
+            val execBashScript = "${UsePath.cmdclickDefaultAppDirPath}/" +
                     selectedShellFileName
             val factExecCmd = "${runShell} \"${execBashScript}\""
             val execTitle = "echo \"\n### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${selectedShellFileName}\" " +

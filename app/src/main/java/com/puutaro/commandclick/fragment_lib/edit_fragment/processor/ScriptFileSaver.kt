@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents
@@ -12,9 +13,9 @@ class ScriptFileSaver(
     private val editFragment: EditFragment,
 ) {
     private val fannelInfoMap = editFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -38,7 +39,7 @@ class ScriptFileSaver(
 
             else -> {
                 val currentFannelConList = ReadText(
-                    File(currentAppDirPath, currentFannelName).absolutePath
+                    File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath
                 ).textToList()
                 editedTextContents.updateByCommandVariables(
                     currentFannelConList,

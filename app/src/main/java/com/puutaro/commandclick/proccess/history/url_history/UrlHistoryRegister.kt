@@ -9,30 +9,31 @@ object UrlHistoryRegister {
 
     private const val takeHistoryNum = 500
     fun insertJsPath(
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         jsFileName: String,
     ) {
         if(
             jsFileName == UsePath.cmdclickPreferenceJsName
         ) return
-        val jsFullPath = "${recentAppDirPath}/${jsFileName}"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val jsFullPath = "${cmdclickDefaultAppDirPath}/${jsFileName}"
         val jsFullPathObj = File(jsFullPath)
         if(
             !jsFullPathObj.isFile
         ) return
         insert(
-            recentAppDirPath,
+//            cmdclickDefaultAppDirPath,
             jsFullPath,
             jsFullPath,
         )
     }
 
     fun insert(
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         title: String,
         uri: String,
     ){
-        val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val appUrlSystemPath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         val cmdclickUrlHistoryFilePath = File(appUrlSystemPath, cmdclickUrlHistoryFileName).absolutePath
         val updatingHistoryCon =

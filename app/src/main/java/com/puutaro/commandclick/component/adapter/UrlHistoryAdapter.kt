@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
@@ -30,7 +31,7 @@ import java.io.File
 
 class UrlHistoryAdapter(
     private val fragment: Fragment,
-    private val currentAppDirPath: String,
+//    private val currentAppDirPath: String,
     var urlHistoryMapList: MutableList<Map<String, String>>,
     private val currentUrl: String?,
 ): RecyclerView.Adapter<UrlHistoryAdapter.UrlHistoryViewHolder>(){
@@ -63,6 +64,7 @@ class UrlHistoryAdapter(
     }
 
     private val context = fragment.context
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
     private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
         context,
@@ -158,7 +160,7 @@ class UrlHistoryAdapter(
                 urlHistoryMap.get(UrlHistoryMapKey.ICON_BASE64_STR.key)
                     ?: let {
                         val logoBase64TxtPath = UrlLogoHistoryTool.getCaptureBase64TxtPathByUrl(
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             urlStr,
                         )?.absolutePath
                             ?: return@let null
@@ -168,7 +170,7 @@ class UrlHistoryAdapter(
             val capturePngPathOrMacro =
                 urlHistoryMap.get(UrlHistoryMapKey.CAPTURE_BASE64_STR.key)
                     ?: UrlHistoryPath.getCaptureGifPath(
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         urlStr,
                     )
 

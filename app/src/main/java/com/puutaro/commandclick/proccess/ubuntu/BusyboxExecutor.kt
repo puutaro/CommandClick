@@ -490,10 +490,10 @@ class BusyboxExecutor(
         ).textToList()
         val ubuntuIntentMonitorPort = UsePort.UBUNTU_INTENT_MONITOR_PORT.num.toString()
         val fannelInfoSharePref = FannelInfoTool.getSharePref(context)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            fannelInfoSharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            fannelInfoSharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val exportList = listOf(
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
@@ -504,7 +504,7 @@ class BusyboxExecutor(
             "UBUNTU_ENV_TSV_NAME" to UbuntuFiles.ubuntuEnvTsvName,
             "UBUNTU_SERVICE_TEMP_DIR_PATH" to UsePath.cmdclickTempUbuntuServiceDirPath,
             "SD_ROOT_DIR_PATH" to SdPath.getSdUseRootPath(),
-            "CUR_APP_DIR_PATH" to currentAppDirPath,
+            "CUR_APP_DIR_PATH" to UsePath.cmdclickDefaultAppDirPath,
         )
         val exportCmd = "export"
         val existEnvMark = "EXIST_ENV_MARK"

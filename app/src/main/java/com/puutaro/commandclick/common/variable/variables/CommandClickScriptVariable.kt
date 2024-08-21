@@ -720,7 +720,7 @@ object CommandClickScriptVariable {
 
 
     fun makeShellOrJsFile(
-        dirPath: String,
+//        dirPath: String,
         shellScriptName: String,
         onUpdateLastModifyValue: String = onUpdateLastModifyOn,
         shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
@@ -743,9 +743,10 @@ object CommandClickScriptVariable {
                     )
             }.joinToString("\n")
         }
-        FileSystems.createDirs(dirPath)
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        FileSystems.createDirs(cmdclickDefaultAppDirPath)
         val createFile = File(
-            dirPath,
+            cmdclickDefaultAppDirPath,
             shellScriptName
         )
         createFile.writeText(shellContents)
@@ -789,20 +790,21 @@ object CommandClickScriptVariable {
     }
 
     fun makeButtonExecJS(
-        dirPath: String,
+//        dirPath: String,
         shellScriptName: String,
         execJsOrHtmlPathValue: String = String()
     ){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
-        FileSystems.createDirs(dirPath)
+        FileSystems.createDirs(cmdclickDefaultAppDirPath)
         if(
             File(
-                dirPath,
+                cmdclickDefaultAppDirPath,
                 shellScriptName
             ).isFile
         ) return
         makeShellOrJsFile(
-            dirPath,
+//            dirPath,
             shellScriptName,
             onUpdateLastModifyOff,
             shellOrJs,

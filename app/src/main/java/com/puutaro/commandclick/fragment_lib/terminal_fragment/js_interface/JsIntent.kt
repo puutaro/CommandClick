@@ -76,10 +76,10 @@ class JsIntent(
             .setAction(Intent.ACTION_MAIN)
             .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        execIntent.putExtra(
-            FannelInfoSetting.current_app_dir.name,
-            currentAppDirPath
-        )
+//        execIntent.putExtra(
+//            FannelInfoSetting.current_app_dir.name,
+//            currentAppDirPath
+//        )
         execIntent.putExtra(
             FannelInfoSetting.current_fannel_name.name,
             currentScriptFileName

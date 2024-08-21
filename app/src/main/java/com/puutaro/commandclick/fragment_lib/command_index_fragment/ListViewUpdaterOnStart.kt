@@ -9,12 +9,12 @@ object ListViewUpdaterOnStart {
         cmdIndexFragment: CommandIndexFragment
     ){
         val binding = cmdIndexFragment.binding
-        val fannelInfoMap = cmdIndexFragment.fannelInfoMap
+//        val fannelInfoMap = cmdIndexFragment.fannelInfoMap
         val cmdList = binding.cmdList
         CommandListManager.execListUpdateForCmdIndex(
-            FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            ),
+//            FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            ),
             cmdList,
         )
     }

@@ -10,10 +10,10 @@ class JsUrlHistory(
 ) {
     val context = terminalFragment.context
     val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val fannelInfoMap = terminalFragment.fannelInfoMap
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
 
     @JavascriptInterface
     fun save(
@@ -21,7 +21,7 @@ class JsUrlHistory(
         url: String,
     ){
         UrlHistoryRegister.insert(
-            currentAppDirPath,
+//            currentAppDirPath,
             title,
             url,
         )

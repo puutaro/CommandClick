@@ -26,7 +26,7 @@ import java.io.File
 object FannelNameClickListenerSetter {
     fun set(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){
         val context = cmdIndexFragment.context
@@ -34,6 +34,7 @@ object FannelNameClickListenerSetter {
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
         fannelIndexListAdapter.fannelNameClickListener = object: FannelIndexListAdapter.OnFannelNameItemClickListener {
             override fun onFannelNameClick(
@@ -60,11 +61,11 @@ object FannelNameClickListenerSetter {
                 ) {
                     BroadCastIntent.sendUrlCon(
                         context,
-                        "${currentAppDirPath}/$selectedShellFileName"
+                        "${cmdclickDefaultAppDirPath}/$selectedShellFileName"
                     )
                     updateLastModifiedListView(
                         cmdListView,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         selectedShellFileName
                     )
                     return
@@ -78,7 +79,7 @@ object FannelNameClickListenerSetter {
                     cmdIndexFragment.tag ?: String()
 
                 val mainFannelContentsList = ReadText(
-                    File(currentAppDirPath, selectedShellFileName).absolutePath
+                    File(cmdclickDefaultAppDirPath, selectedShellFileName).absolutePath
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     cmdIndexFragment,
@@ -87,7 +88,7 @@ object FannelNameClickListenerSetter {
                 )
                 if (validateErrMessage.isNotEmpty()) {
                     val shellScriptPath =
-                        "${currentAppDirPath}/${selectedShellFileName}"
+                        "${cmdclickDefaultAppDirPath}/${selectedShellFileName}"
                     VariationErrDialog.show(
                         cmdIndexFragment,
                         shellScriptPath,
@@ -99,7 +100,7 @@ object FannelNameClickListenerSetter {
                     JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                         context,
                         mainFannelContentsList,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         selectedShellFileName,
                     )
                 val languageType =
@@ -120,7 +121,7 @@ object FannelNameClickListenerSetter {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it?.joinToString("\n") ?: String(),
                         setReplaceVariableMap,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         selectedShellFileName,
                     ).split("\n")
                 }
@@ -133,21 +134,21 @@ object FannelNameClickListenerSetter {
                 when (editExecuteValue) {
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name -> {
                         val fannelState = FannelStateManager.getState(
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             selectedShellFileName,
                             settingSectionVariableList,
                             setReplaceVariableMap,
                         )
                         val editFragmentTag = DecideEditTag(
                             mainFannelContentsList,
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             selectedShellFileName,
                             fannelState
                         ).decide() ?: return
                         OnEditExecuteEvent.invoke(
                             cmdIndexFragment,
                             editFragmentTag,
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             selectedShellFileName,
                             fannelState
                         )
@@ -156,12 +157,12 @@ object FannelNameClickListenerSetter {
                 }
                 ExecJsOrSellHandler.handle(
                     cmdIndexFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     selectedShellFileName,
                     mainFannelContentsList,
                 )
                 CommandListManager.execListUpdateForCmdIndex(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     cmdListView,
                 )
 
@@ -177,17 +178,17 @@ object FannelNameClickListenerSetter {
 
 private fun updateLastModifiedListView (
     cmdListView: RecyclerView,
-    currentAppDirPath: String,
+//    currentAppDirPath: String,
     selectecJsFileName: String
 ) {
     FileSystems.updateLastModified(
         File(
-            currentAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             selectecJsFileName
         ).absolutePath
     )
     CommandListManager.execListUpdateForCmdIndex(
-        currentAppDirPath,
+//        currentAppDirPath,
         cmdListView,
     )
 }

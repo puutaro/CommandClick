@@ -22,9 +22,9 @@ class ToolBarInternetButtonControl(
     private val binding = cmdIndexFragment.binding
     private val cmdclickToolBar = cmdIndexFragment.binding.cmdclickToolBar
     private val cmdindexInternet = binding.cmdindexInternetButton
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
 
     fun interneButtontSetOnClickListener () {
         val terminalStateList = context?.getColorStateList(R.color.terminal_color)
@@ -58,7 +58,7 @@ class ToolBarInternetButtonControl(
             ) {
                 ExecJsLoad.execJsLoad(
                     cmdIndexFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     UsePath.cmdclickInternetButtonExecJsFileName,
                 )
                 return@setOnClickListener

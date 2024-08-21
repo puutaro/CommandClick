@@ -47,10 +47,10 @@ object JavaScriptLoadUrl {
         if(
             !jsFileObj.isFile
         ) return null
-        val recentAppDirPath = jsFileObj.parent
-        if(
-            recentAppDirPath.isNullOrEmpty()
-        ) return null
+//        val recentAppDirPath = jsFileObj.parent
+//        if(
+//            recentAppDirPath.isNullOrEmpty()
+//        ) return null
 
         val scriptFileName = jsFileObj.name
         val jsListBeforeRemoveTsv = jsListSource.ifEmpty {
@@ -65,7 +65,7 @@ object JavaScriptLoadUrl {
         val setReplaceVariableMapBeforeConcatTsvMap = createMakeReplaceVariableMapHandler(
             context,
             jsListBeforeRemoveTsv,
-            recentAppDirPath,
+//            recentAppDirPath,
             scriptFileName,
             setReplaceVariableMapSrc,
         )
@@ -86,10 +86,10 @@ object JavaScriptLoadUrl {
         val jsList = TsvImportManager.removeTsvImport(jsListBeforeRemoveTsv)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val currentJsPath = "$recentAppDirPath/$scriptFileName"
-            val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
-                currentJsPath
-            )
+            val currentJsPath = "${UsePath.cmdclickDefaultAppDirPath}/$scriptFileName"
+//            val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
+//                currentJsPath
+//            )
             val mainFannelName = File(
                     CcPathTool.getMainFannelFilePath(
                         currentJsPath
@@ -97,7 +97,7 @@ object JavaScriptLoadUrl {
                 ).name
             makeReplaceVariableTableTsv(
                 setReplaceVariableMap,
-                mainCurrentAppDirPath,
+//                mainCurrentAppDirPath,
                 mainFannelName,
             )
         }
@@ -112,7 +112,7 @@ object JavaScriptLoadUrl {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableMap,
-                    recentAppDirPath,
+//                    recentAppDirPath,
                     scriptFileName
                 )
             }
@@ -199,13 +199,13 @@ object JavaScriptLoadUrl {
         jsConBeforeJsImport: String,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
-        val currentFannelPath = File(currentAppDirPath, currentFannelName).absolutePath
+        val currentFannelPath = File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath
         val jsConBeforeJsImportCompNewLine = "\n${jsConBeforeJsImport}"
         val setReplaceVariableMapByConcat =
             TsvImportManager.concatRepValMapWithTsvImportFromContents(
@@ -232,7 +232,7 @@ object JavaScriptLoadUrl {
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             jsConBeforeReplace,
             setReplaceVariableMapByConcat,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         )
     }
@@ -265,7 +265,7 @@ object JavaScriptLoadUrl {
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 context,
                 settingVariableList,
-                String(),
+//                String(),
                 String()
             )
         var countSettingSectionStart = 0
@@ -326,14 +326,14 @@ object JavaScriptLoadUrl {
             .let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    String(),
+//                    String(),
                     String()
                 )
             }.let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableMap,
-                    String(),
+//                    String(),
                     String()
                 )
             }
@@ -381,27 +381,27 @@ object JavaScriptLoadUrl {
 
     fun makeReplaceVariableTableTsv(
         setReplaceVariableMap:  Map<String, String>?,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         scriptFileName: String,
     ){
         if(
             setReplaceVariableMap.isNullOrEmpty()
         ) return
         val preWordTsvTable = ScriptPreWordReplacer.makeTsvTable(
-            recentAppDirPath,
+//            recentAppDirPath,
             scriptFileName,
         )
         val replaceVariableTable = setReplaceVariableMap.entries.map {
             val replacedVal = ScriptPreWordReplacer.replace(
                 it.value,
-                recentAppDirPath,
+//                recentAppDirPath,
                 scriptFileName,
             )
             "${it.key}\t${replacedVal}"
         }.joinToString("\n")
         val fannelSettingsDirPath = ScriptPreWordReplacer.replace(
             UsePath.fannelSettingVariablsDirPath,
-            recentAppDirPath,
+//            recentAppDirPath,
             scriptFileName,
         )
         FileSystems.writeFile(
@@ -416,7 +416,7 @@ object JavaScriptLoadUrl {
     fun createMakeReplaceVariableMapHandler(
         context: Context?,
         jsList: List<String>,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         scriptFileName:  String,
         setReplaceVariableMapSrc: Map<String, String>? = null,
     ): Map<String, String>? {
@@ -432,7 +432,7 @@ object JavaScriptLoadUrl {
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 context,
                 settingVariableList,
-                recentAppDirPath,
+//                recentAppDirPath,
                 scriptFileName
             )
         if(
@@ -440,7 +440,7 @@ object JavaScriptLoadUrl {
         ) return setReplaceVariableMap
         return SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,
-            "${recentAppDirPath}/${scriptFileName}",
+            "${UsePath.cmdclickDefaultAppDirPath}/${scriptFileName}",
         )
     }
 }

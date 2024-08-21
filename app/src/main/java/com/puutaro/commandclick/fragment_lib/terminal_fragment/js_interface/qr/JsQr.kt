@@ -16,7 +16,6 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoPadd
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoShape
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelShape
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -69,10 +68,10 @@ class JsQr(
             context,
             FileUploadService::class.java
         )
-        intent.putExtra(
-            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
-            terminalFragment.currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
+//            terminalFragment.currentAppDirPath
+//        )
         context?.let {
             ContextCompat.startForegroundService(context, intent)
         }
@@ -95,7 +94,7 @@ class JsQr(
     ){
         QrUriHandler.handle(
             terminalFragment,
-            terminalFragment.currentAppDirPath,
+//            terminalFragment.currentAppDirPath,
             decodedText,
         )
     }
@@ -112,7 +111,7 @@ class JsQr(
             QrConfirmDialog(
                 terminalFragment,
                 null,
-                terminalFragment.currentAppDirPath,
+//                terminalFragment.currentAppDirPath,
                 QrDecodedTitle.makeTitle(
                     context,
                     decodedText

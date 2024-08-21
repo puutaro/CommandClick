@@ -8,13 +8,13 @@ import java.io.File
 object QrHistoryManager {
 
     fun registerQrUriToHistory(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         title: String,
         selectedQrUri: String,
     ){
         val qrHistoryLimitRowSize = 100
         val qrHistoryParentDirPath =
-            "${currentAppDirPath}/${UsePath.cmdclickQrSystemDirRelativePath}"
+            "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickQrSystemDirRelativePath}"
         val cmdclickQrHistoryFileName = UsePath.cmdclickQrHistoryFileName
         val qrHistoryList = ReadText(
             File(

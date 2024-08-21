@@ -26,10 +26,10 @@ object StartupHandler {
     private fun execInvoke(
         terminalFragment: TerminalFragment,
     ) {
-        val currentAppDirPath = terminalFragment.currentAppDirPath
+//        val currentAppDirPath = terminalFragment.currentAppDirPath
         val fannelName = terminalFragment.currentFannelName
         WebUrlVariables.makeUrlHistoryFile(
-            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+            "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         )
         val launchFannelName = if(
             fannelName == CommandClickScriptVariable.EMPTY_STRING

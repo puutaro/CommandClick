@@ -25,7 +25,6 @@ import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelInfoTool
 
 
 class ToolBarSettingButtonControl(
@@ -33,10 +32,9 @@ class ToolBarSettingButtonControl(
 ){
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
-    private val fannelInfoMap = cmdIndexFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
 
     private val settingButtonView = binding.cmdindexSettingButton
     private val menuMapList = MenuEnums.values().toList().map{
@@ -169,18 +167,18 @@ class ToolBarSettingButtonControl(
                 MenuEnums.INSTALL_FANNEL.itemName ->
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
-                        UsePath.cmdclickSystemAppDirPath,
+//                        UsePath.cmdclickDefaultAppDirPath,
                         SystemFannel.fannelRepoFannelName
                     )
                 MenuEnums.QR_SCAN.itemName ->
                     QrScanner.scanFromCamera(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                     )
                 MenuEnums.NO_SCROLL_SAVE_URL.itemName ->
                     NoScrollUrlSaver.save(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         String()
                     )
                 MenuEnums.USAGE.itemName ->
@@ -192,7 +190,7 @@ class ToolBarSettingButtonControl(
                 MenuEnums.MANAGE.itemName ->
                     ManageSubMenuDialog.launch(
                         cmdIndexFragment,
-                        currentAppDirPath
+//                        currentAppDirPath
                     )
                 MenuEnums.SETTING.itemName ->
                     SettingSubMenuDialog.launch(cmdIndexFragment)
@@ -207,7 +205,7 @@ class ToolBarSettingButtonControl(
         )
         SystemFannelLauncher.launch(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             UsePath.cmdclickPreferenceJsName,
         )
     }

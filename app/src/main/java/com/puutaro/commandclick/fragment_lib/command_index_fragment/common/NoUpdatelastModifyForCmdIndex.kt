@@ -7,7 +7,6 @@ class NoUpdatelastModifyForCmdIndex {
     private val guardDirPathList = listOf(
         UsePath.cmdclickAppHistoryDirAdminPath,
         UsePath.cmdclickAppDirAdminPath,
-        UsePath.cmdclickSystemAppDirPath
     )
     fun judge(
         currentAppDirPath: String

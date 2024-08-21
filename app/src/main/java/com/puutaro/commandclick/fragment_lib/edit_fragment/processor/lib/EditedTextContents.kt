@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -21,9 +22,10 @@ class EditedTextContents(
 ) {
 
     private val fannelInfoMap = editFragment.fannelInfoMap
-    private val currentAppDirPath = fannelInfoMap.get(
-        FannelInfoSetting.current_app_dir.name
-    ) ?: FannelInfoSetting.current_app_dir.defalutStr
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        fannelInfoMap.get(
+//        FannelInfoSetting.current_app_dir.name
+//    ) ?: FannelInfoSetting.current_app_dir.defalutStr
     private val currentScriptFileName = fannelInfoMap.get(
         FannelInfoSetting.current_fannel_name.name
     ) ?: FannelInfoSetting.current_fannel_name.defalutStr
@@ -84,7 +86,7 @@ class EditedTextContents(
                 editFragment.setReplaceVariableMap
             )
             else -> File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 currentScriptFileName,
             ).absolutePath
         }
@@ -108,7 +110,7 @@ class EditedTextContents(
         ) return
         FileSystems.updateWeekPastLastModified(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 currentScriptFileName
             ).absolutePath
         )
@@ -124,7 +126,7 @@ class EditedTextContents(
         )?.joinToString("\n")?.let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                cmdclickDefaultAppDirPath,
                 currentScriptFileName,
             )
         }?.split("\n")

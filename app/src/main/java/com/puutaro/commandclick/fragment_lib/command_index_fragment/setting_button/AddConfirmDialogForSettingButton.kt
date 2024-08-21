@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -23,14 +24,15 @@ object AddConfirmDialogForSettingButton {
     private var addConfirmDialog: Dialog? = null
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String,
         languageTypeSelects: LanguageTypeSelects
     ){
         val context = cmdIndexFragment.context
             ?: return
         val binding = cmdIndexFragment.binding
-        val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val shellScriptPath = "${cmdclickDefaultAppDirPath}/${shellScriptName}"
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
                 .get(languageTypeSelects)
@@ -54,13 +56,13 @@ object AddConfirmDialogForSettingButton {
         confirmContentTextView?.text = "\tpath: path: ${shellScriptPath}"
         cancelButtonListener(
             binding,
-            currentAppDirPath,
+//            currentAppDirPath,
             shellScriptName
         )
         okButtonListener(
             binding,
             languageTypeToSectionHolderMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             shellScriptName,
         )
         addConfirmDialog?.setOnCancelListener {
@@ -79,7 +81,7 @@ object AddConfirmDialogForSettingButton {
 
     private fun cancelButtonListener(
         binding: CommandIndexFragmentBinding,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String
     ){
         val confirmCancelButton =
@@ -89,14 +91,14 @@ object AddConfirmDialogForSettingButton {
         confirmCancelButton?.setOnClickListener {
             addConfirmDialog?.dismiss()
             addConfirmDialog = null
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             FileSystems.removeFiles(
                 File(
-                    currentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     shellScriptName,
                 ).absolutePath
             )
             CommandListManager.execListUpdateForCmdIndex(
-                currentAppDirPath,
                 binding.cmdList,
             )
         }
@@ -105,7 +107,7 @@ object AddConfirmDialogForSettingButton {
     private fun okButtonListener(
         binding: CommandIndexFragmentBinding,
         languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String,
     ){
         val confirmOkButton =
@@ -118,7 +120,7 @@ object AddConfirmDialogForSettingButton {
             confirmOkExecutor(
                 binding,
                 languageTypeToSectionHolderMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 shellScriptName,
             )
         }
@@ -127,12 +129,13 @@ object AddConfirmDialogForSettingButton {
     private fun confirmOkExecutor(
         binding: CommandIndexFragmentBinding,
         languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String,
     ){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val shellContentsList = ReadText(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 shellScriptName
             ).absolutePath
         ).textToList()
@@ -147,13 +150,13 @@ object AddConfirmDialogForSettingButton {
         )
         FileSystems.writeFile(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 shellScriptName,
             ).absolutePath,
             shellScriptContentsQuoteComp
         )
         CommandListManager.execListUpdateForCmdIndex(
-            currentAppDirPath,
+//            currentAppDirPath,
             binding.cmdList,
         )
     }

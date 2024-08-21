@@ -6,6 +6,7 @@ import android.widget.*
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
@@ -33,9 +34,9 @@ object ListContentsSelectSpinnerViewProducer {
         val context = editParameters.context
         val currentId = editParameters.currentId
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val scriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -65,7 +66,7 @@ object ListContentsSelectSpinnerViewProducer {
 
         val selectJsPath = getSelectJsPath(
             elcbMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptName
         )
 
@@ -167,9 +168,9 @@ object ListContentsSelectSpinnerViewProducer {
             true -> {
                 val fannelInfoMap = editParameters.fannelInfoMap
                 val setReplaceVariableMap = editParameters.setReplaceVariableMap
-                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                    fannelInfoMap
-                )
+//                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                    fannelInfoMap
+//                )
                 val currentFannelName = FannelInfoTool.getCurrentFannelName(
                     fannelInfoMap
                 )
@@ -180,7 +181,7 @@ object ListContentsSelectSpinnerViewProducer {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it,
                         setReplaceVariableMap,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         currentFannelName
                     )
                 }
@@ -211,7 +212,7 @@ object ListContentsSelectSpinnerViewProducer {
 
     fun getSelectJsPath(
         elcbMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         scriptName: String,
     ): String {
         return elcbMap?.get(ListContentsEditKey.selectJsPath.name)
@@ -221,7 +222,7 @@ object ListContentsSelectSpinnerViewProducer {
                 ) return@let String()
                 ScriptPreWordReplacer.replace(
                     it,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     scriptName
                 )
             } ?: String()
@@ -264,7 +265,7 @@ object ListContentsSelectSpinnerViewProducer {
 
     fun setInitMarkToListContents(
         elcbMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ){
         val listContentsFilePath = elcbMap?.get(ListContentsEditKey.listPath.name)
         if(
@@ -274,9 +275,10 @@ object ListContentsSelectSpinnerViewProducer {
         if(
             deleteStr.isNullOrEmpty()
         ) return
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         if(
-            !listContentsFilePath.startsWith(currentAppDirPath)
-            || listContentsFilePath == currentAppDirPath
+            !listContentsFilePath.startsWith(cmdclickDefaultAppDirPath)
+            || listContentsFilePath == cmdclickDefaultAppDirPath
         ) return
         val listContentsList = ReadText(
             listContentsFilePath

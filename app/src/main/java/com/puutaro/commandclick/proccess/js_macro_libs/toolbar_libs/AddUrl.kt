@@ -23,12 +23,12 @@ object AddUrl {
         ) ?: emptyMap()
 
         val urlStringOrMacro = argsMap.get(AddUrlKey.URL.key) ?: String()
-        val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val fannelInfoMap = editFragment.fannelInfoMap
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val urlString = HistoryUrlContents.extract(
-            currentAppDirPath,
+//            currentAppDirPath,
             urlStringOrMacro
         ) ?: String()
         val onSearchBtn =
@@ -36,7 +36,7 @@ object AddUrl {
                 ?: String()
         ExecJsLoad.execExternalJs(
             editFragment,
-            UsePath.cmdclickSystemAppDirPath,
+//            UsePath.cmdclickDefaultAppDirPath,
             UsePath.savePageUrlDialogFannelName,
             listOf(
                 urlString,

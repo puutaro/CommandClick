@@ -8,11 +8,11 @@ import java.io.File
 object HistoryUrlContents {
 
     fun extract(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         macroStr: String,
     ): String? {
         val appUrlSystemPath = File(
-            currentAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
         ).absolutePath
         return when(macroStr) {

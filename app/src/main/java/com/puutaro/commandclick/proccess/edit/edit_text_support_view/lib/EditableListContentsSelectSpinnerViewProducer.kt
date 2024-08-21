@@ -26,9 +26,9 @@ object EditableListContentsSelectSpinnerViewProducer {
     ): Spinner {
         val currentFragment = editParameters.currentFragment
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val scriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -64,7 +64,7 @@ object EditableListContentsSelectSpinnerViewProducer {
         )
         val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
             elcbMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptName,
         )
         val initMark = elcbMap?.get(
@@ -75,7 +75,7 @@ object EditableListContentsSelectSpinnerViewProducer {
             ?: String()
         setInitMarkToListContents(
             elcbMap,
-            currentAppDirPath,
+//            currentAppDirPath,
         )
 
         val fileObj = File(listContentsFilePath)

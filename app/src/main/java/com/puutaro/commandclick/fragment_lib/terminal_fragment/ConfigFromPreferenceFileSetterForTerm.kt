@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -7,7 +8,6 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -24,9 +24,10 @@ object ConfigFromPreferenceFileSetterForTerm {
         terminalFragment: TerminalFragment,
     ){
         val context = terminalFragment.context
-        CmdClickSystemFannelManager.createConfigFannel(
-            context
-        )
+        val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
+//        CmdClickSystemFannelManager.createConfigFannel(
+//            context
+//        )
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -41,24 +42,25 @@ object ConfigFromPreferenceFileSetterForTerm {
         ) as String
 
         val fannelInfoMap = terminalFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
+        CmdClickSystemFannelManager.createPreferenceFannel(
+            context,
+            fannelInfoMap,
         )
-        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
 
-        val settingVariableListFromConfig = CommandClickVariables.extractValListFromHolder(
+        val settingVariableListFromPreference = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
-                UsePath.cmdclickSystemAppDirPath,
-                UsePath.cmdclickConfigFileName
+//                UsePath.cmdclickDefaultAppDirPath,
+                cmdclickPreferenceJsName
             ),
             settingSectionStart,
             settingSectionEnd
         )
 
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.ON_ADBLOCK,
             CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
             SettingVariableSelects.OnAdblockSelects.INHERIT.name,
@@ -70,7 +72,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         )
 
         terminalFragment.onTermBackendWhenStart = SettingVariableReader.getCbValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START,
             CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
             SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
@@ -82,7 +84,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         )
 
         terminalFragment.onTermShortWhenLoad = SettingVariableReader.getCbValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD,
             CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
             SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
@@ -94,7 +96,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         )
 
         terminalFragment.disableShowToolbarWhenHighlight = SettingVariableReader.getCbValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
             SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.INHERIT.name,
@@ -106,20 +108,20 @@ object ConfigFromPreferenceFileSetterForTerm {
         )
 
         terminalFragment.fontZoomPercent = SettingVariableReader.getNumValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE,
             "1"
         )
 
         terminalFragment.terminalColor = SettingVariableReader.getStrValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.TERMINAL_COLOR,
             CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
         )
         val onRootfsSdCardSaveSelectsOn = SettingVariableSelects.OnRootfsSdCardSaveSelects.ON.name
         SettingVariableReader.getCbValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.ON_ROOTFS_SDCARD_SAVE,
             String(),
             String(),
@@ -137,65 +139,89 @@ object ConfigFromPreferenceFileSetterForTerm {
         }
 
         terminalFragment.terminalFontColor = SettingVariableReader.getStrValue(
-            settingVariableListFromConfig,
+            settingVariableListFromPreference,
             CommandClickScriptVariable.TERMINAL_FONT_COLOR,
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        CmdClickSystemFannelManager.createPreferenceFannel(
-            context,
-            fannelInfoMap,
-        )
-        val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
-        val currentScriptFileName = ValidFannelNameGetterForTerm.get(
-            terminalFragment
+        terminalFragment.srcImageAnchorLongPressMenuFilePath =
+            LongPressPathDecider.decide(
+                terminalFragment,
+//                    currentAppDirPath,
+                cmdclickPreferenceJsName,
+                settingVariableListFromPreference,
+                CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+            )
+
+        terminalFragment.srcAnchorLongPressMenuFilePath =
+            LongPressPathDecider.decide(
+                terminalFragment,
+//                    currentAppDirPath,
+                cmdclickPreferenceJsName,
+                settingVariableListFromPreference,
+                CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+            )
+        terminalFragment.imageLongPressMenuFilePath =
+            LongPressPathDecider.decide(
+                terminalFragment,
+//                    currentAppDirPath,
+                cmdclickPreferenceJsName,
+                settingVariableListFromPreference,
+                CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+            )
+
+        terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
+            ScriptPreWordReplacer.replace(
+                UsePath.noScrollSaveUrlsFilePath,
+//                    terminalFragment.currentAppDirPath,
+                cmdclickPreferenceJsName,
+            )
         )
 
+        terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
+            settingVariableListFromPreference,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            listOf(
+                UsePath.cmdClickMonitorFileName_2,
+                UsePath.cmdClickMonitorFileName_3,
+                UsePath.cmdClickMonitorFileName_4,
+            ),
+        ).let {
+            if(
+                MonitorFileManager.monitorFileList.contains(it)
+            ) return@let it
+            UsePath.cmdClickMonitorFileName_1
+        }
+        val currentFannelName = terminalFragment.currentFannelName
         if(
-            currentScriptFileName != cmdclickPreferenceJsName
-        ){
-            val settingVariableListFromPreference = CommandClickVariables.extractValListFromHolder(
-                CommandClickVariables.makeMainFannelConList(
-                    terminalFragment.currentAppDirPath,
-                    cmdclickPreferenceJsName
+           FannelInfoTool.isEmptyFannelName(currentFannelName)
+           || currentFannelName == cmdclickPreferenceJsName
+        ) {
+            terminalFragment.terminalOn = SettingVariableReader.getStrValue(
+                settingVariableListFromPreference,
+                CommandClickScriptVariable.TERMINAL_DO,
+                CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+            )
+            terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
+                CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
+                terminalFragment.fannelInfoMap,
+                terminalFragment.setReplaceVariableMap,
+                settingVariableListFromPreference,
+            )
+            terminalFragment.onLaunchUrlHistoryByBackstack = SettingVariableReader.getCbValue(
+                settingVariableListFromPreference,
+                CommandClickScriptVariable.ON_LAUNCH_URL_HISTORY_BY_BACKSTACK,
+                terminalFragment.onLaunchUrlHistoryByBackstack,
+                terminalFragment.onLaunchUrlHistoryByBackstack,
+                terminalFragment.onLaunchUrlHistoryByBackstack,
+                listOf(
+                    SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON.name,
+                    SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF.name,
                 ),
-                settingSectionStart,
-                settingSectionEnd
             )
-            terminalFragment.srcImageAnchorLongPressMenuFilePath =
-                LongPressPathDecider.decide(
-                    terminalFragment,
-                    currentAppDirPath,
-                    cmdclickPreferenceJsName,
-                    settingVariableListFromPreference,
-                    CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-                )
-
-            terminalFragment.srcAnchorLongPressMenuFilePath =
-                LongPressPathDecider.decide(
-                    terminalFragment,
-                    currentAppDirPath,
-                    cmdclickPreferenceJsName,
-                    settingVariableListFromPreference,
-                    CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-                )
-            terminalFragment.imageLongPressMenuFilePath =
-                LongPressPathDecider.decide(
-                    terminalFragment,
-                    currentAppDirPath,
-                    cmdclickPreferenceJsName,
-                    settingVariableListFromPreference,
-                    CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
-                )
-
-            terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
-                ScriptPreWordReplacer.replace(
-                    UsePath.noScrollSaveUrlsFilePath,
-                    terminalFragment.currentAppDirPath,
-                    cmdclickPreferenceJsName,
-                )
-            )
-
             terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
                 settingVariableListFromPreference,
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
@@ -213,15 +239,94 @@ object ConfigFromPreferenceFileSetterForTerm {
                 ) return@let it
                 UsePath.cmdClickMonitorFileName_1
             }
+            terminalFragment.onUrlHistoryRegister = SettingVariableReader.getCbValue(
+                settingVariableListFromPreference,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                listOf(
+                    SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name,
+                    SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name,
+                ),
+            )
+            return
         }
+//        val currentScriptFileName = ValidFannelNameGetterForTerm.get(
+//            terminalFragment
+//        )
+
+//        if(
+//            currentScriptFileName != cmdclickPreferenceJsName
+//        ){
+//            val settingVariableListFromPreference = CommandClickVariables.extractValListFromHolder(
+//                CommandClickVariables.makeMainFannelConList(
+////                    terminalFragment.currentAppDirPath,
+//                    cmdclickPreferenceJsName
+//                ),
+//                settingSectionStart,
+//                settingSectionEnd
+//            )
+//            terminalFragment.srcImageAnchorLongPressMenuFilePath =
+//                LongPressPathDecider.decide(
+//                    terminalFragment,
+////                    currentAppDirPath,
+//                    cmdclickPreferenceJsName,
+//                    settingVariableListFromPreference,
+//                    CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+//                )
+//
+//            terminalFragment.srcAnchorLongPressMenuFilePath =
+//                LongPressPathDecider.decide(
+//                    terminalFragment,
+////                    currentAppDirPath,
+//                    cmdclickPreferenceJsName,
+//                    settingVariableListFromPreference,
+//                    CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+//                )
+//            terminalFragment.imageLongPressMenuFilePath =
+//                LongPressPathDecider.decide(
+//                    terminalFragment,
+////                    currentAppDirPath,
+//                    cmdclickPreferenceJsName,
+//                    settingVariableListFromPreference,
+//                    CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+//                )
+
+//            terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
+//                ScriptPreWordReplacer.replace(
+//                    UsePath.noScrollSaveUrlsFilePath,
+////                    terminalFragment.currentAppDirPath,
+//                    cmdclickPreferenceJsName,
+//                )
+//            )
+
+//            terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
+//                settingVariableListFromPreference,
+//                CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
+//                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+//                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+//                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+//                listOf(
+//                    UsePath.cmdClickMonitorFileName_2,
+//                    UsePath.cmdClickMonitorFileName_3,
+//                    UsePath.cmdClickMonitorFileName_4,
+//                ),
+//            ).let {
+//                if(
+//                    MonitorFileManager.monitorFileList.contains(it)
+//                ) return@let it
+//                UsePath.cmdClickMonitorFileName_1
+//            }
+//        }
         val fannelContentsList = CommandClickVariables.makeMainFannelConList(
-            terminalFragment.currentAppDirPath,
-            currentScriptFileName
+//            terminalFragment.currentAppDirPath,
+            currentFannelName
         )
         val settingVariableList = makeSettingVariableListForTerm(
             terminalFragment,
             fannelContentsList,
-            currentScriptFileName,
+            currentFannelName,
             settingSectionStart,
             settingSectionEnd,
         )
@@ -355,7 +460,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         ) terminalFragment.srcImageAnchorLongPressMenuFilePath =
                 LongPressPathDecider.decide(
                     terminalFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                     settingVariableList,
                     CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
@@ -370,7 +475,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         ) terminalFragment.srcAnchorLongPressMenuFilePath =
             LongPressPathDecider.decide(
                 terminalFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
                 settingVariableList,
                 CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
@@ -385,7 +490,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         ) terminalFragment.imageLongPressMenuFilePath =
             LongPressPathDecider.decide(
                 terminalFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
                 settingVariableList,
                 CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
@@ -394,8 +499,8 @@ object ConfigFromPreferenceFileSetterForTerm {
         val noScrollSaveUrls = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(
                 UsePath.noScrollSaveUrlsFilePath,
-                terminalFragment.currentAppDirPath,
-                currentScriptFileName,
+//                terminalFragment.currentAppDirPath,
+                currentFannelName,
             )
         )
         if(
@@ -409,7 +514,7 @@ private object LongPressPathDecider {
 
     fun decide(
         terminalFragment: TerminalFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelNameSrc: String,
         settingVariableList: List<String>?,
         settingValName: String,
@@ -436,7 +541,7 @@ private object LongPressPathDecider {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 repPath,
                 terminalFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
         }

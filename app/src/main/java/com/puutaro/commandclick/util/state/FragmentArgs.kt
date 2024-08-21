@@ -15,12 +15,12 @@ class EditFragmentArgs(
         enum class FragmentArgsKey(
             val key: String,
         ){
-            CURRENT_APP_DIR_PATH(FannelInfoSetting.current_app_dir.name),
+//            CURRENT_APP_DIR_PATH(FannelInfoSetting.current_app_dir.name),
             CURRENT_FANNEL_NAME(FannelInfoSetting.current_fannel_name.name),
             ON_SHORTCUT(FannelInfoSetting.on_shortcut.name),
             CURRENT_FANNEL_STATE(FannelInfoSetting.current_fannel_state.name),
             EDIT_TYPE("editType"),
-            SRC_CURRENT_APP_DIR_PATH("src_${FannelInfoSetting.current_app_dir.name}"),
+//            SRC_CURRENT_APP_DIR_PATH("src_${FannelInfoSetting.current_app_dir.name}"),
             SRC_CURRENT_FANNEL_NAME("src_${FannelInfoSetting.current_fannel_name.name}"),
             SRC_ON_SHORTCUT("src_${FannelInfoSetting.on_shortcut.name}"),
             SRC_CURRENT_FANNEL_STATE("src_${FannelInfoSetting.current_fannel_state.name}"),
@@ -41,13 +41,13 @@ class EditFragmentArgs(
         }
 
         fun createFannelInfoMap(
-            currentAppDirPath: String,
+//            currentAppDirPath: String,
             currentFannelName: String,
             onShortcut: String,
             fannelState: String,
         ): Map<String, String> {
             return mapOf(
-                FannelInfoSetting.current_app_dir.name to currentAppDirPath,
+//                FannelInfoSetting.current_app_dir.name to currentAppDirPath,
                 FannelInfoSetting.current_fannel_name.name to currentFannelName,
                 FannelInfoSetting.on_shortcut.name to onShortcut,
                 FannelInfoSetting.current_fannel_state.name to fannelState,
@@ -57,10 +57,10 @@ class EditFragmentArgs(
         fun getFannelInfoMap(
             fragArgsBundle:  Bundle?,
         ): Map<String, String> {
-            val currentAppDirPath =
-                fragArgsBundle?.getString(
-                    FragmentArgsKey.CURRENT_APP_DIR_PATH.key
-                ) ?: FannelInfoSetting.current_app_dir.defalutStr
+//            val currentAppDirPath =
+//                fragArgsBundle?.getString(
+//                    FragmentArgsKey.CURRENT_APP_DIR_PATH.key
+//                ) ?: FannelInfoSetting.current_app_dir.defalutStr
             val currentFannelName =
                 fragArgsBundle?.getString(
                     FragmentArgsKey.CURRENT_FANNEL_NAME.key
@@ -74,7 +74,7 @@ class EditFragmentArgs(
                     FragmentArgsKey.CURRENT_FANNEL_STATE.key
                 ) ?: FannelInfoSetting.current_fannel_state.defalutStr
             return mapOf(
-                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
+//                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
                 FragmentArgsKey.CURRENT_FANNEL_NAME.key to currentFannelName,
                 FragmentArgsKey.ON_SHORTCUT.key to onShortcut,
                 FragmentArgsKey.CURRENT_FANNEL_STATE.key to currentFannelState,
@@ -84,12 +84,12 @@ class EditFragmentArgs(
         fun getSrcFannelInfoMap(
             fragArgsBundle: Bundle?,
         ): Map<String, String>? {
-            val currentAppDirPath =
-                fragArgsBundle?.getString(
-                    FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key
-                ) ?: return null
+//            val currentAppDirPath =
+//                fragArgsBundle?.getString(
+//                    FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key
+//                ) ?: return null
             val currentFannelName =
-                fragArgsBundle.getString(
+                fragArgsBundle?.getString(
                     FragmentArgsKey.SRC_CURRENT_FANNEL_NAME.key
                 ) ?: return null
             val onShortcut =
@@ -101,7 +101,7 @@ class EditFragmentArgs(
                     FragmentArgsKey.SRC_CURRENT_FANNEL_STATE.key
                 ) ?: FannelInfoSetting.current_fannel_state.defalutStr
             return mapOf(
-                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
+//                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
                 FragmentArgsKey.CURRENT_FANNEL_NAME.key to currentFannelName,
                 FragmentArgsKey.ON_SHORTCUT.key to onShortcut,
                 FragmentArgsKey.CURRENT_FANNEL_STATE.key to currentFannelState,
@@ -126,9 +126,9 @@ class EditFragmentArgs(
         val fragArgsBundle = Bundle()
 
         srcFannelInfoMap?.let {
-            val srcCurrentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                it,
-            )
+//            val srcCurrentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                it,
+//            )
             val srcCurrentFannelName =FannelInfoTool.getCurrentFannelName(
                 it,
             )
@@ -138,10 +138,10 @@ class EditFragmentArgs(
             val srcCurrentFannelState = FannelInfoTool.getCurrentStateName(
                 it,
             )
-            fragArgsBundle.putString(
-                FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key,
-                srcCurrentAppDirPath,
-            )
+//            fragArgsBundle.putString(
+//                FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key,
+//                srcCurrentAppDirPath,
+//            )
             fragArgsBundle.putString(
                 FragmentArgsKey.SRC_CURRENT_FANNEL_NAME.key,
                 srcCurrentFannelName,
@@ -155,9 +155,9 @@ class EditFragmentArgs(
                 srcCurrentFannelState,
             )
         }
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -167,10 +167,10 @@ class EditFragmentArgs(
         val currentFannelState = FannelInfoTool.getCurrentStateName(
             fannelInfoMap
         )
-        fragArgsBundle.putString(
-            FragmentArgsKey.CURRENT_APP_DIR_PATH.key,
-            currentAppDirPath,
-        )
+//        fragArgsBundle.putString(
+//            FragmentArgsKey.CURRENT_APP_DIR_PATH.key,
+//            currentAppDirPath,
+//        )
         fragArgsBundle.putString(
             FragmentArgsKey.CURRENT_FANNEL_NAME.key,
             currentFannelName,

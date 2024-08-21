@@ -19,11 +19,11 @@ object UrlHistoryPath {
     }
 
     fun getCapturePngPathsByUrl(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String,
     ): List<String>? {
         val capturePartsPngDirPath = getCapturePartsPngDirPath(
-            currentAppDirPath,
+//            currentAppDirPath,
             url
         )
         if(
@@ -37,41 +37,41 @@ object UrlHistoryPath {
     }
 
     fun makeCaptureHistoryDirPath(
-        currentAppDirPath: String
+//        currentAppDirPath: String
     ): String {
         return File(
-            File(currentAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
+            File(UsePath.cmdclickDefaultAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
             "capture"
         ).absolutePath
     }
 
     fun makeCaptureHistoryLastModifiedFilePath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String,
     ): String {
         return File(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(url),
         ).absolutePath + lastModifyExtend
     }
 
     fun getCaptureUniqueDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String
     ): String {
         return File(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(url),
         ).absolutePath
     }
 
 
     fun getCapturePartsPngDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentUrl: String,
     ): String {
         return listOf(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
             "partPng"
         ).joinToString("/").replace(
@@ -80,11 +80,11 @@ object UrlHistoryPath {
     }
 
     fun getCaptureGifTextPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentUrl: String,
     ): String {
         return listOf(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
             "gif.txt"
         ).joinToString("/").replace(
@@ -93,11 +93,11 @@ object UrlHistoryPath {
     }
 
     fun getCaptureGifPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentUrl: String,
     ): String {
         return listOf(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
             "gif.gif"
         ).joinToString("/").replace(

@@ -38,7 +38,7 @@ object MenuSettingTool {
         context: Context?,
         busyboxExecutor: BusyboxExecutor?,
         settingMenuMapCon: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
     ): List<List<Pair<String, String>>> {
@@ -47,7 +47,7 @@ object MenuSettingTool {
         val menuPairConListSrc = SetReplaceVariabler.execReplaceByReplaceVariables(
                 settingMenuMapCon,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             ).let {
                 QuoteTool.splitBySurroundedIgnore(
@@ -266,7 +266,7 @@ private object AlterToolForMenu{
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             alterValue,
             replaceVariableMap,
-            String(),
+//            String(),
             String()
         ).let {
             CmdClickMap.createMap(

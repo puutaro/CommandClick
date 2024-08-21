@@ -14,7 +14,7 @@ object UrlCaptureHistoryTool {
     private var beforeHash = String()
 
     fun insertToHistory(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentUrl: String?,
         capture: Bitmap?,
     ){
@@ -51,12 +51,12 @@ object UrlCaptureHistoryTool {
         val smallBitmap = BitmapTool.resizeByMaxHeight(capture, 700.0)
         val byteArray = BitmapTool.convertBitmapToByteArray(smallBitmap, 100)
         val captureUniqueDirPath = UrlHistoryPath.getCaptureUniqueDirPath(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentUrl
         )
         FileSystems.createDirs(captureUniqueDirPath)
         val partsPngDirPath = UrlHistoryPath.getCapturePartsPngDirPath(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentUrl,
         )
 //        FileSystems.writeFile(
@@ -81,7 +81,7 @@ object UrlCaptureHistoryTool {
             byteArray,
         )
         val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentUrl,
         )
 //        val gifPath = UrlHistoryPath.getCaptureGifPath(
@@ -90,7 +90,7 @@ object UrlCaptureHistoryTool {
 //        )
         FileSystems.writeFile(
             UrlHistoryPath.makeCaptureHistoryLastModifiedFilePath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentUrl,
             ),
             String()

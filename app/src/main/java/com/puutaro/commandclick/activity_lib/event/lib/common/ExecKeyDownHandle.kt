@@ -126,6 +126,7 @@ private object BackstackManager {
                 }
                 if(
                     currentBottomFragment is CommandIndexFragment
+                    || activity.supportFragmentManager.backStackEntryCount > 0
                 ) {
                     execPopBackStackImmediate(
                         activity,
@@ -310,10 +311,10 @@ private object BackstackManager {
         supportFragmentManager: FragmentManager,
     ){
         val sharedPref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharedPref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharedPref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharedPref,
             FannelInfoSetting.current_fannel_name
@@ -325,7 +326,7 @@ private object BackstackManager {
         val targetFragmentInstance = TargetFragmentInstance()
         val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState,
         )

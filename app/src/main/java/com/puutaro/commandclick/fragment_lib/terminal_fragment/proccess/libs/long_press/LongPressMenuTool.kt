@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lo
 
 import android.content.Context
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -20,9 +21,10 @@ object LongPressMenuTool {
 
     fun makeExecJsPath(
         terminalFragment: TerminalFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptNameOrPath: File,
     ): String {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelName = makeCurrentFannelName(
             terminalFragment,
         )
@@ -31,12 +33,12 @@ object LongPressMenuTool {
             isScriptName
         ) {
             true
-            -> "${currentAppDirPath}/${selectedScriptNameOrPath.name}"
+            -> "${cmdclickDefaultAppDirPath}/${selectedScriptNameOrPath.name}"
 
             else
             -> ScriptPreWordReplacer.replace(
                 selectedScriptNameOrPath.absolutePath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
         }
@@ -92,7 +94,7 @@ object LongPressMenuTool {
             context,
             srcFannelPath,
         )
-        val longPressFannelMainAppDirPath = CcPathTool.getMainAppDirPath(srcFannelPath)
+//        val longPressFannelMainAppDirPath = CcPathTool.getMainAppDirPath(srcFannelPath)
         val longPressFannelName =  File(srcFannelPath).name
         return CommandClickVariables.returnSettingVariableList(
             ReadText(srcFannelPath).textToList(),
@@ -101,7 +103,7 @@ object LongPressMenuTool {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 repValMap,
-                longPressFannelMainAppDirPath,
+//                longPressFannelMainAppDirPath,
                 longPressFannelName
             )
         }?.split("\n")
@@ -119,7 +121,7 @@ object LongPressMenuTool {
             longPressMenuFilePath
         )
         val mainFannelPathObj = File(mainFannelPath)
-        val currentAppDirPath = mainFannelPathObj.parent ?: String()
+//        val currentAppDirPath = mainFannelPathObj.parent ?: String()
         val currentFannelName = mainFannelPathObj.name
         val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,
@@ -132,7 +134,7 @@ object LongPressMenuTool {
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             srcLongPressListCon,
             repValMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         ).split("\n")
     }

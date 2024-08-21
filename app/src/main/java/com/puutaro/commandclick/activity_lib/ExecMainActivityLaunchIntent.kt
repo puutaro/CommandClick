@@ -13,13 +13,13 @@ object ExecMainActivityLaunchIntent {
         execIntent.action = Intent.ACTION_MAIN
         execIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         val startUpPref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            startUpPref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            startUpPref,
+//            FannelInfoSetting.current_app_dir
+//        )
         FannelInfoTool.putAllFannelInfo(
             startUpPref,
-            currentAppDirPath = currentAppDirPath,
+//            currentAppDirPath = currentAppDirPath,
             currentFannelName = FannelInfoSetting.current_fannel_name.defalutStr,
             onShortcutValue = FannelInfoSetting.on_shortcut.defalutStr,
             currentFannelState = FannelInfoSetting.current_fannel_state.defalutStr

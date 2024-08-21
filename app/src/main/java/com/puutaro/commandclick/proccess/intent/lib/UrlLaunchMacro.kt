@@ -7,11 +7,11 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 object UrlLaunchMacro {
     fun launch(
         terminalViewModel: TerminalViewModel,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         onUrlLaunchMacro: String,
     ) {
         val launchUrl = HistoryUrlContents.extract(
-            recentAppDirPath,
+//            recentAppDirPath,
             onUrlLaunchMacro
         )
         if(

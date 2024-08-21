@@ -33,32 +33,32 @@ object CmdClickSystemFannelManager {
                     emptyList()
                 )
             }
-            withContext(Dispatchers.IO){
-                createConfigFannel(context)
-            }
+//            withContext(Dispatchers.IO){
+//                createConfigFannel(context)
+//            }
         }
     }
 
-    fun createConfigFannel(
-        context: Context?,
-    ){
-        FannelVersion.create(
-            context,
-            cmdclickDefaultAppDirPath,
-            "cmdclickConfig",
-        )
-    }
+//    fun createConfigFannel(
+//        context: Context?,
+//    ){
+//        FannelVersion.create(
+//            context,
+////            cmdclickDefaultAppDirPath,
+//            "cmdclickConfig",
+//        )
+//    }
 
     fun createPreferenceFannel(
         context: Context?,
         fannelInfoMap: Map<String, String>,
     ){
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         FannelVersion.create(
             context,
-            currentAppDirPath,
+//            currentAppDirPath,
             "preference",
         )
     }
@@ -66,7 +66,7 @@ object CmdClickSystemFannelManager {
     object FannelVersion {
         fun create(
             context: Context?,
-            targetAppDirPath: String,
+//            targetAppDirPath: String,
             fannelRawName: String,
         ) {
             val assetsPrefix = "${systemFannelDirName}/version"
@@ -89,9 +89,10 @@ object CmdClickSystemFannelManager {
             val infoDirAssetsPath = AssetsFileManager.concatAssetsPath(
                 listOf(fannelDirName, infoDirName),
             )
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             val curVersionFilePath =
                 File(
-                    targetAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     "${infoDirAssetsPath}/${versionTextName}"
                 ).absolutePath
             val assetsVersionFilePath =
@@ -141,7 +142,7 @@ object CmdClickSystemFannelManager {
                     listOf(fannelInfoDirAssetsPath, escapeTsvName)
                 )
             val curEscapeTsvPath = File(
-                targetAppDirPath,
+                cmdclickDefaultAppDirPath,
                 infoDirAssetsPath
             ).absolutePath.let { curInfoDirPath ->
                 File(
@@ -171,7 +172,7 @@ object CmdClickSystemFannelManager {
                 context,
                 fannelRawDirAssetsPath,
                 fannelRawDirAssetsPath,
-                targetAppDirPath,
+                cmdclickDefaultAppDirPath,
                 escapeMapList
             )
 //                }

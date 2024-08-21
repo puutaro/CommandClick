@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -13,7 +14,7 @@ import com.puutaro.commandclick.util.Keyboard
 object KeyListenerSetter {
     fun set(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ){
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
@@ -32,7 +33,6 @@ object KeyListenerSetter {
                     cmdIndexFragmentWeight == ReadLines.LONGTH
                 ) {
                     CommandListManager.execListUpdateForCmdIndex(
-                        currentAppDirPath,
                         cmdListView,
                     )
                     return false

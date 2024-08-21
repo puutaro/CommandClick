@@ -154,9 +154,9 @@ object EditableListContentsSelectGridViewProducer {
         elcbMap: Map<String, String>?,
     ){
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val scriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -170,7 +170,7 @@ object EditableListContentsSelectGridViewProducer {
 
         val selectJsPath = getSelectJsPath(
             elcbMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptName,
         )
         gridView.setOnItemClickListener {

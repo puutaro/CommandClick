@@ -43,7 +43,7 @@ object IndexInitHandler {
 //            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
 //            listener?.onBackstackDelete()
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+//        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         val onUrlLaunchIntent = UrlLaunchIntentAction.judge(
             activity
         )
@@ -57,28 +57,28 @@ object IndexInitHandler {
                 ).absolutePath
             )
         } else {
-            UpdateLastModifyFromSharePrefDir.update(startUpPref)
+            UpdateLastModifyFromSharePrefDir.update()
         }
 
-        val currentDirName = FileSystems.filterSuffixJsFiles(
-            cmdclickAppDirAdminPath,
-            "on"
-        ).firstOrNull()?.removeSuffix(
-            UsePath.JS_FILE_SUFFIX
-        ) ?: UsePath.cmdclickDefaultAppDirName
-        val currentAppDirPath = "${cmdclickAppDirPath}/${currentDirName}"
+//        val currentDirName = FileSystems.filterSuffixJsFiles(
+//            cmdclickAppDirAdminPath,
+//            "on"
+//        ).firstOrNull()?.removeSuffix(
+//            UsePath.JS_FILE_SUFFIX
+//        ) ?: UsePath.cmdclickDefaultAppDirName
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         FileSystems.createDirs(
-            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+            "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         )
         FileSystems.createDirs(
-            "${currentAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
+            "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
         )
         FileSystems.createDirs(
-            "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+            "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
         )
         FannelInfoTool.putAllFannelInfo(
             startUpPref,
-            currentAppDirPath,
+//            currentAppDirPath,
             FannelInfoSetting.current_fannel_name.defalutStr,
             FannelInfoSetting.on_shortcut.defalutStr,
             FannelInfoSetting.current_fannel_state.defalutStr
@@ -93,14 +93,14 @@ object IndexInitHandler {
         pageSearchToolbarManager.searchTopClickLisnter()
         pageSearchToolbarManager.searchDownClickLisnter()
 
-        if(
-            currentAppDirPath == UsePath.cmdclickSystemAppDirPath
-        ) return
+//        if(
+//            currentAppDirPath == UsePath.cmdclickSystemAppDirPath
+//        ) return
         FileSystems.updateLastModified(
             File(
                 UsePath.cmdclickAppHistoryDirAdminPath,
                 FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                 )
             ).absolutePath
         )
@@ -115,15 +115,15 @@ object IndexInitHandler {
             withContext(Dispatchers.IO){
                 urlFileSystems.getFannelList(context)
             }
-            StartFileMaker.makeForConfig(
-                cmdIndexFragment
-            )
+//            StartFileMaker.makeForConfig(
+////                cmdIndexFragment
+//            )
             CommandClickScriptVariable.makeButtonExecJS(
-                currentAppDirPath,
+//                currentAppDirPath,
                 UsePath.cmdclickButtonExecShellFileName
             )
             CommandClickScriptVariable.makeButtonExecJS(
-                currentAppDirPath,
+//                currentAppDirPath,
                 UsePath.cmdclickInternetButtonExecJsFileName,
                 UsePath.selectMenuFannelPath
             )
@@ -136,7 +136,7 @@ object IndexInitHandler {
                             semaphore.withPermit {
                                 urlFileSystems.createFile(
                                     context,
-                                    currentAppDirPath,
+                                    cmdclickDefaultAppDirPath,
                                     it.str
                                 )
                             }
@@ -157,12 +157,12 @@ object IndexInitHandler {
             )
             ConfigFromPreferenceFileSetter.set(
                 cmdIndexFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
             )
 
             AssetsFileManager.copyFileToDirFromAssets(
                 cmdIndexFragment.context,
-                "${currentAppDirPath}/${UsePath.cmdclickJsSystemDirRelativePath}",
+                "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickJsSystemDirRelativePath}",
                 AssetsFileManager.assetsClipToHistoryForBookmark
             )
         }

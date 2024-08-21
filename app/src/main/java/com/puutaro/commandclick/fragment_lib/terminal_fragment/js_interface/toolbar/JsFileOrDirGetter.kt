@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
@@ -16,9 +17,9 @@ class JsFileOrDirGetter(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -73,7 +74,7 @@ class JsFileOrDirGetter(
         */
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
@@ -86,7 +87,7 @@ class JsFileOrDirGetter(
                     ListIndexForEditAdapter.indexListMap,
                     ListIndexForEditAdapter.listIndexTypeKey
                 )
-                else -> currentAppDirPath
+                else -> UsePath.cmdclickDefaultAppDirPath
             }
         val filterMap = CmdClickMap.createMap(
             filterMapCon,

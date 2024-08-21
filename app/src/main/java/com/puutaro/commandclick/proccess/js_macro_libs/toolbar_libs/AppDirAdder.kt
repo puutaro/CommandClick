@@ -7,15 +7,15 @@ import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 
 object AppDirAdder {
 
-    fun add(
-        editFragment: EditFragment,
-    ){
-        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-            JsAppDirAdder::class.java.simpleName
-        )
-        ExecJsLoad.jsConLaunchHandler(
-            editFragment,
-            "${useClassName}.add_S();"
-        )
-    }
+//    fun add(
+//        editFragment: EditFragment,
+//    ){
+//        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+//            JsAppDirAdder::class.java.simpleName
+//        )
+//        ExecJsLoad.jsConLaunchHandler(
+//            editFragment,
+//            "${useClassName}.add_S();"
+//        )
+//    }
 }

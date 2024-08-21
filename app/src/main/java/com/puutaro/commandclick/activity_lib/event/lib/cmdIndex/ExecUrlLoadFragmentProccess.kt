@@ -57,10 +57,10 @@ object ExecUrlLoadFragmentProccess {
         activity: MainActivity,
     ){
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -70,7 +70,7 @@ object ExecUrlLoadFragmentProccess {
             FannelInfoSetting.current_fannel_state
         )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         )

@@ -34,9 +34,9 @@ class JsFileAdder(
     private val activity = terminalFragment.activity
     private val fannelInfoMap =
         terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -83,7 +83,7 @@ class JsFileAdder(
 
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
@@ -154,7 +154,7 @@ class JsFileAdder(
             compFileNameMap,
         )
         ListIndexDuplicate.isFileDetect(
-            parentDirPath,
+//            parentDirPath,
             compFileName,
         ).let {
             isDetect ->

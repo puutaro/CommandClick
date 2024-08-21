@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -19,9 +20,9 @@ class ListIndexArgsMaker(
 ) {
     val setReplaceVariableMap = editFragment.setReplaceVariableMap
     val fannelInfoMap = editFragment.fannelInfoMap
-    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     val currentFannelName = FannelInfoTool.getCurrentFannelName(
         fannelInfoMap
     )
@@ -35,9 +36,9 @@ class ListIndexArgsMaker(
                 fragment,
                 null
             )
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             val currentFannelName = FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap,
             )
@@ -63,7 +64,7 @@ class ListIndexArgsMaker(
             val settingMenuMapCon = when (isSettingMenuSettingFilePath) {
                 true -> SettingFile.read(
                     settingMenuSettingFilePathObj.absolutePath,
-                    File(currentAppDirPath, currentFannelName).absolutePath,
+                    File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,
                 )
 
@@ -85,7 +86,7 @@ class ListIndexArgsMaker(
                 fragment.context,
                 busyboxExecutor,
                 settingMenuMapCon,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
                 setReplaceVariableMap
             ).filter { it.isNotEmpty() }

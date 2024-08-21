@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.state
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 
 object FragmentTagManager {
@@ -10,26 +11,25 @@ object FragmentTagManager {
 
 
     fun makeCmdValEditTag(
-        parentAppDirPath: String,
+//        parentAppDirPath: String,
         scriptFileName: String,
         fannelState: String,
     ): String {
         return makeTag(
             FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str,
-            parentAppDirPath,
             scriptFileName,
             fannelState,
         )
     }
 
     fun makeSettingValEditTag(
-        parentAppDirPath: String,
+//        parentAppDirPath: String,
         scriptFileName: String,
         fannelState: String = String(),
     ): String {
         return makeTag(
             FragmentTagPrefix.Prefix.SETTING_VAL_EDIT_PREFIX.str,
-            parentAppDirPath,
+//            parentAppDirPath,
             scriptFileName,
             fannelState,
         )
@@ -37,13 +37,13 @@ object FragmentTagManager {
 
     private fun makeTag(
         prefix: String,
-        parentAppDirPath: String,
+//        parentAppDirPath: String,
         scriptFileName: String,
         fannelState: String = String(),
     ): String {
         return listOf(
             prefix,
-            parentAppDirPath,
+//            parentAppDirPath,
             scriptFileName,
             fannelState,
         ).joinToString(separateUnderBar)

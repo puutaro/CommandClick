@@ -21,7 +21,7 @@ object SetReplaceVariabler {
     fun makeSetReplaceVariableMap(
         context: Context?,
         settingVariableList: List<String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentScriptFileName: String,
     ): Map<String, String>? {
         if(
@@ -29,7 +29,7 @@ object SetReplaceVariabler {
         ) return null
 
         val fannelInfoMap = mapOf(
-            FannelInfoSetting.current_app_dir.name to currentAppDirPath,
+//            FannelInfoSetting.current_app_dir.name to currentAppDirPath,
             FannelInfoSetting.current_fannel_name.name to currentScriptFileName,
         )
         val noImportRepValMap = execMakeSetReplaceVariableMap(
@@ -183,9 +183,10 @@ object SetReplaceVariabler {
     fun execReplaceByReplaceVariables(
         replacingContents: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         scriptFileName: String
     ):String {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         var loadJsUrlSource = replacingContents
         setReplaceVariableCompleteMap?.forEach {
             val replaceVariable = "\${${it.key}}"
@@ -193,7 +194,7 @@ object SetReplaceVariabler {
                 .let {
                     ScriptPreWordReplacer.replace(
                         it,
-                        recentAppDirPath,
+//                        recentAppDirPath,
                         scriptFileName
                     )
                 }
@@ -204,7 +205,7 @@ object SetReplaceVariabler {
         }
         return ScriptPreWordReplacer.replace(
             loadJsUrlSource,
-            recentAppDirPath,
+//            recentAppDirPath,
             scriptFileName
         )
     }
@@ -225,18 +226,18 @@ object SetReplaceVariabler {
             LogSystems.stdWarn("not found file: ${mainFannlePath}")
             return null
         }
-        val currentAppDirPath = currentMainFannelPathObj.parent
-            ?: let {
-                LogSystems.stdWarn("not found dir: ${mainFannlePath}")
-                return null
-            }
+//        val currentAppDirPath = currentMainFannelPathObj.parent
+//            ?: let {
+//                LogSystems.stdWarn("not found dir: ${mainFannlePath}")
+//                return null
+//            }
         val mainFannelName = currentMainFannelPathObj.name
         val mainFannelConList = ReadText(
             mainFannlePath
         ).readText().let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 mainFannelName
             )
         }.split("\n")
@@ -262,7 +263,7 @@ object SetReplaceVariabler {
         return makeSetReplaceVariableMap(
             context,
             settingVariableList,
-            currentAppDirPath,
+//            currentAppDirPath,
             mainFannelName,
         )
     }
