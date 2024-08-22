@@ -4,8 +4,6 @@ import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.util.Intent.CurlManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 
 class UrlFileSystems {
@@ -57,17 +55,17 @@ class UrlFileSystems {
             ?: String()
     }
 
-    private suspend fun getFannelList(
-        context: Context?,
-    ): List<String> {
-        return withContext(Dispatchers.IO) {
-            execGetFannelList(
-                context
-            ).split("\n")
-        }
-    }
+//    private suspend fun getFannelList(
+//        context: Context?,
+//    ): List<String> {
+//        return withContext(Dispatchers.IO) {
+//            execGetFannelList(
+//                context
+//            ).split("\n")
+//        }
+//    }
 
-    fun execGetFannelList(
+    fun getFannelList(
         context: Context?
     ): String {
         val fannelListUrl =
@@ -83,6 +81,19 @@ class UrlFileSystems {
                 !CurlManager.isConnOk(it)
             ) return@let String()
             String(it)
+        }
+    }
+
+    fun extractFannelNameList(
+        fannelList: List<String>
+    ): List<String> {
+        val jsFileSuffix = UsePath.JS_FILE_SUFFIX
+        return fannelList.filter {
+            val file = File(it)
+            if (
+                !file.parent.isNullOrEmpty()
+            ) return@filter false
+            it.endsWith(jsFileSuffix)
         }
     }
 

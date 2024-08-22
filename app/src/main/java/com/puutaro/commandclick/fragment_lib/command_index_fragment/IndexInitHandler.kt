@@ -158,18 +158,11 @@ object IndexInitHandler {
                 UsePath.selectMenuFannelPath
             )
             val fannelList = withContext(Dispatchers.IO) {
-                urlFileSystems.execGetFannelList(context)
+                urlFileSystems.getFannelList(context)
                     .split("\n")
             }
             val fannelNameList = withContext(Dispatchers.IO) {
-                val jsFileSuffix = UsePath.JS_FILE_SUFFIX
-                fannelList.filter {
-                    val file = File(it)
-                    if (
-                        !file.parent.isNullOrEmpty()
-                    ) return@filter false
-                    it.endsWith(jsFileSuffix)
-                }
+                urlFileSystems.extractFannelNameList(fannelList)
             }
             val fannelRawNameToDownloadList = makeDownloadListByFannelRawName(
                 context,
