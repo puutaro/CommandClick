@@ -1,5 +1,8 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
+import android.content.Context
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -23,6 +26,26 @@ object UrlLaunchMacro {
         launchUrl(
             onUrlLaunchMacro,
             terminalViewModel
+        )
+    }
+
+    fun launchForIndex(
+        context: Context?,
+    ){
+        val launchUrlSrc = HistoryUrlContents.extract(
+            SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name,
+        )
+        val launchUrl = when (
+            launchUrlSrc.isNullOrEmpty()
+        ){
+            true -> {
+                WebUrlVariables.commandClickUsageUrl
+            }
+            else -> launchUrlSrc
+        }
+        BroadCastIntent.sendUrlCon(
+            context,
+            launchUrl
         )
     }
 

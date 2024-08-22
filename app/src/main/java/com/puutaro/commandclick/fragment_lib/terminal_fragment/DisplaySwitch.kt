@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import androidx.lifecycle.*
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -20,11 +21,50 @@ object DisplaySwitch {
         terminalFragment: TerminalFragment,
         terminalViewModel: TerminalViewModel,
     ): Job {
-        return monitorOutput(
-            terminalFragment,
-            terminalViewModel,
-            termUpdateMiliTime
-        )
+        val tag = terminalFragment.tag
+        val isIndexTerminal = !tag.isNullOrEmpty()
+                && tag == terminalFragment.context?.getString(R.string.index_terminal_fragment)
+        return when(isIndexTerminal) {
+            true -> urlLaunch(
+                terminalFragment,
+                terminalViewModel,
+            )
+            else -> monitorOutput(
+                terminalFragment,
+                terminalViewModel,
+                termUpdateMiliTime
+            )
+        }
+    }
+}
+
+private fun urlLaunch(
+    terminalFragment: TerminalFragment,
+    terminalViewModel: TerminalViewModel,
+): Job {
+    terminalFragment.firstDisplayUpdate = false
+    return CoroutineScope(Dispatchers.IO).launch {
+        terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED){
+            withContext(Dispatchers.IO){
+                while (true) {
+                    delay(100)
+                    if(!terminalViewModel.onDisplayUpdate) continue
+                    if(
+                        terminalViewModel.launchUrl.isNullOrEmpty()
+                    ) continue
+                    val launchUrl = terminalViewModel.launchUrl
+                    terminalViewModel.launchUrl = null
+                    withContext(Dispatchers.Main) {
+                        setWebView(
+                            terminalFragment,
+                            String(),
+                            terminalViewModel,
+                            launchUrl
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -33,6 +73,9 @@ private fun monitorOutput(
     terminalViewModel: TerminalViewModel,
     termUpdateMilitime: Long,
 ): Job {
+    val tag = terminalFragment.tag
+    val isIndexTerminal = !tag.isNullOrEmpty()
+            && tag == terminalFragment.context?.getString(R.string.index_terminal_fragment)
     return CoroutineScope(Dispatchers.IO).launch {
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -47,7 +90,8 @@ private fun monitorOutput(
             }
             withContext(Dispatchers.Main){
                 if(
-                    !terminalFragment.firstDisplayUpdate
+                    isIndexTerminal
+                    || !terminalFragment.firstDisplayUpdate
                 ) return@withContext
                 firstSetWebView(
                     terminalFragment,
