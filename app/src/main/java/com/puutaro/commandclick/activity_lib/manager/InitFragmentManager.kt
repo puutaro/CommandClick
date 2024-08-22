@@ -212,7 +212,7 @@ class InitFragmentManager(
 //            startUpPref,
 //            FannelInfoSetting.current_app_dir
 //        )
-        val preferenceScriptFileName = FannelInfoTool.getStringFromFannelInfo(
+        val fannelName = FannelInfoTool.getStringFromFannelInfo(
             startUpPref,
             FannelInfoSetting.current_fannel_name
         )
@@ -225,17 +225,14 @@ class InitFragmentManager(
             FannelInfoSetting.current_fannel_state
         )
 
-        val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
-
         if (
-            preferenceScriptFileName.isEmpty()
-            || preferenceScriptFileName == emptyShellFileName
+            FannelInfoTool.isEmptyFannelName(fannelName)
 //            || preferenceAppDirPath == UsePath.cmdclickAppDirAdminPath
 //            || preferenceAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
-            || allowJudgeSystemFannelIntent(
+//            || allowJudgeSystemFannelIntent(
 //                preferenceAppDirPath,
-                preferenceScriptFileName
-            )
+//                fannelName
+//            )
             || onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -255,12 +252,12 @@ class InitFragmentManager(
         }
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
 //            preferenceAppDirPath,
-            preferenceScriptFileName,
+            fannelName,
             fannelState,
         )
         val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
 //            preferenceAppDirPath,
-            preferenceScriptFileName,
+            fannelName,
             onShortcut,
             fannelState
         )
@@ -348,18 +345,18 @@ class InitFragmentManager(
 //        }
 //    }
 
-    private fun allowJudgeSystemFannelIntent(
-//        preferenceAppDirPath: String,
-        preferenceScriptFileName: String,
-    ): Boolean {
-//        if(
-//            preferenceAppDirPath != UsePath.cmdclickSystemAppDirPath
-//        ) return false
-        return !SystemFannel.allowIntentSystemFannelList.contains(
-            preferenceScriptFileName
-        )
-
-    }
+//    private fun allowJudgeSystemFannelIntent(
+////        preferenceAppDirPath: String,
+//        fannelName: String,
+//    ): Boolean {
+////        if(
+////            preferenceAppDirPath != UsePath.cmdclickSystemAppDirPath
+////        ) return false
+//        return !SystemFannel.allowIntentSystemFannelList.contains(
+//            fannelName
+//        )
+//
+//    }
 
 //    private fun setDataString(
 //        intent: Intent?,
