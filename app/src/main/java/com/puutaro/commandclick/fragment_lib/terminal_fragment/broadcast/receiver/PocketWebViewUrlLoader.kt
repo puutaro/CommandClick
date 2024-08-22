@@ -2,13 +2,13 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 
 import android.webkit.WebView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryRegister
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +33,7 @@ object PocketWebViewUrlLoader {
             )
             when(webView == null) {
                 true -> {
-                    val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                            UsePath.JS_FILE_SUFFIX
+                    val webSearcherName = SystemFannel.webSearcher
                     val systemExecRepTextList = listOf(url)
 
                     ExecJsLoad.execExternalJs(

@@ -237,8 +237,8 @@ object ListIndexEditConfig {
         busyboxExecutor: BusyboxExecutor?,
     ): String {
         return when(listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> fileNameSrc
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> fileNameSrc
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> {
                 makeFannelName(
@@ -318,10 +318,10 @@ object ListIndexEditConfig {
         makeFileDescArgsMaker: MakeFileDescArgsMaker
     ): String? {
         return when(ListIndexForEditAdapter.listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
-                FannelListVariable.getDesc(
-                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
-                )
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
+//                FannelListVariable.getDesc(
+//                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
+//                )
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
                 makeDescCon(
                     makeFileDescArgsMaker,

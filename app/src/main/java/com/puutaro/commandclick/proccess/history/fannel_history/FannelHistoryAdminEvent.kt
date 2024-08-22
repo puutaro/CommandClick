@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.history.fannel_history
 
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting

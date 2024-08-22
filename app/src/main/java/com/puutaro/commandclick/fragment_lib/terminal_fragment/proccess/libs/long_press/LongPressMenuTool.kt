@@ -161,4 +161,12 @@ object LongPressMenuTool {
 
         }
     }
+
+    enum class LongPressKey(val key: String){
+        TITLE("title"),
+        TRIGGER_WORD("triggerWord"),
+        DISABLE("disable"),
+    }
+
+    val longPressDisableOn = "ON"
 }

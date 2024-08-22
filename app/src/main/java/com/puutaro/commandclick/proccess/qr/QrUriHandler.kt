@@ -10,7 +10,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.GitDownloadExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -27,7 +27,6 @@ import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -551,8 +550,7 @@ object QrUriHandler {
         val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
         when(onLaunchByWebViewDialog){
             true -> {
-                val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                        UsePath.JS_FILE_SUFFIX
+                val webSearcherName = SystemFannel.webSearcher
                 ExecJsLoad.execExternalJs(
                     fragment,
 //                    currentAppDirPath,

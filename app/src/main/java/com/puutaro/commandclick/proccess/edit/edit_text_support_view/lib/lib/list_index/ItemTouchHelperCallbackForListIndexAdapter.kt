@@ -108,7 +108,7 @@ object ItemTouchHelperCallbackForListIndexAdapter {
     ){
         val listIndexTypeKey = ListIndexForEditAdapter.listIndexTypeKey
         when(listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
                 val fromFileName = fromViewHolder.fileName
                 val toFileName = toViewHolder.fileName

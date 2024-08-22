@@ -42,8 +42,9 @@ class FannelHistoryAdapter(
         enum class FannelHistorySettingKey(val key: String){
             ENABLE_LONG_PRESS_BUTTON("enableLongPressButton"),
             ENABLE_EDIT_EXECUTE("enableEditExecute"),
+            TITLE("title"),
         }
-        val keySeparator = ","
+        const val keySeparator = ","
         const val switchOn = "ON"
     }
     class FannelHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {

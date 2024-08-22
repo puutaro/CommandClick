@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess
 
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -47,8 +48,7 @@ object ScriptFileDescription {
         val isLaunchWebReadme = isTerminalFragment && isReadmeUrl
         when(isLaunchWebReadme){
             true -> {
-                val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                        UsePath.JS_FILE_SUFFIX
+                val webSearcherName = SystemFannel.webSearcher
                 val systemExecRepTextList =
                     when(readmeUrl == null){
                         false -> listOf(readmeUrl)

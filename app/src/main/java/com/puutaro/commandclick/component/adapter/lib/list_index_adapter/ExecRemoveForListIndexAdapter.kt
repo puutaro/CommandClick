@@ -36,7 +36,7 @@ object ExecRemoveForListIndexAdapter {
         removeItemLine: String,
     ){
         when(listIndexType) {
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> return
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT

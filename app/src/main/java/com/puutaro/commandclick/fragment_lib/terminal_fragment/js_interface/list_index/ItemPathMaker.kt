@@ -22,7 +22,7 @@ object ItemPathMaker {
             editFragment
         )
         val extractedPath = when(type) {
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> getCatPathForNormal(
                 editFragment,

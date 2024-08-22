@@ -86,7 +86,7 @@ object ExecSimpleDelete {
         listIndexPosition: Int,
     ){
         when(ListIndexForEditAdapter.listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
                 val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                     editFragment,

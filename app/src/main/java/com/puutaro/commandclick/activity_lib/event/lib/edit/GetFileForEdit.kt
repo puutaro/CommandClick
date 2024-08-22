@@ -214,8 +214,8 @@ class GetFileForEdit(
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> {
                 if(onDirectoryPick) return

@@ -171,8 +171,8 @@ class GetFileListForEdit (
 //            ).joinToString("\n")
 //        )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> {
                 if(onDirectoryPick) {

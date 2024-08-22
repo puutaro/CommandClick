@@ -26,7 +26,7 @@ object ExecRenameFile {
         )
         CoroutineScope(Dispatchers.Main).launch {
             when (type) {
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
                 -> execFileRename(
                     editFragment,

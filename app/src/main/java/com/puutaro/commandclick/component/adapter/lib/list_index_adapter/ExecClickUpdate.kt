@@ -27,8 +27,8 @@ object ExecClickUpdate {
             )
         if(!enableClickUpdate) return
         when(ListIndexForEditAdapter.listIndexTypeKey) {
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> updateForNormal(
                 editFragment,

@@ -348,8 +348,8 @@ object QrLogoSettingsForQrDialog {
             iconNameColorConfigMap: Map<String, String>?
         ) {
             val itemPath = when(listIndexTypeKey){
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-                -> return
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//                -> return
                 TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
                 -> itemName
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL

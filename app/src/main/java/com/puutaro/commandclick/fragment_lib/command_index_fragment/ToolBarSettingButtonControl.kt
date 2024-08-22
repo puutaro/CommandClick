@@ -164,12 +164,12 @@ class ToolBarSettingButtonControl(
             val menuListAdapter =
                 menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
-                MenuEnums.INSTALL_FANNEL.itemName ->
-                    SystemFannelLauncher.launch(
-                        cmdIndexFragment,
-//                        UsePath.cmdclickDefaultAppDirPath,
-                        SystemFannel.fannelRepoFannelName
-                    )
+//                MenuEnums.INSTALL_FANNEL.itemName ->
+//                    SystemFannelLauncher.launch(
+//                        cmdIndexFragment,
+////                        UsePath.cmdclickDefaultAppDirPath,
+//                        SystemFannel.fannelRepoFannelName
+//                    )
                 MenuEnums.QR_SCAN.itemName ->
                     QrScanner.scanFromCamera(
                         cmdIndexFragment,
@@ -215,7 +215,7 @@ private enum class MenuEnums(
     val itemName: String,
     val imageId: Int,
 ) {
-    INSTALL_FANNEL("Install fannel", R.drawable.icons8_puzzle),
+//    INSTALL_FANNEL("Install fannel", R.drawable.icons8_puzzle),
     USAGE("Usage", R.drawable.icons8_info),
     EDIT_PREFERENCE("Preference", R.drawable.icons8_setup),
     NO_SCROLL_SAVE_URL("No scroll save url", R.drawable.icons8_check_ok),

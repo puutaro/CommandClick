@@ -98,13 +98,13 @@ object SettingSubMenuDialog {
                 it.itemName == selectedSubMenu
             } ?: return@setOnItemClickListener
             when(settingSubMenuEnums){
-                SettingSubMenuEnums.APP_DIR_MANAGER -> {
-                    SystemFannelLauncher.launch(
-                        cmdIndexFragment,
-//                        UsePath.cmdclickDefaultAppDirPath,
-                        SystemFannel.appDirManagerFannelName
-                    )
-                }
+//                SettingSubMenuEnums.APP_DIR_MANAGER -> {
+//                    SystemFannelLauncher.launch(
+//                        cmdIndexFragment,
+////                        UsePath.cmdclickDefaultAppDirPath,
+//                        SystemFannel.appDirManagerFannelName
+//                    )
+//                }
                 SettingSubMenuEnums.SHORTCUT -> {
                     val listener =
                         cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
@@ -138,7 +138,7 @@ object SettingSubMenuDialog {
         val itemName: String,
         val imageId: Int
     ){
-        APP_DIR_MANAGER("App dir manager", R.drawable.icons8_support),
+//        APP_DIR_MANAGER("App dir manager", R.drawable.icons8_support),
         SHORTCUT("Create short cut", R.drawable.icons8_shortcut),
 //        TERMUX_SETUP("Termux setup", R.drawable.icons8_setup),
 //        CONFIG("Config", R.drawable.icons8_edit),

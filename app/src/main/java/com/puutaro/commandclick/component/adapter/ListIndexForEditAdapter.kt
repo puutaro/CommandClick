@@ -225,15 +225,16 @@ class ListIndexForEditAdapter(
                 }
             }
             val fileConBackGroundColorInt = withContext(Dispatchers.IO) {
-                val editExecuteValueForInstallFannel = when(
-                    listIndexTypeKey
-                ){
-                    TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-                    -> FannelListVariable.getEditExecute(
-                        fileNameOrInstallFannelLine
-                    )
-                    else -> String()
-                }
+                val editExecuteValueForInstallFannel = String()
+//                    when(
+//                    listIndexTypeKey
+//                ){
+//                    TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//                    -> FannelListVariable.getEditExecute(
+//                        fileNameOrInstallFannelLine
+//                    )
+//                    else -> String()
+//                }
                 setFileContentsBackColor(
                     fileConList,
                     fileNameOrInstallFannelLine,

@@ -18,8 +18,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellT
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -187,7 +185,7 @@ class UrlHistoryAddToTsv (
             } ?: return@setOnItemLongClickListener false
             val selectedUrl = selectedUrlHistoryLine.split("\t").lastOrNull()
                 ?: return@setOnItemLongClickListener false
-            val webSearcherName = SystemFannel.webSearcherFannelName
+            val webSearcherName = SystemFannel.webSearcher
 //            val fannelInfoMap = editFragment.fannelInfoMap
 //            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //                fannelInfoMap

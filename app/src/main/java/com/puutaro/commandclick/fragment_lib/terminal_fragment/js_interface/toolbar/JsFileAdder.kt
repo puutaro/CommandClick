@@ -112,8 +112,8 @@ class JsFileAdder(
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> return
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
                 execAddForTsv(
                     editFragment,

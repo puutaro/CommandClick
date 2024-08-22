@@ -32,9 +32,16 @@ object UrlCaptureWatcher {
     ) {
         exit()
         captureJob = CoroutineScope(Dispatchers.IO).launch {
+            if(
+                terminalFragment.view?.height == 0
+            ) return@launch
             val terminalWebView = withContext(Dispatchers.IO) {
-                terminalFragment.binding.terminalWebView
-            }
+                try {
+                    terminalFragment.binding.terminalWebView
+                } catch (e: Exception){
+                    null
+                }
+            } ?: return@launch
             val previousUrl = withContext(Dispatchers.Main) {
                 terminalWebView.url
             }
@@ -121,18 +128,18 @@ object UrlCaptureWatcher {
 //            currentAppDirPath: String,
             url: String,
         ): Boolean {
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
-                listOf(
-                    "start ${LocalDateTime.now()}"
-                ).joinToString("\n")
-            )
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
-                listOf(
-                    "start-start ${LocalDateTime.now()}"
-                ).joinToString("\n")
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
+//                listOf(
+//                    "start ${LocalDateTime.now()}"
+//                ).joinToString("\n")
+//            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
+//                listOf(
+//                    "start-start ${LocalDateTime.now()}"
+//                ).joinToString("\n")
+//            )
             val capture = withContext(Dispatchers.Main) {
                 BitmapTool.getLowScreenShotFromView(terminalFragmentView)
             } ?: let {

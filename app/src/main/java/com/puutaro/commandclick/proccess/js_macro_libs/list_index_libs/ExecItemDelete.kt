@@ -36,7 +36,7 @@ object ExecItemDelete {
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> return
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL

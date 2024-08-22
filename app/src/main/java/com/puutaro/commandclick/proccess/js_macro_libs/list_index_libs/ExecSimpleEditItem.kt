@@ -26,7 +26,7 @@ object ExecSimpleEditItem {
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> writeFile(
                 editFragment,

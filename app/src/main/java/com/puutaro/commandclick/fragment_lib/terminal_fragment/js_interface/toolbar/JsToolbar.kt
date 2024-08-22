@@ -210,7 +210,7 @@ class JsToolbar(
             editFragment == null
         ) return null
         return when(listIndexType){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> EditSettingExtraArgsTool.getParentDirPath(
                     extraMap,
@@ -231,7 +231,7 @@ class JsToolbar(
             editFragment == null
         ) return
         when(listIndexType){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> {
                 val insertLine = listOf(

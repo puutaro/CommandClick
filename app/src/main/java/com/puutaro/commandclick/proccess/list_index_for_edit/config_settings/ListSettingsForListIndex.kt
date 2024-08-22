@@ -163,8 +163,8 @@ object ListSettingsForListIndex  {
 //                ).joinToString("\n\n")
 //            )
             return when(listIndexTypeKey) {
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-                -> makeFannelListForListView().toMutableList()
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//                -> makeFannelListForListView().toMutableList()
                 TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
                     makeTsvConList(
                         editFragment,
@@ -186,8 +186,8 @@ object ListSettingsForListIndex  {
             listIndexType : TypeSettingsForListIndex.ListIndexTypeKey,
         ): String {
             return when(listIndexType){
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-                -> UsePath.cmdclickFannelItselfDirPath
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//                -> UsePath.cmdclickFannelItselfDirPath
                 TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
                 -> String()
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL ->

@@ -375,8 +375,8 @@ object QrScanner{
             fragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> return
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> addFile(
                 fragment,

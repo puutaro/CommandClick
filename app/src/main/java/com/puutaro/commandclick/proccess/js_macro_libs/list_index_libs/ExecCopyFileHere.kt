@@ -21,8 +21,8 @@ object ExecCopyFileHere {
         )
         ToastUtils.showShort("Copy ok")
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> execCopyHereForNormal(
                 editFragment,

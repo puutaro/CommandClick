@@ -201,7 +201,7 @@ class FannelRepoDownloadService: Service() {
                 ) return@map null
                 async {
                     semaphore.withPermit {
-                        val downloadUrl = "${urlFileSystems.gitUserContentFannelPrefix}/${it}"
+                        val downloadUrl = "${UrlFileSystems.gitUserContentFannelPrefix}/${it}"
                         val conByteArray = CurlManager.get(
                             context,
                             downloadUrl,
