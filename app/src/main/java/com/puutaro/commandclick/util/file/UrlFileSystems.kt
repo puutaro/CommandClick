@@ -3,7 +3,10 @@ package com.puutaro.commandclick.util.file
 import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.Intent.CurlManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class UrlFileSystems {
@@ -44,6 +47,34 @@ class UrlFileSystems {
 //            cmdMusicPlayerU("cmdMusicPlayerU"),
 //            fileManager("fileManager"),
 //        }
+    }
+
+    suspend fun getFannel(
+        context: Context?,
+        fannelName: String
+    ): ByteArray? {
+        val fannelUrl = listOf(
+            gitUserContentFannelPrefix,
+            fannelName,
+        ).joinToString("/")
+        return withContext(Dispatchers.IO) {
+            CurlManager.get(
+                context,
+                fannelUrl,
+                String(),
+                String(),
+                2_000
+            ).let {
+                byteArray ->
+                val isConnOk = CurlManager.isConnOk(
+                    byteArray
+                )
+                if(
+                    !isConnOk
+                ) return@withContext null
+                return@withContext byteArray
+            }
+        }
     }
 
     fun getFileNameFromUrl(
@@ -94,6 +125,20 @@ class UrlFileSystems {
                 !file.parent.isNullOrEmpty()
             ) return@filter false
             it.endsWith(jsFileSuffix)
+        }
+    }
+
+    fun extractFannelListByName(
+        fannelList: List<String>,
+        fannelName: String,
+    ): List<String> {
+        return fannelList.filter {
+            val isFannel =
+                it == fannelName
+            val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+            val isFannelDir =
+                it.startsWith(fannelDirName)
+            isFannel && isFannelDir
         }
     }
 

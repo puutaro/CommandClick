@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import java.io.File
 
 
 object ConfigFromPreferenceFileSetter {
@@ -30,11 +31,24 @@ object ConfigFromPreferenceFileSetter {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val settingVariableList = CommandClickVariables.extractValListFromHolder(
-            CommandClickVariables.makeMainFannelConList(
+        val preferenceConList = when(
+            File(UsePath.cmdclickDefaultAppDirPath, cmdclickPreferenceJsName).isFile
+        ) {
+            false ->
+                CommandClickVariables.makeMainFannelConListFromUrl(
+                    cmdIndexFragment.context,
+                    cmdclickPreferenceJsName
+                )
+            else ->
+                CommandClickVariables.makeMainFannelConList(
 //                currentAppDirPath,
-                cmdclickPreferenceJsName
-            ),
+                    cmdclickPreferenceJsName
+                )
+
+        }
+
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
+            preferenceConList,
             settingSectionStart,
             settingSectionEnd
         )

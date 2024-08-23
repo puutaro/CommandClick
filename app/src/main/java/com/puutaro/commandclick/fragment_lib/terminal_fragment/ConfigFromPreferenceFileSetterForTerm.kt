@@ -17,6 +17,7 @@ import com.puutaro.commandclick.util.sd.SdCardTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import java.io.File
 
 
 object ConfigFromPreferenceFileSetterForTerm {
@@ -50,12 +51,23 @@ object ConfigFromPreferenceFileSetterForTerm {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )
+        val preferenceConList = when(
+            File(UsePath.cmdclickDefaultAppDirPath, cmdclickPreferenceJsName).isFile
+        ) {
+            false ->
+                CommandClickVariables.makeMainFannelConListFromUrl(
+                    context,
+                    cmdclickPreferenceJsName
+                )
+            else ->
+                CommandClickVariables.makeMainFannelConList(
+//                currentAppDirPath,
+                    cmdclickPreferenceJsName
+                )
 
+        }
         val settingVariableListFromPreference = CommandClickVariables.extractValListFromHolder(
-            CommandClickVariables.makeMainFannelConList(
-//                UsePath.cmdclickDefaultAppDirPath,
-                cmdclickPreferenceJsName
-            ),
+            preferenceConList,
             settingSectionStart,
             settingSectionEnd
         )

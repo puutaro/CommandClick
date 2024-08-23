@@ -1,15 +1,21 @@
 package com.puutaro.commandclick.util
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -234,6 +240,34 @@ object CommandClickVariables {
                 setReplaceVariableMap,
 //                currentAppDirPath,
                 scriptName
+            ).split("\n")
+        }
+    }
+
+    fun makeMainFannelConListFromUrl(
+        context: Context?,
+        fannelName: String,
+        setReplaceVariableMap: Map<String, String>? = null,
+    ): List<String> {
+        val fannelCon = runBlocking {
+            UrlFileSystems().getFannel(
+                context,
+                fannelName,
+            )
+        } ?: return emptyList()
+        val scriptConList = ScriptPreWordReplacer.replace(
+            String(fannelCon),
+            fannelName,
+        ).split("\n")
+        return when(
+            setReplaceVariableMap.isNullOrEmpty()
+        ){
+            true -> scriptConList
+            else -> SetReplaceVariabler.execReplaceByReplaceVariables(
+                scriptConList.joinToString("\n"),
+                setReplaceVariableMap,
+//                currentAppDirPath,
+                fannelName
             ).split("\n")
         }
     }

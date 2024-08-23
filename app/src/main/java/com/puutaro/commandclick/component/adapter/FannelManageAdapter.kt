@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -22,6 +21,8 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,21 @@ class FannelHistoryAdapter(
     var historyList: MutableList<String>
     ): RecyclerView.Adapter<FannelHistoryAdapter.FannelHistoryViewHolder>(){
 
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+    private val fannelAdapterInfoMap = ReadText(UsePath.fannelInfoMapTsvPath).textToList().map {
+        fannelAdapterInfoLine ->
+        val fanneRawNameAndMap = fannelAdapterInfoLine.split("\t")
+        val fannelRawName = fanneRawNameAndMap.firstOrNull()?.let {
+            UsePath.compExtend(it, UsePath.JS_FILE_SUFFIX)
+        } ?: String()
+        val adapterInfoMapCon = fanneRawNameAndMap.getOrNull(1)
+        fannelRawName to CmdClickMap.createMap(
+            adapterInfoMapCon,
+            keySeparator
+        ).toMap()
+    }.toMap()
+    private val pinFannelList = ReadText(UsePath.pinFannelTsvPath).textToList()
+
     companion object {
 
 
@@ -44,7 +60,7 @@ class FannelHistoryAdapter(
             ENABLE_EDIT_EXECUTE("enableEditExecute"),
             TITLE("title"),
         }
-        const val keySeparator = ","
+        const val keySeparator = ','
         const val switchOn = "ON"
     }
     class FannelHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
@@ -53,11 +69,13 @@ class FannelHistoryAdapter(
         val fannelHistoryAdapterConstraintLayout = view.findViewById<ConstraintLayout>(R.id.fannel_history_adapter_constraint_layout)
         val fannelHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.fannel_history_adapter_relative_layout)
         val fannelCaptureView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_capture)
-        val appDirNameTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_app_dir)
         val fannelNameTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_name)
+        val titleTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_title)
 //        val fannelHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.fannel_history_adapter_bottom_linear_inner)
-        val shareImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_share)
-        val deleteImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_delete)
+        val shareImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_icon)
+        val pinImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_pin)
+        val editImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_edit)
+        val longPressImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_long_press)
     }
 
     private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
@@ -105,19 +123,14 @@ class FannelHistoryAdapter(
     ) {
         val historyLine = historyList[position]
         CoroutineScope(Dispatchers.IO).launch {
-            holder.appDirNameTextView.revOutline(true)
-            val appDirName = withContext(Dispatchers.IO){
-                FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
-                    historyLine
-                )
-            }
+            holder.titleTextView.revOutline(true)
             val fannelName = withContext(Dispatchers.IO){
                 FannelHistoryManager.getFannelNameFromAppHistoryFileName(
                     historyLine
                 )
             }
             withContext(Dispatchers.Main) {
-                holder.appDirNameTextView.text = appDirName
+                holder.titleTextView.text = cmdclickDefaultAppDirPath
 //                holder.appDirNameTextView.isVisible = false
             }
             withContext(Dispatchers.Main) {
@@ -141,8 +154,6 @@ class FannelHistoryAdapter(
                 FileSystems.updateFile(
                     File(UsePath.cmdclickDefaultAppDirPath, "gFannelLit.txt").absolutePath,
                     listOf(
-//                        "currentAppDirPath: ${currentAppDirPath}",
-                        "appDirName: ${appDirName}",
                         "currentFannelName: ${currentFannelName}",
                         "fannelName: ${fannelName}",
                     ).joinToString("\n\n") + "\n------\n"
@@ -165,7 +176,7 @@ class FannelHistoryAdapter(
                 holder.shareImageButtonView.setOnClickListener {
                     shareItemClickListener?.onItemClick(holder)
                 }
-                holder.deleteImageButtonView.setOnClickListener {
+                holder.pinImageButtonView.setOnClickListener {
                     deleteItemClickListener?.onItemClick(holder)
                 }
             }
@@ -203,7 +214,7 @@ class FannelHistoryAdapter(
 //                context?.getColorStateList(hitFannelColor)
             holder.shareImageButtonView.backgroundTintList =
                 context?.getColorStateList(hitFannelColor)
-            holder.deleteImageButtonView.backgroundTintList =
+            holder.pinImageButtonView.backgroundTintList =
                 context?.getColorStateList(hitFannelColor)
 
         }
