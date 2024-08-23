@@ -99,7 +99,7 @@
             android:id="@+id/fannel_history_adapter_icon"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/icons8_share"
+            android:src="@drawable/icons_qr_code"
             android:backgroundTint="@color/setting_menu_footer"
             app:tint="@color/file_dark_green_color"
             android:scaleType="fitXY"

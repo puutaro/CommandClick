@@ -18,6 +18,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -141,7 +142,7 @@ class FannelManageAdapter(
                     fannelName == SystemFannel.home
                 ){
                     true -> "HOME"
-                    else -> fannelName
+                    else -> CcPathTool.trimAllExtend(fannelName)
                 }
                 holder.fannelNameTextView.text = displayFannelName
 //                holder.appDirNameTextView.isVisible = false
@@ -422,7 +423,7 @@ class FannelManageAdapter(
                 .sizeMultiplier(0.1f)
         Glide
             .with(context)
-            .load(R.drawable.icons8_share)
+            .load(R.drawable.icons_qr_code)
             .skipMemoryCache( true )
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .thumbnail( requestBuilder )

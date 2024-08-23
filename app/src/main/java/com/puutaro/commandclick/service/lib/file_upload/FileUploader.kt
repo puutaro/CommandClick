@@ -160,10 +160,20 @@ object CopyFannelServer {
         val cpFileMacro = cpFileMap.get(CpFileKey.CP_FILE_MACRO_FOR_SERVICE.key)
         return  when(cpFileMacro) {
             ReceivePathMacroType.GET_FILE_LIST.name
-            -> catFileList(
+            -> {
+                val byteArray = catFileList(
 //                currentAppDirPath,
-                cpFileMap
-            )
+                    cpFileMap
+                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "upload.txt").absolutePath,
+//                    listOf(
+//                        "cpFileMap: ${cpFileMap}",
+//                        "byteArray: ${String(byteArray)}"
+//                    ).joinToString("\n")
+//                )
+                byteArray
+            }
             ReceivePathMacroType.CLOSE_COPY_SERVER.name
             -> closeCopyServer(
                 fileUploadService

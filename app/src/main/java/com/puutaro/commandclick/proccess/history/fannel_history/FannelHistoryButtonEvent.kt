@@ -35,6 +35,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -596,21 +597,30 @@ class FannelHistoryButtonEvent (
     ){
         fannelManageAdapter.shareItemClickListener = object: FannelManageAdapter.OnShareItemClickListener {
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
-                val urlHistoryAdapterRelativeLayout = holder.fannelHistoryAdapterRelativeLayout
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main){
-                        ToastUtils.showShort("share")
-                    }
-                    val pngImagePathObj = HistoryShareImage.makePngImageFromView(
-                        context,
-                        urlHistoryAdapterRelativeLayout
-                    ) ?: return@launch
-                    withContext(Dispatchers.Main) {
-                        IntentVariant.sharePngImage(
-                            pngImagePathObj,
-                            context,
-                        )
-                    }
+                val position = holder.bindingAdapterPosition
+                val fannelName =
+                    fannelManageAdapter.fannelNameList.getOrNull(position)
+                        ?: return
+//                val urlHistoryAdapterRelativeLayout = holder.fannelHistoryAdapterRelativeLayout
+                CoroutineScope(Dispatchers.Main).launch {
+                    QrDialogMethod.launchPassDialog(
+                        fragment,
+//                currentAppDirPath,
+                        fannelName,
+                    )
+//                    withContext(Dispatchers.Main){
+//                        ToastUtils.showShort("share")
+//                    }
+//                    val pngImagePathObj = HistoryShareImage.makePngImageFromView(
+//                        context,
+//                        urlHistoryAdapterRelativeLayout
+//                    ) ?: return@launch
+//                    withContext(Dispatchers.Main) {
+//                        IntentVariant.sharePngImage(
+//                            pngImagePathObj,
+//                            context,
+//                        )
+//                    }
                 }
             }
         }

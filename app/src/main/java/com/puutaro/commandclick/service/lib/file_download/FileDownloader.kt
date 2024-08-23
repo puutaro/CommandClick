@@ -3,6 +3,7 @@ package com.puutaro.commandclick.service.lib.file_download
 import android.content.Context
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
@@ -110,6 +111,13 @@ object FileDownloader {
                 cpFileMapStr,
                 curlTimeoutMiliSec
             )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "down_get.txt").absolutePath,
+//                listOf(
+//                    "fileListConSrcByteArray: ${String(fileListConSrcByteArray)}",
+//                    "cpFileMapStr: ${cpFileMapStr}",
+//                ).joinToString("\n")
+//            )
             if (
                 CurlManager.isConnOk(fileListConSrcByteArray)
             ) {
@@ -184,8 +192,7 @@ object FileDownloader {
 //            fileListCon
 //        )
 //        FileSystems.writeFile(
-//            UsePath.cmdclickDefaultAppDirPath,
-//            "qrCpFileList.txt",
+//            File(UsePath.cmdclickDefaultAppDirPath, "qrCpFileList.txt",).absolutePath,
 //            cpFileList.joinToString("\n")
 //        )
         if(

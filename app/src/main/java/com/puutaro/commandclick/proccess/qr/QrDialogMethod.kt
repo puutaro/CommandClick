@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
@@ -145,11 +146,12 @@ object QrDialogMethod {
         val ipV4Address = NetworkTool.getIpv4Address(context)
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
         val cmdclickDefaultAppDirPath =  UsePath.cmdclickDefaultAppDirPath
-        val isAppDirAdmin = cmdclickDefaultAppDirPath.removeSuffix("/") ==
-                UsePath.cmdclickAppDirAdminPath
+        val isAppDirAdmin = fannelName == SystemFannel.home
+//            cmdclickDefaultAppDirPath.removeSuffix("/") ==
+//                UsePath.cmdclickAppDirAdminPath
         return when(isAppDirAdmin){
             true -> {
-                val appDirPathForCpFile = "${UsePath.cmdclickAppDirPath}/$fannelRawName"
+                val appDirPathForCpFile = UsePath.cmdclickDefaultAppDirPath
                 QrLaunchType.CpFile.prefix + listOf(
                     "${CpFileKey.ADDRESS.key}=${ipV4Address}:${UsePort.COPY_FANNEL_PORT.num}",
                     "${CpFileKey.PATH.key}=$appDirPathForCpFile",
