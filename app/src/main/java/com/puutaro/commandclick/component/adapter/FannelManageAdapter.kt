@@ -152,7 +152,11 @@ class FannelManageAdapter(
                         holder.titleTextView.text = "\uD83C\uDFE0"
                         holder.titleTextView.textSize = 70f
                     }
-                    else -> holder.titleTextView.text = settingMap?.get(FannelHistorySettingKey.TITLE.key)
+                    else -> {
+                        holder.titleTextView.text =
+                            settingMap?.get(FannelHistorySettingKey.TITLE.key)
+                        holder.titleTextView.textSize = 22f
+                    }
                 }
             }
             withContext(Dispatchers.Main){
@@ -165,9 +169,14 @@ class FannelManageAdapter(
                         context?.getColorStateList(buttonGrayOutColor)
                     return@withContext
                 }
+                holder.pinImageButtonView.isEnabled = true
                 if(
                     !pinFannelList.contains(fannelName)
-                ) return@withContext
+                ) {
+                    holder.pinImageButtonView.imageTintList =
+                        context?.getColorStateList(buttonOrdinalyColor)
+                    return@withContext
+                }
                 holder.pinImageButtonView.imageTintList =
                     context?.getColorStateList(pinExistColor)
             }
@@ -178,11 +187,14 @@ class FannelManageAdapter(
                     ) != switchOn
                     || !isIndex
                 ) {
+                    holder.longPressImageButtonView.imageTintList =
+                        context?.getColorStateList(buttonGrayOutColor)
                     holder.longPressImageButtonView.isEnabled = false
                     return@withContext
                 }
                 holder.longPressImageButtonView.imageTintList =
                     context?.getColorStateList(buttonOrdinalyColor)
+                holder.longPressImageButtonView.isEnabled = true
             }
             withContext(Dispatchers.Main){
                 if(
@@ -192,8 +204,11 @@ class FannelManageAdapter(
                     || !isIndex
                 ) {
                     holder.editImageButtonView.isEnabled = false
+                    holder.editImageButtonView.imageTintList =
+                        context?.getColorStateList(buttonGrayOutColor)
                     return@withContext
                 }
+                holder.editImageButtonView.isEnabled = true
                 holder.editImageButtonView.imageTintList =
                     context?.getColorStateList(buttonOrdinalyColor)
             }
@@ -215,7 +230,10 @@ class FannelManageAdapter(
                     }
                     if (
                         !File(logoPngPath).isFile
-                    ) return@setImage
+                    ) {
+                        setFannelShareLogo(holder)
+                        return@setImage
+                    }
                     setFannelLogo(
                         holder,
                         logoPngPath,
@@ -384,6 +402,27 @@ class FannelManageAdapter(
         Glide
             .with(context)
             .load(logoPngPath)
+            .skipMemoryCache( true )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail( requestBuilder )
+            .into(shareImageView)
+    }
+
+    private fun setFannelShareLogo(
+        holder: FannelManageViewHolder,
+    ){
+        val shareImageView = holder.shareImageView
+//        holder.shareImageView.foregroundTintList = null
+        shareImageView.imageTintList = null
+//        holder.shareImageView.backgroundTintList = null
+        val context = shareImageView.context
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        Glide
+            .with(context)
+            .load(R.drawable.icons8_share)
             .skipMemoryCache( true )
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .thumbnail( requestBuilder )

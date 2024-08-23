@@ -14,7 +14,7 @@ import java.io.File
 object FannelListVariable {
 
     val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
-    val descriptionFirstLineLimit = 50
+    val descriptionFirstLineLimit = 100
 
     val fannelNameIndex = 0
     val editExecuteValueIndex = 1
