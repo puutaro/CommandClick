@@ -7,15 +7,12 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -206,7 +203,7 @@ object CommandClickVariables {
 
     fun makeMainFannelConList(
 //        currentAppDirPath: String,
-        scriptName: String,
+        fannelName: String,
         setReplaceVariableMap: Map<String, String>? = null,
     ): List<String> {
 //        val isMainFannelDir = currentAppDirPath.removePrefix(
@@ -214,34 +211,22 @@ object CommandClickVariables {
 //        ).removePrefix("/").let{
 //            File(it).parent
 //        }.isNullOrEmpty()
-        val isFannelName = FannelInfoTool.isEmptyFannelName(scriptName)
+        val isFannelName = FannelInfoTool.isEmptyFannelName(fannelName)
         if(
 //            !isMainFannelDir
             isFannelName
         ) return emptyList()
-        val scriptConList = ReadText(
+        val scriptCon = ReadText(
             File(
                 UsePath.cmdclickDefaultAppDirPath,
-                scriptName
+                fannelName
             ).absolutePath
-        ).readText().let {
-            ScriptPreWordReplacer.replace(
-                it,
-//                currentAppDirPath,
-                scriptName,
-            )
-        }.split("\n")
-        return when(
-            setReplaceVariableMap.isNullOrEmpty()
-        ){
-            true -> scriptConList
-            else -> SetReplaceVariabler.execReplaceByReplaceVariables(
-                scriptConList.joinToString("\n"),
-                setReplaceVariableMap,
-//                currentAppDirPath,
-                scriptName
-            ).split("\n")
-        }
+        ).readText()
+        return replace(
+            scriptCon,
+            fannelName,
+            setReplaceVariableMap,
+        )
     }
 
     fun makeMainFannelConListFromUrl(
@@ -250,13 +235,27 @@ object CommandClickVariables {
         setReplaceVariableMap: Map<String, String>? = null,
     ): List<String> {
         val fannelCon = runBlocking {
-            UrlFileSystems().getFannel(
+            UrlFileSystems.getFannel(
                 context,
                 fannelName,
             )
         } ?: return emptyList()
+        return replace(
+            fannelCon,
+            fannelName,
+            setReplaceVariableMap,
+        )
+    }
+
+    private fun replace(
+        con: String,
+        fannelName: String,
+        setReplaceVariableMap: Map<String, String>?,
+    ): List<String> {
+
         val scriptConList = ScriptPreWordReplacer.replace(
-            String(fannelCon),
+            con,
+//                currentAppDirPath,
             fannelName,
         ).split("\n")
         return when(

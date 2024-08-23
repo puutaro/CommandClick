@@ -115,4 +115,9 @@ object SettingVariableSelects {
         ON,
         OFF
     }
+
+    enum class DisableSettingValsEdit {
+        ON,
+        OFF,
+    }
 }

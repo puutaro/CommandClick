@@ -9,7 +9,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.component.adapter.FannelHistoryAdapter
+import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromPreferenceFileSetter
@@ -140,7 +140,6 @@ object IndexInitHandler {
             ).absolutePath
         )
         FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
-        val urlFileSystems = UrlFileSystems()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 CmdClickSystemFannelManager.createPreferenceFannel(
@@ -158,13 +157,13 @@ object IndexInitHandler {
                 UsePath.selectMenuFannelPath
             )
             val fannelList = withContext(Dispatchers.IO) {
-                urlFileSystems.getFannelList(context)
+                UrlFileSystems.getFannelList(context)
                     .split("\n")
             }
             val fannelNameList = withContext(Dispatchers.IO) {
-                urlFileSystems.extractFannelNameList(fannelList)
+                UrlFileSystems.extractFannelNameList(fannelList)
             }
-            val fannelRawNameToDownloadList = makeDownloadListByFannelRawName(
+            val fannelNameToDownloadList = makeDownloadListByFannelName(
                 context,
                 fannelNameList,
                 fannelList,
@@ -181,15 +180,15 @@ object IndexInitHandler {
             val semaphore = Semaphore(concurrentLimit)
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
-                    val jobList = fannelRawNameToDownloadList.map {
+                    val jobList = fannelNameToDownloadList.map {
                         async {
                             semaphore.withPermit {
-                                val fannelRawName = it.first
+                                val fannelName = it.first
                                 val downloadList = it.second
-                                urlFileSystems.createFileByOverride(
+                                UrlFileSystems.createFileByOverride(
                                     context,
                                     cmdclickDefaultAppDirPath,
-                                    fannelRawName,
+                                    fannelName,
                                     downloadList
                                 )
                             }
@@ -210,13 +209,13 @@ object IndexInitHandler {
                     if (
                         isNotUpdateFannelInfo
                     ) return@withContext
-                    val fannelInfoMapList = FannelInfoMapMaker.make(
+                    val fannelSettingMapList = FannelSettingMapMaker.make(
                         context,
-                        fannelRawNameToDownloadList.map { it.first }
+                        fannelNameToDownloadList.map { it.first }
                     )
                     FileSystems.writeFile(
-                        UsePath.fannelInfoMapTsvPath,
-                        fannelInfoMapList.joinToString("\n")
+                        UsePath.fannelSettingMapTsvPath,
+                        fannelSettingMapList.joinToString("\n")
                     )
 //                    FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
                 }
@@ -249,7 +248,7 @@ object IndexInitHandler {
 
     }
 
-    private suspend fun makeDownloadListByFannelRawName(
+    private suspend fun makeDownloadListByFannelName(
         context: Context?,
         fannelNameList: List<String>,
         fannelList: List<String>,
@@ -261,13 +260,14 @@ object IndexInitHandler {
             val jobList = fannelNameList.mapIndexed { index, fannelName ->
                 semaphore.withPermit {
                     async {
-                        val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
                         val downloadEntryList = fannelList.filter { relativePath ->
                             val isNotPartPng = !"/${relativePath}".contains(
                                 "/${FannelHistoryPath.makePartPngDirCut()}/"
                             )
-                            relativePath.startsWith(fannelRawName)
-                                    && isNotPartPng
+                            UrlFileSystems.isFannelListByName(
+                                relativePath,
+                                fannelName
+                            ) && isNotPartPng
                         }
                         val downloadListByVersion = makeDownloadListByVersion(
                             context,
@@ -291,23 +291,23 @@ object IndexInitHandler {
                             FileSystems.writeFile(
                                 File(
                                     cmdclickUpdateFannelInfoSystemDirPath,
-                                    fannelRawName
+                                    CcPathTool.trimAllExtend(fannelName)
                                 ).absolutePath,
                                 String(),
                             )
                         }
-                        channel.send(fannelRawName to downloadList)
+                        channel.send(fannelName to downloadList)
                     }
                 }
             }
             jobList.forEach { it.await() }
             channel.close()
         }
-        val fanneRawNameToDownLoadListList: MutableList<Pair<String, List<String>>> = mutableListOf()
+        val fanneNameToDownLoadListList: MutableList<Pair<String, List<String>>> = mutableListOf()
         for (fanneNameToDownLoadList in channel){
-            fanneRawNameToDownLoadListList.add(fanneNameToDownLoadList)
+            fanneNameToDownLoadListList.add(fanneNameToDownLoadList)
         }
-        return fanneRawNameToDownLoadListList
+        return fanneNameToDownLoadListList
     }
 
 
@@ -338,23 +338,21 @@ object IndexInitHandler {
         }
     }
 
-    private object FannelInfoMapMaker {
+    private object FannelSettingMapMaker {
 
-        private val switchOn = FannelHistoryAdapter.switchOn
+        private val switchOn = FannelManageAdapter.switchOn
         suspend fun make(
             context: Context?,
-            fannelRawNameList: List<String>
+            fannelNameList: List<String>
         ): List<String> {
             val concurrencyLimit = 10
             val semaphore = Semaphore(concurrencyLimit)
-            val channel = Channel<String>(fannelRawNameList.size)
+            val channel = Channel<String>(fannelNameList.size)
             val fannelInfoMapList = mutableListOf<String>()
             withContext(Dispatchers.IO) {
-                val jobList = fannelRawNameList.map { fannelRawName ->
+                val jobList = fannelNameList.map { fannelName ->
                     async {
                         semaphore.withPermit {
-                            val fannelName =
-                                UsePath.compExtend(fannelRawName, UsePath.JS_FILE_SUFFIX)
                             val repValsMap =
                                 SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
                                     context,
@@ -377,15 +375,19 @@ object IndexInitHandler {
                             val enableEditExecuteButtonKeyValue = makeEditExecuteEnableKeyCon(
                                 settingVariableList
                             )
+                            val enableEditSettingVals = makeEditSettingValsEnableKeyCon(
+                                settingVariableList
+                            )
                             val fannelTitleKeyValue = makeTitleKeyValue(
-                                fannelRawName
+                                fannelName
                             )
                             val fannelInfoValueCon = listOf(
                                 enableEditExecuteButtonKeyValue,
+                                enableEditSettingVals,
                                 enableLongPressButtonKeyValue,
                                 fannelTitleKeyValue,
-                            ).joinToString(FannelHistoryAdapter.keySeparator)
-                            channel.send("${fannelRawName}\t${fannelInfoValueCon}")
+                            ).joinToString(FannelManageAdapter.keySeparator.toString())
+                            channel.send("${fannelName}\t${fannelInfoValueCon}")
 
                         }
                     }
@@ -415,8 +417,29 @@ object IndexInitHandler {
                 else -> switchOn
             }
             return listOf(
-                FannelHistoryAdapter.Companion.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key,
+                FannelManageAdapter.Companion.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key,
                 enableEditExecuteButtonValue,
+            ).joinToString("=")
+        }
+
+        private fun makeEditSettingValsEnableKeyCon(
+            settingVariableList: List<String>?
+        ): String {
+            val enableEditSettingVals = SettingVariableReader.getCbValue(
+                settingVariableList,
+                CommandClickScriptVariable.DISABLE_SETTING_VALS_EDIT,
+                SettingVariableSelects.DisableSettingValsEdit.OFF.name,
+                String(),
+                SettingVariableSelects.DisableSettingValsEdit.OFF.name,
+                SettingVariableSelects.DisableSettingValsEdit.values().map { it.name },
+            ) != SettingVariableSelects.DisableSettingValsEdit.ON.name
+            val enableEditSettingValsValue = when (enableEditSettingVals) {
+                false -> String()
+                else -> switchOn
+            }
+            return listOf(
+                FannelManageAdapter.Companion.FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key,
+                enableEditSettingValsValue,
             ).joinToString("=")
         }
 
@@ -465,32 +488,28 @@ object IndexInitHandler {
                 else -> switchOn
             }
             return listOf(
-                FannelHistoryAdapter.Companion.FannelHistorySettingKey.ENABLE_LONG_PRESS_BUTTON.key,
+                FannelManageAdapter.Companion.FannelHistorySettingKey.ENABLE_LONG_PRESS_BUTTON.key,
                 enableLongPressButtonValue,
             ).joinToString("=")
         }
 
 
         private fun makeTitleKeyValue(
-            fannelRawName: String
+            fannelName: String
         ): String {
             val descCon = extractDescription(
-                fannelRawName
+                fannelName
             )
             return listOf(
-                FannelHistoryAdapter.Companion.FannelHistorySettingKey.TITLE.key,
+                FannelManageAdapter.Companion.FannelHistorySettingKey.TITLE.key,
                 descCon
             ).joinToString("=")
 
         }
 
         private fun extractDescription(
-            fannelRawName: String
+            fannelName: String
         ): String {
-            val fannelName = UsePath.compExtend(
-                fannelRawName,
-                UsePath.JS_FILE_SUFFIX
-            )
             val fannelConList = ReadText(
                 File(cmdclickDefaultAppDirPath, fannelName).absolutePath,
             ).textToList()
@@ -541,7 +560,7 @@ object IndexInitHandler {
                 else -> descFirstLineSource
             }
             return descFirstLine?.replace(
-                FannelHistoryAdapter.keySeparator,
+                FannelManageAdapter.keySeparator.toString(),
                 " "
             )?.trim() ?: String()
         }

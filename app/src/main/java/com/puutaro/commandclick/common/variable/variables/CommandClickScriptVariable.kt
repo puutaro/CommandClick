@@ -96,6 +96,7 @@ object CommandClickScriptVariable {
     val QR_DIALOG_CONFIG = "qrDialogConfig"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
     val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
+    val DISABLE_SETTING_VALS_EDIT = "disableSettingValsEdit"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
     val SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcAnchorLongPressMenuFilePath"
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
@@ -172,6 +173,8 @@ object CommandClickScriptVariable {
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
     private val autoExecSelectsOn = SettingVariableSelects.AutoExecSelects.ON.name
     private val autoExecSelectsOff = SettingVariableSelects.AutoExecSelects.OFF.name
+    private val disableSettingValsEditOn = SettingVariableSelects.DisableSettingValsEdit.ON.name
+    private val disableSettingValsEditOff = SettingVariableSelects.DisableSettingValsEdit.OFF.name
     private val terminalOutPutModeNormal = SettingVariableSelects.TerminalOutPutModeSelects.NORMAL.name
     private val terminalOutPutModeReflash = SettingVariableSelects.TerminalOutPutModeSelects.REFLASH.name
     private val terminalOutPutModeReflashAndFirstRow = SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name

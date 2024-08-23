@@ -9,25 +9,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class UrlFileSystems {
+object UrlFileSystems {
 
 //    private var fannelListCon = String()
 
-    companion object {
-        val gitComPrefix = "https://github.com"
-        val gitUserContentPrefix =
-            "https://raw.githubusercontent.com"
+    val gitComPrefix = "https://github.com"
+    val gitUserContentPrefix =
+        "https://raw.githubusercontent.com"
 
-        val cmdclickRepoGitUserContentPrefix =
-            "$gitUserContentPrefix/" +
-                    "puutaro/commandclick-repository/master"
-        private val gitUserContentManagePrefix =
-            "$cmdclickRepoGitUserContentPrefix/manage"
+    val cmdclickRepoGitUserContentPrefix =
+        "$gitUserContentPrefix/" +
+                "puutaro/commandclick-repository/master"
+    private val gitUserContentManagePrefix =
+        "$cmdclickRepoGitUserContentPrefix/manage"
 
-        val gitUserContentFannelPrefix =
-            "$cmdclickRepoGitUserContentPrefix/fannel"
+    val gitUserContentFannelPrefix =
+        "$cmdclickRepoGitUserContentPrefix/fannel"
 
-        val readmeSuffix = "master/${UsePath.fannelReadmeName}"
+    val readmeSuffix = "master/${UsePath.fannelReadmeName}"
 //        enum class FirstCreateFannels(
 //            val str: String,
 //        ) {
@@ -47,12 +46,45 @@ class UrlFileSystems {
 //            cmdMusicPlayerU("cmdMusicPlayerU"),
 //            fileManager("fileManager"),
 //        }
+
+    fun getFileNameFromUrl(
+        urlStr: String
+    ): String {
+        return urlStr
+            .split("/")
+            .lastOrNull()
+            ?: String()
+    }
+
+    fun extractFannelNameList(
+        fannelList: List<String>
+    ): List<String> {
+        val jsFileSuffix = UsePath.JS_FILE_SUFFIX
+        return fannelList.filter {
+            val file = File(it)
+            if (
+                !file.parent.isNullOrEmpty()
+            ) return@filter false
+            it.endsWith(jsFileSuffix)
+        }
+    }
+
+    fun isFannelListByName(
+        listLine: String,
+        fannelName: String,
+    ): Boolean {
+        val isFannel =
+            listLine == fannelName
+        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val isFannelDir =
+            listLine.startsWith(fannelDirName)
+        return isFannel || isFannelDir
     }
 
     suspend fun getFannel(
         context: Context?,
         fannelName: String
-    ): ByteArray? {
+    ): String? {
         val fannelUrl = listOf(
             gitUserContentFannelPrefix,
             fannelName,
@@ -72,19 +104,11 @@ class UrlFileSystems {
                 if(
                     !isConnOk
                 ) return@withContext null
-                return@withContext byteArray
+                return@withContext String(byteArray)
             }
         }
     }
 
-    fun getFileNameFromUrl(
-        urlStr: String
-    ): String {
-        return urlStr
-            .split("/")
-            .lastOrNull()
-            ?: String()
-    }
 
 //    private suspend fun getFannelList(
 //        context: Context?,
@@ -115,42 +139,18 @@ class UrlFileSystems {
         }
     }
 
-    fun extractFannelNameList(
-        fannelList: List<String>
-    ): List<String> {
-        val jsFileSuffix = UsePath.JS_FILE_SUFFIX
-        return fannelList.filter {
-            val file = File(it)
-            if (
-                !file.parent.isNullOrEmpty()
-            ) return@filter false
-            it.endsWith(jsFileSuffix)
-        }
-    }
-
-    fun extractFannelListByName(
-        fannelList: List<String>,
-        fannelName: String,
-    ): List<String> {
-        return fannelList.filter {
-            val isFannel =
-                it == fannelName
-            val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-            val isFannelDir =
-                it.startsWith(fannelDirName)
-            isFannel && isFannelDir
-        }
-    }
-
     fun createFile(
         context: Context?,
         destiDirPath: String,
-        fannelRawName: String = String(),
+        fannelName: String,
         fannelList: List<String>,
     ){
 
         fannelList.filter {
-            it.startsWith(fannelRawName)
+            isFannelListByName(
+                it,
+                fannelName
+            )
         }.forEach {
             val destiFileObj = File("$destiDirPath/$it")
             if(
@@ -180,12 +180,15 @@ class UrlFileSystems {
     fun createFileByOverride(
         context: Context?,
         destiDirPath: String,
-        fannelRawName: String = String(),
+        fannelName: String,
         fannelList: List<String>,
     ){
 
         fannelList.filter {
-            it.startsWith(fannelRawName)
+            isFannelListByName(
+                it,
+                fannelName,
+            )
         }.forEach {
             val destiFileObj = File("$destiDirPath/$it")
             if(

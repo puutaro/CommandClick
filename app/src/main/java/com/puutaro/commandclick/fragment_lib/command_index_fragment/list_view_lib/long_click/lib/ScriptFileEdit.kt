@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
-import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -16,12 +16,12 @@ import java.io.File
 
 object ScriptFileEdit {
     fun edit(
-        cmdIndexFragment: CommandIndexFragment,
+        fragment: Fragment,
 //        currentAppDirPath: String,
         fannelName: String,
     ){
         val sharedPref =
-            FannelInfoTool.getSharePref(cmdIndexFragment.context)
+            FannelInfoTool.getSharePref(fragment.context)
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
 //            currentAppDirPath,
@@ -37,14 +37,14 @@ object ScriptFileEdit {
             ).absolutePath,
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
-            cmdIndexFragment,
+            fragment,
             shellContentsList,
             fannelName
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${cmdclickDefaultAppDirPath}/${fannelName}"
             VariationErrDialog.show(
-                cmdIndexFragment,
+                fragment,
                 shellScriptPath,
                 validateErrMessage
             )
@@ -63,7 +63,7 @@ object ScriptFileEdit {
             FannelInfoSetting.on_shortcut.defalutStr,
             FannelInfoSetting.current_fannel_state.defalutStr,
         )
-        val context = cmdIndexFragment.context
+        val context = fragment.context
             ?: return
         val listener = context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener

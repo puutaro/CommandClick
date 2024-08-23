@@ -26,7 +26,6 @@ import java.io.File
 object FannelHistoryGifCreator {
 
     private var gifCreateJob: Job? = null
-    private val urlFileSystems = UrlFileSystems()
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
     fun exit(){
@@ -49,14 +48,14 @@ object FannelHistoryGifCreator {
                     && tag != terminalFragment.context?.getString(R.string.index_terminal_fragment)
                 ) return@repeatOnLifecycle
                 val fannelList = withContext(Dispatchers.IO) {
-                    urlFileSystems.getFannelList(
+                    UrlFileSystems.getFannelList(
                         context
                     ).split("\n").filter {
                         it.isNotEmpty()
                     }
                 }
                 val fannelNameList = withContext(Dispatchers.IO) {
-                    urlFileSystems.extractFannelNameList(fannelList)
+                    UrlFileSystems.extractFannelNameList(fannelList)
                 }
 //                val historyList = withContext(Dispatchers.IO) {
 //                    FileSystems.filterSuffixShellOrJsFiles(
