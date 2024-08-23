@@ -13,7 +13,6 @@ object AddBlockerHandler {
         val onAdBlock =
             terminalFragment.onAdBlock ==
                     SettingVariableSelects.OnAdblockSelects.ON.name
-        ToastUtils.showLong(onAdBlock.toString())
         if(!onAdBlock) return
         val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
