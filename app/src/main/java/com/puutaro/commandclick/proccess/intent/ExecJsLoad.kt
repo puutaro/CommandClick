@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.intent
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -107,8 +108,9 @@ object ExecJsLoad {
             sharePref,
             FannelInfoSetting.current_fannel_name
         )
-        val isCmdIndex = selectedJsFileName == UsePath.cmdclickPreferenceJsName
-                && currentFannelName != UsePath.cmdclickPreferenceJsName
+        val preference = SystemFannel.preference
+        val isCmdIndex = selectedJsFileName == preference
+                && currentFannelName != preference
         if(
             isCmdIndex
             || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName

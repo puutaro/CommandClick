@@ -1,16 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -49,18 +52,31 @@ object CmdClickSystemFannelManager {
 //        )
 //    }
 
-    fun createPreferenceFannel(
+    suspend fun createPreferenceFannel(
         context: Context?,
-        fannelInfoMap: Map<String, String>,
     ){
+        if(
+            File(UsePath.cmdclickDefaultAppDirPath, SystemFannel.preference).isFile
+        ) return
+        val fannelList = withContext(Dispatchers.IO){
+            UrlFileSystems.getFannelList(context).split("\n")
+        }
+        withContext(Dispatchers.IO){
+            UrlFileSystems.createFileByOverride(
+                context,
+                SystemFannel.preference,
+                fannelList
+            )
+        }
+
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )
-        FannelVersion.create(
-            context,
-//            currentAppDirPath,
-            "preference",
-        )
+//        FannelVersion.create(
+//            context,
+////            currentAppDirPath,
+//            "preference",
+//        )
     }
 
     object FannelVersion {

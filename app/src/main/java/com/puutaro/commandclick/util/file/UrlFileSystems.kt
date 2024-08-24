@@ -27,6 +27,7 @@ object UrlFileSystems {
         "$cmdclickRepoGitUserContentPrefix/fannel"
 
     val readmeSuffix = "master/${UsePath.fannelReadmeName}"
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 //        enum class FirstCreateFannels(
 //            val str: String,
 //        ) {
@@ -139,47 +140,46 @@ object UrlFileSystems {
         }
     }
 
-    fun createFile(
-        context: Context?,
-        destiDirPath: String,
-        fannelName: String,
-        fannelList: List<String>,
-    ){
-
-        fannelList.filter {
-            isFannelListByName(
-                it,
-                fannelName
-            )
-        }.forEach {
-            val destiFileObj = File("$destiDirPath/$it")
-            if(
-                destiFileObj.isFile
-                || destiFileObj.absolutePath.contains(
-                    "/${FannelHistoryPath.makePartPngDirCut()}/"
-                )
-            ) return@forEach
-            val downloadUrl = "$gitUserContentFannelPrefix/$it"
-            val conByteArray = CurlManager.get(
-                context,
-                downloadUrl,
-                String(),
-                String(),
-                2000,
-            )
-            if(
-                !CurlManager.isConnOk(conByteArray)
-            ) return@forEach
-            FileSystems.writeFromByteArray(
-                destiFileObj.absolutePath,
-                conByteArray
-            )
-        }
-    }
+//    fun createFile(
+//        context: Context?,
+//        destiDirPath: String,
+//        fannelName: String,
+//        fannelList: List<String>,
+//    ){
+//
+//        fannelList.filter {
+//            isFannelListByName(
+//                it,
+//                fannelName
+//            )
+//        }.forEach {
+//            val destiFileObj = File("$destiDirPath/$it")
+//            if(
+//                destiFileObj.isFile
+//                || destiFileObj.absolutePath.contains(
+//                    "/${FannelHistoryPath.makePartPngDirCut()}/"
+//                )
+//            ) return@forEach
+//            val downloadUrl = "$gitUserContentFannelPrefix/$it"
+//            val conByteArray = CurlManager.get(
+//                context,
+//                downloadUrl,
+//                String(),
+//                String(),
+//                2000,
+//            )
+//            if(
+//                !CurlManager.isConnOk(conByteArray)
+//            ) return@forEach
+//            FileSystems.writeFromByteArray(
+//                destiFileObj.absolutePath,
+//                conByteArray
+//            )
+//        }
+//    }
 
     fun createFileByOverride(
         context: Context?,
-        destiDirPath: String,
         fannelName: String,
         fannelList: List<String>,
     ){
@@ -190,7 +190,7 @@ object UrlFileSystems {
                 fannelName,
             )
         }.forEach {
-            val destiFileObj = File("$destiDirPath/$it")
+            val destiFileObj = File("${cmdclickDefaultAppDirPath}/$it")
             if(
                 destiFileObj.absolutePath.contains(
                     "/${FannelHistoryPath.makePartPngDirCut()}/"

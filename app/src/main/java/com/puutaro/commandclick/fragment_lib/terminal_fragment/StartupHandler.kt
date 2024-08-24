@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -49,7 +50,7 @@ object StartupHandler {
         val launchFannelName = when(
             FannelInfoTool.isEmptyFannelName(fannelName)
         ) {
-            true -> UsePath.cmdclickPreferenceJsName
+            true -> SystemFannel.preference
             else -> fannelName
         }
         AutoExecFireManager.fire(

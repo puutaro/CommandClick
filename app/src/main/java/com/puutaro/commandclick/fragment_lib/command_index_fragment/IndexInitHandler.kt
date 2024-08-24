@@ -106,7 +106,6 @@ object IndexInitHandler {
             withContext(Dispatchers.IO) {
                 CmdClickSystemFannelManager.createPreferenceFannel(
                     context,
-                    cmdIndexFragment.fannelInfoMap,
                 )
             }
             CommandClickScriptVariable.makeButtonExecJS(

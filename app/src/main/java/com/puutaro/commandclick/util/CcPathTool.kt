@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -267,7 +268,7 @@ object CcPathTool {
             currentScriptFileName.isEmpty()
             || currentScriptFileName == "-"
             || currentScriptFileName == CommandClickScriptVariable.EMPTY_STRING
-        ) return UsePath.cmdclickPreferenceJsName
+        ) return SystemFannel.preference
         return currentScriptFileName
     }
 

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press
 
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -18,7 +19,7 @@ object LongPressPathDecider {
                 it.isEmpty()
                         || it == CommandClickScriptVariable.EMPTY_STRING
             when(isEmptyFanneName){
-                true -> UsePath.cmdclickPreferenceJsName
+                true -> SystemFannel.preference
                 else -> it
             }
         }

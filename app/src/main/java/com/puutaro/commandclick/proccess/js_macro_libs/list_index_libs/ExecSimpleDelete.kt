@@ -115,7 +115,7 @@ object ExecSimpleDelete {
 
     private object DeleteConfirmDialog {
 
-        private var getPermissionConfirmDialog: Dialog? = null
+        private var delteConfirmDialog: Dialog? = null
 
         fun launch(
             editFragment: EditFragment,
@@ -145,49 +145,49 @@ object ExecSimpleDelete {
         ){
             val context = editFragment.context
                 ?: return
-            getPermissionConfirmDialog = Dialog(
+            delteConfirmDialog = Dialog(
                 context
             )
-            getPermissionConfirmDialog?.setContentView(
+            delteConfirmDialog?.setContentView(
                 com.puutaro.commandclick.R.layout.confirm_text_dialog
             )
             val confirmTitleTextView =
-                getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
+                delteConfirmDialog?.findViewById<AppCompatTextView>(
                     com.puutaro.commandclick.R.id.confirm_text_dialog_title
                 )
             confirmTitleTextView?.text = "Delete ok?"
             val confirmContentTextView =
-                getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
+                delteConfirmDialog?.findViewById<AppCompatTextView>(
                     com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
                 )
             confirmContentTextView?.text = selectedItem
             val confirmCancelButton =
-                getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
+                delteConfirmDialog?.findViewById<AppCompatImageButton>(
                     com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
                 )
             confirmCancelButton?.setOnClickListener {
-                getPermissionConfirmDialog?.dismiss()
-                getPermissionConfirmDialog = null
+                delteConfirmDialog?.dismiss()
+                delteConfirmDialog = null
                 cancelProcess(
                     recyclerView,
                     listIndexPosition,
                 )
             }
-            getPermissionConfirmDialog?.setOnCancelListener {
-                getPermissionConfirmDialog?.dismiss()
-                getPermissionConfirmDialog = null
+            delteConfirmDialog?.setOnCancelListener {
+                delteConfirmDialog?.dismiss()
+                delteConfirmDialog = null
                 cancelProcess(
                     recyclerView,
                     listIndexPosition,
                 )
             }
             val confirmOkButton =
-                getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
+                delteConfirmDialog?.findViewById<AppCompatImageButton>(
                     com.puutaro.commandclick.R.id.confirm_text_dialog_ok
                 )
             confirmOkButton?.setOnClickListener {
-                getPermissionConfirmDialog?.dismiss()
-                getPermissionConfirmDialog = null
+                delteConfirmDialog?.dismiss()
+                delteConfirmDialog = null
                 removeItem(
                     editFragment,
                     listIndexForEditAdapter,
@@ -195,14 +195,14 @@ object ExecSimpleDelete {
                     listIndexPosition,
                 )
             }
-            getPermissionConfirmDialog?.window?.setLayout(
+            delteConfirmDialog?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            getPermissionConfirmDialog?.window?.setGravity(
+            delteConfirmDialog?.window?.setGravity(
                 Gravity.CENTER
             )
-            getPermissionConfirmDialog?.show()
+            delteConfirmDialog?.show()
         }
 
         private fun cancelProcess(

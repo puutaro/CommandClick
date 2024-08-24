@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.system.Os
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 
@@ -33,7 +34,7 @@ class UbuntuFiles(
             ScriptPreWordReplacer.replace(
                 "${UsePath.fannelSettingsDirPath}/${ubuntuExtraStartupShellPathsTsvName}",
 //                UsePath.cmdclickDefaultAppDirPath,
-                UsePath.cmdclickPreferenceJsName
+                SystemFannel.preference
             )
         }
         const val pulseAudioStartUpShellPath = "${supportDirInUbuntu}/pulse_setup.sh"

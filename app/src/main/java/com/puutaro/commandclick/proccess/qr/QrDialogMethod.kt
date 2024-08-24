@@ -127,14 +127,15 @@ object QrDialogMethod {
 //        currentAppDirPath: String,
         fannelName: String,
     ): String {
-        val isAppDirAdmin = UsePath.cmdclickDefaultAppDirPath.removeSuffix("/") ==
-                UsePath.cmdclickAppDirAdminPath
-        return when(isAppDirAdmin){
-            true
-            -> "Pass AppDir: ${CcPathTool.makeFannelRawName(fannelName)}"
-            else
-            -> "Pass: ${fannelName}"
-        }
+//        val isAppDirAdmin = UsePath.cmdclickDefaultAppDirPath.removeSuffix("/") ==
+//                UsePath.cmdclickAppDirAdminPath
+//        return when(isAppDirAdmin){
+//            true
+//            -> "Pass AppDir: ${CcPathTool.makeFannelRawName(fannelName)}"
+//            else
+//            -> "Pass: ${fannelName}"
+//        }
+        return "Pass: ${SystemFannel.convertDisplayNameToFannelName(fannelName)}"
     }
 
     private fun makeCpFileQrStr(

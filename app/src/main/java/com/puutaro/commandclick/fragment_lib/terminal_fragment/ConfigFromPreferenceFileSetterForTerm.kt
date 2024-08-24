@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -17,6 +18,7 @@ import com.puutaro.commandclick.util.sd.SdCardTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 
@@ -26,7 +28,7 @@ object ConfigFromPreferenceFileSetterForTerm {
         terminalFragment: TerminalFragment,
     ){
         val context = terminalFragment.context
-        val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
+        val cmdclickPreferenceJsName = SystemFannel.preference
 //        CmdClickSystemFannelManager.createConfigFannel(
 //            context
 //        )
@@ -42,12 +44,11 @@ object ConfigFromPreferenceFileSetterForTerm {
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
-
-        val fannelInfoMap = terminalFragment.fannelInfoMap
-        CmdClickSystemFannelManager.createPreferenceFannel(
-            context,
-            fannelInfoMap,
-        )
+//        runBlocking {
+//            CmdClickSystemFannelManager.createPreferenceFannel(
+//                context,
+//            )
+//        }
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )
@@ -535,7 +536,7 @@ private fun makeSettingVariableListForTerm(
         R.string.index_terminal_fragment
     )
     val isPreferenceScript =
-        currentScriptFileName == UsePath.cmdclickPreferenceJsName
+        currentScriptFileName == SystemFannel.preference
     if(
         isIndexTerminal
         || isPreferenceScript

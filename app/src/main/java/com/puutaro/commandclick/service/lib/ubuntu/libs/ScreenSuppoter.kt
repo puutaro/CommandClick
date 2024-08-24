@@ -2,6 +2,7 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
@@ -89,7 +90,7 @@ object ScreenMonitor {
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
 //                UsePath.cmdclickDefaultAppDirPath,
-                UsePath.cmdclickPreferenceJsName
+                SystemFannel.preference
             ),
             settingSectionStart,
             settingSectionEnd

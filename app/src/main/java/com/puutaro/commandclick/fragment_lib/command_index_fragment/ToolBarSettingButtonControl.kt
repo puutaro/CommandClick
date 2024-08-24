@@ -25,6 +25,7 @@ import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import kotlinx.coroutines.runBlocking
 
 
 class ToolBarSettingButtonControl(
@@ -199,14 +200,15 @@ class ToolBarSettingButtonControl(
     }
 
     private fun preferenceEdit(){
-        CmdClickSystemFannelManager.createPreferenceFannel(
-            context,
-            cmdIndexFragment.fannelInfoMap
-        )
+        runBlocking {
+            CmdClickSystemFannelManager.createPreferenceFannel(
+                context,
+            )
+        }
         SystemFannelLauncher.launch(
             cmdIndexFragment,
 //            currentAppDirPath,
-            UsePath.cmdclickPreferenceJsName,
+            SystemFannel.preference,
         )
     }
 }

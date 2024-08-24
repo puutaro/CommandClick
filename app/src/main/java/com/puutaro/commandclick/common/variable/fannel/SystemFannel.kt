@@ -17,6 +17,15 @@ object SystemFannel {
     val saveWebConDialog = "saveWebConDialog.js"
     val urlIntender = "urlIntender.js"
 
+    fun convertDisplayNameToFannelName(
+        fannelName: String
+    ): String {
+        return when(fannelName == home){
+            true -> "HOME"
+            else -> fannelName
+        }
+    }
+
     val maskListForFannelManageList = listOf(
         webSearcher,
         copyLink,

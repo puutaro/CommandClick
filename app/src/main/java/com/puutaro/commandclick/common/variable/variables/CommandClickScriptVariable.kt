@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.common.variable.variables
 
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
@@ -242,9 +243,8 @@ object CommandClickScriptVariable {
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
-    val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
     val fannelDirName = CcPathTool.makeFannelDirName(
-        cmdclickPreferenceJsName
+        SystemFannel.preference
     )
     private val homeScriptUrlsFilePath = UsePath.homeScriptUrlsFilePath
     private val homeFannelsFilePath =

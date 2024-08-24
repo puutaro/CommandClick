@@ -254,7 +254,7 @@ class CommandIndexFragment: Fragment() {
             fannelInfoMap
         )
         toolBarInternetButtonControl.interneButtontSetOnClickListener()
-        FannelPreInstaller.install(this)
+        PreInstallFannel.install(this)
     }
 
 

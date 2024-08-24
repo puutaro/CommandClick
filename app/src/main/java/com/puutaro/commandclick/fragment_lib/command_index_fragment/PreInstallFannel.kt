@@ -38,7 +38,7 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
 
-object FannelPreInstaller {
+object PreInstallFannel {
 
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val cmdclickUpdateFannelInfoSystemDirPath = UsePath.cmdclickUpdateFannelInfoSystemDirPath
@@ -94,7 +94,6 @@ object FannelPreInstaller {
                                 val downloadList = it.second
                                 UrlFileSystems.createFileByOverride(
                                     context,
-                                    cmdclickDefaultAppDirPath,
                                     fannelName,
                                     downloadList
                                 )
@@ -136,9 +135,24 @@ object FannelPreInstaller {
                         SystemFannel.firstPinFannelList.joinToString("\n")
                     )
                 }
+                withContext(Dispatchers.IO) {
+                    val preInstallFannelListTsvPath = UsePath.preInstallFannelListTsvPath
+                    val preInstallFannelList = listOf(SystemFannel.home) + fannelNameList
+                    FileSystems.writeFile(
+                        preInstallFannelListTsvPath,
+                        preInstallFannelList.joinToString("\n")
+                    )
+                }
             }
         }
+    }
 
+    fun isPreinstallFannel(
+        fannelName: String
+    ): Boolean {
+        return ReadText(
+            UsePath.preInstallFannelListTsvPath
+        ).textToList().contains(fannelName)
     }
 
     private suspend fun makeDownloadListByFannelName(

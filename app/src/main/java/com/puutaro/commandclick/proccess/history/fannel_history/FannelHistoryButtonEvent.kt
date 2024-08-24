@@ -28,20 +28,22 @@ import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.PreInstallFannel
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
-import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
+import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateManager
@@ -170,11 +172,11 @@ class FannelHistoryButtonEvent (
             fannelManageListView,
             searchText
         )
-//        setItemTouchHelper(
-//            fannelManageListView,
-//            fannelManageListAdapter,
-//            searchText,
-//        )
+        setItemTouchHelper(
+            fannelManageListView,
+            fannelManageListAdapter,
+            searchText,
+        )
         fannelHistoryDialog?.window
             ?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -303,6 +305,13 @@ class FannelHistoryButtonEvent (
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
                 val position = holder.bindingAdapterPosition
                 val fannelName = fannelManageListAdapter.fannelNameList[position]
+                if(
+                    !FactFannel.isFactFannel(fannelName)
+                    && fannelName != SystemFannel.home
+                ){
+                    FactFannel.creatingToast()
+                    return
+                }
                 FileSystems.updateLastModified(
                     File(cmdclickDefaultAppDirPath, fannelName).absolutePath
                 )
@@ -414,40 +423,35 @@ class FannelHistoryButtonEvent (
     private fun setFannelManageListViewOnPinItemClickListener(
         fannelManageListAdapter: FannelManageAdapter,
     ) {
-        val pinLimit = FannelManageAdapter.pinLimit
+//        val pinLimit = FannelManageAdapter.pinLimit
         val pinFannelTsvPath = UsePath.pinFannelTsvPath
         fannelManageListAdapter.pinItemClickListener = object: FannelManageAdapter.OnPinItemClickListener {
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
 //                terminalViewModel.onDialog = false
                 val position = holder.bindingAdapterPosition
                 val fannelName = fannelManageListAdapter.fannelNameList[position]
+                if(
+                    !FactFannel.isFactFannel(fannelName)
+                ){
+                    FactFannel.creatingToast()
+                    return
+                }
                 val pinFannelList = ReadText(pinFannelTsvPath).textToList()
                 when(
                     pinFannelList.contains(fannelName)
                 ){
                     true -> {
-                        val removePinFannelList =
-                            pinFannelList.filter {
-                                it != fannelName
-                            }.joinToString("\n")
-                        FileSystems.writeFile(
-                            pinFannelTsvPath,
-                            removePinFannelList
-                        )
+                        PinFannelManager.remove(fannelName)
                         ToastUtils.showShort("Remove ok: ${fannelName}")
                         holder.pinImageButtonView.imageTintList =
                             context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
                     }
                     else -> {
-                        if(pinFannelList.size >= pinLimit){
-                            ToastUtils.showLong("Remove pin: limit ${pinLimit}")
-                            return
-                        }
-                        val updatePinList = listOf(fannelName) + pinFannelList
-                        FileSystems.writeFile(
-                            pinFannelTsvPath,
-                            updatePinList.joinToString("\n")
-                        )
+//                        if(pinFannelList.size >= pinLimit){
+//                            ToastUtils.showLong("Remove pin: limit ${pinLimit}")
+//                            return
+//                        }
+                        PinFannelManager.add(fannelName)
                         ToastUtils.showShort("Add ok: ${fannelName}")
                         holder.pinImageButtonView.imageTintList =
                             context?.getColorStateList(FannelManageAdapter.pinExistColor)
@@ -469,34 +473,58 @@ class FannelHistoryButtonEvent (
                     fannelManageListAdapter.fannelNameList.getOrNull(position)
                         ?: return
                 exitDialog(fannelManageListView)
-                ScriptFileEdit.edit(
-                    fragment,
-                    fannelName
-                )
+                if(
+                    !FactFannel.isFactFannel(fannelName)
+                ){
+                    FactFannel.creatingToast()
+                    return
+                }
+                when(fannelName == SystemFannel.home) {
+                    true -> {
+                        preferenceEdit()
+                    }
+                    false -> ScriptFileEdit.edit(
+                        fragment,
+                        fannelName
+                    )
+                }
             }
         }
+    }
+
+    private fun preferenceEdit(
+    ){
+        if(
+            fragment !is CommandIndexFragment
+        ) return
+        val preference = SystemFannel.preference
+        if(
+            !File(UsePath.cmdclickDefaultAppDirPath, preference).isFile
+        ) {
+            ToastUtils.showShort("wait for creating..")
+            return
+        }
+        SystemFannelLauncher.launch(
+            fragment,
+            preference,
+        )
     }
 
     private fun setFannelManageListViewOnLongPressItemClickListener(
         fannelManageListAdapter: FannelManageAdapter,
     ) {
-//        val longPressMenuPathList = listOf(
-//            UsePath.srcImageAnchorLongPressMenuFilePath,
-//            UsePath.srcAnchorLongPressMenuFilePath,
-//            UsePath.imageLongPressMenuFilePath,
-//        ).joinToString("\n").let {
-//            ScriptPreWordReplacer.replace(
-//                it,
-//                UsePath.cmdclickPreferenceJsName
-//            )
-//        }.split("\n")
-
         fannelManageListAdapter.longPressItemClickListener = object: FannelManageAdapter.OnLongPressItemClickListener {
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
                 val position = holder.bindingAdapterPosition
                 val fannelName =
                     fannelManageListAdapter.fannelNameList.getOrNull(position)
                         ?: return
+                if(
+                    !FactFannel.isFactFannel(fannelName)
+                ){
+                    FactFannel.creatingToast()
+                    return
+                }
                 val repValsMap =
                     SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
                         context,
@@ -516,7 +544,7 @@ class FannelHistoryButtonEvent (
                         ?: String()
                     val menuSettingPath = ScriptPreWordReplacer.replace(
                         menuSettingPathSrc,
-                        UsePath.cmdclickPreferenceJsName,
+                        SystemFannel.preference,
                     )
                     val jsPathSettingValName = menuNameToJsPathSettingValsMap.get(it)
                         ?: String()
@@ -601,6 +629,13 @@ class FannelHistoryButtonEvent (
                 val fannelName =
                     fannelManageAdapter.fannelNameList.getOrNull(position)
                         ?: return
+                if(
+                    !FactFannel.isFactFannel(fannelName)
+                    && fannelName != SystemFannel.home
+                ){
+                    FactFannel.creatingToast()
+                    return
+                }
 //                val urlHistoryAdapterRelativeLayout = holder.fannelHistoryAdapterRelativeLayout
                 CoroutineScope(Dispatchers.Main).launch {
                     QrDialogMethod.launchPassDialog(
@@ -654,22 +689,16 @@ class FannelHistoryButtonEvent (
                         && direction != ItemTouchHelper.RIGHT
                     ) return
                     val position = viewHolder.layoutPosition
-                    val historyLine = fannelManageAdapter.fannelNameList[position]
+                    val fannelName = fannelManageAdapter.fannelNameList.getOrNull(position)
+                        ?: return
 //                    val appDirName =
 //                        FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
 //                            historyLine
 //                        )
-                    val fannelName =
-                        FannelHistoryManager.getFannelNameFromAppHistoryFileName(
-                            historyLine
-                        )
-                    val selectedHistoryFile = FannelHistoryManager.makeAppHistoryFileNameForInit(
-//                        appDirName,
-                        fannelName
-                    )
-                    execDeleteHistoryFile(
-                        selectedHistoryFile,
-                        cmdclickAppHistoryDirAdminPath,
+                    DeleteConfirmDialog.launch(
+                        fragment,
+                        fannelName,
+                        recyclerView,
                         fannelManageAdapter,
                         position,
                         searchText,
@@ -745,28 +774,202 @@ class FannelHistoryButtonEvent (
 //    }
 
 
-    fun execDeleteHistoryFile(
-        selectedHistoryFile: String,
-        cmdclickAppHistoryDirAdminPath: String,
-        historyListAdapter: FannelManageAdapter,
-        position: Int,
-        searchText: AppCompatEditText?,
-    ) {
-        val selectedDeleteFile =
-            selectedHistoryFile
-                .split("\n")
-                .firstOrNull()
+    private object DeleteConfirmDialog {
+
+        private var deleteConfirmDialog: Dialog? = null
+
+        fun launch(
+            fragment: Fragment,
+            fannelName: String,
+            recyclerView: RecyclerView,
+            fannelManageAdapter: FannelManageAdapter,
+            position: Int,
+            searchText: AppCompatEditText?,
+        ){
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
+                    execLaunch(
+                        fragment,
+                        fannelName,
+                        recyclerView,
+                        fannelManageAdapter,
+                        position,
+                        searchText,
+                    )
+                }
+            }
+        }
+        private fun execLaunch(
+            fragment: Fragment,
+            fannelName: String,
+            recyclerView: RecyclerView,
+            fannelManageAdapter: FannelManageAdapter,
+            position: Int,
+            searchText: AppCompatEditText?,
+        ){
+            val context = fragment.context
                 ?: return
-        FileSystems.removeFiles(
-            File(
-                cmdclickAppHistoryDirAdminPath,
-                selectedDeleteFile,
-            ).absolutePath
-        )
-        historyListAdapter.fannelNameList.removeAt(position)
-        historyListAdapter.notifyItemRemoved(position)
-        searchText?.text?.clear()
+            deleteConfirmDialog = Dialog(
+                context
+            )
+            deleteConfirmDialog?.setContentView(
+                R.layout.confirm_text_dialog
+            )
+            val confirmTitleTextView =
+                deleteConfirmDialog?.findViewById<AppCompatTextView>(
+                    R.id.confirm_text_dialog_title
+                )
+            val confirmTitle = when(
+                PreInstallFannel.isPreinstallFannel(fannelName)
+            ){
+                false -> "Delete ok?"
+                else -> "Init ok?"
+            }
+            confirmTitleTextView?.text = confirmTitle
+            val confirmContentTextView =
+                deleteConfirmDialog?.findViewById<AppCompatTextView>(
+                    R.id.confirm_text_dialog_text_view
+                )
+            confirmContentTextView?.text =
+                SystemFannel.convertDisplayNameToFannelName(fannelName)
+            val confirmCancelButton =
+                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+                    R.id.confirm_text_dialog_cancel
+                )
+            confirmCancelButton?.setOnClickListener {
+                deleteConfirmDialog?.dismiss()
+                deleteConfirmDialog = null
+                cancelProcess(
+                    recyclerView,
+                    position,
+                )
+            }
+            deleteConfirmDialog?.setOnCancelListener {
+                deleteConfirmDialog?.dismiss()
+                deleteConfirmDialog = null
+                cancelProcess(
+                    recyclerView,
+                    position,
+                )
+            }
+            val confirmOkButton =
+                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+                    R.id.confirm_text_dialog_ok
+                )
+            confirmOkButton?.setOnClickListener {
+                deleteConfirmDialog?.dismiss()
+                deleteConfirmDialog = null
+                execDeleteFannel(
+                    context,
+                    fannelName,
+                    fannelManageAdapter,
+                    position,
+                    searchText,
+                )
+            }
+            deleteConfirmDialog?.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            deleteConfirmDialog?.window?.setGravity(
+                Gravity.CENTER
+            )
+            deleteConfirmDialog?.show()
+        }
+
+        private fun cancelProcess(
+            recyclerView: RecyclerView,
+            listIndexPosition: Int,
+        ){
+            recyclerView.adapter?.notifyItemChanged(
+                listIndexPosition
+            )
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
+                    delay(300)
+                    recyclerView.layoutManager?.scrollToPosition(
+                        listIndexPosition
+                    )
+                }
+            }
+        }
+
+        private fun execDeleteFannel(
+            context: Context?,
+            fannelName: String,
+            fannelManageAdapter: FannelManageAdapter,
+            position: Int,
+            searchText: AppCompatEditText?,
+        ) {
+            PinFannelManager.remove(fannelName)
+            LongPressMenuTool.removeAll(fannelName)
+            deleteFannel(fannelName)
+            val isPreInstallFannel =
+                PreInstallFannel.isPreinstallFannel(fannelName)
+            when(isPreInstallFannel) {
+                false -> {
+                    fannelManageAdapter.fannelNameList.removeAt(position)
+                    fannelManageAdapter.notifyItemRemoved(position)
+                }
+                else -> fannelManageAdapter.notifyDataSetChanged()
+            }
+            searchText?.text?.clear()
+            if(isPreInstallFannel) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val createFannelName = withContext(Dispatchers.IO) {
+                        FactFannel.convertToFactFannelName(fannelName)
+                    }
+                    val fannelList = withContext(Dispatchers.IO){
+                        UrlFileSystems.getFannelList(context).split("\n")
+                    }
+                    withContext(Dispatchers.IO) {
+                        UrlFileSystems.createFileByOverride(
+                            context,
+                            createFannelName,
+                            fannelList
+                        )
+                    }
+                }
+            }
+        }
+
+        private fun deleteFannel(
+            fannelName: String
+        ){
+            when(fannelName == SystemFannel.home) {
+                true -> deleteAndSaveSettingImage(SystemFannel.preference)
+                else -> deleteAndSaveSettingImage(fannelName)
+            }
+        }
+
+        fun deleteAndSaveSettingImage(
+            fannelName: String
+        ){
+            val settingImageDirPath = ScriptPreWordReplacer.replace(
+                UsePath.fannelSettingImagesDirPath,
+                fannelName
+            )
+            val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
+            FileSystems.removeAndCreateDir(cmdclickTempDownloadDirPath)
+            FileSystems.copyDirectory(
+                settingImageDirPath,
+                cmdclickTempDownloadDirPath,
+            )
+            FileSystems.removeFileWithDir(
+                File(
+                    UsePath.cmdclickDefaultAppDirPath,
+                    fannelName,
+                )
+            )
+            FileSystems.copyDirectory(
+                cmdclickTempDownloadDirPath,
+                settingImageDirPath,
+            )
+        }
+
     }
+
+
 
     fun updateLastModifyForHistoryAndAppDir(
         selectedHistoryFilePath: String,
@@ -911,7 +1114,7 @@ private object LongPressManageListDialog {
                 ?: return@setOnItemClickListener
             val menuPath = ScriptPreWordReplacer.replace(
                 menuPathSrc,
-                UsePath.cmdclickPreferenceJsName,
+                SystemFannel.preference,
             )
             val menuConList = ReadText(menuPath).textToList()
             val updateLongPressMenuToIsExistList = when(menuNameToExist.second){
@@ -958,6 +1161,34 @@ private object LongPressManageListDialog {
                 fannelName,
                 updateLongPressMenuToIsExistList,
             )
+        }
+    }
+}
+
+private object FactFannel {
+
+    fun isFactFannel(
+        fannelName: String
+    ): Boolean {
+        return File(
+            UsePath.cmdclickDefaultAppDirPath,
+            convertToFactFannelName(fannelName)
+        ).isFile
+    }
+    fun convertToFactFannelName(
+        fannelName: String
+    ): String {
+        return when (
+            fannelName == SystemFannel.home
+        ) {
+            true -> SystemFannel.preference
+            else -> fannelName
+        }
+    }
+
+    fun creatingToast(){
+        CoroutineScope(Dispatchers.Main).launch {
+            ToastUtils.showShort("createing..")
         }
     }
 }

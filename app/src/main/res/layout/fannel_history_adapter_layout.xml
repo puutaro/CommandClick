@@ -142,7 +142,7 @@
         android:id="@+id/fannel_history_adapter_edit"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:src="@drawable/icons8_edit"
+        android:src="@drawable/icons8_setting"
         app:tint="@color/gray_out"
         android:backgroundTint="@color/setting_menu_footer"
         android:layout_gravity="center"

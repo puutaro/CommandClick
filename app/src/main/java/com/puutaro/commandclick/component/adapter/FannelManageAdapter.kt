@@ -2,12 +2,19 @@ package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,9 +22,10 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.custom_view.DrawableSpan
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
@@ -52,7 +60,7 @@ class FannelManageAdapter(
 
     companion object {
 
-        const val pinLimit = 6
+//        const val pinLimit = 6
         enum class FannelHistorySettingKey(val key: String){
             ENABLE_LONG_PRESS_BUTTON("enableLongPressButton"),
             ENABLE_EDIT_EXECUTE("enableEditExecute"),
@@ -144,7 +152,18 @@ class FannelManageAdapter(
                     true -> "HOME"
                     else -> CcPathTool.trimAllExtend(fannelName)
                 }
-                holder.fannelNameTextView.text = displayFannelName
+                when(
+                    settingMap?.get(
+                        FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
+                    ) == switchOn
+                ) {
+                    true -> holder.fannelNameTextView.setText(
+                        underlineSpannableFannelName(displayFannelName),
+                        TextView.BufferType.SPANNABLE
+                    )
+                    else -> holder.fannelNameTextView.text = displayFannelName
+                }
+
 //                holder.appDirNameTextView.isVisible = false
             }
             withContext(Dispatchers.Main) {
@@ -198,10 +217,13 @@ class FannelManageAdapter(
                 holder.longPressImageButtonView.isEnabled = true
             }
             withContext(Dispatchers.Main){
-                if(
+                val isNotHomeFannel = fannelName != SystemFannel.home
+                val disableEditSettingVals =
                     settingMap?.get(
-                        FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key
-                    ) != switchOn
+                    FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key
+                ) != switchOn && isNotHomeFannel
+                if(
+                    disableEditSettingVals
                     || !isIndex
                 ) {
                     holder.editImageButtonView.isEnabled = false
@@ -449,5 +471,20 @@ class FannelManageAdapter(
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .thumbnail( requestBuilder )
             .into(shareImageView)
+    }
+
+    private fun underlineSpannableFannelName(
+        text: String
+    ): SpannableString {
+        val spannable = SpannableString(text)
+        context?.let {
+            spannable.setSpan(
+                DrawableSpan(AppCompatResources.getDrawable(context, R.drawable.text_underline)),
+                0,
+                text.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        return spannable
     }
 }

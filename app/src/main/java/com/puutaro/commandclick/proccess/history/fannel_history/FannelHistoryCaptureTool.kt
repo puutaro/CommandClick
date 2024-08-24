@@ -49,7 +49,6 @@ object FannelHistoryCaptureTool {
         val onPixelCopyListener: PixelCopy.OnPixelCopyFinishedListener = PixelCopy.OnPixelCopyFinishedListener { copyResult ->
 
             if (copyResult == PixelCopy.SUCCESS) {
-
                 execGetCapture(
                     startUpPref,
                     temporalBitmap

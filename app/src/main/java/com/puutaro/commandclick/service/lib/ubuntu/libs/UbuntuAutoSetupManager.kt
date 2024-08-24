@@ -3,6 +3,7 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 import android.content.Context
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -29,7 +30,7 @@ object UbuntuAutoSetupManager {
         ) return
         val settingValList = File(
             UsePath.cmdclickDefaultAppDirPath,
-            UsePath.cmdclickPreferenceJsName
+            SystemFannel.preference
         ).let {
             CommandClickVariables.extractSettingValListByFannelName(
                 ReadText(it.absolutePath).textToList(),

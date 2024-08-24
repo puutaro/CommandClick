@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -69,7 +70,7 @@ object ExecUpdateNoSaveUrlPaths {
                 ?: return
 
         val currentFannelName =
-            fannelName.ifEmpty { UsePath.cmdclickPreferenceJsName }
+            fannelName.ifEmpty { SystemFannel.preference }
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
 //            currentAppDirPath,

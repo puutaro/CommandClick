@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.history.url_history
 
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -13,7 +14,7 @@ object UrlHistoryRegister {
         jsFileName: String,
     ) {
         if(
-            jsFileName == UsePath.cmdclickPreferenceJsName
+            jsFileName == SystemFannel.preference
         ) return
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val jsFullPath = "${cmdclickDefaultAppDirPath}/${jsFileName}"

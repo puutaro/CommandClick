@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -236,7 +237,7 @@ private object ShellFilePathToHistory {
         shellFileName: String,
     ) {
         if(
-            shellFileName == UsePath.cmdclickPreferenceJsName
+            shellFileName == SystemFannel.preference
         ) return
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val appUrlSystemPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"

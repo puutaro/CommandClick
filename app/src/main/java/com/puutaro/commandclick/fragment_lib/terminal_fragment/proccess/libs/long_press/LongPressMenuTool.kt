@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lo
 
 import android.content.Context
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -9,6 +10,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -162,11 +164,39 @@ object LongPressMenuTool {
         }
     }
 
+    fun removeAll(
+        fannelName: String
+    ){
+        val preference = SystemFannel.preference
+        listOf(
+            UsePath.imageLongPressMenuFilePath,
+            UsePath.srcAnchorLongPressMenuFilePath,
+            UsePath.srcImageAnchorLongPressMenuFilePath,
+        ).joinToString("\n").let {
+            ScriptPreWordReplacer.replace(
+                it,
+                preference
+            )
+        }.split("\n").forEach {
+            longPressMenuPath ->
+            val longPressMenuFannelList =
+                ReadText(longPressMenuPath).textToList()
+            val removedLongPressFannelMenuList =
+                longPressMenuFannelList.filter {
+                    it != fannelName
+                }.joinToString("\n")
+            FileSystems.writeFile(
+                longPressMenuPath,
+                removedLongPressFannelMenuList
+            )
+        }
+    }
+
     enum class LongPressKey(val key: String){
         TITLE("title"),
         TRIGGER_WORD("triggerWord"),
         DISABLE("disable"),
     }
 
-    val longPressDisableOn = "ON"
+    const val longPressDisableOn = "ON"
 }

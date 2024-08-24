@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -17,7 +18,7 @@ object ConfigFromPreferenceFileSetter {
     ){
 
 //        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-        val cmdclickPreferenceJsName = UsePath.cmdclickPreferenceJsName
+        val cmdclickPreferenceJsName = SystemFannel.preference
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
