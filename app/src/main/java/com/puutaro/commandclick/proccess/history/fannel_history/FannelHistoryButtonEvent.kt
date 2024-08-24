@@ -284,12 +284,12 @@ class FannelHistoryButtonEvent (
                 it != homeFannelName
             } + listOf(homeFannelName)
 //        + homeFannelList.reversed()
-        val fannelNameListSourceSize = fannelList.size
+        val fannelNameListSourceSize = fannelNameListSource.size
         return when(
             fannelNameListSourceSize % 2 == 1
                     &&  fannelNameListSourceSize > 3
         ){
-            true -> listOf(homeFannelName)+ fannelNameListSource
+            true -> listOf(homeFannelName) + fannelNameListSource
 //            + homeFannelList.last()
             else -> fannelNameListSource
         }
