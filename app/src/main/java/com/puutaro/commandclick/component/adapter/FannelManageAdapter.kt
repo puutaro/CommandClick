@@ -2,19 +2,13 @@ package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -23,7 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.custom_view.DrawableSpan
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.util.CcPathTool
@@ -56,6 +49,7 @@ class FannelManageAdapter(
         ).toMap()
     }.toMap()
     private val pinFannelList = ReadText(UsePath.pinFannelTsvPath).textToList()
+    private val homeFannel = SystemFannel.home
 
 
     companion object {
@@ -72,12 +66,14 @@ class FannelManageAdapter(
         val pinExistColor = R.color.checked_item_color
         val buttonOrdinalyColor = R.color.file_dark_green_color
         val buttonGrayOutColor = R.color.gray_out
+//        val editExecuteColor = R.color.fannel_icon_color
+        val ordialyBkColor = R.color.setting_menu_footer
     }
     class FannelManageViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
 
         val fannelHistoryAdapterConstraintLayout = view.findViewById<ConstraintLayout>(R.id.fannel_history_adapter_constraint_layout)
-        val fannelHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.fannel_history_adapter_relative_layout)
+//        val fannelHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.fannel_history_adapter_relative_layout)
         val fannelCaptureView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_capture)
         val fannelNameTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_name)
         val titleTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_title)
@@ -147,27 +143,29 @@ class FannelManageAdapter(
             }
             withContext(Dispatchers.Main) {
                 val displayFannelName = when(
-                    fannelName == SystemFannel.home
+                    fannelName == homeFannel
                 ){
                     true -> "HOME"
                     else -> CcPathTool.trimAllExtend(fannelName)
                 }
-                when(
-                    settingMap?.get(
-                        FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
-                    ) == switchOn
-                ) {
-                    true -> holder.fannelNameTextView.setText(
-                        underlineSpannableFannelName(displayFannelName),
-                        TextView.BufferType.SPANNABLE
-                    )
-                    else -> holder.fannelNameTextView.text = displayFannelName
-                }
+                holder.fannelNameTextView.text = displayFannelName
+//                when(
+//                    settingMap?.get(
+//                        FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
+//                    ) == switchOn
+//                            || fannelName == homeFannel
+//                ) {
+//                    true -> holder.fannelNameTextView.setText(
+//                        underlineSpannableFannelName(displayFannelName),
+//                        TextView.BufferType.SPANNABLE
+//                    )
+//                    else -> holder.fannelNameTextView.text = displayFannelName
+//                }
 
 //                holder.appDirNameTextView.isVisible = false
             }
             withContext(Dispatchers.Main) {
-                when(fannelName == SystemFannel.home){
+                when(fannelName == homeFannel){
                     true -> {
                         holder.titleTextView.text = "\uD83C\uDFE0"
                         holder.titleTextView.textSize = 70f
@@ -181,7 +179,7 @@ class FannelManageAdapter(
             }
             withContext(Dispatchers.Main){
                 if(
-                    fannelName == SystemFannel.home
+                    fannelName == homeFannel
                     || !isIndex
                 ) {
                     holder.pinImageButtonView.isEnabled = false
@@ -217,7 +215,7 @@ class FannelManageAdapter(
                 holder.longPressImageButtonView.isEnabled = true
             }
             withContext(Dispatchers.Main){
-                val isNotHomeFannel = fannelName != SystemFannel.home
+                val isNotHomeFannel = fannelName != homeFannel
                 val disableEditSettingVals =
                     settingMap?.get(
                     FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key
@@ -244,11 +242,20 @@ class FannelManageAdapter(
                         fannelName
                     )
                 }
-                withContext(Dispatchers.Main) setImage@ {
+                withContext(Dispatchers.Main) setImage@{
+                    val isEditExecute = settingMap?.get(
+                        FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
+                    ) == switchOn
+                            || fannelName == homeFannel
+                    setLogoBackground(
+                        holder.shareImageRelativeLayoutView,
+                        holder.shareImageView,
+                        isEditExecute,
+                    )
                     if(
-                        fannelName == SystemFannel.home
+                        fannelName == homeFannel
                     ){
-                        setFannelLogo(holder)
+                        setFannelLogo(holder.shareImageView)
                         return@setImage
                     }
                     if (
@@ -258,7 +265,7 @@ class FannelManageAdapter(
                         return@setImage
                     }
                     setFannelLogo(
-                        holder,
+                        holder.shareImageView,
                         logoPngPath,
                     )
                 }
@@ -286,7 +293,7 @@ class FannelManageAdapter(
 //                    ).joinToString("\n\n") + "\n------\n"
 //                )
                 val isAppDir =
-                    fannelName == SystemFannel.home
+                    fannelName == homeFannel
 //                    FannelInfoTool.isEmptyFannelName(fannelName)
                 val isCurentAppDir =
                     FannelInfoTool.isEmptyFannelName(currentFannelName)
@@ -327,10 +334,10 @@ class FannelManageAdapter(
 //        fun onItemLongClick(itemView: View, holder: FannelHistoryViewHolder)
 //    }
 
-    var deleteItemClickListener: OnDeleteItemClickListener? = null
-    interface OnDeleteItemClickListener {
-        fun onItemClick(holder: FannelManageViewHolder)
-    }
+//    var deleteItemClickListener: OnDeleteItemClickListener? = null
+//    interface OnDeleteItemClickListener {
+//        fun onItemClick(holder: FannelManageViewHolder)
+//    }
 
     var shareItemClickListener: OnShareItemClickListener? = null
     interface OnShareItemClickListener {
@@ -362,8 +369,8 @@ class FannelManageAdapter(
                 context?.getColorStateList(hitFannelColor)
 //            holder.fannelHistoryAdapterBottomLinearInner.backgroundTintList =
 //                context?.getColorStateList(hitFannelColor)
-            holder.shareImageView.backgroundTintList =
-                context?.getColorStateList(hitFannelColor)
+            holder.shareImageView.backgroundTintList = null
+//                context?.getColorStateList(hitFannelColor)
             holder.pinImageButtonView.backgroundTintList =
                 context?.getColorStateList(hitFannelColor)
             holder.editImageButtonView.backgroundTintList =
@@ -409,11 +416,36 @@ class FannelManageAdapter(
         }
     }
 
+    private fun setLogoBackground(
+        shareImageRelativeLayoutView: RelativeLayout,
+        shareImageView: AppCompatImageView,
+        isEditExecute: Boolean,
+    ){
+        if(
+            context == null
+        ) return
+        val logoBkColorId = when(isEditExecute){
+            true -> buttonOrdinalyColor
+            else -> ordialyBkColor
+        }
+        val logoImageColorId = when(isEditExecute){
+            true -> ordialyBkColor
+            else -> buttonOrdinalyColor
+        }
+        shareImageRelativeLayoutView.background =
+            AppCompatResources.getDrawable(context, logoBkColorId)
+        shareImageView.imageTintList =
+            context.getColorStateList(logoImageColorId)
+        shareImageView.backgroundTintList = null
+//                                    it.getColorStateList(null)
+        shareImageView.background =
+            AppCompatResources.getDrawable(context, logoBkColorId)
+    }
+
     private fun setFannelLogo(
-        holder: FannelManageViewHolder,
+        shareImageView: AppCompatImageView,
         logoPngPath: String,
     ){
-        val shareImageView = holder.shareImageView
 //        holder.shareImageView.foregroundTintList = null
         shareImageView.imageTintList = null
 //        holder.shareImageView.backgroundTintList = null
@@ -436,7 +468,7 @@ class FannelManageAdapter(
     ){
         val shareImageView = holder.shareImageView
 //        holder.shareImageView.foregroundTintList = null
-        shareImageView.imageTintList = null
+//        shareImageView.imageTintList = null
 //        holder.shareImageView.backgroundTintList = null
         val context = shareImageView.context
         val requestBuilder: RequestBuilder<Drawable> =
@@ -453,9 +485,8 @@ class FannelManageAdapter(
     }
 
     private fun setFannelLogo(
-        holder: FannelManageViewHolder,
+        shareImageView: AppCompatImageView,
     ){
-        val shareImageView = holder.shareImageView
 //        holder.shareImageView.foregroundTintList = null
         shareImageView.imageTintList = null
 //        holder.shareImageView.backgroundTintList = null
@@ -473,18 +504,18 @@ class FannelManageAdapter(
             .into(shareImageView)
     }
 
-    private fun underlineSpannableFannelName(
-        text: String
-    ): SpannableString {
-        val spannable = SpannableString(text)
-        context?.let {
-            spannable.setSpan(
-                DrawableSpan(AppCompatResources.getDrawable(context, R.drawable.text_underline)),
-                0,
-                text.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        return spannable
-    }
+//    private fun underlineSpannableFannelName(
+//        text: String
+//    ): SpannableString {
+//        val spannable = SpannableString(text)
+//        context?.let {
+//            spannable.setSpan(
+//                DrawableSpan(AppCompatResources.getDrawable(context, R.drawable.text_underline)),
+//                0,
+//                text.length,
+//                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//        }
+//        return spannable
+//    }
 }
