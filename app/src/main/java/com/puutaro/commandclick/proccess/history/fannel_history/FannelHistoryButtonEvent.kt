@@ -24,6 +24,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -34,6 +35,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
@@ -341,25 +343,53 @@ class FannelHistoryButtonEvent (
                         fannelName,
                     ).split("\n")
                 }
-                FannelHistoryAdminEvent.register(
-                    sharedPref,
-                    cmdclickDefaultAppDirPath,
-                    fannelName,
-                    mainFannelSettingConList,
-                    setReplaceVariableMap,
-                )
-                launchHandler(
-//                    selectedHistoryFile,
-//                    selectedAppDirPath,
-                    fannelName,
-                    mainFannelSettingConList,
-                    setReplaceVariableMap
-                )
+                val isEditExecute =
+                    CommandClickVariables.substituteCmdClickVariable(
+                        mainFannelSettingConList,
+                        CommandClickScriptVariable.EDIT_EXECUTE,
+                    ) == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+                            || fannelName == SystemFannel.home
+                when (isEditExecute) {
+                    true -> {
+                        execEditExecute(
+                            fannelName,
+                            mainFannelSettingConList,
+                            setReplaceVariableMap
+                        )
+                        return
+                    }
+                    else -> ExecJsOrSellHandler.handle(
+                        fragment,
+                        fannelName,
+                        mainFannelSettingConList,
+                    )
+                }
                 exitDialog(
                     fannelManageListView
                 )
             }
         }
+    }
+
+    private fun execEditExecute(
+        fannelName: String,
+        mainFannelSettingConList: List<String>,
+        setReplaceVariableMap: Map<String, String>?
+    ){
+        FannelHistoryAdminEvent.register(
+            sharedPref,
+            cmdclickDefaultAppDirPath,
+            fannelName,
+            mainFannelSettingConList,
+            setReplaceVariableMap,
+        )
+        launchHandler(
+//                    selectedHistoryFile,
+//                    selectedAppDirPath,
+            fannelName,
+            mainFannelSettingConList,
+            setReplaceVariableMap
+        )
     }
 
     private fun launchHandler(
