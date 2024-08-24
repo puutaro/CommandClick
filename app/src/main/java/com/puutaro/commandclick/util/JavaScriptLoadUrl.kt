@@ -43,19 +43,29 @@ object JavaScriptLoadUrl {
         setReplaceVariableMapSrc: Map<String, String>? = null,
         extraRepValMap: Map<String, String>? = null,
     ):String? {
-        val jsFileObj = File(execJsPath)
+//        val jsFileObj = File(execJsPath)
         if(
-            !jsFileObj.isFile
+            !File(execJsPath).isFile
         ) return null
+        val fannelName = File(
+            CcPathTool.getMainFannelFilePath(execJsPath)
+        ).name
 //        val recentAppDirPath = jsFileObj.parent
 //        if(
 //            recentAppDirPath.isNullOrEmpty()
 //        ) return null
 
-        val scriptFileName = jsFileObj.name
+//        val scriptFileName = jsFileObj.name
         val jsListBeforeRemoveTsv = jsListSource.ifEmpty {
             ReadText(execJsPath).textToList()
         }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "js_repbals.txt").absolutePath,
+//            listOf(
+//                "execJsPath: ${execJsPath}",
+//                "jsListBeforeRemoveTsv: ${jsListBeforeRemoveTsv}",
+//            ).joinToString("\n\n")
+//        )
         if(
             jsListBeforeRemoveTsv.isEmpty()
         ) return null
@@ -66,7 +76,7 @@ object JavaScriptLoadUrl {
             context,
             jsListBeforeRemoveTsv,
 //            recentAppDirPath,
-            scriptFileName,
+            fannelName,
             setReplaceVariableMapSrc,
         )
         val setReplaceVariableMapBeforeConcatExtraMap = TsvImportManager.concatRepValWithTsvImport(
@@ -86,19 +96,19 @@ object JavaScriptLoadUrl {
         val jsList = TsvImportManager.removeTsvImport(jsListBeforeRemoveTsv)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val currentJsPath = "${UsePath.cmdclickDefaultAppDirPath}/$scriptFileName"
-//            val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
-//                currentJsPath
-//            )
-            val mainFannelName = File(
-                    CcPathTool.getMainFannelFilePath(
-                        currentJsPath
-                    )
-                ).name
+//            val currentJsPath = "${UsePath.cmdclickDefaultAppDirPath}/$fannelName"
+////            val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
+////                currentJsPath
+////            )
+//            val mainFannelName = File(
+//                    CcPathTool.getMainFannelFilePath(
+//                        currentJsPath
+//                    )
+//                ).name
             makeReplaceVariableTableTsv(
                 setReplaceVariableMap,
 //                mainCurrentAppDirPath,
-                mainFannelName,
+                fannelName,
             )
         }
 
@@ -113,13 +123,23 @@ object JavaScriptLoadUrl {
                     it,
                     setReplaceVariableMap,
 //                    recentAppDirPath,
-                    scriptFileName
+                    fannelName
                 )
             }
         if(
             loadJsUrl.isEmpty()
             || loadJsUrl.isBlank()
         ) return null
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "js_repbals.txt").absolutePath,
+//            listOf(
+//                "execJsPath: ${execJsPath}",
+//                "setReplaceVariableMap: ${setReplaceVariableMap}",
+//                "jsList: ${jsList}",
+//                "loadJsUrl: ${loadJsUrl}",
+//                "makeLastJsCon(loadJsUrl): ${makeLastJsCon(loadJsUrl)}"
+//            ).joinToString("\n\n")
+//        )
         return makeLastJsCon(loadJsUrl)
     }
 

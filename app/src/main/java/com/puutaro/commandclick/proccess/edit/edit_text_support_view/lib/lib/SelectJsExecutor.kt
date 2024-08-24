@@ -38,12 +38,13 @@ object SelectJsExecutor {
             if (!onLaunchUrl) return@launch
 //            val currentAppDir = jsFilePathObj.parent
 //                ?: return@launch
-            val scriptName = jsFilePathObj.name
+//            val scriptName = jsFilePathObj.name
             val jsFileContents = withContext(Dispatchers.IO) {
-                makeSelectJsContents(
-//                    currentAppDir,
-                    scriptName,
-                )
+                ReadText(jsFilePath).textToList()
+//                makeSelectJsContents(
+////                    currentAppDir,
+//                    scriptName,
+//                )
             }
             withContext(Dispatchers.Main) {
                 jsHandler(
@@ -77,21 +78,17 @@ object SelectJsExecutor {
         )
     }
 }
-private fun makeSelectJsContents(
-//    currentAppDir: String,
-    scriptName: String,
-): List<String> {
-    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-    return ReadText(
-        File(
-            cmdclickDefaultAppDirPath,
-            scriptName
-        ).absolutePath
-    ).readText().let {
-        ScriptPreWordReplacer.replace(
-            it,
-//            cmdclickDefaultAppDirPath,
-            scriptName
-        )
-    }.split("\n")
-}
+//private fun makeSelectJsContents(
+//    selectedJsPath: String
+//): List<String> {
+//    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//    return ReadText(
+//        selectedJsPath
+//    ).readText().let {
+//        ScriptPreWordReplacer.replace(
+//            it,
+////            cmdclickDefaultAppDirPath,
+//            scriptName
+//        )
+//    }.split("\n")
+//}

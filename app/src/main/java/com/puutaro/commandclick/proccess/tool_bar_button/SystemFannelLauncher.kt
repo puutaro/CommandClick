@@ -20,50 +20,50 @@ object SystemFannelLauncher {
     fun launch(
         fragment: Fragment,
 //        parentDirPath: String,
-        fannelScriptName: String,
+        fannelName: String,
     ) {
         val context = fragment.context
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelConList = ReadText(
             File(
                 cmdclickDefaultAppDirPath,
-                fannelScriptName
+                fannelName
             ).absolutePath
         ).textToList()
 
         val mainFannelConList = ReadText(
-            File(cmdclickDefaultAppDirPath, fannelScriptName).absolutePath
+            File(cmdclickDefaultAppDirPath, fannelName).absolutePath
         ).textToList()
         val setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 context,
                 mainFannelConList,
 //                parentDirPath,
-                fannelScriptName,
+                fannelName,
             )
 
         val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
             mainFannelConList,
-            fannelScriptName
+            fannelName
         ).let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it?.joinToString("\n") ?: String(),
                 setReplaceVariableMap,
 //                parentDirPath,
-                fannelScriptName,
+                fannelName,
             ).split("\n")
         }
 
         val fannelState = FannelStateManager.getState(
 //            parentDirPath,
-            fannelScriptName,
+            fannelName,
             mainFannelSettingConList,
             setReplaceVariableMap,
         )
         val editFragmentTag = DecideEditTag(
             fannelConList,
 //            parentDirPath,
-            fannelScriptName,
+            fannelName,
             fannelState
         ).decide()
             ?: return
@@ -71,7 +71,7 @@ object SystemFannelLauncher {
             fragment,
             editFragmentTag,
 //            parentDirPath,
-            fannelScriptName,
+            fannelName,
             fannelState,
         )
     }

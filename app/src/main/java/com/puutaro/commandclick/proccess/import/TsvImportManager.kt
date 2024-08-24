@@ -1,5 +1,6 @@
 
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -22,15 +23,20 @@ object TsvImportManager {
         setReplaceVariableCompleteMap: Map<String, String>? = null
     ): Map<String, String>? {
         val jsFileObj = File(scriptPath)
-        if(!jsFileObj.isFile) return setReplaceVariableCompleteMap
+        if(
+            !jsFileObj.isFile
+        ) return setReplaceVariableCompleteMap
 //        val recentAppDirPath = jsFileObj.parent
 //            ?: return setReplaceVariableCompleteMap
-        val scriptFileName = jsFileObj.name
+//        jsFileObj.name
+        val fannelName = File(
+            CcPathTool.getMainFannelFilePath(scriptPath)
+        ).name
         val jsConForTsv = SetReplaceVariabler.execReplaceByReplaceVariables(
             trimJsConForTsv(jsList),
             setReplaceVariableCompleteMap,
 //            recentAppDirPath,
-            scriptFileName
+            fannelName
         )
         val result = tsvImportRegex.findAll("\n$jsConForTsv")
 
@@ -38,7 +44,7 @@ object TsvImportManager {
             result,
             setReplaceVariableCompleteMap,
 //            recentAppDirPath,
-            scriptFileName
+            fannelName
         )
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
             true -> tsvKeyValueMap

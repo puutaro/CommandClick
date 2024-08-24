@@ -184,7 +184,7 @@ object SetReplaceVariabler {
         replacingContents: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
 //        recentAppDirPath: String,
-        scriptFileName: String
+        fannelName: String
     ):String {
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         var loadJsUrlSource = replacingContents
@@ -195,7 +195,7 @@ object SetReplaceVariabler {
                     ScriptPreWordReplacer.replace(
                         it,
 //                        recentAppDirPath,
-                        scriptFileName
+                        fannelName
                     )
                 }
             loadJsUrlSource = loadJsUrlSource.replace(
@@ -206,7 +206,7 @@ object SetReplaceVariabler {
         return ScriptPreWordReplacer.replace(
             loadJsUrlSource,
 //            recentAppDirPath,
-            scriptFileName
+            fannelName
         )
     }
 
