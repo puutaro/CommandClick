@@ -936,10 +936,18 @@ class FannelHistoryButtonEvent (
         private fun deleteFannel(
             fannelName: String
         ){
-            when(fannelName == SystemFannel.home) {
-                true -> deleteAndSaveSettingImage(SystemFannel.preference)
-                else -> deleteAndSaveSettingImage(fannelName)
+            if(
+                !PreInstallFannel.isPreinstallFannel(fannelName)
+            ){
+                FileSystems.removeFileWithDir(
+                    File(UsePath.cmdclickDefaultAppDirPath, fannelName)
+                )
+                return
             }
+            val deleteFannelName =
+                FactFannel.convertToFactFannelName(fannelName)
+            deleteAndSaveSettingImage(deleteFannelName)
+
         }
 
         fun deleteAndSaveSettingImage(
