@@ -29,7 +29,6 @@ import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrM
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -40,10 +39,10 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class ListIndexForEditAdapter(
+class ListIndexAdapter(
     private val editFragment: EditFragment,
     var listIndexList: MutableList<String>,
-): RecyclerView.Adapter<ListIndexForEditAdapter.ListIndexListViewHolder>()
+): RecyclerView.Adapter<ListIndexAdapter.ListIndexListViewHolder>()
 {
     private val fannelInfoMap = editFragment.fannelInfoMap
     private val context = editFragment.context

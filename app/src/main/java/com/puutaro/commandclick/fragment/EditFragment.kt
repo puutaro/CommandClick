@@ -25,7 +25,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -420,8 +420,8 @@ class EditFragment: Fragment() {
                 this@EditFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     this@EditFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
             )
         }

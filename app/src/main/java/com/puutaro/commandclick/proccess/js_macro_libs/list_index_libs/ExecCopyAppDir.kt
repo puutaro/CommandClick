@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
@@ -68,8 +68,8 @@ object ExecCopyAppDir {
                 editFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
             )
         }

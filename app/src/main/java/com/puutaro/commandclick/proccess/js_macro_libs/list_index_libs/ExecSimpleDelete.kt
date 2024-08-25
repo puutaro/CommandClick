@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
@@ -23,12 +23,12 @@ object ExecSimpleDelete {
     fun removeController(
         editFragment: EditFragment,
         recyclerView: RecyclerView,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
+        listIndexForEditAdapter: ListIndexAdapter,
         selectedItem: String,
         listIndexPosition: Int,
     ){
         val enableDeleteConfirm = !DeleteSettingsForListIndex.howDisableDeleteConfirm(
-            ListIndexForEditAdapter.deleteConfigMap
+            ListIndexAdapter.deleteConfigMap
         )
         when(enableDeleteConfirm){
             false -> removeItem(
@@ -49,7 +49,7 @@ object ExecSimpleDelete {
 
     private fun removeItem(
         editFragment: EditFragment,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
+        listIndexForEditAdapter: ListIndexAdapter,
         selectedItem: String,
         listIndexPosition: Int,
     ){
@@ -64,7 +64,7 @@ object ExecSimpleDelete {
             withContext(Dispatchers.IO) {
                 ExecRemoveForListIndexAdapter.removeCon(
                     editFragment,
-                    ListIndexForEditAdapter.listIndexTypeKey,
+                    ListIndexAdapter.listIndexTypeKey,
                     removeItemLine,
                 )
             }
@@ -85,13 +85,13 @@ object ExecSimpleDelete {
         removeItemLine: String,
         listIndexPosition: Int,
     ){
-        when(ListIndexForEditAdapter.listIndexTypeKey){
+        when(ListIndexAdapter.listIndexTypeKey){
 //            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
                 val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
                 ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
                     editFragment,
@@ -122,7 +122,7 @@ object ExecSimpleDelete {
             recyclerView: RecyclerView,
             listIndexPosition: Int,
             selectedItem: String,
-            listIndexForEditAdapter: ListIndexForEditAdapter
+            listIndexForEditAdapter: ListIndexAdapter
         ){
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
@@ -141,7 +141,7 @@ object ExecSimpleDelete {
             recyclerView: RecyclerView,
             listIndexPosition: Int,
             selectedItem: String,
-            listIndexForEditAdapter: ListIndexForEditAdapter
+            listIndexForEditAdapter: ListIndexAdapter
         ){
             val context = editFragment.context
                 ?: return

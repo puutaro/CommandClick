@@ -32,7 +32,7 @@ object ExecUrlLoadFragmentProccess {
         val context = cmdIndexFragment.context
         val binding = cmdIndexFragment.binding
         val cmdindexInternetButton = binding.cmdindexInternetButton
-        binding.cmdListSwipeToRefresh.isVisible = false
+//        binding.cmdListSwipeToRefresh.isVisible = false
         context?.let {
             cmdindexInternetButton.setImageResource(
                 SearchSwichImage.WEB.image

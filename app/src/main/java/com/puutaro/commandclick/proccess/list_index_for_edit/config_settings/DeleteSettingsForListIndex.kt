@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexReplacer
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
@@ -45,7 +45,7 @@ object DeleteSettingsForListIndex {
         selectedItem: String,
         listIndexListPosition: Int,
     ){
-        val jsActionConSrcBeforeReplace = ListIndexForEditAdapter.deleteConfigMap.get(
+        val jsActionConSrcBeforeReplace = ListIndexAdapter.deleteConfigMap.get(
             DeleteKey.WITH_JS_ACTION.key
         )
         val jsActionCon = ListIndexReplacer.replace(

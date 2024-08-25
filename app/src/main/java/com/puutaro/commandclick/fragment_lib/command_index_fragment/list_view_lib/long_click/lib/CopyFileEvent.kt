@@ -114,7 +114,7 @@ object CopyFileEvent{
 //    }
 
     fun execInvokeItemSetClickListnerForCopyFile(
-        cmdListView: RecyclerView,
+//        cmdListView: RecyclerView,
         sourceFannelName: String,
     ) {
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
@@ -127,10 +127,10 @@ object CopyFileEvent{
         copyResultToast(
             sourceFannelPath
         )
-        CommandListManager.execListUpdateForCmdIndex(
-//            cmdclickDefaultAppDirPath,
-            cmdListView,
-        )
+//        CommandListManager.execListUpdateForCmdIndex(
+////            cmdclickDefaultAppDirPath,
+//            cmdListView,
+//        )
 
     }
 }

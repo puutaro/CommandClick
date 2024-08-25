@@ -22,7 +22,7 @@ object TextChangedListenerAdder {
         val context = cmdIndexFragment.context
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
-        val cmdListView = binding.cmdList
+//        val cmdListView = binding.cmdList
         val googleSuggest = GoogleSuggest(
             cmdIndexFragment,
             cmdSearchEditText
@@ -90,11 +90,11 @@ object TextChangedListenerAdder {
                         it.lowercase()
                     )
                 }
-                CommandListManager.execListUpdateByEditTextForCmdIndex(
-                    filteredCmdStrList,
-                    cmdListAdapter,
-                    cmdListView,
-                )
+//                CommandListManager.execListUpdateByEditTextForCmdIndex(
+//                    filteredCmdStrList,
+//                    cmdListAdapter,
+//                    cmdListView,
+//                )
             }
         })
     }

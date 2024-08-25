@@ -24,31 +24,27 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.PreInstallFannel
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.FactFannel
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -317,134 +313,12 @@ class FannelHistoryButtonEvent (
                 FileSystems.updateLastModified(
                     File(cmdclickDefaultAppDirPath, fannelName).absolutePath
                 )
-                val mainFannelConList = ReadText(
-                    File(cmdclickDefaultAppDirPath, fannelName).absolutePath
-                ).textToList()
-                val setReplaceVariableMap = when(
-                    fannelName.isEmpty()
-                ) {
-                    true -> null
-                    else -> JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
-                        context,
-                        mainFannelConList,
-//                        appDirName,
-                        fannelName,
-                    )
-                }
-
-                val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
-                    mainFannelConList,
+                EditExecuteOrElse.handle(
+                    fragment,
                     fannelName
-                ).let {
-                    SetReplaceVariabler.execReplaceByReplaceVariables(
-                        it?.joinToString("\n") ?: String(),
-                        setReplaceVariableMap,
-//                        appDirName,
-                        fannelName,
-                    ).split("\n")
-                }
-                val isEditExecute =
-                    CommandClickVariables.substituteCmdClickVariable(
-                        mainFannelSettingConList,
-                        CommandClickScriptVariable.EDIT_EXECUTE,
-                    ) == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-                            || fannelName == SystemFannel.home
-                when (isEditExecute) {
-                    true -> {
-                        execEditExecute(
-                            fannelName,
-                            mainFannelSettingConList,
-                            setReplaceVariableMap
-                        )
-                        return
-                    }
-                    else -> ExecJsOrSellHandler.handle(
-                        fragment,
-                        fannelName,
-                        mainFannelSettingConList,
-                    )
-                }
+                )
                 exitDialog(
                     fannelManageListView
-                )
-            }
-        }
-    }
-
-    private fun execEditExecute(
-        fannelName: String,
-        mainFannelSettingConList: List<String>,
-        setReplaceVariableMap: Map<String, String>?
-    ){
-        FannelHistoryAdminEvent.register(
-            sharedPref,
-            cmdclickDefaultAppDirPath,
-            fannelName,
-            mainFannelSettingConList,
-            setReplaceVariableMap,
-        )
-        launchHandler(
-//                    selectedHistoryFile,
-//                    selectedAppDirPath,
-            fannelName,
-            mainFannelSettingConList,
-            setReplaceVariableMap
-        )
-    }
-
-    private fun launchHandler(
-//        selectedHistoryFile: String,
-//        selectedAppDirPath: String,
-        fannelName: String,
-        mainFannelSettingConList: List<String>?,
-        setReplaceVariableMap: Map<String, String>?
-    ){
-        val isJsExec = FannelHistoryJsEvent.run(
-            fragment,
-            fannelName
-//            selectedHistoryFile,
-        )
-        val fannelState = FannelStateManager.getState(
-//            selectedAppDirPath,
-            fannelName,
-            mainFannelSettingConList,
-            setReplaceVariableMap
-        )
-        val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
-//            selectedAppDirPath,
-            fannelName,
-            EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
-            fannelState
-        )
-        val cmdValEdit =
-            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-        val jsExecWaitTime =
-            if(isJsExec) 200L
-            else 200L
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(jsExecWaitTime)
-            if(fragment is CommandIndexFragment) {
-                FileSystems
-                val listener = context
-                        as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-                listener?.onLongClickMenuItemsforCmdIndex(
-                    LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
-                    EditFragmentArgs(
-                        fannelInfoMap,
-                        cmdValEdit,
-                    ),
-                    String(),
-                    String()
-
-                )
-            } else {
-                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                listener?.onToolbarMenuCategoriesForEdit(
-                    ToolbarMenuCategoriesVariantForCmdIndex.HISTORY,
-                    EditFragmentArgs(
-                        fannelInfoMap,
-                        cmdValEdit,
-                    )
                 )
             }
         }
@@ -454,7 +328,6 @@ class FannelHistoryButtonEvent (
         fannelManageListAdapter: FannelManageAdapter,
     ) {
 //        val pinLimit = FannelManageAdapter.pinLimit
-        val pinFannelTsvPath = UsePath.pinFannelTsvPath
         fannelManageListAdapter.pinItemClickListener = object: FannelManageAdapter.OnPinItemClickListener {
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
 //                terminalViewModel.onDialog = false
@@ -466,7 +339,7 @@ class FannelHistoryButtonEvent (
                     FactFannel.creatingToast()
                     return
                 }
-                val pinFannelList = ReadText(pinFannelTsvPath).textToList()
+                val pinFannelList = PinFannelManager.get()
                 when(
                     pinFannelList.contains(fannelName)
                 ){
@@ -477,16 +350,13 @@ class FannelHistoryButtonEvent (
                             context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
                     }
                     else -> {
-//                        if(pinFannelList.size >= pinLimit){
-//                            ToastUtils.showLong("Remove pin: limit ${pinLimit}")
-//                            return
-//                        }
                         PinFannelManager.add(fannelName)
                         ToastUtils.showShort("Add ok: ${fannelName}")
                         holder.pinImageButtonView.imageTintList =
                             context?.getColorStateList(FannelManageAdapter.pinExistColor)
                     }
                 }
+                PinFannelManager.updateBroadcast(context)
             }
         }
     }
@@ -569,6 +439,7 @@ class FannelHistoryButtonEvent (
                         settingSectionStart,
                         settingSectionEnd
                     )
+                val switchOn = FannelSettingMap.switchOn
                 val menuNameToEnableList = LongPressMenuName.values().map {
                     val menuSettingPathSrc = menuNameToMenuPathMap.get(it)
                         ?: String()
@@ -584,7 +455,7 @@ class FannelHistoryButtonEvent (
                         String(),
                     )
                     val isJsPath = File(jsPath).isFile
-                            || jsPath == FannelManageAdapter.switchOn
+                            || jsPath == switchOn
                     if(
                         !isJsPath
                     ) return@map String() to null
@@ -1199,34 +1070,6 @@ private object LongPressManageListDialog {
                 fannelName,
                 updateLongPressMenuToIsExistList,
             )
-        }
-    }
-}
-
-private object FactFannel {
-
-    fun isFactFannel(
-        fannelName: String
-    ): Boolean {
-        return File(
-            UsePath.cmdclickDefaultAppDirPath,
-            convertToFactFannelName(fannelName)
-        ).isFile
-    }
-    fun convertToFactFannelName(
-        fannelName: String
-    ): String {
-        return when (
-            fannelName == SystemFannel.home
-        ) {
-            true -> SystemFannel.preference
-            else -> fannelName
-        }
-    }
-
-    fun creatingToast(){
-        CoroutineScope(Dispatchers.Main).launch {
-            ToastUtils.showShort("createing..")
         }
     }
 }

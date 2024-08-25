@@ -1,10 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
@@ -20,7 +20,7 @@ object OnEditExecuteEvent {
     ) {
         val context = fragment.context
             ?: return
-        val sharedPref = FannelInfoTool.getSharePref(fragment.context)
+        val sharedPref = FannelInfoTool.getSharePref(context)
         val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         FannelInfoTool.putAllFannelInfo(sharedPref,
 //            currentAppDirPath,
@@ -44,7 +44,7 @@ object OnEditExecuteEvent {
             }
         when(fragment){
             is CommandIndexFragment -> {
-                val listener = fragment.context
+                val listener = context
                         as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                 listener?.onLongClickMenuItemsforCmdIndex(
                     LongClickMenuItemsforCmdIndex.EDIT,
@@ -56,8 +56,21 @@ object OnEditExecuteEvent {
                     context.getString(R.string.edit_terminal_fragment)
                 )
             }
+            is TerminalFragment -> {
+                val listener = context
+                        as? TerminalFragment.OnPinClickForTermListener
+                listener?.onPinClickForTerm(
+                    LongClickMenuItemsforCmdIndex.EDIT,
+                    EditFragmentArgs(
+                        fannelInfoMap,
+                        cmdValEdit,
+                    ),
+                    editFragmentTag,
+                    context.getString(R.string.edit_terminal_fragment)
+                )
+            }
             is EditFragment -> {
-                val listener = fragment.context
+                val listener = context
                         as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                     listener?.onLongClickMenuItemsforCmdIndex(
                         LongClickMenuItemsforCmdIndex.EDIT,

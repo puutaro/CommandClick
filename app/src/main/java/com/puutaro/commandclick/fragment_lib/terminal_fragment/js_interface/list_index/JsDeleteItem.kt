@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lis
 
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
@@ -70,7 +70,7 @@ class JsDeleteItem(
         ) ?: return
         val binding = editFragment.binding
         val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            binding.editListRecyclerView.adapter as ListIndexAdapter
         val listIndexPosition =
             listIndexForEditAdapter.listIndexList.indexOf(selectedItem)
         ExecItemDelete.execItemDelete(
@@ -124,7 +124,7 @@ class JsDeleteItem(
         ) ?: return
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
-        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
+        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexAdapter
         val listIndexListLastIndex = listIndexForEditAdapter.listIndexList.lastIndex
         val isInValidIndex = listIndexListPosition < 0
                 && listIndexListPosition > listIndexListLastIndex

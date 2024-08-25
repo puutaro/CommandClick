@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
@@ -15,7 +15,7 @@ object ExecSwitcherForListIndexAdapter {
     ){
         val tsvPath = FilePrefixGetter.get(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
+            ListIndexAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         )
         if(
@@ -23,7 +23,7 @@ object ExecSwitcherForListIndexAdapter {
         ) return
         val sortType = ListSettingsForListIndex.getSortType(
             editFragment,
-            ListIndexForEditAdapter.indexListMap
+            ListIndexAdapter.indexListMap
         )
         val sortListIndexListForTsvSave =
             ListSettingsForListIndex.ListIndexListMaker.sortListForTsvSave(

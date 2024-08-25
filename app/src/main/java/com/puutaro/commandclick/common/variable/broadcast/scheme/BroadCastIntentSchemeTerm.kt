@@ -48,4 +48,8 @@ enum class BroadCastIntentSchemeTerm(
         "com.puutaro.commandclick.pocket_webview_loadurl.load",
         ""
     ),
+    FANNEL_PIN_BAR_UPDATE(
+        "com.puutaro.commandclick.fannel_pin_bar_update.update",
+        String()
+    )
 }

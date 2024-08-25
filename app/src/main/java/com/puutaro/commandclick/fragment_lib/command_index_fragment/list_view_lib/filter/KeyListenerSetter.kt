@@ -18,7 +18,7 @@ object KeyListenerSetter {
     ){
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
-        val cmdListView = binding.cmdList
+//        val cmdListView = binding.cmdList
         cmdSearchEditText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (
@@ -32,9 +32,9 @@ object KeyListenerSetter {
                 if(
                     cmdIndexFragmentWeight == ReadLines.LONGTH
                 ) {
-                    CommandListManager.execListUpdateForCmdIndex(
-                        cmdListView,
-                    )
+//                    CommandListManager.execListUpdateForCmdIndex(
+//                        cmdListView,
+//                    )
                     return false
                 }
                 if(

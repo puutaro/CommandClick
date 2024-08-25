@@ -24,6 +24,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
@@ -184,6 +185,11 @@ class TerminalFragment: Fragment() {
         ExecDownLoadManager.set(
             this,
             binding.terminalWebView
+        )
+        PinFannelBarManager.set(
+            this,
+            tag,
+            binding.fannelPinRecyclerView
         )
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
@@ -369,6 +375,7 @@ class TerminalFragment: Fragment() {
             broadcastReceiverForTerm
         )
         UrlCaptureWatcher.exit()
+        PinFannelBarManager.clear(binding.fannelPinRecyclerView)
         this.onPageFinishedCoroutineJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()
@@ -464,6 +471,19 @@ class TerminalFragment: Fragment() {
     interface GetSdcardDirListenerForTerm {
         fun getSdcardDirForTerm(
             isCreate: Boolean
+        )
+    }
+
+    interface OnRestartListenerForTerm {
+        fun onRestartForTerm()
+    }
+
+    interface OnPinClickForTermListener {
+        fun onPinClickForTerm(
+            longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
+            editFragmentArgs: EditFragmentArgs,
+            editFragmentTag: String,
+            terminalFragmentTag: String
         )
     }
 }

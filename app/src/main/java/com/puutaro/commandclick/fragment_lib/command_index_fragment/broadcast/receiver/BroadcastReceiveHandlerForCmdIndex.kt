@@ -12,31 +12,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 object BroadcastReceiveHandlerForCmdIndex {
-    fun handle(
-        cmdIndexFragment: CommandIndexFragment,
-        intent: Intent
-    ){
-        if(
-            !cmdIndexFragment.isVisible
-        ) return
-        val action = intent.action
-        when(action){
-            BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
-            -> {
-//                val startUpPref =
-//                    FannelInfoTool.getSharePref(cmdIndexFragment.context)
-//                val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-//                    startUpPref,
-//                    FannelInfoSetting.current_app_dir
-//                )
-                CoroutineScope(Dispatchers.Main).launch {
-                    CommandListManager.execListUpdateForCmdIndex(
-//                        currentAppDirPath,
-                        cmdIndexFragment.binding.cmdList,
-                    )
-                }
-            }
-        }
+//    fun handle(
+//        cmdIndexFragment: CommandIndexFragment,
+//        intent: Intent
+//    ){
+//        if(
+//            !cmdIndexFragment.isVisible
+//        ) return
+//        val action = intent.action
+//        when(action){
+//            BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
+//            -> {
+////                val startUpPref =
+////                    FannelInfoTool.getSharePref(cmdIndexFragment.context)
+////                val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+////                    startUpPref,
+////                    FannelInfoSetting.current_app_dir
+////                )
+////                CoroutineScope(Dispatchers.Main).launch {
+////                    CommandListManager.execListUpdateForCmdIndex(
+//////                        currentAppDirPath,
+////                        cmdIndexFragment.binding.cmdList,
+////                    )
+////                }
+//            }
+//        }
 
-    }
+//    }
 }

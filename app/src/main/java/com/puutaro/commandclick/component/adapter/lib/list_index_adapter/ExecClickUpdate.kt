@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
@@ -18,7 +18,7 @@ object ExecClickUpdate {
     fun update(
         editFragment: EditFragment,
         listIndexArgsMaker: ListIndexArgsMaker,
-        listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexListViewHolder: ListIndexAdapter.ListIndexListViewHolder,
     ){
         val clickConfigMap = listIndexArgsMaker.clickConfigPairList
         val enableClickUpdate =
@@ -26,7 +26,7 @@ object ExecClickUpdate {
                 clickConfigMap
             )
         if(!enableClickUpdate) return
-        when(ListIndexForEditAdapter.listIndexTypeKey) {
+        when(ListIndexAdapter.listIndexTypeKey) {
 //            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
 //            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
@@ -45,11 +45,11 @@ object ExecClickUpdate {
 
     private fun updateForTsv(
         editFragment: EditFragment,
-        listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexListViewHolder: ListIndexAdapter.ListIndexListViewHolder,
     ){
         val sortType = ListSettingsForListIndex.getSortType(
             editFragment,
-            ListIndexForEditAdapter.indexListMap
+            ListIndexAdapter.indexListMap
         )
         when(sortType){
             ListSettingsForListIndex.SortByKey.SORT,
@@ -60,14 +60,14 @@ object ExecClickUpdate {
         }
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
-        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
+        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexAdapter
         val tsvLine =
             listIndexForEditAdapter.listIndexList.getOrNull(
                 listIndexListViewHolder.bindingAdapterPosition
             ) ?: return
         val tsvPath = FilePrefixGetter.get(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
+            ListIndexAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         )
         TsvTool.insertTsvInFirst(
@@ -86,8 +86,8 @@ object ExecClickUpdate {
     ){
         val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
         FileSystems.updateLastModified(
             File(

@@ -23,7 +23,7 @@ object MonitorSizeManager {
 
         val binding = cmdIndexFragment.binding
         val cmdindexInternetButton = binding.cmdindexInternetButton
-        val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
+//        val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
         val linearLayoutParam =
             binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
         when(
@@ -31,7 +31,7 @@ object MonitorSizeManager {
         ) {
             true
             -> {
-                cmdListSwipeToRefresh.isVisible = true
+//                cmdListSwipeToRefresh.isVisible = true
                 binding.cmdSearchEditText.setText("")
                 cmdindexInternetButton.setImageResource(
                     SearchSwichImage.TERMINAL.image
@@ -45,7 +45,7 @@ object MonitorSizeManager {
             }
             else
             -> {
-                cmdListSwipeToRefresh.isVisible = false
+//                cmdListSwipeToRefresh.isVisible = false
                 cmdindexInternetButton.setImageResource(
                     SearchSwichImage.WEB.image
                 )

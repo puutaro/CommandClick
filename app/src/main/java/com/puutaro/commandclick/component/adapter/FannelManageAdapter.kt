@@ -19,10 +19,12 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
+import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
@@ -38,31 +40,15 @@ class FannelManageAdapter(
     var fannelNameList: MutableList<String>
     ): RecyclerView.Adapter<FannelManageAdapter.FannelManageViewHolder>(){
 
-    private val fannelSettingInfoMap = ReadText(UsePath.fannelSettingMapTsvPath).textToList().map {
-        fannelAdapterInfoLine ->
-        val fanneNameAndMapCon = fannelAdapterInfoLine.split("\t")
-        val fannelName = fanneNameAndMapCon.firstOrNull() ?: String()
-        val adapterInfoMapCon = fanneNameAndMapCon.getOrNull(1)
-        fannelName to CmdClickMap.createMap(
-            adapterInfoMapCon,
-            keySeparator
-        ).toMap()
-    }.toMap()
-    private val pinFannelList = ReadText(UsePath.pinFannelTsvPath).textToList()
+    private val fannelSettingInfoMap = FannelSettingMap.create()
+    private val pinFannelList = PinFannelManager.get()
     private val homeFannel = SystemFannel.home
+    private val switchOn = FannelSettingMap.switchOn
 
 
     companion object {
 
 //        const val pinLimit = 6
-        enum class FannelHistorySettingKey(val key: String){
-            ENABLE_LONG_PRESS_BUTTON("enableLongPressButton"),
-            ENABLE_EDIT_EXECUTE("enableEditExecute"),
-            ENABLE_EDIT_SETTING_VALS("enableEditSettingVals"),
-            TITLE("title"),
-        }
-        const val keySeparator = ','
-        const val switchOn = "ON"
         val pinExistColor = R.color.checked_item_color
         val buttonOrdinalyColor = R.color.file_dark_green_color
         val buttonGrayOutColor = R.color.gray_out
@@ -172,7 +158,7 @@ class FannelManageAdapter(
                     }
                     else -> {
                         holder.titleTextView.text =
-                            settingMap?.get(FannelHistorySettingKey.TITLE.key)
+                            settingMap?.get(FannelSettingMap.FannelHistorySettingKey.TITLE.key)
                         holder.titleTextView.textSize = 22f
                     }
                 }
@@ -201,7 +187,7 @@ class FannelManageAdapter(
             withContext(Dispatchers.Main){
                 if(
                     settingMap?.get(
-                        FannelHistorySettingKey.ENABLE_LONG_PRESS_BUTTON.key
+                        FannelSettingMap.FannelHistorySettingKey.ENABLE_LONG_PRESS_BUTTON.key
                     ) != switchOn
                     || !isIndex
                 ) {
@@ -218,7 +204,7 @@ class FannelManageAdapter(
                 val isNotHomeFannel = fannelName != homeFannel
                 val disableEditSettingVals =
                     settingMap?.get(
-                    FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key
+                        FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key
                 ) != switchOn && isNotHomeFannel
                 if(
                     disableEditSettingVals
@@ -244,7 +230,7 @@ class FannelManageAdapter(
                 }
                 withContext(Dispatchers.Main) setImage@{
                     val isEditExecute = settingMap?.get(
-                        FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
+                        FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
                     ) == switchOn
                             || fannelName == homeFannel
                     setLogoBackground(

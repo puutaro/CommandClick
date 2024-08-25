@@ -11,13 +11,13 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
+import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.CurlManager
@@ -26,6 +26,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.Dispatchers
@@ -120,20 +121,14 @@ object PreInstallFannel {
                         fannelNameToDownloadList.map { it.first }
                     )
                     FileSystems.writeFile(
-                        UsePath.fannelSettingMapTsvPath,
+                        FannelSettingMap.fannelSettingMapTsvPath,
                         fannelSettingMapList.joinToString("\n")
                     )
 //                    FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
                 }
                 withContext(Dispatchers.IO){
-                    val pinFannelTsvPath = UsePath.pinFannelTsvPath
-                    if(
-                        File(pinFannelTsvPath).isFile
-                    ) return@withContext
-                    FileSystems.writeFile(
-                        pinFannelTsvPath,
-                        SystemFannel.firstPinFannelList.joinToString("\n")
-                    )
+                    PinFannelManager.saveForPreInstall()
+                    PinFannelManager.updateBroadcast(context)
                 }
                 withContext(Dispatchers.IO) {
                     val preInstallFannelListTsvPath = UsePath.preInstallFannelListTsvPath
@@ -246,7 +241,7 @@ object PreInstallFannel {
 
     private object FannelSettingMapMaker {
 
-        private val switchOn = FannelManageAdapter.switchOn
+        private val switchOn = FannelSettingMap.switchOn
         suspend fun make(
             context: Context?,
             fannelNameList: List<String>
@@ -291,7 +286,7 @@ object PreInstallFannel {
                                 enableEditSettingVals,
                                 enableLongPressButtonKeyValue,
                                 fannelTitleKeyValue,
-                            ).joinToString(FannelManageAdapter.keySeparator.toString())
+                            ).joinToString(FannelSettingMap.keySeparator.toString())
                             channel.send("${fannelName}\t${fannelInfoValueCon}")
 
                         }
@@ -322,7 +317,7 @@ object PreInstallFannel {
                 else -> switchOn
             }
             return listOf(
-                FannelManageAdapter.Companion.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key,
+                FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key,
                 enableEditExecuteButtonValue,
             ).joinToString("=")
         }
@@ -343,7 +338,7 @@ object PreInstallFannel {
                 else -> switchOn
             }
             return listOf(
-                FannelManageAdapter.Companion.FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key,
+                FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_SETTING_VALS.key,
                 enableEditSettingValsValue,
             ).joinToString("=")
         }
@@ -393,7 +388,7 @@ object PreInstallFannel {
                 else -> switchOn
             }
             return listOf(
-                FannelManageAdapter.Companion.FannelHistorySettingKey.ENABLE_LONG_PRESS_BUTTON.key,
+                FannelSettingMap.FannelHistorySettingKey.ENABLE_LONG_PRESS_BUTTON.key,
                 enableLongPressButtonValue,
             ).joinToString("=")
         }
@@ -406,7 +401,7 @@ object PreInstallFannel {
                 fannelName
             )
             return listOf(
-                FannelManageAdapter.Companion.FannelHistorySettingKey.TITLE.key,
+                FannelSettingMap.FannelHistorySettingKey.TITLE.key,
                 descCon
             ).joinToString("=")
 
@@ -465,7 +460,7 @@ object PreInstallFannel {
                 else -> descFirstLineSource
             }
             return descFirstLine?.replace(
-                FannelManageAdapter.keySeparator.toString(),
+                FannelSettingMap.keySeparator.toString(),
                 " "
             )?.trim() ?: String()
         }

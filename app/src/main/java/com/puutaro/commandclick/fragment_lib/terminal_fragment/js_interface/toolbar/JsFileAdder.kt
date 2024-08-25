@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.EditFragment
@@ -141,8 +141,8 @@ class JsFileAdder(
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.indexListMap,
+                ListIndexAdapter.listIndexTypeKey
             )
         val compFileNameMap = CmdClickMap.createMap(
             compFileNameMapCon,
@@ -207,7 +207,7 @@ class JsFileAdder(
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
+                ListIndexAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
             )  ?: String()
         ListIndexDuplicate.isTsvDetect(

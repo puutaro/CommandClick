@@ -5,15 +5,11 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
-import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
@@ -24,8 +20,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 
 class WithIndexListView(
@@ -94,7 +88,7 @@ class WithIndexListView(
 
         val editListRecyclerView =
             binding.editListRecyclerView
-        val listIndexForEditAdapter = ListIndexForEditAdapter(
+        val listIndexForEditAdapter = ListIndexAdapter(
             editFragment,
             fileList,
         )
@@ -133,12 +127,12 @@ class WithIndexListView(
 
         private fun invokeItemSetClickListenerForFileList() {
         val listIndexForEditAdapter =
-            editListRecyclerView.adapter as ListIndexForEditAdapter
+            editListRecyclerView.adapter as ListIndexAdapter
         listIndexForEditAdapter.fileNameClickListener =
-            object: ListIndexForEditAdapter.OnFileNameItemClickListener {
+            object: ListIndexAdapter.OnFileNameItemClickListener {
                 override fun onFileNameClick(
                     itemView: View,
-                    holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+                    holder: ListIndexAdapter.ListIndexListViewHolder,
                     listIndexPosition: Int,
                 ) {
                     keyboardHide(
@@ -160,11 +154,11 @@ class WithIndexListView(
         editFragment: EditFragment,
     ) {
         val listIndexForEditAdapter =
-            editListRecyclerView.adapter as ListIndexForEditAdapter
-        listIndexForEditAdapter.fileQrLogoClickListener = object: ListIndexForEditAdapter.OnFileQrLogoItemClickListener {
+            editListRecyclerView.adapter as ListIndexAdapter
+        listIndexForEditAdapter.fileQrLogoClickListener = object: ListIndexAdapter.OnFileQrLogoItemClickListener {
             override fun onFileQrLogoClick(
                 itemView: View,
-                holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+                holder: ListIndexAdapter.ListIndexListViewHolder,
                 listIndexPosition: Int,
             ) {
                 keyboardHide(editFragment)
@@ -223,8 +217,8 @@ class WithIndexListView(
                 if(!searchText.hasFocus()) return
                 val filteredUrlHistoryList = ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 ).filter {
                     Regex(
                         searchText.text.toString()
@@ -247,11 +241,11 @@ class WithIndexListView(
         if(
             context == null
         ) return
-        val indexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
-        indexForEditAdapter.itemLongClickListener = object : ListIndexForEditAdapter.OnItemLongClickListener {
+        val indexForEditAdapter = editListRecyclerView.adapter as ListIndexAdapter
+        indexForEditAdapter.itemLongClickListener = object : ListIndexAdapter.OnItemLongClickListener {
             override fun onItemLongClick(
                 itemView: View,
-                holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+                holder: ListIndexAdapter.ListIndexListViewHolder,
                 listIndexPosition: Int
             ) {
                 val selectedItem = holder.fileName

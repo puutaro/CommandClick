@@ -6,7 +6,7 @@ import com.anggrayudi.storage.file.getAbsolutePath
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.RequestCode
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
@@ -106,8 +106,8 @@ class DirectoryAndCopyGetter(
             editFragment,
             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.indexListMap,
+                ListIndexAdapter.listIndexTypeKey
             )
         )
         ToastUtils.showLong("copy file ok")

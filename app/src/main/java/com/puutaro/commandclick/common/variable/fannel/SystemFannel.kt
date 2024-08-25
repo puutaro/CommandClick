@@ -41,9 +41,4 @@ object SystemFannel {
         cmdTerminal,
 //        fannelRepoFannelName
     )
-
-    val firstPinFannelList = listOf(
-        textToSpeech,
-        cmdBookmaker,
-    )
 }

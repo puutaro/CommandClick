@@ -1,12 +1,43 @@
 package com.puutaro.commandclick.proccess.pin
 
+import android.content.Context
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object PinFannelManager {
 
-    private val pinFannelTsvPath = UsePath.pinFannelTsvPath
+    private const val pinFannelTsvName = "pinFannel.tsv"
+    val pinFannelTsvPath = "${UsePath.cmdclickFannelSystemDirPath}/${pinFannelTsvName}"
+
+    val firstPinFannelList = listOf(
+        SystemFannel.textToSpeech,
+        SystemFannel.cmdBookmaker,
+    )
+
+    fun get(
+    ): List<String> {
+       return ReadText(pinFannelTsvPath).textToList()
+    }
+
+    fun saveForPreInstall(){
+        if(
+            File(pinFannelTsvPath).isFile
+        ) return
+        save(firstPinFannelList)
+    }
+    fun save(
+        pinFannelList: List<String>
+    ){
+        FileSystems.writeFile(
+            pinFannelTsvPath,
+            pinFannelList.joinToString("\n")
+        )
+    }
 
     fun add(
         fannelName: String
@@ -14,7 +45,7 @@ object PinFannelManager {
         val pinFannelList =
             ReadText(pinFannelTsvPath).textToList()
         val updatePinList =
-            listOf(fannelName) + pinFannelList
+            pinFannelList + listOf(fannelName)
         FileSystems.writeFile(
             pinFannelTsvPath,
             updatePinList.joinToString("\n")
@@ -33,6 +64,13 @@ object PinFannelManager {
         FileSystems.writeFile(
             pinFannelTsvPath,
             removePinFannelList
+        )
+    }
+
+    fun updateBroadcast(context: Context?){
+        BroadcastSender.normalSend(
+            context,
+            BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE.action
         )
     }
 }

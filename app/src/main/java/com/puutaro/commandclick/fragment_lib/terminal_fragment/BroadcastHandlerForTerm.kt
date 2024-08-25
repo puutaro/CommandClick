@@ -74,6 +74,12 @@ object BroadcastHandlerForTerm {
                     intent.getStringExtra(PocketWebviewExtra.url.schema),
                 )
             }
+            BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE
+            -> PinFannelBarManager.update(
+                terminalFragment.context,
+                terminalFragment.tag,
+                terminalFragment.binding.fannelPinRecyclerView
+            )
         }
     }
 }

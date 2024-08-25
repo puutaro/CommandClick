@@ -152,7 +152,7 @@ object ExecOnLongClickDo {
                     cmdIndexFragment,
 //                    currentAppDirPath,
                     selectedScriptName,
-                    cmdIndexFragment.binding.cmdList
+//                    cmdIndexFragment.binding.cmdList
                 )
                 ContextMenuEnums.EDIT.itemName
                 -> ScriptFileEdit.edit(
@@ -450,7 +450,7 @@ private object UtilitySubMenuDialog {
 
                 UtilitySubMenuEnums.COPY_FILE
                 ->  CopyFileEvent.execInvokeItemSetClickListnerForCopyFile(
-                    cmdIndexFragment.binding.cmdList,
+//                    cmdIndexFragment.binding.cmdList,
                     selectedScriptName,
                 )
 //                UtilitySubMenuEnums.KILL.itemName

@@ -21,7 +21,7 @@ object ConfirmDialogForDelete {
         cmdIndexFragment: CommandIndexFragment,
 //        currentAppDirPath: String,
         scriptFileName: String,
-        cmdListView: RecyclerView
+//        cmdListView: RecyclerView
     ){
         val context =
             cmdIndexFragment.context
@@ -60,7 +60,7 @@ object ConfirmDialogForDelete {
         deleteOkListener(
 //            currentAppDirPath,
             scriptFileName,
-            cmdListView
+//            cmdListView
         )
         addConfirmDialog?.setOnCancelListener {
             addConfirmDialog?.dismiss()
@@ -79,7 +79,7 @@ object ConfirmDialogForDelete {
     private fun deleteOkListener(
 //        currentAppDirPath: String,
         scriptFileName: String,
-        cmdListView: RecyclerView
+//        cmdListView: RecyclerView
     ){
         val confirmOkButtonView =
             addConfirmDialog?.findViewById<AppCompatImageButton>(
@@ -106,10 +106,10 @@ object ConfirmDialogForDelete {
                 "${cmdclickDefaultAppDirPath}/${fannelDirName}"
             )
 
-            CommandListManager.execListUpdateForCmdIndex(
-//                currentAppDirPath,
-                cmdListView,
-            )
+//            CommandListManager.execListUpdateForCmdIndex(
+////                currentAppDirPath,
+//                cmdListView,
+//            )
         }
     }
 }

@@ -1,9 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 
 import android.webkit.JavascriptInterface
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -16,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class JsQrGetter(
     private val terminalFragment: TerminalFragment
@@ -111,8 +109,8 @@ class JsQrGetter(
         )
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
         ListIndexDuplicate.isFileDetect(
 //            parentDirPath,

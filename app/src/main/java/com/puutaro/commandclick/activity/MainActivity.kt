@@ -25,6 +25,7 @@ import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecSimpleRestartActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecUpdateNoSaveUrlPaths
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecWifiSet
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
@@ -44,7 +45,6 @@ import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentMan
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
-import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.permission.SdCardDirGetter
 import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
@@ -99,6 +99,8 @@ class MainActivity:
     TerminalFragment.OnGetFileListenerForTerm,
     TerminalFragment.OnGetFileListListenerForTerm,
     TerminalFragment.GetSdcardDirListenerForTerm,
+    TerminalFragment.OnRestartListenerForTerm,
+    TerminalFragment.OnPinClickForTermListener,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -160,8 +162,8 @@ class MainActivity:
     val manageFullStoragePermissionResultLauncher =
             StorageAccessSetter.setForFullStorageAccess(this)
 
-    val getRunCommandPermissionAndStartFragmentLauncher =
-        RunCommandSetter.set(this)
+//    val getRunCommandPermissionAndStartFragmentLauncher =
+//        RunCommandSetter.set(this)
 
     val getNotifierSetterLaunch =
         NotifierSetter.set(this)
@@ -256,6 +258,21 @@ class MainActivity:
         )
     }
 
+    override fun onPinClickForTerm(
+        longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
+        editFragmentArgs: EditFragmentArgs,
+        editFragmentTag: String,
+        terminalFragmentTag: String
+    ) {
+        ExecLongClickMenuItemsforCmdIndex.execLongClickMenuItemsforCmdIndex(
+            this,
+            longClickMenuItemsforCmdIndex,
+            editFragmentTag,
+            editFragmentArgs,
+            terminalFragmentTag
+        )
+    }
+
 
     override fun onToolbarMenuCategories(
         toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
@@ -328,10 +345,10 @@ class MainActivity:
                 )
                 return@launch
             }
-            ExecCmdIndexSizingInTermShort.execCmdIndexSizingInTermShort(
-                this@MainActivity,
-                isKeyboardShowing,
-            )
+//            ExecCmdIndexSizingInTermShort.execCmdIndexSizingInTermShort(
+//                this@MainActivity,
+//                isKeyboardShowing,
+//            )
         }
 
     }
@@ -814,5 +831,9 @@ class MainActivity:
             startUpPref,
             activityMainBinding.rootContainer
         )
+    }
+
+    override fun onRestartForTerm() {
+        ExecSimpleRestartActivity.execSimpleRestartActivity(this)
     }
  }

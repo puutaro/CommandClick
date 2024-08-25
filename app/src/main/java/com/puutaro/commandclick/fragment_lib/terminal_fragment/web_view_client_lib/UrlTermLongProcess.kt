@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_
 
 import android.webkit.WebView
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
@@ -19,8 +20,17 @@ object UrlTermLongProcess {
         if(
             FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
         ) return
-
         val activity = terminalFragment.activity
+        val targetFragmentInstance = TargetFragmentInstance()
+        val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+            activity,
+            cmdEditFragmentTag,
+        )
+        if(
+            bottomFragment is CommandIndexFragment
+        ) return
+
         val urlCheckResult = EnableUrlPrefix.isHttpOrFilePrefix(url)
         terminalViewModel.onDisplayUpdate = !urlCheckResult
         terminalViewModel.onExecInternetButtonShell = urlCheckResult
@@ -35,12 +45,6 @@ object UrlTermLongProcess {
             terminalFragment.onTermShortWhenLoad ==
                     SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name
         if(isTermShortWhenLoad) return
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
-            activity,
-            cmdEditFragmentTag,
-        )
         val listener =
             context as? TerminalFragment.OnTermLongChangeListenerForTerminalFragment
         listener?.onTermLongChangeForTerminalFragment(

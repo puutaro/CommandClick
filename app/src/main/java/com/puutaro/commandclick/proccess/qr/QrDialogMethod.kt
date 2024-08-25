@@ -13,13 +13,12 @@ import androidx.fragment.app.Fragment
 import coil.load
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -311,8 +310,8 @@ object QrDialogMethod {
                             fragment,
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
-                                ListIndexForEditAdapter.indexListMap,
-                                ListIndexForEditAdapter.listIndexTypeKey
+                                ListIndexAdapter.indexListMap,
+                                ListIndexAdapter.listIndexTypeKey
                             )
                         )
                     }
@@ -391,8 +390,8 @@ object QrDialogMethod {
                             fragment,
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
-                                ListIndexForEditAdapter.indexListMap,
-                                ListIndexForEditAdapter.listIndexTypeKey
+                                ListIndexAdapter.indexListMap,
+                                ListIndexAdapter.listIndexTypeKey
                             )
                         )
                     }

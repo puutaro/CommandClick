@@ -18,16 +18,16 @@ object ExecCmdIndexSizingInTermShort {
         } catch (e: Exception) {
             return
         }
-        val binding = cmdIndexFragment.binding
-        if(isKeyboardShowing) {
-            binding.commandIndexFragment.layoutParams =
-                CmdIndexLinearWeightParam.listViewShortWeight
-            binding.cmdListSwipeToRefresh.isVisible = false
-            return
-        }
-        binding.cmdListSwipeToRefresh.isVisible = true
-        binding.commandIndexFragment.layoutParams =
-            CmdIndexLinearWeightParam.listViewLongWeight
+//        val binding = cmdIndexFragment.binding
+//        if(isKeyboardShowing) {
+//            binding.commandIndexFragment.layoutParams =
+//                CmdIndexLinearWeightParam.listViewShortWeight
+//            binding.cmdListSwipeToRefresh.isVisible = false
+//            return
+//        }
+//        binding.cmdListSwipeToRefresh.isVisible = true
+//        binding.commandIndexFragment.layoutParams =
+//            CmdIndexLinearWeightParam.listViewLongWeight
 
     }
 }

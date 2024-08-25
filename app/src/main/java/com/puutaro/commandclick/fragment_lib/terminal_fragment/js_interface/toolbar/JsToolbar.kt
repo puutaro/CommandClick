@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -53,7 +53,7 @@ class JsToolbar(
         ) return null
         val listKeyCon = FilePrefixGetter.get(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
+            ListIndexAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         )
         return listKeyCon
@@ -161,7 +161,7 @@ class JsToolbar(
                 val tsvPath =
                     FilePrefixGetter.get(
                         editFragment,
-                        ListIndexForEditAdapter.indexListMap,
+                        ListIndexAdapter.indexListMap,
                         ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
                     )  ?: String()
                 ListIndexDuplicate.isTsvDetect(

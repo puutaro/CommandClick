@@ -22,6 +22,7 @@ object BroadcastRegisterForTerm {
                 BroadCastIntentSchemeTerm.DEBUGGER_SYS_WATCH.action,
                 BroadCastIntentSchemeTerm.DEBUGGER_CLOSE.action,
                 BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
+                BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE.action,
             )
         )
     }

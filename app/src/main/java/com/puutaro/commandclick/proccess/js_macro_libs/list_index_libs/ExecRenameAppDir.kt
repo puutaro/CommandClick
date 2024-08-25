@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -47,8 +47,8 @@ object ExecRenameAppDir {
             editFragment,
             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.indexListMap,
+                ListIndexAdapter.listIndexTypeKey
             )
         )
     }
@@ -148,8 +148,8 @@ object ExecRenameAppDir {
                 editFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
             )
         }

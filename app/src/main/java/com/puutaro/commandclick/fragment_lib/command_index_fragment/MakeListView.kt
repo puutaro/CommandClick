@@ -26,7 +26,7 @@ class MakeListView(
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
     private val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace()
-    private val cmdListView = binding.cmdList
+//    private val cmdListView = binding.cmdList
     private val cmdSearchEditText = binding.cmdSearchEditText
 
 
@@ -80,18 +80,18 @@ class MakeListView(
         )
     }
 
-    fun cmdListSwipeToRefresh(
-    ){
-        val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
-        cmdListSwipeToRefresh.setOnRefreshListener(SwipyRefreshLayout.OnRefreshListener {
-                direction ->
-            CommandListManager.execListUpdateForCmdIndex(
-//                currentAppDirPath,
-                cmdListView,
-            )
-            cmdListSwipeToRefresh.isRefreshing = false
-        })
-    }
+//    fun cmdListSwipeToRefresh(
+//    ){
+//        val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
+//        cmdListSwipeToRefresh.setOnRefreshListener(SwipyRefreshLayout.OnRefreshListener {
+//                direction ->
+//            CommandListManager.execListUpdateForCmdIndex(
+////                currentAppDirPath,
+//                cmdListView,
+//            )
+//            cmdListSwipeToRefresh.isRefreshing = false
+//        })
+//    }
 
     fun onLongClickQrDo(
         fannelIndexListAdapter: FannelIndexListAdapter

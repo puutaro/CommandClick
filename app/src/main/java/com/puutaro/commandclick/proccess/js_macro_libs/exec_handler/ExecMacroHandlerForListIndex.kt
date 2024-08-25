@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.exec_handler
 
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
@@ -44,8 +44,8 @@ object ExecMacroHandlerForListIndex {
             JsPathMacroForListIndex.DELETE -> {
                 val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
                 ExecItemDelete.execItemDelete(
                     editFragment,
@@ -58,7 +58,7 @@ object ExecMacroHandlerForListIndex {
                 val binding = editFragment.binding
                 val editListRecyclerView = binding.editListRecyclerView
                 val listIndexForEditAdapter =
-                    editListRecyclerView.adapter as ListIndexForEditAdapter
+                    editListRecyclerView.adapter as ListIndexAdapter
                 ExecSimpleDelete.removeController(
                     editFragment,
                     editListRecyclerView,

@@ -20,10 +20,8 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
@@ -60,10 +58,10 @@ class CommandIndexFragment: Fragment() {
 
     private var broadcastReceiverForCmdIndex: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            BroadcastReceiveHandlerForCmdIndex.handle(
-                this@CommandIndexFragment,
-                intent,
-            )
+//            BroadcastReceiveHandlerForCmdIndex.handle(
+//                this@CommandIndexFragment,
+//                intent,
+//            )
         }
     }
 
@@ -142,9 +140,9 @@ class CommandIndexFragment: Fragment() {
 //            readSharePreffernceMap
 //        )
 
-        val cmdListView = binding.cmdList
-        cmdListView.setHasFixedSize(true)
-        cmdListView.setItemViewCacheSize(100)
+//        val cmdListView = binding.cmdList
+//        cmdListView.setHasFixedSize(true)
+//        cmdListView.setItemViewCacheSize(100)
         val makeListView = MakeListView(
             binding,
             this,
@@ -162,14 +160,14 @@ class CommandIndexFragment: Fragment() {
         makeListView.onLongClickDo(
             fannelIndexListAdapter
         )
-        makeListView.cmdListSwipeToRefresh()
-        cmdListView.adapter = fannelIndexListAdapter
-        cmdListView.layoutManager = PreLoadLayoutManager(
-            context,
-        )
-        cmdListView.layoutManager?.scrollToPosition(
-            fannelIndexListAdapter.itemCount - 1
-        )
+//        makeListView.cmdListSwipeToRefresh()
+//        cmdListView.adapter = fannelIndexListAdapter
+//        cmdListView.layoutManager = PreLoadLayoutManager(
+//            context,
+//        )
+//        cmdListView.layoutManager?.scrollToPosition(
+//            fannelIndexListAdapter.itemCount - 1
+//        )
         makeListView.makeTextFilter(
             fannelIndexListAdapter,
         )
@@ -203,10 +201,10 @@ class CommandIndexFragment: Fragment() {
                     }
                     val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
                     if(isLongth) {
-                        KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
-                                isOpen,
-                                this,
-                        )
+//                        KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
+//                                isOpen,
+//                                this,
+//                        )
                         return@KeyboardVisibilityEventListener
                     }
                     KeyboardForCmdIndex.historyAndSearchHideShow(
@@ -224,17 +222,17 @@ class CommandIndexFragment: Fragment() {
                         this.isVisible,
                         this.WebSearchSwitch
                     )
-                    if(
-                        !isOpen
-                        && binding.cmdListSwipeToRefresh.isVisible
-                    ){
-                        CoroutineScope(Dispatchers.Main).launch {
-                            delay(100)
-                            cmdListView.scrollToPosition(
-                                fannelIndexListAdapter.itemCount - 1
-                            )
-                        }
-                    }
+//                    if(
+//                        !isOpen
+//                        && binding.cmdListSwipeToRefresh.isVisible
+//                    ){
+//                        CoroutineScope(Dispatchers.Main).launch {
+//                            delay(100)
+//                            cmdListView.scrollToPosition(
+//                                fannelIndexListAdapter.itemCount - 1
+//                            )
+//                        }
+//                    }
                 })
         }
 
@@ -261,9 +259,9 @@ class CommandIndexFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-        exitDialog(
-            binding.cmdList
-        )
+//        exitDialog(
+////            binding.cmdList
+//        )
         cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
         _binding = null
@@ -296,10 +294,10 @@ class CommandIndexFragment: Fragment() {
     }
 
 
-    override fun onStart() {
-        super.onStart()
-        ListViewUpdaterOnStart.update(this)
-    }
+//    override fun onStart() {
+//        super.onStart()
+////        ListViewUpdaterOnStart.update(this)
+//    }
 
     interface OnLongClickMenuItemsForCmdIndexListener {
         fun onLongClickMenuItemsforCmdIndex(

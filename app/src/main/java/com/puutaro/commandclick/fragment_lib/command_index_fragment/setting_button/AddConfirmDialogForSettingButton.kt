@@ -98,9 +98,9 @@ object AddConfirmDialogForSettingButton {
                     shellScriptName,
                 ).absolutePath
             )
-            CommandListManager.execListUpdateForCmdIndex(
-                binding.cmdList,
-            )
+//            CommandListManager.execListUpdateForCmdIndex(
+//                binding.cmdList,
+//            )
         }
     }
 
@@ -155,10 +155,10 @@ object AddConfirmDialogForSettingButton {
             ).absolutePath,
             shellScriptContentsQuoteComp
         )
-        CommandListManager.execListUpdateForCmdIndex(
-//            currentAppDirPath,
-            binding.cmdList,
-        )
+//        CommandListManager.execListUpdateForCmdIndex(
+////            currentAppDirPath,
+//            binding.cmdList,
+//        )
     }
 }
 

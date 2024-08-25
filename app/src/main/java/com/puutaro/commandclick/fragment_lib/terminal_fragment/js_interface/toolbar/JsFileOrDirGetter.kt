@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
@@ -84,8 +84,8 @@ class JsFileOrDirGetter(
             ) {
                 true -> ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
                 else -> UsePath.cmdclickDefaultAppDirPath
             }

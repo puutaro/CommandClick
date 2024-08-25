@@ -33,7 +33,7 @@ object FannelNameClickListenerSetter {
         val activity = cmdIndexFragment.activity
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
-        val cmdListView = binding.cmdList
+//        val cmdListView = binding.cmdList
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
         fannelIndexListAdapter.fannelNameClickListener = object: FannelIndexListAdapter.OnFannelNameItemClickListener {
@@ -41,9 +41,9 @@ object FannelNameClickListenerSetter {
                 itemView: View,
                 holder: FannelIndexListAdapter.FannelIndexListViewHolder
             ) {
-                if (
-                    binding.cmdListSwipeToRefresh.isRefreshing
-                ) return
+//                if (
+//                    binding.cmdListSwipeToRefresh.isRefreshing
+//                ) return
                 val selectedShellFileName = holder.fannelNameTextView.text.toString()
                 Keyboard.hiddenKeyboard(
                     activity,
@@ -63,11 +63,11 @@ object FannelNameClickListenerSetter {
                         context,
                         "${cmdclickDefaultAppDirPath}/$selectedShellFileName"
                     )
-                    updateLastModifiedListView(
-                        cmdListView,
-//                        currentAppDirPath,
-                        selectedShellFileName
-                    )
+//                    updateLastModifiedListView(
+//                        cmdListView,
+////                        currentAppDirPath,
+//                        selectedShellFileName
+//                    )
                     return
                 }
                 if (
@@ -161,10 +161,10 @@ object FannelNameClickListenerSetter {
                     selectedShellFileName,
                     mainFannelContentsList,
                 )
-                CommandListManager.execListUpdateForCmdIndex(
-//                    currentAppDirPath,
-                    cmdListView,
-                )
+//                CommandListManager.execListUpdateForCmdIndex(
+////                    currentAppDirPath,
+//                    cmdListView,
+//                )
 
                 val listener = cmdIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
                 listener?.onListItemClicked(
