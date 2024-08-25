@@ -19,6 +19,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.FactFannel
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.list.ListTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FannelSettingMap
@@ -27,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object PinFannelBarManager {
 
@@ -128,6 +130,9 @@ object PinFannelBarManager {
                     FactFannel.creatingToast()
                     return
                 }
+                FileSystems.updateLastModified(
+                    File(cmdclickDefaultAppDirPath, fannelName).absolutePath
+                )
                 EditExecuteOrElse.handle(
                     terminalFragment,
                     fannelName,
