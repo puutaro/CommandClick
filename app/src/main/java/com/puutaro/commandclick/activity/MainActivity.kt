@@ -101,6 +101,7 @@ class MainActivity:
     TerminalFragment.GetSdcardDirListenerForTerm,
     TerminalFragment.OnRestartListenerForTerm,
     TerminalFragment.OnPinClickForTermListener,
+    TerminalFragment.OnSetToolbarButtonImageListener,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -835,5 +836,11 @@ class MainActivity:
 
     override fun onRestartForTerm() {
         ExecSimpleRestartActivity.execSimpleRestartActivity(this)
+    }
+
+    override fun onSetToolbarButtonImage() {
+        ExecSetToolbarButtonImage.set(
+            this
+        )
     }
  }

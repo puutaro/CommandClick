@@ -8,6 +8,8 @@ import java.io.File
 object UrlHistoryPath {
 
     const val lastModifyExtend = ".lastModified"
+    const val partPngDirName = "partPng"
+    val toolbarUrlImageDirPath = File(UsePath.cmdclickFannelSystemDirPath, "toolbarButtonImage").absolutePath
 
     fun makePathNameFromUrl(
         url: String
@@ -73,7 +75,7 @@ object UrlHistoryPath {
         return listOf(
             makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
-            "partPng"
+            partPngDirName
         ).joinToString("/").replace(
             Regex("[/]+"), "/"
         )

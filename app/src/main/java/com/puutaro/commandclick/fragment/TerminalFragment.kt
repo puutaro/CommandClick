@@ -25,6 +25,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.ToolbarButtonImageCreator
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
@@ -220,6 +221,7 @@ class TerminalFragment: Fragment() {
         BroadcastRegisterForTerm.register(this)
         GifCreateMonitor.watch(this)
         FannelHistoryGifCreator.watch(this)
+        ToolbarButtonImageCreator.create(this)
     }
 
     override fun onStart() {
@@ -486,5 +488,9 @@ class TerminalFragment: Fragment() {
             editFragmentTag: String,
             terminalFragmentTag: String
         )
+    }
+
+    interface OnSetToolbarButtonImageListener {
+        fun onSetToolbarButtonImage()
     }
 }

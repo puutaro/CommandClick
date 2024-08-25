@@ -10,6 +10,9 @@
     android:orientation="vertical"
     android:background="@null"
     android:backgroundTint="@null"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
     >
 
     <androidx.appcompat.widget.AppCompatImageView

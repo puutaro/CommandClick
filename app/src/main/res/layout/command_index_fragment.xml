@@ -13,7 +13,7 @@
         android:id="@+id/command_index_fragment"
         android:layout_width="match_parent"
         android:background="@color/white"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         tools:context="com.puutaro.commandclick.fragment.CommandIndexFragment">
 <!--        <com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout-->
 <!--            android:id="@+id/cmd_list_swipe_to_refresh"-->
@@ -65,17 +65,57 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="1">
-                    <ImageButton
+                    <RelativeLayout
                         android:id="@+id/cmdindex_history_button"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icons8_history"
-                        android:contentDescription="@string/history"
-                        android:backgroundTint="@color/white"
-                        android:layout_gravity="center"
+                        android:layout_height="60dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackground"
                         android:layout_weight="0.2"
-                        app:tint="@color/terminal_color"
-                        />
+                        >
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/cmdindex_history_button_image"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icons8_history"
+                            android:backgroundTint="@color/setting_menu_footer"
+                            app:tint="@color/file_dark_green_color"
+                            android:scaleType="fitCenter"
+                            android:padding="0dp"
+                            android:layout_centerInParent="true"
+                            android:layout_above="@+id/cmdindex_history_button_caption"
+                            />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/cmdindex_history_button_caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:padding="0dp"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:text="fannelManager"
+                            android:gravity="center"
+                            android:layout_alignParentBottom="true"
+                            />
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/cmdindex_history_button"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:src="@drawable/icons8_history"-->
+<!--                            android:contentDescription="@string/history"-->
+<!--                            android:backgroundTint="@color/white"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:layout_weight="0.2"-->
+<!--                            app:tint="@color/terminal_color"-->
+<!--                            android:scaleType="fitCenter"-->
+<!--                            android:adjustViewBounds="true"-->
+<!--                            />-->
+                    </RelativeLayout>
 
                     <ImageButton
                         android:id="@+id/cmdindex_internet_button"
@@ -105,17 +145,57 @@
                         android:paddingEnd="10dp"
                         android:maxLines="1"
                         android:inputType="text" />
-                    <ImageButton
+                    <RelativeLayout
                         android:id="@+id/cmdindex_setting_button"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icons8_setting"
-                        android:backgroundTint="@color/white"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/setting"
+                        android:layout_height="60dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackground"
                         android:layout_weight="0.2"
-                        app:tint="@color/terminal_color"
-                        />
+                        >
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/cmdindex_setting_button_image"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icons8_setting"
+                            android:backgroundTint="@color/setting_menu_footer"
+                            app:tint="@color/file_dark_green_color"
+                            android:scaleType="fitCenter"
+                            android:padding="0dp"
+                            android:layout_centerInParent="true"
+                            android:layout_above="@+id/cmdindex_setting_button_caption"
+                            />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/cmdindex_setting_button_caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:padding="0dp"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:gravity="center"
+                            android:text="setting"
+                            android:layout_alignParentBottom="true"
+                            />
+                    </RelativeLayout>
+<!--                    <ImageButton-->
+<!--                        android:id="@+id/cmdindex_setting_button"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:src="@drawable/icons8_setting"-->
+<!--                        android:backgroundTint="@color/white"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:contentDescription="@string/setting"-->
+<!--                        android:layout_weight="0.2"-->
+<!--                        app:tint="@color/terminal_color"-->
+<!--                        android:scaleType="fitCenter"-->
+<!--                        android:adjustViewBounds="true"-->
+<!--                        />-->
                 </LinearLayout>
             </android.widget.Toolbar>
         </LinearLayout>

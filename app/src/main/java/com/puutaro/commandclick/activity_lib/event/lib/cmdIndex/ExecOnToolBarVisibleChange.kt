@@ -77,6 +77,6 @@ object ExecOnToolBarVisibleChange {
 private enum class TerminalSizingForCmdIndex(
     val height: Int
 ) {
-    VISIBLE(50),
+    VISIBLE(60),
     INVISIBLE(0)
 }
