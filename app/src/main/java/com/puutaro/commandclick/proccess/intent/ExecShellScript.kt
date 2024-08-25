@@ -18,6 +18,8 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -81,10 +83,15 @@ object ExecShellScript {
             CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
         ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
 
+        val curUrl =
+            TargetFragmentInstance().getCurrentTerminalFragmentFromFrag(
+                currentFragment.activity,
+            )?.binding?.terminalWebView?.url
         UrlLaunchMacro.launch(
             terminalViewModel,
 //            recentAppDirPath,
             onUrlLaunchMacro,
+            curUrl,
         )
 
         JavascriptExecuter.exec(

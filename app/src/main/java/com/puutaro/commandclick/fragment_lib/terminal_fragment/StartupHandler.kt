@@ -12,6 +12,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AutoExec
 import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,6 +43,10 @@ object StartupHandler {
         val tag = terminalFragment.tag
         val isIndexTerminal = !tag.isNullOrEmpty()
                 && tag == terminalFragment.context?.getString(R.string.index_terminal_fragment)
+        val isCurUrlHttp = EnableUrlPrefix.isHttpPrefix(
+            terminalFragment.binding.terminalWebView.url
+        )
+        if(isCurUrlHttp) return
         if(isIndexTerminal){
             UrlLaunchMacro.launchForIndex(
                 terminalFragment.context,
