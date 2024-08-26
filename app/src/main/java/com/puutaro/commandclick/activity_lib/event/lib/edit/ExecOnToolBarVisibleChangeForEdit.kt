@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.EditFragment
