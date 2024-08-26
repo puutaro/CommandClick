@@ -2,4 +2,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="cmdclick_layout_marginHorizontal">10dp</dimen>
     <dimen name="global_menu_string_size">20sp</dimen>
+    <dimen name="toolbar_layout_height">60dp</dimen>
+    <dimen name="toolbar_image_height">40dp</dimen>
+    <dimen name="toolbar_image_width">40dp</dimen>
 </resources>

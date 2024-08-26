@@ -65,26 +65,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="1">
-                    <RelativeLayout
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/cmdindex_history_button"
                         android:layout_width="0dp"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/toolbar_layout_height"
                         android:clickable="true"
                         android:focusable="true"
+                        android:orientation="vertical"
                         android:foreground="?selectableItemBackground"
                         android:layout_weight="0.2"
                         >
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/cmdindex_history_button_image"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="@dimen/toolbar_image_width"
+                            android:layout_height="@dimen/toolbar_image_height"
                             android:src="@drawable/icons8_history"
-                            android:backgroundTint="@color/setting_menu_footer"
+                            android:backgroundTint="@color/white"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
                             android:padding="0dp"
-                            android:layout_centerInParent="true"
-                            android:layout_above="@+id/cmdindex_history_button_caption"
+                            android:layout_gravity="center"
                             />
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/cmdindex_history_button_caption"
@@ -98,9 +98,9 @@
                             android:maxLines="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
-                            android:text="fannelManager"
+                            android:text="fnlMngr"
+                            android:layout_gravity="center"
                             android:gravity="center"
-                            android:layout_alignParentBottom="true"
                             />
 <!--                        <ImageButton-->
 <!--                            android:id="@+id/cmdindex_history_button"-->
@@ -115,7 +115,7 @@
 <!--                            android:scaleType="fitCenter"-->
 <!--                            android:adjustViewBounds="true"-->
 <!--                            />-->
-                    </RelativeLayout>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <ImageButton
                         android:id="@+id/cmdindex_internet_button"
@@ -145,26 +145,26 @@
                         android:paddingEnd="10dp"
                         android:maxLines="1"
                         android:inputType="text" />
-                    <RelativeLayout
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/cmdindex_setting_button"
                         android:layout_width="0dp"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/toolbar_layout_height"
                         android:clickable="true"
                         android:focusable="true"
+                        android:orientation="vertical"
                         android:foreground="?selectableItemBackground"
                         android:layout_weight="0.2"
                         >
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/cmdindex_setting_button_image"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="@dimen/toolbar_image_width"
+                            android:layout_height="@dimen/toolbar_image_height"
                             android:src="@drawable/icons8_setting"
-                            android:backgroundTint="@color/setting_menu_footer"
+                            android:backgroundTint="@color/white"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
+                            android:layout_gravity="center"
                             android:padding="0dp"
-                            android:layout_centerInParent="true"
-                            android:layout_above="@+id/cmdindex_setting_button_caption"
                             />
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/cmdindex_setting_button_caption"
@@ -178,11 +178,11 @@
                             android:maxLines="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
+                            android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="setting"
-                            android:layout_alignParentBottom="true"
+                            android:text="stting"
                             />
-                    </RelativeLayout>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 <!--                    <ImageButton-->
 <!--                        android:id="@+id/cmdindex_setting_button"-->
 <!--                        android:layout_width="0dp"-->

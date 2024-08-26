@@ -9,8 +9,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
-import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -28,11 +28,11 @@ object ExecSetToolbarButtonImage {
         CoroutineScope(Dispatchers.IO).launch {
             setImageButton(
                 binding.cmdindexHistoryButtonImage,
-                AssetsFileManager.fannelManagerPath
+                CmdClickIcons.HISTORY.str
             )
             setImageButton(
                 binding.cmdindexSettingButtonImage,
-                AssetsFileManager.settingPingPath
+                CmdClickIcons.SETTING.str
             )
 //            File(
 //                toolbarUrlImageDirPath,
@@ -67,12 +67,15 @@ object ExecSetToolbarButtonImage {
 
     private suspend fun setImageButton(
         imageView: AppCompatImageView,
-        assetsPath: String,
+        iconMacroStr: String
     ){
+        val icon = CmdClickIcons.values().firstOrNull {
+            it.str == iconMacroStr
+        } ?: return
         val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
         val imageFile = File(
             toolbarUrlImageDirPath,
-            File(assetsPath).name
+            File(icon.assetsPath).name
 
         )
         if (
@@ -80,13 +83,15 @@ object ExecSetToolbarButtonImage {
         ) return
         execSetImageButton(
             imageView,
-            imageFile.absolutePath
+            imageFile.absolutePath,
+            iconMacroStr
         )
     }
 
     private suspend fun execSetImageButton(
         imageButton: AppCompatImageView,
         imagePath: String,
+        iconMacro: String
     ){
         val context = imageButton.context
         withContext(Dispatchers.Main) {
@@ -105,10 +110,14 @@ object ExecSetToolbarButtonImage {
             FileSystems.checkSum(imagePath)
         }
         withContext(Dispatchers.Main) {
+            val beforeChecksum = TagManager.getChecksumFromTag(imageButton.tag)
             if(
-                imageButton.tag == checksum
+                beforeChecksum == checksum
             ) return@withContext
-            imageButton.tag = checksum
+            imageButton.tag = TagManager.make(
+                iconMacro,
+                checksum
+            )
             imageButton.background =
                  AppCompatResources.getDrawable(context, R.color.terminal_color)
             val requestBuilder: RequestBuilder<Drawable> =
@@ -123,6 +132,48 @@ object ExecSetToolbarButtonImage {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .thumbnail(requestBuilder)
                 .into(imageButton)
+        }
+    }
+
+    object TagManager {
+
+        private const val separator = "___"
+        fun make(
+            iconMacro: String,
+            checksum: String
+        ): String {
+            return listOf(
+                iconMacro,
+                checksum
+            ).joinToString(separator)
+        }
+
+        fun getChecksumFromTag(
+            tag: Any?
+        ): String? {
+            if(
+                tag == null
+            ) return null
+            val tagString = try {
+                tag.toString()
+            } catch (e: Exception){
+                return null
+            }
+            return tagString.split(separator).getOrNull(1)
+        }
+
+        fun getIconMacroFromTag(
+            tag: Any?
+        ): String? {
+            if(
+                tag == null
+            ) return null
+            val tagString = try {
+                tag.toString()
+            } catch (e: Exception){
+                return null
+            }
+            return tagString.split(separator).firstOrNull()
         }
     }
 }

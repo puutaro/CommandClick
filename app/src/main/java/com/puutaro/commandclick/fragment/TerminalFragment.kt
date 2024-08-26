@@ -18,14 +18,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.ToolbarButtonImageCreator
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
@@ -221,7 +220,7 @@ class TerminalFragment: Fragment() {
         BroadcastRegisterForTerm.register(this)
         GifCreateMonitor.watch(this)
         FannelHistoryGifCreator.watch(this)
-        ToolbarButtonImageCreator.create(this)
+        ButtonImageCreator.create(this)
     }
 
     override fun onStart() {

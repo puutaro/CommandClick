@@ -99,4 +99,15 @@ object ScreenSizeCalculator {
         val density = context.resources.displayMetrics.density
         return (dps.toFloat() * density).roundToInt()
     }
+
+    fun <T: Number>toPx(
+        context: Context?,
+        px: T,
+    ): Int{
+        if(
+            context == null
+        ) return 0
+        val density = context.resources.displayMetrics.density
+        return (px.toFloat() / density).roundToInt()
+    }
 }
