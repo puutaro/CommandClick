@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
@@ -35,12 +36,12 @@ class PageSearchToolbarManager(
     }
 
     fun pageSearchTextChangeListner(){
-        val linearWeightParamWide = LinearLayout.LayoutParams(
+        val linearWeightParamWide = LinearLayoutCompat.LayoutParams(
             0,
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
         linearWeightParamWide.weight = 0.67F
-        val linearWeightParamShrink = LinearLayout.LayoutParams(
+        val linearWeightParamShrink = LinearLayoutCompat.LayoutParams(
             0,
             ViewGroup.LayoutParams.MATCH_PARENT,
         )

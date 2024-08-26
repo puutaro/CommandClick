@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.EditFragment
@@ -59,7 +60,7 @@ class WebSearchToolbarManagerForEdit(
                     !cmdWebSearchEditText.hasFocus()
                 ) return
                 val linearLayoutParam =
-                    cmdEditFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    cmdEditFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 val editFragmentWeight = linearLayoutParam.weight
                 if(
                     editFragmentWeight == ReadLines.LONGTH

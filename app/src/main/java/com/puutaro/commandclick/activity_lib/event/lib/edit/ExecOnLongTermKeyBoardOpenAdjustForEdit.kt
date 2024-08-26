@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.edit
 import android.content.Context
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.EditFragment
@@ -38,8 +39,8 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
             Log.d(this.toString(), "not exist ${cmdEditFragmentTag}")
             return
         }
-        val param = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
+        val param = LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
             0
         )
         param.weight = weight

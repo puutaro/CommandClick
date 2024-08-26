@@ -2,6 +2,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.edit
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.TerminalSizingForEdit
@@ -12,7 +13,7 @@ object ExecOnToolBarVisibleChangeForEdit {
         editFragment: EditFragment,
         toolBarVisible: Boolean
     ){
-        val layoutParam = LinearLayout.LayoutParams(
+        val layoutParam = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0
         )

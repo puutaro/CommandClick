@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Context
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
@@ -36,9 +37,9 @@ object EditableListContentsSelectSpinnerViewProducer {
         val context = editParameters.context
         val currentId = editParameters.currentId
         val throughMark = "-"
-        val linearParamsForSpinner = LinearLayout.LayoutParams(
+        val linearParamsForSpinner = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
 

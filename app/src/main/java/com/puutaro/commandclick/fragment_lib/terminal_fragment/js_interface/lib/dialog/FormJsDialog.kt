@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -163,7 +164,7 @@ class FormJsDialog(
         ) confirmTitleTextView?.text = title
         else confirmTitleTextView?.isVisible = false
         val linearLayout =
-            formDialog?.findViewById<LinearLayout>(
+            formDialog?.findViewById<LinearLayoutCompat>(
                 R.id.form_dialog_contents_linear
             ) ?: return
 //        val virtualReadPreffrenceMap = mapOf(
@@ -278,12 +279,12 @@ class FormJsDialog(
         editParameters: EditParameters,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
         editTextStartId: Int,
-        linearLayout: LinearLayout
+        linearLayout: LinearLayoutCompat
     ){
         val recordNumToNameToValueInHolderSize =
             editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
-            val linearParams = LinearLayout.LayoutParams(
+            val linearParams = LinearLayoutCompat.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             )

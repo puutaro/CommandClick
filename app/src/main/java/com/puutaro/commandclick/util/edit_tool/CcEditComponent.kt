@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util.edit_tool
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.LogSystems
 
@@ -10,7 +11,7 @@ object CcEditComponent {
 
     fun makeEditLinearLayoutList(
         editFragment: EditFragment,
-    ): List<LinearLayout> {
+    ): List<LinearLayoutCompat> {
         val binding = editFragment.binding
         return when(editFragment.existIndexList){
             true -> listOf(
@@ -25,7 +26,7 @@ object CcEditComponent {
 
     fun findEditTextView(
         currentId: Int,
-        editLinearLayoutList: List<LinearLayout>,
+        editLinearLayoutList: List<LinearLayoutCompat>,
     ): EditText? {
         editLinearLayoutList.forEach {
             val extractedEditText = it.findViewById<EditText>(currentId)
@@ -41,7 +42,7 @@ object CcEditComponent {
 
     fun findSpinnerView(
         currentId: Int,
-        editLinearLayoutList: List<LinearLayout>,
+        editLinearLayoutList: List<LinearLayoutCompat>,
     ): Spinner? {
         editLinearLayoutList.forEach {
             val extractedSpinner = it.findViewById<Spinner>(currentId)

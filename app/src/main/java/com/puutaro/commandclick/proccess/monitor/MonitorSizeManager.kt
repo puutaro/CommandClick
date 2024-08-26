@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.monitor
 
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
@@ -25,7 +26,7 @@ object MonitorSizeManager {
         val cmdindexInternetButton = binding.cmdindexInternetButton
 //        val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
         val linearLayoutParam =
-            binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
         when(
             linearLayoutParam.weight != ReadLines.LONGTH
         ) {
@@ -91,7 +92,7 @@ object MonitorSizeManager {
             return
         }
         val linearLayoutParam =
-            editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+            editFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
         val isShow = linearLayoutParam.weight != ReadLines.LONGTH
         EditLayoutViewHideShow.exec(
             editFragment,

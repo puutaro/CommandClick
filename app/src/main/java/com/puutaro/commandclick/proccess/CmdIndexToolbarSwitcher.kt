@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -21,7 +22,7 @@ object CmdIndexToolbarSwitcher {
             )
         ) return
         val linearLayoutParam =
-            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
         val cmdIndexFragmentWeight = linearLayoutParam.weight
         if(
             cmdIndexFragment.WebSearchSwitch
@@ -36,13 +37,13 @@ object CmdIndexToolbarSwitcher {
         val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
         val cmdSearchEditText = binding.cmdSearchEditText
 
-        val linearLayoutParamPageSearchToolBar = LinearLayout.LayoutParams(
+        val linearLayoutParamPageSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
         linearLayoutParamPageSearchToolBar.weight = weightSwicher(onPageSearch)
 
-        val linearLayoutParamToolbar = LinearLayout.LayoutParams(
+        val linearLayoutParamToolbar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )

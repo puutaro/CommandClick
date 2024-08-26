@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
@@ -540,7 +541,7 @@ object QrUriHandler {
             targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
                 ?: return
 
-        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
+        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayoutCompat.LayoutParams
             ?: return
         val loadUrl =
             ScriptPreWordReplacer.replaceForQr(

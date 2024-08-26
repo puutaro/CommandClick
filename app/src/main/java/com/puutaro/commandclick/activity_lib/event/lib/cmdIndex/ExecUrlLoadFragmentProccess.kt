@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 import android.content.Context
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
@@ -42,7 +43,7 @@ object ExecUrlLoadFragmentProccess {
             (it.getColor(R.color.white))
         }
         val linearLayoutParam =
-            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
         if(linearLayoutParam.weight == ReadLines.LONGTH) {
             ExecTerminalLongOrShort.open<CommandIndexFragment>(
                 cmdIndexFragmentTag,
@@ -89,7 +90,7 @@ object ExecUrlLoadFragmentProccess {
             false
         )
         val linearLayoutParam =
-            editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+            editFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
         if(
             linearLayoutParam.weight != ReadLines.LONGTH
         ) return

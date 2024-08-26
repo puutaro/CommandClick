@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.lib
 
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -21,12 +22,12 @@ object ExecSetTermSizeForIntent {
         val currentFragmentWeight = when(currentFragment){
             is CommandIndexFragment -> {
                 val linearLayoutParam =
-                    currentFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    currentFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 linearLayoutParam.weight
             }
             is EditFragment -> {
                 val linearLayoutParam =
-                    currentFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    currentFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 linearLayoutParam.weight
             }
             else -> {

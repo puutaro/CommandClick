@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -41,9 +42,9 @@ object FileSelectGridViewProducer {
         val editFragment = editParameters.currentFragment as EditFragment
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val linearParamsForGrid = LinearLayout.LayoutParams(
+        val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForGrid.weight = weight
         val fcbMap = getFcbMap(

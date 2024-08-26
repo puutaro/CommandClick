@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
@@ -50,7 +51,7 @@ object TextChangedListenerAdder {
                     !cmdSearchEditText.hasFocus()
                 ) return
                 val linearLayoutParam =
-                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 val cmdIndexFragmentWeight = linearLayoutParam.weight
                 if(
                     cmdIndexFragmentWeight == ReadLines.LONGTH
@@ -76,7 +77,7 @@ object TextChangedListenerAdder {
                     return
                 }
                 val linearLayoutParam =
-                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 val cmdIndexFragmentWeight = linearLayoutParam.weight
                 if(
                     cmdIndexFragmentWeight != ReadLines.LONGTH

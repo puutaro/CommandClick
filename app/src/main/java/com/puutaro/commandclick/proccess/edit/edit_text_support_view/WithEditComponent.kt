@@ -3,8 +3,8 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 import android.content.Context
 import android.text.InputType
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
@@ -53,7 +53,7 @@ class WithEditComponent(
     fun insert(
         insertTextView: TextView,
         editParameters: EditParameters,
-    ): LinearLayout {
+    ): LinearLayoutCompat? {
         val context = editParameters.context
         val textLabelIndex = culcSetVariableTypeMarkIndex(
             editParameters,
@@ -110,12 +110,12 @@ class WithEditComponent(
             editTextWeight
         )
         val horizontalLinearLayout = makeHorizontalLayout(context)
-        horizontalLinearLayout.addView(insertEditText)
+        horizontalLinearLayout?.addView(insertEditText)
         hideVariables(
             editFragment,
             editParameters,
             insertTextView,
-            horizontalLinearLayout,
+//            horizontalLinearLayout,
         )
         checkIndexNum(
             editParameters,
@@ -136,7 +136,7 @@ class WithEditComponent(
                         otherComponentWeight,
                         currentComponentIndex,
                     )
-                    horizontalLinearLayout.addView(insertButton)
+                    horizontalLinearLayout?.addView(insertButton)
                 }
                 EditTextSupportViewName.CHECK_BOX.str -> {
                     val insertSpinner = SpinnerViewProducer.make(
@@ -145,7 +145,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertSpinner)
+                    horizontalLinearLayout?.addView(insertSpinner)
                 }
                 EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
                     val insertSpinner = EditableSpinnerViewProducer.make(
@@ -154,7 +154,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertSpinner)
+                    horizontalLinearLayout?.addView(insertSpinner)
                 }
                 EditTextSupportViewName.LIST_CONTENTS_SELECT_BOX.str -> {
                     val insertListConSpinner = ListContentsSelectSpinnerViewProducer.make(
@@ -163,7 +163,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertListConSpinner)
+                    horizontalLinearLayout?.addView(insertListConSpinner)
                 }
                 EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
                     val insertListConSpinner = EditableListContentsSelectSpinnerViewProducer.make(
@@ -172,7 +172,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertListConSpinner)
+                    horizontalLinearLayout?.addView(insertListConSpinner)
                 }
                 EditTextSupportViewName.GRID_BOX.str -> {
                     val insertGridSelectBox = EditableListContentsSelectGridViewProducer.make(
@@ -181,7 +181,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertGridSelectBox)
+                    horizontalLinearLayout?.addView(insertGridSelectBox)
                 }
                 EditTextSupportViewName.MULTI_GRID_BOX.str -> {
                     val insertGridSelectBox = EditableListContentsMultiSelectGridViewProducer.make(
@@ -190,7 +190,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertGridSelectBox)
+                    horizontalLinearLayout?.addView(insertGridSelectBox)
                 }
                 EditTextSupportViewName.ONlY_IMAGE_GRID_BOX.str -> {
                     val insertGridSelectBox = EditableListContentsSelectOnlyImageGridViewProducer.make(
@@ -199,7 +199,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(insertGridSelectBox)
+                    horizontalLinearLayout?.addView(insertGridSelectBox)
                 }
                 EditTextSupportViewName.MULTI_SELECT_BOX.str -> {
                     val multiSelectSpinner = MultiSelectSpinnerViewProducer.make(
@@ -209,7 +209,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(multiSelectSpinner)
+                    horizontalLinearLayout?.addView(multiSelectSpinner)
                 }
                 EditTextSupportViewName.LIST_CONTENTS_MULTI_SELECT_BOX.str -> {
                     val listConMultiSelectSpinner = EditableListContentsMultiSeletctSpinnerViewProducer.make(
@@ -219,7 +219,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(listConMultiSelectSpinner)
+                    horizontalLinearLayout?.addView(listConMultiSelectSpinner)
                 }
                 EditTextSupportViewName.DRAG_SORT_SELECT_BOX.str -> {
                     val dragSortListView = DragSortListViewProducer.make(
@@ -228,7 +228,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight
                     )
-                    horizontalLinearLayout.addView(dragSortListView)
+                    horizontalLinearLayout?.addView(dragSortListView)
                 }
                 EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
                     val editableFileSelectSpinner = FileSelectSpinnerViewProducer.make(
@@ -237,7 +237,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(editableFileSelectSpinner)
+                    horizontalLinearLayout?.addView(editableFileSelectSpinner)
                 }
                 EditTextSupportViewName.FILE_SELECT_GRID_BOX.str -> {
                     val fileSelectGridSelectBox = FileSelectGridViewProducer.make(
@@ -246,7 +246,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(fileSelectGridSelectBox)
+                    horizontalLinearLayout?.addView(fileSelectGridSelectBox)
                 }
                 EditTextSupportViewName.MULTI_FILE_SELECT_GRID_BOX.str -> {
                     val fileSelectGridSelectBox = MultiFileSelectGridViewProducer.make(
@@ -255,7 +255,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(fileSelectGridSelectBox)
+                    horizontalLinearLayout?.addView(fileSelectGridSelectBox)
                 }
                 EditTextSupportViewName.FILE_SELECT_ONLY_IMAGE_GRID_BOX.str -> {
                     val fileSelectGridSelectBox = FileSelectOnlyImageGridViewProducer.make(
@@ -264,7 +264,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(fileSelectGridSelectBox)
+                    horizontalLinearLayout?.addView(fileSelectGridSelectBox)
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
                     val incButton = InDeCrementerViewProducer.make(
@@ -274,7 +274,7 @@ class WithEditComponent(
                         otherComponentWeight,
                         true,
                     )
-                    horizontalLinearLayout.addView(incButton)
+                    horizontalLinearLayout?.addView(incButton)
                     val decButton = InDeCrementerViewProducer.make(
                         insertEditText,
                         editParameters,
@@ -282,7 +282,7 @@ class WithEditComponent(
                         otherComponentWeight,
                         false
                     )
-                    horizontalLinearLayout.addView(decButton)
+                    horizontalLinearLayout?.addView(decButton)
                 }
                 EditTextSupportViewName.FILE_PICKER.str -> {
                     val fileChooser = DirOrFileChooseProducer.make(
@@ -293,7 +293,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(fileChooser)
+                    horizontalLinearLayout?.addView(fileChooser)
                 }
                 EditTextSupportViewName.DIRECTORY_PICKER.str -> {
                     val dirChooser = DirOrFileChooseProducer.make(
@@ -304,7 +304,7 @@ class WithEditComponent(
                         currentComponentIndex,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(dirChooser)
+                    horizontalLinearLayout?.addView(dirChooser)
                 }
                 EditTextSupportViewName.COLOR.str -> {
                     val colorPicker = ColorPickerViewProducer.make(
@@ -312,7 +312,7 @@ class WithEditComponent(
                         insertEditText,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(colorPicker)
+                    horizontalLinearLayout?.addView(colorPicker)
                 }
                 EditTextSupportViewName.DATE.str -> {
                     val datePicker = DatePickerProducer.make(
@@ -320,7 +320,7 @@ class WithEditComponent(
                         editParameters,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(datePicker)
+                    horizontalLinearLayout?.addView(datePicker)
                 }
                 EditTextSupportViewName.TIME.str -> {
                     val timePicker = TimePickerViewProducer.make(
@@ -328,7 +328,7 @@ class WithEditComponent(
                         editParameters,
                         otherComponentWeight,
                     )
-                    horizontalLinearLayout.addView(timePicker)
+                    horizontalLinearLayout?.addView(timePicker)
                 }
                 EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
                     insertEditText.isEnabled = false
@@ -347,11 +347,12 @@ class WithEditComponent(
 
     private  fun makeHorizontalLayout(
         context: Context?
-    ):LinearLayout {
-        val horizontalLinearLayout = LinearLayout(context)
-        horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
+    ):LinearLayoutCompat? {
+        if(context == null) return null
+        val horizontalLinearLayout = LinearLayoutCompat(context)
+        horizontalLinearLayout.orientation = LinearLayoutCompat.HORIZONTAL
         horizontalLinearLayout.weightSum = 1F
-        val linearParamsForHorizontal = LinearLayout.LayoutParams(
+        val linearParamsForHorizontal = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
@@ -427,7 +428,7 @@ class WithEditComponent(
         editFragment: EditFragment,
         editParameters: EditParameters,
         insertTextView: TextView,
-        horizontalLinearLayout: LinearLayout,
+//        horizontalLinearLayout: LinearLayout,
     ){
 //        val isVisible = !editParameters.hideSettingVariableList.contains(
 //            editParameters.currentVariableName

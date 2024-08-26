@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
@@ -54,17 +55,17 @@ object EditToolbarSwitcher {
         val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
         val cmdWebSearchEditText = webSearch.cmdWebSearchEditText
 
-        val linearLayoutParamPageSearchToolBar = LinearLayout.LayoutParams(
+        val linearLayoutParamPageSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
         cmdclickPageSearchToolBar.layoutParams = linearLayoutParamPageSearchToolBar
-        val linearLayoutParamPageWebSearchToolBar = LinearLayout.LayoutParams(
+        val linearLayoutParamPageWebSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
         webSearchToolbar.layoutParams = linearLayoutParamPageWebSearchToolBar
-        val linearLayoutParamToolbar = LinearLayout.LayoutParams(
+        val linearLayoutParamToolbar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )

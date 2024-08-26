@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -18,8 +19,8 @@ object ExecTermMinimumForEdit {
                 activity,
                 editExecuteTerminalFragmentTag
             ) ?: return
-        val param = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
+        val param = LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
             0
         )
         val minTermRate = 0F

@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.R
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.EditFragment
@@ -215,9 +216,9 @@ class EditTextProducerForEdit(
         val descriptionButton = Button(context)
         val buttonLabel = "Description"
         descriptionButton.text = buttonLabel
-        val linearParamsForButton = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+        val linearParamsForButton = LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         descriptionButton.layoutParams = linearParamsForButton
         context?.let {

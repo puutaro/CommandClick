@@ -4,6 +4,7 @@ import android.text.InputType
 import android.util.TypedValue
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -97,7 +98,7 @@ object EditTextSetter {
                 defaultHeight
             }
         }
-        val linearParamsForEditTextTest = LinearLayout.LayoutParams(
+        val linearParamsForEditTextTest = LinearLayoutCompat.LayoutParams(
             0,
             layoutHeight,
         )

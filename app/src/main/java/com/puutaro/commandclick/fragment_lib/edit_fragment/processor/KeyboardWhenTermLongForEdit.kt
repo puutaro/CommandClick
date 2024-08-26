@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -32,7 +33,7 @@ object KeyboardWhenTermLongForEdit {
             }
             else -> {
                 val linearLayoutParam =
-                    editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    editFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 val isShow = linearLayoutParam.weight == ReadLines.LONGTH
                 binding.editTextScroll.isVisible = !isOpen && isShow
             }

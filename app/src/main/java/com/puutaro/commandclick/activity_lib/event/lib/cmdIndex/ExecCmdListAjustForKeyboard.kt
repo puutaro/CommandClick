@@ -2,6 +2,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 
@@ -17,8 +18,8 @@ object ExecCmdListAjustForKeyboard {
             Log.d(this.toString(), "not exist ${cmdIndexfragmentTag}")
             return
         }
-        val param = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
+        val param = LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
             0
         )
         param.weight = weight

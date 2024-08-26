@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -339,7 +340,7 @@ class EditFragment: Fragment() {
 //            if(terminalViewModel.onDialog) return@setEventListener
                     binding.editTitleLinearlayout.isVisible = !isOpen
                     val linearLayoutParam =
-                        binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                        binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                     val editFragmentWeight = linearLayoutParam.weight
                     if(
                         editFragmentWeight != ReadLines.LONGTH

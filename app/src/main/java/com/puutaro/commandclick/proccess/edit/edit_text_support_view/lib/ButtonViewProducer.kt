@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Intent
 import android.view.MotionEvent
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -81,9 +82,9 @@ object ButtonViewProducer {
             currentSetVariableValue,
             currentComponentIndex
         )
-        val linearParamsForButton = LinearLayout.LayoutParams(
+        val linearParamsForButton = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForButton.weight = weight
         val insertButton = Button(context)

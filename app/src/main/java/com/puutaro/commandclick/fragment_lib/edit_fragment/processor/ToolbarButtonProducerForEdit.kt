@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -22,9 +23,9 @@ class ToolbarButtonProducerForEdit(
 ) {
     private val fannelInfoMap = editFragment.fannelInfoMap
     private val context = editFragment.context
-    private val insertImageButtonParam = LinearLayout.LayoutParams(
+    private val insertImageButtonParam = LinearLayoutCompat.LayoutParams(
         0,
-        LinearLayout.LayoutParams.MATCH_PARENT,
+        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
     )
     private val toolbarButtonHandler = ToolbarButtonHandler(
         editFragment,

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
@@ -53,9 +54,9 @@ object DirOrFileChooseProducer {
                 currentVariableName
             )
         }
-        val insertButtonViewParam = LinearLayout.LayoutParams(
+        val insertButtonViewParam = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         insertButtonViewParam.weight = weight
         insertButtonView.layoutParams = insertButtonViewParam

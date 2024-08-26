@@ -30,7 +30,7 @@
             android:layout_above="@+id/edit_tool_bar_linear_layout"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
             >
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/edit_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,9 +72,9 @@
                         />
                     <requestFocus/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/edit_list_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
             android:weightSum="1"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
             >
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/edit_list_inner_top_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                 android:focusableInTouchMode="true"
                 android:background="@color/white"
                 >
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_list_recycler_view"
@@ -124,7 +124,7 @@
                 android:autofillHints=""
                 android:inputType="text"
                 />
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/edit_list_inner_bottom_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,10 +133,10 @@
                 android:focusableInTouchMode="true"
                 android:background="@color/white"
                 >
-            </LinearLayout>
-        </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/edit_tool_bar_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -168,13 +168,13 @@
                 android:focusableInTouchMode="true"
                 android:layout_weight="1"
                 >
-                <LinearLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/edit_toolbar_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                </LinearLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </android.widget.Toolbar>
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>
 </layout>

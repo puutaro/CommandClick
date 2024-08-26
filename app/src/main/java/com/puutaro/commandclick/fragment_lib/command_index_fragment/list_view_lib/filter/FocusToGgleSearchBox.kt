@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -23,7 +24,7 @@ object FocusToGgleSearchBox {
                 !hasFocus
             ) return@OnFocusChangeListener
             val linearLayoutParam =
-                cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
             val cmdIndexFragmentWeight = linearLayoutParam.weight
             if (
                 cmdIndexFragmentWeight == ReadLines.LONGTH

@@ -8,6 +8,7 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -187,7 +188,7 @@ class CommandIndexFragment: Fragment() {
                         terminalViewModel.onDialog
                     ) return@KeyboardVisibilityEventListener
                     val linearLayoutParam =
-                        binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                        binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                     val cmdIndexFragmentWeight = linearLayoutParam.weight
                     val enableInternetButton = (
                             !isOpen

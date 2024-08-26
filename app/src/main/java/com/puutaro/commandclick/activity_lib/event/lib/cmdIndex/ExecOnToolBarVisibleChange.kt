@@ -2,12 +2,16 @@ package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import ch.qos.logback.core.util.Loader.getResources
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.TerminalSizingForEdit
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+
 
 object ExecOnToolBarVisibleChange {
     fun execOnToolBarVisibleChange(
@@ -38,17 +42,23 @@ object ExecOnToolBarVisibleChange {
     ){
         val layoutParam = when(toolBarVisible) {
             true -> {
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
+                val dpHeight =
                     ScreenSizeCalculator.toDp(
                         activity,
-                        TerminalSizingForCmdIndex.VISIBLE.height
+                        activity.resources.getDimension(TerminalSizingForCmdIndex.VISIBLE.height)
+                    )
+
+                LinearLayoutCompat.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ScreenSizeCalculator.toPx(
+                        activity,
+                        dpHeight
                     )
                 )
             }
 //            TerminalSizingForCmdIndex.VISIBLE.weight
             else -> {
-                LinearLayout.LayoutParams(
+                LinearLayoutCompat.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     TerminalSizingForCmdIndex.INVISIBLE.height
                 )
@@ -77,6 +87,6 @@ object ExecOnToolBarVisibleChange {
 private enum class TerminalSizingForCmdIndex(
     val height: Int
 ) {
-    VISIBLE(60),
+    VISIBLE(R.dimen.toolbar_layout_height),
     INVISIBLE(0)
 }

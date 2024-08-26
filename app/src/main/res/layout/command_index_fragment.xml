@@ -9,12 +9,12 @@
 
     </data>
 
-    <RelativeLayout
-        android:id="@+id/command_index_fragment"
-        android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="60dp"
-        tools:context="com.puutaro.commandclick.fragment.CommandIndexFragment">
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/command_index_fragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:background="@color/white"-->
+<!--        android:layout_height="60dp"-->
+<!--        tools:context="com.puutaro.commandclick.fragment.CommandIndexFragment">-->
 <!--        <com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout-->
 <!--            android:id="@+id/cmd_list_swipe_to_refresh"-->
 <!--            android:layout_width="wrap_content"-->
@@ -38,13 +38,14 @@
 <!--            &lt;!&ndash;                android:transcriptMode="alwaysScroll"&ndash;&gt;-->
 <!--        </com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout>-->
 
-        <LinearLayout
-            android:id="@+id/cmdindex_all_toolbar_linear_layout"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/command_index_fragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:orientation="vertical"
-            android:layout_alignParentBottom="true"
             android:weightSum="1">
+<!--
+ android:layout_alignParentBottom="true"-->
             <include
                 layout="@layout/page_search"
                 android:id="@+id/page_search"
@@ -59,7 +60,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 >
-                <LinearLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/cmdindex_toolbar_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -196,9 +197,9 @@
 <!--                        android:scaleType="fitCenter"-->
 <!--                        android:adjustViewBounds="true"-->
 <!--                        />-->
-                </LinearLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </android.widget.Toolbar>
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 </layout>

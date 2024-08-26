@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -26,7 +27,7 @@ object KeyListenerSetter {
                     || keyCode != KeyEvent.KEYCODE_ENTER
                 ) return false
                 val linearLayoutParam =
-                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 val cmdIndexFragmentWeight = linearLayoutParam.weight
                 Keyboard.hiddenKeyboardForFragment(cmdIndexFragment)
                 if(

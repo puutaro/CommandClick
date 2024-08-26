@@ -1,12 +1,13 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.util.CompleteQuote
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 
 class ScriptContentsLister(
-    private val editLinearLayoutList: List<LinearLayout>
+    private val editLinearLayoutList: List<LinearLayoutCompat>
 ) {
     fun update(
         recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>,

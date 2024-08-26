@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.state
 
 import android.app.Activity
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
@@ -203,12 +204,12 @@ class TargetFragmentInstance {
         return when(currentBottomFragment){
             is CommandIndexFragment -> {
                 val linearLayoutParam =
-                    currentBottomFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    currentBottomFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 linearLayoutParam.weight
             }
             is EditFragment -> {
                 val linearLayoutParam =
-                    currentBottomFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    currentBottomFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 linearLayoutParam.weight
             }
             else -> null

@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -33,9 +34,9 @@ object ColorPickerViewProducer {
             insertEditText
         )
 
-        val insertButtonViewParam = LinearLayout.LayoutParams(
+        val insertButtonViewParam = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         insertButtonViewParam.weight = weight
         insertButtonView.layoutParams = insertButtonViewParam
