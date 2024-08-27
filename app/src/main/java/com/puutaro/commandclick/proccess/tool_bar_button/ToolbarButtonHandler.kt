@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.widget.ImageButton
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
@@ -23,7 +24,8 @@ class ToolbarButtonHandler(
     fun handle(
         isLongClick: Boolean,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        settingButtonView: ImageButton?,
+        buttonLayout: LinearLayoutCompat?,
+//        settingButtonView: ImageButton?,
     ){
         val toolbarButtonConfigMap =
             editFragment.toolbarButtonConfigMap?.get(
@@ -59,7 +61,8 @@ class ToolbarButtonHandler(
         JsPathHandlerForToolbarButton.handle(
             editFragment,
             String(),
-            settingButtonView,
+            buttonLayout,
+//            settingButtonView,
             jsActionMap
         )
     }
@@ -187,6 +190,7 @@ enum class SettingButtonConfigMapKey(
     LONG_CLICK("longClick"),
     CLICK("click"),
     ICON("icon"),
+    CAPTTION("caption"),
     VISIBLE("visible"),
     DISABLE("disable"),
     COLOR("color")

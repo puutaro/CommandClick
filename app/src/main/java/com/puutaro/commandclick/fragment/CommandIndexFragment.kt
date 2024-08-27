@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -237,12 +238,13 @@ class CommandIndexFragment: Fragment() {
                 })
         }
 
+
+        ExecSetToolbarButtonImage.setForCmdIndex(this)
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             this,
         )
         toolBarSettingButtonControl.toolbarSettingButtonOnClick()
         toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
-
         val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
             this,
         )

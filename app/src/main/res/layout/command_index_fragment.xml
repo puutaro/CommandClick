@@ -91,7 +91,6 @@
                             android:id="@+id/cmdindex_history_button_caption"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scaleType="fitCenter"
                             android:padding="0dp"
                             android:textSize="12sp"
                             android:textStyle="bold"

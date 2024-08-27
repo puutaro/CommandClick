@@ -124,7 +124,7 @@ class EditFragment: Fragment() {
     var qrDialogConfig: Map<String, String>? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
-    val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
+    val toolBarButtonIconMap: MutableMap<ToolbarButtonBariantForEdit, Pair<Int, String>> = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var editBoxTitleConfig: Map<String, String> = emptyMap()
     var filterDir = String()
     var buttonWeight = 0.25f

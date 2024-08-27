@@ -28,7 +28,6 @@ import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
-import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 
 object ConfigFromScriptFileSetter {
 
@@ -560,80 +559,100 @@ object ConfigFromScriptFileSetter {
 //        val isOnlyCmdEdit = enableCmdEdit
 //                && !enableEditExecute
         val iconNameIdPairList = CmdClickIcons.values()
-        val defaultSettingButtonIconId =
-            R.drawable.icons8_setting
+        val defaultIconId = R.drawable.icons8_setting
+        val defaultSettingButtonIconIdToCaption =
+            Pair(defaultIconId, "setting")
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.SETTING,
             when(true) {
                 isSettingEdit,
                 isOnlyCmdEdit ->
-                    defaultSettingButtonIconId
+                    defaultSettingButtonIconIdToCaption
                 else -> {
                     val settingButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.SETTING)
                     val selectedIconName = settingButtonConfigMap?.get(
                         SettingButtonConfigMapKey.ICON.key
                     ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.SETTING.str
-                    iconNameIdPairList.find {
+                    val selectedCaption = settingButtonConfigMap?.get(
+                        SettingButtonConfigMapKey.CAPTTION.key
+                    ) ?: String()
+                    val iconId = iconNameIdPairList.find {
                         it.str == selectedIconName
-                    }?.id ?: defaultSettingButtonIconId
+                    }?.id ?: defaultIconId
+                    Pair(iconId, selectedCaption)
                 }
             }
         )
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.EXTRA,
             let {
-                    val settingButtonConfigMap =
-                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EXTRA)
-                    val selectedIconName = settingButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.ICON.key
-                    ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.EXTRA.str
-                    iconNameIdPairList.find {
-                        it.str == selectedIconName
-                    }?.id ?: defaultSettingButtonIconId
-                }
+                val settingButtonConfigMap =
+                    editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EXTRA)
+                val selectedCaption = settingButtonConfigMap?.get(
+                    SettingButtonConfigMapKey.CAPTTION.key
+                ) ?: String()
+                val selectedIconName = settingButtonConfigMap?.get(
+                    SettingButtonConfigMapKey.ICON.key
+                ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.EXTRA.str
+                val iconId = iconNameIdPairList.find {
+                    it.str == selectedIconName
+                }?.id ?: defaultIconId
+                Pair(iconId, selectedCaption)
+            }
         )
-        val defaultOkButtonIconId =
-            R.drawable.icons8_check_ok
+        val defaultOkButtonIconIdToCaption =
+            Pair(R.drawable.icons8_check_ok, "ok")
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.OK,
             when(true) {
                 isSettingEdit ->
-                    defaultOkButtonIconId
+                    defaultOkButtonIconIdToCaption
                 isOnlyCmdEdit ->
-                    defaultOkButtonIconId
+                    defaultOkButtonIconIdToCaption
                 else -> {
                     val okButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.OK)
+                    val selectedCaption = okButtonConfigMap?.get(
+                        SettingButtonConfigMapKey.CAPTTION.key
+                    ) ?: String()
                     val selectedIconName = okButtonConfigMap?.get(
                         SettingButtonConfigMapKey.ICON.key
                     ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.PLAY.str
-                    val defaultIconId = R.drawable.icons_play
-                    iconNameIdPairList.find {
+                    val defaultOkIconId = R.drawable.icons_play
+                    val iconId = iconNameIdPairList.find {
                         it.str == selectedIconName
-                    }?.id ?: defaultIconId
+                    }?.id ?: defaultOkIconId
+                    Pair(iconId, selectedCaption)
                 }
             }
         )
         val defaultEditButtonIconId =
             R.drawable.icons8_edit
+        val defaultEditButtonIconIdToCaption =
+            Pair(defaultEditButtonIconId, "edit")
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.EDIT,
             when(true) {
                 isSettingEdit ->
-                    defaultEditButtonIconId
+                    defaultEditButtonIconIdToCaption
                 isOnlyCmdEdit ->
-                    defaultEditButtonIconId
+                    defaultEditButtonIconIdToCaption
                 else -> {
                     val editButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
+                    val selectedCaption = editButtonConfigMap?.get(
+                        SettingButtonConfigMapKey.CAPTTION.key
+                    ) ?: String()
                     val selectedIconName = editButtonConfigMap?.get(
                         SettingButtonConfigMapKey.ICON.key
                     ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.EDIT.str
-                    val defaultIconId = R.drawable.icons8_check_ok
-                    iconNameIdPairList.find {
+                    val defaultEditIconId = R.drawable.icons8_check_ok
+                    val iconId = iconNameIdPairList.find {
                         it.str == selectedIconName
-                    }?.id ?: defaultIconId
+                    }?.id ?: defaultEditIconId
+                    Pair(iconId, selectedCaption)
+
                 }
             }
         )

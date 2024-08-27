@@ -9,13 +9,11 @@
 
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <RelativeLayout
         android:id="@+id/edit_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:background="@color/white"
-        android:weightSum="1"
         tools:context="com.puutaro.commandclick.fragment.EditFragment">
 
         <ScrollView
@@ -24,11 +22,12 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:orientation="vertical"
-            android:layout_weight="1"
             android:descendantFocusability="blocksDescendants"
             android:scrollbarThumbVertical="@android:color/darker_gray"
             tools:context="com.puutaro.commandclick.fragment.TerminalFragment"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
+            android:layout_above="@+id/edit_tool_bar_linear_layout"
+
             >
 <!--
  app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +85,7 @@
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:background="@color/white"
+            android:layout_above="@+id/edit_tool_bar_linear_layout"
             android:weightSum="1"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
             >
@@ -145,6 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_layout_height"
             android:orientation="vertical"
+            android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:weightSum="1"
             >
@@ -180,5 +181,5 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </android.widget.Toolbar>
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </RelativeLayout>
 </layout>

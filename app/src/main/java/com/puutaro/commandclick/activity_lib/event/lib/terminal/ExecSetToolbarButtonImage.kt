@@ -3,6 +3,9 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.children
+import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -10,6 +13,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -20,79 +26,120 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 object ExecSetToolbarButtonImage {
+
+    private val cmdClickIconList = CmdClickIcons.values()
     fun set(activity: MainActivity){
         val targetFragmentInstance = TargetFragmentInstance()
-        val cmdIndexFragment = targetFragmentInstance.getCmdIndexFragment(activity)
-            ?: return
+        val cmdVariableEditFragmentTag =
+            targetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = targetFragmentInstance.getCurrentBottomFragment(
+            activity,
+            cmdVariableEditFragmentTag
+        ) ?: return
+        when(bottomFragment) {
+            is CommandIndexFragment ->
+                setForCmdIndex(bottomFragment)
+            is EditFragment ->
+                setForEditFragment(
+                    bottomFragment,
+                )
+        }
+    }
+
+    fun setForCmdIndex(cmdIndexFragment: CommandIndexFragment){
         val binding = cmdIndexFragment.binding
         CoroutineScope(Dispatchers.IO).launch {
-            setImageButton(
-                binding.cmdindexHistoryButtonImage,
-                CmdClickIcons.HISTORY.str
-            )
-            setImageButton(
-                binding.cmdindexSettingButtonImage,
-                CmdClickIcons.SETTING.str
-            )
-//            File(
-//                toolbarUrlImageDirPath,
-//                CcPathTool.trimAllExtend(
-//                    File(AssetsFileManager.fannelManagerPath).name
-//                )
-//            ).let {
-//                dirFile ->
-//                val imageName = FileSystems.sortedFiles(dirFile.absolutePath).firstOrNull()
-//                    ?: return@launch
-//
-//                if (
-//                    FileSystems.sortedFiles(dirFile.absolutePath).isEmpty()
-//                ) return@let
-//                execSetImageButton(
-//                    binding.cmdindexHistoryButtonImage,
-//                    File(dirFile.absolutePath, imageName).absolutePath
-//                )
-//            }
-//            File(
-//                toolbarUrlImageDirPath,
-//                File(AssetsFileManager.settingPingPath).name
-//            ).let {
-//                if (!it.isFile) return@let
-//                execSetImageButton(
-//                    binding.cmdindexSettingButtonImage,
-//                    it.absolutePath
-//                )
-//            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.HISTORY.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.cmdindexHistoryButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.SETTING.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.cmdindexSettingButtonImage,
+                    icon
+                )
+            }
+        }
+    }
+
+    fun setForEditFragment(
+        editFragment: EditFragment,
+    ){
+        CoroutineScope(Dispatchers.IO).launch {
+            ToolbarButtonBariantForEdit.values().forEach {
+                val linearLayout = withContext(Dispatchers.Main) {
+                    editFragment.binding.editToolbarLinearLayout.findViewWithTag<LinearLayoutCompat>(
+                        it.str
+                    )
+                } ?: return@forEach
+                val imageView = withContext(Dispatchers.Main) {
+                    linearLayout.children.forEach imageSet@{
+                            view ->
+                        if (
+                            view !is AppCompatImageView
+                        ) return@imageSet
+                        return@withContext view
+                    }
+                    return@withContext null
+                } ?: return@forEach
+                val imageMacro = TagManager.getIconMacroFromTag(imageView.tag)
+                val icon = cmdClickIconList.firstOrNull {
+                    it.str == imageMacro
+                } ?: return@forEach
+                setImageButton(
+                    imageView,
+                    icon
+                )
+            }
         }
     }
 
     private suspend fun setImageButton(
-        imageView: AppCompatImageView,
-        iconMacroStr: String
+        imageView: AppCompatImageView?,
+        icon: CmdClickIcons
     ){
-        val icon = CmdClickIcons.values().firstOrNull {
-            it.str == iconMacroStr
-        } ?: return
+        if(imageView == null) return
         val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
-        val imageFile = File(
-            toolbarUrlImageDirPath,
-            File(icon.assetsPath).name
-
-        )
+        val imageFile = getImageFile(icon.assetsPath)
         if (
             !imageFile.isFile
         ) return
         execSetImageButton(
             imageView,
             imageFile.absolutePath,
-            iconMacroStr
+            icon.str
+        )
+    }
+
+    fun isImageFile(assetsPath: String?): Boolean {
+        if(
+            assetsPath.isNullOrEmpty()
+        ) return false
+        return getImageFile(assetsPath).isFile
+    }
+
+    private fun getImageFile(assetsPath: String): File {
+        val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
+        return File(
+            toolbarUrlImageDirPath,
+            File(assetsPath).name
         )
     }
 
     private suspend fun execSetImageButton(
-        imageButton: AppCompatImageView,
+        imageButton: AppCompatImageView?,
         imagePath: String,
         iconMacro: String
     ){
+        if(imageButton == null) return
         val context = imageButton.context
         withContext(Dispatchers.Main) {
             imageButton.imageTintList = null
