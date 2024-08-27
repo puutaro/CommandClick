@@ -55,7 +55,7 @@ object EditExecuteOrElse {
 
         val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
             mainFannelConList,
-            fannelName
+//            fannelName
         ).let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it?.joinToString("\n") ?: String(),

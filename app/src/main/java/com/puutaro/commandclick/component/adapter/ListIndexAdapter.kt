@@ -236,7 +236,7 @@ class ListIndexAdapter(
 //                }
                 setFileContentsBackColor(
                     fileConList,
-                    fileNameOrInstallFannelLine,
+//                    fileNameOrInstallFannelLine,
                     editExecuteValueForInstallFannel,
                 )
             }
@@ -381,7 +381,7 @@ class ListIndexAdapter(
 
     private fun setFileContentsBackColor(
         fileConList: List<String>,
-        fileName: String,
+//        fileName: String,
         editExecuteValueForInstallFannel: String,
     ): Int {
         if(
@@ -390,21 +390,23 @@ class ListIndexAdapter(
         if(
             editExecuteValueForInstallFannel == editExecuteAlways
         ) return com.puutaro.commandclick.R.color.terminal_color
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fileName)
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(fileName)
 
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             fileConList,
-            settingSectionStart,
-            settingSectionEnd
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            settingSectionStart,
+//            settingSectionEnd
         )
         val editExecuteValue = SettingVariableReader.getStrValue(
             settingVariableList,

@@ -1,12 +1,17 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
 
 object RecordNumToMapNameValueInHolderMaker {
+
+    private const val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    private const val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+    private const val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+    private const val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
 
     fun makeForSetting(
         editFragment: EditFragment,
@@ -17,8 +22,8 @@ object RecordNumToMapNameValueInHolderMaker {
         val recordNumToMapNameValueInSettingHolderSrc =
             RecordNumToMapNameValueInHolder.parse(
                 settingFannelConList,
-                editFragment.settingSectionStart,
-                editFragment.settingSectionEnd,
+                settingSectionStart,
+                settingSectionEnd,
                 true,
             )
         return filterRecordNumToMapNameValueInHolderByHideVariable(
@@ -49,8 +54,8 @@ object RecordNumToMapNameValueInHolderMaker {
         val recordNumToMapNameValueInCommandHolderSrc =
             RecordNumToMapNameValueInHolder.parse(
                 mainFannelSettingConList,
-                editFragment.commandSectionStart,
-                editFragment.commandSectionEnd
+                commandSectionStart,
+                commandSectionEnd
             )
         return filterRecordNumToMapNameValueInHolderByHideVariable(
             editFragment,

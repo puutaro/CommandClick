@@ -124,12 +124,12 @@ object ManageSubMenuDialog {
                 ManageSubMenuEnums.SELECT_MONITOR -> {
                     SelectTermDialog.launch(cmdIndexFragment)
                 }
-                ManageSubMenuEnums.ADD -> {
-                    AddScriptHandler(
-                        cmdIndexFragment,
-//                        currentAppDirPath,
-                    ).handle()
-                }
+//                ManageSubMenuEnums.ADD -> {
+//                    AddScriptHandler(
+//                        cmdIndexFragment,
+////                        currentAppDirPath,
+//                    ).handle()
+//                }
                 ManageSubMenuEnums.LAUNCH_DEBUGGER -> {
                     JsDebugger.sendDebugNoti(
                         cmdIndexFragment.context,
@@ -163,6 +163,6 @@ object ManageSubMenuDialog {
         RESTART_UBUNTU("Restart ubuntu", R.drawable.icons8_launch),
         LAUNCH_DEBUGGER("Launch debugger", R.drawable.icon_debug),
 //        JS_IMPORT("Js import manager", R.drawable.icons8_folda),
-        ADD("Add", R.drawable.icons8_plus),
+//        ADD("Add", R.drawable.icons8_plus),
     }
 }

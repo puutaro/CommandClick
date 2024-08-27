@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -42,18 +41,21 @@ import java.net.ServerSocket
 class UbuntuService:
     Service() {
 
-    val languageType = LanguageTypeSelects.JAVA_SCRIPT
-    val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
+//    val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//            languageType
+//        )
+    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-    val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
     var isUbuntuRestore = false
 
     val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath

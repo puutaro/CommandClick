@@ -2,12 +2,11 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+//import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
 
@@ -19,18 +18,18 @@ object ConfigFromPreferenceFileSetter {
 
 //        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val cmdclickPreferenceJsName = SystemFannel.preference
-        val languageType = LanguageTypeSelects.JAVA_SCRIPT
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageType
-            )
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//                languageType
+//            )
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
 
         val preferenceConList = when(
             File(UsePath.cmdclickDefaultAppDirPath, cmdclickPreferenceJsName).isFile
@@ -50,8 +49,10 @@ object ConfigFromPreferenceFileSetter {
 
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             preferenceConList,
-            settingSectionStart,
-            settingSectionEnd
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            settingSectionStart,
+//            settingSectionEnd
         )
 
         cmdIndexFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
@@ -95,27 +96,27 @@ object ConfigFromPreferenceFileSetter {
             CommandClickScriptVariable.TERMINAL_COLOR,
             CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
         )
-        val bottomScriptUrlList = SettingVariableReader.setListFromPath(
-            ScriptPreWordReplacer.replace(
-                UsePath.homeScriptUrlsFilePath,
-//                currentAppDirPath,
-                cmdclickPreferenceJsName,
-            )
-        )
-        if(
-            bottomScriptUrlList.isNotEmpty()
-        ) cmdIndexFragment.bottomScriptUrlList = bottomScriptUrlList
+//        val bottomScriptUrlList = SettingVariableReader.setListFromPath(
+//            ScriptPreWordReplacer.replace(
+//                UsePath.homeScriptUrlsFilePath,
+////                currentAppDirPath,
+//                cmdclickPreferenceJsName,
+//            )
+//        )
+//        if(
+//            bottomScriptUrlList.isNotEmpty()
+//        ) cmdIndexFragment.bottomScriptUrlList = bottomScriptUrlList
 
-        val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
-            ScriptPreWordReplacer.replace(
-                UsePath.homeFannelsFilePath,
-//                currentAppDirPath,
-                cmdclickPreferenceJsName,
-            )
-        )
-        if(
-            homeFannelHistoryNameList.isNotEmpty()
-        ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
+//        val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
+//            ScriptPreWordReplacer.replace(
+//                UsePath.homeFannelsFilePath,
+////                currentAppDirPath,
+//                cmdclickPreferenceJsName,
+//            )
+//        )
+//        if(
+//            homeFannelHistoryNameList.isNotEmpty()
+//        ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
     }
 }

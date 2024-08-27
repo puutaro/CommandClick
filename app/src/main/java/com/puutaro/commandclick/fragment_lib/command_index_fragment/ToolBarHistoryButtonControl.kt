@@ -12,13 +12,11 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class ToolBarHistoryButtonControl(
     private val cmdIndexFragment: CommandIndexFragment,
 ){
-    private val fannelInfoMap = cmdIndexFragment.fannelInfoMap
     private val binding = cmdIndexFragment.binding
     val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val historyButtonView = binding.cmdindexHistoryButton
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
         cmdIndexFragment,
-        fannelInfoMap,
     )
 
 

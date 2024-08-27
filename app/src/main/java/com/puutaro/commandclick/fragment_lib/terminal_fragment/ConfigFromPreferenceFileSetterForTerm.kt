@@ -1,24 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressPathDecider
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.sd.SdCardTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
-import kotlinx.coroutines.runBlocking
 import java.io.File
 
 
@@ -32,18 +27,18 @@ object ConfigFromPreferenceFileSetterForTerm {
 //        CmdClickSystemFannelManager.createConfigFannel(
 //            context
 //        )
-        val languageType = LanguageTypeSelects.JAVA_SCRIPT
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageType
-            )
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//                languageType
+//            )
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
 //        runBlocking {
 //            CmdClickSystemFannelManager.createPreferenceFannel(
 //                context,
@@ -69,8 +64,10 @@ object ConfigFromPreferenceFileSetterForTerm {
         }
         val settingVariableListFromPreference = CommandClickVariables.extractValListFromHolder(
             preferenceConList,
-            settingSectionStart,
-            settingSectionEnd
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            settingSectionStart,
+//            settingSectionEnd
         )
 
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
@@ -341,8 +338,10 @@ object ConfigFromPreferenceFileSetterForTerm {
             terminalFragment,
             fannelContentsList,
             currentFannelName,
-            settingSectionStart,
-            settingSectionEnd,
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            settingSectionStart,
+//            settingSectionEnd,
         )
         terminalFragment.terminalOn = SettingVariableReader.getStrValue(
             settingVariableList,

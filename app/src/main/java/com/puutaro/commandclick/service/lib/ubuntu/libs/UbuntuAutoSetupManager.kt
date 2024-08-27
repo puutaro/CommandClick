@@ -34,7 +34,7 @@ object UbuntuAutoSetupManager {
         ).let {
             CommandClickVariables.extractSettingValListByFannelName(
                 ReadText(it.absolutePath).textToList(),
-                it.name,
+//                it.name,
             )
         }
         val ubuntuAutoSetupOff =

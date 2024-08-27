@@ -103,20 +103,22 @@ object FannelNameClickListenerSetter {
 //                        currentAppDirPath,
                         selectedShellFileName,
                     )
-                val languageType =
-                    CommandClickVariables.judgeJsOrShellFromSuffix(selectedShellFileName)
-                val languageTypeToSectionHolderMap =
-                    CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-                val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-                ) as String
-                val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-                ) as String
+//                val languageType =
+//                    CommandClickVariables.judgeJsOrShellFromSuffix(selectedShellFileName)
+//                val languageTypeToSectionHolderMap =
+//                    CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//                val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//                ) as String
+//                val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//                ) as String
                 val settingSectionVariableList = CommandClickVariables.extractValListFromHolder(
                     mainFannelContentsList,
-                    settingSectionStart,
-                    settingSectionEnd
+                    CommandClickScriptVariable.SETTING_SEC_START,
+                    CommandClickScriptVariable.SETTING_SEC_END,
+//                    settingSectionStart,
+//                    settingSectionEnd
                 ).let {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it?.joinToString("\n") ?: String(),

@@ -21,7 +21,6 @@ import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
@@ -52,25 +51,25 @@ class TerminalFragment: Fragment() {
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
-    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-    var languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    var languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//            languageType
+//        )
+//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+//
+//    var commandSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+//    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
     var busyboxExecutor: BusyboxExecutor? = null
     var fannelInfoMap = mapOf<String, String>()
     var srcFannelInfoMap: Map<String, String>? = null

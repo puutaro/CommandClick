@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -24,18 +23,21 @@ class ToolbarButtonArgsMaker(
     private val isLongClick: Boolean,
 ) {
     private val context = editFragment.context
-    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
+//    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//            languageType
+//        )
+    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
 
     val fannelInfoMap = editFragment.fannelInfoMap
 

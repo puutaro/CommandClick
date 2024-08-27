@@ -170,8 +170,8 @@ object UsePath {
     val ignoreHistoryPathsConfig = "ignoreHistoryPaths.js"
     val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
     val fannelSettingsDirPath = "${cmdclickDefaultAppDirPath}/\${001}/settings"
-    val homeFannelsFilePath =
-        "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
+//    val homeFannelsFilePath =
+//        "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
     val longPressInfoMapPath =
         "${fannelSettingsDirPath}/longPressInfoMap.txt"
     val settingImagesDirName = "settingImages"
@@ -222,8 +222,8 @@ object UsePath {
     val fannelStateStockFilePath =  "$fannelSettingsDirPath/${fannelStateStockFileName}"
     private const val fannelStateRootTableFileName = "fannelStateRootTable.tsv"
     val fannelStateRootTableFilePath =  "$fannelSettingsDirPath/${fannelStateRootTableFileName}"
-    private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"
-    val homeScriptUrlsFilePath =  "$fannelSettingsDirPath/${homeScriptUrlsFileName}"
+//    private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"
+//    val homeScriptUrlsFilePath =  "$fannelSettingsDirPath/${homeScriptUrlsFileName}"
     private val listIndexForEditConfigName = "listIndexConfig.js"
     val listIndexForEditConfigPath =  "$fannelSettingsDirPath/${listIndexForEditConfigName}"
     private val qrDialogConfigName = "qrDialogConfig.js"

@@ -9,7 +9,6 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
@@ -43,18 +42,18 @@ object PreInstallFannel {
 
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val cmdclickUpdateFannelInfoSystemDirPath = UsePath.cmdclickUpdateFannelInfoSystemDirPath
-    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//            languageType
+//        )
+//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
     private const val concurrencyLimit = 5
 
     fun install(
@@ -264,8 +263,10 @@ object PreInstallFannel {
                                         fannelName,
                                         repValsMap
                                     ),
-                                    settingSectionStart,
-                                    settingSectionEnd
+                                    CommandClickScriptVariable.SETTING_SEC_START,
+                                    CommandClickScriptVariable.SETTING_SEC_END,
+//                                    settingSectionStart,
+//                                    settingSectionEnd
                                 )
                             val enableLongPressButtonKeyValue = makeLongPressEnableKeyCon(
                                 fannelName,

@@ -4,7 +4,6 @@ import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
@@ -21,21 +20,25 @@ import java.io.File
 object JavaScriptLoadUrl {
 
     val commentOutMark = "//"
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+//
+//    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+//    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
+    private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+    private val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+    private val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
     fun make (
         context: Context?,
         execJsPath: String,
@@ -261,21 +264,26 @@ object JavaScriptLoadUrl {
         context: Context?,
         jsList: List<String>
     ):String? {
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-        val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-        ) as String
+        val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+        val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
+//
+//        val commandSectionStart = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//        ) as String
+//        val commandSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//        ) as String
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             jsList,
             settingSectionStart,

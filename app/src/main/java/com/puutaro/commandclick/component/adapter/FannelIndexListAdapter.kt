@@ -195,21 +195,23 @@ class FannelIndexListAdapter(
         if(
             context == null
         ) return com.puutaro.commandclick.R.color.fannel_icon_color
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
 
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             fannelConList,
-            settingSectionStart,
-            settingSectionEnd
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            settingSectionStart,
+//            settingSectionEnd
         )
         val editExecuteValue = SettingVariableReader.getStrValue(
             settingVariableList,

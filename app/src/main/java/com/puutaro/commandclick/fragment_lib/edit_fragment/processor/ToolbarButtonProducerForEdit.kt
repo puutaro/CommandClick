@@ -17,8 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -29,38 +27,32 @@ import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEve
 import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
 ) {
-    private val fannelInfoMap = editFragment.fannelInfoMap
     private val context = editFragment.context
     private val toolbarButtonHandler = ToolbarButtonHandler(
         editFragment,
     )
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
         editFragment,
-        fannelInfoMap,
     )
 
-
-    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-    var languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    var languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//            languageType
+//        )
+//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,

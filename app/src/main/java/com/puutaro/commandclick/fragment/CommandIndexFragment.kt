@@ -55,8 +55,8 @@ class CommandIndexFragment: Fragment() {
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
     var savedEditTextContents = String()
-    var homeFannelHistoryNameList: List<String>? = null
-    var bottomScriptUrlList = emptyList<String>()
+//    var homeFannelHistoryNameList: List<String>? = null
+//    var bottomScriptUrlList = emptyList<String>()
 
     private var broadcastReceiverForCmdIndex: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

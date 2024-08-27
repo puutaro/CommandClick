@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
@@ -11,7 +10,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn.*
@@ -51,24 +49,29 @@ class FormDialogForListIndexOrButton(
 
         private val withEditComponentForListIndex = WithEditComponentForListIndex()
 
-    private val languageType =
-        LanguageTypeSelects.JAVA_SCRIPT
+//    private val languageType =
+//        LanguageTypeSelects.JAVA_SCRIPT
 
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+//
+//    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+//    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
+    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+    private val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+    private val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
 
 
     fun create(

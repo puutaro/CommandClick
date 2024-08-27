@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -70,27 +69,34 @@ object JsActionTool {
 
     object ExcludeSettingVariable {
 
-        private val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
-        private val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-        ) as String
-        private val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-        ) as String
-        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        private val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+        private val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
+        private val labelingSectionEnd =  CommandClickScriptVariable.LABELING_SEC_END
+        private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-        private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-        ) as String
+        private val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+        private val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
+//        private val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+//        ) as String
+//        private val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+//        ) as String
+//        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
+
+//        private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//        ) as String
+//        private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//        ) as String
         fun exclude(
             jsList: List<String>,
         ): List<String> {

@@ -1,29 +1,31 @@
 package com.puutaro.commandclick.proccess
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.util.CommandClickVariables
 
 object CommentOutLabelingSection {
     fun commentOut(
         shellContentsList: List<String>,
-        shellScriptName: String,
+//        shellScriptName: String,
     ): List<String> {
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(shellScriptName)
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(shellScriptName)
+//
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
+//        languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+//        ) as String
+        val labelingSectionEnd =  CommandClickScriptVariable.LABELING_SEC_END
+//        CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+//        ) as String
+        val commentOutMark = "//"
 
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-        ) as String
-        val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-        ) as String
-        val commentOutMark = when(languageType) {
-            LanguageTypeSelects.SHELL_SCRIPT -> "#"
-            else -> "//"
-        }
+//        when(languageType) {
+//            LanguageTypeSelects.SHELL_SCRIPT -> "#"
+//            else -> "//"
+//        }
 
         var countLabelingSectionStart = 0
         var countLabelingSectionEnd = 0

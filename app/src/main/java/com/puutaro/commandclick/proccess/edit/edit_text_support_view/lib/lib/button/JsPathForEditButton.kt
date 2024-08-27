@@ -6,7 +6,7 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 
 object JsPathForEditButton {
 
-    val iconSelectBoxArgsKeySeparator = "@@@"
+//    val iconSelectBoxArgsKeySeparator = "@@@"
     val buttonIconSeparator = "\t"
     val buttonIconNameIdSeparator = "|"
 

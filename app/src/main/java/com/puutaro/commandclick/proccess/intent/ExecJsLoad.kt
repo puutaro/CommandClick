@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -66,15 +65,18 @@ object ExecJsLoad {
             }
         }
         val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
-        val languageType = LanguageTypeSelects.JAVA_SCRIPT
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
 
         val jsContents = if (
             jsContentsListSource.isNullOrEmpty()
@@ -255,16 +257,19 @@ object ExecJsLoad {
         scriptName: String,
     ): List<Map<String, String>> {
         val context = fragment.context
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(fragment, String())
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(

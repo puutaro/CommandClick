@@ -21,7 +21,6 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelSha
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.FannelIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -179,7 +178,7 @@ class QrLogo(
         return null
     }
 
-    fun createFromQrDesignMap(
+    private fun createFromQrDesignMap(
         qrDesignMap: Map<String, String>,
     ): Drawable? {
         val context = fragment.context ?: return null
@@ -346,11 +345,11 @@ class QrLogo(
         val editExecuteAlwaysStr = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         val isEditExecuteForJs = CommandClickVariables.returnEditExecuteValueStr(
             scriptContentsList,
-            LanguageTypeSelects.JAVA_SCRIPT
+//            LanguageTypeSelects.JAVA_SCRIPT
         ) == editExecuteAlwaysStr
         val isEditExecuteForShell = CommandClickVariables.returnEditExecuteValueStr(
             scriptContentsList,
-            LanguageTypeSelects.SHELL_SCRIPT
+//            LanguageTypeSelects.SHELL_SCRIPT
         ) == editExecuteAlwaysStr
         return isEditExecuteForJs || isEditExecuteForShell
     }
@@ -459,7 +458,7 @@ class QrLogo(
         return newQrDesignMap
     }
 
-    fun createNewDesignMap(
+    private fun createNewDesignMap(
         qrDesignFilePath: String,
         qrContents: String,
     ): Map<String, String> {

@@ -70,7 +70,7 @@ object FannelStateManager {
         ) return
         val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
             ReadText(File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath).textToList(),
-            currentFannelName,
+//            currentFannelName,
         )
 
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(

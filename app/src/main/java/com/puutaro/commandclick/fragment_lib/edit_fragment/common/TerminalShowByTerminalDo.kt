@@ -10,6 +10,10 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object TerminalShowByTerminalDo {
+
+    private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    private const val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+
     fun show(
         editFragment: EditFragment,
     ){
@@ -31,8 +35,8 @@ object TerminalShowByTerminalDo {
         ) return
         val variablesSettingHolderList = CommandClickVariables.extractValListFromHolder(
             currentFannelConList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd
+            settingSectionStart,
+            settingSectionEnd
         )
         val terminalDo = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,

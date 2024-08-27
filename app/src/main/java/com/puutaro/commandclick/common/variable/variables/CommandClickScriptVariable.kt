@@ -1,14 +1,12 @@
 package com.puutaro.commandclick.common.variable.variables
 
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+//import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.proccess.edit.lib.ProducerMacro
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
@@ -16,43 +14,44 @@ import java.io.File
 
 
 object CommandClickScriptVariable {
-    enum class HolderTypeName {
-        LABELING_SEC_START,
-        LABELING_SEC_END,
-        SETTING_SEC_START,
-        SETTING_SEC_END,
-        CMD_SEC_START,
-        CMD_SEC_END,
-        SCRIPT_START
-    }
+//    enum class HolderTypeName {
+//        LABELING_SEC_START,
+//        LABELING_SEC_END,
+//        SETTING_SEC_START,
+//        SETTING_SEC_END,
+//        CMD_SEC_START,
+//        CMD_SEC_END,
+//        SCRIPT_START
+//    }
     val EMPTY_STRING = "COMMAND_CLICK_EMPTY_STRING"
-    private const val labelingSectionStartSentence = "LABELING_SECTION_START"
-    private const val labelingSectionEndSentence = "LABELING_SECTION_END"
-    private const val settingSectionStartSentence = "SETTING_SECTION_START"
-    private const val settingSectionEndSentence = "SETTING_SECTION_END"
-    private const val commandSectionStartSentence = "CMD_VARIABLE_SECTION_START"
-    private const val commandSectionEndSentence = "CMD_VARIABLE_SECTION_END"
-    val LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP = mapOf(
-        LanguageTypeSelects.SHELL_SCRIPT to mapOf(
-            HolderTypeName.LABELING_SEC_START to "### $labelingSectionStartSentence",
-            HolderTypeName.LABELING_SEC_END to "### $labelingSectionEndSentence",
-            HolderTypeName.SETTING_SEC_START to "### $settingSectionStartSentence",
-            HolderTypeName.SETTING_SEC_END to "### $settingSectionEndSentence",
-            HolderTypeName.CMD_SEC_START to "### $commandSectionStartSentence",
-            HolderTypeName.CMD_SEC_END to "### $commandSectionEndSentence",
-            HolderTypeName.SCRIPT_START to "### Please write bellow with shell script",
-
-        ),
-        LanguageTypeSelects.JAVA_SCRIPT to mapOf(
-            HolderTypeName.LABELING_SEC_START to "/// $labelingSectionStartSentence",
-            HolderTypeName.LABELING_SEC_END to "/// $labelingSectionEndSentence",
-            HolderTypeName.SETTING_SEC_START to "/// $settingSectionStartSentence",
-            HolderTypeName.SETTING_SEC_END to "/// $settingSectionEndSentence",
-            HolderTypeName.CMD_SEC_START to "/// $commandSectionStartSentence",
-            HolderTypeName.CMD_SEC_END to "/// $commandSectionEndSentence",
-            HolderTypeName.SCRIPT_START to "/// Please write bellow with javascript",
-        )
-    )
+    const val LABELING_SEC_START = "/// LABELING_SECTION_START"
+    const val LABELING_SEC_END = "/// LABELING_SECTION_END"
+    const val SETTING_SEC_START = "/// SETTING_SECTION_START"
+    const val SETTING_SEC_END = "/// SETTING_SECTION_END"
+    const val CMD_SEC_START = "/// CMD_VARIABLE_SECTION_START"
+    const val CMD_SEC_END = "/// CMD_VARIABLE_SECTION_END"
+    const val SCRIPT_START = "/// Please write bellow with javascript"
+//    val LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP = mapOf(
+//        LanguageTypeSelects.SHELL_SCRIPT to mapOf(
+//            HolderTypeName.LABELING_SEC_START to "### $labelingSectionStartSentence",
+//            HolderTypeName.LABELING_SEC_END to "### $labelingSectionEndSentence",
+//            HolderTypeName.SETTING_SEC_START to "### $settingSectionStartSentence",
+//            HolderTypeName.SETTING_SEC_END to "### $settingSectionEndSentence",
+//            HolderTypeName.CMD_SEC_START to "### $commandSectionStartSentence",
+//            HolderTypeName.CMD_SEC_END to "### $commandSectionEndSentence",
+//            HolderTypeName.SCRIPT_START to "### Please write bellow with shell script",
+//
+//        ),
+//        LanguageTypeSelects.JAVA_SCRIPT to mapOf(
+//            HolderTypeName.LABELING_SEC_START to "/// $labelingSectionStartSentence",
+//            HolderTypeName.LABELING_SEC_END to "/// $labelingSectionEndSentence",
+//            HolderTypeName.SETTING_SEC_START to "/// $settingSectionStartSentence",
+//            HolderTypeName.SETTING_SEC_END to "/// $settingSectionEndSentence",
+//            HolderTypeName.CMD_SEC_START to "/// $commandSectionStartSentence",
+//            HolderTypeName.CMD_SEC_END to "/// $commandSectionEndSentence",
+//            HolderTypeName.SCRIPT_START to "/// Please write bellow with javascript",
+//        )
+//    )
     val SHELL_EXEC_ENV = "shellExecEnv"
     val UBUNTU_EXEC_MODE = "ubuntuExecMode"
     val UBUNTU_OUTPUT_FILE = "ubuntuOutputFile"
@@ -84,10 +83,10 @@ object CommandClickScriptVariable {
     val EDIT_BOX_TITLE_CONFIG = "editBoxTitleConfig"
     val TERMINAL_COLOR = "terminalColor"
     val TERMINAL_FONT_COLOR = "terminalFontColor"
-    val HOME_SCRIPT_URLS_PATH = "homeScriptUrlsPath"
+//    val HOME_SCRIPT_URLS_PATH = "homeScriptUrlsPath"
     val CMDCLICK_SHIBAN_DEFAULT_VALUE = "#!/bin/bash"
     val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
-    val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
+//    val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
     val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
@@ -148,11 +147,11 @@ object CommandClickScriptVariable {
         ON_URL_LAUNCH_MACRO,
         EXEC_JS_OR_HTML_PATH,
         ON_URL_HISTORY_REGISTER,
-        CMDCLICK_HOME_FANNELS_PATH,
+//        CMDCLICK_HOME_FANNELS_PATH,
         BEFORE_COMMAND,
         AFTER_COMMAND,
         IGNORE_HISTORY_PATHS,
-        HOME_SCRIPT_URLS_PATH,
+//        HOME_SCRIPT_URLS_PATH,
         PLAY_BUTTON_CONFIG,
         EDIT_BUTTON_CONFIG,
         EXTRA_BUTTON_CONFIG,
@@ -246,9 +245,9 @@ object CommandClickScriptVariable {
     val fannelDirName = CcPathTool.makeFannelDirName(
         SystemFannel.preference
     )
-    private val homeScriptUrlsFilePath = UsePath.homeScriptUrlsFilePath
-    private val homeFannelsFilePath =
-        UsePath.homeFannelsFilePath
+//    private val homeScriptUrlsFilePath = UsePath.homeScriptUrlsFilePath
+//    private val homeFannelsFilePath =
+//        UsePath.homeFannelsFilePath
     private val macroStrForDragSortGetListPathFromVar =
         ProducerMacro.macroStrForDragSortGetListPathFromVar
     private val buttonCmd = ButtonViewProducer.ButtonEditKey.cmd.name
@@ -259,34 +258,34 @@ object CommandClickScriptVariable {
         ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.suffix.name
     private val buttonSetfListAddSourceDirPath =
         ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.dirPath.name
-    private val buttonSetfListAddHowFull =
-        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
+//    private val buttonSetfListAddHowFull =
+//        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
     private val listPathForListConSlSpi =
         ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
     private val limitNumForListConSlSpi =
         ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
-    private val setVaraibleValueForHomeScriptUrlsPath =
-        "$listPathForListConSlSpi=" +
-                "$macroStrForDragSortGetListPathFromVar:${homeScriptUrlsFilePath}" +
-                    "?$limitNumForListConSlSpi=20" +
-                "|$buttonCmd=" +
-                    listOf(
-                        "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
-                        "$buttonSetfListAddSuffix=.js&.sh&.html",
-                        "$buttonSetfListAddSourceDirPath=\${01}",
-                        "$buttonSetfListAddHowFull=on?$buttonLabel=ADD"
-                    ).joinToString(" ")
-    private val setVariableValueForHomeFannelsPath =
-        "$listPathForListConSlSpi=" +
-                "$macroStrForDragSortGetListPathFromVar:$homeFannelsFilePath" +
-                    "?$limitNumForListConSlSpi=20" +
-                "|$buttonCmd=" +
-                listOf(
-                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
-                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
-                    "$buttonSetfListAddSourceDirPath=${UsePath.cmdclickAppHistoryDirAdminPath}" +
-                            "?$buttonLabel=ADD"
-                ).joinToString(" ")
+//    private val setVaraibleValueForHomeScriptUrlsPath =
+//        "$listPathForListConSlSpi=" +
+//                "$macroStrForDragSortGetListPathFromVar:${homeScriptUrlsFilePath}" +
+//                    "?$limitNumForListConSlSpi=20" +
+//                "|$buttonCmd=" +
+//                    listOf(
+//                        "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+//                        "$buttonSetfListAddSuffix=.js&.sh&.html",
+//                        "$buttonSetfListAddSourceDirPath=\${01}",
+//                        "$buttonSetfListAddHowFull=on?$buttonLabel=ADD"
+//                    ).joinToString(" ")
+//    private val setVariableValueForHomeFannelsPath =
+//        "$listPathForListConSlSpi=" +
+//                "$macroStrForDragSortGetListPathFromVar:$homeFannelsFilePath" +
+//                    "?$limitNumForListConSlSpi=20" +
+//                "|$buttonCmd=" +
+//                listOf(
+//                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+//                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+//                    "$buttonSetfListAddSourceDirPath=${UsePath.cmdclickAppHistoryDirAdminPath}" +
+//                            "?$buttonLabel=ADD"
+//                ).joinToString(" ")
     private val srcImageAnchorLongPressMenuFilePath =
         UsePath.srcImageAnchorLongPressMenuFilePath
     private val srcAnchorLongPressMenuFilePath =
@@ -328,11 +327,11 @@ object CommandClickScriptVariable {
                     "$buttonSetfListAddSourceDirPath=\${01}" +
                             "?$buttonLabel=ADD"
                 ).joinToString(" ")
-    val buttonIconSeparator = JsPathForEditButton.buttonIconSeparator
-    val buttonIconNameIdSeparator = JsPathForEditButton.buttonIconNameIdSeparator
-    val buttonIconNameIdPairListStr = CmdClickIcons.values().reversed().map {
-        "${it.str}${buttonIconNameIdSeparator}${it.str}"
-    }.joinToString(buttonIconSeparator)
+//    val buttonIconSeparator = JsPathForEditButton.buttonIconSeparator
+//    val buttonIconNameIdSeparator = JsPathForEditButton.buttonIconNameIdSeparator
+//    val buttonIconNameIdPairListStr = CmdClickIcons.values().reversed().map {
+//        "${it.str}${buttonIconNameIdSeparator}${it.str}"
+//    }.joinToString(buttonIconSeparator)
 
     private val setVariableValueForNoScrollSaveUrlsFilePath =
         "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
@@ -363,8 +362,8 @@ object CommandClickScriptVariable {
         "$TERMINAL_COLOR:TXT:CLR=",
         "$TERMINAL_FONT_COLOR:TXT:CLR=",
         "$EXEC_JS_OR_HTML_PATH:TXT:FL=",
-        "$HOME_SCRIPT_URLS_PATH:DSL:BTN=$setVaraibleValueForHomeScriptUrlsPath",
-        "$CMDCLICK_HOME_FANNELS_PATH:DSL:BTN=$setVariableValueForHomeFannelsPath",
+//        "$HOME_SCRIPT_URLS_PATH:DSL:BTN=$setVaraibleValueForHomeScriptUrlsPath",
+//        "$CMDCLICK_HOME_FANNELS_PATH:DSL:BTN=$setVariableValueForHomeFannelsPath",
         "$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcImageAnchorLongPressMenuFilePath",
         "$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcAnchorLongPressMenuFilePath",
         "$IMAGE_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForImageLongPressMenuFilePath",
@@ -373,12 +372,13 @@ object CommandClickScriptVariable {
     )
 
     fun makeShellScriptName(
-        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
+//        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
     ): String {
-        val scriptSuffix = when(shellOrJs){
-            LanguageTypeSelects.SHELL_SCRIPT -> UsePath.SHELL_FILE_SUFFIX
-            else -> UsePath.JS_FILE_SUFFIX
-        }
+        val scriptSuffix = UsePath.JS_FILE_SUFFIX
+//        when(shellOrJs){
+//            LanguageTypeSelects.SHELL_SCRIPT -> UsePath.SHELL_FILE_SUFFIX
+//            else -> UsePath.JS_FILE_SUFFIX
+//        }
         return (1..10000).random().toString() + scriptSuffix
     }
 
@@ -410,9 +410,6 @@ object CommandClickScriptVariable {
             replaceLowerAdnBlankDash(SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
             |#  * [$IMAGE_LONG_PRESS_MENU_FILE_PATH](#${
             replaceLowerAdnBlankDash(IMAGE_LONG_PRESS_MENU_FILE_PATH)})
-            |#  * [$HOME_SCRIPT_URLS_PATH](#${replaceLowerAdnBlankDash(HOME_SCRIPT_URLS_PATH)})
-            |#  * [$CMDCLICK_HOME_FANNELS_PATH](#${
-            replaceLowerAdnBlankDash(CMDCLICK_HOME_FANNELS_PATH)})
             |#  * [$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC](#${
             replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
             |#  * [$ON_ADBLOCK](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
@@ -529,23 +526,10 @@ object CommandClickScriptVariable {
             |# | DSL button | Drag and sort long press menu list |
             |# | ADD button | Add script to long press menu list |
             |
-            |# ### $HOME_SCRIPT_URLS_PATH
-            |# Specified script, url and html put always bottom in url history
-            |# ex) $HOME_SCRIPT_URLS_PATH=
-            |
             |# | Button type | usage | 
             |# | $mdDash | $mdDash |
             |# | DSL button | Drag and sort home url script List |
             |# | ADD button | Add fannel to home url script list |
-            |
-            |# ### $CMDCLICK_HOME_FANNELS_PATH
-            |# Specified fannels put always bottom in app history 
-            |# ex) $CMDCLICK_HOME_FANNELS_PATH=$\{file_path}
-            |
-            |# | Button type | usage | 
-            |# | $mdDash | $mdDash |
-            |# | DSL button | Drag and sort home fannels list |
-            |# | ADD button | Add fannel to home fannel list |
             |
             |# ### $CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC
             |# Switch url history or button script exec
@@ -666,19 +650,19 @@ object CommandClickScriptVariable {
 
     fun makeScriptContents(
         onUpdateLastModifyValue: String,
-        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
+//        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
         execJsOrHtmlPathValue: String = String(),
     ): String{
-        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
+//        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
         return """${CMDCLICK_SHIBAN_DEFAULT_VALUE}
         |
         |
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
+        |${LABELING_SEC_START}
         |${makeDescription()}
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
+        |${LABELING_SEC_END}
         |
         |
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+        |${SETTING_SEC_START}
         |$SHELL_EXEC_ENV="$SHELL_EXEC_ENV_DEFAULT_VALUE"
         |$UBUNTU_EXEC_MODE="$UBUNTU_EXEC_MODE_DEFAULT_VALUE"
         |$UBUNTU_OUTPUT_FILE="$UBUNTU_OUTPUT_FILE_DEFAULT_VALUE"
@@ -707,14 +691,14 @@ object CommandClickScriptVariable {
         |$SET_VARIABLE_TYPE=""
         |$BEFORE_COMMAND=""
         |$AFTER_COMMAND=""
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
+        |${SETTING_SEC_END}
         |
         |
-        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
-        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
+        |${CMD_SEC_START}
+        |${CMD_SEC_END}
         |
         |
-        |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
+        |${SCRIPT_START}
         |
         |
         |
@@ -726,15 +710,15 @@ object CommandClickScriptVariable {
 //        dirPath: String,
         shellScriptName: String,
         onUpdateLastModifyValue: String = onUpdateLastModifyOn,
-        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
+//        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
         execJsOrHtmlPathValue: String = String(),
     ) {
         val shellContents =  makeScriptContents(
             onUpdateLastModifyValue,
-            shellOrJs,
+//            shellOrJs,
             execJsOrHtmlPathValue
         ).let {
-            if(shellOrJs != LanguageTypeSelects.JAVA_SCRIPT) return@let it
+//            if(shellOrJs != LanguageTypeSelects.JAVA_SCRIPT) return@let it
             it
                 .substring(
                     it.indexOf('\n')+1
@@ -757,15 +741,15 @@ object CommandClickScriptVariable {
 
 
     private fun makeAppDirScriptContents(
-        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
+//        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
     ): String{
-        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
+//        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
         return """
         |
         |
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
+        |${LABELING_SEC_START}
         |${makeDescription()}
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
+        |${LABELING_SEC_END}
         |
         |
     """.trimMargin()
@@ -798,7 +782,7 @@ object CommandClickScriptVariable {
         execJsOrHtmlPathValue: String = String()
     ){
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-        val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
+//        val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
         FileSystems.createDirs(cmdclickDefaultAppDirPath)
         if(
             File(
@@ -810,83 +794,82 @@ object CommandClickScriptVariable {
 //            dirPath,
             shellScriptName,
             onUpdateLastModifyOff,
-            shellOrJs,
+//            shellOrJs,
             execJsOrHtmlPathValue
         )
     }
 
-    private fun makeAutoJsContents(
-    ): String {
-        val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
-        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
-        return """
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
-        |${makeDescription()}
-        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
-        |$CMDCLICK_ON_AUTO_EXEC="$CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE"
-        |$ON_UPDATE_LAST_MODIFY="$onUpdateLastModifyOff"
-        |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
-        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
-        |$ON_ADBLOCK="$onAdBlockInherit"
-        |${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}="${disableShowToolbarWhenHighlightOff}"
-        |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
-        |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
-        |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
-        |$ON_URL_LAUNCH_MACRO="$onUrlLaunchMacroRecent"
-        |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
-        |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
-        |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
-        |$IMAGE_LONG_PRESS_MENU_FILE_PATH=""
-        |$IGNORE_HISTORY_PATHS=""
-        |$EXEC_JS_OR_HTML_PATH=""
-        |$HOME_SCRIPT_URLS_PATH=""
-        |$NO_SCROLL_SAVE_URLS=""
-        |$CMDCLICK_TERMINAL_FONT_ZOOM=""
-        |$TERMINAL_FONT_COLOR=""
-        |$TERMINAL_COLOR=""
-        |$HIDE_SETTING_VARIABLES="$ON_UPDATE_LAST_MODIFY"
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
-        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
-        |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
-        |
-        |
-        |
-    """.trimMargin()
-            .split("\n")
-            .map {
-                it.replace(
-                    Regex("^#"), "//"
-                )
-            }.joinToString("\n")
-    }
+//    private fun makeAutoJsContents(
+//    ): String {
+//        val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
+//        val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
+//        return """
+//        |
+//        |
+//        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
+//        |${makeDescription()}
+//        |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
+//        |
+//        |
+//        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+//        |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
+//        |$CMDCLICK_ON_AUTO_EXEC="$CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE"
+//        |$ON_UPDATE_LAST_MODIFY="$onUpdateLastModifyOff"
+//        |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
+//        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
+//        |$ON_ADBLOCK="$onAdBlockInherit"
+//        |${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}="${disableShowToolbarWhenHighlightOff}"
+//        |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
+//        |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
+//        |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
+//        |$ON_URL_LAUNCH_MACRO="$onUrlLaunchMacroRecent"
+//        |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
+//        |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
+//        |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
+//        |$IMAGE_LONG_PRESS_MENU_FILE_PATH=""
+//        |$IGNORE_HISTORY_PATHS=""
+//        |$EXEC_JS_OR_HTML_PATH=""
+//        |$NO_SCROLL_SAVE_URLS=""
+//        |$CMDCLICK_TERMINAL_FONT_ZOOM=""
+//        |$TERMINAL_FONT_COLOR=""
+//        |$TERMINAL_COLOR=""
+//        |$HIDE_SETTING_VARIABLES="$ON_UPDATE_LAST_MODIFY"
+//        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
+//        |
+//        |
+//        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
+//        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
+//        |
+//        |
+//        |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
+//        |
+//        |
+//        |
+//    """.trimMargin()
+//            .split("\n")
+//            .map {
+//                it.replace(
+//                    Regex("^#"), "//"
+//                )
+//            }.joinToString("\n")
+//    }
 
-    fun makeAutoJsFile(
-        dirPath: String,
-        jsScriptName: String,
-    ) {
-        FileSystems.createDirs(dirPath)
-        if(
-            File(
-                dirPath,
-                jsScriptName
-            ).isFile
-        ) return
-        val shellContents = makeAutoJsContents()
-        val createFile = File(
-            dirPath,
-            jsScriptName
-        )
-        createFile.writeText(shellContents)
-    }
+//    fun makeAutoJsFile(
+//        dirPath: String,
+//        jsScriptName: String,
+//    ) {
+//        FileSystems.createDirs(dirPath)
+//        if(
+//            File(
+//                dirPath,
+//                jsScriptName
+//            ).isFile
+//        ) return
+//        val shellContents = makeAutoJsContents()
+//        val createFile = File(
+//            dirPath,
+//            jsScriptName
+//        )
+//        createFile.writeText(shellContents)
+//    }
 }

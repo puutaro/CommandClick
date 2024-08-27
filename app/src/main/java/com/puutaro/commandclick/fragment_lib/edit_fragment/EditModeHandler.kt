@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifiedForAppHistory
@@ -21,8 +22,8 @@ class EditModeHandler(
         binding,
         editFragment,
     )
-    val settingSectionStart = editFragment.settingSectionStart
-    val settingSectionEnd = editFragment.settingSectionEnd
+    val settingSectionStart = CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd = CommandClickScriptVariable.SETTING_SEC_END
 
     fun execByHowFullEdit(){
         when(

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
@@ -57,14 +55,13 @@ class UrlHistoryAdapter(
             CAPTURE_BASE64_STR("captureBase64Str"),
         }
 
-        enum class FileType{
-            BOTTOM_FANNEL,
-            NORMAL_FANNEL,
-        }
+//        enum class FileType{
+//            BOTTOM_FANNEL,
+//            NORMAL_FANNEL,
+//        }
     }
 
     private val context = fragment.context
-    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
     private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
         context,
@@ -276,26 +273,26 @@ class UrlHistoryAdapter(
         urlStr: String,
     ){
         if(context == null) return
-        val fileType = FileType.values().firstOrNull {
-            it.name == iconBase64Str
-        }
-        if(fileType != null) {
-            val color = when(fileType){
-                FileType.BOTTOM_FANNEL -> R.color.fannel_icon_color
-                FileType.NORMAL_FANNEL -> R.color.orange
-            }
-            withContext(Dispatchers.Main) {
-                Glide
-                    .with(holder.urlSiteLogoView.context)
-                    .load(R.drawable.icons8_file)
-                    .centerCrop()
-                    .into(holder.urlSiteLogoView)
-//                holder.urlSiteLogoView.load(R.drawable.icons8_file)
-                holder.urlSiteLogoView.imageTintList =
-                    context.getColorStateList(color)
-            }
-            return
-        }
+//        val fileType = FileType.values().firstOrNull {
+//            it.name == iconBase64Str
+//        }
+//        if(fileType != null) {
+//            val color = when(fileType){
+//                FileType.BOTTOM_FANNEL -> R.color.fannel_icon_color
+//                FileType.NORMAL_FANNEL -> R.color.orange
+//            }
+//            withContext(Dispatchers.Main) {
+//                Glide
+//                    .with(holder.urlSiteLogoView.context)
+//                    .load(R.drawable.icons8_file)
+//                    .centerCrop()
+//                    .into(holder.urlSiteLogoView)
+////                holder.urlSiteLogoView.load(R.drawable.icons8_file)
+//                holder.urlSiteLogoView.imageTintList =
+//                    context.getColorStateList(color)
+//            }
+//            return
+//        }
         val iconBitMap = withContext(Dispatchers.IO) {
             BitmapTool.Base64Tool.decode(
                 iconBase64Str

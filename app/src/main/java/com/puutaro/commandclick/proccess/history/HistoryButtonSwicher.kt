@@ -9,7 +9,6 @@ import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 
@@ -32,7 +31,7 @@ object HistoryButtonSwitcher {
             is EditFragment -> fragment.fannelInfoMap
             else -> return
         }
-        val sharedPref = FannelInfoTool.getSharePref(fragment.context)
+//        val sharedPref = FannelInfoTool.getSharePref(fragment.context)
         val switchOnSource = (
                 historySwitch ==
                         SettingVariableSelects.HistorySwitchSelects.ON.name
@@ -45,7 +44,7 @@ object HistoryButtonSwitcher {
         when(switchOn) {
             true -> FannelHistoryButtonEvent(
                 fragment,
-                sharedPref,
+//                sharedPref,
             ).invoke()
            else -> urlHistoryButtonHandler(
                fragment,
@@ -59,7 +58,7 @@ object HistoryButtonSwitcher {
                ) return@let
                FannelHistoryButtonEvent(
                    fragment,
-                   sharedPref,
+//                   sharedPref,
                ).invoke()
            }
         }

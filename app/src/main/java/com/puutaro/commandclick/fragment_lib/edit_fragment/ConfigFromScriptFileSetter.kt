@@ -4,7 +4,6 @@ import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
@@ -35,6 +34,8 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         mainFannelConList: List<String>
     ){
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
         val fannelInfoMap = editFragment.fannelInfoMap
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         val onShortcut = FannelInfoTool.getOnShortcut(
@@ -43,8 +44,8 @@ object ConfigFromScriptFileSetter {
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
             fannelInfoMap,
             setReplaceVariableMap,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
+            settingSectionStart,
+            settingSectionEnd,
             editFragment.settingFannelPath
         )
         editFragment.settingFannelConList = settingVariableList
@@ -281,26 +282,26 @@ object ConfigFromScriptFileSetter {
 //            ).joinToString("\n\n")
 //        )
 
-        val bottomScriptUrlList = makeListFromSettingPath(
-            editFragment,
-            settingVariableList,
-            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH,
-            UsePath.homeScriptUrlsFilePath,
-        )
-        if(
-            bottomScriptUrlList.isNotEmpty()
-        ) editFragment.bottomScriptUrlList = bottomScriptUrlList
+//        val bottomScriptUrlList = makeListFromSettingPath(
+//            editFragment,
+//            settingVariableList,
+//            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH,
+//            UsePath.homeScriptUrlsFilePath,
+//        )
+//        if(
+//            bottomScriptUrlList.isNotEmpty()
+//        ) editFragment.bottomScriptUrlList = bottomScriptUrlList
 
-
-        val homeFannelHistoryNameList = makeListFromSettingPath(
-            editFragment,
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH,
-            UsePath.homeFannelsFilePath,
-        )
-        if(
-            homeFannelHistoryNameList.isNotEmpty()
-        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
+//
+//        val homeFannelHistoryNameList = makeListFromSettingPath(
+//            editFragment,
+//            settingVariableList,
+//            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH,
+//            UsePath.homeFannelsFilePath,
+//        )
+//        if(
+//            homeFannelHistoryNameList.isNotEmpty()
+//        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
         if(
             editFragment.tag?.startsWith(
@@ -709,39 +710,39 @@ object ConfigFromScriptFileSetter {
         }
     }
 
-    private fun makeListFromSettingPath(
-        editFragment: EditFragment,
-        settingVariableList: List<String>?,
-        settingValName: String,
-        defaultPath: String,
-    ): List<String> {
-        val fannelInfoMap = editFragment.fannelInfoMap
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//    private fun makeListFromSettingPath(
+//        editFragment: EditFragment,
+//        settingVariableList: List<String>?,
+//        settingValName: String,
+//        defaultPath: String,
+//    ): List<String> {
+//        val fannelInfoMap = editFragment.fannelInfoMap
+////        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////            fannelInfoMap
+////        )
+//        val currentFannelName = FannelInfoTool.getCurrentFannelName(
 //            fannelInfoMap
 //        )
-        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
-        val bottomScriptUrlPath =  SettingVariableReader.getStrValue(
-            settingVariableList,
-            settingValName,
-            defaultPath,
-        ).let {
-            val repPath = when(it.isEmpty()){
-                true -> defaultPath
-                else -> it
-            }
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                repPath,
-                editFragment.setReplaceVariableMap,
-//                currentAppDirPath,
-                currentFannelName,
-            )
-        }
-        return SettingVariableReader.setListFromPath(
-            bottomScriptUrlPath
-        )
-    }
+//        val bottomScriptUrlPath =  SettingVariableReader.getStrValue(
+//            settingVariableList,
+//            settingValName,
+//            defaultPath,
+//        ).let {
+//            val repPath = when(it.isEmpty()){
+//                true -> defaultPath
+//                else -> it
+//            }
+//            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                repPath,
+//                editFragment.setReplaceVariableMap,
+////                currentAppDirPath,
+//                currentFannelName,
+//            )
+//        }
+//        return SettingVariableReader.setListFromPath(
+//            bottomScriptUrlPath
+//        )
+//    }
 }
 
 private object AlterToolForSetValType {

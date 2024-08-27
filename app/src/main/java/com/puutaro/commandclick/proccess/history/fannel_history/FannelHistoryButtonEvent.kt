@@ -23,7 +23,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -44,7 +43,6 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.map.FannelSettingMap
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +65,7 @@ import java.io.File
 //}
 class FannelHistoryButtonEvent (
     private val fragment: Fragment,
-    private val sharedPref: FannelInfoTool.FannelInfoSharePref?,
+//    private val sharedPref: FannelInfoTool.FannelInfoSharePref?,
     )
 {
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
@@ -91,18 +89,20 @@ class FannelHistoryButtonEvent (
 //    } ?: emptyList()
 
     companion object {
-        private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-        private val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageType
-            )
-        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-
-        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        private val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//        private val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//                languageType
+//            )
+//        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//
+//        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
     }
     fun invoke(
     ) {
@@ -880,20 +880,20 @@ class FannelHistoryButtonEvent (
 
 
 
-    fun updateLastModifyForHistoryAndAppDir(
-        selectedHistoryFilePath: String,
-        selectedAppDirName: String,
-    ){
-        FileSystems.updateLastModified(
-            selectedHistoryFilePath
-        )
-        FileSystems.updateLastModified(
-            File(
-                UsePath.cmdclickAppDirAdminPath,
-                selectedAppDirName + UsePath.JS_FILE_SUFFIX
-            ).absolutePath
-        )
-    }
+//    fun updateLastModifyForHistoryAndAppDir(
+//        selectedHistoryFilePath: String,
+//        selectedAppDirName: String,
+//    ){
+//        FileSystems.updateLastModified(
+//            selectedHistoryFilePath
+//        )
+//        FileSystems.updateLastModified(
+//            File(
+//                UsePath.cmdclickAppDirAdminPath,
+//                selectedAppDirName + UsePath.JS_FILE_SUFFIX
+//            ).absolutePath
+//        )
+//    }
 
     private fun exitDialog(
         historyListView: RecyclerView
@@ -1074,30 +1074,30 @@ private object LongPressManageListDialog {
     }
 }
 
-private fun deleteOverHistory(
-    cmdclickAppHistoryDirAdminPath: String
-){
-    val leavesHistoryNum = 50
-    val dirFiles = FileSystems.sortedFiles(
-        cmdclickAppHistoryDirAdminPath,
-    )
-    if(dirFiles.isEmpty()) return
-    val deleteFileNum = dirFiles.size - leavesHistoryNum
-    if(deleteFileNum <= 0) return
-    val deletingFiles = dirFiles.take(deleteFileNum)
-    deletingFiles.forEach {
-        try {
-            val fileEntry = File(
-                cmdclickAppHistoryDirAdminPath,
-                it
-            )
-            if(!fileEntry.isFile) return@forEach
-            fileEntry.delete()
-        } catch (e: Exception) {
-            println("pass")
-        }
-    }
-}
+//private fun deleteOverHistory(
+//    cmdclickAppHistoryDirAdminPath: String
+//){
+//    val leavesHistoryNum = 50
+//    val dirFiles = FileSystems.sortedFiles(
+//        cmdclickAppHistoryDirAdminPath,
+//    )
+//    if(dirFiles.isEmpty()) return
+//    val deleteFileNum = dirFiles.size - leavesHistoryNum
+//    if(deleteFileNum <= 0) return
+//    val deletingFiles = dirFiles.take(deleteFileNum)
+//    deletingFiles.forEach {
+//        try {
+//            val fileEntry = File(
+//                cmdclickAppHistoryDirAdminPath,
+//                it
+//            )
+//            if(!fileEntry.isFile) return@forEach
+//            fileEntry.delete()
+//        } catch (e: Exception) {
+//            println("pass")
+//        }
+//    }
+//}
 
 private enum class LongPressMenuName(val menu: String){
     SRC_ANCHOR("src anchor"),

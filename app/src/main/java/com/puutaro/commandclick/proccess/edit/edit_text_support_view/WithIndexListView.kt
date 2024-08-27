@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
@@ -44,18 +43,20 @@ class WithIndexListView(
         }
     }
 
-    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-    var languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    var languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//            languageType
+//        )
+//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
     fun create(
         editParameters: EditParameters,

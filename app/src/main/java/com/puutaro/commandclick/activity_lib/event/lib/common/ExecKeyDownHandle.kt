@@ -173,10 +173,9 @@ private object BackstackManager {
             isLaunchUrlHistory ->
             if(!isLaunchUrlHistory) return@let
             updateBeforeAndAfterUrlPair(monitorUrlPath)
-            launchUrlHistory(
-                activity,
+            UrlHistoryButtonEvent(
                 currentBottomFragment,
-            )
+            ).invoke()
             return
         }
 
@@ -287,23 +286,6 @@ private object BackstackManager {
             supportFragmentManager,
         )
         supportFragmentManager.popBackStackImmediate()
-    }
-
-    private fun launchUrlHistory(
-        activity: MainActivity,
-        currentBottomFragment: Fragment,
-    ){
-        val sharePref = FannelInfoTool.getSharePref(activity)
-        val fannelInfoMap = FannelInfoSetting.values().map {
-            it.name to FannelInfoTool.getStringFromFannelInfo(
-                sharePref,
-                it
-            )
-        }.toMap()
-        UrlHistoryButtonEvent(
-            currentBottomFragment,
-            fannelInfoMap,
-        ).invoke()
     }
 
     private fun removeEditAndTermFragment(

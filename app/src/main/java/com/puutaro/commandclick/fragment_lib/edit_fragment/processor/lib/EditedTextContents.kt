@@ -32,6 +32,8 @@ class EditedTextContents(
     private val scriptContentsLister = ScriptContentsLister(
         CcEditComponent.makeEditLinearLayoutList(editFragment)
     )
+    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
     fun updateByCommandVariables(
         scriptContentsList: List<String>,
@@ -76,7 +78,7 @@ class EditedTextContents(
 
         val submitScriptContentsList = CommentOutLabelingSection.commentOut(
             lastScriptContentsList,
-            currentScriptFileName
+//            currentScriptFileName
         )
         val settingFannelPath = when(
             isSettingEdit
@@ -121,8 +123,8 @@ class EditedTextContents(
     ): Boolean {
         val settingVariableList = extractValListFromHolder(
             submitScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd
+            settingSectionStart,
+            settingSectionEnd
         )?.joinToString("\n")?.let {
             ScriptPreWordReplacer.replace(
                 it,

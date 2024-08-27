@@ -5,7 +5,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
@@ -100,7 +99,7 @@ object LongPressMenuTool {
         val longPressFannelName =  File(srcFannelPath).name
         return CommandClickVariables.returnSettingVariableList(
             ReadText(srcFannelPath).textToList(),
-            LanguageTypeSelects.JAVA_SCRIPT,
+//            LanguageTypeSelects.JAVA_SCRIPT,
         )?.joinToString("\n")?.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,

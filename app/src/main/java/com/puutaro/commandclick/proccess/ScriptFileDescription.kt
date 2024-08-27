@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.url.WebUrlVariables
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.dialog.DialogObject
@@ -30,7 +29,7 @@ object ScriptFileDescription {
     ) {
         val labelingSecConList = subLabelingSecConList(
             currentScriptContentsList,
-            fannelName,
+//            fannelName,
         ) ?: return
 
         val descCon = makeDescriptionContents(
@@ -65,7 +64,7 @@ object ScriptFileDescription {
                 if(
                     isMdConAsHttp(
                         labelingSecConList,
-                        fannelName,
+//                        fannelName,
                     )
                 ){
                     DialogObject.descDialog(
@@ -95,20 +94,21 @@ object ScriptFileDescription {
 
     private fun isMdConAsHttp(
         labelingSecConList: List<String>,
-        fannelName: String,
+//        fannelName: String,
     ): Boolean {
         val labelingSecListSize = labelingSecConList.size
         if(
             labelingSecListSize > 4
         ) return false
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
-        val removePrefix = when(
-            languageType == LanguageTypeSelects.SHELL_SCRIPT
-        ) {
-            true -> "#"
-            else -> "//"
-        }
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+        val removePrefix = "//"
+//        when(
+//            languageType == LanguageTypeSelects.SHELL_SCRIPT
+//        ) {
+//            true -> "#"
+//            else -> "//"
+//        }
         return labelingSecConList.any {
             val line = it.removePrefix(removePrefix).trim()
             line.startsWith(httpsPrefix)
@@ -139,18 +139,20 @@ object ScriptFileDescription {
 
     private fun subLabelingSecConList(
         currentScriptContentsList: List<String>,
-        fannelName: String,
+//        fannelName: String,
     ): List<String>? {
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-        ) as String
-        val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-        ) as String
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
+//        CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+//        ) as String
+        val labelingSectionEnd =  CommandClickScriptVariable.LABELING_SEC_END
+//        CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+//        ) as String
         return CommandClickVariables.extractValListFromHolder(
             currentScriptContentsList,
             labelingSectionStart,
@@ -163,19 +165,22 @@ object ScriptFileDescription {
 //        currentAppDirPath: String,
         fannelName: String,
     ): List<String> {
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-        ) as String
-        val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-        ) as String
-        val removePrefix = if(languageType == LanguageTypeSelects.SHELL_SCRIPT){
-            "#"
-        } else "//"
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
+//        CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+//        ) as String
+        val labelingSectionEnd = CommandClickScriptVariable.LABELING_SEC_END
+//        languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+//        ) as String
+        val removePrefix = "//"
+//        if(languageType == LanguageTypeSelects.SHELL_SCRIPT){
+//            "#"
+//        } else "//"
         val suffixBlank = "  "
         return (listOf("\n") + labelingSecConList).filter {
             (

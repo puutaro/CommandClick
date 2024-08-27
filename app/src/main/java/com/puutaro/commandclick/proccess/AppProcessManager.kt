@@ -306,10 +306,10 @@ object AppProcessManager {
 //        currentAppDirPath: String,
         fannelName: String,
     ){
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(
-                fannelName
-            )
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(
+//                fannelName
+//            )
         val settingVariable = CommandClickVariables.returnSettingVariableList(
             ReadText(
                 File(
@@ -317,7 +317,7 @@ object AppProcessManager {
                     fannelName
                 ).absolutePath,
             ).textToList(),
-            languageType
+//            languageType
         )
         val shellExecEnv = CommandClickVariables.substituteCmdClickVariable(
             settingVariable,

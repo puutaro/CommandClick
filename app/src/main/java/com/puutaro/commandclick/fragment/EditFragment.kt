@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -23,7 +22,6 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.ListIndexAdapter
@@ -71,25 +69,25 @@ class EditFragment: Fragment() {
 
     private var _binding: EditFragmentBinding? = null
     val binding get() = _binding!!
-    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-    var languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageType
-            )
-    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+//    var languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//                languageType
+//            )
+//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//
+//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+//
+//    var commandSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+//    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
     var busyboxExecutor: BusyboxExecutor? = null
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
@@ -115,8 +113,8 @@ class EditFragment: Fragment() {
     var enableEditExecute = false
     var currentFannelConList = emptyList<String>()
     var settingFannelConList: List<String>? = null
-    var homeFannelHistoryNameList: List<String>? = null
-    var bottomScriptUrlList = emptyList<String>()
+//    var homeFannelHistoryNameList: List<String>? = null
+//    var bottomScriptUrlList = emptyList<String>()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
@@ -210,23 +208,23 @@ class EditFragment: Fragment() {
             currentFannelState
         )
 
-        languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(currentFannelName)
-
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
-        commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-        ) as String
+//        languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(currentFannelName)
+//
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//        settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
+//        commandSectionStart = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//        ) as String
+//        commandSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//        ) as String
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelPath =
             File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath

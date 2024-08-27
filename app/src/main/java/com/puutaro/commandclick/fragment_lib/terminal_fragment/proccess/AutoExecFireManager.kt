@@ -17,6 +17,8 @@ object AutoExecFireManager {
 
     private val onAutoExecArg =
         ScriptArgsMapList.ScriptArgsName.ON_AUTO_EXEC.str
+    private const val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    private const val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
     fun fire(
         terminalFragment: TerminalFragment,
@@ -120,15 +122,15 @@ object AutoExecFireManager {
             true ->
                 CommandClickVariables.extractValListFromHolder(
                     jsContentsList,
-                    terminalFragment.settingSectionStart,
-                    terminalFragment.settingSectionEnd,
+                    settingSectionStart,
+                    settingSectionEnd,
                 )
             else ->
                 FannelStateRooterManager.makeSettingVariableList(
                     terminalFragment.fannelInfoMap,
                     terminalFragment.setReplaceVariableMap,
-                    terminalFragment.settingSectionStart,
-                    terminalFragment.settingSectionEnd,
+                    settingSectionStart,
+                    settingSectionEnd,
                     terminalFragment.settingFannelPath,
                 )
         }
