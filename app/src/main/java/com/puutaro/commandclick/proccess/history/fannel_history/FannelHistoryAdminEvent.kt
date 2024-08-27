@@ -15,7 +15,6 @@ import java.io.File
 object FannelHistoryAdminEvent {
     fun register(
         sharedPref: FannelInfoTool.FannelInfoSharePref?,
-        selectedAppDirPath: String,
         selectedFannelName: String,
         mainFannelSettingConList: List<String>,
         setReplaceVariableMap: Map<String, String>?
@@ -37,7 +36,7 @@ object FannelHistoryAdminEvent {
             return
         }
         val selectedAppShellFilePathObj = File(
-            selectedAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             selectedFannelName
         )
         FileSystems.updateLastModified(

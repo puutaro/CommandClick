@@ -19,10 +19,10 @@ object IntentManager {
 //            FannelInfoSetting.current_app_dir.name,
 //            fannelDirPath
 //        )
-        execIntent.putExtra(
-            FannelInfoSetting.current_fannel_name.name,
-            fannelName
-        )
+//        execIntent.putExtra(
+//            FannelInfoSetting.current_fannel_name.name,
+//            fannelName
+//        )
         context?.startActivity(execIntent)
     }
 }

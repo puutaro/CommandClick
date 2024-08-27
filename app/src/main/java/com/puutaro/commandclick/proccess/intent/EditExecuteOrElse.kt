@@ -125,7 +125,6 @@ object EditExecuteOrElse {
                  val sharePref = FannelInfoTool.getSharePref(fragment.context)
                  FannelHistoryAdminEvent.register(
                      sharePref,
-                     cmdclickDefaultAppDirPath,
                      fannelName,
                      mainFannelSettingConList,
                      setReplaceVariableMap,
