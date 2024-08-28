@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.text.TextUtils
@@ -23,6 +24,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.history.CLICLTYPE
 import com.puutaro.commandclick.proccess.history.HistoryButtonSwitcher
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
@@ -127,29 +129,30 @@ class ToolbarButtonProducerForEdit(
         buttonLayout.setOnClickListener { view ->
             when (toolbarButtonBariantForEdit) {
                 ToolbarButtonBariantForEdit.HISTORY -> {
-                    val editExecuteTerminalFragment = TargetFragmentInstance()
-                        .getFromFragment<TerminalFragment>(
-                            editFragment.activity,
-                            context.getString(R.string.edit_terminal_fragment)
-                        )
-                    if(
-                        editExecuteTerminalFragment != null
-                    ){
-                        val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
-                        listener?.onKeyBoardVisibleChangeForEditFragment(
-                            false,
-                            true
-                        )
-                    }
-                    HistoryButtonSwitcher.switch(
-                        editFragment,
-                        editFragment.context?.getString(
-                            R.string.edit_terminal_fragment
-                        ),
-                        editFragment.historySwitch,
-                        urlHistoryButtonEvent,
-                        CLICLTYPE.SHORT
-                    )
+                    FannelHistoryButtonEvent(editFragment).invoke()
+//                    val editExecuteTerminalFragment = TargetFragmentInstance()
+//                        .getFromFragment<TerminalFragment>(
+//                            editFragment.activity,
+//                            context.getString(R.string.edit_terminal_fragment)
+//                        )
+//                    if(
+//                        editExecuteTerminalFragment != null
+//                    ){
+//                        val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+//                        listener?.onKeyBoardVisibleChangeForEditFragment(
+//                            false,
+//                            true
+//                        )
+//                    }
+//                    HistoryButtonSwitcher.switch(
+//                        editFragment,
+//                        editFragment.context?.getString(
+//                            R.string.edit_terminal_fragment
+//                        ),
+//                        editFragment.historySwitch,
+//                        urlHistoryButtonEvent,
+//                        CLICLTYPE.SHORT
+//                    )
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.SETTING,
@@ -219,6 +222,7 @@ class ToolbarButtonProducerForEdit(
         textView.textSize = 12f
         textView.inputType = InputType.TYPE_CLASS_TEXT
         textView.maxLines = 1
+        textView.setTypeface(null, Typeface.BOLD)
         textView.ellipsize = TextUtils.TruncateAt.END
         return textView
     }
@@ -283,15 +287,15 @@ class ToolbarButtonProducerForEdit(
     ){
         when (toolbarButtonBariantForEdit) {
             ToolbarButtonBariantForEdit.HISTORY -> {
-                HistoryButtonSwitcher.switch(
-                    editFragment,
-                    editFragment.context?.getString(
-                        R.string.edit_terminal_fragment
-                    ),
-                    editFragment.historySwitch,
-                    urlHistoryButtonEvent,
-                    CLICLTYPE.LONG
-                )
+//                HistoryButtonSwitcher.switch(
+//                    editFragment,
+//                    editFragment.context?.getString(
+//                        R.string.edit_terminal_fragment
+//                    ),
+//                    editFragment.historySwitch,
+//                    urlHistoryButtonEvent,
+//                    CLICLTYPE.LONG
+//                )
             }
             ToolbarButtonBariantForEdit.SETTING,
             ToolbarButtonBariantForEdit.OK,

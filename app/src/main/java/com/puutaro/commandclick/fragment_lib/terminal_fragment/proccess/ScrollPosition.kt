@@ -53,6 +53,7 @@ object ScrollPosition {
 
     fun save(
         terminalFragment: TerminalFragment,
+        webView: WebView,
         url: String?,
         scrollY: Int,
         oldPositionY: Float,
@@ -81,7 +82,7 @@ object ScrollPosition {
         val scrollPosiSaveDirPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/"
         val cmdclickMonitorScrollPosiFileName = UsePath.cmdclickMonitorScrollPosiFileName
         CoroutineScope(Dispatchers.Main).launch {
-            terminalFragment.binding.terminalWebView.evaluateJavascript(
+            webView.evaluateJavascript(
                 "(function() {  " +
                         "return (document.scrollingElement || document.body).scrollTop;" +
                         "})()",

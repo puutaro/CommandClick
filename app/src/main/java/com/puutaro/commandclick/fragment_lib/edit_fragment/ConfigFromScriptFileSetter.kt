@@ -411,7 +411,7 @@ object ConfigFromScriptFileSetter {
             editButtonVariant,
             when (true) {
                 isSettingEdit -> false
-                isOnlyCmdEdit -> true
+                isOnlyCmdEdit -> false
                 else -> {
                     val editButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(
@@ -422,7 +422,7 @@ object ConfigFromScriptFileSetter {
                     ).let {
                         if(
                             it.isNullOrEmpty()
-                        ) return@let true
+                        ) return@let false
                         it == buttonVisibleOn
                     }
                 }

@@ -290,12 +290,11 @@ object JsDebugger {
             UsePath.jsSrcAcDebugReportPath,
         )
         val menuMapSeparator = '|'
-        val cancelLabel = "❌"
         val menuMapStrListCon = listOf(
-            "dismissType=both?label=${cancelLabel}?tag=cancel",
-            "label=AC?tag=jsSrcAction?clickMenuFilePath=OPEN_SRC_JS_ACTION_REPORT.js",
-            "label=GAC?tag=jsGenAction?clickMenuFilePath=OPEN_GENERATED_JS_ACTION_REPORT.js",
-            "label=JS?tag=js?clickMenuFilePath=OPEN_JS_REPORT.js",
+            "dismissType=both?caption=cancel?iconName=cancel?tag=cancel",
+            "caption=action?iconName=debug?tag=jsSrcAction?clickMenuFilePath=OPEN_SRC_JS_ACTION_REPORT.js",
+            "caption=genAc?iconName=search?tag=jsGenAction?clickMenuFilePath=OPEN_GENERATED_JS_ACTION_REPORT.js",
+            "caption=js?iconName=js?tag=js?clickMenuFilePath=OPEN_JS_REPORT.js",
         ).joinToString(menuMapSeparator.toString())
         val extraMapCon = listOf(
             "focus=defaultTag=jsSrcAction?triggers=click"
@@ -331,7 +330,7 @@ object JsDebugger {
             jsDialog.webView_S(
                 "${launchUrl}",
                 "",
-                "dismissType=both?label=${cancelLabel}",
+                "dismissType=both?caption=${cancelLabel}?iconName=cancel",
                 "",
                 "",
             );

@@ -332,14 +332,14 @@ class UrlHistoryButtonEvent(
                         return
                     }
                     is EditFragment -> {
-                        if(
-                            fragmentTag?.startsWith(
-                                FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
-                            ) != true
-                        ) {
-                            exitDialog(urlHistoryListView)
-                            return
-                        }
+//                        if(
+//                            fragmentTag?.startsWith(
+//                                FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
+//                            ) != true
+//                        ) {
+//                            exitDialog(urlHistoryListView)
+//                            return
+//                        }
                         val listener =
                             context as? EditFragment.OnLaunchUrlByWebViewForEditListener
                         listener?.onLaunchUrlByWebViewForEdit(
@@ -349,15 +349,15 @@ class UrlHistoryButtonEvent(
                         return
                     }
                     is TerminalFragment -> {
-                        if(
-                            fragmentTag?.startsWith(
-                                context?.getString(R.string.index_terminal_fragment)
-                                    ?: String()
-                            ) != true
-                        ) {
-                            exitDialog(urlHistoryListView)
-                            return
-                        }
+//                        if(
+//                            fragmentTag?.startsWith(
+//                                context?.getString(R.string.index_terminal_fragment)
+//                                    ?: String()
+//                            ) != true
+//                        ) {
+//                            exitDialog(urlHistoryListView)
+//                            return
+//                        }
                         fragment.binding.terminalWebView.loadUrl(selectedUrl)
                         exitDialog(urlHistoryListView)
                         return

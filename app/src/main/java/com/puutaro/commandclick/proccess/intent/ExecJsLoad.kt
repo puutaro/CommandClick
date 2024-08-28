@@ -186,10 +186,10 @@ object ExecJsLoad {
             tempOnDisplayUpdate,
         )
 
-        UrlHistoryRegister.insertJsPath(
-//            recentAppDirPath,
-            selectedJsFileName,
-        )
+//        UrlHistoryRegister.insertJsPath(
+////            recentAppDirPath,
+//            selectedJsFileName,
+//        )
 
         val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,

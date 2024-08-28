@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/icon_caption_laytout"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/toolbar_layout_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:background="@null"
+    android:backgroundTint="@null"
+    android:foreground="?selectableItemBackground"
+    >
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon_caption_layout_image"
+        android:layout_width="@dimen/toolbar_image_width"
+        android:layout_height="@dimen/toolbar_image_height"
+        android:src="@drawable/icons8_search"
+        app:tint="@color/file_dark_green_color"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"
+        android:padding="0dp"
+        />
+    <com.puutaro.commandclick.custom_view.OutlineTextView
+        android:id="@+id/icon_caption_layout_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="search"
+        />
+</androidx.appcompat.widget.LinearLayoutCompat>
+

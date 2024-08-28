@@ -9,7 +9,7 @@ enum class CmdClickIcons(
     val assetsPath: String
 ) {
     ABOUT("about", R.drawable.icons8_about, ButtonAssetsImage.aboutPingPath),
-    BACK("back", com.afollestad.materialdialogs.R.drawable.md_nav_back, ButtonAssetsImage.backPingPath),
+    BACK("back", R.drawable.back, ButtonAssetsImage.backPingPath),
     CANCEL("cancel", R.drawable.icons8_cancel, ButtonAssetsImage.cancelPingPath),
     COPY("copy", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha, ButtonAssetsImage.copyPingPath),
     DOWN("down", R.drawable.ic_down_allow, ButtonAssetsImage.downPingPath),
@@ -20,8 +20,10 @@ enum class CmdClickIcons(
     EDIT_FRAME("edit_frame", R.drawable.icons8_edit_frame, ButtonAssetsImage.editPingPath),
     FILE("file", R.drawable.icons8_file, ButtonAssetsImage.filePingPath),
     FOLDA("folda", R.drawable.icons8_folda, ButtonAssetsImage.foldaPingPath),
+    FORWARD("forward", R.drawable.icon_forward, ButtonAssetsImage.forwardPingPath),
     HISTORY("history", R.drawable.icons8_history, ButtonAssetsImage.fannelManagerPath),
     GALLERY("gallery", R.drawable.icons8_image_gallery, ButtonAssetsImage.galleryPingPath),
+    JS("js", R.drawable.js, ButtonAssetsImage.jsPingPath),
     INFO("info", R.drawable.icons8_info, ButtonAssetsImage.infoPingPath),
     INTERNET("internet", R.drawable.internet, ButtonAssetsImage.internetPingPath),
     LAUNCH("launch", R.drawable.icons8_launch, ButtonAssetsImage.launchPingPath),
@@ -32,6 +34,7 @@ enum class CmdClickIcons(
     MENU("menu", R.drawable.icons8_menu, ButtonAssetsImage.menuPingPath),
     MUSIC("music", R.drawable.icon_music, ButtonAssetsImage.musicPingPath),
     OK("ok", R.drawable.icons8_check_ok, ButtonAssetsImage.okPingPath),
+    OPEN_CLOSE("open_close", R.drawable.open_and_close, ButtonAssetsImage.openClosePingPath),
     OVERFLOW("overflow", androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, ButtonAssetsImage.overflowPingPath),
     PIN("pin", R.drawable.pin, ButtonAssetsImage.pinPingPath),
     PIN_LOCATION("pin_location", R.drawable.pin_location, ButtonAssetsImage.pinLocationPingPath),

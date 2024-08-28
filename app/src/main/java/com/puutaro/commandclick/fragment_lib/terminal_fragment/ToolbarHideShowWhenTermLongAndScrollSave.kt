@@ -55,8 +55,9 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                             )
                             val url = terminalWebView.url
                             CoroutineScope(Dispatchers.IO).launch {
-                                    ScrollPosition.save(
+                                ScrollPosition.save(
                                     terminalFragment,
+                                    terminalWebView,
                                     url,
                                     terminalWebView.scrollY,
                                     oldPositionY,

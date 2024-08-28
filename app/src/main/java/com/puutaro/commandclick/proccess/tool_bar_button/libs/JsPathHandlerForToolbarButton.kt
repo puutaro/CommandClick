@@ -15,6 +15,7 @@ import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
@@ -365,6 +366,12 @@ object JsPathHandlerForToolbarButton {
                         );
                     """.trimIndent()
                 )
+            }
+            MacroForToolbarButton.Macro.URL_HISTORY
+            -> {
+                UrlHistoryButtonEvent(
+                    fragment
+                ).invoke()
             }
             MacroForToolbarButton.Macro.OK
             -> {

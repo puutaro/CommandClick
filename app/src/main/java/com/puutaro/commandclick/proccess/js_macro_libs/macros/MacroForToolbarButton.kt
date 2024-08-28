@@ -37,6 +37,7 @@ object MacroForToolbarButton{
         SYNC,
 //        TERMUX_SETUP,
         USAGE,
+        URL_HISTORY,
         WEB_SEARCH,
     }
 

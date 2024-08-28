@@ -214,7 +214,7 @@ object ExecSetToolbarButtonImage {
         return getImageFile(assetsPath).isFile
     }
 
-    private fun getImageFile(assetsPath: String): File {
+    fun getImageFile(assetsPath: String): File {
         val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
         return File(
             toolbarUrlImageDirPath,

@@ -48,7 +48,12 @@ object UrlLaunchMacro {
             true -> {
                 WebUrlVariables.commandClickUsageUrl
             }
-            else -> launchUrlSrc
+            else -> {
+                if(
+                    EnableUrlPrefix.isHttpPrefix(launchUrlSrc)
+                ) launchUrlSrc
+                else WebUrlVariables.commandClickUsageUrl
+            }
         }
         BroadCastIntent.sendUrlCon(
             context,

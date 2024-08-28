@@ -24,9 +24,12 @@ object HistoryUrlContents {
                     ).absolutePath
                 ).textToList()
                     .filter {
-                        EnableUrlPrefix.isHttpOrFilePrefix(
+                        EnableUrlPrefix.isHttpPrefix(
                             it.split("\t").lastOrNull()
                         )
+//                        EnableUrlPrefix.isHttpOrFilePrefix(
+//                            it.split("\t").lastOrNull()
+//                        )
                     }
                     .firstOrNull()
                     ?.split("\t")?.lastOrNull()
@@ -39,9 +42,12 @@ object HistoryUrlContents {
                     ).absolutePath
                 ).textToList()
                     .filter {
-                        EnableUrlPrefix.isHttpOrFilePrefix(
+                        EnableUrlPrefix.isHttpPrefix(
                             it.split("\t").lastOrNull()
                         )
+//                        EnableUrlPrefix.isHttpOrFilePrefix(
+//                            it.split("\t").lastOrNull()
+//                        )
                     }
                     .groupBy { it }
                     .mapValues { it.value.size }

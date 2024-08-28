@@ -9,25 +9,25 @@ import java.io.File
 object UrlHistoryRegister {
 
     private const val takeHistoryNum = 500
-    fun insertJsPath(
-//        recentAppDirPath: String,
-        jsFileName: String,
-    ) {
-        if(
-            jsFileName == SystemFannel.preference
-        ) return
-        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-        val jsFullPath = "${cmdclickDefaultAppDirPath}/${jsFileName}"
-        val jsFullPathObj = File(jsFullPath)
-        if(
-            !jsFullPathObj.isFile
-        ) return
-        insert(
-//            cmdclickDefaultAppDirPath,
-            jsFullPath,
-            jsFullPath,
-        )
-    }
+//    fun insertJsPath(
+////        recentAppDirPath: String,
+//        jsFileName: String,
+//    ) {
+//        if(
+//            jsFileName == SystemFannel.preference
+//        ) return
+//        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        val jsFullPath = "${cmdclickDefaultAppDirPath}/${jsFileName}"
+//        val jsFullPathObj = File(jsFullPath)
+//        if(
+//            !jsFullPathObj.isFile
+//        ) return
+//        insert(
+////            cmdclickDefaultAppDirPath,
+//            jsFullPath,
+//            jsFullPath,
+//        )
+//    }
 
     fun insert(
 //        recentAppDirPath: String,

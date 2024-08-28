@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -101,7 +102,9 @@ object TitleImageAndViewSetter {
 //        currentAppDirPath: String,
         currentScriptFileName: String
     ): String {
-        return "${UsePath.makeOmitPath(UsePath.cmdclickDefaultAppDirPath)}/${currentScriptFileName}"
+        return CcPathTool.trimAllExtend(
+            UsePath.makeOmitPath(currentScriptFileName)
+        )
     }
 
     fun makeBackstackCount(

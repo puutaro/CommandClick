@@ -89,6 +89,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsCmdValSaveAndBack
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirListGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsUrlAdder
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsUrlHistoryLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tsv.JsTsv
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 
@@ -477,6 +478,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsCmdValSaveAndBack(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsUrlHistoryLauncher(terminalFragment)
         )
     }
 

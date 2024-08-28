@@ -24,7 +24,7 @@ class OutlineTextView : AppCompatTextView {
     var outlineWidthSrc = 2
     private var strokeColor = Color.WHITE
     private var fillColor = context.getColor(R.color.fill_gray)
-    private val density = context.resources.displayMetrics.density
+    private val densityForOutline = context.resources.displayMetrics.density
 
     fun setStrokeColor(id: Int){
         strokeColor = context.getColor(id)
@@ -43,7 +43,7 @@ class OutlineTextView : AppCompatTextView {
         setTextColor(strokeColor)
         paint.apply {
             style = Paint.Style.FILL_AND_STROKE
-            strokeWidth = outlineWidthSrc * density
+            strokeWidth = outlineWidthSrc * densityForOutline
         }
         super.onDraw(canvas)
 

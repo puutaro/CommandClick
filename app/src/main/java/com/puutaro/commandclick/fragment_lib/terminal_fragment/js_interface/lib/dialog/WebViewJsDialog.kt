@@ -4,31 +4,38 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.button.MaterialButton
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.util.url.WebUrlVariables
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -44,14 +51,16 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.Exe
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
-import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
-import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,9 +77,6 @@ class WebViewJsDialog(
 ) {
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private val longpressMenuGroupId = 110000
     private val clickMenuGroupId = 120000
@@ -213,6 +219,14 @@ class WebViewJsDialog(
                 R.id.webview_dialog_webview
             ) ?: return@launch
             webViewSetting(webView)
+            val firstBottomLinearLayout =
+                terminalFragment.webViewDialogInstance?.findViewById<LinearLayoutCompat>(
+                R.id.first_bottom_linearlayout
+            )
+            toolbarHideShow(
+                webView,
+                firstBottomLinearLayout
+            )
             ExecDownLoadManager.set(
                 terminalFragment,
                 webView
@@ -239,9 +253,6 @@ class WebViewJsDialog(
                 '|'
             )
             val btnWeight = culcBtnWeight(menuMapStrList)
-            val firstBottomLinearLayout = terminalFragment.webViewDialogInstance?.findViewById<LinearLayout>(
-                R.id.first_bottom_linearlayout
-            ) ?: return@launch
             val webViewDialogExtraMapManager = WebViewDialogExtraMapManager(
                 menuMapStrList,
                 extraMapCon,
@@ -252,14 +263,15 @@ class WebViewJsDialog(
                     currentScriptPath,
                     it
                 )
-                val bottomButton = webViewBottomBtnSetter(
+                webViewBottomBtnSetter(
                     webView,
                     btnMenuMap,
                     btnWeight,
                     currentScriptPath,
                     webViewDialogExtraMapManager,
-                )
-                firstBottomLinearLayout.addView(bottomButton)
+                )?.let {
+                    firstBottomLinearLayout?.addView(it)
+                }
             }
             webViewClientSetter(
                 webView,
@@ -327,7 +339,7 @@ class WebViewJsDialog(
         culcBtnWeight: Float,
         currentScriptPath: String,
         webViewDialogExtraMapManager: WebViewDialogExtraMapManager,
-    ): MaterialButton {
+    ): LinearLayoutCompat? {
         val targetBtn = makeBottomButton(
             targetMenuMap,
             culcBtnWeight,
@@ -341,7 +353,7 @@ class WebViewJsDialog(
             targetMenuMap,
             WebViewMenuMapType.longPressMenuFilePath.name,
         )
-        targetBtn.setOnClickListener{
+        targetBtn?.setOnClickListener{
             val btnContext = it.context
             btnActionHandler(
                 btnContext,
@@ -359,7 +371,7 @@ class WebViewJsDialog(
                 targetMenuMap?.get(WebViewMenuMapType.tag.name),
             )
         }
-        targetBtn.setOnLongClickListener{
+        targetBtn?.setOnLongClickListener{
             val btnContext = it.context
             btnActionHandler(
                 btnContext,
@@ -383,7 +395,7 @@ class WebViewJsDialog(
 
     private fun btnActionHandler(
         contextSrc: Context?,
-        targetBtn: MaterialButton,
+        targetBtn: LinearLayoutCompat,
         btnOptionMap: Map<String, String>?,
         menuList: List<String>,
         webView: WebView,
@@ -429,6 +441,7 @@ class WebViewJsDialog(
             ?: return
         ScrollPosition.save(
             terminalFragment,
+            webView,
             currentUrl,
             webView.scrollY,
             100f,
@@ -440,7 +453,7 @@ class WebViewJsDialog(
 
     private fun launchMenu(
         contextSrc: Context?,
-        webViewSearchBtn: MaterialButton,
+        webViewSearchBtn: LinearLayoutCompat,
         menuList: List<String>,
         webView: WebView,
         menuGroupId: Int,
@@ -775,43 +788,117 @@ class WebViewJsDialog(
         menuBtnMap: Map<String, String>?,
         buttonWeight: Float,
         webViewDialogExtraMapManager: WebViewDialogExtraMapManager,
-    ): MaterialButton {
-        val btnContext = context as Context
-        val button = MaterialButton(btnContext)
-        val label = menuBtnMap
-            ?.get(
-                WebViewMenuMapType.label.name
-            ) ?: "exec"
-        button.text = label
-        button.textSize = 20f
-        button.stateListAnimator = null
-        button.setTextColor(context.getColor(CmdClickColor.BLUE.id))
-        button.backgroundTintList = context.getColorStateList(CmdClickColor.WHITE.id)
-        button.background = AppCompatResources.getDrawable(
-            context,
-            R.drawable.edit_button_layout_no_stroke
-        )
-        button.insetTop = 0
-        button.insetBottom = 0
+    ): LinearLayoutCompat? {
+       if(
+           context == null
+       ) return null
+//        val buttonLayout = makeBottomButton(
+//            context,
+//            menuBtnMap,
+//            buttonWeight,
+//            webViewDialogExtraMapManager,
+//        )
+
+        val inflater = LayoutInflater.from(context)
+        val linearLayoutCompat = inflater.inflate(
+            R.layout.icon_caption_layout,
+            null
+        ) as LinearLayoutCompat
         val tag = menuBtnMap
             ?.get(
                 WebViewMenuMapType.tag.name
             ) ?: "exec"
-        button.tag = tag
+        linearLayoutCompat.tag = tag
+        val param = LinearLayoutCompat.LayoutParams(
+            0,
+            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+        )
+        param.weight = buttonWeight
+        linearLayoutCompat.layoutParams = param
+//        val tag = menuBtnMap
+//            ?.get(
+//                WebViewMenuMapType.tag.name
+//            ) ?: "exec"
         webViewDialogExtraMapManager.setDefaultFocus(
             context,
-            button,
+            linearLayoutCompat,
             tag,
         )
-        val linearLayoutForImageButtonParam = LinearLayout.LayoutParams(
-            0,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutForImageButtonParam.weight = buttonWeight
-        linearLayoutForImageButtonParam.gravity = Gravity.CENTER
-        button.layoutParams = linearLayoutForImageButtonParam
-        return button
+        val imageView =
+            linearLayoutCompat.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)
 
+        val iconName = menuBtnMap
+            ?.get(
+                WebViewMenuMapType.iconName.name
+            ) ?: "exec"
+        makeImageView(
+            imageView,
+            iconName,
+        )
+        val caption = menuBtnMap?.get(
+            WebViewMenuMapType.caption.name
+        ) ?: iconName
+
+        val captionTextView =
+            linearLayoutCompat.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)
+
+        makeTextView(
+            context,
+            captionTextView,
+            iconName,
+            caption,
+        )
+        return linearLayoutCompat
+
+    }
+
+    private fun makeTextView(
+        context: Context,
+        captionTextView: OutlineTextView,
+        iconName: String,
+        caption: String,
+    ) {
+        val icon = CmdClickIcons.values().firstOrNull {
+            it.str == iconName
+        } ?: CmdClickIcons.OK
+        captionTextView.text = caption.ifEmpty { icon.str }
+        captionTextView.setStrokeColor(R.color.white)
+        captionTextView.setFillColor(R.color.web_icon_color)
+    }
+
+    private fun makeImageView(
+        imageView: AppCompatImageView,
+        iconName: String,
+    ) {
+        val imageViewContext = imageView.context
+        val icon = CmdClickIcons.values().firstOrNull {
+            it.str == iconName
+        } ?: CmdClickIcons.OK
+        imageView.imageTintList = null
+        imageView.backgroundTintList = imageViewContext.getColorStateList(R.color.white)
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(imageViewContext)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        val isImageFile =
+            ExecSetToolbarButtonImage.isImageFile(icon.assetsPath)
+        when(isImageFile) {
+            true -> {
+                val imagePath = ExecSetToolbarButtonImage.getImageFile(icon.assetsPath)
+                Glide.with(imageViewContext)
+                    .load(imagePath)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .thumbnail(requestBuilder)
+                    .into(imageView)
+            }
+            else ->
+                Glide.with(imageViewContext)
+                    .load(icon.id)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .thumbnail(requestBuilder).into(imageView)
+        }
     }
 
     private fun getDismissType(
@@ -945,13 +1032,8 @@ class WebViewJsDialog(
             terminalFragment: TerminalFragment,
             debugPath: String,
         ) {
-//            val disableScrollQueryParameter = listOf(
-//                TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
-//                TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
-//            ).joinToString("=")
             val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
                 debugPath,
-//                disableScrollQueryParameter,
             )
             val extraStrPairList = listOf(
                 PocketWebviewExtra.url.schema
@@ -983,7 +1065,6 @@ class WebViewJsDialog(
         val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
             jsPath,
             setReplaceVariableMap,
-//            currentAppDirPath,
             fannelName
         )
         JavascriptExecuter.jsOrActionHandler(
@@ -1047,6 +1128,62 @@ class WebViewJsDialog(
             ?: return
         webView.loadUrl(jsScriptUrl)
     }
+
+    private fun toolbarHideShow(
+        pocketWebView: WebView,
+        firstBottomLinearLayout: LinearLayoutCompat?,
+    ){
+        var oldPositionY = 0f
+        val hideShowThreshold = getScreenHeight(terminalFragment)
+        with(pocketWebView){
+            setOnTouchListener {
+                    v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        oldPositionY = event.rawY
+                        v.performClick()
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        execHideShowForPocketWebview(
+                            hideShowThreshold,
+                            oldPositionY,
+                            event.rawY,
+                            firstBottomLinearLayout
+                        )
+                    }
+                }
+                v.performClick()
+                false
+            }
+        }
+    }
+}
+
+private fun execHideShowForPocketWebview(
+    hideShowThreshold: Int,
+    oldPositionY: Float,
+    rawY: Float,
+    firstBottomLinearLayout: LinearLayoutCompat?
+) {
+    val oldCurrYDff = oldPositionY - rawY
+    if(hideShowThreshold < oldCurrYDff && oldCurrYDff < -10){
+        firstBottomLinearLayout?.isVisible = true
+    }
+    if(oldCurrYDff > 10) {
+        firstBottomLinearLayout?.isVisible = false
+    }
+}
+private fun getScreenHeight(
+    terminalFragment: TerminalFragment
+): Int {
+    val dpHeight = ScreenSizeCalculator.dpHeight(
+        terminalFragment
+    )
+    val hideShowRate =
+        if(dpHeight > 670f) 3.0f
+        else if(dpHeight > 630) 3.5F
+        else 4.0f
+    return -(dpHeight / hideShowRate).toInt()
 }
 
 enum class WebViewMenuMapType {
@@ -1054,7 +1191,8 @@ enum class WebViewMenuMapType {
     longPressMenuFilePath,
     dismissType,
     dismissDelayMiliTime,
-    label,
+    caption,
+    iconName,
     tag,
 }
 
@@ -1070,7 +1208,7 @@ private enum class DismissType {
     both,
 }
 
-enum class JsMacroType(val str: String,) {
+enum class JsMacroType(val str: String) {
     HIGHLIGHT_SCH_JS("HIGHLIGHT_SCH.js"),
     GO_BACK_JS("GO_BACK.js"),
     GO_FORWARD_JS("GO_FORWARD.js"),
@@ -1092,7 +1230,7 @@ enum class WevViewDialogUriPrefix(
 private class WebViewDialogExtraMapManager(
     menuMapStrList: List<String>,
     extraMapCon: String,
-    private val firstBottomLinearLayout: LinearLayout?
+    private val firstBottomLinearLayout: LinearLayoutCompat?
 ) {
     private var extraMap = emptyMap<String, String>()
     private var focusMap = emptyMap<String, String>()
@@ -1175,7 +1313,7 @@ private class WebViewDialogExtraMapManager(
     }
     fun setDefaultFocus(
         context: Context?,
-        button: MaterialButton,
+        button: LinearLayoutCompat,
         curTag: String,
     ){
         val isNotDefaultTag = focusMap.get(
@@ -1217,7 +1355,7 @@ private class WebViewDialogExtraMapManager(
             isNotTrigger
         ) return
         val button = firstBottomLinearLayout
-            ?.findViewWithTag<MaterialButton>(curTag)
+            ?.findViewWithTag<LinearLayoutCompat>(curTag)
         setBackground(
             context,
             button,
@@ -1226,7 +1364,7 @@ private class WebViewDialogExtraMapManager(
         bottomBtnTagList.forEach {
             if(it == curTag) return@forEach
             val curButton = firstBottomLinearLayout
-                ?.findViewWithTag<MaterialButton>(it)
+                ?.findViewWithTag<LinearLayoutCompat>(it)
             setBackground(
                 context,
                 curButton,
@@ -1237,10 +1375,19 @@ private class WebViewDialogExtraMapManager(
 
     private fun setBackground(
         context: Context?,
-        button: MaterialButton?,
+        button: LinearLayoutCompat?,
         colorId: Int,
     ){
-        button?.backgroundTintList =
-            context?.getColorStateList(colorId)
+        when(colorId == CmdClickColor.WHITE.id) {
+            true -> {
+                button?.background = null
+                button?.alpha = 1f
+            }
+            else -> {
+                button?.background =
+                    AppCompatResources.getDrawable(context as Context, colorId)
+                button?.alpha = 0.6f
+            }
+        }
     }
 }
