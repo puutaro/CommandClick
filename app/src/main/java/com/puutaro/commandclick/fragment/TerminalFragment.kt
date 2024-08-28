@@ -23,6 +23,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.GgleSerchSystemMaker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
@@ -33,6 +34,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -43,6 +45,8 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 
 class TerminalFragment: Fragment() {
@@ -186,11 +190,32 @@ class TerminalFragment: Fragment() {
             this,
             binding.terminalWebView
         )
+        TerminalToolbarHandler.handler(this)
+        GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
+        val keyboardHandleListener = context as? OnKeyboardHandleListenerForTerm
+        activity?.let {
+            KeyboardVisibilityEvent.setEventListener(
+                it,
+                this.viewLifecycleOwner,
+                KeyboardVisibilityEventListener {
+                        isOpen ->
+                    // some code depending on keyboard visiblity status
+                    if(
+                        !this.isVisible
+                    ) return@KeyboardVisibilityEventListener
+                    if(
+                        terminalViewModel.onDialog
+                    ) return@KeyboardVisibilityEventListener
+                    keyboardHandleListener?.onKeyboardHandleForTerm(isOpen)
+                })
+        }
         PinFannelBarManager.set(
             this,
             tag,
             binding.fannelPinRecyclerView
         )
+        PinFannelHideShow.setHideListener(this)
+
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
         )
@@ -311,11 +336,11 @@ class TerminalFragment: Fragment() {
         )
     }
 
-    interface OnAutoCompUpdateListener {
-        fun onAutoCompUpdate (
-//            currentAppDirPath: String
-        )
-    }
+//    interface OnAutoCompUpdateListener {
+//        fun onAutoCompUpdate (
+////            currentAppDirPath: String
+//        )
+//    }
 
     interface OnTermLongChangeListenerForTerminalFragment {
         fun onTermLongChangeForTerminalFragment(
@@ -490,5 +515,16 @@ class TerminalFragment: Fragment() {
 
     interface OnSetToolbarButtonImageListener {
         fun onSetToolbarButtonImage()
+    }
+
+    interface OnSearchButtonMakeListenerForTerm {
+        fun onSearchButtonMakeForTerm()
+    }
+
+    interface OnKeyboardHandleListenerForTerm {
+        fun onKeyboardHandleForTerm(isOpen: Boolean)
+    }
+    interface OnPinFannelHideListener {
+        fun onPinFannelHide()
     }
 }

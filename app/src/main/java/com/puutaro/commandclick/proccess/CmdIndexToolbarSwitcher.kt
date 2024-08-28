@@ -33,7 +33,8 @@ object CmdIndexToolbarSwitcher {
         val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
         if(cmdclickPageSearchToolBar.isVisible == onPageSearch) return
 
-        val cmdclickToolBar = binding.cmdclickToolBar
+        val cmdclickToolBar = binding.cmdindexToolbarLinearLayout
+//            binding.cmdclickToolBar
         val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
         val cmdSearchEditText = binding.cmdSearchEditText
 

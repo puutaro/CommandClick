@@ -7,8 +7,6 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -20,7 +18,6 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
@@ -28,6 +25,8 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClic
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.SettingMenuForCmdIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -145,23 +144,23 @@ class CommandIndexFragment: Fragment() {
 //        val cmdListView = binding.cmdList
 //        cmdListView.setHasFixedSize(true)
 //        cmdListView.setItemViewCacheSize(100)
-        val makeListView = MakeListView(
-            binding,
-            this,
-//            fannelInfoMap
-        )
-        val fannelIndexListAdapter = makeListView.makeList(
-            requireContext()
-        )
-        makeListView.makeClickItemListener(
-            fannelIndexListAdapter
-        )
-        makeListView.onLongClickQrDo(
-            fannelIndexListAdapter
-        )
-        makeListView.onLongClickDo(
-            fannelIndexListAdapter
-        )
+//        val serchEditTextMaker = SerchEditTextMaker(
+//            binding,
+//            this,
+////            fannelInfoMap
+//        )
+//        val fannelIndexListAdapter = makeListView.makeList(
+//            requireContext()
+//        )
+//        makeListView.makeClickItemListener(
+//            fannelIndexListAdapter
+//        )
+//        makeListView.onLongClickQrDo(
+//            fannelIndexListAdapter
+//        )
+//        makeListView.onLongClickDo(
+//            fannelIndexListAdapter
+//        )
 //        makeListView.cmdListSwipeToRefresh()
 //        cmdListView.adapter = fannelIndexListAdapter
 //        cmdListView.layoutManager = PreLoadLayoutManager(
@@ -170,11 +169,16 @@ class CommandIndexFragment: Fragment() {
 //        cmdListView.layoutManager?.scrollToPosition(
 //            fannelIndexListAdapter.itemCount - 1
 //        )
-        makeListView.makeTextFilter(
-            fannelIndexListAdapter,
+        GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
+        GgleSerchSystemMaker.makeSearchEditTextOnlyCmdIndexFragment(
+            this,
+//            binding.cmdindexSearchButton,
+            binding.cmdSearchEditText
+//            fannelIndexListAdapter,
         )
 
-        val cmdindexInternetButton = binding.cmdindexInternetButton
+//        val cmdindexInternetButton = binding.cmdindexInternetButton
+        val keyboardHandleListener = context as? OnKeyboardHandleListenerForCmdIndex
         activity?.let {
             KeyboardVisibilityEvent.setEventListener(
                 it,
@@ -188,42 +192,45 @@ class CommandIndexFragment: Fragment() {
                     if(
                         terminalViewModel.onDialog
                     ) return@KeyboardVisibilityEventListener
-                    val linearLayoutParam =
-                        binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
-                    val cmdIndexFragmentWeight = linearLayoutParam.weight
-                    val enableInternetButton = (
-                            !isOpen
-                            || cmdIndexFragmentWeight != ReadLines.LONGTH
-                            )
-                    cmdindexInternetButton.isEnabled = enableInternetButton
-                    if(enableInternetButton){
-                        cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
-                    } else {
-                        cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
-                    }
-                    val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
-                    if(isLongth) {
-//                        KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
-//                                isOpen,
-//                                this,
-//                        )
-                        return@KeyboardVisibilityEventListener
-                    }
-                    KeyboardForCmdIndex.historyAndSearchHideShow(
-                        isOpen,
-                        this,
-                    )
-                    val listener = context as? OnKeyboardVisibleListener
-                    val isOpenKeyboard = if(
-                        isOpen
-                    ) onTermVisibleWhenKeyboard !=
-                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-                    else isOpen
-                    listener?.onKeyBoardVisibleChange(
-                        isOpenKeyboard,
-                        this.isVisible,
-                        this.WebSearchSwitch
-                    )
+                    keyboardHandleListener?.onKeyboardHandleForCmdIndex(isOpen)
+//                    val linearLayoutParam =
+//                        binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
+//                    val cmdIndexFragmentWeight = linearLayoutParam.weight
+//                    val enableInternetButton = (
+//                            !isOpen
+//                            || cmdIndexFragmentWeight != ReadLines.LONGTH
+//                            )
+//                    cmdindexInternetButton.isEnabled = enableInternetButton
+//                    if(enableInternetButton){
+//                        cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
+//                    } else {
+//                        cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
+//                    }
+//                    val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
+//                    if(isLongth) {
+////                        KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
+////                                isOpen,
+////                                this,
+////                        )
+//                        return@KeyboardVisibilityEventListener
+//                    }
+//                    KeyboardForCmdIndex.historyAndSearchHideShow(
+//                        isOpen,
+//                        this,
+//                        binding.cmdindexToolbarLinearLayout,
+//                        binding.cmdSearchEditText
+//                    )
+//                    val listener = context as? OnKeyboardVisibleListener
+//                    val isOpenKeyboard = if(
+//                        isOpen
+//                    ) onTermVisibleWhenKeyboard !=
+//                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+//                    else isOpen
+//                    listener?.onKeyBoardVisibleChange(
+//                        isOpenKeyboard,
+//                        this.isVisible,
+//                        this.WebSearchSwitch
+//                    )
 //                    if(
 //                        !isOpen
 //                        && binding.cmdListSwipeToRefresh.isVisible
@@ -240,21 +247,23 @@ class CommandIndexFragment: Fragment() {
 
 
         ExecSetToolbarButtonImage.setForCmdIndex(this)
-        val toolBarSettingButtonControl = ToolBarSettingButtonControl(
-            this,
-        )
-        toolBarSettingButtonControl.toolbarSettingButtonOnClick()
-        toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
+        SettingMenuForCmdIndex.launch(this)
+//        val toolBarSettingButtonControl = ToolBarSettingButtonControl(
+//            this,
+//        )
+//        toolBarSettingButtonControl.toolbarSettingButtonOnClick()
+//        toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
         val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
             this,
         )
         toolBarHistoryButtonControl.historyButtonClick()
 
-        val toolBarInternetButtonControl = ToolBarInternetButtonControl(
-            this,
-            fannelInfoMap
-        )
-        toolBarInternetButtonControl.interneButtontSetOnClickListener()
+//        val toolBarInternetButtonControl = ToolBarInternetButtonControl(
+//            this,
+//            fannelInfoMap
+//        )
+//        toolBarInternetButtonControl.interneButtontSetOnClickListener()
+        PinFannelHideShow.setShowListener(this)
         PreInstallFannel.install(this)
     }
 
@@ -390,5 +399,22 @@ class CommandIndexFragment: Fragment() {
         cmdList.adapter = null
         cmdList.recycledViewPool.clear()
         cmdList.removeAllViews()
+    }
+
+    interface OnZeroSizingListener {
+        fun onZeroSizing()
+    }
+
+    interface OnSearchButtonMakeListenerForCmdIndex {
+        fun onSearchButtonMakeForCmdIndex()
+    }
+
+
+    interface OnKeyboardHandleListenerForCmdIndex {
+        fun onKeyboardHandleForCmdIndex(isOpen: Boolean)
+    }
+
+    interface OnPinFannelShowListener {
+        fun onPinFannelShow()
     }
 }

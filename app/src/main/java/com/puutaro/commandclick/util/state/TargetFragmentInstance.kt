@@ -56,6 +56,25 @@ class TargetFragmentInstance {
         return null
     }
 
+    fun getCmdIndexFragmentFromFrag(
+        activity: FragmentActivity?,
+    ): CommandIndexFragment? {
+        if(
+            activity == null
+        ) return null
+        val cmdIndexFragment = getFromFragment<CommandIndexFragment>(
+            activity,
+            activity.getString(R.string.command_index_fragment)
+        )
+        if(
+            cmdIndexFragment != null
+            && cmdIndexFragment.isVisible
+        ) {
+            return cmdIndexFragment
+        }
+        return null
+    }
+
     fun getCurrentBottomFragment(
         activity: MainActivity,
         cmdVariableEditFragmentTag: String,

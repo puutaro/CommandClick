@@ -1,22 +1,19 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
+package com.puutaro.commandclick.proccess.setting_menu_for_cmdindex
 
 import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
-import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
-import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -25,10 +22,10 @@ object ManageSubMenuDialog {
     private var manageSubMenuDialog: Dialog? = null
 
     fun launch(
-        cmdIndexFragment: CommandIndexFragment,
+        fragment: Fragment,
 //        currentAppDirPath: String
     ){
-        val context = cmdIndexFragment.context
+        val context = fragment.context
             ?: return
 
         manageSubMenuDialog = Dialog(
@@ -38,7 +35,7 @@ object ManageSubMenuDialog {
             R.layout.submenu_dialog
         )
         setListView(
-            cmdIndexFragment,
+            fragment,
 //            currentAppDirPath,
         )
         setCancelListener()
@@ -68,10 +65,10 @@ object ManageSubMenuDialog {
     }
 
     private fun setListView(
-        cmdIndexFragment: CommandIndexFragment,
+        fragment: Fragment,
 //        currentAppDirPath: String,
     ) {
-        val context = cmdIndexFragment.context
+        val context = fragment.context
             ?: return
         val subMenuListView =
             manageSubMenuDialog?.findViewById<ListView>(
@@ -86,18 +83,18 @@ object ManageSubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            cmdIndexFragment,
+            fragment,
 //            currentAppDirPath,
             subMenuListView
         )
     }
 
     private fun subMenuItemClickListener(
-        cmdIndexFragment: CommandIndexFragment,
+        fragment: Fragment,
 //        currentAppDirPath: String,
         subMenuListView: ListView?
     ){
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
             manageSubMenuDialog?.dismiss()
@@ -111,18 +108,18 @@ object ManageSubMenuDialog {
             when(manageSubMenuEnums){
                 ManageSubMenuEnums.KILL -> {
                     AppProcessManager.killDialogForCmdIndex(
-                        cmdIndexFragment,
+                        fragment,
 //                        currentAppDirPath,
                         String(),
                     )
                 }
                 ManageSubMenuEnums.RESTART_UBUNTU -> {
                     UbuntuServiceManager.launch(
-                        cmdIndexFragment.activity
+                        fragment.activity
                     )
                 }
                 ManageSubMenuEnums.SELECT_MONITOR -> {
-                    SelectTermDialog.launch(cmdIndexFragment)
+                    SelectTermDialog.launch(fragment)
                 }
 //                ManageSubMenuEnums.ADD -> {
 //                    AddScriptHandler(
@@ -132,7 +129,7 @@ object ManageSubMenuDialog {
 //                }
                 ManageSubMenuEnums.LAUNCH_DEBUGGER -> {
                     JsDebugger.sendDebugNoti(
-                        cmdIndexFragment.context,
+                        fragment.context,
                         BroadCastIntentExtraForJsDebug.DebugGenre.JS_DEBUG.type,
                         BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level,
                     )

@@ -27,6 +27,7 @@ import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.PreInstallFannel
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
@@ -43,6 +44,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.map.FannelSettingMap
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -128,6 +130,7 @@ class FannelHistoryButtonEvent (
             is EditFragment -> {
                 fragment.fannelInfoMap
             }
+            is TerminalFragment -> fragment.fannelInfoMap
             else -> emptyMap()
         }
         val fannelManageListAdapter = FannelManageAdapter(
@@ -394,8 +397,13 @@ class FannelHistoryButtonEvent (
 
     private fun preferenceEdit(
     ){
+        val activity = fragment.activity
+        val targetFragmentInstance = TargetFragmentInstance()
+        val bottomFragment = targetFragmentInstance.getCmdIndexFragmentFromFrag(
+            activity,
+        )
         if(
-            fragment !is CommandIndexFragment
+            bottomFragment !is CommandIndexFragment
         ) return
         val preference = SystemFannel.preference
         if(

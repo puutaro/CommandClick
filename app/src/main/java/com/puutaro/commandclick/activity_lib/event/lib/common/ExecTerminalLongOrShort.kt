@@ -11,7 +11,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 
 
 object ExecTerminalLongOrShort {
-    fun <T: Fragment>   open(
+    fun <T: Fragment>  open(
         fragmentTag: String,
         supportFragmentManager: FragmentManager,
     ){

@@ -121,7 +121,8 @@ class FannelManageAdapter(
     ) {
         val fannelName = fannelNameList[position]
         CoroutineScope(Dispatchers.IO).launch {
-            holder.fannelNameTextView.revOutline(true)
+            holder.fannelNameTextView.setStrokeColor(R.color.fill_gray)
+            holder.fannelNameTextView.setFillColor(R.color.white)
             val settingMap = withContext(Dispatchers.IO) {
                 fannelSettingInfoMap.get(
                    fannelName

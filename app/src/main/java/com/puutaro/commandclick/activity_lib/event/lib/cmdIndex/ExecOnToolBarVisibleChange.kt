@@ -42,18 +42,19 @@ object ExecOnToolBarVisibleChange {
     ){
         val layoutParam = when(toolBarVisible) {
             true -> {
-                val dpHeight =
-                    ScreenSizeCalculator.toDp(
-                        activity,
-                        activity.resources.getDimension(TerminalSizingForCmdIndex.VISIBLE.height)
-                    )
+//                val dpHeight =
+//                    ScreenSizeCalculator.toDp(
+//                        activity,
+//                        activity.resources.getDimension(TerminalSizingForCmdIndex.VISIBLE.height)
+//                    )
 
                 LinearLayoutCompat.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ScreenSizeCalculator.toPx(
-                        activity,
-                        dpHeight
-                    )
+                    TerminalSizingForCmdIndex.VISIBLE.height,
+//                    ScreenSizeCalculator.toPx(
+//                        activity,
+//                        dpHeight
+//                    )
                 )
             }
 //            TerminalSizingForCmdIndex.VISIBLE.weight
@@ -87,6 +88,6 @@ object ExecOnToolBarVisibleChange {
 private enum class TerminalSizingForCmdIndex(
     val height: Int
 ) {
-    VISIBLE(R.dimen.toolbar_layout_height),
+    VISIBLE(ViewGroup.LayoutParams.WRAP_CONTENT),
     INVISIBLE(0)
 }

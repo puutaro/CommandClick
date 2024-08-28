@@ -48,9 +48,9 @@ object ExecSetTermSizeForIntent {
         ) return
         when(currentFragment){
             is CommandIndexFragment -> {
-                MonitorSizeManager.changeForCmdIndexFragment(
-                    currentFragment,
-                )
+//                MonitorSizeManager.changeForCmdIndexFragment(
+//                    currentFragment,
+//                )
             }
             is EditFragment -> {
                 val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit

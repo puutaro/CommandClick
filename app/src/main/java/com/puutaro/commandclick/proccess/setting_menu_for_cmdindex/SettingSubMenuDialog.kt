@@ -1,17 +1,16 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
+package com.puutaro.commandclick.proccess.setting_menu_for_cmdindex
 
 import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 //import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
@@ -20,9 +19,9 @@ object SettingSubMenuDialog {
     private var settingSubMenuDialog: Dialog? = null
 
     fun launch(
-        cmdIndexFragment: CommandIndexFragment
+        fragment: Fragment
     ){
-        val context = cmdIndexFragment.context
+        val context = fragment.context
             ?: return
 
         settingSubMenuDialog = Dialog(
@@ -32,7 +31,7 @@ object SettingSubMenuDialog {
             R.layout.submenu_dialog
         )
         setListView(
-            cmdIndexFragment,
+            fragment,
         )
         setCancelListener()
         settingSubMenuDialog?.window?.setLayout(
@@ -61,9 +60,9 @@ object SettingSubMenuDialog {
     }
 
     private fun setListView(
-        cmdIndexFragment: CommandIndexFragment,
+        fragment: Fragment,
     ) {
-        val context = cmdIndexFragment.context
+        val context = fragment.context
             ?: return
         val subMenuListView =
             settingSubMenuDialog?.findViewById<ListView>(
@@ -78,13 +77,13 @@ object SettingSubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         settingSubMenuItemClickListener(
-            cmdIndexFragment,
+            fragment,
             subMenuListView
         )
     }
 
     private fun settingSubMenuItemClickListener(
-        cmdIndexFragment: CommandIndexFragment,
+        fragment: Fragment,
         subMenuListView: ListView?
     ){
         subMenuListView?.setOnItemClickListener {
@@ -106,12 +105,17 @@ object SettingSubMenuDialog {
 //                    )
 //                }
                 SettingSubMenuEnums.SHORTCUT -> {
+                    val fannelInfoMap = when(fragment){
+                        is CommandIndexFragment -> fragment.fannelInfoMap
+                        is TerminalFragment -> fragment.fannelInfoMap
+                        else -> return@setOnItemClickListener
+                    }
                     val listener =
-                        cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                        fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
                         EditFragmentArgs(
-                            cmdIndexFragment.fannelInfoMap,
+                            fannelInfoMap,
                             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                         )
                     )

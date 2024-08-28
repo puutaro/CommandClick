@@ -54,6 +54,8 @@ import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.KeyboardForCmdIndex
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.SearchButtonClickListener
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
@@ -62,6 +64,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.service.FannelRepoDownloadService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -102,6 +105,9 @@ class MainActivity:
     TerminalFragment.OnRestartListenerForTerm,
     TerminalFragment.OnPinClickForTermListener,
     TerminalFragment.OnSetToolbarButtonImageListener,
+    TerminalFragment.OnSearchButtonMakeListenerForTerm,
+    TerminalFragment.OnKeyboardHandleListenerForTerm,
+    TerminalFragment.OnPinFannelHideListener,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -114,6 +120,10 @@ class MainActivity:
     CommandIndexFragment.OnGetPermissionListenerForCmdIndex,
     CommandIndexFragment.OnConnectWifiListenerForCmdIndex,
     CommandIndexFragment.OnCaptureActivityListenerForIndex,
+    CommandIndexFragment.OnZeroSizingListener,
+    CommandIndexFragment.OnSearchButtonMakeListenerForCmdIndex,
+    CommandIndexFragment.OnKeyboardHandleListenerForCmdIndex,
+    CommandIndexFragment.OnPinFannelShowListener,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -841,6 +851,55 @@ class MainActivity:
     override fun onSetToolbarButtonImage() {
         ExecSetToolbarButtonImage.set(
             this
+        )
+    }
+
+    override fun onZeroSizing() {
+    }
+
+    override fun onSearchButtonMakeForCmdIndex() {
+        SearchButtonClickListener.handle(
+            this,
+            false,
+        )
+    }
+
+    override fun onSearchButtonMakeForTerm() {
+        SearchButtonClickListener.handle(
+            this,
+            true,
+        )
+    }
+
+    override fun onKeyboardHandleForCmdIndex(
+        isOpen: Boolean
+    ) {
+        KeyboardForCmdIndex.historyAndSearchHideShow(
+            this,
+            isOpen,
+            false,
+        )
+    }
+
+    override fun onKeyboardHandleForTerm(isOpen: Boolean) {
+        KeyboardForCmdIndex.historyAndSearchHideShow(
+            this,
+            isOpen,
+            true,
+        )
+    }
+
+    override fun onPinFannelHide() {
+        PinFannelHideShow.execHideShow(
+            this,
+            true
+        )
+    }
+
+    override fun onPinFannelShow() {
+        PinFannelHideShow.execHideShow(
+            this,
+            false
         )
     }
  }

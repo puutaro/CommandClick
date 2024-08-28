@@ -181,9 +181,9 @@ private object BackstackManager {
 
         when(currentBottomFragment){
             is CommandIndexFragment -> {
-                MonitorSizeManager.changeForCmdIndexFragment(
-                    currentBottomFragment
-                )
+//                MonitorSizeManager.changeForCmdIndexFragment(
+//                    currentBottomFragment
+//                )
                 return
             }
             is EditFragment -> {

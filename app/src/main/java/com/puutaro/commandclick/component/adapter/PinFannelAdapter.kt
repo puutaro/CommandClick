@@ -78,10 +78,19 @@ class PinFannelAdapter(
                fannelName
             )
             withContext(Dispatchers.Main){
-                val isNotEditExecute = fannelNameSettingMap?.get(
+                val isEditExecute = fannelNameSettingMap?.get(
                     FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
-                ) != switchOn
-                holder.fannelPinAdapterNameView.revOutline(isNotEditExecute)
+                ) == switchOn
+                when(isEditExecute) {
+                    false -> {
+                        holder.fannelPinAdapterNameView.setStrokeColor(R.color.file_dark_green_color)
+                        holder.fannelPinAdapterNameView.setFillColor(R.color.white)
+                    }
+                    else -> {
+                        holder.fannelPinAdapterNameView.setStrokeColor(R.color.white)
+                        holder.fannelPinAdapterNameView.setFillColor(R.color.file_dark_green_color)
+                    }
+                }
                 holder.fannelPinAdapterNameView.outlineWidthSrc = 1
                 holder.fannelPinAdapterNameView.text = fannelName
             }

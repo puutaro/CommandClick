@@ -32,16 +32,16 @@ object ExecUrlLoadFragmentProccess {
         if(!cmdIndexFragment.isVisible) return
         val context = cmdIndexFragment.context
         val binding = cmdIndexFragment.binding
-        val cmdindexInternetButton = binding.cmdindexInternetButton
+//        val cmdindexInternetButton = binding.cmdindexInternetButton
 //        binding.cmdListSwipeToRefresh.isVisible = false
-        context?.let {
-            cmdindexInternetButton.setImageResource(
-                SearchSwichImage.WEB.image
-            )
-            cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
-            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color))
-            (it.getColor(R.color.white))
-        }
+//        context?.let {
+//            cmdindexInternetButton.setImageResource(
+//                SearchSwichImage.WEB.image
+//            )
+//            cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
+//            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color))
+//            (it.getColor(R.color.white))
+//        }
         val linearLayoutParam =
             cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
         if(linearLayoutParam.weight == ReadLines.LONGTH) {

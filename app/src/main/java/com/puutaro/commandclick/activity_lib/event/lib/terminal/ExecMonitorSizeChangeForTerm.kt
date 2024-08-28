@@ -55,9 +55,9 @@ object ExecMonitorSizeChangeForTerm {
         val cmdIndexFragment =
             targetFragmentInstance.getCmdIndexFragment(activity)
         if(cmdIndexFragment != null){
-            MonitorSizeManager.changeForCmdIndexFragment(
-                cmdIndexFragment,
-            )
+//            MonitorSizeManager.changeForCmdIndexFragment(
+//                cmdIndexFragment,
+//            )
             return
         }
         val editFragment = targetFragmentInstance.getCurrentEditFragmentFromActivity(

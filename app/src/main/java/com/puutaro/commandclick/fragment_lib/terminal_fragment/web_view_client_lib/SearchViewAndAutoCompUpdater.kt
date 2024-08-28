@@ -74,33 +74,33 @@ object SearchViewAndAutoCompUpdater {
             commandIndexFragment,
             searchViewText,
         )
-        if(
-            searchViewText.isEmpty()
-        ) return
+//        if(
+//            searchViewText.isEmpty()
+//        ) return
 
-        autoCompUpdater(
-            terminalFragment,
-            commandIndexFragment,
-//            currentAppDirPath,
-        )
+//        autoCompUpdater(
+//            terminalFragment,
+//            commandIndexFragment,
+////            currentAppDirPath,
+//        )
     }
 
-    private fun autoCompUpdater(
-        terminalFragment: TerminalFragment,
-        commandIndexFragment: CommandIndexFragment?,
-//        currentAppDirPath: String,
-    ){
-        if(
-            commandIndexFragment == null
-        ) return
-        if(
-            !commandIndexFragment.isVisible
-        ) return
-        val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
-        autoCompUpdateListner?.onAutoCompUpdate(
-//            currentAppDirPath,
-        )
-    }
+//    private fun autoCompUpdater(
+//        terminalFragment: TerminalFragment,
+//        commandIndexFragment: CommandIndexFragment?,
+////        currentAppDirPath: String,
+//    ){
+//        if(
+//            commandIndexFragment == null
+//        ) return
+//        if(
+//            !commandIndexFragment.isVisible
+//        ) return
+//        val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
+//        autoCompUpdateListner?.onAutoCompUpdate(
+////            currentAppDirPath,
+//        )
+//    }
 
     private fun updateSearchViewString(
         terminalFragment: TerminalFragment,

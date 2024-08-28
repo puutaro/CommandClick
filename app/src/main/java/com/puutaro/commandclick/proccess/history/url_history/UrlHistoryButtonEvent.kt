@@ -22,6 +22,7 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -321,28 +322,46 @@ class UrlHistoryButtonEvent(
                     return
                 }
 
-                if (
-                    fragmentTag == context?.getString(
-                        R.string.command_index_fragment
-                    )
-                ) {
-                    val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
-                    listener?.onLaunchUrlByWebView(
-                        selectedUrl,
-                    )
-                    exitDialog(urlHistoryListView)
-                    return
-                } else if (
-                    fragmentTag?.startsWith(
-                        FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
-                    ) == true
-                ) {
-                    val listener = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-                    listener?.onLaunchUrlByWebViewForEdit(
-                        selectedUrl,
-                    )
-                    exitDialog(urlHistoryListView)
-                    return
+                when (fragment) {
+                    is CommandIndexFragment -> {
+                        val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
+                        listener?.onLaunchUrlByWebView(
+                            selectedUrl,
+                        )
+                        exitDialog(urlHistoryListView)
+                        return
+                    }
+                    is EditFragment -> {
+                        if(
+                            fragmentTag?.startsWith(
+                                FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
+                            ) != true
+                        ) {
+                            exitDialog(urlHistoryListView)
+                            return
+                        }
+                        val listener =
+                            context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                        listener?.onLaunchUrlByWebViewForEdit(
+                            selectedUrl,
+                        )
+                        exitDialog(urlHistoryListView)
+                        return
+                    }
+                    is TerminalFragment -> {
+                        if(
+                            fragmentTag?.startsWith(
+                                context?.getString(R.string.index_terminal_fragment)
+                                    ?: String()
+                            ) != true
+                        ) {
+                            exitDialog(urlHistoryListView)
+                            return
+                        }
+                        fragment.binding.terminalWebView.loadUrl(selectedUrl)
+                        exitDialog(urlHistoryListView)
+                        return
+                    }
                 }
                 exitDialog(urlHistoryListView)
             }

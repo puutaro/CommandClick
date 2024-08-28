@@ -5,6 +5,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -37,8 +38,10 @@ object ExecSetToolbarButtonImage {
             cmdVariableEditFragmentTag
         ) ?: return
         when(bottomFragment) {
-            is CommandIndexFragment ->
+            is CommandIndexFragment -> {
                 setForCmdIndex(bottomFragment)
+                setForTerminalFragment(activity)
+            }
             is EditFragment ->
                 setForEditFragment(
                     bottomFragment,
@@ -67,7 +70,92 @@ object ExecSetToolbarButtonImage {
                     icon
                 )
             }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.BLACK_HISTORY.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.cmdindexUrlHistoryButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.SEARCH.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.cmdindexSearchButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.TOP.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.cmdindexShowPinButtonImage,
+                    icon
+                )
+            }
         }
+    }
+
+    private fun setForTerminalFragment(
+        activity: MainActivity
+    ){
+        val targetFragmentInstance = TargetFragmentInstance()
+        val terminalFragment =
+            targetFragmentInstance.getCurrentTerminalFragment(activity)
+                ?: return
+        val binding = terminalFragment.binding
+        CoroutineScope(Dispatchers.IO).launch {
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.HISTORY.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termHistoryButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.SETTING.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termSettingButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.BLACK_HISTORY.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termUrlHistoryButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.SEARCH.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termSearchButtonImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.DOWN.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termHidePinButtonImage,
+                    icon
+                )
+            }
+        }
+
     }
 
     fun setForEditFragment(
@@ -165,8 +253,8 @@ object ExecSetToolbarButtonImage {
                 iconMacro,
                 checksum
             )
-            imageButton.background =
-                 AppCompatResources.getDrawable(context, R.color.terminal_color)
+//            imageButton.background =
+//                 AppCompatResources.getDrawable(context, R.color.terminal_color)
             val requestBuilder: RequestBuilder<Drawable> =
                 Glide.with(context)
                     .asDrawable()
