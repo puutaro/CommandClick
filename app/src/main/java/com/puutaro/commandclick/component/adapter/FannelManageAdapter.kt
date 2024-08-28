@@ -19,6 +19,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
@@ -166,8 +167,7 @@ class FannelManageAdapter(
             }
             withContext(Dispatchers.Main){
                 if(
-                    fannelName == homeFannel
-                    || !isIndex
+                    !isIndex
                 ) {
                     holder.pinImageButtonView.isEnabled = false
                     holder.pinImageButtonView.imageTintList =
@@ -175,6 +175,17 @@ class FannelManageAdapter(
                     return@withContext
                 }
                 holder.pinImageButtonView.isEnabled = true
+                if(
+                    fannelName == homeFannel
+                ) {
+                    val pinColor = when(PinFannelHideShow.isHide()){
+                        true -> context?.getColorStateList(buttonOrdinalyColor)
+                        else -> context?.getColorStateList(pinExistColor)
+                    }
+                    holder.pinImageButtonView.imageTintList = pinColor
+                    return@withContext
+                }
+
                 if(
                     !pinFannelList.contains(fannelName)
                 ) {

@@ -220,7 +220,7 @@
                             android:id="@+id/term_hide_pin_button_image"
                             android:layout_width="@dimen/toolbar_image_width"
                             android:layout_height="@dimen/toolbar_image_height"
-                            android:src="@drawable/ic_top_allow"
+                            android:src="@drawable/ic_down_allow"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
                             android:layout_gravity="center"

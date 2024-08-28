@@ -46,7 +46,6 @@ object TerminalToolbarHandler {
         setUrlHistoryClickAction(terminalFragment)
         setSettingButtonClickAction(terminalFragment)
         CoroutineScope(Dispatchers.Main).launch {
-            ToastUtils.showShort("bbb")
             val toolbarListener = context as TerminalFragment.OnSetToolbarButtonImageListener
             toolbarListener.onSetToolbarButtonImage()
         }

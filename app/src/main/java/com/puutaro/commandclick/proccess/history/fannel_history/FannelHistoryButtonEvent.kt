@@ -34,6 +34,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lon
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
@@ -342,26 +343,73 @@ class FannelHistoryButtonEvent (
                     FactFannel.creatingToast()
                     return
                 }
-                val pinFannelList = PinFannelManager.get()
-                when(
-                    pinFannelList.contains(fannelName)
-                ){
-                    true -> {
-                        PinFannelManager.remove(fannelName)
-                        ToastUtils.showShort("Remove ok: ${fannelName}")
-                        holder.pinImageButtonView.imageTintList =
-                            context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
-                    }
-                    else -> {
-                        PinFannelManager.add(fannelName)
-                        ToastUtils.showShort("Add ok: ${fannelName}")
-                        holder.pinImageButtonView.imageTintList =
-                            context?.getColorStateList(FannelManageAdapter.pinExistColor)
-                    }
+                when(fannelName == SystemFannel.home){
+                    true -> pinFannelToolbarHideShow(
+                        holder.pinImageButtonView
+                    )
+                    else -> pinFannelRA(
+                        fannelName,
+                        holder.pinImageButtonView
+                    )
                 }
-                PinFannelManager.updateBroadcast(context)
             }
         }
+    }
+
+    private fun pinFannelToolbarHideShow(
+        pinImageButtonView: AppCompatImageButton
+    ){
+        val targetFragmentInstance = TargetFragmentInstance()
+        val isHide = PinFannelHideShow.isHide()
+        when(isHide){
+            true -> {
+                val cmdIndexFragment =
+                    targetFragmentInstance.getCmdIndexFragmentFromFrag(fragment.activity)
+                        ?: return
+                val listener = cmdIndexFragment.context as? CommandIndexFragment.OnPinFannelShowListener
+                    ?: return
+                listener.onPinFannelShow()
+                ToastUtils.showShort("Show pin")
+                pinImageButtonView.imageTintList =
+                    context?.getColorStateList(FannelManageAdapter.pinExistColor)
+            }
+            else -> {
+                val terminalFragment =
+                    targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
+                        ?: return
+                val listener = terminalFragment.context as? TerminalFragment.OnPinFannelHideListener
+                    ?: return
+                listener.onPinFannelHide()
+                ToastUtils.showShort("Hide pin")
+                pinImageButtonView.imageTintList =
+                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
+
+            }
+        }
+    }
+
+    private fun pinFannelRA(
+        fannelName: String,
+        pinImageButtonView: AppCompatImageButton
+    ){
+        val pinFannelList = PinFannelManager.get()
+        when(
+            pinFannelList.contains(fannelName)
+        ){
+            true -> {
+                PinFannelManager.remove(fannelName)
+                ToastUtils.showShort("Remove ok: ${fannelName}")
+                pinImageButtonView.imageTintList =
+                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
+            }
+            else -> {
+                PinFannelManager.add(fannelName)
+                ToastUtils.showShort("Add ok: ${fannelName}")
+                pinImageButtonView.imageTintList =
+                    context?.getColorStateList(FannelManageAdapter.pinExistColor)
+            }
+        }
+        PinFannelManager.updateBroadcast(context)
     }
 
     private fun setFannelManageListViewOnEditItemClickListener(

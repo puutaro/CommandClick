@@ -12,9 +12,9 @@ import java.io.File
 object PinFannelManager {
 
     private const val pinFannelTsvName = "pinFannel.tsv"
-    val pinFannelTsvPath = "${UsePath.cmdclickFannelSystemDirPath}/${pinFannelTsvName}"
+    private val pinFannelTsvPath = "${UsePath.cmdclickFannelSystemDirPath}/${pinFannelTsvName}"
 
-    val firstPinFannelList = listOf(
+    private val firstPinFannelList = listOf(
         SystemFannel.textToSpeech,
         SystemFannel.cmdBookmaker,
     )

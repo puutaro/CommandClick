@@ -40,7 +40,6 @@ object SettingMenuForCmdIndex {
              is TerminalFragment -> fragment.binding.termSettingButton
              else -> return
         }
-        ToastUtils.showShort("aaa")
         toolbarSettingButtonOnClick(
             fragment,
             buttonLinearView
