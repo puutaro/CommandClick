@@ -42,8 +42,8 @@ object SearchButtonClickListener {
                 terminalFragment.binding.terminalWebView.url?.startsWith(
                     WebUrlVariables.queryUrlBase
                 ) == true
+            searchEditText.isVisible = !isGgleSearchUrl
             if (!isGgleSearchUrl) {
-                searchEditText.isVisible = true
                 searchEditText.requestFocus()
 //                searchEditText.isVisible = false
                 Keyboard.showKeyboardForCmdIndexFromActivity(

@@ -1,15 +1,11 @@
 package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
-import ch.qos.logback.core.util.Loader.getResources
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 
@@ -77,9 +73,14 @@ object ExecOnToolBarVisibleChange {
         val terminalFragment =
             TargetFragmentInstance().getCurrentTerminalFragment(activity)
                 ?: return
+        val isShow = !PinFannelHideShow.isHide()
+        val binding = terminalFragment.binding
         val fannelPinRecyclerView =
-            terminalFragment.binding.fannelPinRecyclerView
-        fannelPinRecyclerView.isVisible = toolBarVisible
+            binding.fannelPinRecyclerView
+        val termBottomLinear =
+            binding.termBottomLinear
+        fannelPinRecyclerView.isVisible = toolBarVisible && isShow
+        termBottomLinear.isVisible = toolBarVisible && isShow
     }
 }
 
