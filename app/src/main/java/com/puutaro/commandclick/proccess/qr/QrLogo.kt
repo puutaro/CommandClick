@@ -8,6 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.fragment.app.Fragment
 import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
@@ -28,6 +31,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,7 +62,7 @@ class QrLogo(
         }
     }
 
-    fun setTitleQrLogo(
+    fun setTitleFannelLogo(
         titleImageView: AppCompatImageView?,
 //        currentAppDirPath: String,
         selectedScriptName: String,
@@ -68,9 +72,17 @@ class QrLogo(
         if(
             titleImageView == null
         ) return
-        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
-        val qrLogoPath = "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
-        if(!File(qrLogoPath).isFile) return
+//        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
+        val logoPngPath = listOf(
+            UsePath.fannelLogoPngPath,
+        ).joinToString("/").let {
+            ScriptPreWordReplacer.replace(
+                it,
+                selectedScriptName
+            )
+        }
+//            "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+        if(!File(logoPngPath).isFile) return
 
         val isEditExecute = checkEditExecute(
 //            currentAppDirPath,
@@ -80,7 +92,18 @@ class QrLogo(
         titleImageView.background = if(isEditExecute) {
             AppCompatResources.getDrawable(context, R.color.terminal_color)
         } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
-        titleImageView.load(qrLogoPath)
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        Glide
+            .with(context)
+            .load(logoPngPath)
+            .skipMemoryCache( true )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail( requestBuilder )
+            .into(titleImageView)
+//        titleImageView.load(logoPngPath)
     }
 
     fun createAndSaveWithGitCloneOrFileCon(

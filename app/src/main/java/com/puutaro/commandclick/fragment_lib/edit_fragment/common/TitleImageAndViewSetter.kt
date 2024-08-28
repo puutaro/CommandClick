@@ -1,15 +1,21 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
+import android.graphics.drawable.Drawable
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
-import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import java.io.File
 
 object TitleImageAndViewSetter {
 
@@ -125,11 +131,64 @@ object TitleImageAndViewSetter {
         )
         val binding = editFragment.binding
         val editTitleImageView = binding.editTitleImage
-        QrLogo(editFragment).setTitleQrLogo(
+        FannelLogoSetter.setTitleFannelLogo(
+            editFragment,
             editTitleImageView,
-//            currentAppDirPath,
-            currentFannelName
+//        currentAppDirPath: String,
+            currentFannelName,
         )
+//        QrLogo(editFragment).setTitleFannelLogo(
+//            editTitleImageView,
+////            currentAppDirPath,
+//            currentFannelName
+//        )
+    }
+}
+
+private object FannelLogoSetter {
+    fun setTitleFannelLogo(
+        editFragment: EditFragment,
+        titleImageView: AppCompatImageView?,
+//        currentAppDirPath: String,
+        selectedScriptName: String,
+    ){
+        val context = editFragment.context
+            ?: return
+        if(
+            titleImageView == null
+        ) return
+//        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
+        val logoPngPath = listOf(
+            UsePath.fannelLogoPngPath,
+        ).joinToString("/").let {
+            ScriptPreWordReplacer.replace(
+                it,
+                selectedScriptName
+            )
+        }
+//            "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+        if(!File(logoPngPath).isFile) return
+
+//        val isEditExecute = checkEditExecute(
+////            currentAppDirPath,
+//            selectedScriptName,
+//        )
+        titleImageView.setPadding(2, 2,2,2)
+//        titleImageView.background = if(isEditExecute) {
+//            AppCompatResources.getDrawable(context, R.color.terminal_color)
+//        } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        Glide
+            .with(context)
+            .load(logoPngPath)
+            .skipMemoryCache( true )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail( requestBuilder )
+            .into(titleImageView)
+//        titleImageView.load(logoPngPath)
     }
 }
 
