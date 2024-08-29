@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -249,6 +250,7 @@ class TerminalFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
+        ExecBackstackHandle.initPrevBackTime()
         TerminalOnHandlerForEdit.handle(this)
         JsDebugger.stockLogSender(this)
         UrlCaptureWatcher.watch(this)

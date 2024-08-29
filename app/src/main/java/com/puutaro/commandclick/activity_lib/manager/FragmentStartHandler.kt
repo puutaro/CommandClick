@@ -28,7 +28,7 @@ object FragmentStartHandler {
             activity,
             R.layout.activity_main
         )
-        ExecBackstackHandle.initBeforeAfterUrlPair(activity)
+//        ExecBackstackHandle.initBeforeAfterUrlPair(activity)
         initFragmentManager.startFragment(
             activity.savedInstanceStateVal
         )

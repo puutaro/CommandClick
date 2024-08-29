@@ -93,15 +93,10 @@ object ConfigFromScriptFileSetter {
             editFragment
         )
 
-        editFragment.isToolbarBtnCustomInSettingSelects =  SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.ON_TOOLBAR_BTN_CUSTOM_IN_SETTING,
-            String()
-        ) == SettingVariableSelects.ToolbarBtnCustomInSettingSelects.ON.name
         val isSettingEdit = !editFragment.enableCmdEdit
                 || editFragment.passCmdVariableEdit ==
                 CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-                && !editFragment.isToolbarBtnCustomInSettingSelects
+
 
         setToolbarButtonConfigMapFromSettingValList(
             editFragment,
@@ -242,7 +237,6 @@ object ConfigFromScriptFileSetter {
         val isSettingEditForOnShortcut = !editFragment.enableCmdEdit
                 || editFragment.passCmdVariableEdit ==
                 CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-                && !editFragment.isToolbarBtnCustomInSettingSelects
         val isOnlyCmdEditForShortcut = editFragment.enableCmdEdit
                 && !editFragment.enableEditExecute
 

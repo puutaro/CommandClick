@@ -107,7 +107,6 @@ object CommandClickScriptVariable {
     val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
     val SETTING_IMPORT = "settingImport"
     val IMPORT_DISABLE_VAL_LIST = "importDisableValList"
-    val ON_TOOLBAR_BTN_CUSTOM_IN_SETTING = "onToolbarBtnCustomInSetting"
     val ON_ROOTFS_SDCARD_SAVE = "onRootfsSdCardSave"
     val UBUNTU_AUTO_SETUP = "ubuntuAutoSetup"
     val jsActionShiban = "js/action"

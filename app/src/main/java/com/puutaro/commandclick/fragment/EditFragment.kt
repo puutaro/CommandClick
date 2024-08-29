@@ -128,7 +128,6 @@ class EditFragment: Fragment() {
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
-    var isToolbarBtnCustomInSettingSelects = false
     var disableKeyboardFragmentChange = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
     var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
