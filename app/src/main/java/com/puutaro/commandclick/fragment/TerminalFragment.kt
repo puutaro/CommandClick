@@ -205,7 +205,10 @@ class TerminalFragment: Fragment() {
                         !this.isVisible
                     ) return@KeyboardVisibilityEventListener
                     if(
-                        terminalViewModel.onDialog
+                        view.height == 0
+                    ) return@KeyboardVisibilityEventListener
+                    if(
+                        !view.hasWindowFocus()
                     ) return@KeyboardVisibilityEventListener
                     keyboardHandleListener?.onKeyboardHandleForTerm(isOpen)
                 })

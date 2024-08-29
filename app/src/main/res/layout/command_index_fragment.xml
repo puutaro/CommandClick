@@ -52,23 +52,43 @@
                 layout="@layout/page_search"
                 android:id="@+id/page_search"
                 />
-            <AutoCompleteTextView
-                android:id="@+id/cmd_search_edit_text"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/cmdindex_search_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="search"
-                android:text=""
-                android:textColorHighlight ="@color/edit_text_selected_color"
-                android:textCursorDrawable="@null"
-                android:autofillHints=""
-                android:selectAllOnFocus="true"
-                android:layout_gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:maxLines="1"
-                android:visibility="gone"
-                android:background="@color/white"
-                android:inputType="text" />
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:weightSum="1"
+                android:visibility="gone">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/cmdindex_web_search_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/internet"
+                    android:backgroundTint="@color/white"
+                    app:tint="@color/file_dark_green_color"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_gravity="center" />
+                <AutoCompleteTextView
+                    android:id="@+id/cmd_search_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="search"
+                    android:text=""
+                    android:textColorHighlight ="@color/edit_text_selected_color"
+                    android:textCursorDrawable="@null"
+                    android:autofillHints=""
+                    android:selectAllOnFocus="true"
+                    android:layout_gravity="center"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="15dp"
+                    android:maxLines="1"
+                    android:background="@color/white"
+                    android:inputType="text"
+                    android:layout_weight="1"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 <!--            <android.widget.Toolbar-->
 <!--                android:id="@+id/cmdclick_tool_bar"-->
 <!--                android:layout_width="match_parent"-->

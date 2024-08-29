@@ -1,11 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter
 
 import android.widget.AutoCompleteTextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.Keyboard
@@ -27,6 +25,7 @@ object SearchButtonClickListener {
             activity
         ) ?: return
         val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
+        val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
         val searchLinearButton = when(isFromTerminal){
             true -> targetFragmentInstance
                 .getCurrentTerminalFragment(activity)
@@ -42,17 +41,16 @@ object SearchButtonClickListener {
                 terminalFragment.binding.terminalWebView.url?.startsWith(
                     WebUrlVariables.queryUrlBase
                 ) == true
-            searchEditText.isVisible = !isGgleSearchUrl
+            cmdindexSearchLinearLayout.isVisible = !isGgleSearchUrl
             if (!isGgleSearchUrl) {
                 searchEditText.requestFocus()
-//                searchEditText.isVisible = false
                 Keyboard.showKeyboardForCmdIndexFromActivity(
                     activity,
                     searchEditText,
                 )
                 return@setOnClickListener
             }
-            execSetFocus(
+            execSetGgleFocus(
                 terminalFragment,
                 searchEditText,
             )
@@ -73,20 +71,20 @@ object SearchButtonClickListener {
             if (!isGgleSearchUrl) {
                 return@setOnFocusChangeListener
             }
-            execSetFocus(
+            execSetGgleFocus(
                 terminalFragment,
                 searchEditText,
             )
         }
     }
 
-    private fun execSetFocus(
+    private fun execSetGgleFocus(
         fragment: Fragment,
         searchEditText: AutoCompleteTextView,
     ){
 //            cmdSearchEditText.isVisible = false
-        searchEditText.setSelection(0)
-        searchEditText.clearFocus()
+//        searchEditText.setSelection(0)
+//        searchEditText.clearFocus()
         val jsContents = AssetsFileManager.readFromAssets(
             fragment.context,
             AssetsFileManager.ggleSchBoxFocus

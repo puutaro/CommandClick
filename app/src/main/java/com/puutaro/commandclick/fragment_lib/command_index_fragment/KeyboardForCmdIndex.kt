@@ -19,7 +19,6 @@ object KeyboardForCmdIndex {
         isOpen: Boolean,
         isFromTerminal: Boolean,
     ){
-
         val targetFragmentInstance = TargetFragmentInstance()
         val cmdIndexFragment = targetFragmentInstance.getCmdIndexFragment(
             activity
@@ -53,15 +52,17 @@ object KeyboardForCmdIndex {
                 WebUrlVariables.queryUrlBase
             ) == true
         }
+        val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
         val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
         when(isGgleSearchUrl){
             true -> {
-                searchEditText.isVisible = false
+                cmdindexSearchLinearLayout.isVisible = false
                 searchEditText.setSelection(0)
                 searchEditText.clearFocus()
             }
             else ->
                 setSearchEditText(
+                    cmdindexSearchLinearLayout,
                     searchEditText,
                     isOpen,
                 )
@@ -141,10 +142,11 @@ object KeyboardForCmdIndex {
 //    }
 
     private fun setSearchEditText(
+        cmdindexSearchLinearLayout: LinearLayoutCompat,
         cmdSearchEditText: AutoCompleteTextView,
         isOpen: Boolean,
     ){
-        cmdSearchEditText.isVisible = isOpen
+        cmdindexSearchLinearLayout.isVisible = isOpen
         when(isOpen){
             true -> {
 //                cmdSearchEditText.setText(String())

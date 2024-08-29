@@ -97,6 +97,15 @@ object ExecSetToolbarButtonImage {
                     icon
                 )
             }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.INTERNET.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.cmdindexWebSearchImage,
+                    icon
+                )
+            }
         }
     }
 

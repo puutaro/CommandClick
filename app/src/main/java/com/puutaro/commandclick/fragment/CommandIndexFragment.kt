@@ -190,7 +190,7 @@ class CommandIndexFragment: Fragment() {
                         !this.isVisible
                     ) return@KeyboardVisibilityEventListener
                     if(
-                        terminalViewModel.onDialog
+                        !view.hasWindowFocus()
                     ) return@KeyboardVisibilityEventListener
                     keyboardHandleListener?.onKeyboardHandleForCmdIndex(isOpen)
 //                    val linearLayoutParam =
