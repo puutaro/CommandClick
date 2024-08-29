@@ -7,6 +7,7 @@ import android.webkit.WebView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.Keyboard
 
 
 class JsKeyboard(
@@ -21,10 +22,14 @@ class JsKeyboard(
         val focusWebView = getFocusWebView()
         val isFocus = focusWebView.requestFocus()
         if (!isFocus) return
-        val imm =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE)
-                    as? InputMethodManager
-        imm?.showSoftInput(focusWebView,0)
+        Keyboard.showKeyboard(
+            activity,
+            focusWebView,
+        )
+//        val imm =
+//            activity?.getSystemService(Context.INPUT_METHOD_SERVICE)
+//                    as? InputMethodManager
+//        imm?.showSoftInput(focusWebView,0)
     }
 
     private fun getFocusWebView(): WebView {

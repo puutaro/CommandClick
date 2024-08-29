@@ -55,4 +55,14 @@ object Keyboard {
         ) as InputMethodManager
         imm.showSoftInput(editText, 0)
     }
+
+    fun showKeyboard(
+        activity: FragmentActivity?,
+        focusView: View?,
+    ){
+        val imm =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE)
+                    as? InputMethodManager
+        imm?.showSoftInput(focusView,0)
+    }
 }

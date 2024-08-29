@@ -1,7 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter
 
-import android.widget.AutoCompleteTextView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.url.WebUrlVariables
@@ -13,19 +11,14 @@ import com.puutaro.commandclick.util.state.TargetFragmentInstance
 object SearchButtonClickListener {
 
     fun handle (
-//        fragment: Fragment,
         activity: MainActivity,
         isFromTerminal: Boolean,
-//        searchLinearButton: LinearLayoutCompat,
-//        searchEditText: AutoCompleteTextView,
-//
         ) {
         val targetFragmentInstance = TargetFragmentInstance()
         val cmdIndexFragment = targetFragmentInstance.getCmdIndexFragment(
             activity
         ) ?: return
-        val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
-        val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
+//        val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
         val searchLinearButton = when(isFromTerminal){
             true -> targetFragmentInstance
                 .getCurrentTerminalFragment(activity)
@@ -41,22 +34,26 @@ object SearchButtonClickListener {
                 terminalFragment.binding.terminalWebView.url?.startsWith(
                     WebUrlVariables.queryUrlBase
                 ) == true
-            cmdindexSearchLinearLayout.isVisible = !isGgleSearchUrl
+//            cmdindexSearchLinearLayout.isVisible = !isGgleSearchUrl
             if (!isGgleSearchUrl) {
-                searchEditText.requestFocus()
-                Keyboard.showKeyboardForCmdIndexFromActivity(
+//                searchEditText.requestFocus()
+                val isFocus = terminalFragment.binding.terminalWebView.requestFocus()
+                Keyboard.showKeyboard(
                     activity,
-                    searchEditText,
+                    terminalFragment.binding.terminalWebView,
                 )
+//                Keyboard.showKeyboardForCmdIndexFromActivity(
+//                    activity,
+//                    searchEditText,
+//                )
                 return@setOnClickListener
             }
             execSetGgleFocus(
                 terminalFragment,
-                searchEditText,
+//                searchEditText,
             )
         }
-
-        searchEditText.setOnFocusChangeListener { v, hasFocus ->
+        cmdIndexFragment.binding.cmdSearchEditText.setOnFocusChangeListener { v, hasFocus ->
             if(
                 !hasFocus
             ) return@setOnFocusChangeListener
@@ -73,14 +70,14 @@ object SearchButtonClickListener {
             }
             execSetGgleFocus(
                 terminalFragment,
-                searchEditText,
+//                searchEditText,
             )
         }
     }
 
     private fun execSetGgleFocus(
         fragment: Fragment,
-        searchEditText: AutoCompleteTextView,
+//        searchEditText: AutoCompleteTextView,
     ){
 //            cmdSearchEditText.isVisible = false
 //        searchEditText.setSelection(0)
