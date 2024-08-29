@@ -30,10 +30,12 @@
                     android:layout_height="50dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+                    app:layout_constraintBottom_toTopOf="@+id/term_bottom_linear"
                     android:scrollbars="horizontal"
                     android:fadeScrollbars="true"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
                     />
 
 
@@ -42,19 +44,18 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0dp"
                     android:layout_height="5dp"
-                    app:layout_constraintTop_toBottomOf="@+id/fannel_pin_recycler_view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/term_bottom_linear"
                     android:layout_marginTop="0dp"
                     android:indeterminate="false"
                     />
-<!--                 app:layout_constraintTop_toBottomOf="@+id/terminal_web_view"-->
+<!--               app:layout_constraintTop_toBottomOf="@+id/fannel_pin_recycler_view"
+ app:layout_constraintTop_toBottomOf="@+id/terminal_web_view"-->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/term_bottom_linear"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/toolbar_layout_height"
-                    app:layout_constraintTop_toBottomOf="@+id/progressBar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -63,6 +64,7 @@
                     android:backgroundTint="@null"
                     android:weightSum="1"
                     >
+<!--                    app:layout_constraintTop_toBottomOf="@+id/progressBar"-->
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/term_history_button"
                         android:layout_width="0dp"
