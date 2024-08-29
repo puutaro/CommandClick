@@ -98,7 +98,7 @@ object ExecSetToolbarButtonImage {
                 )
             }
             cmdClickIconList.firstOrNull {
-                it.str == CmdClickIcons.INTERNET.str
+                it.str == CmdClickIcons.GOOGLE.str
             }?.let {
                     icon ->
                 setImageButton(

@@ -64,7 +64,7 @@
                     android:id="@+id/cmdindex_web_search_image"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/internet"
+                    android:src="@drawable/google"
                     android:backgroundTint="@color/white"
                     app:tint="@color/file_dark_green_color"
                     android:scaleType="fitCenter"

@@ -19,6 +19,7 @@ object ButtonAssetsImage {
     const val filePingPath = "${resButtonPngDirPath}/file.png"
     const val foldaPingPath = "${resButtonPngDirPath}/folda.png"
     const val forwardPingPath = "${resButtonPngDirPath}/forward.png"
+    const val googlePingPath = "${resButtonPngDirPath}/google.png"
     const val galleryPingPath = "${resButtonPngDirPath}/gallery.png"
     const val infoPingPath = "${resButtonPngDirPath}/info.png"
     const val jsPingPath = "${resButtonPngDirPath}/js.png"

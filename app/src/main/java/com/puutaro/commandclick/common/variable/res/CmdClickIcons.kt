@@ -21,6 +21,7 @@ enum class CmdClickIcons(
     FILE("file", R.drawable.icons8_file, ButtonAssetsImage.filePingPath),
     FOLDA("folda", R.drawable.icons8_folda, ButtonAssetsImage.foldaPingPath),
     FORWARD("forward", R.drawable.icon_forward, ButtonAssetsImage.forwardPingPath),
+    GOOGLE("google", R.drawable.google, ButtonAssetsImage.googlePingPath),
     HISTORY("history", R.drawable.icons8_history, ButtonAssetsImage.fannelManagerPath),
     GALLERY("gallery", R.drawable.icons8_image_gallery, ButtonAssetsImage.galleryPingPath),
     JS("js", R.drawable.js, ButtonAssetsImage.jsPingPath),
