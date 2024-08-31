@@ -3,7 +3,9 @@ package com.puutaro.commandclick.fragment
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
@@ -54,6 +56,7 @@ class CommandIndexFragment: Fragment() {
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
     var savedEditTextContents = String()
+//    var extraMapBitmapList: List<Bitmap?> = emptyList()
 //    var homeFannelHistoryNameList: List<String>? = null
 //    var bottomScriptUrlList = emptyList<String>()
 
@@ -265,6 +268,7 @@ class CommandIndexFragment: Fragment() {
 //        toolBarInternetButtonControl.interneButtontSetOnClickListener()
         PinFannelHideShow.setShowListener(this)
         PreInstallFannel.install(this)
+        ExtraMenuGifCreator.create(this)
     }
 
 
@@ -416,5 +420,9 @@ class CommandIndexFragment: Fragment() {
 
     interface OnPinFannelShowListener {
         fun onPinFannelShow()
+    }
+
+    interface OnExtraBkSetListener {
+        fun onExtraBkSet()
     }
 }

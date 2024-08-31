@@ -139,7 +139,7 @@
                             android:maxLines="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
-                            android:text="fnlMngr"
+                            android:text="fnlCntr"
                             android:layout_gravity="center"
                             android:gravity="center"
                             />
@@ -288,7 +288,7 @@
                             android:id="@+id/cmdindex_setting_button_image"
                             android:layout_width="@dimen/toolbar_image_width"
                             android:layout_height="@dimen/toolbar_image_height"
-                            android:src="@drawable/icons8_setting"
+                            android:src="@drawable/extra"
                             android:backgroundTint="@color/white"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
@@ -309,7 +309,7 @@
                             android:layout_marginEnd="4dp"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="stting"
+                            android:text="extra"
                             />
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>

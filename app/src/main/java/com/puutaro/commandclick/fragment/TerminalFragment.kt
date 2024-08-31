@@ -3,6 +3,8 @@ package com.puutaro.commandclick.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.*
+import android.graphics.Bitmap
+import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
@@ -120,6 +122,7 @@ class TerminalFragment: Fragment() {
     var alertDialogInstance: AlertDialog? = null
     var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
+//    var extraMapBitmapList: List<Bitmap?> = emptyList()
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             BroadcastHandlerForTerm.handle(

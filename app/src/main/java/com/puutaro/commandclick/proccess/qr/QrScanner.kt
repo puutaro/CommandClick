@@ -184,6 +184,11 @@ object QrScanner{
                     fragContext as? EditFragment.OnGetPermissionListenerForEdit
                 listener?.onGetPermissionForEdit(cameraPermissionStr)
             }
+            is TerminalFragment -> {
+                val listener =
+                    fragContext as? TerminalFragment.OnGetPermissionListenerForTerm
+                listener?.onGetPermission(cameraPermissionStr)
+            }
         }
     }
 

@@ -52,21 +52,26 @@ object KeyboardForCmdIndex {
                 WebUrlVariables.queryUrlBase
             ) == true
         }
-        val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
-        val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
-        when(isGgleSearchUrl){
-            true -> {
-                cmdindexSearchLinearLayout.isVisible = false
-                searchEditText.setSelection(0)
-                searchEditText.clearFocus()
-            }
-            else ->
-                setSearchEditText(
-                    cmdindexSearchLinearLayout,
-                    searchEditText,
-                    isOpen,
-                )
+        if(isGgleSearchUrl) {
+            val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
+            val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
+            cmdindexSearchLinearLayout.isVisible = false
+            searchEditText.setSelection(0)
+            searchEditText.clearFocus()
         }
+//        when(isGgleSearchUrl){
+//            true -> {
+//                cmdindexSearchLinearLayout.isVisible = false
+//                searchEditText.setSelection(0)
+//                searchEditText.clearFocus()
+//            }
+//            else ->
+//                setSearchEditText(
+//                    cmdindexSearchLinearLayout,
+//                    searchEditText,
+//                    isOpen,
+//                )
+//        }
 
 //        cmdclickToolBar.isVisible = !isOpen
 //        cmdSearchEditText.isVisible = isOpen

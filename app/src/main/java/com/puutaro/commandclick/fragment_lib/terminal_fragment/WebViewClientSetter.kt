@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath

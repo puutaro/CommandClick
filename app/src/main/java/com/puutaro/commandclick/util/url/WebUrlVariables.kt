@@ -7,8 +7,11 @@ import java.io.File
 
 object WebUrlVariables {
 
+    val googleSearchIndexPage = "https://www.google.com/webhp"
     val queryUrlBase = "https://www.google.co.id/search?"
     val queryUrl = "${queryUrlBase}q="
+    val blankEncodeQuery = "%20"
+    val autoFocusGgleSearchUrl = "${queryUrl}${blankEncodeQuery}"
     val escapeStr = "about:blank"
     val httpPrefix = "http://"
     val httpsPrefix = "https://"
@@ -27,6 +30,12 @@ object WebUrlVariables {
     val base64PngPrefix = "${base64Prefix}png;base64"
     val base64WebpPrefix = "${base64Prefix}webp;base64"
 
+
+    fun isGgleSearchIndexPage(url: String): Boolean {
+        return  url.startsWith(httpsPrefix)
+                && url.contains("google")
+                && !url.contains("search?q=")
+    }
     fun makeUrlHistoryFile(
         dirPath: String,
     ){

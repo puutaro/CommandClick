@@ -124,6 +124,7 @@ class MainActivity:
     CommandIndexFragment.OnSearchButtonMakeListenerForCmdIndex,
     CommandIndexFragment.OnKeyboardHandleListenerForCmdIndex,
     CommandIndexFragment.OnPinFannelShowListener,
+    CommandIndexFragment.OnExtraBkSetListener,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -901,5 +902,9 @@ class MainActivity:
             this,
             false
         )
+    }
+
+    override fun onExtraBkSet() {
+        ExecSetExtraDrawable.set(this)
     }
  }

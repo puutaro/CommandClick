@@ -4,15 +4,19 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ValueCallback
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.PopupMenu
@@ -48,11 +52,13 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
@@ -60,6 +66,7 @@ import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -70,6 +77,7 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.time.LocalDateTime
+import kotlin.system.exitProcess
 
 
 class WebViewJsDialog(
@@ -117,7 +125,10 @@ class WebViewJsDialog(
                         mdUrl
                     )
                 }
-                else -> webView.loadUrl(trimUrlCon)
+                else -> webView.loadUrl(
+//                    "https://www.google.co.id/search?q=%20"
+                    trimUrlCon
+                )
             }
         }
     }
@@ -127,7 +138,8 @@ class WebViewJsDialog(
         private var pageFinishJs = String()
 
         companion object {
-            private const val autoFocusGgleSearchUrl = "https://www.google.co.id/search?q=%20"
+            private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
+//                "https://www.google.co.id/search?q=%20"
         }
         private enum class UrlMacro(
             val macro: String,
@@ -154,7 +166,7 @@ class WebViewJsDialog(
             pageFinishJs = pageFinishedJsAssetsPath
         }
 
-        fun execPageFinishJs(
+        suspend fun execPageFinishJs(
             context: Context?,
             webView: WebView,
             url: String?
@@ -172,6 +184,42 @@ class WebViewJsDialog(
             if(
                 pageFinishJs.isEmpty()
             ) return
+            withContext(Dispatchers.Main) {
+//                for (i in 1..5) {
+//                    var urlTitleString = String()
+//                    webView.evaluateJavascript("(function() {  return document.title;})()",
+//                        ValueCallback<String?> { siteTitle ->
+//                            urlTitleString = siteTitle
+//                        })
+//                    if (
+//                        urlTitleString.lowercase().contains("google")
+//                    ) {
+//                        ToastUtils.showShort("break")
+//                        break
+//                    }
+//                    delay(50)
+//                }
+                delay(200)
+            }
+//            CoroutineScope(Dispatchers.Main).launch {
+//               withContext(Dispatchers.IO){
+//                   delay(1000)
+//               }
+//                ToastUtils.showShort("aaa")
+//                for(i in 1..2){
+//                    webView.dispatchKeyEvent(
+//                        KeyEvent(
+//                            KeyEvent.ACTION_DOWN,
+//                            KeyEvent.KEYCODE_TAB
+//                        )
+//                    )
+//                }
+//                Keyboard.showKeyboard(
+//                    context,
+//                    webView,
+//                )
+//            }
+//            return
             val jsContents = AssetsFileManager.readFromAssets(
                 context,
                 pageFinishJs
@@ -275,7 +323,8 @@ class WebViewJsDialog(
             }
             webViewClientSetter(
                 webView,
-                urlToFinishJs
+                urlToFinishJs,
+                webViewDialogExtraMapManager
             )
             WebChromeClientSetter.set(
                 terminalFragment,
@@ -321,6 +370,14 @@ class WebViewJsDialog(
         settings.allowFileAccess = true
         settings.builtInZoomControls = true
         settings.displayZoomControls = false
+
+
+//        settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        settings.cacheMode = WebSettings.LOAD_NO_CACHE;
+
+
+
         settings.textZoom = (terminalFragment.fontZoomPercent * 95 ) / 100
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         JsInterfaceAdder.add(
@@ -429,8 +486,7 @@ class WebViewJsDialog(
         val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
             context,
             jsContents
-        )
-            ?: return
+        ) ?: return
         webView.loadUrl(jsScriptUrl)
     }
 
@@ -554,7 +610,8 @@ class WebViewJsDialog(
 
     private fun webViewClientSetter(
         webView: WebView,
-        urlToFinishJs: UrlToFinishJs?
+        urlToFinishJs: UrlToFinishJs?,
+        webViewDialogExtraMapManager: WebViewDialogExtraMapManager
     ){
         var previousUrl: String? = null
         webView.webViewClient = object : WebViewClient() {
@@ -562,9 +619,10 @@ class WebViewJsDialog(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
+                val requestUrl = request?.url
                 if (
-                    request?.url?.scheme.equals("intent")
-                    || request?.url?.scheme.equals("android-app")
+                    requestUrl?.scheme.equals("intent")
+                    || requestUrl?.scheme.equals("android-app")
                 ) {
                     val intent = Intent.parseUri(request?.url.toString(), Intent.URI_INTENT_SCHEME)
                     val packageManager = activity?.packageManager
@@ -575,6 +633,14 @@ class WebViewJsDialog(
                         activity?.startActivity(intent)
                         return true
                     }
+                }
+                val isLoadLocal = webViewDialogExtraMapManager.loadAtLocal(
+                    context,
+                    requestUrl.toString()
+                )
+                if(isLoadLocal) {
+                    stopWebView(webView)
+                    return true
                 }
                 positionHashMap.put(
                     "${webView.url}",
@@ -602,6 +668,17 @@ class WebViewJsDialog(
                 return super.shouldInterceptRequest(view, request)
             }
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                CoroutineScope(Dispatchers.Main).launch {
+                    urlToFinishJs?.execPageFinishJs(
+                        context,
+                        webView,
+                        url,
+                    )
+                }
+            }
+
             override fun onPageFinished(
                 webview: WebView?,
                 url: String?
@@ -625,11 +702,11 @@ class WebViewJsDialog(
                 ) {
                     previousUrl = url
                 }
-                urlToFinishJs?.execPageFinishJs(
-                    context,
-                    webView,
-                    url,
-                )
+//                urlToFinishJs?.execPageFinishJs(
+//                    context,
+//                    webView,
+//                    url,
+//                )
                 super.onPageFinished(webview, url)
             }
         }
@@ -1075,7 +1152,7 @@ class WebViewJsDialog(
         )
     }
 
-    fun execGoBack(webView: WebView){
+    private fun execGoBack(webView: WebView){
         val isDismiss = PocketWebviewGoBack.backOrDismiss(webView)
         if(isDismiss) stopWebView(webView)
     }
@@ -1242,8 +1319,11 @@ private class WebViewDialogExtraMapManager(
         private enum class MainKeys(
             val key: String
         ) {
-            FOCUS("focus")
+            FOCUS("focus"),
+            LOAD_LOCAL("load_local"),
         }
+
+        private val loadLocalOn = "ON"
 
         object FocusManager {
 
@@ -1287,6 +1367,41 @@ private class WebViewDialogExtraMapManager(
             extraMapCon,
             keySeparator,
         ).toMap()
+    }
+
+    fun loadAtLocal(
+        context: Context?,
+        url: String?
+    ): Boolean {
+        val isNotLocalAtLocal = extraMap.get(
+            MainKeys.LOAD_LOCAL.key
+        ) != loadLocalOn
+        if(
+            isNotLocalAtLocal
+        ) return false
+        if(
+            url.isNullOrEmpty()
+        ) return false
+//        CoroutineScope(Dispatchers.Main).launch {
+//            ToastUtils.showShort(url)
+//        }
+        if(
+            WebUrlVariables.isGgleSearchIndexPage(url)
+        ) return false
+        val query = url.removePrefix(
+            WebUrlVariables.queryUrl
+        ).trim()
+        val isNotSearchUrl =
+            query.isEmpty() || query == WebUrlVariables.blankEncodeQuery
+        if(isNotSearchUrl) {
+            return false
+        }
+        BroadCastIntent.sendUrlCon(
+            context,
+            url
+        )
+        return true
+
     }
 
     private fun makeBottomButtonTagList(

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="extraMenuDialogStyle" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>

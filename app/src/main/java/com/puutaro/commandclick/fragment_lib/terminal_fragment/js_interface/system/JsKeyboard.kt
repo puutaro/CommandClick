@@ -8,6 +8,9 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.Keyboard
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class JsKeyboard(
@@ -22,10 +25,13 @@ class JsKeyboard(
         val focusWebView = getFocusWebView()
         val isFocus = focusWebView.requestFocus()
         if (!isFocus) return
-        Keyboard.showKeyboard(
-            activity,
-            focusWebView,
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            Keyboard.showKeyboard(
+                context,
+//                activity,
+                focusWebView,
+            )
+        }
 //        val imm =
 //            activity?.getSystemService(Context.INPUT_METHOD_SERVICE)
 //                    as? InputMethodManager

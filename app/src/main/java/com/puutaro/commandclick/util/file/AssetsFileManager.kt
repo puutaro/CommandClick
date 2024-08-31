@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.file
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import java.io.ByteArrayOutputStream
@@ -15,6 +16,10 @@ object AssetsFileManager {
     const val resPngDirPath = "res/png"
     const val textImagePingPath = "${resPngDirPath}/text_image.png"
     const val pdfImagePingPath = "${resPngDirPath}/pdf_image.png"
+    const val extraMenuDirPath = "${resPngDirPath}/extra_menu"
+    const val cHoleMaskPingPath = "${extraMenuDirPath}/c_hole_mask.png"
+    const val textViewDecoDirPath = "${resPngDirPath}/text_view_deco"
+    const val underLinePngPath = "${textViewDecoDirPath}/under_line.png"
     const val resGifDirPath = "res/gif"
     const val urlHistoryGifPath = "${resGifDirPath}/url_history.gif"
     const val internetGifPath = "${resGifDirPath}/internet.gif"
@@ -43,6 +48,13 @@ object AssetsFileManager {
         assetRelativePath: String,
     ): Uri {
         return Uri.parse("file:///android_asset/${assetRelativePath}")
+    }
+
+    fun makeDrawable(
+        context: Context,
+        assetsPath: String,
+    ): Drawable? {
+        return Drawable.createFromStream(context.assets.open(assetsPath), null)
     }
     fun concatAssetsPath(
         pathList: List<String>

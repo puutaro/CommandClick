@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import android.graphics.drawable.Drawable
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
@@ -80,7 +79,7 @@ object ExecSetToolbarButtonImage {
                 )
             }
             cmdClickIconList.firstOrNull {
-                it.str == CmdClickIcons.SEARCH.str
+                it.str == CmdClickIcons.GOOGLE.str
             }?.let {
                     icon ->
                 setImageButton(
@@ -128,7 +127,7 @@ object ExecSetToolbarButtonImage {
                 )
             }
             cmdClickIconList.firstOrNull {
-                it.str == CmdClickIcons.SETTING.str
+                it.str == CmdClickIcons.EXTRA.str
             }?.let {
                     icon ->
                 setImageButton(
@@ -146,7 +145,7 @@ object ExecSetToolbarButtonImage {
                 )
             }
             cmdClickIconList.firstOrNull {
-                it.str == CmdClickIcons.SEARCH.str
+                it.str == CmdClickIcons.GOOGLE.str
             }?.let {
                     icon ->
                 setImageButton(

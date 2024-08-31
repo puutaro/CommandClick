@@ -18,6 +18,7 @@ enum class CmdClickIcons(
     DEBUG("debug", R.drawable.icon_debug, ButtonAssetsImage.debugPingPath),
     EDIT("edit", R.drawable.icons8_edit, ButtonAssetsImage.editPingPath),
     EDIT_FRAME("edit_frame", R.drawable.icons8_edit_frame, ButtonAssetsImage.editPingPath),
+    EXTRA("extra", R.drawable.extra, ButtonAssetsImage.extraPingPath),
     FILE("file", R.drawable.icons8_file, ButtonAssetsImage.filePingPath),
     FOLDA("folda", R.drawable.icons8_folda, ButtonAssetsImage.foldaPingPath),
     FORWARD("forward", R.drawable.icon_forward, ButtonAssetsImage.forwardPingPath),

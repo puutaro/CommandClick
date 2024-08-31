@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -35,23 +36,57 @@ object SearchButtonClickListener {
                     WebUrlVariables.queryUrlBase
                 ) == true
 //            cmdindexSearchLinearLayout.isVisible = !isGgleSearchUrl
-            if (!isGgleSearchUrl) {
-//                searchEditText.requestFocus()
-                val isFocus = terminalFragment.binding.terminalWebView.requestFocus()
-                Keyboard.showKeyboard(
-                    activity,
-                    terminalFragment.binding.terminalWebView,
+            if (isGgleSearchUrl) {
+                execSetGgleFocus(
+                    terminalFragment,
+//        searchEditText: AutoCompleteTextView,
                 )
-//                Keyboard.showKeyboardForCmdIndexFromActivity(
-//                    activity,
-//                    searchEditText,
-//                )
                 return@setOnClickListener
             }
-            execSetGgleFocus(
-                terminalFragment,
-//                searchEditText,
-            )
+            val menuMapSeparator = '|'
+            val menuMapStrListCon = listOf(
+                "caption=search?iconName=google?clickMenuFilePath=HIGHLIGHT_SCH.js",
+            ).joinToString(menuMapSeparator.toString())
+            val extraMapCon = listOf(
+                "load_local=ON",
+            ).joinToString(menuMapSeparator.toString())
+            val jsConSrc = """
+            jsDialog.webView_S(
+                "GGLE_SEARCH",
+                "",
+                "${menuMapStrListCon}",
+                "",
+                "${extraMapCon}",
+            );
+        """.trimIndent()
+            val jsCon = JavaScriptLoadUrl.makeFromContents(
+                cmdIndexFragment.context,
+                jsConSrc.split("\n"),
+            ) ?: return@setOnClickListener
+            terminalFragment.binding.terminalWebView.loadUrl(jsCon)
+            return@setOnClickListener
+//            val isGgleSearchUrl =
+//                terminalFragment.binding.terminalWebView.url?.startsWith(
+//                    WebUrlVariables.queryUrlBase
+//                ) == true
+////            cmdindexSearchLinearLayout.isVisible = !isGgleSearchUrl
+//            if (!isGgleSearchUrl) {
+////                searchEditText.requestFocus()
+//                val isFocus = terminalFragment.binding.terminalWebView.requestFocus()
+//                Keyboard.showKeyboard(
+//                    activity,
+//                    terminalFragment.binding.terminalWebView,
+//                )
+////                Keyboard.showKeyboardForCmdIndexFromActivity(
+////                    activity,
+////                    searchEditText,
+////                )
+//                return@setOnClickListener
+//            }
+//            execSetGgleFocus(
+//                terminalFragment,
+////                searchEditText,
+//            )
         }
         cmdIndexFragment.binding.cmdSearchEditText.setOnFocusChangeListener { v, hasFocus ->
             if(

@@ -57,11 +57,12 @@ object Keyboard {
     }
 
     fun showKeyboard(
-        activity: FragmentActivity?,
+        context: Context?,
+//        activity: FragmentActivity?,
         focusView: View?,
     ){
         val imm =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE)
+            context?.getSystemService(Context.INPUT_METHOD_SERVICE)
                     as? InputMethodManager
         imm?.showSoftInput(focusView,0)
     }
