@@ -104,7 +104,7 @@
                             android:maxLines="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
-                            android:text="fnlMngr"
+                            android:text="fnlCntr"
                             android:layout_gravity="center"
                             android:gravity="center"
                             />

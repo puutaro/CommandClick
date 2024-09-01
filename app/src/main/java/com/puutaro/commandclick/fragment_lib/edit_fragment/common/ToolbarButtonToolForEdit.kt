@@ -15,7 +15,7 @@ object ToolbarButtonToolForEdit {
     )
 
     fun createInitButtonIconMap() = mutableMapOf(
-        ToolbarButtonBariantForEdit.HISTORY to Pair(R.drawable.icons8_history, "fnlMngr"),
+        ToolbarButtonBariantForEdit.HISTORY to Pair(R.drawable.icons8_history, "fnlCntr"),
         ToolbarButtonBariantForEdit.OK to Pair(R.drawable.icons8_check_ok, "ok"),
         ToolbarButtonBariantForEdit.EDIT to Pair(R.drawable.icons8_edit, "edit"),
         ToolbarButtonBariantForEdit.SETTING to Pair(R.drawable.icons8_setting, "setting"),
