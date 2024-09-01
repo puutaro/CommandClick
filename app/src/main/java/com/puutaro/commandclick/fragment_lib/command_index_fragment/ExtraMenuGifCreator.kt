@@ -6,33 +6,35 @@ import android.graphics.BitmapFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.blankj.utilcode.util.ToastUtils
-import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import kotlinx.coroutines.CoroutineScope
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
-import java.nio.ByteBuffer
 
 
-private const val imageWidth = 500
+//private const val imageWidth = 500
 private const val imageHeight = 1000
 
 object ExtraMenuGifCreator {
 
-    val extraMenuDirPath = File(UsePath.cmdclickDefaultAppDirPath, "extraMenuDir").absolutePath
-    val fg1GifDirPath = File(extraMenuDirPath, "fg1").absolutePath
+
+
+    private val extraButtonImageDirPath = File(UsePath.cmdclickFannelSystemDirPath, "extraButtonImage").absolutePath
+    private val extraMenuUrlDirPath = "${UrlFileSystems.cmdClickAssetsRepoPrefix}/master/extra_menu/wall"
+    private const val srcWallPngName = "srcWall.png"
+    private val srcWallUrlPngPath = "${extraMenuUrlDirPath}/${srcWallPngName}"
+    private val srcWallDirPath = File(extraButtonImageDirPath, "wall").absolutePath
+    private val srcWallSrcDirPath = File(srcWallDirPath, "src").absolutePath
+    val srcWallPartDirPath = File(srcWallDirPath, "part").absolutePath
+    private val srcWallPngFile = File(srcWallSrcDirPath, srcWallPngName)
     var extraMapBitmapList: List<Bitmap?> = emptyList()
-//    val fg2GifDirPath = File(extraMenuDirPath, "fg2").absolutePath
-//    val fg3GifDirPath = File(extraMenuDirPath, "fg3").absolutePath
-//    val bkGifDirPath = File(extraMenuDirPath, "bk").absolutePath
 
     fun create(
         cmdIndexFragment: CommandIndexFragment
@@ -40,149 +42,75 @@ object ExtraMenuGifCreator {
         val context = cmdIndexFragment.context
         cmdIndexFragment.lifecycleScope.launch {
             cmdIndexFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//            withContext(Dispatchers.IO) {
-//                BkCreator.create(context)
-//            }
+                val imageWidth = withContext(Dispatchers.IO) {
+                    val screenHeight =
+                        ScreenSizeCalculator.dpHeight(cmdIndexFragment)
+                    val screenWeight =
+                        ScreenSizeCalculator.dpWidth(cmdIndexFragment)
+                    (imageHeight * screenWeight) / screenHeight
+                }.toInt()
+                val srcWallByteArray = withContext(Dispatchers.IO){
+                    SrcWall.makeByteArray(context)
+                } ?: return@repeatOnLifecycle
                 withContext(Dispatchers.IO) {
                     extraMapBitmapList = FgCreator.create(
-                        context,
-                        "#043333",
-                        fg1GifDirPath
-                    )
-//                FgCreator.create(
-//                    context,
-//                    "#289c7f",
-//                    fg2GifDirPath
-//                )
-//                FgCreator.create(
-//                    context,
-//                    "#289c7f",
-//                    fg3GifDirPath
-//                )
-//                FgCreator.create(
-//                    context,
-//                    "#a4f5e1",
-//                    bkGifDirPath
-//                )
-                }
-                withContext(Dispatchers.Main) {
-                    ToastUtils.showShort(
-                        "ok"
+                        BitmapFactory.decodeByteArray(srcWallByteArray, 0, srcWallByteArray.size),
+                        srcWallPartDirPath,
+                        imageWidth
                     )
                 }
-
             }
         }
     }
 
-    private object BkCreator {
+    private object SrcWall {
 
-        fun create(
-            context: Context?
-        ){
-            (1..3).forEachIndexed {
-                    index, _ ->
-                val bitmap = execCreate(context)
-                    ?: return@forEachIndexed
-                val byteArray = BitmapTool.convertBitmapToByteArray(bitmap)
-                    ?: return@forEachIndexed
-//                FileSystems.writeFromByteArray(
-//                    File(bkGifDirPath, "${index}.png").absolutePath,
-//                    byteArray,
-//                )
-//                execCreate(context)
-            }
-//            val gifByteArray = BitmapTool.generateGIF(bitmapList)
-//                ?: return
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagebkgif.gif").absolutePath,
-//                gifByteArray
-//            )
-
-        }
-        fun execCreate(
-            context: Context?
-        ): Bitmap? {
-            val maskBitmap = createMask(
-                context,
-            ) ?: return null
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagebkfg.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(maskBitmap)
-//            )
-            val bkBitmap = createBk()
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagebkbk.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(bkBitmap)
-//            )
-            val bk = BitmapTool.ImageRemaker.mask(
-                bkBitmap,
-                maskBitmap,
-            )
-
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagebk.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(bk)
-//            )
-            return bk
-
-        }
-
-        private fun createBk(): Bitmap {
-            return BitmapTool.ImageRemaker.makeRect(
-                "#5ae0dc",
-                imageWidth,
-                imageHeight
-            )
-        }
-
-        private fun createMask(
+        suspend fun makeByteArray(
             context: Context?,
-        ): Bitmap? {
-            val baseColorRect = BitmapTool.ImageRemaker.makeRect(
-                "#000000",
-                imageWidth,
-                imageHeight
-            )
-            val bitmap = AssetsFileManager.assetsByteArray(
-                context,
-                AssetsFileManager.cHoleMaskPingPath
-            )?.let {
-                BitmapFactory.decodeByteArray(it, 0, it.size)
-            } ?: return null
-            val maskBitmapSrc = BitmapTool.ImageRemaker.cut(
-                bitmap,
-                imageWidth,
-                imageHeight,
-            ).let {
-                rndFlip(it)
+        ): ByteArray? {
+            val urlSrcWallLength = withContext(Dispatchers.IO){
+                CurlManager.getLength(
+                    context,
+                    srcWallUrlPngPath
+                )
             }
-            return BitmapTool.ImageRemaker.mask(
-                baseColorRect,
-                maskBitmapSrc
+            if(
+                srcWallPngFile.isFile
+                && srcWallPngFile.length().toInt() == urlSrcWallLength
+            ) {
+                return BitmapTool.convertFileToByteArray(srcWallPngFile.absolutePath)
+            }
+            val byteArray = CurlManager.get(
+                context,
+                srcWallUrlPngPath,
+                String(),
+                String(),
+                5_000,
+            ).let {
+                val isConnOk = CurlManager.isConnOk(it)
+                if(!isConnOk) return@let null
+                it
+            } ?: return null
+            FileSystems.writeFromByteArray(
+                srcWallPngFile.absolutePath,
+                byteArray
             )
-//            return BitmapTool.ImageRemaker.masking(
-//                baseColorRect,
-//                maskBitmapSrc,
-//            )
-//            return masking(
-//                maskBitmap,
-//                baseColorRect
-//            )
+            return byteArray
         }
     }
 
     private object FgCreator {
 
         fun create(
-            context: Context?,
-            color: String,
+            srcWallBitmap: Bitmap,
             outDirPath: String,
+            imageWidth: Int
         ): List<Bitmap?> {
-            val createRndList = (1..4)
+            val createRndList = (1..7)
             return (1..10).mapIndexed {
-                index, _ ->
-                val createPngFile = File(outDirPath, "${index}.png")
+                    index, _ ->
+                val partPngName = "${index}.png"
+                val createPngFile = File(outDirPath, partPngName)
                 val isCreate = when(createPngFile.isFile) {
                     false -> true
                     true -> createRndList.random() % 4 == 1
@@ -193,59 +121,38 @@ object ExtraMenuGifCreator {
                     createPngFile.absolutePath
                 )
                 val bitmap = execCreate(
-                    context,
-                    color,
-                ) ?: return@mapIndexed null
+                    srcWallBitmap,
+                    imageWidth,
+                )
                 val byteArray = BitmapTool.convertBitmapToByteArray(bitmap)
-                    ?: return@mapIndexed null
                 FileSystems.writeFromByteArray(
-                    File(outDirPath, "${index}.png").absolutePath,
+                    File(outDirPath, partPngName).absolutePath,
                     byteArray,
                 )
                 bitmap
             }
-//            val gifByteArray = BitmapTool.generateGIF(
-//                bitMapList = bitmapList,
-////                dispose = 2,
-//                transparentColor = 0x0000ffff
-//            ) ?: return
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imageFgif.gif").absolutePath,
-//                gifByteArray
-//            )
-
         }
         fun execCreate(
-            context: Context?,
-            color: String
-        ): Bitmap? {
+            srcWallBitmap: Bitmap,
+            imageWidth: Int
+        ): Bitmap {
             val maskBitmap = createMask(
-                context,
-            ) ?: return null
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagefgfg.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(maskBitmap)
-//            )
-            val bkBitmap = createBk(color)
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagefgbk.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(bkBitmap)
-//            )
+                srcWallBitmap,
+                imageWidth,
+            )
+            val bkBitmap = createBk(
+                imageWidth
+            )
             val fg = BitmapTool.ImageRemaker.mask(
                 bkBitmap,
                 maskBitmap,
             )
-
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "imagefg.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(fg)
-//            )
             return fg
 
         }
 
         private fun createBk(
-            color: String
+            imageWidth: Int
         ): Bitmap {
             return BitmapTool.ImageRemaker.makeRect(
                 "#0a6161",
@@ -255,47 +162,33 @@ object ExtraMenuGifCreator {
         }
 
         private fun createMask(
-            context: Context?,
-        ): Bitmap? {
-            val baseColorRect = BitmapTool.ImageRemaker.makeRect(
-                "#000000",
-                imageWidth,
-                imageHeight
-            )
-            val bitmap = AssetsFileManager.assetsByteArray(
-                context,
-                AssetsFileManager.cHoleMaskPingPath
-            )?.let {
-                BitmapFactory.decodeByteArray(it, 0, it.size)
-            } ?: return null
-            val maskBitmapSrc = BitmapTool.ImageRemaker.cut(
-                bitmap,
+            srcWallBitmap: Bitmap,
+            imageWidth: Int,
+        ): Bitmap {
+            val maskBitmapSrc = cutWall(
+                srcWallBitmap,
                 imageWidth,
                 imageHeight,
             ).let {
                 rndFlip(it)
             }
-            val maskSrcBitmap = BitmapTool.ImageRemaker.mask(
-                baseColorRect,
-                maskBitmapSrc,
-            )
-            FileSystems.writeFromByteArray(
-                File(UsePath.cmdclickDefaultAppDirPath, "imageFgMaskSrc.png").absolutePath,
-                BitmapTool.convertBitmapToByteArray(maskSrcBitmap)
-            )
             return maskBitmapSrc
-            val maskBitmap = BitmapTool.ImageRemaker.mask(
-                baseColorRect,
-                maskSrcBitmap,
-            )
-            FileSystems.writeFromByteArray(
-                File(UsePath.cmdclickDefaultAppDirPath, "imageFgMask.png").absolutePath,
-                BitmapTool.convertBitmapToByteArray(maskBitmap)
-            )
-            return maskBitmap
+        }
+
+        fun cutWall(
+            bitmap: Bitmap,
+            limitWidthPx: Int,
+            limitHeightPx: Int,
+        ): Bitmap {
+            // Set some constants
+            val srcWidth = bitmap.width
+            val srcHeight = bitmap.height
+            val startX = (0..(srcWidth - limitWidthPx)).random()
+            val startY = (0..(srcHeight - limitHeightPx)).random()
+
+            return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
         }
     }
-
 
     private fun rndFlip(bitmap: Bitmap): Bitmap {
         val rndInt = (1..4).random()
@@ -314,31 +207,6 @@ object ExtraMenuGifCreator {
             else -> bitmap
         }
 
-    }
-
-//    private fun createAnimatinGif(
-//        context: Context,
-//        bitmap1: Bitmap,
-//        bitmap2: Bitmap,
-//        bitmap3: Bitmap,
-//    ){
-//        val animation = AnimationDrawable()
-//        animation.addFrame(BitmapDrawable(context.resources, bitmap1), 10)
-//        animation.addFrame(BitmapDrawable(context.resources, bitmap2), 50)
-//        animation.addFrame(BitmapDrawable(context.resources, bitmap3), 30)
-//        animation.isOneShot = false
-//        GifDrawable()
-//        val imageAnim = findViewById(R.id.imageView) as ImageView
-//        imageAnim.setImageDrawable(animation)
-//    }
-
-    private fun gifDrawableToFile(gifDrawable: GifDrawable, gifFile: File) {
-        val byteBuffer = gifDrawable.buffer
-        val output = FileOutputStream(gifFile)
-        val bytes = ByteArray(byteBuffer.capacity())
-        (byteBuffer.duplicate().clear() as ByteBuffer).get(bytes)
-        output.write(bytes, 0, bytes.size)
-        output.close()
     }
 }
 

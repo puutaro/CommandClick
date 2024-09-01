@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ShadowConstraintLayout">
+        <attr name="shadowTopOffset" format="dimension"/>
+        <attr name="shadowBottomOffset" format="dimension"/>
+        <attr name="shadowStartOffset" format="dimension"/>
+        <attr name="shadowEndOffset" format="dimension"/>
+        <attr name="shadowStartY" format="dimension"/>
+        <attr name="shadowColor" format="color"/>
+        <attr name="shadowStrokeWidth" format="dimension"/>
+        <attr name="cornerRadius" format="dimension"/>
+        <attr name="blurRadius" format="dimension"/>
+        <attr name="enableShadow" format="boolean"/>
+        <attr name="enableBorder" format="boolean"/>
+        <attr name="borderHeight" format="dimension"/>
+    </declare-styleable>
+</resources>

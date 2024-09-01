@@ -20,6 +20,8 @@ object UrlFileSystems {
     val cmdclickRepoGitUserContentPrefix =
         "$gitUserContentPrefix/" +
                 "puutaro/commandclick-repository/master"
+    val cmdClickAssetsRepoName = "CommandClickAssets"
+    val cmdClickAssetsRepoPrefix = "${gitUserContentPrefix}/puutaro/${cmdClickAssetsRepoName}"
     private val gitUserContentManagePrefix =
         "$cmdclickRepoGitUserContentPrefix/manage"
 
@@ -28,6 +30,7 @@ object UrlFileSystems {
 
     val readmeSuffix = "master/${UsePath.fannelReadmeName}"
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+
 //        enum class FirstCreateFannels(
 //            val str: String,
 //        ) {

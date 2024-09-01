@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="#080D15"
+        android:endColor="#000e1724" android:angle="90"/> // adding alpha value 00
+</shape>

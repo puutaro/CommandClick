@@ -421,8 +421,4 @@ class CommandIndexFragment: Fragment() {
     interface OnPinFannelShowListener {
         fun onPinFannelShow()
     }
-
-    interface OnExtraBkSetListener {
-        fun onExtraBkSet()
-    }
 }

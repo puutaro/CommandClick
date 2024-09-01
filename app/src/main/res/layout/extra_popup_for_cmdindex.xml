@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.appcompat.widget.LinearLayoutCompat-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/extra_popup_cmdindex_liner_layout"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:weightSum="1"-->
+<!--    >-->
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/extra_popup_cmdindex_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/extra_popup_cmdindex_layout"
     android:background="@null"
     android:backgroundTint="@null"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
     >
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_fg3_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="h, 1:2.5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/google"
         app:tint="@color/file_dark_green_color"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:alpha="1"
@@ -31,14 +40,13 @@
         android:id="@+id/extra_popup_cmdindex_fg2_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="h, 1:2.5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/google"
         app:tint="@color/file_dark_green_color"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:alpha="1"
@@ -49,14 +57,13 @@
         android:id="@+id/extra_popup_cmdindex_fg1_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="h, 1:2.5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/google"
         app:tint="@color/file_dark_green_color"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:alpha="1"
@@ -68,14 +75,16 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_restart_ubuntu_image"
-        android:layout_width="@dimen/extra_button_image_one_side"
-        android:layout_height="@dimen/extra_button_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.22"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/extra_popup_cmdindex_debugger_image"
         app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_scan_qr_image"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintHorizontal_bias="0.4"
-        android:src="@drawable/md_nav_back"
+        android:src="@drawable/icons8_launch"
         app:tint="@color/cmdclick_text_black"
         android:clickable="true"
         android:focusable="true"
@@ -85,6 +94,8 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="10dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         />
 <!--     app:layout_constraintHorizontal_chainStyle="spread"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
@@ -108,8 +119,10 @@
         />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_debugger_image"
-        android:layout_width="@dimen/extra_button_image_one_side"
-        android:layout_height="@dimen/extra_button_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.22"
         app:layout_constraintStart_toEndOf="@+id/extra_popup_cmdindex_restart_ubuntu_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_shortcut_image"
@@ -119,14 +132,17 @@
         android:focusable="true"
         android:orientation="vertical"
         android:foreground="?selectableItemBackground"
-        android:src="@drawable/md_nav_back"
+        android:src="@drawable/icon_debug"
         app:tint="@color/cmdclick_text_black"
-        android:rotation="180"
         android:background="@null"
         android:backgroundTint="@null"
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="10dp"
+        android:shadowColor="@color/file_dark_green_color"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="2"
         />
     <com.puutaro.commandclick.custom_view.OutlineTextView
         android:id="@+id/extra_popup_cmdindex_debugger_caption"
@@ -150,15 +166,17 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_scan_qr_image"
-        android:layout_width="@dimen/extra_button_image_one_side"
-        android:layout_height="@dimen/extra_button_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.22"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/extra_popup_cmdindex_shortcut_image"
         app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_nav_back_iamge_view"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintHorizontal_bias="0.2"
-        android:src="@drawable/md_nav_back"
+        android:src="@drawable/icons_qr_code"
         app:tint="@color/cmdclick_text_black"
         android:clickable="true"
         android:focusable="true"
@@ -168,6 +186,10 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="10dp"
+        android:shadowColor="@color/file_dark_green_color"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="2"
         />
 <!--     app:layout_constraintTop_toBottomOf="@+id/extra_popup_cmdindex_restart_ubuntu_image"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
@@ -191,8 +213,10 @@
         />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_shortcut_image"
-        android:layout_width="@dimen/extra_button_image_one_side"
-        android:layout_height="@dimen/extra_button_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.22"
         app:layout_constraintStart_toEndOf="@+id/extra_popup_cmdindex_scan_qr_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_nav_reload_iamge_view"
@@ -202,14 +226,17 @@
         android:focusable="true"
         android:orientation="vertical"
         android:foreground="?selectableItemBackground"
-        android:src="@drawable/md_nav_back"
+        android:src="@drawable/icons8_shortcut"
         app:tint="@color/cmdclick_text_black"
-        android:rotation="180"
         android:background="@null"
         android:backgroundTint="@null"
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="10dp"
+        android:shadowColor="@color/file_dark_green_color"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="2"
         />
 <!--           app:layout_constraintTop_toBottomOf="@+id/extra_popup_cmdindex_debugger_image"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
@@ -236,8 +263,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_nav_back_iamge_view"
-        android:layout_width="@dimen/extra_toolbar_image_one_side"
-        android:layout_height="@dimen/extra_toolbar_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/extra_popup_cmdindex_nav_reload_iamge_view"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -252,6 +281,10 @@
         android:backgroundTint="@null"
         android:layout_gravity="center"
         android:gravity="center"
+        android:shadowColor="@color/file_dark_green_color"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="2"
         />
 <!--     -->
     <com.puutaro.commandclick.custom_view.OutlineTextView
@@ -278,8 +311,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_nav_reload_iamge_view"
-        android:layout_width="@dimen/extra_toolbar_image_one_side"
-        android:layout_height="@dimen/extra_toolbar_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.24"
         app:layout_constraintStart_toEndOf="@+id/extra_popup_cmdindex_nav_back_iamge_view"
         app:layout_constraintEnd_toStartOf="@+id/extra_popup_cmdindex_nav_forward_iamge_view"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -294,6 +329,10 @@
         android:backgroundTint="@null"
         android:layout_gravity="center"
         android:gravity="center"
+        android:shadowColor="@color/file_dark_green_color"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="2"
         />
 
         <com.puutaro.commandclick.custom_view.OutlineTextView
@@ -316,8 +355,10 @@
             />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_nav_forward_iamge_view"
-        android:layout_width="@dimen/extra_toolbar_image_one_side"
-        android:layout_height="@dimen/extra_toolbar_image_one_side"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.24"
         app:layout_constraintStart_toEndOf="@+id/extra_popup_cmdindex_nav_reload_iamge_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -332,6 +373,10 @@
         android:backgroundTint="@null"
         android:layout_gravity="center"
         android:gravity="center"
+        android:shadowColor="@color/file_dark_green_color"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="2"
         />
     <com.puutaro.commandclick.custom_view.OutlineTextView
         android:id="@+id/extra_popup_cmdindex_nav_forward_caption"
@@ -352,3 +397,4 @@
         android:gravity="center"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
+<!--</androidx.appcompat.widget.LinearLayoutCompat>-->

@@ -1,13 +1,14 @@
 package com.puutaro.commandclick.util.Intent
 
 import android.content.Context
+import com.itextpdf.text.pdf.PdfFileSpecification.url
 import com.puutaro.commandclick.util.LogSystems
 import java.io.ByteArrayOutputStream
-import java.io.EOFException
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.URL
+import java.net.URLConnection
 import java.util.Locale
 
 
@@ -68,6 +69,32 @@ object CurlManager {
             connection.disconnect()
         }
         return invalidResponse.toByteArray()
+    }
+
+    fun getLength(
+        context: Context?,
+        mainUrl: String,
+    ): Int? {
+        if(
+            mainUrl.isEmpty()
+        ) return null
+        var conn: HttpURLConnection? = null
+        var length: Int? = null
+        try {
+            val url = URL(mainUrl)
+            conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "HEAD"
+            conn.connect()
+            length = conn.contentLength
+        } catch (e: IOException) {
+            stdErrByLowLevelSysNoti(
+                context,
+                e
+            )
+        } finally {
+            conn?.disconnect()
+        }
+        return length
     }
 
     fun post(

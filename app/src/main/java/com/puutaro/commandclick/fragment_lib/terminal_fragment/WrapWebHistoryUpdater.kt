@@ -22,6 +22,8 @@ import kotlinx.coroutines.*
 
 
 object WrapWebHistoryUpdater {
+
+    private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
     fun update(
         terminalFragment: TerminalFragment,
         webView: WebView?,
@@ -121,7 +123,9 @@ object WrapWebHistoryUpdater {
             val webViewUrlLast = withContext(Dispatchers.Main) {
                 webView.url
             }
-            if(webViewUrlLast != webViewUrl) return@launch
+            if(
+                webViewUrlLast != webViewUrl
+            ) return@launch
             withContext(Dispatchers.Main) {
                 webView.evaluateJavascript("(function() {  return document.title;})()",
                     ValueCallback<String?> { siteTitle ->
@@ -198,6 +202,9 @@ object WrapWebHistoryUpdater {
         ) {
             queryUrlToText(webViewUrl)
         } else webViewUrl ?:return
+        if(
+            webViewUrl.contains(autoFocusGgleSearchUrl)
+        ) return
         val searchViewText = if(
             searchViewTextSource.startsWith(escapeStr)
         ) {

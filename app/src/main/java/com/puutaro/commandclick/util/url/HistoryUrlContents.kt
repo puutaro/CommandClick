@@ -15,6 +15,7 @@ object HistoryUrlContents {
             UsePath.cmdclickDefaultAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
         ).absolutePath
+        val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
         return when(macroStr) {
             SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name -> {
                 ReadText(
@@ -26,7 +27,7 @@ object HistoryUrlContents {
                     .filter {
                         EnableUrlPrefix.isHttpPrefix(
                             it.split("\t").lastOrNull()
-                        )
+                        ) && !it.contains(autoFocusGgleSearchUrl)
 //                        EnableUrlPrefix.isHttpOrFilePrefix(
 //                            it.split("\t").lastOrNull()
 //                        )

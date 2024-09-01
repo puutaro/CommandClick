@@ -155,13 +155,13 @@ object ButtonImageCreator {
         }
         val cornerDips = (2..8).random()
         val borderDips = (0..3).random()
-        val borderFrameBitmap = drawBorderFrame(
-            context,
-            original,
-            lightColorList.random(),
-            cornerDips,
-            borderDips,
-        )
+//        val borderFrameBitmap = drawBorderFrame(
+//            context,
+//            original,
+//            lightColorList.random(),
+//            cornerDips,
+//            borderDips,
+//        )
         val bkBitmapSrc = makeGradientBitmap2(
             original.width,
             original.height,
@@ -169,12 +169,12 @@ object ButtonImageCreator {
 //            .let {
 //            BitmapTool.convertBitmapToByteArray(it)
 //        }
-        val bkBitmap = overlayBitmap(
-            borderFrameBitmap,
-            bkBitmapSrc
-        ) ?: return null
+//        val bkBitmap = overlayBitmap(
+//            borderFrameBitmap,
+//            bkBitmapSrc
+//        ) ?: return null
          val overBitmap = overlayBitmap(
-             bkBitmap,
+             bkBitmapSrc,
 //             BitmapFactory.decodeByteArray(bkByteArray, 0, bkByteArray.size),
              outBitmap,
         ) ?: return null

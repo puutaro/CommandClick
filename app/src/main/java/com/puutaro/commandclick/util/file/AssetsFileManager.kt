@@ -17,7 +17,6 @@ object AssetsFileManager {
     const val textImagePingPath = "${resPngDirPath}/text_image.png"
     const val pdfImagePingPath = "${resPngDirPath}/pdf_image.png"
     const val extraMenuDirPath = "${resPngDirPath}/extra_menu"
-    const val cHoleMaskPingPath = "${extraMenuDirPath}/c_hole_mask.png"
     const val textViewDecoDirPath = "${resPngDirPath}/text_view_deco"
     const val underLinePngPath = "${textViewDecoDirPath}/under_line.png"
     const val resGifDirPath = "res/gif"

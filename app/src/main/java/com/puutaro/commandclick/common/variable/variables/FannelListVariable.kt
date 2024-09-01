@@ -75,11 +75,11 @@ object FannelListVariable {
                     String(),
                     String(),
                     2000
-                ).let {
-                    val isConnOk = CurlManager.isConnOk(it)
-                    if(!isConnOk) return@let String()
-                    String(it)
-                }
+                    ).let {
+                        val isConnOk = CurlManager.isConnOk(it)
+                        if(!isConnOk) return@let String()
+                        String(it)
+                    }
             }
             val descFirstLineSource = descCon.split('\n').take(firstDescriptionLineRange).filter {
                 val trimLine = it.trim()
