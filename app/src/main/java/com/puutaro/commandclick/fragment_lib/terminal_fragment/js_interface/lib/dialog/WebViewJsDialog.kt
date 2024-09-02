@@ -60,6 +60,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -81,14 +82,15 @@ import java.time.LocalDateTime
 class WebViewJsDialog(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
+    private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
     private val longpressMenuGroupId = 110000
     private val clickMenuGroupId = 120000
-    private val urlToFinishJs = UrlToFinishJs()
     private var webViewDialogExtraMapManager: WebViewDialogExtraMapManager? = null
     private val positionHashMap = hashMapOf<String, Int>()
     private var currentScriptPath = String()
     private var longPressMenuMapListStr = String()
-    var webViewDialogInstance: Dialog? = let {
+    private var noShowKeyBoardForPreloadAutoGgle = true
+    private var webViewDialogInstance: Dialog? = let {
         val terminalFragment = terminalFragmentRef.get()
         val context = terminalFragment?.context
         val webViewDialog = Dialog(context as Context)
@@ -100,7 +102,7 @@ class WebViewJsDialog(
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         webViewDialog.setOnCancelListener {
-            stopWebView(false)
+            stopWebView()
         }
         webViewDialog
     }
@@ -134,9 +136,6 @@ class WebViewJsDialog(
         webViewClientSetter(
             terminalFragment,
             pocketWebViewSrc
-//                webView,
-//            urlToFinishJs,
-//            webViewDialogExtraMapManager
         )
         WebChromeClientSetter.set(
             terminalFragment,
@@ -145,10 +144,8 @@ class WebViewJsDialog(
         )
         webViewLongClickListener(
             pocketWebViewSrc,
-//            webView,
-//            currentScriptPath,
-//            longPressMenuMapListStr
         )
+        pocketWebViewSrc?.loadUrl(autoFocusGgleSearchUrl)
         pocketWebViewSrc?.isVisible = false
         pocketWebViewSrc?.onPause()
         pocketWebViewSrc
@@ -161,65 +158,59 @@ class WebViewJsDialog(
         longPressMenuMapListStrSrc: String,
         extraMapCon: String,
     ) {
+        noShowKeyBoardForPreloadAutoGgle = false
         positionHashMap.clear()
-        val urlToFinishJsPair = urlToFinishJs.makePair(urlStrSrc)
-        urlToFinishJs.setFinishJs(urlToFinishJsPair.second)
-        val madeUrl = urlToFinishJsPair.first
-        val urlStr = if(
-            madeUrl.startsWith(WebUrlVariables.slashPrefix)
-            || madeUrl.startsWith(WebUrlVariables.filePrefix)
-            || madeUrl.startsWith(WebUrlVariables.httpPrefix)
-            || madeUrl.startsWith(WebUrlVariables.httpsPrefix)
-            || madeUrl.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
-        ) madeUrl
-        else "${WebUrlVariables.queryUrl}${madeUrl}"
+        PocketWebviewGoBack.initPrevBackTime()
+//        val urlToPageFinishGgleFocusJsJsPair = urlToPageFinishGgleFocusJs.makePair(urlStrSrc)
+//        urlToPageFinishGgleFocusJs.setFinishJs(urlToPageFinishGgleFocusJsJsPair.second)
+//        val madeUrl = urlToPageFinishGgleFocusJsJsPair.first
         currentScriptPath = currentScriptPathSrc
         longPressMenuMapListStr = longPressMenuMapListStrSrc
         CoroutineScope(Dispatchers.Main).launch{
             withContext(Dispatchers.Main){
                 startWebView()
             }
-//            terminalFragment.webViewDialogInstance?.dismiss()
-//            terminalFragment.webViewDialogInstance = null
-//            terminalFragment.webViewDialogInstance = Dialog(
-//                context as Context
-//            )
-//            terminalFragment.webViewDialogInstance?.setContentView(
-//                R.layout.dialog_webview_layout
-//            )
-//            val webView = terminalFragment.webViewDialogInstance?.findViewById<WebView>(
-//                R.id.webview_dialog_webview
-//            ) ?: return@launch
-//            webViewSetting(webView)
-//            val firstBottomLinearLayout =
-//                terminalFragment.webViewDialogInstance?.findViewById<LinearLayoutCompat>(
-//                R.id.first_bottom_linearlayout
-//            )
-//            toolbarHideShow(
-//                webView,
-//                firstBottomLinearLayout
-//            )
-//            ExecDownLoadManager.set(
-//                terminalFragment,
-//                webView
-//            )
             val terminalFragment = terminalFragmentRef.get()
-            loadUrlHandler(
-                terminalFragment,
-//                webView,
-                urlStr,
-            )
-//            val progressBar = terminalFragment.webViewDialogInstance?.findViewById<ProgressBar>(
-//                R.id.dialog_webview_progressBar
-//            )
-//            terminalFragment.webViewDialogInstance?.window?.setLayout(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT
-//            )
+            when (urlStrSrc == UrlToPageFinishGgleFocusJs.ggleSearchMacro) {
+                true ->
+                    CoroutineScope(Dispatchers.IO).launch autoFocus@ {
+                        withContext(Dispatchers.IO){
+                            delay(100)
+                        }
+                        UrlToPageFinishGgleFocusJs.loadJsGgleFocusJs(
+                            terminalFragment?.context,
+                            pocketWebView,
+                        )
+//                        val jsScriptUrl = withContext(Dispatchers.IO){
+//                            val jsContents = AssetsFileManager.readFromAssets(
+//                                terminalFragment?.context,
+//                                AssetsFileManager.ggleSchBoxFocus
+//                            ).split("\n")
+//                            JavaScriptLoadUrl.makeFromContents(
+//                                terminalFragment?.context,
+//                                jsContents
+//                            )
+//                        }  ?: return@autoFocus
+//                        withContext(Dispatchers.Main){
+//                            pocketWebView?.loadUrl(jsScriptUrl)
+//                        }
+                    }
+                else -> {
+                    val urlStr = if(
+                        urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
+                        || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
+                        || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
+                        || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
+                        || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
+                    ) urlStrSrc
+                    else "${WebUrlVariables.queryUrl}${urlStrSrc}"
+                    loadUrlHandler(
+                        terminalFragment,
+                        urlStr,
+                    )
+                }
 
-//            terminalFragment.webViewDialogInstance?.setOnCancelListener {
-//                stopWebView()
-//            }
+            }
             val menuMapStrList = QuoteTool.splitBySurroundedIgnore(
                 menuMapStrListStr,
                 '|'
@@ -238,17 +229,13 @@ class WebViewJsDialog(
             withContext(Dispatchers.IO) {
                 menuMapStrList.forEach {
                     val btnMenuMap = makeBtnOptionMap(
-//                    currentScriptPath,
                         it
                     )
                     withContext(Dispatchers.Main) {
                         webViewBottomBtnSetter(
                             terminalFragment,
-//                    webView,
                             btnMenuMap,
                             btnWeight,
-//                    currentScriptPath,
-//                    webViewDialogExtraMapManager,
                         )?.let {
                             firstBottomLinearLayout?.addView(it)
                         }
@@ -256,25 +243,10 @@ class WebViewJsDialog(
                 }
             }
             webViewDialogInstance?.show()
-//            webViewClientSetter(
-////                webView,
-//                urlToFinishJs,
-//                webViewDialogExtraMapManager
-//            )
-//            WebChromeClientSetter.set(
-//                terminalFragment,
-////                webView,
-//                progressBar as ProgressBar
-//            )
-//            webViewLongClickListener(
-//                webView,
-//                currentScriptPath,
-//                longPressMenuMapListStr
-//            )
         }
     }
 
-    fun loadUrlHandler(
+    private fun loadUrlHandler(
         terminalFragment: TerminalFragment?,
         urlCon: String,
     ){
@@ -317,84 +289,50 @@ class WebViewJsDialog(
         }
     }
 
-    private class UrlToFinishJs {
+    private object UrlToPageFinishGgleFocusJs {
 
-        private var pageFinishJs = String()
-
-        companion object {
-            private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
-//                "https://www.google.co.id/search?q=%20"
-        }
-        private enum class UrlMacro(
-            val macro: String,
-            val url: String,
-            val pageFinishedJsAssetsPath: String,
-        ) {
-            GGLE_SEARCH(
-                "GGLE_SEARCH",
-                autoFocusGgleSearchUrl,
-                String()
-            ),
-        }
-
-        fun makePair(
-            urlStrSrc: String
-        ): Pair<String, String> {
-            val macroEnum = UrlMacro.values().firstOrNull {
-                it.macro == urlStrSrc
-            } ?: return urlStrSrc to String()
-            return macroEnum.url to macroEnum.pageFinishedJsAssetsPath
-        }
-
-        fun setFinishJs(pageFinishedJsAssetsPath: String){
-            pageFinishJs = pageFinishedJsAssetsPath
-        }
+        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
+        val ggleSearchMacro = "GGLE_SEARCH"
 
         suspend fun execPageFinishJs(
             context: Context?,
             webView: WebView?,
             url: String?
         ){
-            when(true){
-                url.isNullOrEmpty() -> {
-                    pageFinishJs = String()
-                    return
-                }
-                (url == autoFocusGgleSearchUrl) -> {
-                    pageFinishJs = AssetsFileManager.ggleSchBoxFocus
-                }
-                else -> {}
-            }
             if(
-                pageFinishJs.isEmpty()
+                url.isNullOrEmpty()
             ) return
-            withContext(Dispatchers.Main) {
+            if(
+                url != autoFocusGgleSearchUrl
+            ) return
+            withContext(Dispatchers.IO) {
                 delay(200)
             }
-            val jsContents = AssetsFileManager.readFromAssets(
+            loadJsGgleFocusJs(
                 context,
-                pageFinishJs
-            ).split("\n")
-            setFinishJs(String())
-            val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
-                context,
-                jsContents
-            ) ?: return
-            webView?.loadUrl(jsScriptUrl)
+                webView,
+            )
+        }
+
+        suspend fun loadJsGgleFocusJs(
+            context: Context?,
+            webView: WebView?,
+        ){
+            val jsScriptUrl = withContext(Dispatchers.IO) {
+                val jsContents = AssetsFileManager.readFromAssets(
+                    context,
+                    AssetsFileManager.ggleSchBoxFocus,
+                ).split("\n")
+                JavaScriptLoadUrl.makeFromContents(
+                    context,
+                    jsContents
+                )
+            } ?: return
+            withContext(Dispatchers.Main) {
+                webView?.loadUrl(jsScriptUrl)
+            }
         }
     }
-
-//    fun dismiss(){
-//        CoroutineScope(Dispatchers.Main).launch {
-//            withContext(Dispatchers.IO) {
-//                delay(200)
-//            }
-//            withContext(Dispatchers.Main) {
-//                webViewDialogInstance.dismiss()
-////                webViewDialogInstance = null
-//            }
-//        }
-//    }
 
     private fun startWebView(){
         try {
@@ -406,24 +344,44 @@ class WebViewJsDialog(
         firstBottomLinearLayout?.isVisible = true
     }
     fun stopWebView(
-        isDestroy: Boolean
     ){
+        val isAutoFocusUrl =
+            pocketWebView?.url?.contains(WebUrlVariables.autoFocusGgleSearchUrl) == true
+        firstBottomLinearLayout?.removeAllViews()
         pocketWebView?.onPause()
         pocketWebView?.isVisible = false
-        pocketWebView?.webChromeClient = null;
-        pocketWebView?.clearHistory();
-        pocketWebView?.clearCache(true);
-        pocketWebView?.removeAllViews();
+        if(!isAutoFocusUrl) {
+            pocketWebView?.webChromeClient = null
+            pocketWebView?.clearHistory()
+            pocketWebView?.clearCache(true)
+            pocketWebView?.removeAllViews()
+            pocketWebView?.destroy()
+            positionHashMap.clear()
+            firstBottomLinearLayout?.isVisible = false
+            webviewDialogLayout?.removeAllViews()
+        }
+        webViewDialogInstance?.dismiss()
+        if(!isAutoFocusUrl) {
+            webViewDialogInstance = null
+            val terminalFragment = terminalFragmentRef.get()
+            noShowKeyBoardForPreloadAutoGgle = true
+            terminalFragment?.pocketWebViewManager = WebViewJsDialog(terminalFragmentRef)
+        }
+    }
+
+    fun destroyWebView(){
+        pocketWebView?.onPause()
+        pocketWebView?.isVisible = false
+        pocketWebView?.webChromeClient = null
+        pocketWebView?.clearHistory()
+        pocketWebView?.clearCache(true)
+        pocketWebView?.removeAllViews()
         pocketWebView?.destroy()
         positionHashMap.clear()
         firstBottomLinearLayout?.isVisible = false
         webviewDialogLayout?.removeAllViews()
         webViewDialogInstance?.dismiss()
         webViewDialogInstance = null
-        if(!isDestroy) {
-            val terminalFragment = terminalFragmentRef.get()
-            terminalFragment?.pocketWebViewManager = WebViewJsDialog(terminalFragmentRef)
-        }
     }
 
     private fun webViewSetting(
@@ -481,16 +439,13 @@ class WebViewJsDialog(
             WebViewMenuMapType.longPressMenuFilePath.name,
         )
         targetBtn?.setOnClickListener{
-//            val btnContext = it.context
             btnActionHandler(
                 terminalFragment,
                 targetBtn,
                 targetMenuMap,
                 clickMenuList,
-//                webView,
                 DismissType.click.name,
                 clickMenuGroupId,
-//                currentScriptPath
             )
             webViewDialogExtraMapManager?.trigger(
                 terminalFragment?.context,
@@ -499,16 +454,13 @@ class WebViewJsDialog(
             )
         }
         targetBtn?.setOnLongClickListener{
-//            val btnContext = it.context
             btnActionHandler(
                 terminalFragment,
                 targetBtn,
                 targetMenuMap,
                 longPressMenuList,
-//                webView,
                 DismissType.longpress.name,
                 longpressMenuGroupId,
-//                currentScriptPath
             )
             webViewDialogExtraMapManager?.trigger(
                 terminalFragment?.context,
@@ -525,21 +477,16 @@ class WebViewJsDialog(
         targetBtn: LinearLayoutCompat,
         btnOptionMap: Map<String, String>?,
         menuList: List<String>,
-//        webView: WebView,
         dismissType: String,
         menuGroupId: Int,
-//        currentScriptPath: String,
     ){
         launchMenu(
             terminalFragment,
             targetBtn,
             menuList,
-//            webView,
             menuGroupId,
-//            currentScriptPath,
         )
         dismissHandler(
-//            webView,
             btnOptionMap,
             dismissType,
         )
@@ -562,7 +509,6 @@ class WebViewJsDialog(
 
     private fun launchUrlAtLocal(
         terminalFragment: TerminalFragment?,
-//        webView: WebView,
     ){
         val currentUrl = pocketWebView?.url
             ?: return
@@ -576,7 +522,7 @@ class WebViewJsDialog(
                 0f,
             )
         }
-        stopWebView(false)
+        stopWebView()
         terminalFragment?.binding?.terminalWebView?.loadUrl(currentUrl)
     }
 
@@ -584,9 +530,7 @@ class WebViewJsDialog(
         terminalFragment: TerminalFragment?,
         webViewSearchBtn: LinearLayoutCompat,
         menuList: List<String>,
-//        webView: WebView,
         menuGroupId: Int,
-//        currentScriptPath: String,
     ){
         if (
             menuList.isEmpty()
@@ -596,7 +540,6 @@ class WebViewJsDialog(
             jsOrMacroHandler(
                 terminalFragment,
                 getJsPathFromMenuSrc(menuList.first()),
-//                webView,
             )
             return
         }
@@ -624,7 +567,6 @@ class WebViewJsDialog(
             terminalFragment,
             popupMenu,
             menuList,
-//            webView,
         )
         popupMenu.show()
     }
@@ -633,7 +575,6 @@ class WebViewJsDialog(
         terminalFragment: TerminalFragment?,
         popup: PopupMenu,
         menuList: List<String>,
-//        webView: WebView,
     ){
         popup.setOnMenuItemClickListener {
                 menuItem ->
@@ -645,7 +586,6 @@ class WebViewJsDialog(
             jsOrMacroHandler(
                 terminalFragment,
                 selectedJsPath,
-//                webView,
             )
             true
         }
@@ -713,7 +653,7 @@ class WebViewJsDialog(
                     requestUrl.toString()
                 ) == true
                 if(isLoadLocal) {
-                    stopWebView(false)
+                    stopWebView()
                     return true
                 }
                 positionHashMap.put(
@@ -746,7 +686,8 @@ class WebViewJsDialog(
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 CoroutineScope(Dispatchers.Main).launch {
-                    urlToFinishJs.execPageFinishJs(
+                    if(noShowKeyBoardForPreloadAutoGgle) return@launch
+                    UrlToPageFinishGgleFocusJs.execPageFinishJs(
                         context,
                         view,
                         url,
@@ -766,6 +707,10 @@ class WebViewJsDialog(
                         webview?.scrollY = it
                     }
                 }
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "history.txt").absolutePath,
+                    "${webview?.title}\t${url.toString()}",
+                )
                 WrapWebHistoryUpdater.updateForPocketWebview(
                     terminalFragment,
                     webview,
@@ -797,16 +742,12 @@ class WebViewJsDialog(
             !currentScriptPathObj.isFile
             && currentScriptPath.isNotEmpty()
         ) return null
-//        val currentAppDirPath =
-//            currentScriptPathObj.parent
-//                ?: String()
         val fannelName =
             currentScriptPathObj.name
                 ?: String()
 
         return ScriptPreWordReplacer.replace(
             centerMenuMapStr,
-//            currentAppDirPath,
             fannelName
         ).let {
             CmdClickMap.createMap(
@@ -818,9 +759,9 @@ class WebViewJsDialog(
 
     private fun webViewLongClickListener(
         pocketWebViewSrc: WebView?
-//        webView: WebView,
     ){
         pocketWebViewSrc?.setOnLongClickListener { view ->
+            firstBottomLinearLayout?.isVisible = true
             val lContext = view.context
             val hitTestResult = pocketWebView?.hitTestResult
             val title = pocketWebView?.title
@@ -929,7 +870,7 @@ class WebViewJsDialog(
                     delay(delayMiliTime)
                 }
                 withContext(Dispatchers.Main) {
-                    stopWebView(false)
+                    stopWebView()
                 }
             }
         }
@@ -939,15 +880,8 @@ class WebViewJsDialog(
         terminalFragment: TerminalFragment?,
         menuBtnMap: Map<String, String>?,
         buttonWeight: Float,
-//        webViewDialogExtraMapManager: WebViewDialogExtraMapManager,
     ): LinearLayoutCompat? {
         val context = terminalFragment?.context ?: return null
-//        val buttonLayout = makeBottomButton(
-//            context,
-//            menuBtnMap,
-//            buttonWeight,
-//            webViewDialogExtraMapManager,
-//        )
 
         val inflater = LayoutInflater.from(context)
         val linearLayoutCompat = inflater.inflate(
@@ -965,10 +899,6 @@ class WebViewJsDialog(
         )
         param.weight = buttonWeight
         linearLayoutCompat.layoutParams = param
-//        val tag = menuBtnMap
-//            ?.get(
-//                WebViewMenuMapType.tag.name
-//            ) ?: "exec"
         webViewDialogExtraMapManager?.setDefaultFocus(
             context,
             linearLayoutCompat,
@@ -1105,7 +1035,6 @@ class WebViewJsDialog(
     private fun jsOrMacroHandler(
         terminalFragment: TerminalFragment?,
         jsPath: String,
-//        webView: WebView,
     ){
         val macro = JsMacroType.values().firstOrNull {
             it.str == jsPath
@@ -1113,9 +1042,7 @@ class WebViewJsDialog(
         if(macro == null){
             execLoadJs(
                 terminalFragment,
-//                currentScriptPath,
                 jsPath,
-//                webView,
             )
             return
         }
@@ -1133,12 +1060,10 @@ class WebViewJsDialog(
             JsMacroType.LAUNCH_LOCAL_JS
             -> launchUrlAtLocal(
                 terminalFragment
-//                webView,
             )
             JsMacroType.HIGHLIGHT_COPY_JS
             -> assetsCopy(
                 terminalFragment.context
-//                webView
             )
             JsMacroType.OPEN_SRC_JS_ACTION_REPORT
             -> DebugReport.openSrcJsActionReport(terminalFragment)
@@ -1201,9 +1126,7 @@ class WebViewJsDialog(
 
     private fun execLoadJs(
         terminalFragment: TerminalFragment?,
-//        currentScriptPath: String,
         jsPath: String,
-//        webView: WebView,
     ){
         val context = terminalFragment?.context
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
@@ -1231,15 +1154,18 @@ class WebViewJsDialog(
     }
 
     private fun execGoBack(
-//        webView: WebView
     ){
         val isDismiss = PocketWebviewGoBack.backOrDismiss(pocketWebView)
-        if(isDismiss) stopWebView(false)
+        if(isDismiss) stopWebView()
     }
 
     private object PocketWebviewGoBack {
 
         private var prevBackTime = LocalDateTime.parse("2020-02-15T21:30:50")
+
+        fun initPrevBackTime(){
+            prevBackTime = LocalDateTime.parse("2020-02-15T21:30:50")
+        }
 
         fun backOrDismiss(
             webView: WebView?
@@ -1248,14 +1174,16 @@ class WebViewJsDialog(
                 webView?.canGoBack() == true
             ) {
                 webView.goBack()
+                initPrevBackTime()
                 return false
             }
-            val curBackTime = LocalDateTime.now()
 
-            val isNotDismiss = LocalDatetimeTool.getDurationSec(prevBackTime, curBackTime) > 0.7
+
+            val curBackTime = LocalDateTime.now()
+            val isNotDismiss = LocalDatetimeTool.getDurationSec(prevBackTime, curBackTime) > 5
             if(isNotDismiss){
-                ToastUtils.showShort("Dismiss by double tap")
                 prevBackTime = curBackTime
+                ToastUtils.showShort("Dismiss by next tap")
                 return false
             }
             return true
@@ -1273,7 +1201,6 @@ class WebViewJsDialog(
 
     private fun assetsCopy(
         context: Context?
-//        webView: WebView,
     ){
         val jsContents = AssetsFileManager.readFromAssets(
             context,
@@ -1289,7 +1216,6 @@ class WebViewJsDialog(
     private fun toolbarHideShow(
         terminalFragment: TerminalFragment?,
         pocketWebViewSrc: WebView?,
-//        firstBottomLinearLayout: LinearLayoutCompat?,
     ){
         if(
             pocketWebViewSrc == null
@@ -1466,9 +1392,6 @@ private class WebViewDialogExtraMapManager(
         if(
             url.isNullOrEmpty()
         ) return false
-//        CoroutineScope(Dispatchers.Main).launch {
-//            ToastUtils.showShort(url)
-//        }
         if(
             WebUrlVariables.isGgleSearchIndexPage(url)
         ) return false

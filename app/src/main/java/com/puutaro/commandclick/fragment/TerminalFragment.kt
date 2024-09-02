@@ -428,7 +428,7 @@ class TerminalFragment: Fragment() {
         this.onWebHistoryUpdaterJob?.cancel()
         onPocketWebHistoryUpdaterJob?.cancel()
         onRegisterPocketWebViewUrl?.cancel()
-        pocketWebViewManager?.stopWebView(true)
+        pocketWebViewManager?.destroyWebView()
         val terminalWebView = binding.terminalWebView
         terminalWebView.onPause()
         terminalWebView.webChromeClient = null

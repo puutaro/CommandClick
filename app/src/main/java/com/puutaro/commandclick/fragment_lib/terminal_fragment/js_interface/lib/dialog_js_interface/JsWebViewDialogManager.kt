@@ -15,7 +15,7 @@ class JsWebViewDialogManager(
     fun dismiss(){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
-        terminalFragment.pocketWebViewManager?.stopWebView(false)
+        terminalFragment.pocketWebViewManager?.stopWebView()
 //        terminalFragment.pocketWebViewManager.dismiss()
 //        terminalFragment.webViewDialogInstance = null
     }

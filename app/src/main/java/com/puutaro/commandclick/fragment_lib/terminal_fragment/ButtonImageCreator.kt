@@ -62,6 +62,14 @@ object ButtonImageCreator {
                 val capturePartPngDirPathList = withContext(Dispatchers.IO) {
                     makeCapturePartPngDirPathList()
                 }
+                val defaultUrlCapBitmap = withContext(Dispatchers.IO){
+                    AssetsFileManager.assetsByteArray(
+                        context,
+                        AssetsFileManager.firstUrlCapPngPath
+                    )?.let {
+                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                    }
+                }
                 withContext(Dispatchers.IO) {
                     val jobList = CmdClickIcons.values().map {
                         it.assetsPath
@@ -82,6 +90,7 @@ object ButtonImageCreator {
                                     context,
                                     assetsPath,
                                     capturePartPngDirPathList,
+                                    defaultUrlCapBitmap,
                                 ) ?: return@async
 
                                 FileSystems.writeFromByteArray(
@@ -112,6 +121,7 @@ object ButtonImageCreator {
         context: Context?,
         maskAssetsPath: String,
         captureDirList: List<String>,
+        defaultUrlCapBitmap: Bitmap?,
     ): ByteArray? {
         val originalImagePath = captureDirList.shuffled().firstOrNull()?.let {
                 dirPath ->
@@ -127,14 +137,7 @@ object ButtonImageCreator {
         }
         val original = withContext(Dispatchers.IO) {
             when(originalImagePath.isNullOrEmpty()){
-                true -> {
-                    AssetsFileManager.assetsByteArray(
-                        context,
-                        AssetsFileManager.firstUrlCapPngPath
-                    )?.let {
-                        BitmapFactory.decodeByteArray(it, 0, it.size)
-                    }
-                }
+                true -> defaultUrlCapBitmap
                 else -> BitmapTool.convertFileToBitmap(
                     originalImagePath
                 )

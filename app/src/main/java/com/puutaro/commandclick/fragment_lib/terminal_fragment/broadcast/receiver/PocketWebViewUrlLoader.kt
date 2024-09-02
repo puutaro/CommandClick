@@ -29,26 +29,35 @@ object PocketWebViewUrlLoader {
         ) return
         terminalFragment.onRegisterPocketWebViewUrl?.cancel()
         terminalFragment.onRegisterPocketWebViewUrl = CoroutineScope(Dispatchers.Main).launch {
-            when(
-                terminalFragment.pocketWebViewManager?.pocketWebView?.isVisible == true
-            ) {
-                false -> {
-                    val webSearcherName = SystemFannel.webSearcher
-                    val systemExecRepTextList = listOf(url)
+            val webSearcherName = SystemFannel.webSearcher
+            val systemExecRepTextList = listOf(url)
 
-                    ExecJsLoad.execExternalJs(
-                        terminalFragment,
+            ExecJsLoad.execExternalJs(
+                terminalFragment,
 //                        terminalFragment.currentAppDirPath,
-                        webSearcherName,
-                        systemExecRepTextList
-                    )
-                }
-                else ->
-                    terminalFragment.pocketWebViewManager?.loadUrlHandler(
-                        terminalFragment,
-                        url,
-                    )
-            }
+                webSearcherName,
+                systemExecRepTextList
+            )
+//            when(
+//                terminalFragment.pocketWebViewManager?.pocketWebView?.isVisible == true
+//            ) {
+//                false -> {
+//                    val webSearcherName = SystemFannel.webSearcher
+//                    val systemExecRepTextList = listOf(url)
+//
+//                    ExecJsLoad.execExternalJs(
+//                        terminalFragment,
+////                        terminalFragment.currentAppDirPath,
+//                        webSearcherName,
+//                        systemExecRepTextList
+//                    )
+//                }
+//                else ->
+//                    terminalFragment.pocketWebViewManager?.loadUrlHandler(
+//                        terminalFragment,
+//                        url,
+//                    )
+//            }
         }
     }
 }

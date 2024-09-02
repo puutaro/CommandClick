@@ -374,7 +374,7 @@ class JsDialog(
         */
         val terminalFragment = terminalFragmentRef.get()
             ?: return
-        terminalFragment.pocketWebViewManager?.stopWebView(false)
+        terminalFragment.pocketWebViewManager?.stopWebView()
     }
 
     @JavascriptInterface
