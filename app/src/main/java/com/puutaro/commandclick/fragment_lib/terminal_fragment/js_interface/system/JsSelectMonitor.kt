@@ -8,21 +8,21 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsSelectMonitor(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
-    val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     val subMenuPairListStr = SettingSubMenuEnums.values().map {
         "${it.itemName}\t${it.imageId}"
     }.reversed().joinToString("\n")
 
     @JavascriptInterface
     fun launch(){
-        val selectedMonitorFile = JsDialog(terminalFragment).listDialog(
+        val selectedMonitorFile = JsDialog(terminalFragmentRef).listDialog(
             String(),
             String(),
             subMenuPairListStr
@@ -42,6 +42,9 @@ class JsSelectMonitor(
                 selectedMonitorFile
             ).absolutePath
         )
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.currentMonitorFileName = selectedMonitorFile
         ToastUtils.showShort("set ${selectedMonitorFile}")
     }

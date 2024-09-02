@@ -14,16 +14,14 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
+import java.lang.ref.WeakReference
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class JsFileSystem(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-
     @JavascriptInterface
     fun readLocalFile(path: String): String {
         val fileObj = File(path)
@@ -85,6 +83,10 @@ class JsFileSystem(
             SettingVariableSelects.TerminalOutPutModeSelects.NO.name
             == outPutOption
         ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+
         val currentMonitorPath = File(
             UsePath.cmdclickMonitorDirPath,
             terminalViewModel.currentMonitorFileName
@@ -124,6 +126,12 @@ class JsFileSystem(
     fun errLog(
         con: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+
         LogSystems.stdErr(
             context,
             con
@@ -134,6 +142,10 @@ class JsFileSystem(
     fun errJsLog(
         con: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+            ?: return
         LogSystems.stdErr(
             context,
             con,
@@ -169,6 +181,9 @@ class JsFileSystem(
             SettingVariableSelects.TerminalOutPutModeSelects.NO.name
             == outPutOption
         ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val currentMonitorPath =
             File(
                 UsePath.cmdclickMonitorDirPath,
@@ -205,6 +220,9 @@ class JsFileSystem(
     fun outputSwitch(
         switch: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(switch == "on") {
             terminalViewModel.onDisplayUpdate = true
             return

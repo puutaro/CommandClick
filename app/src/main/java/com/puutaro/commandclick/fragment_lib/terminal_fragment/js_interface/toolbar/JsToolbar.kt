@@ -22,32 +22,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsToolbar(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
-    private val targetFragmentInstance = TargetFragmentInstance()
-    private val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
-        activity,
-//        currentAppDirPath,
-        currentFannelName,
-        currentFannelState
-    )
 
     @JavascriptInterface
     fun getListPath(): String? {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return null
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+            activity,
+//        currentAppDirPath,
+            currentFannelName,
+            currentFannelState
+        )
         if(
             editFragment == null
         ) return null
@@ -66,10 +64,19 @@ class JsToolbar(
         urlConSaveParentDirPathSrc: String,
         compSuffix: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
         val listIndexPath = getListPath()
             ?: return
-        val targetFragmentInstance = TargetFragmentInstance()
-        val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,
@@ -135,6 +142,18 @@ class JsToolbar(
         title: String,
         urlString: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+
         CoroutineScope(Dispatchers.Main).launch {
             val siteTitle = withContext(Dispatchers.IO) {
                 if(
@@ -151,8 +170,7 @@ class JsToolbar(
             }
             val insertLine = "${siteTitle}\t${urlString}"
             withContext(Dispatchers.Main) {
-                val targetFragmentInstance = TargetFragmentInstance()
-                val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+                val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
                     activity,
 //                    currentAppDirPath,
                     currentFannelName,
@@ -206,9 +224,22 @@ class JsToolbar(
         listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
         listIndexPath: String
     ): String? {
-        if(
-            editFragment == null
-        ) return null
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return null
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+            activity,
+//        currentAppDirPath,
+            currentFannelName,
+            currentFannelState
+        ) ?: return null
         return when(listIndexType){
 //            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
@@ -227,9 +258,22 @@ class JsToolbar(
 //        urlConSaveParentDirPath: String,
         fileName: String,
     ){
-        if(
-            editFragment == null
-        ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+            activity,
+//        currentAppDirPath,
+            currentFannelName,
+            currentFannelState
+        ) ?: return
         when(listIndexType){
 //            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT

@@ -77,7 +77,7 @@ class OnlySpannableAdapter(
                 com.puutaro.commandclick.R.id.grid_only_spannable_image_view
             )
             holder.spannableView = SppannableAdapterTool.setSpannableView(
-                fragment,
+                fragment.activity,
                 spannableView,
                 imagePath,
                 textImagePngBitMap,
@@ -93,7 +93,7 @@ class OnlySpannableAdapter(
         holder = convertViewArg.tag as ViewHolder
         val spannableView = holder.spannableView
         SppannableAdapterTool.setSpannableView(
-            fragment,
+            fragment.activity,
             spannableView,
             imagePath,
             textImagePngBitMap,

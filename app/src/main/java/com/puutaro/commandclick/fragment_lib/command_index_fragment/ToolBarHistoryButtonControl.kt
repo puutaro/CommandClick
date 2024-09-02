@@ -10,25 +10,17 @@ import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEve
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-class ToolBarHistoryButtonControl(
-    private val cmdIndexFragment: CommandIndexFragment,
-){
-    private val binding = cmdIndexFragment.binding
-    val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-    private val historyButtonView = binding.cmdindexHistoryButton
-    private val cmdindexUrlHistoryButton = binding.cmdindexUrlHistoryButton
-    private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
-        cmdIndexFragment,
-    )
+object ToolBarHistoryButtonControl {
 
-
-    fun historyButtonClick() {
+    fun historyButtonClick(
+        cmdIndexFragment: CommandIndexFragment
+    ) {
+        val binding = cmdIndexFragment.binding
+        val historyButtonView = binding.cmdindexHistoryButton
+        val cmdindexUrlHistoryButton = binding.cmdindexUrlHistoryButton
         historyButtonView.setOnClickListener {
             historyButtonInnerView ->
-            FannelHistoryButtonEvent(
-                cmdIndexFragment,
-//                sharedPref,
-            ).invoke()
+            FannelHistoryButtonEvent.invoke(cmdIndexFragment)
 //            HistoryButtonSwitcher.switch(
 //                cmdIndexFragment,
 //                cmdIndexFragment.context?.getString(
@@ -42,7 +34,7 @@ class ToolBarHistoryButtonControl(
 
         cmdindexUrlHistoryButton.setOnClickListener {
                 historyButtonInnerView ->
-            urlHistoryButtonEvent.invoke()
+            UrlHistoryButtonEvent.invoke(cmdIndexFragment)
 //            FannelHistoryButtonEvent(
 //                cmdIndexFragment,
 ////                   sharedPref,

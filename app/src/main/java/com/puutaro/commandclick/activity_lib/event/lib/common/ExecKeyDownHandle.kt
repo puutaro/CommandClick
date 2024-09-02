@@ -80,15 +80,14 @@ private object BackstackManager {
     fun exec(
         activity: MainActivity
     ){
-        val targetFragmentInstance = TargetFragmentInstance()
         val currentTerminalFragment =
-            targetFragmentInstance.getCurrentTerminalFragment(
+            TargetFragmentInstance.getCurrentTerminalFragment(
                 activity
             )
         val cmdVariableEditFragmentTag =
-            targetFragmentInstance.getCmdEditFragmentTag(activity)
+            TargetFragmentInstance.getCmdEditFragmentTag(activity)
         val currentBottomFragment =
-            targetFragmentInstance.getCurrentBottomFragment(
+            TargetFragmentInstance.getCurrentBottomFragment(
                 activity,
                 cmdVariableEditFragmentTag
             )
@@ -196,9 +195,7 @@ private object BackstackManager {
                 if (
                     LocalDatetimeTool.getDurationSec(prevBackTime, curDatetime) > backStackDelaySec
                 ) {
-                    UrlHistoryButtonEvent(
-                        currentBottomFragment,
-                    ).invoke()
+                    UrlHistoryButtonEvent.invoke(currentBottomFragment)
                     prevBackTime = curDatetime
                     return
                 }
@@ -406,14 +403,13 @@ private object BackstackManager {
             sharedPref,
             FannelInfoSetting.current_fannel_state
         )
-        val targetFragmentInstance = TargetFragmentInstance()
-        val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+        val currentEditFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,
             currentFannelState,
         )
-        val currentTerminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
+        val currentTerminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
             activity,
         )
         val removeFragmentList = listOf(

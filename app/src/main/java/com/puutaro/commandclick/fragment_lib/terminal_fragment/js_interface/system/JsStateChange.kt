@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
@@ -10,9 +9,10 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsStateChange(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
     private val extraMapSeparator = '|'
@@ -58,8 +58,10 @@ class JsStateChange(
 //                "enableAddToBackStackValue: ${enableAddToBackStackValue}",
 //            ).joinToString("\n\n")
 //        )
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         StageChanger.change(
-            terminalFragment,
+            terminalFragmentRef,
             stateName,
             enableAddToBackStackValue,
         )
@@ -182,13 +184,13 @@ class JsStateChange(
         private const val enableAddToBackStackOn = "ON"
 
         fun change(
-            terminalFragment: TerminalFragment,
+            terminalFragmentRef: WeakReference<TerminalFragment>,
             stateName: String,
             enableAddToBackStackValue: String?,
         ){
             val disableAddToBackStack =
                 enableAddToBackStackValue != enableAddToBackStackOn
-            JsCmdValFrag(terminalFragment).stateChange_S(
+            JsCmdValFrag(terminalFragmentRef).stateChange_S(
                 stateName,
                 disableAddToBackStack
             )

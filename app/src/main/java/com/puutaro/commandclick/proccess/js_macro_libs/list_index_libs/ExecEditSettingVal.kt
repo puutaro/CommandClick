@@ -22,10 +22,8 @@ object ExecEditSettingVal {
                 selectedItem,
             )
         ) return
-        val formDialogForListIndexOrButton = FormDialogForListIndexOrButton(
-            editFragment
-        )
-        formDialogForListIndexOrButton.create(
+        FormDialogForListIndexOrButton.create(
+            editFragment,
             "edit setting variable",
             parentDirPath,
             selectedItem,

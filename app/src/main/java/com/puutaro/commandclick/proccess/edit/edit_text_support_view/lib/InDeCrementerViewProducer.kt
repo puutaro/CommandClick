@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -19,13 +20,14 @@ import java.lang.Runnable
 
 object InDeCrementerViewProducer {
     fun make(
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
         onIncrement: Boolean = true,
     ): Button {
-        val context = editParameters.context
+        val context = fragment.context
         val variableTypeValue = editParameters.setVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )

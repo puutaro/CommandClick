@@ -11,22 +11,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 class JsCopySItem(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
-    val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun copy_S(
@@ -34,9 +23,18 @@ class JsCopySItem(
         selectedItem: String,
         extraMapCon: String,
     ){
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return

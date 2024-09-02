@@ -19,77 +19,77 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.OnlySpannableGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import java.lang.ref.WeakReference
 
 class JsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
 
     private val promptJsDialog = PromptJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val jsConfirm = JsConfirm(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val listJsDialog = ListJsDialog(
-        terminalFragment,
+        terminalFragmentRef,
     )
 
     private val formJsDialog = FormJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val multiSelectJsDialog = MultiSelectJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val multiSelectGridViewJsDialog = MultiSelectGridViewJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val multiSelectOnlyImageGridViewJsDialog = MultiSelectOnlyImageGridViewJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val multiSelectSpannableJsDialog = MultiSelectSpannableJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val gridJsDialog = GridJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val onlyImageGridJsDialog = OnlyImageGridJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val onlySpannableGridJsDialog = OnlySpannableGridJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val asciiArtJsDialog = AsciiArtJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val imageJsDialog = ImageJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
-    private val webViewJsDialog = WebViewJsDialog(
-        terminalFragment
-    )
+//    private val webViewJsDialog = WebViewJsDialog(
+//        terminalFragment
+//    )
 
     private val qrScanJsDialog = QrScanJsDialog(
-        terminalFragment
+        terminalFragmentRef
     )
 
     private val debugJsAlert = DebugJsAlert(
-        terminalFragment
+        terminalFragmentRef
     )
 
     @JavascriptInterface
@@ -146,6 +146,9 @@ class JsDialog(
         contents: String,
         scrollBottom: Boolean
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         DialogObject.simpleTextShow(
             context,
             title,
@@ -352,7 +355,9 @@ class JsDialog(
         longPressMenuMapListStr: String,
         extraMapCon: String,
     ){
-        webViewJsDialog.create(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.show(
             urlStr,
             currentFannelPath,
             menuMapStrListStr,
@@ -367,7 +372,9 @@ class JsDialog(
         /*
         This function is used to dismiss [pocket webview](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#highlight-search
         */
-        webViewJsDialog.dismiss()
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.stopWebView(false)
     }
 
     @JavascriptInterface
@@ -376,6 +383,8 @@ class JsDialog(
         contents: String,
         scrollBottom: Boolean
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         CopyJsDialog.create(
             title,
             terminalFragment,

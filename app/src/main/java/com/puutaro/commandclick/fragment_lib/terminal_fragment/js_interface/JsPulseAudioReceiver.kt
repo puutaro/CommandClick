@@ -6,15 +6,12 @@ import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.common.variable.broadcast.extra.PulseServerIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.PulseReceiverService
-
+import java.lang.ref.WeakReference
 
 
 class JsPulseAudioReceiver(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-
-    val context = terminalFragment.context
-    val activity = terminalFragment.activity
     private val pulseReceiverService = PulseReceiverService::class.java
 
     @JavascriptInterface
@@ -22,6 +19,11 @@ class JsPulseAudioReceiver(
         pcIpv4Address: String,
         serverPort: Int,
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val activity = terminalFragment.activity
+
         val intent = Intent(
             activity,
             pulseReceiverService
@@ -41,6 +43,11 @@ class JsPulseAudioReceiver(
 
     @JavascriptInterface
     fun stop(){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val activity = terminalFragment.activity
+
         context?.stopService(
             Intent(
                 activity,

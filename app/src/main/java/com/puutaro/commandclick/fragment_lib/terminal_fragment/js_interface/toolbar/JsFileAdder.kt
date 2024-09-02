@@ -26,23 +26,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsFileAdder(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap =
-        terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun add(
@@ -81,7 +69,17 @@ class JsFileAdder(
 
         */
 
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,
@@ -100,7 +98,7 @@ class JsFileAdder(
         compFileNameMapCon: String,
         separator: String,
     ){
-        val fileName = JsDialog(terminalFragment).prompt(
+        val fileName = JsDialog(terminalFragmentRef).prompt(
             "Type item name",
             String(),
             String()

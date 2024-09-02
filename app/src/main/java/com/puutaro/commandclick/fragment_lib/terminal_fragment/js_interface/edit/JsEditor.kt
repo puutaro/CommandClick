@@ -11,11 +11,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsEditor(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
 
     @JavascriptInterface
     fun open_S(
@@ -29,6 +29,9 @@ class JsEditor(
 //        val parentDirPath = filePathObj.parent
 //            ?: return
         val fileName = filePathObj.name
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         EditorByIntent(
 //            parentDirPath,
             fileName,
@@ -54,6 +57,8 @@ class JsEditor(
         ).readText()
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val terminalFragment = terminalFragmentRef.get()
+                    ?: return@launch
                 EditorByEditText.byEditText(
                     terminalFragment,
                     parentDirPath,

@@ -2,9 +2,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tex
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import java.lang.ref.WeakReference
 
 class JsCon(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
     @JavascriptInterface
     fun sortFromThis(

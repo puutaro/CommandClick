@@ -1,23 +1,27 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.FileTempDownloader
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.ImageTempDownloader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class JsCurl(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
 
     @JavascriptInterface
     fun get(
@@ -26,6 +30,10 @@ class JsCurl(
         header: String,
         timeout: Int
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         val con = CurlManager.get(
             context,
             mainUrl,
@@ -46,6 +54,10 @@ class JsCurl(
         header: String,
         timeout: Int
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         CurlManager.get(
             context,
             mainUrl,
@@ -70,6 +82,10 @@ class JsCurl(
         bodyStr: String,
         timeout: Int
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         return CurlManager.post(
             context,
             mainUrl,
@@ -89,6 +105,10 @@ class JsCurl(
         bodyStr: String,
         timeout: Int
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         return CurlManager.post(
             context,
             mainUrl,
@@ -133,6 +153,9 @@ class JsCurl(
     fun getImage(
         url: String
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
         var downloadImagePath = String()
         runBlocking{

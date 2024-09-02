@@ -8,15 +8,16 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.lang.ref.WeakReference
 
 class JsValEdit(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
-    private val context = terminalFragment.context
+//    private val context = terminalFragment.context
     private val okReturnCode = "0"
     private val cancelReturnCode = "1"
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
+//    private val fannelInfoMap = terminalFragment.fannelInfoMap
 
 
     @JavascriptInterface
@@ -26,6 +27,9 @@ class JsValEdit(
         setVariableTypes: String,
         targetVariables: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
         val isOk = try {
             execEditAndSaveCmdVar(
                 title,
@@ -51,9 +55,12 @@ class JsValEdit(
         /*
         Register fannel con change to Edit fragment
         */
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val listener = context as? TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm
         listener?.onEditFannelContentsListUpdateForTerm(
-            fannelInfoMap,
+            terminalFragment.fannelInfoMap,
             changedFannelCon.split("\n")
         )
     }
@@ -64,7 +71,7 @@ class JsValEdit(
         setVariableTypes: String,
         targetVariables: String,
     ): String {
-        val resultKeyValueCon = JsDialog(terminalFragment).formDialog(
+        val resultKeyValueCon = JsDialog(terminalFragmentRef).formDialog(
             title,
             setVariableTypes,
             targetVariables,
@@ -77,7 +84,7 @@ class JsValEdit(
             resultKeyValueCon,
             '\n'
         )
-        val jsEdit = JsEdit(terminalFragment)
+        val jsEdit = JsEdit(terminalFragmentRef)
         variableMap.forEach {
             val varName = it.first
             val varValue = it.second
@@ -86,7 +93,7 @@ class JsValEdit(
                 varValue
             )
         }
-        val jsScript = JsScript(terminalFragment)
+        val jsScript = JsScript(terminalFragmentRef)
         val fcon = ReadText(
             fannelPath
         ).readText()

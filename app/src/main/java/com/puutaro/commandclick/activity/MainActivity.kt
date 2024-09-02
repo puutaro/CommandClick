@@ -74,6 +74,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 import java.util.*
 
 
@@ -162,7 +163,7 @@ class MainActivity:
         storageHelper,
     )
     private val getFileListForEdit = GetFileListForEdit(
-        this,
+        WeakReference(this),
         storageHelper
     )
 
@@ -218,7 +219,7 @@ class MainActivity:
             true,
             false
         )
-        InitManager(this).invoke()
+        InitManager.invoke(this)
 //        CoroutineScope(Dispatchers.IO).launch {
 //            val view = withContext(Dispatchers.IO) {
 //                while (true) {
@@ -483,10 +484,7 @@ class MainActivity:
 
 
     override fun onBackstackDelete(){
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
-        fragmentManagerForActivity.deleteAllBackStack()
+        FragmentManagerForActivity.deleteAllBackStack(supportFragmentManager)
     }
 
     override fun onLaunchUrlByWebView(

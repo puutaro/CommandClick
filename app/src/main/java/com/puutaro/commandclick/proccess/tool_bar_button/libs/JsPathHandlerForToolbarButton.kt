@@ -369,9 +369,7 @@ object JsPathHandlerForToolbarButton {
             }
             MacroForToolbarButton.Macro.URL_HISTORY
             -> {
-                UrlHistoryButtonEvent(
-                    fragment
-                ).invoke()
+                UrlHistoryButtonEvent.invoke(fragment)
             }
             MacroForToolbarButton.Macro.OK
             -> {
@@ -387,10 +385,10 @@ object JsPathHandlerForToolbarButton {
                 if(
                     fragment !is EditFragment
                 ) return
-                UrlHistoryAddToTsv(
+                UrlHistoryAddToTsv.invoke(
                     fragment,
                     jsActionMap,
-                ).invoke()
+                )
             }
             MacroForToolbarButton.Macro.ADD_URL_CON
             -> {

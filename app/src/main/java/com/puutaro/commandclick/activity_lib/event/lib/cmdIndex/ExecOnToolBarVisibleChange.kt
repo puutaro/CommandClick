@@ -71,7 +71,7 @@ object ExecOnToolBarVisibleChange {
         toolBarVisible: Boolean
     ){
         val terminalFragment =
-            TargetFragmentInstance().getCurrentTerminalFragment(activity)
+            TargetFragmentInstance.getCurrentTerminalFragment(activity)
                 ?: return
         val isShow = !PinFannelHideShow.isHide()
         val binding = terminalFragment.binding

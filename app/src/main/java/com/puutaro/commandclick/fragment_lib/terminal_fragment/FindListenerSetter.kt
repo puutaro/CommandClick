@@ -33,12 +33,12 @@ object FindListenerSetter {
                 fannelState
             )
             val commandIndexFragment =
-                TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
+                TargetFragmentInstance.getFromFragment<CommandIndexFragment>(
                     terminalFragment.activity,
                     context?.getString(R.string.command_index_fragment)
                 )
             val cmdEditFragment =
-                TargetFragmentInstance().getFromFragment<EditFragment>(
+                TargetFragmentInstance.getFromFragment<EditFragment>(
                     terminalFragment.activity,
                     cmdEditFragmentTag
                 )

@@ -80,7 +80,8 @@ object ListIndexEditConfig {
             '|'
         )
         val listIndexArgsMaker = ListIndexArgsMaker(
-            editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
             clickConfigPairList,
         )
 

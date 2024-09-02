@@ -1,11 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -19,14 +16,13 @@ object KeyboardForCmdIndex {
         isOpen: Boolean,
         isFromTerminal: Boolean,
     ){
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdIndexFragment = targetFragmentInstance.getCmdIndexFragment(
+        val cmdIndexFragment = TargetFragmentInstance.getCmdIndexFragment(
             activity
         ) ?: return
         val isPinHide = PinFannelHideShow.isHide()
         when(isFromTerminal){
             true -> {
-                val toolbarLinear = targetFragmentInstance
+                val toolbarLinear = TargetFragmentInstance
                     .getCurrentTerminalFragment(activity)
                     ?.binding
                     ?.termBottomLinear
@@ -37,7 +33,7 @@ object KeyboardForCmdIndex {
                 toolbarLinear.isVisible = !isOpen && isPinHide
             }
         }
-        val terminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
+        val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
             activity
         )
         terminalFragment?.binding?.fannelPinRecyclerView?.isVisible =

@@ -9,20 +9,20 @@ import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
-class ScriptFileSaver(
-    private val editFragment: EditFragment,
-) {
-    private val fannelInfoMap = editFragment.fannelInfoMap
+object ScriptFileSaver{
 //    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //        fannelInfoMap
 //    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    fun save(){
-        val editedTextContents = EditedTextContents(
-            editFragment,
+    fun save(
+        editFragment: EditFragment
+    ){
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
         )
+//        val editedTextContents = EditedTextContents(
+//            editFragment,
+//        )
         val isSettingEdit = !IsCmdEdit.judge(editFragment)
         val editedShellContentsList = when(
             isSettingEdit
@@ -31,7 +31,8 @@ class ScriptFileSaver(
                 val settingFannelConList = SettingFannelConHandlerForEdit.handle(
                     editFragment
                 )
-                editedTextContents.updateBySettingVariables(
+                EditedTextContents.updateBySettingVariables(
+                    editFragment,
                     settingFannelConList,
                     editFragment.recordNumToMapNameValueInSettingHolder,
                 )
@@ -41,13 +42,16 @@ class ScriptFileSaver(
                 val currentFannelConList = ReadText(
                     File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath
                 ).textToList()
-                editedTextContents.updateByCommandVariables(
+                EditedTextContents.updateByCommandVariables(
+                    editFragment,
                     currentFannelConList,
                     editFragment.recordNumToMapNameValueInCommandHolder,
                 )
             }
         }
-        editedTextContents.save(
+        EditedTextContents.save(
+            editFragment,
+            currentFannelName,
             editedShellContentsList,
             isSettingEdit
         )

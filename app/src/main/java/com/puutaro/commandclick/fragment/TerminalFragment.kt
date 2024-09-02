@@ -1,10 +1,7 @@
 package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.*
-import android.graphics.Bitmap
-import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
@@ -15,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.webkit.WebView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,6 +28,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
@@ -50,6 +47,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import java.lang.ref.WeakReference
 
 
 class TerminalFragment: Fragment() {
@@ -89,6 +87,7 @@ class TerminalFragment: Fragment() {
     var displayUpdateCoroutineJob: Job? = null
     var loadAssetCoroutineJob: Job? = null
     var onPageFinishedCoroutineJob: Job? = null
+    var onScrollPosiSaveJob: Job? = null
     var registerUrlHistoryTitleCoroutineJob: Job? = null
     var onWebHistoryUpdaterJob: Job? = null
     var onPocketWebHistoryUpdaterJob: Job? = null
@@ -120,8 +119,9 @@ class TerminalFragment: Fragment() {
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
-    var webViewDialogInstance: Dialog? = null
+//    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
+    var pocketWebViewManager: WebViewJsDialog? = null
 //    var extraMapBitmapList: List<Bitmap?> = emptyList()
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -189,11 +189,11 @@ class TerminalFragment: Fragment() {
             setReplaceVariableMap
         )
         editType = EditFragmentArgs.getEditType(arguments)
-
         ExecDownLoadManager.set(
             this,
             binding.terminalWebView
         )
+        pocketWebViewManager = WebViewJsDialog(WeakReference(this))
         TerminalToolbarHandler.handler(this)
         GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
         val keyboardHandleListener = context as? OnKeyboardHandleListenerForTerm
@@ -249,9 +249,7 @@ class TerminalFragment: Fragment() {
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
-        GifCreateMonitor.watch(this)
-        FannelHistoryGifCreator.watch(this)
-        ButtonImageCreator.create(this)
+//        FannelHistoryGifCreator.watch(this)
     }
 
     override fun onStart() {
@@ -259,7 +257,6 @@ class TerminalFragment: Fragment() {
         ExecBackstackHandle.initPrevBackTime()
         TerminalOnHandlerForEdit.handle(this)
         JsDebugger.stockLogSender(this)
-        UrlCaptureWatcher.watch(this)
     }
 
 
@@ -268,35 +265,42 @@ class TerminalFragment: Fragment() {
         val terminalViewModel: TerminalViewModel by activityViewModels()
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
-        webViewDialogInstance?.findViewById<WebView>(
-            R.id.webview_dialog_webview
-        )?.onPause()
-        terminalViewModel.onDialog = false
+//        webViewDialogInstance?.findViewById<WebView>(
+//            R.id.webview_dialog_webview
+//        )?.onPause()
+//        terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
         UrlCaptureWatcher.exit()
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
         binding.terminalWebView.onPause()
+//        FannelHistoryGifCreator.exit()
+//        GifCreateMonitor.exit()
+//        ButtonImageCreator.exit()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
+        onScrollPosiSaveJob?.cancel()
         registerUrlHistoryTitleCoroutineJob?.cancel()
         onWebHistoryUpdaterJob?.cancel()
         onPocketWebHistoryUpdaterJob?.cancel()
         displayUpdateCoroutineJob?.cancel()
+        UrlCaptureWatcher.exit()
+        FannelHistoryGifCreator.exit()
+        GifCreateMonitor.exit()
+        ButtonImageCreator.exit()
     }
 
     override fun onResume() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdVariableEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+        val cmdVariableEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = TargetFragmentInstance.getCurrentBottomFragmentInFrag(
             activity,
             cmdVariableEditFragmentTag
         )
         val currentBottomFragmentWeight =
-            targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
+            TargetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
         firstDisplayUpdate = if(
             !firstDisplayUpdate
             && currentBottomFragmentWeight == ReadLines.LONGTH
@@ -306,10 +310,10 @@ class TerminalFragment: Fragment() {
         InitCurrentMonitorFile.trim(this)
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
-        webViewDialogInstance?.findViewById<WebView>(
-            R.id.webview_dialog_webview
-        )?.onResume()
-        terminalViewModel.onDialog = false
+//        webViewDialogInstance?.findViewById<WebView>(
+//            R.id.webview_dialog_webview
+//        )?.onResume()
+//        terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
 //        UrlLaunchIntentAction.handle(this)
@@ -319,6 +323,10 @@ class TerminalFragment: Fragment() {
             this,
             terminalViewModel,
         )
+        UrlCaptureWatcher.watch(this)
+        FannelHistoryGifCreator.watch(this)
+        GifCreateMonitor.watch(this)
+        ButtonImageCreator.create(this)
         previousTerminalTag = tag
     }
 
@@ -410,15 +418,29 @@ class TerminalFragment: Fragment() {
         )
         UrlCaptureWatcher.exit()
         PinFannelBarManager.clear(binding.fannelPinRecyclerView)
+        FannelHistoryGifCreator.exit()
+        GifCreateMonitor.exit()
+        ButtonImageCreator.exit()
         this.onPageFinishedCoroutineJob?.cancel()
+        onScrollPosiSaveJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
         onPocketWebHistoryUpdaterJob?.cancel()
         onRegisterPocketWebViewUrl?.cancel()
+        pocketWebViewManager?.stopWebView(true)
+        val terminalWebView = binding.terminalWebView
+        terminalWebView.onPause()
+        terminalWebView.webChromeClient = null
+        terminalWebView.clearHistory()
+        terminalWebView.clearCache(true)
+        terminalWebView.removeAllViews()
+        terminalWebView.destroy()
+        binding.terminalFragment.removeAllViews()
         _binding = null
-        webViewDialogInstance?.dismiss()
-        webViewDialogInstance = null
+        pocketWebViewManager = null
+//        webViewDialogInstance?.dismiss()
+//        webViewDialogInstance = null
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
         firstDisplayUpdate = true

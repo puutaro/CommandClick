@@ -15,6 +15,7 @@ import java.io.File
 object EditableListContentsMultiSeletctSpinnerViewProducer {
 
     fun make (
+        editFragment: EditFragment,
         insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters,
@@ -22,7 +23,7 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         weight: Float,
         isInsertTextViewVisible: Boolean = false
     ): Button {
-        val context = editParameters.context
+        val context = editFragment.context
         val currentId = editParameters.currentId
 
         val linearParamsForSpinner = LinearLayoutCompat.LayoutParams(

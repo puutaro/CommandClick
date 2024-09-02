@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util.state
 
 import android.app.Activity
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -13,7 +12,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
-class TargetFragmentInstance {
+object TargetFragmentInstance {
     fun <T: Fragment> getFromFragment(
         activity: FragmentActivity?,
         targetFragmentTag: String?
@@ -269,8 +268,7 @@ class TargetFragmentInstance {
         ) return null
         val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
         val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_terminal_fragment)
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromActivity<TerminalFragment>(
+        val indexTerminalFragment = getFromActivity<TerminalFragment>(
             activity,
             indexTerminalFragmentTag
         )
@@ -278,7 +276,7 @@ class TargetFragmentInstance {
             indexTerminalFragment != null
             && indexTerminalFragment.isVisible
         ) return indexTerminalFragment
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromActivity<TerminalFragment>(
+        val editExecuteTerminalFragment = getFromActivity<TerminalFragment>(
             activity,
             editExecuteTerminalFragmentTag
         )
@@ -296,8 +294,7 @@ class TargetFragmentInstance {
         ) return null
         val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
         val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_terminal_fragment)
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val indexTerminalFragment = getFromFragment<TerminalFragment>(
             activity,
             indexTerminalFragmentTag
         )
@@ -305,7 +302,7 @@ class TargetFragmentInstance {
             indexTerminalFragment != null
             && indexTerminalFragment.isVisible
         ) return indexTerminalFragment
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val editExecuteTerminalFragment = getFromFragment<TerminalFragment>(
             activity,
             editExecuteTerminalFragmentTag
         )

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.image_tools
 
 import android.R
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -11,7 +12,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.util.Base64
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.ByteArrayOutputStream
@@ -33,11 +33,11 @@ object BitmapTool {
     }
 
     fun resizeByScreenWidth(
-        fragment: Fragment,
+        activity: Activity?,
         imagePath: String,
     ): Bitmap {
         val beforeResizeBitMap = BitmapFactory.decodeFile(imagePath)
-        val baseWidth = ScreenSizeCalculator.dpWidth(fragment)
+        val baseWidth = ScreenSizeCalculator.dpWidth(activity)
 //                                    resizeScale = 180.0 / beforeResizeBitMap.width
         val resizeScale: Double =
             (baseWidth / beforeResizeBitMap.width).toDouble()

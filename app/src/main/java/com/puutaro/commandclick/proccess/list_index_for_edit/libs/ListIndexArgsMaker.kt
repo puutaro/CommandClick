@@ -15,17 +15,19 @@ import java.io.File
 
 
 class ListIndexArgsMaker(
-    val editFragment: EditFragment,
+//    val editFragment: EditFragment,
+    val fannelInfoMap: Map<String, String>,
+    val setReplaceVariableMap: Map<String, String>?,
     val clickConfigPairList: List<Pair<String, String>>?,
 ) {
-    val setReplaceVariableMap = editFragment.setReplaceVariableMap
-    val fannelInfoMap = editFragment.fannelInfoMap
-//    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//    val setReplaceVariableMap = editFragment.setReplaceVariableMap
+//    val fannelInfoMap = editFragment.fannelInfoMap
+////    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////        fannelInfoMap
+////    )
+//    val currentFannelName = FannelInfoTool.getCurrentFannelName(
 //        fannelInfoMap
 //    )
-    val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
 
     companion object {
         fun makeListIndexClickMenuPairList(

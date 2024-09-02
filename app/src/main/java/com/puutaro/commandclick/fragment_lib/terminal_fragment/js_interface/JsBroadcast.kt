@@ -4,12 +4,13 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadCastSenderSchemaForCommon
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.lang.ref.WeakReference
 
 class JsBroadcast(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-
-    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun send(
@@ -55,6 +56,9 @@ class JsBroadcast(
         ```
         */
 
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val keySeparator = '|'
         val broadcastMap = mapOf(
             BroadCastSenderSchemaForCommon.action.name to action,

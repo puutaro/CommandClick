@@ -256,7 +256,7 @@ class EditFragment: Fragment() {
         buttonWeight =
             ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
-            UpdateLastModifyForEdit().judge(
+            UpdateLastModifyForEdit.judge(
                 this,
 //                currentAppDirPath,
             )
@@ -273,18 +273,16 @@ class EditFragment: Fragment() {
                     currentFannelName
                 ).absolutePath,
             )
-            val pageSearchToolbarManagerForEdit =
-                PageSearchToolbarManagerForEdit(this)
-            pageSearchToolbarManagerForEdit.cancleButtonClickListener()
-            pageSearchToolbarManagerForEdit.onKeyListner()
-            pageSearchToolbarManagerForEdit.pageSearchTextChangeListner()
-            pageSearchToolbarManagerForEdit.searchTopClickLisnter()
-            pageSearchToolbarManagerForEdit.searchDownClickLisnter()
-            val webSearchToolbarManagerForEdit =
-                WebSearchToolbarManagerForEdit(this)
-            webSearchToolbarManagerForEdit.setKeyListener()
-            webSearchToolbarManagerForEdit.setCancelListener()
-            webSearchToolbarManagerForEdit.setGoogleSuggest()
+//            val pageSearchToolbarManagerForEdit =
+//                PageSearchToolbarManagerForEdit(this)
+            PageSearchToolbarManagerForEdit.cancleButtonClickListener(this)
+            PageSearchToolbarManagerForEdit.onKeyListner(this)
+            PageSearchToolbarManagerForEdit.pageSearchTextChangeListner(this)
+            PageSearchToolbarManagerForEdit.searchTopClickLisnter(this)
+            PageSearchToolbarManagerForEdit.searchDownClickLisnter(this)
+            WebSearchToolbarManagerForEdit.setKeyListener(this)
+            WebSearchToolbarManagerForEdit.setCancelListener(this)
+            WebSearchToolbarManagerForEdit.setGoogleSuggest(this)
         }
 
         val window = activity?.window
@@ -292,9 +290,9 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
-        val editModeHandler = EditModeHandler(
-            this,
-        )
+//        val editModeHandler = EditModeHandler.execByHowFullEdit(
+//            this,
+//        )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,
 //            listOf(
@@ -312,7 +310,7 @@ class EditFragment: Fragment() {
 //                "recordNumToMapNameValueInCommandHolder: ${recordNumToMapNameValueInCommandHolder}"
 //            ).joinToString("\n\n")
 //        )
-        editModeHandler.execByHowFullEdit()
+        EditModeHandler.execByHowFullEdit(this)
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
         context?.let {

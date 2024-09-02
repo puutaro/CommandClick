@@ -6,10 +6,9 @@ import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHo
 import com.puutaro.commandclick.util.CompleteQuote
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 
-class ScriptContentsLister(
-    private val editLinearLayoutList: List<LinearLayoutCompat>
-) {
+object ScriptContentsLister {
     fun update(
+        editLinearLayoutList: List<LinearLayoutCompat>,
         recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>,
         scriptContentsList: List<String>,
         startIdNum: Int

@@ -4,13 +4,10 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
-import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -29,10 +26,9 @@ object ExecSetToolbarButtonImage {
 
     private val cmdClickIconList = CmdClickIcons.values()
     fun set(activity: MainActivity){
-        val targetFragmentInstance = TargetFragmentInstance()
         val cmdVariableEditFragmentTag =
-            targetFragmentInstance.getCmdEditFragmentTag(activity)
-        val bottomFragment = targetFragmentInstance.getCurrentBottomFragment(
+            TargetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = TargetFragmentInstance.getCurrentBottomFragment(
             activity,
             cmdVariableEditFragmentTag
         ) ?: return
@@ -111,9 +107,8 @@ object ExecSetToolbarButtonImage {
     private fun setForTerminalFragment(
         activity: MainActivity
     ){
-        val targetFragmentInstance = TargetFragmentInstance()
         val terminalFragment =
-            targetFragmentInstance.getCurrentTerminalFragment(activity)
+            TargetFragmentInstance.getCurrentTerminalFragment(activity)
                 ?: return
         val binding = terminalFragment.binding
         CoroutineScope(Dispatchers.IO).launch {

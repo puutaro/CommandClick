@@ -14,13 +14,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 class JsConfirm(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var confirmDialogObj: Dialog? = null
     private var returnBool = false
 
@@ -28,6 +27,9 @@ class JsConfirm(
         title: String,
         body: String,
     ): Boolean {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return false
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         runBlocking {
             withContext(Dispatchers.Main) {
@@ -56,6 +58,10 @@ class JsConfirm(
         title: String,
         body: String,
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ) {
@@ -120,6 +126,9 @@ class JsConfirm(
         returnBool = false
         confirmDialogObj?.dismiss()
         confirmDialogObj = null
-        terminalViewModel.onDialog = false
+        terminalFragmentRef.get()?.let {
+            val terminalViewModel: TerminalViewModel by it.activityViewModels()
+            terminalViewModel.onDialog = false
+        }
     }
 }

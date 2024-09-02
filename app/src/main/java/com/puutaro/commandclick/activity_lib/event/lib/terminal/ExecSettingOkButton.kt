@@ -24,8 +24,7 @@ object ExecSettingOkButton {
             sharedPref,
             FannelInfoSetting.current_fannel_state
         )
-        val targetFragmentInstance = TargetFragmentInstance()
-        val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+        val currentEditFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,

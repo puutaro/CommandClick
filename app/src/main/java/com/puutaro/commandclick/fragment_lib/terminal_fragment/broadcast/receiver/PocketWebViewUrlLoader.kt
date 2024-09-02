@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
 import android.webkit.WebView
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -28,11 +29,10 @@ object PocketWebViewUrlLoader {
         ) return
         terminalFragment.onRegisterPocketWebViewUrl?.cancel()
         terminalFragment.onRegisterPocketWebViewUrl = CoroutineScope(Dispatchers.Main).launch {
-            val webView = terminalFragment.webViewDialogInstance?.findViewById<WebView>(
-                R.id.webview_dialog_webview
-            )
-            when(webView == null) {
-                true -> {
+            when(
+                terminalFragment.pocketWebViewManager?.pocketWebView?.isVisible == true
+            ) {
+                false -> {
                     val webSearcherName = SystemFannel.webSearcher
                     val systemExecRepTextList = listOf(url)
 
@@ -43,53 +43,12 @@ object PocketWebViewUrlLoader {
                         systemExecRepTextList
                     )
                 }
-                else -> WebViewJsDialog.loadUrlHandler(
-                    terminalFragment,
-                    webView,
-                    url,
-                )
+                else ->
+                    terminalFragment.pocketWebViewManager?.loadUrlHandler(
+                        terminalFragment,
+                        url,
+                    )
             }
-//            if(
-//                !isHistorySave
-//            ) {
-//                return@launch
-//            }
-//            saveToUrlHistory(
-//                terminalFragment.currentAppDirPath,
-//                url,
-//            )
         }
-    }
-
-    private suspend fun saveToUrlHistory(
-        currentAppDirPath: String,
-        url: String,
-    ){
-        val gglQueryUrl = WebUrlVariables.queryUrl
-        val title = when(
-            url.startsWith(gglQueryUrl)
-        ){
-            true -> "${url.removePrefix(gglQueryUrl)} - Pocket search"
-            else -> url
-        }
-        val appUrlSystemPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-        val cmdclickUrlHistoryFilePath = File(appUrlSystemPath, UsePath.cmdclickUrlHistoryFileName).absolutePath
-        val beforeChecksum = FileSystems.checkSum(
-            cmdclickUrlHistoryFilePath
-        )
-        for (i in 1..6) {
-            delay(1000)
-            val curCheckSum = FileSystems.checkSum(
-                cmdclickUrlHistoryFilePath
-            )
-            if(
-                curCheckSum != beforeChecksum
-            ) break
-        }
-        UrlHistoryRegister.insertByUnique(
-            currentAppDirPath,
-            title,
-            url,
-        )
     }
 }

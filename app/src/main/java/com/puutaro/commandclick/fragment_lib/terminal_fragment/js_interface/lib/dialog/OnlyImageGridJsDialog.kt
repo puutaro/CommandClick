@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSelectGridViewProducer
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -18,13 +17,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 class OnlyImageGridJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var onlyImageGridDialog: AlertDialog? = null
 
@@ -33,11 +31,15 @@ class OnlyImageGridJsDialog(
         message: String,
         imagePathListTabSepaStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    terminalFragment,
                     title,
                     message,
                     imagePathListTabSepaStr
@@ -55,9 +57,11 @@ class OnlyImageGridJsDialog(
     }
 
     private fun createLinearLayoutForGridView(
+        terminalFragment: TerminalFragment,
         imagePathList: List<String>,
     ): LinearLayout {
-
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val gridView = GridView(context)
         gridView.numColumns = 2
 
@@ -75,7 +79,7 @@ class OnlyImageGridJsDialog(
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
         )
-        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
+        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment.activity)
         val listWeight = 1F - searchTextWeight
         val linearLayoutForListView = NestLinearLayout.make(
             context,
@@ -92,6 +96,7 @@ class OnlyImageGridJsDialog(
     }
 
     private fun execCreate(
+        terminalFragment: TerminalFragment,
         title: String,
         message: String,
         imagePathListTabSepaStr: String,
@@ -100,8 +105,11 @@ class OnlyImageGridJsDialog(
             imagePathListTabSepaStr
                 .split("\n")
                 .toMutableList()
-        val context = context ?: return
+        val context = terminalFragment.context
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val linearLayoutForGridView = createLinearLayoutForGridView(
+            terminalFragment,
             imagePathList,
         )
 

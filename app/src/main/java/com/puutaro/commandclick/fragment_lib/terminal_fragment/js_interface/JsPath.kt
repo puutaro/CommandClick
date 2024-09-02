@@ -5,11 +5,11 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsPath(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun compPrefix(
@@ -110,6 +110,10 @@ class JsPath(
 
     @JavascriptInterface
     fun echoPath(pathType: String): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         val appFileDirPath = when(pathType) {
             PathType.appFiles.name
             -> return "${context?.filesDir}"
@@ -136,6 +140,9 @@ class JsPath(
 
     @JavascriptInterface
     fun convertUbuntuPath(path: String): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
         val ubuntuPath = CcPathTool.convertUbuntuPath(
             context,
             path

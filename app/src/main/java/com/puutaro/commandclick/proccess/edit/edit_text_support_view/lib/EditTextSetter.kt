@@ -21,13 +21,13 @@ import com.puutaro.commandclick.view_model.activity.EditViewModel
 object EditTextSetter {
 
     fun set(
+        fragment: Fragment,
         editParameters: EditParameters,
         editTextPropertyMap: Map<String, String>?,
         editTextWeight: Float
     ): EditText {
-        val currentFragment = editParameters.currentFragment
-        val editViewModel: EditViewModel by currentFragment.activityViewModels()
-        val context = editParameters.context
+        val editViewModel: EditViewModel by fragment.activityViewModels()
+        val context = fragment.context
         val currentId = editParameters.currentId
         val currentVariableValue = editParameters.currentVariableValue
         val currentVariableName = editParameters.currentVariableName
@@ -44,7 +44,7 @@ object EditTextSetter {
 
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         val editTextCon = EditTextMaker.make(
-            currentFragment,
+            fragment,
             editTextPropertyMap,
             currentVariableValue,
         )

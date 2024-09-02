@@ -7,16 +7,19 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import java.lang.ref.WeakReference
 
 class JsAction(
-    private val terminalFragment: TerminalFragment,
+    private val terminalFragmentRef: WeakReference<TerminalFragment,>
 ) {
-    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun execByPath_S(
         jsActionPath: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,
             jsActionPath,
@@ -43,6 +46,10 @@ class JsAction(
         jsActionPairListCon: String,
         mainOrSubFannelPath: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             terminalFragment,
             mainOrSubFannelPath

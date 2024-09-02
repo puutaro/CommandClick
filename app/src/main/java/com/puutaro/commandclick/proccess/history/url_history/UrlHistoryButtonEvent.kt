@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -32,7 +33,6 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
@@ -45,18 +45,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class UrlHistoryButtonEvent(
-    private val fragment: androidx.fragment.app.Fragment,
-) {
+object UrlHistoryButtonEvent{
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 //        FannelInfoTool.getCurrentAppDirPath(
 //        fannelInfoMap
 //    )
-    private val fragmentTag = fragment.tag
-    private val context = fragment.context
-    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
-    private val listLinearWeight = 1F - searchTextLinearWeight
     private val takeUrlListNum = 400
     private var urlHistoryDialog: Dialog? = null
     private val titleKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.TITLE.key
@@ -70,7 +63,12 @@ class UrlHistoryButtonEvent(
 
 
     fun invoke(
+        fragment: Fragment,
     ){
+        val context = fragment.context
+        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+        val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)
+        val listLinearWeight = 1F - searchTextLinearWeight
         if(
             context == null
         ) return
@@ -116,7 +114,7 @@ class UrlHistoryButtonEvent(
             LinearLayoutManager.VERTICAL,
             false
         )
-        val currentUrl = TargetFragmentInstance().getCurrentTerminalFragmentFromFrag(fragment.activity).let {
+        val currentUrl = TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity).let {
             terminalFragment ->
             if(
                 terminalFragment == null
@@ -159,14 +157,17 @@ class UrlHistoryButtonEvent(
         urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog?.show()
         setUrlHistoryListViewOnItemClickListener(
+            fragment,
             urlHistoryListView,
             urlHistoryDisplayListAdapter,
             searchText
         )
         setUrlHistoryListViewOnLogoItemClickListener (
+            context,
             urlHistoryDisplayListAdapter,
         )
         setUrlHistoryListViewOnCopyItemClickListener (
+            context,
             urlHistoryDisplayListAdapter,
             searchText,
         )
@@ -275,6 +276,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnItemClickListener (
+        fragment: Fragment,
         urlHistoryListView: RecyclerView,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
         searchText: AppCompatEditText,
@@ -317,14 +319,17 @@ class UrlHistoryButtonEvent(
                         UsePath.JSX_FILE_SUFFIX,
                     )
                 ) {
-                    execScriptFile(selectedUrl)
+                    execScriptFile(
+                        fragment,
+                        selectedUrl
+                    )
                     exitDialog(urlHistoryListView)
                     return
                 }
 
                 when (fragment) {
                     is CommandIndexFragment -> {
-                        val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
+                        val listener = fragment.context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
                         listener?.onLaunchUrlByWebView(
                             selectedUrl,
                         )
@@ -341,7 +346,7 @@ class UrlHistoryButtonEvent(
 //                            return
 //                        }
                         val listener =
-                            context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                            fragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
                         listener?.onLaunchUrlByWebViewForEdit(
                             selectedUrl,
                         )
@@ -369,6 +374,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnLogoItemClickListener (
+        context: Context?,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
     ){
         urlHistoryDisplayListAdapter.logoItemClickListener = object: UrlHistoryAdapter.OnLogoItemClickListener {
@@ -395,6 +401,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnCopyItemClickListener (
+        context: Context?,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
         searchText: AppCompatEditText,
     ){
@@ -510,6 +517,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun execScriptFile(
+        fragment: Fragment,
         selectedUrlSource: String
     ) {
         val shellFileObj = File(selectedUrlSource)

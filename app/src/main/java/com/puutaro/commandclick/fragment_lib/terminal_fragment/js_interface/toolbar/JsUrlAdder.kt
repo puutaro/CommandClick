@@ -7,21 +7,11 @@ import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.HistoryUrlContents
+import java.lang.ref.WeakReference
 
 class JsUrlAdder(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun add_S(
@@ -56,12 +46,22 @@ class JsUrlAdder(
 
         */
 
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+
         val urlString = HistoryUrlContents.extract(
 //            currentAppDirPath,
             urlStringOrMacro
         ) ?: String()
-        val targetFragmentInstance = TargetFragmentInstance()
-        val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,

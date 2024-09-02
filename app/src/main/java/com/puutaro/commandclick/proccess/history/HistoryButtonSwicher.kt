@@ -42,10 +42,7 @@ object HistoryButtonSwitcher {
         else !switchOnSource
 
         when(switchOn) {
-            true -> FannelHistoryButtonEvent(
-                fragment,
-//                sharedPref,
-            ).invoke()
+            true -> FannelHistoryButtonEvent.invoke(fragment)
            else -> urlHistoryButtonHandler(
                fragment,
                fannelInfoMap,
@@ -56,10 +53,7 @@ object HistoryButtonSwitcher {
                if(
                    onUrlHistory
                ) return@let
-               FannelHistoryButtonEvent(
-                   fragment,
-//                   sharedPref,
-               ).invoke()
+               FannelHistoryButtonEvent.invoke(fragment)
            }
         }
     }
@@ -126,7 +120,7 @@ private fun urlHistoryButtonHandler(
     if(
         onUrlHistory
     ) {
-        urlHistoryButtonEvent.invoke()
+        urlHistoryButtonEvent.invoke(fragment)
         return true
     }
 

@@ -34,20 +34,13 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class FormDialogForListIndexOrButton(
-    private val editFragment: EditFragment
-) {
+object FormDialogForListIndexOrButton {
 
     private var formDialog: Dialog? = null
     private var returnValue = String()
-    private val variableTypeDefineListForMiniEdit
-            = TypeVariable.variableTypeDefineListForMiniEdit
-    private val context = editFragment.context
-    private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-
     private val exitTextStartId = 110000
 
-        private val withEditComponentForListIndex = WithEditComponentForListIndex()
+    private val variableTypeDefineListForMiniEdit = TypeVariable.variableTypeDefineListForMiniEdit
 
 //    private val languageType =
 //        LanguageTypeSelects.JAVA_SCRIPT
@@ -75,11 +68,15 @@ class FormDialogForListIndexOrButton(
 
 
     fun create(
+        editFragment: EditFragment,
         title: String,
         parentDirPath: String,
         selectedScriptName: String,
         onSetting: String,
     ) {
+        val context = editFragment.context
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+
         val scriptContents = ReadText(
             File(
                 parentDirPath,
@@ -90,6 +87,7 @@ class FormDialogForListIndexOrButton(
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    editFragment,
                     title,
                     parentDirPath,
                     selectedScriptName,
@@ -108,12 +106,15 @@ class FormDialogForListIndexOrButton(
 
 
     private fun execCreate(
+        editFragment: EditFragment,
         title: String,
         parentDirPath: String,
         selectedScriptName: String,
         scriptContentsList: List<String>,
         onSetting: String
     ) {
+        val context = editFragment.context
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         if(
             context == null
         ) {
@@ -210,7 +211,7 @@ class FormDialogForListIndexOrButton(
             onSetting.isEmpty()
         ) {
             EditParameters(
-                editFragment,
+//                editFragment,
                 scriptContentsList,
                 recordNumToMapNameValueInCommandHolder,
                 recordNumToMapNameValueInSettingHolder,
@@ -227,7 +228,7 @@ class FormDialogForListIndexOrButton(
                 settingVariableList,
             )
             EditParameters(
-                editFragment,
+//                editFragment,
                 scriptContentsList,
                 recordNumToMapNameValueInSettingHolder,
                 null,
@@ -239,6 +240,7 @@ class FormDialogForListIndexOrButton(
         }
 
         execFormPartsAdd(
+            editFragment,
             editParameters,
             recordNumToSetVariableMaps,
             exitTextStartId,
@@ -272,9 +274,8 @@ class FormDialogForListIndexOrButton(
                 recordNumToMapNameValueInHolder.isNullOrEmpty()
             ) scriptContentsList
             else {
-                ScriptContentsLister(
-                    listOf(linearLayout)
-                ).update(
+                ScriptContentsLister.update(
+                    listOf(linearLayout),
                     recordNumToMapNameValueInHolder,
                     scriptContentsList,
                     exitTextStartId
@@ -308,6 +309,7 @@ class FormDialogForListIndexOrButton(
 
 
     private fun execFormPartsAdd(
+        editFragment: EditFragment,
         editParameters: EditParameters,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
         editTextStartId: Int,
@@ -327,6 +329,7 @@ class FormDialogForListIndexOrButton(
                 )
             val currentRecordNumToNameToValueInHolder =
                 currentRecordNumToMapNameValueInHolder.value
+            val context = editFragment.context
             val insertTextView = TextView(context)
             val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
                 VARIABLE_NAME.name
@@ -354,7 +357,8 @@ class FormDialogForListIndexOrButton(
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
 
-            val horizontalLinearLayout = withEditComponentForListIndex.insert(
+            val horizontalLinearLayout = WithEditComponentForListIndex.insert(
+                editFragment,
                 insertTextView,
                 editParameters,
             )

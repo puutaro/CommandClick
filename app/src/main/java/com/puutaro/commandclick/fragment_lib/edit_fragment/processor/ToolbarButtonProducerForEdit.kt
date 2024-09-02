@@ -18,30 +18,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.history.CLICLTYPE
-import com.puutaro.commandclick.proccess.history.HistoryButtonSwitcher
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
-import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 
-class ToolbarButtonProducerForEdit(
-    private val binding: EditFragmentBinding,
-    private val editFragment: EditFragment,
-) {
-    private val context = editFragment.context
-    private val toolbarButtonHandler = ToolbarButtonHandler(
-        editFragment,
-    )
-    private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
-        editFragment,
-    )
+object ToolbarButtonProducerForEdit {
 
 //    var languageType = LanguageTypeSelects.JAVA_SCRIPT
 //    var languageTypeToSectionHolderMap =
@@ -57,23 +41,31 @@ class ToolbarButtonProducerForEdit(
 //    ) as String
 
     fun make(
+        editFragment: EditFragment,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     ) {
+        val context = editFragment.context
+//        val toolbarButtonHandler = ToolbarButtonHandler(
+//            editFragment,
+//        )
         if(
-            !howSetButton(toolbarButtonBariantForEdit)
+            !howSetButton(
+                editFragment,
+                toolbarButtonBariantForEdit
+            )
             || context == null
         ) return
 
 
         val buttonLayout = makeButtonLayout(
-            context,
+            editFragment,
             toolbarButtonBariantForEdit,
         )
         val iconIdToCaption = editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit]
             ?: Pair(R.drawable.icons8_ok, String())
 
         val imageView = makeImageView(
-            context,
+            editFragment,
             toolbarButtonBariantForEdit,
             iconIdToCaption
         )
@@ -129,7 +121,7 @@ class ToolbarButtonProducerForEdit(
         buttonLayout.setOnClickListener { view ->
             when (toolbarButtonBariantForEdit) {
                 ToolbarButtonBariantForEdit.HISTORY -> {
-                    FannelHistoryButtonEvent(editFragment).invoke()
+                    FannelHistoryButtonEvent.invoke(editFragment)
 //                    val editExecuteTerminalFragment = TargetFragmentInstance()
 //                        .getFromFragment<TerminalFragment>(
 //                            editFragment.activity,
@@ -160,7 +152,8 @@ class ToolbarButtonProducerForEdit(
                 ToolbarButtonBariantForEdit.EDIT,
                 ToolbarButtonBariantForEdit.EXTRA,
                 -> {
-                    toolbarButtonHandler.handle(
+                    ToolbarButtonHandler.handle(
+                        editFragment,
                         false,
                         toolbarButtonBariantForEdit,
                         buttonLayout
@@ -170,17 +163,18 @@ class ToolbarButtonProducerForEdit(
                 ToolbarButtonBariantForEdit.CANCEL -> {}
             }
         }
-        binding.editToolbarLinearLayout.addView(
+        editFragment.binding.editToolbarLinearLayout.addView(
             buttonLayout
 //            makeButtonView
         )
     }
 
     private fun makeButtonLayout(
-        context: Context,
+        editFragment: EditFragment,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     ): LinearLayoutCompat {
-        val buttonLayout = LinearLayoutCompat(context)
+        val context = editFragment.context
+        val buttonLayout = LinearLayoutCompat(context as Context)
         buttonLayout.tag = toolbarButtonBariantForEdit.str
         val outValue = TypedValue()
         context.theme
@@ -228,10 +222,11 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun makeImageView(
-        context: Context,
+        editFragment: EditFragment,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         iconIdToCaption: Pair<Int, String>
     ): AppCompatImageView{
+        val context = editFragment.context as Context
         val imageView = AppCompatImageView(context)
         val dpSize = ScreenSizeCalculator.toDp(context, 40)
         val paramForImageView = LinearLayoutCompat.LayoutParams(
@@ -272,6 +267,7 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun howSetButton(
+        editFragment: EditFragment,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit
     ): Boolean {
         return editFragment.toolBarButtonVisibleMap.filter {
@@ -301,7 +297,8 @@ class ToolbarButtonProducerForEdit(
             ToolbarButtonBariantForEdit.OK,
             ToolbarButtonBariantForEdit.EDIT,
             ToolbarButtonBariantForEdit.EXTRA -> {
-                toolbarButtonHandler.handle(
+                ToolbarButtonHandler.handle(
+                    editFragment,
                     true,
                     toolbarButtonBariantForEdit,
                     buttonLayout

@@ -4,10 +4,11 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.tsv.TsvTool
+import java.lang.ref.WeakReference
 
 
 class JsListTsvUpdater(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
     @JavascriptInterface

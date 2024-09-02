@@ -5,9 +5,10 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsCon
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
+import java.lang.ref.WeakReference
 
 class JsTsv(
-    private val terminalFragment: TerminalFragment,
+    private val terminalFragmentRef: WeakReference<TerminalFragment>,
 ) {
 
     @JavascriptInterface
@@ -148,7 +149,7 @@ class JsTsv(
         val secondColCon = TsvTool.getSecondRow(
             con
         )
-        return JsCon(terminalFragment).sortFromThis(
+        return JsCon(terminalFragmentRef).sortFromThis(
             secondColCon,
             thisLine
         )

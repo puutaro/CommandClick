@@ -31,7 +31,7 @@ object EditTextUpdaterForTerminalFragment {
             sharePref,
             FannelInfoSetting.current_fannel_state
         )
-        val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+        val editExecuteFragment = TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
 //            currentAppDirPath,
             currentFannelName,

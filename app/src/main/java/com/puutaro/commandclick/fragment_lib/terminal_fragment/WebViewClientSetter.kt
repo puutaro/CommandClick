@@ -139,7 +139,7 @@ object WebViewClientSetter {
                     return
                 }
                 super.onPageFinished(webview, url)
-                CoroutineScope(Dispatchers.Main).launch{
+                terminalFragment.onScrollPosiSaveJob = CoroutineScope(Dispatchers.Main).launch{
                     if(
                         FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
                     ) return@launch
@@ -167,6 +167,8 @@ object WebViewClientSetter {
                     }
                 }
             }
+
+
         }
     }
 }

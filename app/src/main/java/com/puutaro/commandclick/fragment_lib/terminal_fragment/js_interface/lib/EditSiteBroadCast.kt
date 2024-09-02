@@ -4,12 +4,14 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class EditSiteBroadCast(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
     private val keySeparator = '|'
 
     fun send(
@@ -87,6 +89,7 @@ class EditSiteBroadCast(
                 it
             )
         }
-        context?.sendBroadcast(editSiteIntent)
+        val terminalFragment = terminalFragmentRef.get() ?: return
+        terminalFragment.context?.sendBroadcast(editSiteIntent)
     }
 }

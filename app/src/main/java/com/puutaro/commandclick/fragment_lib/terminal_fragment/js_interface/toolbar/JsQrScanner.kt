@@ -1,28 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsQrScanner(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap =
-        terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun scan_S(){
@@ -38,7 +29,17 @@ class JsQrScanner(
 
         */
 
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,

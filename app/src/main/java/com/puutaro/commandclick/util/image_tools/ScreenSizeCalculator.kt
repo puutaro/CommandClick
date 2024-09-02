@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.image_tools
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
@@ -8,21 +9,21 @@ import kotlin.math.roundToInt
 
 object ScreenSizeCalculator {
     fun dpHeight(
-        fragment: Fragment
+        activity: Activity?
     ): Float {
         val defaultDpheight = 600f
-        val density =  fragment.activity?.resources?.displayMetrics?.density
+        val density =  activity?.resources?.displayMetrics?.density
             ?: return defaultDpheight
         if(density == 0F) return defaultDpheight
         return if(
             Build.VERSION.SDK_INT > 30
         ) {
             val windowMetrics =
-                fragment.activity?.windowManager?.currentWindowMetrics
+                activity.windowManager?.currentWindowMetrics
                     ?: return defaultDpheight
             windowMetrics.bounds.height() / density
         } else {
-            val display = fragment.activity?.windowManager?.getDefaultDisplay()
+            val display = activity.windowManager?.getDefaultDisplay()
             val outMetrics = DisplayMetrics()
             display?.getMetrics(outMetrics)
             outMetrics.heightPixels / density
@@ -30,21 +31,21 @@ object ScreenSizeCalculator {
     }
 
     fun dpWidth(
-        fragment: Fragment
+        activity: Activity?
     ): Float {
         val defaultDpheight = 600f
-        val density =  fragment.activity?.resources?.displayMetrics?.density
+        val density =  activity?.resources?.displayMetrics?.density
             ?: return defaultDpheight
         if(density == 0F) return defaultDpheight
         return if(
             Build.VERSION.SDK_INT > 30
         ) {
             val windowMetrics =
-                fragment.activity?.windowManager?.currentWindowMetrics
+                activity.windowManager?.currentWindowMetrics
                     ?: return defaultDpheight
             windowMetrics.bounds.width() / density
         } else {
-            val display = fragment.activity?.windowManager?.getDefaultDisplay()
+            val display = activity.windowManager?.getDefaultDisplay()
             val outMetrics = DisplayMetrics()
             display?.getMetrics(outMetrics)
             outMetrics.widthPixels / density

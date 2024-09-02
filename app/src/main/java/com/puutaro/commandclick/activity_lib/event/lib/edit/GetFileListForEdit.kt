@@ -16,9 +16,10 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
+import java.lang.ref.WeakReference
 
 class GetFileListForEdit (
-    private val activity: MainActivity,
+    private val activityRef: WeakReference<MainActivity>,
     private val storageHelper: SimpleStorageHelper
 ) {
 
@@ -36,44 +37,52 @@ class GetFileListForEdit (
     ){
         when(initialPath.isEmpty()){
             true -> storageHelper.openFolderPicker()
-            else -> storageHelper.openFolderPicker(
+            else -> {
+                val activity = activityRef.get()
+                    ?: return
+                storageHelper.openFolderPicker(
                     RequestCode.FOLDER_PICKER_FOR_GET_FILE_LIST.code,
                     FileFullPath(
                         activity,
                         initialPath
                     )
                 )
+            }
         }
 
         storageHelper.onFolderSelected = {
                 requestCode, folder ->
-            val srcDirPath = folder.getAbsolutePath(activity)
-            FilePickerTool.registerRecentDir(
-                currentFannelName,
-                tag,
-                pickerMacro,
-                srcDirPath,
-            )
-            val srcFirOrDirList = when(onDirectoryPick){
-                true -> showDirNameList(
+            val activity = activityRef.get()
+            if(activity != null) {
+                val srcDirPath = folder.getAbsolutePath(activity)
+                FilePickerTool.registerRecentDir(
+                    currentFannelName,
+                    tag,
+                    pickerMacro,
                     srcDirPath,
-                    filterPrefixListCon,
-                    filterSuffixListCon,
-                    filterShellCon,
                 )
-                else -> showFileNameList(
-                    srcDirPath,
-                    filterPrefixListCon,
-                    filterSuffixListCon,
-                    filterShellCon,
+                val srcFirOrDirList = when (onDirectoryPick) {
+                    true -> showDirNameList(
+                        srcDirPath,
+                        filterPrefixListCon,
+                        filterSuffixListCon,
+                        filterShellCon,
+                    )
+
+                    else -> showFileNameList(
+                        srcDirPath,
+                        filterPrefixListCon,
+                        filterSuffixListCon,
+                        filterShellCon,
+                    )
+                }.map {
+                    File(srcDirPath, it).absolutePath
+                }
+                registerFileHandler(
+                    onDirectoryPick,
+                    srcFirOrDirList
                 )
-            }.map {
-                File(srcDirPath, it).absolutePath
             }
-            registerFileHandler(
-                onDirectoryPick,
-                srcFirOrDirList
-            )
         }
     }
 
@@ -131,6 +140,8 @@ class GetFileListForEdit (
 
     private fun getEditFragment(
     ): EditFragment? {
+        val activity = activityRef.get()
+            ?: return null
         val sharedPref = FannelInfoTool.getSharePref(activity)
         val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             sharedPref
@@ -144,7 +155,7 @@ class GetFileListForEdit (
         val currentFannelState = FannelInfoTool.getCurrentStateName(
             fannelInfoMap
         )
-        return TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+        return TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
 //            currentAppDirPath,
             currentFannelName,

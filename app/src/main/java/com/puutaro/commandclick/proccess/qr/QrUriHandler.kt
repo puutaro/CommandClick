@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.qr
 import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -15,7 +14,6 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -24,8 +22,10 @@ import com.puutaro.commandclick.service.GitDownloadService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CopyToClip
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.datetime.DateTimeConverter
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -124,7 +124,11 @@ object QrUriHandler {
         fragment: Fragment,
         copyString: String,
     ){
-        JsUtil(fragment).copyToClipboard(copyString, 10)
+        CopyToClip.copy(
+            fragment,
+            copyString,
+            10
+        )
         ToastUtils.showShort("Copy ok")
     }
 
@@ -379,7 +383,6 @@ object QrUriHandler {
         val gCalendarMap = QrMapper.convertScanConToMap(
             gCalendarStr
         )
-        val jsUtil = JsUtil(fragment)
         gCalendarMap.get(GCalendarKey.TITLE.key)
             ?: return
         putExtraStr(
@@ -406,13 +409,11 @@ object QrUriHandler {
             intent,
             gCalendarMap,
             GCalendarKey.BIGIN_TIME.key,
-            jsUtil,
         )
         putExtraDate(
             intent,
             gCalendarMap,
             GCalendarKey.END_TIME.key,
-            jsUtil,
         )
         context.startActivity(intent)
     }
@@ -437,10 +438,9 @@ object QrUriHandler {
         intent: Intent,
         map: Map<String, String?>?,
         key: String,
-        jsUtil: JsUtil,
     ){
         map?.get(key)?.let {
-            val miliTime =  jsUtil.convertDateTimeToMiliTime(it)
+            val miliTime =  DateTimeConverter.convert(it)
             intent.putExtra(
                 key,
                 miliTime
@@ -536,9 +536,8 @@ object QrUriHandler {
 //        currentAppDirPath: String,
         loadConSrc: String
     ) {
-        val targetFragmentInstance = TargetFragmentInstance()
         val terminalFragment =
-            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
+            TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
                 ?: return
 
         val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayoutCompat.LayoutParams

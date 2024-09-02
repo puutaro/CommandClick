@@ -16,7 +16,7 @@ object KeyboardWhenTermLongForEdit {
     ){
         val context = editFragment.context
         val activity = editFragment.activity
-        val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
+        val editExecuteTerminal = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             context?.getString(
                 R.string.edit_terminal_fragment

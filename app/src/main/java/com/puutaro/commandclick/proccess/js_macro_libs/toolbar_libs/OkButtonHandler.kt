@@ -32,12 +32,8 @@ object OkButtonHandler {
         val onPassCmdVariableEdit =
             editFragment.passCmdVariableEdit ==
                     CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-        val scriptFileSaver = ScriptFileSaver(
-            editFragment,
-        )
-
         val buttonTag = SaveTagForListContents.OK.tag
-        scriptFileSaver.save()
+        ScriptFileSaver.save(editFragment)
         val isCmdEditExecute = enableCmdEdit
                 && editFragment.enableEditExecute
                 && !onPassCmdVariableEdit
@@ -87,12 +83,9 @@ object OkButtonHandler {
         editFragment: EditFragment
     ){
         val context = editFragment.context
-        val scriptFileSaver = ScriptFileSaver(
-            editFragment,
-        )
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
-                scriptFileSaver.save()
+                ScriptFileSaver.save(editFragment)
             }
             withContext(Dispatchers.Main) {
                 val listener =

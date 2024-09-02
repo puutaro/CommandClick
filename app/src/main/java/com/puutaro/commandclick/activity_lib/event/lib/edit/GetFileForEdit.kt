@@ -196,7 +196,7 @@ class GetFileForEdit(
         val currentFannelState = FannelInfoTool.getCurrentStateName(
             fannelInfoMap
         )
-        return TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+        return TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
 //            currentAppDirPath,
             currentFannelName,

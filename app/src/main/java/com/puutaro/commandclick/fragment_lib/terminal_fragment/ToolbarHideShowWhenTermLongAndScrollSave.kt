@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.app.Activity
 import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -24,17 +25,16 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
         val listener =
             context as? TerminalFragment.OnToolBarVisibleChangeListener
         var oldPositionY = 0f
-        val hideShowThreshold = getScreenHeight(terminalFragment)
+        val hideShowThreshold = getScreenHeight(activity)
         with(binding.terminalWebView){
             setOnTouchListener {
                     v, event ->
-                val targetFragmentInstance = TargetFragmentInstance()
-                val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-                val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+                val cmdEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(activity)
+                val bottomFragment = TargetFragmentInstance.getCurrentBottomFragmentInFrag(
                     activity,
                     cmdEditFragmentTag,
                 )
-                val bottomFragmentWeight = targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
+                val bottomFragmentWeight = TargetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
                 if(
                     terminalFragment.isVisible
                     && bottomFragmentWeight != ReadLines.LONGTH
@@ -98,10 +98,10 @@ private fun execHideShow(
 }
 
 private fun getScreenHeight(
-    terminalFragment: TerminalFragment
+    activity: Activity?
 ): Int {
     val dpHeight = ScreenSizeCalculator.dpHeight(
-        terminalFragment
+        activity
     )
     val hideShowRate =
         if(dpHeight > 670f) 3.0f

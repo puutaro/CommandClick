@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 
-class UpdateLastModifyForEdit {
+object UpdateLastModifyForEdit {
 //    private val guardDirPathList = listOf(
 //        UsePath.cmdclickAppDirAdminPath,
 //    )

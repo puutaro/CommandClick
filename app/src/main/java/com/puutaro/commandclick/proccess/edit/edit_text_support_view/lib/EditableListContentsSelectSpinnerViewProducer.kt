@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
@@ -20,12 +21,12 @@ import java.io.File
 object EditableListContentsSelectSpinnerViewProducer {
 
     fun make (
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
-        val currentFragment = editParameters.currentFragment
         val fannelInfoMap = editParameters.fannelInfoMap
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
@@ -34,7 +35,7 @@ object EditableListContentsSelectSpinnerViewProducer {
             fannelInfoMap
         )
         val defaultListLimit = 100
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
         val throughMark = "-"
         val linearParamsForSpinner = LinearLayoutCompat.LayoutParams(
@@ -47,8 +48,8 @@ object EditableListContentsSelectSpinnerViewProducer {
             editParameters,
             currentComponentIndex
         )
-        when(currentFragment){
-            is EditFragment -> currentFragment.listConSelectBoxMapList.add(elcbMap)
+        when(fragment){
+            is EditFragment -> fragment.listConSelectBoxMapList.add(elcbMap)
         }
         val listContentsFilePath =
             elcbMap?.get(
@@ -170,7 +171,7 @@ object EditableListContentsSelectSpinnerViewProducer {
                     else -> insertEditText.setText(selectedItem)
                 }
                 SelectJsExecutor.exec(
-                    currentFragment,
+                    fragment,
                     selectJsPath,
                     selectedItem
                 )

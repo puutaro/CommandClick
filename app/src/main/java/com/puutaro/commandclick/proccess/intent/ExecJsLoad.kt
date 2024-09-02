@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.intent
 
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
@@ -124,7 +125,7 @@ object ExecJsLoad {
                 CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
             ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
             val curUrl =
-                TargetFragmentInstance().getCurrentTerminalFragmentFromFrag(
+                TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
                     currentFragment.activity,
                 )?.binding?.terminalWebView?.url
             UrlLaunchMacro.launch(
@@ -245,6 +246,12 @@ object ExecJsLoad {
             jsContentsListSource,
             extraRepValMap = replaceMarkMap
         ) ?: return
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "wUrl.txt").absolutePath,
+            listOf(
+                "externalJsCon: ${externalJsCon}",
+            ).joinToString("\n")
+        )
         JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
             externalJsCon

@@ -1,17 +1,23 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 
 import android.webkit.JavascriptInterface
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import java.lang.ref.WeakReference
 
 class JsReplaceVariables(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
     @JavascriptInterface
     fun getTsv(
         currentPath: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         val replaceVariableTsvCon = SetReplaceVariabler.getReplaceVariablesTsv(
             context,
             currentPath

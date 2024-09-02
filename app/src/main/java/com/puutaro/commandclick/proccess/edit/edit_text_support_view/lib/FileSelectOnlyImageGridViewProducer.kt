@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -32,13 +31,13 @@ object FileSelectOnlyImageGridViewProducer {
     private var alertDialog: AlertDialog? = null
 
     fun make (
+        editFragment: EditFragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val editFragment = editParameters.currentFragment as EditFragment
-        val context = editParameters.context
+        val context = editFragment.context
         val currentId = editParameters.currentId
         val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
             0,
@@ -97,7 +96,7 @@ object FileSelectOnlyImageGridViewProducer {
             val linearLayoutForTotal = LinearLayoutForTotal.make(
                 context
             )
-            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment)
+            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment.activity)
             val listWeight = 1F - searchTextWeight
             val linearLayoutForListView = NestLinearLayout.make(
                 context,

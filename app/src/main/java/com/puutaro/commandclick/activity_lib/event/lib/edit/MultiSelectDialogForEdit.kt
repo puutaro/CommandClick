@@ -56,14 +56,14 @@ object MultiSelectDialogForEdit {
 //                        currentAppDirPath,
                         currentFannelName,
                     )
-                    val editFragmentSource = TargetFragmentInstance().getFromActivity<EditFragment>(
+                    val editFragmentSource = TargetFragmentInstance.getFromActivity<EditFragment>(
                         activity,
                         cmdEditFragmentTag
                     )
                     val editFragment = if(
                         editFragmentSource == null
                     ){
-                        TargetFragmentInstance().getFromActivity<EditFragment>(
+                        TargetFragmentInstance.getFromActivity<EditFragment>(
                             activity,
                             settingEditFragmentTag
                         )

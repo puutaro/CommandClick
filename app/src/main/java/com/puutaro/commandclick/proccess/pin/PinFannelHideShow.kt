@@ -49,12 +49,11 @@ object PinFannelHideShow {
         activity: MainActivity,
         isHide: Boolean,
     ){
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdIndexFragment = targetFragmentInstance.getCmdIndexFragment(
+        val cmdIndexFragment = TargetFragmentInstance.getCmdIndexFragment(
             activity
         ) ?: return
 
-        val terminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
+        val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
             activity
         ) ?: return
         when(isHide){

@@ -24,14 +24,14 @@ object EditToolbarSwitcher {
         val editExecuteTerminalTag = context?.getString(
             R.string.edit_terminal_fragment
         )
-        val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
+        val editExecuteTerminal = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             editExecuteTerminalTag
         ) ?: return
         if(
             !editExecuteTerminal.isVisible
         ) return
-        val cmdEditFragmentConfirm = TargetFragmentInstance().getFromFragment<EditFragment>(
+        val cmdEditFragmentConfirm = TargetFragmentInstance.getFromFragment<EditFragment>(
             activity,
             cmdEditFragment.tag
         ) ?: return

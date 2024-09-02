@@ -52,7 +52,7 @@ object ScrollPosition {
     }
 
     fun save(
-        terminalFragment: TerminalFragment,
+        terminalFragment: TerminalFragment?,
         webView: WebView,
         url: String?,
         scrollY: Int,
@@ -60,7 +60,8 @@ object ScrollPosition {
         rawY: Float,
     ){
         if(
-            !terminalFragment.isVisible
+            terminalFragment == null
+            || !terminalFragment.isVisible
         ) return
         if(
             url.isNullOrEmpty()

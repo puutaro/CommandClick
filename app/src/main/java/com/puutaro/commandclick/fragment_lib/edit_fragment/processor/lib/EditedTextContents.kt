@@ -17,35 +17,28 @@ import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import java.io.File
 
 
-class EditedTextContents(
-    private val editFragment: EditFragment,
-) {
+object EditedTextContents {
 
-    private val fannelInfoMap = editFragment.fannelInfoMap
-    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-//        fannelInfoMap.get(
-//        FannelInfoSetting.current_app_dir.name
-//    ) ?: FannelInfoSetting.current_app_dir.defalutStr
-    private val currentScriptFileName = fannelInfoMap.get(
-        FannelInfoSetting.current_fannel_name.name
-    ) ?: FannelInfoSetting.current_fannel_name.defalutStr
-    private val scriptContentsLister = ScriptContentsLister(
-        CcEditComponent.makeEditLinearLayoutList(editFragment)
-    )
     val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
     val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
     fun updateByCommandVariables(
+        editFragment: EditFragment,
         scriptContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
     ): List<String> {
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val currentScriptFileName = fannelInfoMap.get(
+            FannelInfoSetting.current_fannel_name.name
+        ) ?: FannelInfoSetting.current_fannel_name.defalutStr
         return if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
 //            || editFragment.existIndexList
         ) {
             scriptContentsList
         } else {
-            scriptContentsLister.update(
+            ScriptContentsLister.update(
+                CcEditComponent.makeEditLinearLayoutList(editFragment),
                 recordNumToMapNameValueInCommandHolder,
                 scriptContentsList,
                 EditTextIdForEdit.COMMAND_VARIABLE.id
@@ -54,13 +47,15 @@ class EditedTextContents(
     }
 
     fun updateBySettingVariables(
+        editFragment: EditFragment,
         editedScriptContentsList: List<String>,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
     ): List<String> {
         return if (recordNumToMapNameValueInSettingHolder == null) {
             editedScriptContentsList
         } else {
-            scriptContentsLister.update(
+            ScriptContentsLister.update(
+                CcEditComponent.makeEditLinearLayoutList(editFragment),
                 recordNumToMapNameValueInSettingHolder,
                 editedScriptContentsList,
                 EditTextIdForEdit.SETTING_VARIABLE.id
@@ -69,6 +64,8 @@ class EditedTextContents(
     }
 
     fun save(
+        editFragment: EditFragment,
+        currentScriptFileName: String,
         lastScriptContentsList: List<String>,
         isSettingEdit: Boolean
     ){
@@ -88,7 +85,7 @@ class EditedTextContents(
                 editFragment.setReplaceVariableMap
             )
             else -> File(
-                cmdclickDefaultAppDirPath,
+                UsePath.cmdclickDefaultAppDirPath,
                 currentScriptFileName,
             ).absolutePath
         }
@@ -97,29 +94,32 @@ class EditedTextContents(
             submitScriptContentsList.joinToString("\n")
         )
         judgeAndUpdateWeekAgoLastModify(
-            submitScriptContentsList
-
+            submitScriptContentsList,
+            currentScriptFileName,
         )
     }
 
     private fun judgeAndUpdateWeekAgoLastModify(
-        submitScriptContentsList: List<String>
+        submitScriptContentsList: List<String>,
+        currentScriptFileName: String,
     ){
         if(
             howUpdateLastModify(
-                submitScriptContentsList
+                submitScriptContentsList,
+                currentScriptFileName,
             )
         ) return
         FileSystems.updateWeekPastLastModified(
             File(
-                cmdclickDefaultAppDirPath,
+                UsePath.cmdclickDefaultAppDirPath,
                 currentScriptFileName
             ).absolutePath
         )
     }
 
     private fun howUpdateLastModify(
-        submitScriptContentsList: List<String>
+        submitScriptContentsList: List<String>,
+        currentScriptFileName: String,
     ): Boolean {
         val settingVariableList = extractValListFromHolder(
             submitScriptContentsList,

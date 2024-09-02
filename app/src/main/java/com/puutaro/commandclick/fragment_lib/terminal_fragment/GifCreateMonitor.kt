@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,9 +17,15 @@ import java.io.File
 
 object GifCreateMonitor {
 
+    private var gifCreateJob: Job? = null
+
+    fun exit(){
+        gifCreateJob?.cancel()
+    }
+
     fun watch(
         terminalFragment: TerminalFragment,
-    ){
+    ) {
         val lastModifyExtend = UrlHistoryPath.lastModifyExtend
 //        val currentAppDirPath = terminalFragment.currentAppDirPath
         val captureHistoryDirPath =
@@ -27,7 +34,8 @@ object GifCreateMonitor {
             )
         //: 0 create 1: no_create
 //        var gitCreteTimes = 0
-        terminalFragment.lifecycleScope.launch {
+        exit()
+        gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
                     var previousPngList: List<String> = emptyList()

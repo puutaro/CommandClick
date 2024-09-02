@@ -1,14 +1,18 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.url.HistoryUrlContents
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsAddUrlCon(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
 //    private val fannelInfoMap =
@@ -73,6 +77,8 @@ class JsAddUrlCon(
         val saveUrlHistory = extraMap.get(
             AddUrlConKey.ON_SAVE_URL_HISTORY.key
         ) ?: "-"
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         ExecJsLoad.execExternalJs(
             terminalFragment,
 //            UsePath.cmdclickDefaultAppDirPath,

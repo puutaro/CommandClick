@@ -14,6 +14,7 @@ import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -35,18 +36,24 @@ object ExtraMenuGifCreator {
     val srcWallPartDirPath = File(srcWallDirPath, "part").absolutePath
     private val srcWallPngFile = File(srcWallSrcDirPath, srcWallPngName)
     var extraMapBitmapList: List<Bitmap?> = emptyList()
+    private var extraMenuGifCreateJob: Job? = null
 
+    fun exit(){
+        extraMenuGifCreateJob?.cancel()
+    }
     fun create(
         cmdIndexFragment: CommandIndexFragment
     ){
+
         val context = cmdIndexFragment.context
-        cmdIndexFragment.lifecycleScope.launch {
+        exit()
+        extraMenuGifCreateJob = cmdIndexFragment.lifecycleScope.launch {
             cmdIndexFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 val imageWidth = withContext(Dispatchers.IO) {
                     val screenHeight =
-                        ScreenSizeCalculator.dpHeight(cmdIndexFragment)
+                        ScreenSizeCalculator.dpHeight(cmdIndexFragment.activity)
                     val screenWeight =
-                        ScreenSizeCalculator.dpWidth(cmdIndexFragment)
+                        ScreenSizeCalculator.dpWidth(cmdIndexFragment.activity)
                     (imageHeight * screenWeight) / screenHeight
                 }.toInt()
                 val srcWallByteArray = withContext(Dispatchers.IO){

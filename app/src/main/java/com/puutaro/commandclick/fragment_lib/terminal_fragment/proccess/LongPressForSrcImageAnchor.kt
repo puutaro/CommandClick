@@ -18,9 +18,10 @@ import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
+import java.lang.ref.WeakReference
 
 class LongPressForSrcImageAnchor(
-    private val terminalFragment: TerminalFragment,
+    private val terminalFragmentRef: WeakReference<TerminalFragment>,
     private val context: Context?,
     private val srcImageAnchorMenuFilePath: String,
 )  {
@@ -56,6 +57,7 @@ class LongPressForSrcImageAnchor(
             )
             return
         }
+        val terminalFragment = terminalFragmentRef.get() ?: return
         val longPressScriptList = LongPressMenuTool.makeLongPressScriptList(
             terminalFragment,
             srcImageAnchorLongPressMenuDirPath,
@@ -129,6 +131,7 @@ class LongPressForSrcImageAnchor(
         longPressImageUrl: String,
         currentUrl: String,
     ) {
+        val terminalFragment = terminalFragmentRef.get() ?: return
         val context = terminalFragment.context
             ?: return
         val subMenuListView =
@@ -185,6 +188,7 @@ class LongPressForSrcImageAnchor(
         longPressImageUrl: String,
         currentUrl: String,
     ){
+        val terminalFragment = terminalFragmentRef.get() ?: return
         val selectedScriptNameOrPathObj = File(selectedJsPath)
         val execJsPath = LongPressMenuTool.makeExecJsPath(
             terminalFragment,

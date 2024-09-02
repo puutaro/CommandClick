@@ -14,11 +14,11 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import java.lang.ref.WeakReference
 
 class JsUrl(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
     @JavascriptInterface
     fun makeJsUrl(
         jsPath: String
@@ -28,6 +28,9 @@ class JsUrl(
 
         Make load js contents from js path
        */
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val jsConList =
             ReadText(jsPath).textToList()
         val loadJsCon = JavaScriptLoadUrl.make(
@@ -47,6 +50,8 @@ class JsUrl(
 
         Make raw js contents before load
        */
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             terminalFragment,
             jsPath
@@ -84,6 +89,9 @@ class JsUrl(
         ).toMap()
         val jsConList =
             ReadText(jsPath).textToList()
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         JavascriptExecuter.jsOrActionHandler(
             terminalFragment,
             jsPath,
@@ -95,6 +103,10 @@ class JsUrl(
     fun makeJsUrlFromCon(
         execCode: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         val loadJsCon = JavaScriptLoadUrl.makeFromContents(
             context,
             execCode.split("\n")
@@ -111,6 +123,10 @@ class JsUrl(
 
         [Deprecated] Load QR code contents about js or url
         */
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         QrUriHandler.load(
             terminalFragment,
 //            terminalFragment.currentAppDirPath,
@@ -151,6 +167,11 @@ class JsUrl(
         Load Url
         This is one of the most used js interface.
         */
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         BroadCastIntent.sendUrlCon(
             context,
             urlStr
@@ -182,6 +203,11 @@ class JsUrl(
                 pageFinishedLoadCon
             )
         )
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeTerm.ULR_LAUNCH.action,
@@ -196,6 +222,10 @@ class JsUrl(
 
         Exit javascript loading
         */
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         terminalFragment.binding.terminalWebView.loadUrl(
             "about:blank"
         )

@@ -4,6 +4,7 @@ import android.view.View
 import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.JsInterfaceAdder
+import java.lang.ref.WeakReference
 
 
 object WebViewSettings {
@@ -27,7 +28,7 @@ object WebViewSettings {
         settings.mediaPlaybackRequiresUserGesture = false
 
         JsInterfaceAdder.add(
-            terminalFragment,
+            WeakReference(terminalFragment),
             terminalWebView
         )
     }

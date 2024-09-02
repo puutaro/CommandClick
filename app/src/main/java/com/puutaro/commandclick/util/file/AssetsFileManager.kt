@@ -16,6 +16,8 @@ object AssetsFileManager {
     const val resPngDirPath = "res/png"
     const val textImagePingPath = "${resPngDirPath}/text_image.png"
     const val pdfImagePingPath = "${resPngDirPath}/pdf_image.png"
+    const val urlPngDirPath = "${resPngDirPath}/url"
+    const val firstUrlCapPngPath = "${urlPngDirPath}/first_url_cap.png"
     const val extraMenuDirPath = "${resPngDirPath}/extra_menu"
     const val textViewDecoDirPath = "${resPngDirPath}/text_view_deco"
     const val underLinePngPath = "${textViewDecoDirPath}/under_line.png"

@@ -6,15 +6,11 @@ import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import java.lang.ref.WeakReference
 
 class JsFileOrDirListGetter(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
     private val filterMapSeparator = '|'
 
     @JavascriptInterface
@@ -61,7 +57,13 @@ class JsFileOrDirListGetter(
         ```
                 `
         */
-
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
         val filterMap = CmdClickMap.createMap(
             filterMapCon,
             filterMapSeparator,

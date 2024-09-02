@@ -15,20 +15,19 @@ object SearchButtonClickListener {
         activity: MainActivity,
         isFromTerminal: Boolean,
         ) {
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdIndexFragment = targetFragmentInstance.getCmdIndexFragment(
+        val cmdIndexFragment = TargetFragmentInstance.getCmdIndexFragment(
             activity
         ) ?: return
 //        val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
         val searchLinearButton = when(isFromTerminal){
-            true -> targetFragmentInstance
+            true -> TargetFragmentInstance
                 .getCurrentTerminalFragment(activity)
                 ?.binding
                 ?.termSearchButton
             else -> cmdIndexFragment.binding.cmdindexSearchButton
         } ?: return
         searchLinearButton.setOnClickListener{
-            val terminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
+            val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
                 activity
             ) ?: return@setOnClickListener
             val isGgleSearchUrl =
@@ -93,7 +92,7 @@ object SearchButtonClickListener {
                 !hasFocus
             ) return@setOnFocusChangeListener
 
-            val terminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
+            val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
                 activity
             ) ?: return@setOnFocusChangeListener
             val isGgleSearchUrl =

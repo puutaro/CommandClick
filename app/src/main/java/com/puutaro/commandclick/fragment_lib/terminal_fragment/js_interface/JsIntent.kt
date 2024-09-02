@@ -11,14 +11,13 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class JsIntent(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
-    private val editSiteBroadCast = EditSiteBroadCast(terminalFragment)
+    private val editSiteBroadCast = EditSiteBroadCast(terminalFragmentRef)
 
 
     @JavascriptInterface
@@ -38,6 +37,9 @@ class JsIntent(
     fun launchUrl(
         currentPageUrl: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         val openUrlIntent = Intent(
             Intent.ACTION_VIEW,
             Uri.parse(currentPageUrl)
@@ -54,6 +56,10 @@ class JsIntent(
         extraListLongTabSepa: String,
         extraListFloatTabSepa: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+
         IntentLauncher.send(
             activity,
             action,
@@ -71,6 +77,9 @@ class JsIntent(
         currentScriptFileName: String,
         currentFannelState: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         val execIntent = Intent(terminalFragment.activity, MainActivity::class.java)
         execIntent
             .setAction(Intent.ACTION_MAIN)
@@ -104,6 +113,10 @@ class JsIntent(
         ) {
             ToastUtils.showLong("no exist\n ${imageFilePath}")
         }
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         IntentVariant.sharePngImage(
             imageFilePathObj,
             context,

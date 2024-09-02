@@ -66,18 +66,15 @@ import java.io.File
 //) {
 //    DELETE(mainMenuGroupId, 30100, 1, "delete"),
 //}
-class FannelHistoryButtonEvent (
-    private val fragment: Fragment,
-//    private val sharedPref: FannelInfoTool.FannelInfoSharePref?,
-    )
-{
+object FannelHistoryButtonEvent {
+
+
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
-    private val context = fragment.context
-    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
-    private val listLinearWeight = 1F - searchTextLinearWeight
     private var fannelHistoryDialog: Dialog? = null
     private var updateRecyclerJob: Job? = null
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+    private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
 //    private val homeFannelList = when(
 //        fragment
@@ -91,24 +88,12 @@ class FannelHistoryButtonEvent (
 //        else -> emptyList()
 //    } ?: emptyList()
 
-    companion object {
-//        private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-//        private val languageTypeToSectionHolderMap =
-//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//                languageType
-//            )
-//        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//        ) as String
-//
-//        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//        ) as String
-        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
-        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
-    }
     fun invoke(
+       fragment: Fragment
     ) {
+        val context = fragment.context
+        val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)
+        val listLinearWeight = 1F - searchTextLinearWeight
         if(
             context == null
         ) return
@@ -175,6 +160,7 @@ class FannelHistoryButtonEvent (
             searchText
         )
         setItemTouchHelper(
+            fragment,
             fannelManageListView,
             fannelManageListAdapter,
             searchText,
@@ -204,10 +190,12 @@ class FannelHistoryButtonEvent (
 //            cmdclickAppHistoryDirAdminPath
 //        )
         invokeItemSetClickListenerForFannelManage(
+            fragment,
             fannelManageListView,
             fannelManageListAdapter
         )
         setFannelManageListViewOnPinItemClickListener(
+            fragment,
             fannelManageListAdapter,
         )
 //        setFannelManageListViewOnDeleteItemClickListener (
@@ -215,13 +203,16 @@ class FannelHistoryButtonEvent (
 //            searchText,
 //        )
         setFannelManageListViewOnEditItemClickListener(
+            fragment,
             fannelManageListView,
             fannelManageListAdapter,
         )
         setFannelManageListViewOnLogoItemClickListener (
+            fragment,
             fannelManageListAdapter,
         )
         setFannelManageListViewOnLongPressItemClickListener(
+            context,
             fannelManageListAdapter,
         )
     }
@@ -300,6 +291,7 @@ class FannelHistoryButtonEvent (
     }
 
     private fun invokeItemSetClickListenerForFannelManage(
+        fragment: Fragment,
         fannelManageListView: RecyclerView,
         fannelManageListAdapter: FannelManageAdapter,
     ) {
@@ -329,6 +321,7 @@ class FannelHistoryButtonEvent (
     }
 
     private fun setFannelManageListViewOnPinItemClickListener(
+        fragment: Fragment,
         fannelManageListAdapter: FannelManageAdapter,
     ) {
 //        val pinLimit = FannelManageAdapter.pinLimit
@@ -345,9 +338,11 @@ class FannelHistoryButtonEvent (
                 }
                 when(fannelName == SystemFannel.home){
                     true -> pinFannelToolbarHideShow(
+                        fragment,
                         holder.pinImageButtonView
                     )
                     else -> pinFannelRA(
+                        fragment.context,
                         fannelName,
                         holder.pinImageButtonView
                     )
@@ -357,25 +352,25 @@ class FannelHistoryButtonEvent (
     }
 
     private fun pinFannelToolbarHideShow(
+        fragment: Fragment,
         pinImageButtonView: AppCompatImageButton
     ){
-        val targetFragmentInstance = TargetFragmentInstance()
         val isHide = PinFannelHideShow.isHide()
+        val context = fragment.context
         when(isHide){
             true -> {
-                val cmdIndexFragment =
-                    targetFragmentInstance.getCmdIndexFragmentFromFrag(fragment.activity)
+                TargetFragmentInstance.getCmdIndexFragmentFromFrag(fragment.activity)
                         ?: return
-                val listener = cmdIndexFragment.context as? CommandIndexFragment.OnPinFannelShowListener
+                val listener = context as? CommandIndexFragment.OnPinFannelShowListener
                     ?: return
                 listener.onPinFannelShow()
                 ToastUtils.showShort("Show pin")
                 pinImageButtonView.imageTintList =
-                    context?.getColorStateList(FannelManageAdapter.pinExistColor)
+                    context.getColorStateList(FannelManageAdapter.pinExistColor)
             }
             else -> {
                 val terminalFragment =
-                    targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
+                    TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
                         ?: return
                 val listener = terminalFragment.context as? TerminalFragment.OnPinFannelHideListener
                     ?: return
@@ -389,6 +384,7 @@ class FannelHistoryButtonEvent (
     }
 
     private fun pinFannelRA(
+        context: Context?,
         fannelName: String,
         pinImageButtonView: AppCompatImageButton
     ){
@@ -413,6 +409,7 @@ class FannelHistoryButtonEvent (
     }
 
     private fun setFannelManageListViewOnEditItemClickListener(
+        fragment: Fragment,
         fannelManageListView: RecyclerView,
         fannelManageListAdapter: FannelManageAdapter,
     ) {
@@ -432,7 +429,7 @@ class FannelHistoryButtonEvent (
                 }
                 when(fannelName == SystemFannel.home) {
                     true -> {
-                        preferenceEdit()
+                        preferenceEdit(fragment)
                     }
                     false -> ScriptFileEdit.edit(
                         fragment,
@@ -444,10 +441,10 @@ class FannelHistoryButtonEvent (
     }
 
     private fun preferenceEdit(
+        fragment: Fragment,
     ){
         val activity = fragment.activity
-        val targetFragmentInstance = TargetFragmentInstance()
-        val bottomFragment = targetFragmentInstance.getCmdIndexFragmentFromFrag(
+        val bottomFragment = TargetFragmentInstance.getCmdIndexFragmentFromFrag(
             activity,
         )
         if(
@@ -467,6 +464,7 @@ class FannelHistoryButtonEvent (
     }
 
     private fun setFannelManageListViewOnLongPressItemClickListener(
+        context: Context?,
         fannelManageListAdapter: FannelManageAdapter,
     ) {
         fannelManageListAdapter.longPressItemClickListener = object: FannelManageAdapter.OnLongPressItemClickListener {
@@ -578,6 +576,7 @@ class FannelHistoryButtonEvent (
 //    }
 
     private fun setFannelManageListViewOnLogoItemClickListener (
+        fragment: Fragment,
         fannelManageAdapter: FannelManageAdapter,
     ){
         fannelManageAdapter.shareItemClickListener = object: FannelManageAdapter.OnShareItemClickListener {
@@ -619,6 +618,7 @@ class FannelHistoryButtonEvent (
     }
 
     private fun setItemTouchHelper(
+        fragment: Fragment,
         recyclerView: RecyclerView,
         fannelManageAdapter: FannelManageAdapter,
         searchText: AppCompatEditText?,

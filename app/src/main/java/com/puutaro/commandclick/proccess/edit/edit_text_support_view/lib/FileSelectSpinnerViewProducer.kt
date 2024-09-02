@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -26,13 +27,13 @@ object FileSelectSpinnerViewProducer {
     private val throughMark = "-"
 
     fun make (
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
-        val currentFragment = editParameters.currentFragment
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            editParameters.fannelInfoMap
@@ -142,7 +143,7 @@ object FileSelectSpinnerViewProducer {
                 ) return
                 insertEditText.setText(selectedItem)
                 SelectJsExecutor.exec(
-                    currentFragment,
+                    fragment,
                     selectJsPath,
                     selectedItem,
                 )

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -8,6 +9,8 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -15,14 +18,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import java.io.File
+import java.lang.ref.WeakReference
 import java.util.SortedMap
 
 class JsToListMap(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
     private val subSeparator = '?'
-    private val busyboxExecutor = terminalFragment.busyboxExecutor
 
     @JavascriptInterface
     fun map(
@@ -179,7 +181,9 @@ class JsToListMap(
         */
 
 
-
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
         val extraMap = CmdClickMap.createMap(
             extraMapCon,
             FilterAndMapModule.extraMapSeparator,
@@ -253,7 +257,7 @@ class JsToListMap(
             extraMap,
             compPrefixList,
             compSuffixList,
-            busyboxExecutor,
+            terminalFragment.busyboxExecutor,
             shellCon,
             shellArgsMapSrc,
             shellOutput

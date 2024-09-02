@@ -14,22 +14,15 @@ import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonV
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditToolbarSwitcher
 
-class PageSearchToolbarManagerForEdit(
-    private val cmdEditFragment: EditFragment,
-) {
+object PageSearchToolbarManagerForEdit{
+    fun cancleButtonClickListener(
+        cmdEditFragment: EditFragment
+    ){
+        val context = cmdEditFragment.context
+        val binding = cmdEditFragment.binding
+        val pageSearch = binding.pageSearch
+        val cmdindexSearchCancel = pageSearch.cmdindexSearchCancel
 
-    private val context = cmdEditFragment.context
-    private val binding = cmdEditFragment.binding
-    private val pageSearch = binding.pageSearch
-    private val cmdindexSearchCancel = pageSearch.cmdindexSearchCancel
-    private val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
-    private val cmdindexSearchTopAllow = pageSearch.cmdindexSearchTopAllow
-    private val cmdindexSearchDownAllow = pageSearch.cmdindexSearchDownAllow
-    private val listener = context as? EditFragment.OnLongPressPlayOrEditButtonListener
-    private val pageSearchLongPressType = EditLongPressType.PAGE_SEARCH
-    private val editExecuteTerminalTag = context?.getString(R.string.edit_terminal_fragment)
-
-    fun cancleButtonClickListener(){
         cmdindexSearchCancel.setOnClickListener {
                 cancelView ->
             EditToolbarSwitcher.switch(
@@ -39,7 +32,16 @@ class PageSearchToolbarManagerForEdit(
         }
     }
 
-    fun pageSearchTextChangeListner(){
+    fun pageSearchTextChangeListner(
+        cmdEditFragment: EditFragment
+    ){
+        val context = cmdEditFragment.context
+        val binding = cmdEditFragment.binding
+        val pageSearch = binding.pageSearch
+        val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
+        val listener = context as? EditFragment.OnLongPressPlayOrEditButtonListener
+        val pageSearchLongPressType = EditLongPressType.PAGE_SEARCH
+        val editExecuteTerminalTag = context?.getString(R.string.edit_terminal_fragment)
         try {
             val linearWeightParamWide = LinearLayoutCompat.LayoutParams(
                 0,
@@ -87,7 +89,16 @@ class PageSearchToolbarManagerForEdit(
         }
     }
 
-    fun onKeyListner(){
+    fun onKeyListner(
+        cmdEditFragment: EditFragment
+    ){
+        val context = cmdEditFragment.context
+        val binding = cmdEditFragment.binding
+        val pageSearch = binding.pageSearch
+        val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
+        val listener = context as? EditFragment.OnLongPressPlayOrEditButtonListener
+        val pageSearchLongPressType = EditLongPressType.PAGE_SEARCH
+        val editExecuteTerminalTag = context?.getString(R.string.edit_terminal_fragment)
         cmdPageSearchEditText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.getAction() != KeyEvent.ACTION_DOWN ||
@@ -104,7 +115,16 @@ class PageSearchToolbarManagerForEdit(
         })
     }
 
-    fun searchTopClickLisnter(){
+    fun searchTopClickLisnter(
+        cmdEditFragment: EditFragment
+    ){
+        val context = cmdEditFragment.context
+        val binding = cmdEditFragment.binding
+        val pageSearch = binding.pageSearch
+        val cmdindexSearchTopAllow = pageSearch.cmdindexSearchTopAllow
+        val listener = context as? EditFragment.OnLongPressPlayOrEditButtonListener
+        val pageSearchLongPressType = EditLongPressType.PAGE_SEARCH
+        val editExecuteTerminalTag = context?.getString(R.string.edit_terminal_fragment)
         cmdindexSearchTopAllow.setOnClickListener {
                 TopAllowButtonView ->
             if(!cmdEditFragment.isVisible) return@setOnClickListener
@@ -118,7 +138,16 @@ class PageSearchToolbarManagerForEdit(
         }
     }
 
-    fun searchDownClickLisnter(){
+    fun searchDownClickLisnter(
+        cmdEditFragment: EditFragment
+    ){
+        val context = cmdEditFragment.context
+        val binding = cmdEditFragment.binding
+        val pageSearch = binding.pageSearch
+        val cmdindexSearchDownAllow = pageSearch.cmdindexSearchDownAllow
+        val listener = context as? EditFragment.OnLongPressPlayOrEditButtonListener
+        val pageSearchLongPressType = EditLongPressType.PAGE_SEARCH
+        val editExecuteTerminalTag = context?.getString(R.string.edit_terminal_fragment)
         cmdindexSearchDownAllow.setOnClickListener {
                 DownAllowButtonView ->
             if(!cmdEditFragment.isVisible) return@setOnClickListener

@@ -10,22 +10,23 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.lang.ref.WeakReference
 
 class JsFileOrDirGetter(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//    private val context = terminalFragment.context
+//    private val activity = terminalFragment.activity
+//    private val fannelInfoMap = terminalFragment.fannelInfoMap
+////    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////        fannelInfoMap
+////    )
+//    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
 //        fannelInfoMap
 //    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
+//    private val currentFannelState = FannelInfoTool.getCurrentStateName(
+//        fannelInfoMap
+//    )
     private val filterMapSeparator = '|'
 
     @JavascriptInterface
@@ -72,7 +73,19 @@ class JsFileOrDirGetter(
         ```
                 `
         */
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,

@@ -10,12 +10,12 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.*
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsCsv(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
-    val jsText = JsText(terminalFragment)
+    val jsText = JsText(terminalFragmentRef)
     val tableHeaderClassName = "tableHeader"
     val rowFirstClassName = "rowFirst"
     val existSign = "exist"
@@ -24,6 +24,8 @@ class JsCsv(
     fun takeRowSize(
         tag: String
     ): Int {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return 0
         val rowSize = terminalFragment.rowsMap[tag]?.size ?: 0
         return rowSize
     }
@@ -32,6 +34,8 @@ class JsCsv(
     fun takeColSize(
         tag: String
     ): Int {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return 0
         val tagName = terminalFragment.rowsMap[tag]?.firstOrNull()?.size ?: 0
         return tagName
     }
@@ -40,6 +44,8 @@ class JsCsv(
     fun isRead(
         tag: String
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val rowsString = terminalFragment.rowsMap[tag]
             ?.joinToString("")
             ?: String()
@@ -60,10 +66,14 @@ class JsCsv(
     ) {
         var readCompSignal = false
         var errMessage = String()
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 try {
                     execRead(
+                        terminalFragment,
                         tag,
                         filePath,
                         withNoHeader,
@@ -97,6 +107,7 @@ class JsCsv(
 
 
     private fun execRead(
+        terminalFragment: TerminalFragment,
         tag: String,
         filePath: String,
         withNoHeader: String,
@@ -157,6 +168,9 @@ class JsCsv(
         csvString: String,
         csvOrTsv: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         try {
             if(
                 csvOrTsv.isEmpty()
@@ -184,6 +198,9 @@ class JsCsv(
         tag: String,
         colNum: Int,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val headerList =  terminalFragment.headerMap[tag]
             ?: return String()
         val colSize = headerList.size
@@ -200,7 +217,11 @@ class JsCsv(
         startColNumSource: Int,
         endColNumSource: Int,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val startCol = makeStartNum(
+            terminalFragment,
             tag,
             startColNumSource,
         )
@@ -211,6 +232,7 @@ class JsCsv(
         if(
             startCol > endColNum
         ) return String()
+
         val headerList =  terminalFragment.headerMap[tag]
             ?: return String()
         val colSize = headerList.size
@@ -231,7 +253,11 @@ class JsCsv(
         startColNumSource: Int,
         endColNumSource: Int,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val startCol = makeStartNum(
+            terminalFragment,
             tag,
             startColNumSource,
         )
@@ -262,7 +288,11 @@ class JsCsv(
         startRowNumSource: Int,
         endRowNumSource: Int,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val startRow = makeStartNum(
+            terminalFragment,
             tag,
             startRowNumSource,
         )
@@ -297,7 +327,11 @@ class JsCsv(
         endColNumSource: Int,
         headerRow: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val startCol = makeStartNum(
+            terminalFragment,
             tag,
             startColNumSource,
         )
@@ -346,6 +380,9 @@ class JsCsv(
     fun outPutTsvForDRow(
         tag: String
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val tsvCon = terminalFragment.rowsMap[tag]?.map {
             it.joinToString("\t")
         }?.joinToString("\n")
@@ -357,6 +394,9 @@ class JsCsv(
     fun outPutTsvForDCol(
         tag: String
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         val rows = terminalFragment.rowsMap[tag]
             ?: return String()
         val tsvCon = jsText.transpose(rows).map {
@@ -371,12 +411,16 @@ class JsCsv(
         destTag: String,
         comaSepaColumns: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         var selectCompSignal = false
         var errMessage = String()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 try {
                     execSelectColumn(
+                        terminalFragment,
                         srcTag,
                         destTag,
                         comaSepaColumns
@@ -410,6 +454,7 @@ class JsCsv(
     }
 
     private fun execSelectColumn(
+        terminalFragment: TerminalFragment,
         srcTag: String,
         destTag: String,
         comaSepaColumns: String
@@ -456,12 +501,16 @@ class JsCsv(
         destTag: String,
         tabSepaFormura: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         var filterCompSignal = false
         var errMessage = String()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 try {
                     execFilter(
+                        terminalFragment,
                         srcTag,
                         destTag,
                         tabSepaFormura
@@ -494,6 +543,7 @@ class JsCsv(
 
 
     private fun execFilter(
+        terminalFragment: TerminalFragment,
         srcTag: String,
         destTag: String,
         tabSepaFormura: String
@@ -521,6 +571,7 @@ class JsCsv(
             tabSepaFormura
         )
         val filteredRows = execRowsBuFilter(
+            terminalFragment,
             srcTag,
             filterNestMap,
             rows
@@ -554,6 +605,7 @@ class JsCsv(
     }
 
     private fun execRowsBuFilter(
+        terminalFragment: TerminalFragment,
         srcTag: String,
         filterNestMap: Map<String, Map<String, String>>,
         rows: List<List<String>>
@@ -607,6 +659,7 @@ class JsCsv(
     }
 
     private fun makeStartNum(
+        terminalFragment: TerminalFragment,
         tag: String,
         startRowNumSource: Int,
     ): Int {
@@ -626,6 +679,9 @@ class JsCsv(
         tag: String,
         endRowNumSource: Int,
     ): Int {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return 0
+
         val rowSize = terminalFragment.rowsMap[tag]?.size
             ?: return 0
         if(

@@ -18,13 +18,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 class MultiSelectGridViewJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var alertDialog: AlertDialog? = null
 
@@ -33,11 +32,15 @@ class MultiSelectGridViewJsDialog(
         message: String,
         imagePathListTabSepaStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    terminalFragment,
                     title,
                     message,
                     imagePathListTabSepaStr
@@ -55,9 +58,10 @@ class MultiSelectGridViewJsDialog(
     }
 
     private fun createLinearLayoutForGridView(
+        terminalFragment: TerminalFragment,
         imagePathList: List<String>,
     ): LinearLayout {
-
+        val context = terminalFragment.context
         val gridView = GridView(context)
         gridView.numColumns = 2
         gridView.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
@@ -74,7 +78,7 @@ class MultiSelectGridViewJsDialog(
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
         )
-        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
+        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment.activity)
         val listWeight = 1F - searchTextWeight
         val linearLayoutForListView = NestLinearLayout.make(
             context,
@@ -91,6 +95,7 @@ class MultiSelectGridViewJsDialog(
     }
 
     private fun execCreate(
+        terminalFragment: TerminalFragment,
         title: String,
         message: String,
         imagePathListTabSepaStr: String,
@@ -99,8 +104,12 @@ class MultiSelectGridViewJsDialog(
             imagePathListTabSepaStr
                 .split("\t")
                 .toMutableList()
-        val context = context ?: return
+
+        val context = terminalFragment.context
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val linearLayoutForGridView = createLinearLayoutForGridView(
+            terminalFragment,
             imagePathList,
         )
 

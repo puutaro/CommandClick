@@ -17,7 +17,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
@@ -25,16 +24,24 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.LocalDateTime
 
 
 object ButtonImageCreator {
+
+    private
+    var buttonImageCreateJob: Job? = null
+
+    fun exit(){
+        buttonImageCreateJob?.cancel()
+    }
+
     fun create(
         terminalFragment: TerminalFragment
     ){
@@ -42,15 +49,16 @@ object ButtonImageCreator {
         val concurrentLimit = 5
         val semaphore = Semaphore(concurrentLimit)
         val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
-        terminalFragment.lifecycleScope.launch {
+        exit()
+        buttonImageCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                withContext(Dispatchers.IO){
-                    FileSystems.updateFile(
-                        File(UsePath.cmdclickDefaultAppDirPath, "image.txt").absolutePath,
-                        "start ${LocalDateTime.now()}"
-                    )
-                }
+//                withContext(Dispatchers.IO){
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "image.txt").absolutePath,
+//                        "start ${LocalDateTime.now()}"
+//                    )
+//                }
                 val capturePartPngDirPathList = withContext(Dispatchers.IO) {
                     makeCapturePartPngDirPathList()
                 }
@@ -90,12 +98,12 @@ object ButtonImageCreator {
                         ?: return@withContext
                     listener.onSetToolbarButtonImage()
                 }
-                withContext(Dispatchers.IO){
-                    FileSystems.updateFile(
-                        File(UsePath.cmdclickDefaultAppDirPath, "image.txt").absolutePath,
-                        "end ${LocalDateTime.now()}"
-                    )
-                }
+//                withContext(Dispatchers.IO){
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "image.txt").absolutePath,
+//                        "end ${LocalDateTime.now()}"
+//                    )
+//                }
             }
         }
     }
@@ -107,14 +115,30 @@ object ButtonImageCreator {
     ): ByteArray? {
         val originalImagePath = captureDirList.shuffled().firstOrNull()?.let {
                 dirPath ->
-            FileSystems.sortedFiles(dirPath).firstOrNull()?.let {
+            if(
+                dirPath.isEmpty()
+            ) return@let null
+            FileSystems.sortedFiles(dirPath).firstOrNull()?.let fileList@ {
+                if(
+                    it.isEmpty()
+                ) return@fileList null
                 File(dirPath, it).absolutePath
             }
-        }?: return null
+        }
         val original = withContext(Dispatchers.IO) {
-            BitmapTool.convertFileToBitmap(
-                originalImagePath
-            )?.let  {
+            when(originalImagePath.isNullOrEmpty()){
+                true -> {
+                    AssetsFileManager.assetsByteArray(
+                        context,
+                        AssetsFileManager.firstUrlCapPngPath
+                    )?.let {
+                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                    }
+                }
+                else -> BitmapTool.convertFileToBitmap(
+                    originalImagePath
+                )
+            }?.let  {
                 cutOriginal(
                     BitmapTool.resizeByMaxHeight(
                         it,

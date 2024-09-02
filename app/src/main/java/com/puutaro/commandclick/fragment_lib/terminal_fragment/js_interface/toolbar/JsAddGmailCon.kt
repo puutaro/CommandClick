@@ -1,13 +1,17 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsAddGmailCon(
-    private val terminalFragment: TerminalFragment,
+    private val terminalFragmentRef: WeakReference<TerminalFragment,>
 ) {
     private val keySeparator = '|'
 
@@ -46,6 +50,8 @@ class JsAddGmailCon(
 
         */
 
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         if(
             gmailAd.isEmpty()
         ) return

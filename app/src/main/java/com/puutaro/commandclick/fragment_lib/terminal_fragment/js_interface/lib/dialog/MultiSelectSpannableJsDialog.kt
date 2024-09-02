@@ -15,12 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 class MultiSelectSpannableJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var gridDialogObj: Dialog? = null
 
@@ -29,11 +28,16 @@ class MultiSelectSpannableJsDialog(
         message: String,
         imagePathListNewlineSepaStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    terminalFragment,
                     title,
                     message,
                     imagePathListNewlineSepaStr
@@ -50,14 +54,14 @@ class MultiSelectSpannableJsDialog(
     }
 
     private fun execCreate(
+        terminalFragment: TerminalFragment,
         title: String,
         message: String,
         imagePathListNewlineSepaStr: String,
     ) {
-
-        if(
-            context == null
-        ) return
+        val context = terminalFragment.context
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         gridDialogObj = Dialog(
             context
         )
@@ -79,6 +83,7 @@ class MultiSelectSpannableJsDialog(
         ) messageTextView.text = message
         else messageTextView.isVisible = false
         setGridView(
+            terminalFragment,
             imagePathListNewlineSepaStr
         )
         val cancelButton = gridDialogObj?.findViewById<ImageButton>(
@@ -113,6 +118,7 @@ class MultiSelectSpannableJsDialog(
     }
 
     private fun setGridView(
+        terminalFragment: TerminalFragment,
         imagePathListNewlineSepaStr: String,
     ){
         val imagePathList = makeImagePathList(
@@ -122,8 +128,8 @@ class MultiSelectSpannableJsDialog(
             com.puutaro.commandclick.R.id.multi_select_spannable_grid_dialog_grid_view
         ) ?: return
         val multiSelectSpannableAdapter = MultiSelectSpannableAdapter(
-            terminalFragment,
-            context
+            WeakReference(terminalFragment.activity),
+            terminalFragment.context,
         )
         multiSelectSpannableAdapter.clear()
         multiSelectSpannableAdapter.addAll(

@@ -2,14 +2,18 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import java.lang.ref.WeakReference
 
 class JsCancel(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
 
     @JavascriptInterface
     fun cancel_S(){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val listener =
             context as? TerminalFragment.onBackstackWhenTermLongInRestartListener
                 ?: return

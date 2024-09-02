@@ -202,8 +202,7 @@ object DialogObject {
     ): Int {
         val context = fragment.context
             ?: return defaultFontPercentage
-        val cmdIndexTerminal = TargetFragmentInstance(
-        ).getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val cmdIndexTerminal = TargetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             fragment.activity,
             context.getString(R.string.index_terminal_fragment)
         )
@@ -212,8 +211,7 @@ object DialogObject {
             && cmdIndexTerminal.isVisible
         ) return cmdIndexTerminal.fontZoomPercent
 
-        val editExecuteTerminal = TargetFragmentInstance(
-        ).getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val editExecuteTerminal = TargetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             fragment.activity,
             context.getString(R.string.edit_terminal_fragment)
         )

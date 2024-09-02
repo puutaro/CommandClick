@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.widget.EditText
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
@@ -9,39 +10,35 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextPro
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
 
 
-class EditModeHandler(
-    private val editFragment: EditFragment,
-) {
-    private val context = editFragment.context
-    private val fannelInfoMap = editFragment.fannelInfoMap
-    private val editExecuteValue = editFragment.editExecuteValue
-    private val binding = editFragment.binding
-    private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
-        binding,
-        editFragment,
-    )
+object EditModeHandler{
     val settingSectionStart = CommandClickScriptVariable.SETTING_SEC_START
     val settingSectionEnd = CommandClickScriptVariable.SETTING_SEC_END
 
-    fun execByHowFullEdit(){
+    fun execByHowFullEdit(editFragment: EditFragment){
         when(
             IsCmdEdit.judge(editFragment)
         ) {
-            false -> editSettingVariable()
-            else -> editCommandVariable()
+            false -> editSettingVariable(
+                editFragment
+            )
+            else -> editCommandVariable(editFragment)
         }
     }
 
     private fun editCommandVariable(
+        editFragment: EditFragment
     ) {
+        val fannelInfoMap = editFragment.fannelInfoMap
+        val editExecuteValue = editFragment.editExecuteValue
         val recordNumToMapNameValueInCommandHolder =
             editFragment.recordNumToMapNameValueInCommandHolder
         if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
         ) {
-            backToCmdIndex()
+            backToCmdIndex(editFragment)
             return
         }
         UpdateLastModifiedForAppHistory.update(
@@ -49,29 +46,31 @@ class EditModeHandler(
             fannelInfoMap,
         )
         buttonCreate(
+            editFragment,
             ToolbarButtonBariantForEdit.HISTORY,
         )
 
         buttonCreate(
+            editFragment,
             ToolbarButtonBariantForEdit.OK,
         )
-        val editTextProducerForEdit = EditTextProducerForEdit(
-            editFragment,
-        )
-        editTextProducerForEdit.adds()
 
         buttonCreate(
+            editFragment,
             ToolbarButtonBariantForEdit.EDIT,
         )
         buttonCreate(
+            editFragment,
             ToolbarButtonBariantForEdit.SETTING,
         )
         buttonCreate(
+            editFragment,
             ToolbarButtonBariantForEdit.EXTRA,
         )
     }
 
     private fun editSettingVariable(
+        editFragment: EditFragment
     ) {
         val recordNumToMapNameValueInCommandHolder =
             editFragment.recordNumToMapNameValueInCommandHolder
@@ -81,16 +80,15 @@ class EditModeHandler(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
             && recordNumToMapNameValueInSettingHolder.isNullOrEmpty()
         ) {
-            backToCmdIndex()
+            backToCmdIndex(editFragment)
             return
         }
         buttonCreate(
+            editFragment,
             ToolbarButtonBariantForEdit.OK,
         )
-        val editTextProducerForEdit = EditTextProducerForEdit(
+        EditTextProducerForEdit.adds(
             editFragment,
-        )
-        editTextProducerForEdit.adds(
         true
         )
 //        if(editFragment.isToolbarBtnCustomInSettingSelects) {
@@ -107,14 +105,17 @@ class EditModeHandler(
     }
 
     private fun buttonCreate(
+        editFragment: EditFragment,
         toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
     ){
-        toolbarButtonProducerForEdit.make(
+        ToolbarButtonProducerForEdit.make(
+            editFragment,
             toolbarButtonVariantForEdit,
         )
     }
 
-    private fun backToCmdIndex(){
+    private fun backToCmdIndex(editFragment: EditFragment){
+        val context = editFragment.context
         editFragment.popBackStackToIndexImmediateJob?.cancel()
         editFragment.popBackStackToIndexImmediateJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){

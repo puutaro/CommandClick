@@ -17,16 +17,14 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lon
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
+import java.lang.ref.WeakReference
 
 class LongPressForImage(
-    private val terminalFragment: TerminalFragment,
+    private val terminalFragmentRef: WeakReference<TerminalFragment>,
     private val context: Context?,
     private val imageMenuFilePath: String,
 )  {
-    val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
 //    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //        fannelInfoMap
 //    )
@@ -60,6 +58,8 @@ class LongPressForImage(
             )
             return
         }
+       val terminalFragment = terminalFragmentRef.get()
+           ?: return
         val longPressScriptList =
             LongPressMenuTool.makeLongPressScriptList(
                 terminalFragment,
@@ -163,6 +163,7 @@ class LongPressForImage(
         longPressImageUrl: String,
         currentUrl: String,
     ) {
+        val terminalFragment = terminalFragmentRef.get() ?: return
         val context = terminalFragment.context
             ?: return
         val subMenuListView =
@@ -188,6 +189,8 @@ class LongPressForImage(
         longPressImageUrl: String,
         currentUrl: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         val selectedScriptNameOrPathObj = File(selectedJsPath)
         val execJsPath = LongPressMenuTool.makeExecJsPath(
             terminalFragment,

@@ -33,13 +33,12 @@ object ExecQr {
             clickFileName
         ) ?: return
 
-        val targetFragmentInstance = TargetFragmentInstance()
         var terminalFragment: TerminalFragment? = null
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 for (i in 1..10) {
                     terminalFragment =
-                        targetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
+                        TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
                     if (terminalFragment != null) break
                     delay(100)
                 }
@@ -56,7 +55,7 @@ object ExecQr {
 //                    }
 //                }
             withContext(Dispatchers.Main) {
-                QrConfirmDialog(
+                QrConfirmDialog.launch(
                     editFragment,
                     null,
 //                    useAppDirPath,
@@ -65,7 +64,7 @@ object ExecQr {
                         contents
                     ),
                     contents
-                ).launch()
+                )
             }
         }
     }

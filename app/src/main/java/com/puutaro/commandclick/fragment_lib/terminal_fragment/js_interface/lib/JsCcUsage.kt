@@ -5,9 +5,12 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsCcUsage(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 //    private val fannelInfoMap = terminalFragment.fannelInfoMap
 //    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
@@ -16,6 +19,8 @@ class JsCcUsage(
 
     @JavascriptInterface
     fun launch_S(){
+        val terminalFragment = terminalFragmentRef.get() ?: return
+
         val webSearcherName = SystemFannel.webSearcher
         ExecJsLoad.execExternalJs(
             terminalFragment,

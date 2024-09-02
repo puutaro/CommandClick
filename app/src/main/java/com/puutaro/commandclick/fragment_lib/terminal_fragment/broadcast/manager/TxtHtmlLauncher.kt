@@ -22,9 +22,8 @@ object TxtHtmlLauncher {
             "utf-8",
             null
         )
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+        val cmdEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = TargetFragmentInstance.getCurrentBottomFragmentInFrag(
             activity,
             cmdEditFragmentTag,
         )

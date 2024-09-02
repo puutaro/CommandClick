@@ -63,9 +63,7 @@ object TerminalToolbarHandler {
         terminalFragment: TerminalFragment
     ){
         terminalFragment.binding.termHistoryButton.setOnClickListener {
-            FannelHistoryButtonEvent(
-                terminalFragment,
-            ).invoke()
+            FannelHistoryButtonEvent.invoke(terminalFragment)
         }
     }
 
@@ -73,7 +71,7 @@ object TerminalToolbarHandler {
         terminalFragment: TerminalFragment
     ){
         terminalFragment.binding.termUrlHistoryButton.setOnClickListener {
-            UrlHistoryButtonEvent(terminalFragment).invoke()
+            UrlHistoryButtonEvent.invoke(terminalFragment)
         }
         SettingMenuForCmdIndex.launch(terminalFragment)
     }

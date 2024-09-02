@@ -21,13 +21,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsFileSelect(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
     private val noSuffixMacroWord = FileSelectSpinnerViewProducer.noExtend
     private val totalExtendRegex = Regex("\\.[a-zA-Z0-9]*$")
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var confirmDialog: Dialog? = null
 
     @JavascriptInterface
@@ -42,7 +42,7 @@ class JsFileSelect(
         scriptFilePath: String,
         title: String,
     ){
-        val replaceContents = JsDialog(terminalFragment).formDialog(
+        val replaceContents = JsDialog(terminalFragmentRef).formDialog(
             title,
             settingVariables,
             commandVariables,
@@ -67,6 +67,9 @@ class JsFileSelect(
         val scriptFileObj = File(scriptFilePath)
         val parentDirPath = scriptFileObj.parent ?: return
         val scriptFileName = scriptFileObj.name
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         when(
             renameFileNameForDialog
         ){
@@ -116,7 +119,10 @@ class JsFileSelect(
         prefix: String,
         suffix: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ) {
@@ -186,6 +192,8 @@ class JsFileSelect(
             confirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_ok
             )
+        val terminalFragment = terminalFragmentRef.get() ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         confirmOkButton?.setOnClickListener {
             confirmDialog?.dismiss()
             confirmDialog = null
@@ -223,7 +231,7 @@ class JsFileSelect(
                 scriptFileName,
                 "${targetVariable}=\"${recentLogFile}\""
             )
-            JsEdit(terminalFragment).updateEditText(
+            JsEdit(terminalFragmentRef).updateEditText(
                 targetVariable,
                 recentLogFile
             )
@@ -267,7 +275,7 @@ class JsFileSelect(
             scriptFileName,
             "${targetVariable}=\"${renameFileNameOkForDialog}\""
         )
-        JsEdit(terminalFragment).updateEditText(
+        JsEdit(terminalFragmentRef).updateEditText(
             targetVariable,
             renameFileNameOkForDialog
         )
@@ -288,7 +296,7 @@ class JsFileSelect(
             ToastUtils.showLong("no exist: ${scriptFileName}")
             return
         }
-        val jsScript = JsScript(terminalFragment)
+        val jsScript = JsScript(terminalFragmentRef)
         val scriptContents = ReadText(
             scriptFilePathObj.absolutePath
         ).readText()

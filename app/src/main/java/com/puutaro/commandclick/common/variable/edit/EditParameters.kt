@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 
 
 data class EditParameters(
-    val currentFragment: Fragment,
+//    val currentFragment: Fragment,
     val currentShellContentsList: List<String>,
     val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
     val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
@@ -13,7 +13,7 @@ data class EditParameters(
     val onFixNormalSpinner: Boolean,
     val hideSettingVariableList: List<String>
 ) {
-    val context = currentFragment.context
+//    val context = currentFragment.context
     var currentId: Int = 0
     var currentVariableName: String? = null
     var currentVariableValue: String? = null

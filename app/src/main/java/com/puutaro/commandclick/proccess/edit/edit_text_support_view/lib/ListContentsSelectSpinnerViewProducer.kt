@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -25,14 +26,14 @@ import java.io.File
 
 object ListContentsSelectSpinnerViewProducer {
     fun make (
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
-        val currentFragment = editParameters.currentFragment
         val defaultListLimit = 100
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
         val fannelInfoMap = editParameters.fannelInfoMap
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
@@ -51,8 +52,8 @@ object ListContentsSelectSpinnerViewProducer {
             editParameters,
             currentComponentIndex
         )
-        when(currentFragment){
-            is EditFragment -> currentFragment.listConSelectBoxMapList.add(elcbMap)
+        when(fragment){
+            is EditFragment -> fragment.listConSelectBoxMapList.add(elcbMap)
         }
         val listContentsFilePath = elcbMap?.get(ListContentsEditKey.listPath.name) ?: String()
         val listLimit = getLimitNum(
@@ -138,7 +139,7 @@ object ListContentsSelectSpinnerViewProducer {
                 insertSpinner.setSelection(0)
                 insertEditText.setText(selectedItem)
                 SelectJsExecutor.exec(
-                    currentFragment,
+                    fragment,
                     selectJsPath,
                     selectedItem
                 )

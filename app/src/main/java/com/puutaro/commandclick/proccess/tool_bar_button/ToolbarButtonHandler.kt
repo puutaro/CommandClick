@@ -1,14 +1,10 @@
 package com.puutaro.commandclick.proccess.tool_bar_button
 
-import android.widget.ImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSaverByTag
-import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsActionCompleterForToolbar
@@ -17,11 +13,10 @@ import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButto
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.map.CmdClickMap
 
-class ToolbarButtonHandler(
-    private val editFragment: EditFragment,
-) {
+object ToolbarButtonHandler{
 
     fun handle(
+        editFragment: EditFragment,
         isLongClick: Boolean,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         buttonLayout: LinearLayoutCompat?,
@@ -36,7 +31,6 @@ class ToolbarButtonHandler(
             listOf(toolbarButtonBariantForEdit.str)
         )
         val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
-            editFragment,
             toolbarButtonBariantForEdit,
             isLongClick,
         )
@@ -102,32 +96,31 @@ private object ScriptSaver{
         buttonClickMapKey: String,
         defaultOnSaveValue: String,
     ) {
-        val isScriptSave = toolbarButtonArgsMaker
-            .toolbarButtonConfigMap
-            ?.get(buttonClickMapKey)
-            .let { clickConfigMapStr ->
-                if (
-                    clickConfigMapStr == null
-                ) return@let defaultOnSaveValue
-                if (
-                    clickConfigMapStr.isEmpty()
-                ) return@let String()
-                val clickJsPathMap =
-                    CmdClickMap.createMap(
-                        clickConfigMapStr, '|'
-                    ).toMap()
-                val onScriptStr = clickJsPathMap.get(
-                    ClickSettingsForToolbarButton.ClickConfigMapKey.ON_SCRIPT_SAVE.key
-                )
-                if(
-                    onScriptStr.isNullOrEmpty()
-                ) return@let ClickSettingsForToolbarButton.OnScriptSave.OFF.name
-                onScriptStr
-            } == ClickSettingsForToolbarButton.OnScriptSave.ON.name
+        val isScriptSave =
+            editFragment.toolbarButtonConfigMap
+                ?.get(toolbarButtonArgsMaker.toolbarButtonBariantForEdit)
+                ?.get(buttonClickMapKey)
+                .let { clickConfigMapStr ->
+                    if (
+                        clickConfigMapStr == null
+                    ) return@let defaultOnSaveValue
+                    if (
+                        clickConfigMapStr.isEmpty()
+                    ) return@let String()
+                    val clickJsPathMap =
+                        CmdClickMap.createMap(
+                            clickConfigMapStr, '|'
+                        ).toMap()
+                    val onScriptStr = clickJsPathMap.get(
+                        ClickSettingsForToolbarButton.ClickConfigMapKey.ON_SCRIPT_SAVE.key
+                    )
+                    if(
+                        onScriptStr.isNullOrEmpty()
+                    ) return@let ClickSettingsForToolbarButton.OnScriptSave.OFF.name
+                    onScriptStr
+                } == ClickSettingsForToolbarButton.OnScriptSave.ON.name
         if (!isScriptSave) return
-        ScriptFileSaver(
-            editFragment,
-        ).save()
+        ScriptFileSaver.save(editFragment)
     }
 }
 
@@ -158,9 +151,9 @@ private object MonitorSizing{
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         buttonClickMapKey: String,
     ) {
-        val monitorSizeStr = toolbarButtonArgsMaker
-            .toolbarButtonConfigMap
-            ?.get(buttonClickMapKey)
+        val monitorSizeStr = editFragment.toolbarButtonConfigMap?.get(
+            toolbarButtonArgsMaker.toolbarButtonBariantForEdit
+        )?.get(buttonClickMapKey)
             .let { clickConfigMapStr ->
                 if (
                     clickConfigMapStr == null

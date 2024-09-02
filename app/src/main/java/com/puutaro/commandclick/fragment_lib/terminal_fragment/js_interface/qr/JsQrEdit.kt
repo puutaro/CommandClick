@@ -16,16 +16,17 @@ import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsQrEdit(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun create(
@@ -85,6 +86,9 @@ class JsQrEdit(
         val qrConFileName = qrConFilePathObj.name
         val freeTextKeyName = FreeTextKey.FREE_TEXT.key
         val isFreeText = qrMap.containsKey(freeTextKeyName)
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         when(isFreeText){
             true ->
                 CoroutineScope(Dispatchers.IO).launch {
@@ -131,7 +135,7 @@ class JsQrEdit(
             resultKeyValueCon,
             '\n'
         ).toMap()
-        val jsListSelect = JsListSelect(terminalFragment)
+        val jsListSelect = JsListSelect(terminalFragmentRef)
         updateQrMap.keys.forEach {
             val listPath = "${listSaveDirPath}/${it}List.txt"
             val value = updateQrMap.get(it) ?: return@forEach
@@ -186,7 +190,7 @@ class JsQrEdit(
             )
             "${it}=${variableValue}"
         }.joinToString("\n")
-        return JsDialog(terminalFragment).formDialog(
+        return JsDialog(terminalFragmentRef).formDialog(
             "Edit: ${qrConFileName}",
             setVariableTypes,
             targetVariables,

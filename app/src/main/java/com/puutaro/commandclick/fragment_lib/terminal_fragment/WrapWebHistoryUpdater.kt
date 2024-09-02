@@ -175,12 +175,12 @@ object WrapWebHistoryUpdater {
             fannelState,
         )
         val commandIndexFragment =
-            TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
+            TargetFragmentInstance.getFromFragment<CommandIndexFragment>(
                 activity,
                 cmdIndexFragmentTag
             )
         val cmdVariableEditFragment =
-            TargetFragmentInstance().getFromFragment<EditFragment>(
+            TargetFragmentInstance.getFromFragment<EditFragment>(
                 activity,
                 cmdVariableEditFragmentTag
             )

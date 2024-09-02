@@ -16,7 +16,7 @@ object EnableTerminalWebView {
         return withContext(Dispatchers.Main) {
             var hitTimes = 0
             for (i in 1..10) {
-                val targetTerminalFragment = TargetFragmentInstance().getFromFragment<TerminalFragment>(
+                val targetTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
                     currentFragment.activity,
                     fragmentTag,
                 )

@@ -12,13 +12,11 @@ object EnableNavForWebView {
         fragment: androidx.fragment.app.Fragment
     ): Boolean {
         val activity = fragment.activity
-        val context = fragment.context
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val indexTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
         )
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val editExecuteTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.edit_terminal_fragment)
         )
@@ -47,13 +45,11 @@ object EnableNavForWebView {
         fragment: androidx.fragment.app.Fragment
     ): Boolean {
         val activity = fragment.activity
-        val context = fragment.context
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val indexTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
         )
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val editExecuteTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.edit_terminal_fragment)
         )
@@ -82,13 +78,11 @@ object EnableNavForWebView {
         fragment: androidx.fragment.app.Fragment
     ): Boolean {
         val activity = fragment.activity
-        val context = fragment.context
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val indexTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
         )
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
+        val editExecuteTerminalFragment = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.edit_terminal_fragment)
         )

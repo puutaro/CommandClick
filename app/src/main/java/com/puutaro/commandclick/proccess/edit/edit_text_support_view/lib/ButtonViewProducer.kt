@@ -67,12 +67,9 @@ object ButtonViewProducer {
         weight: Float,
         currentComponentIndex: Int,
     ): Button {
-        val context = editParameters.context
+        val context = editFragment.context
         val currentId = editParameters.currentId
 
-        val scriptFileSaver = ScriptFileSaver(
-            editFragment,
-        )
         val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
             editParameters
         )
@@ -106,7 +103,6 @@ object ButtonViewProducer {
             editFragment,
             insertEditText,
             currentVariableName,
-            scriptFileSaver,
             editParameters,
             buttonMap,
             currentSetVariableValue
@@ -185,7 +181,7 @@ object ButtonViewProducer {
             ButtonEditKey.tag.name
         )
 
-        buttonEventArgs.scriptFileSaver.save()
+        ScriptFileSaver.save(editFragment)
         ListContentsSaverByTag.save(
             editFragment,
             listOf(currentButtonTag)
@@ -301,6 +297,7 @@ object ButtonViewProducer {
             )
             ButtonCmdType.jsCode
             -> jsConExecutor(
+                editFragment,
                 buttonEventArgs,
                 innerExecCmd,
             )
@@ -816,13 +813,11 @@ object ButtonViewProducer {
     }
 
     private fun jsConExecutor(
+        editFragment: EditFragment,
         buttonEventArgs: ButtonEventArgs,
         jsConSrc: String,
     ){
         val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
-        val editFragment =
-            buttonEventArgs.editParameters.currentFragment
-        if(editFragment !is EditFragment) return
         val currentVariableName = buttonEventArgs.currentVariableName
         val currentEditTextCon = currentVariableName?.let {
             EditVariableName.getText(editFragment, it)
@@ -1002,7 +997,6 @@ object ButtonViewProducer {
         val editFragment: EditFragment,
         val insertEditText: EditText,
         val currentVariableName: String?,
-        val scriptFileSaver: ScriptFileSaver,
         val editParameters: EditParameters,
         val buttonMap: Map<String, String>?,
         val currentSetVariableValue: String?

@@ -458,13 +458,13 @@ object QrScanner{
             fragContext,
             decodeText
         )
-        QrConfirmDialog(
+        QrConfirmDialog.launch(
             fragment,
             codeScanner,
 //            currentAppDirPath,
             title,
             decodeText,
-        ).launch()
+        )
     }
 
     private fun makeHistoryButton(

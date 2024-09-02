@@ -10,9 +10,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
-import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -29,15 +27,19 @@ import kotlinx.coroutines.withContext
 
 
 private const val innerUrlIntentFlag = "innerUrlIntent"
-class InitFragmentManager(
-    private val activity: MainActivity
-) {
-    private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
-    private val startUpPref = FannelInfoTool.getSharePref(activity)
-    private val intent = activity.intent
+object InitFragmentManager{
+
+//    private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
+//    private val startUpPref = FannelInfoTool.getSharePref(activity)
+//    private val intent = activity.intent
     private val fragmentLaunchDelayTime = 300L
 
-    fun intentHandler(): Boolean {
+    fun intentHandler(
+        activity: MainActivity
+    ): Boolean {
+        val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
+        val startUpPref = FannelInfoTool.getSharePref(activity)
+        val intent = activity.intent
         val isQueryIntent = QueryIntentHandler.handle(
             activity,
             activityManager
@@ -100,7 +102,7 @@ class InitFragmentManager(
                 }
             }
         }
-        return execShortcutIntent()
+        return execShortcutIntent(activity)
     }
 
     private object QueryIntentHandler {
@@ -206,8 +208,10 @@ class InitFragmentManager(
 
 
     fun startFragment(
+        activity: MainActivity,
         savedInstanceState: Bundle?,
     ) {
+        val startUpPref = FannelInfoTool.getSharePref(activity)
 //        val preferenceAppDirPath = FannelInfoTool.getStringFromFannelInfo(
 //            startUpPref,
 //            FannelInfoSetting.current_app_dir
@@ -261,7 +265,7 @@ class InitFragmentManager(
             onShortcut,
             fannelState
         )
-        val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
+        val cmdVariableEditFragment = TargetFragmentInstance.getFromActivity<EditFragment>(
             activity,
             cmdVariableEditFragmentTag
         )
@@ -306,7 +310,11 @@ class InitFragmentManager(
 //    }
 
 
-    private fun execShortcutIntent(): Boolean {
+    private fun execShortcutIntent(
+        activity: MainActivity
+    ): Boolean {
+        val startUpPref = FannelInfoTool.getSharePref(activity)
+        val intent = activity.intent
 //        val recieveAppDirPath = intent.getStringExtra(
 //            FannelInfoSetting.current_app_dir.name
 //        )
@@ -428,7 +436,7 @@ private fun launchUrlByPocketWebView(
 //                ToastUtils.showShort("${i}")
                 val terminalFragment =
                     withContext(Dispatchers.Main) {
-                        TargetFragmentInstance().getCurrentTerminalFragment(
+                        TargetFragmentInstance.getCurrentTerminalFragment(
                             activity
                         )
                     }

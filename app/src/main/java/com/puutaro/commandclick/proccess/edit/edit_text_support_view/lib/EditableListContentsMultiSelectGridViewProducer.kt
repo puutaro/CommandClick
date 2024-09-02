@@ -7,11 +7,11 @@ import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
@@ -26,13 +26,13 @@ object EditableListContentsMultiSelectGridViewProducer {
     private const val gridButtonLabel = "MGS"
 
     fun make (
+        editFragment: EditFragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val currentFragment = editParameters.currentFragment
-        val context = editParameters.context
+        val context = editFragment.context
         val linearParamsForGridButton = LinearLayoutCompat.LayoutParams(
             0,
             LinearLayoutCompat.LayoutParams.MATCH_PARENT,
@@ -78,7 +78,7 @@ object EditableListContentsMultiSelectGridViewProducer {
             val linearLayoutForTotal = LinearLayoutForTotal.make(
                 context
             )
-            val searchTextWeight = SearchTextLinearWeight.calculate(currentFragment)
+            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment.activity)
             val listWeight = 1F - searchTextWeight
             val linearLayoutForListView = NestLinearLayout.make(
                 context,
@@ -108,7 +108,7 @@ object EditableListContentsMultiSelectGridViewProducer {
             multiSelectImageAdapter.notifyDataSetChanged()
 
             setGridViewItemClickListener(
-                currentFragment,
+                editFragment,
                 gridView,
                 multiSelectImageAdapter,
             )

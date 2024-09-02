@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexAdapter
@@ -21,26 +22,18 @@ import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandle
 import com.puutaro.commandclick.util.Keyboard
 
 
-class WithIndexListView(
-    private val editFragment: EditFragment
-) {
-    private val context = editFragment.context
-    private val binding = editFragment.binding
-    private val editListRecyclerView = binding.editListRecyclerView
-    private val editListSearchEditText = binding.editListSearchEditText
+object WithIndexListView{
 
-    companion object {
-        fun keyboardHide(
-            editFragment: EditFragment,
-        ){
-            editFragment.binding.editListSearchEditText.setText(String())
-            val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
-            listener?.onKeyBoardVisibleChangeForEditFragment(
-                false,
-                true,
-            )
-            Keyboard.hiddenKeyboardForFragment(editFragment)
-        }
+    fun keyboardHide(
+        editFragment: EditFragment,
+    ){
+        editFragment.binding.editListSearchEditText.setText(String())
+        val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+        listener?.onKeyBoardVisibleChangeForEditFragment(
+            false,
+            true,
+        )
+        Keyboard.hiddenKeyboardForFragment(editFragment)
     }
 
 //    var languageType = LanguageTypeSelects.JAVA_SCRIPT
@@ -59,11 +52,15 @@ class WithIndexListView(
     val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
     fun create(
+        editFragment: EditFragment,
         editParameters: EditParameters,
     ) {
+        val context = editFragment.context ?: return
+        val binding = editFragment.binding
+        val editListSearchEditText = binding.editListSearchEditText
+
         binding.editListLinearLayout.isVisible = true
         binding.editTextScroll.isVisible = false
-        val context = editParameters.context ?: return
         val listIndexConfigMap = editFragment.listIndexConfigMap
         val listIndexTypeKey = ListIndexEditConfig.getListIndexType(
             editFragment
@@ -116,17 +113,30 @@ class WithIndexListView(
             editListRecyclerView,
             listIndexForEditAdapter,
         )
-        invokeItemSetClickListenerForFileList()
-        invokeQrLogoSetClickListenerForFileList(editFragment)
+        invokeItemSetClickListenerForFileList(
+            editFragment,
+            binding.editListRecyclerView
+        )
+        invokeQrLogoSetClickListenerForFileList(
+            editFragment,
+            binding.editListRecyclerView,
+        )
         invokeQrLogoSetLongClickListenerForFileList(editFragment)
-        invokeItemSetLongTimeClickListenerForIndexList()
+        invokeItemSetLongTimeClickListenerForIndexList(
+            editFragment,
+            editListRecyclerView,
+        )
         makeSearchEditText(
+            editFragment,
             editListSearchEditText,
             listIndexConfigMap
         )
     }
 
-        private fun invokeItemSetClickListenerForFileList() {
+        private fun invokeItemSetClickListenerForFileList(
+            editFragment: EditFragment,
+            editListRecyclerView: RecyclerView
+        ) {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexAdapter
         listIndexForEditAdapter.fileNameClickListener =
@@ -153,6 +163,7 @@ class WithIndexListView(
 
     private fun invokeQrLogoSetClickListenerForFileList(
         editFragment: EditFragment,
+        editListRecyclerView: RecyclerView,
     ) {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexAdapter
@@ -182,6 +193,7 @@ class WithIndexListView(
     }
 
     private fun makeSearchEditText(
+        editFragment: EditFragment,
         searchText: AppCompatEditText,
         listIndexConfigMap: Map<String, String>?
     ) {
@@ -238,10 +250,9 @@ class WithIndexListView(
     }
 
     private fun invokeItemSetLongTimeClickListenerForIndexList(
+        editFragment: EditFragment,
+        editListRecyclerView: RecyclerView,
     ){
-        if(
-            context == null
-        ) return
         val indexForEditAdapter = editListRecyclerView.adapter as ListIndexAdapter
         indexForEditAdapter.itemLongClickListener = object : ListIndexAdapter.OnItemLongClickListener {
             override fun onItemLongClick(

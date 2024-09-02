@@ -16,62 +16,63 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
+import java.lang.ref.WeakReference
 
 class ToolbarButtonArgsMaker(
-    val editFragment: EditFragment,
+//    val editFragment: WeakReference<EditFragment>,
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     private val isLongClick: Boolean,
 ) {
-    private val context = editFragment.context
-//    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-//    private val languageTypeToSectionHolderMap =
-//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//            languageType
-//        )
-    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
-    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
-
-//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//    ) as String
+//    private val context = editFragment.context
+////    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
+////    private val languageTypeToSectionHolderMap =
+////        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+////            languageType
+////        )
+//    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+//    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 //
-//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//    ) as String
-
-    val fannelInfoMap = editFragment.fannelInfoMap
-
-    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-//        FannelInfoTool.getCurrentAppDirPath(
+////    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+////        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+////    ) as String
+////
+////    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+////        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+////    ) as String
+//
+//    val fannelInfoMap = editFragment.fannelInfoMap
+//
+//    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+////        FannelInfoTool.getCurrentAppDirPath(
+////        fannelInfoMap
+////    )
+//    val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
 //        fannelInfoMap
 //    )
-    val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-
-    private val currentScriptContentsList = ReadText(
-        File(
-            cmdclickDefaultAppDirPath,
-            currentScriptFileName
-        ).absolutePath
-    ).textToList()
-    val setReplaceVariableMap = let {
-        val settingVariableList = CommandClickVariables.extractValListFromHolder(
-            currentScriptContentsList,
-            settingSectionStart,
-            settingSectionEnd
-        )
-        SetReplaceVariabler.makeSetReplaceVariableMap(
-            context,
-            settingVariableList,
+//    val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+//
+//    private val currentScriptContentsList = ReadText(
+//        File(
 //            cmdclickDefaultAppDirPath,
-            currentScriptFileName,
-        )
-    }
+//            currentScriptFileName
+//        ).absolutePath
+//    ).textToList()
+//    val setReplaceVariableMap = let {
+//        val settingVariableList = CommandClickVariables.extractValListFromHolder(
+//            currentScriptContentsList,
+//            settingSectionStart,
+//            settingSectionEnd
+//        )
+//        SetReplaceVariabler.makeSetReplaceVariableMap(
+//            context,
+//            settingVariableList,
+////            cmdclickDefaultAppDirPath,
+//            currentScriptFileName,
+//        )
+//    }
 
-    val toolbarButtonConfigMap =
-        editFragment.toolbarButtonConfigMap?.get(toolbarButtonBariantForEdit)
+//    val toolbarButtonConfigMap =
+//        editFragment.toolbarButtonConfigMap?.get(toolbarButtonBariantForEdit)
 
     companion object {
         private val onScriptSaveOffInClick = ClickSettingsForToolbarButton.OnScriptSave.OFF.name

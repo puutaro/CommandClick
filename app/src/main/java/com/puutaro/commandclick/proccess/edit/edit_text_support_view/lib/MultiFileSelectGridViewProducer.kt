@@ -7,13 +7,11 @@ import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
@@ -32,13 +30,13 @@ object MultiFileSelectGridViewProducer {
     private var alertDialog: AlertDialog? = null
 
     fun make (
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val editFragment = editParameters.currentFragment as EditFragment
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
         val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
             0,
@@ -108,7 +106,7 @@ object MultiFileSelectGridViewProducer {
             val linearLayoutForTotal = LinearLayoutForTotal.make(
                 context
             )
-            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment)
+            val searchTextWeight = SearchTextLinearWeight.calculate(fragment.activity)
             val listWeight = 1F - searchTextWeight
             val linearLayoutForListView = NestLinearLayout.make(
                 context,
@@ -123,7 +121,7 @@ object MultiFileSelectGridViewProducer {
             linearLayoutForTotal.addView(linearLayoutForSearch)
 
             setGridViewItemClickListener(
-                editFragment,
+                fragment,
                 gridView,
             )
 

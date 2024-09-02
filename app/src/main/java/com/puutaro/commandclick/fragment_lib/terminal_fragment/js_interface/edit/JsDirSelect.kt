@@ -19,11 +19,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsDirSelect(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var confirmDialog: Dialog? = null
 
     @JavascriptInterface
@@ -36,7 +36,10 @@ class JsDirSelect(
         scriptFilePath: String,
         title: String,
     ){
-        val replaceContents = JsDialog(terminalFragment).formDialog(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+        val replaceContents = JsDialog(terminalFragmentRef).formDialog(
             title,
             settingVariables,
             commandVariables,
@@ -103,7 +106,10 @@ class JsDirSelect(
         editDirNameForDialog: String,
         targetVariable: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ) {
@@ -165,6 +171,9 @@ class JsDirSelect(
         parentDirPath: String,
         scriptFileName: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val confirmOkButton =
             confirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_ok
@@ -194,7 +203,7 @@ class JsDirSelect(
                 scriptFileName,
                 "${targetVariable}=\"${recentDirName}\""
             )
-            JsEdit(terminalFragment).updateEditText(
+            JsEdit(terminalFragmentRef).updateEditText(
                 targetVariable,
                 recentDirName
             )
@@ -216,6 +225,8 @@ class JsDirSelect(
             ToastUtils.showLong("rename dir is same current dir")
             return
         }
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         val srcDirPath = "${targetDirPath}/${editDirNameForDialog}"
         val destiDirPath = "${targetDirPath}/${renameDirNameForDialog}"
         FileSystems.copyDirectory(
@@ -230,7 +241,7 @@ class JsDirSelect(
             scriptFileName,
             "${targetVariable}=\"${renameDirNameForDialog}\""
         )
-        JsEdit(terminalFragment).updateEditText(
+        JsEdit(terminalFragmentRef).updateEditText(
             targetVariable,
             renameDirNameForDialog
         )
@@ -251,7 +262,7 @@ class JsDirSelect(
             ToastUtils.showLong("no exist : ${scriptFileName}")
             return
         }
-        val jsScript = JsScript(terminalFragment)
+        val jsScript = JsScript(terminalFragmentRef)
         val scriptContents = ReadText(
             scriptFilePathObj.absolutePath
         ).readText()

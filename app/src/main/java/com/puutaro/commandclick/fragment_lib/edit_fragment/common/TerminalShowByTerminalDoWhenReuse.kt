@@ -14,7 +14,7 @@ object TerminalShowByTerminalDoWhenReuse {
         editFragment: EditFragment,
         shellContentsList: List<String>?
     ){
-        TargetFragmentInstance().getFromFragment<TerminalFragment>(
+        TargetFragmentInstance.getFromFragment<TerminalFragment>(
             editFragment.activity,
             editFragment.context?.getString(R.string.edit_terminal_fragment)
         ) ?: return

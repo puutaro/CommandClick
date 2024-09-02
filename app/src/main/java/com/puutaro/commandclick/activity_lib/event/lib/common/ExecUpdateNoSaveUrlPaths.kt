@@ -21,7 +21,7 @@ object ExecUpdateNoSaveUrlPaths {
         fannelName: String,
     ){
         val indexTerminalFragment =
-            TargetFragmentInstance().getFromFragment<TerminalFragment>(
+            TargetFragmentInstance.getFromFragment<TerminalFragment>(
                 activity,
                 activity?.getString(R.string.index_terminal_fragment)
             )
@@ -38,7 +38,7 @@ object ExecUpdateNoSaveUrlPaths {
             return
         }
         val editExecuteTerminalFragment =
-            TargetFragmentInstance().getFromFragment<TerminalFragment>(
+            TargetFragmentInstance.getFromFragment<TerminalFragment>(
                 activity,
                 activity?.getString(R.string.edit_terminal_fragment)
             )

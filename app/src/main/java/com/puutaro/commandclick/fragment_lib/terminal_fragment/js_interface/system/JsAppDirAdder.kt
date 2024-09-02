@@ -20,29 +20,25 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsAppDirAdder(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
-    val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
-
     @JavascriptInterface
     fun add_S(){
-        if(
-            context == null
-        ) return
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
 //            currentAppDirPath,
             currentFannelName,
@@ -59,7 +55,7 @@ class JsAppDirAdder(
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> {}
         }
-        val newAppDirSrc = JsDialog(terminalFragment).prompt(
+        val newAppDirSrc = JsDialog(terminalFragmentRef).prompt(
             "Input new app dir name",
             String(),
             String(),

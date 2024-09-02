@@ -34,13 +34,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class PromptJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var promptDialogObj: Dialog? = null
     private val suggestPrefix = "suggest"
@@ -48,12 +47,6 @@ class PromptJsDialog(
     private val suggestTxtSuffix = ".txt"
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 //        terminalFragment.currentAppDirPath
-    private val currentScriptName = terminalFragment.currentFannelName
-    private val fannelDirName = CcPathTool.makeFannelDirName(
-        currentScriptName
-    )
-    private val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
-    private val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
     private val mapSeparator = ','
     private val firstSeparator = '|'
     private val secondSeparator = '?'
@@ -71,6 +64,15 @@ class PromptJsDialog(
             promptMap.get(PromptMapKey.suggest.name),
             firstSeparator
         ).toMap()
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+        val currentScriptName = terminalFragment.currentFannelName
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptName
+        )
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
+        val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
 
 //            makeSuggestAndDefoTxtMap(suggestOrDefoTxtVars)
         val variableName = suggestMap.get(SuggestVars.variableName.name)
@@ -98,10 +100,12 @@ class PromptJsDialog(
             withContext(Dispatchers.Main) {
                 try {
                     execCreate(
+                        terminalFragment,
                         title,
                         message,
                         promptMap,
                         variableName,
+                        suggestDirPath,
                         suggestSrcList,
                     )
                 } catch (e: Exception){
@@ -122,14 +126,17 @@ class PromptJsDialog(
 
 
     private fun execCreate(
+        terminalFragment: TerminalFragment,
         title: String,
         message: String,
         promptMap: Map<String, String>,
         variableName: String?,
+        suggestDirPath: String,
         suggestSrcList: List<String>,
     ) {
-        val context = context
+        val context = terminalFragment.context
             ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
         promptDialogObj = Dialog(
             context,
@@ -176,12 +183,15 @@ class PromptJsDialog(
 //        )
 //        promptEditText?.requestFocus()
         setSuggestEditText(
+            terminalFragment,
             promptEditText,
             suggestSrcList,
         )
         editTextKeyListener(
+            terminalViewModel,
             promptEditText,
-            variableName
+            variableName,
+            suggestDirPath,
         )
         val promptCancelButton =
             promptDialogObj?.findViewById<AppCompatImageButton>(
@@ -209,7 +219,10 @@ class PromptJsDialog(
                 return@setOnClickListener
             }
             else returnValue = inputEditable.toString()
-            registerToSuggest(variableName)
+            registerToSuggest(
+                variableName,
+                suggestDirPath,
+            )
             promptDialogObj?.dismiss()
             promptDialogObj = null
             terminalViewModel.onDialog = false
@@ -232,6 +245,7 @@ class PromptJsDialog(
 
 
     private fun setSuggestEditText(
+        terminalFragment: TerminalFragment,
         promptEditText: AutoCompleteTextView?,
         suggestSrcList: List<String>
     ){
@@ -242,6 +256,7 @@ class PromptJsDialog(
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(!promptEditText.hasFocus()) return
                 makeSuggest(
+                    terminalFragment,
                     promptEditText,
                     suggestSrcList,
                 )
@@ -252,8 +267,10 @@ class PromptJsDialog(
     }
 
     private fun editTextKeyListener(
+        terminalViewModel: TerminalViewModel,
         promptEditText: AutoCompleteTextView?,
         variableName: String?,
+        suggestDirPath: String
     ){
         promptEditText?.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
@@ -271,6 +288,7 @@ class PromptJsDialog(
                 returnValue = currentInputEditable.toString()
                 registerToSuggest(
                     variableName,
+                    suggestDirPath
                 )
                 promptDialogObj?.dismiss()
                 promptDialogObj = null
@@ -282,9 +300,17 @@ class PromptJsDialog(
 
 
     private fun makeSuggest(
+        terminalFragment: TerminalFragment,
         promptEditText: AutoCompleteTextView?,
         suggestSrcList: List<String>
     ){
+        val context = terminalFragment.context
+        val currentScriptName = terminalFragment.currentFannelName
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptName
+        )
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
+        val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
         if(promptEditText == null) return
         if(context == null) return
         if(
@@ -327,6 +353,7 @@ class PromptJsDialog(
 
     private fun registerToSuggest(
         variableName: String?,
+        suggestDirPath: String,
     ){
         val trimedReturnValue =
             returnValue.trim()
@@ -346,6 +373,7 @@ class PromptJsDialog(
                     makeNoEmptyList(
                         trimedReturnValue,
                         suggestTxtName,
+                        suggestDirPath,
                     ).filter {
                         trimedReturnValue != it
                     }.distinct().take(200)
@@ -370,6 +398,7 @@ class PromptJsDialog(
     private fun makeNoEmptyList(
         trimedReturnValue: String,
         suggestTxtName: String,
+        suggestDirPath: String,
     ): List<String> {
         val curSuggestList = ReadText(
             File(

@@ -3,9 +3,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.map.CmdClickMap
+import java.lang.ref.WeakReference
 
 class JsMap(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
     companion object {

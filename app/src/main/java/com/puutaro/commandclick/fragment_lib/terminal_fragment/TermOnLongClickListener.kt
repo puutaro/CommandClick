@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.lang.ref.WeakReference
 
 
 object TermOnLongClickListener {
@@ -22,17 +23,17 @@ object TermOnLongClickListener {
         val binding = terminalFragment.binding
         val terminalWebView = binding.terminalWebView
         val longPressForSrcImageAnchor = LongPressForSrcImageAnchor(
-            terminalFragment,
+            WeakReference(terminalFragment),
             context,
             terminalFragment.srcImageAnchorLongPressMenuFilePath
         )
         val longPressForSrcAnchor = LongPressForSrcAnchor(
-            terminalFragment,
+            WeakReference(terminalFragment),
             context,
             terminalFragment.srcAnchorLongPressMenuFilePath
         )
         val longPressForImage = LongPressForImage(
-            terminalFragment,
+            WeakReference(terminalFragment),
             context,
             terminalFragment.imageLongPressMenuFilePath
         )
@@ -53,9 +54,8 @@ object TermOnLongClickListener {
                         terminalFragment.disableShowToolbarWhenHighlight
                         == SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
                     ) return@setOnLongClickListener false
-                    val targetFragmentInstance = TargetFragmentInstance()
-                    val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-                    val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+                    val cmdEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(activity)
+                    val bottomFragment = TargetFragmentInstance.getCurrentBottomFragmentInFrag(
                         activity,
                         cmdEditFragmentTag,
                     )

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +14,11 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.component.adapter.lib.SppannableAdapterTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import java.lang.ref.WeakReference
 
 
 class MultiSelectSpannableAdapter(
-    private val fragment: Fragment,
+    private val activityRef: WeakReference<Activity?>,
     private val mContext: Context?
 ) : BaseAdapter() {
 
@@ -104,7 +106,7 @@ class MultiSelectSpannableAdapter(
                 com.puutaro.commandclick.R.id.multi_spannable_image_view
             )
             holder.spannableView = SppannableAdapterTool.setSpannableView(
-                fragment,
+                activityRef.get(),
                 spannableView,
                 imagePath,
                 textImagePngBitMap,
@@ -126,7 +128,7 @@ class MultiSelectSpannableAdapter(
             selectedItem
         )
         SppannableAdapterTool.setSpannableView(
-            fragment,
+            activityRef.get(),
             spannableView,
             imagePath,
             textImagePngBitMap,

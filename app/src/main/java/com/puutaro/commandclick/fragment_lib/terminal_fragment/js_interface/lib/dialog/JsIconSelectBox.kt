@@ -1,31 +1,36 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsIconSelectBox(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val listJsDialog = ListJsDialog(terminalFragment)
 
     @JavascriptInterface
     fun launch(
         valName: String,
         listPath: String,
     ){
-        val jsEdit = JsEdit(terminalFragment)
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val jsEdit = JsEdit(terminalFragmentRef)
         val currentItem = jsEdit.getFromEditText(valName)
         val listSrc = readListPath(listPath)
         val sortedListSrc = sortByCurrentItem(
             currentItem,
             listSrc,
         )
-        val selectItem = listJsDialog.create(
+        val selectItem = ListJsDialog(terminalFragmentRef).create(
             "",
             "",
             sortedListSrc,

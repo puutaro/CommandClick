@@ -7,9 +7,10 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
+import java.lang.ref.WeakReference
 
 class JsScript(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 //    private val context = terminalFragment.context
 //    private val languageTypeHolderMap =

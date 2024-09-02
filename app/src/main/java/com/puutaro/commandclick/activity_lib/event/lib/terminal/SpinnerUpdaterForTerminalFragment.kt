@@ -40,7 +40,7 @@ object SpinnerUpdaterForTerminalFragment {
             currentFannelName,
             currentFannelState
         )
-        val cmdEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
+        val cmdEditFragment = TargetFragmentInstance.getFromActivity<EditFragment>(
             activity,
             cmdEditFragmentTag
         ) ?: return

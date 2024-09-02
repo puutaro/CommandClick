@@ -15,12 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 class MultiSelectOnlyImageGridViewJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var gridDialogObj: Dialog? = null
 
@@ -29,6 +28,9 @@ class MultiSelectOnlyImageGridViewJsDialog(
         message: String,
         imagePathListNewlineSepaStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
@@ -55,9 +57,10 @@ class MultiSelectOnlyImageGridViewJsDialog(
         message: String,
         imagePathListNewlineSepaStr: String,
     ) {
-        if(
-            context == null
-        ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         gridDialogObj = Dialog(
             context
         )
@@ -115,6 +118,9 @@ class MultiSelectOnlyImageGridViewJsDialog(
     private fun setGridView(
         imagePathListNewlineSepaStr: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
         val imagePathList = makeImagePathList(
             imagePathListNewlineSepaStr
         )

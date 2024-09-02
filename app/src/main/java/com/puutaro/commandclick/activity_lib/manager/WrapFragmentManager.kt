@@ -3,11 +3,13 @@ package com.puutaro.commandclick.activity_lib.manager
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import java.lang.ref.WeakReference
 
 object WrapFragmentManager {
 
@@ -20,14 +22,13 @@ object WrapFragmentManager {
         if(
             savedInstanceState != null
         ) return
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
-        fragmentManagerForActivity.initFragments(
+        val transaction = supportFragmentManager.beginTransaction()
+        FragmentManagerForActivity.initFragments(
+            transaction,
             terminalFragmentTag,
             commandIndexFragmentTag,
         )
-        fragmentManagerForActivity.commit()
+        FragmentManagerForActivity.commit(transaction)
     }
 
 
@@ -36,22 +37,24 @@ object WrapFragmentManager {
         supportFragmentManager: FragmentManager,
         terminalFragmentTag: String,
     ){
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
+        val transaction = supportFragmentManager.beginTransaction()
         when (isKeyboardShowing) {
             true -> {
-                fragmentManagerForActivity.hideFragment<TerminalFragment>(
+                FragmentManagerForActivity.hideFragment<TerminalFragment>(
+                    supportFragmentManager,
+                    transaction,
                     terminalFragmentTag
                 )
-                fragmentManagerForActivity.commit()
+                FragmentManagerForActivity.commit(transaction)
             }
 
             else -> {
-                fragmentManagerForActivity.showFragment<TerminalFragment>(
+                FragmentManagerForActivity.showFragment<TerminalFragment>(
+                    supportFragmentManager,
+                    transaction,
                     terminalFragmentTag
                 )
-                fragmentManagerForActivity.commit()
+                FragmentManagerForActivity.commit(transaction)
             }
         }
     }
@@ -61,13 +64,14 @@ object WrapFragmentManager {
         supportFragmentManager: FragmentManager,
         terminalFragmentTag: String,
     ){
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
-        fragmentManagerForActivity.showFragment<TerminalFragment>(
+
+        val transaction = supportFragmentManager.beginTransaction()
+        FragmentManagerForActivity.showFragment<TerminalFragment>(
+            supportFragmentManager,
+            transaction,
             terminalFragmentTag
         )
-        fragmentManagerForActivity.commit()
+        FragmentManagerForActivity.commit(transaction)
     }
 
 
@@ -77,20 +81,20 @@ object WrapFragmentManager {
         terminalFragmentTag: String,
         commandIndexFragmentTag: String,
     ){
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
-        fragmentManagerForActivity.deleteAllBackStack()
-        fragmentManagerForActivity.replaceFragment(
+        FragmentManagerForActivity.deleteAllBackStack(supportFragmentManager)
+        val transaction = supportFragmentManager.beginTransaction()
+        FragmentManagerForActivity.replaceFragment(
+            transaction,
             R.id.main_container,
             TerminalFragment(),
             terminalFragmentTag
         )
-        fragmentManagerForActivity.addFragment(
+        FragmentManagerForActivity.addFragment(
+            transaction,
             CommandIndexFragment(),
             commandIndexFragmentTag
         )
-        fragmentManagerForActivity.commit()
+        FragmentManagerForActivity.commit(transaction)
     }
 
 
@@ -101,9 +105,6 @@ object WrapFragmentManager {
         editFragmentArgs: EditFragmentArgs,
         disableAddToBackStack: Boolean = false
     ){
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
 
         val addEditFragment = editFragmentArgs.put(
             EditFragment(),
@@ -111,28 +112,33 @@ object WrapFragmentManager {
         val terminalFragment = editFragmentArgs.put(
             TerminalFragment(),
         )
-
+        val transaction = supportFragmentManager.beginTransaction()
         when(terminalFragmentTag){
             String() -> {
-                fragmentManagerForActivity.replaceFragment(
+                FragmentManagerForActivity.replaceFragment(
+                    transaction,
                     R.id.main_container,
                     addEditFragment,
                     editFragmentTag
                 )
             }
             else -> {
-                fragmentManagerForActivity.replaceFragment(
+                FragmentManagerForActivity.replaceFragment(
+                    transaction,
                     R.id.main_container,
                     terminalFragment,
                     terminalFragmentTag
                 )
-                fragmentManagerForActivity.addFragment(
+                FragmentManagerForActivity.addFragment(
+                    transaction,
                     addEditFragment,
                     editFragmentTag
                 )
             }
         }
-        if(!disableAddToBackStack) fragmentManagerForActivity.addToBackStack()
-        fragmentManagerForActivity.commit()
+        if(
+            !disableAddToBackStack
+        ) FragmentManagerForActivity.addToBackStack(transaction)
+        FragmentManagerForActivity.commit(transaction)
     }
 }

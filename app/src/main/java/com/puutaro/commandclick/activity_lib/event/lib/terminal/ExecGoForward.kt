@@ -6,19 +6,18 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
-object ExecGoForword {
+object ExecGoForward {
     fun execGoForword(
         activity: MainActivity
     ){
 
-        val targetFragmentInstance = TargetFragmentInstance()
         val indexTerminalFragment =
-            targetFragmentInstance.getFromActivity<TerminalFragment>(
+            TargetFragmentInstance.getFromActivity<TerminalFragment>(
                 activity,
                 activity.getString(R.string.index_terminal_fragment)
         )
         val editExecuteTerminalFragment =
-            targetFragmentInstance.getFromActivity<TerminalFragment>(
+            TargetFragmentInstance.getFromActivity<TerminalFragment>(
                 activity,
                 activity.getString(R.string.edit_terminal_fragment)
             )

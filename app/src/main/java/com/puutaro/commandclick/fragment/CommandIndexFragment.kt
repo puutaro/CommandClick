@@ -256,10 +256,10 @@ class CommandIndexFragment: Fragment() {
 //        )
 //        toolBarSettingButtonControl.toolbarSettingButtonOnClick()
 //        toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
-        val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
-            this,
-        )
-        toolBarHistoryButtonControl.historyButtonClick()
+//        val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
+//            this,
+//        )
+        ToolBarHistoryButtonControl.historyButtonClick(this)
 
 //        val toolBarInternetButtonControl = ToolBarInternetButtonControl(
 //            this,
@@ -267,8 +267,6 @@ class CommandIndexFragment: Fragment() {
 //        )
 //        toolBarInternetButtonControl.interneButtontSetOnClickListener()
         PinFannelHideShow.setShowListener(this)
-        PreInstallFannel.install(this)
-        ExtraMenuGifCreator.create(this)
     }
 
 
@@ -278,6 +276,8 @@ class CommandIndexFragment: Fragment() {
 //        exitDialog(
 ////            binding.cmdList
 //        )
+        ExtraMenuGifCreator.exit()
+        PreInstallFannel.exit()
         cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
         _binding = null
@@ -288,6 +288,8 @@ class CommandIndexFragment: Fragment() {
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         showTerminalJobWhenReuse?.cancel()
+        ExtraMenuGifCreator.exit()
+        PreInstallFannel.exit()
         BroadcastRegister.unregisterBroadcastReceiver(
             this,
             broadcastReceiverForCmdIndex,
@@ -307,6 +309,8 @@ class CommandIndexFragment: Fragment() {
                 BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action,
             )
         )
+        PreInstallFannel.install(this)
+        ExtraMenuGifCreator.create(this)
     }
 
 

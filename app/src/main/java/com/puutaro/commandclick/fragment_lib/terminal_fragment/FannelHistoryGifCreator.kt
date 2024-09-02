@@ -32,6 +32,9 @@ object FannelHistoryGifCreator {
         gifCreateJob?.cancel()
     }
 
+    private fun isActive(): Boolean {
+        return gifCreateJob?.isActive == true
+    }
     fun watch(
         terminalFragment: TerminalFragment
     ){
@@ -41,6 +44,7 @@ object FannelHistoryGifCreator {
         val concurrentLimit = 5
         val semaphore = Semaphore(concurrentLimit)
         val tag = terminalFragment.tag
+        exit()
         gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 if(
@@ -86,8 +90,17 @@ object FannelHistoryGifCreator {
                 withContext(Dispatchers.IO) {
                     val jobList = urlPrtPngMap.map {
                             map ->
+                        if(
+                            !isActive()
+                        ) return@withContext
                         async {
+                            if(
+                                !isActive()
+                            ) return@async
                             semaphore.withPermit {
+                                if(
+                                    !isActive()
+                                ) return@withPermit
                                 val fannelName = map.key
                                 val urlPngPathList = map.value
 //                                val appDirName = withContext(Dispatchers.IO) {
@@ -131,7 +144,8 @@ object FannelHistoryGifCreator {
 //                                }
                             if (
                                 !isRecreateGif
-                            ) return@async
+                                || !isActive()
+                            ) return@withPermit
                             GifCreator.create(
                                 context,
                                 fannelName,

@@ -4,16 +4,16 @@ import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.TermRefresh
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsMonitorRefresh(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
-    val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-
     @JavascriptInterface
-    fun refresh(){
+    fun refresh() {
 
         /*
         ## Description
@@ -26,6 +26,9 @@ class JsMonitorRefresh(
 
         */
 
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         TermRefresh.refresh(
             terminalViewModel.currentMonitorFileName
         )

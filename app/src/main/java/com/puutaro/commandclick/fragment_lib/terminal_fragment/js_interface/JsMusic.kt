@@ -2,26 +2,36 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.MediaPlayerIntentSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsMusic(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-//    private val currentAppDirPath = terminalFragment.currentAppDirPath
-    private val currentFannelName = terminalFragment.currentFannelName
 
     @JavascriptInterface
     fun play(
         listFilePath: String,
         extraSettingMapStr: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+
         val currentAppDirName = File(UsePath.cmdclickDefaultAppDirPath).name
         val fannelRawName = CcPathTool.trimAllExtend(currentFannelName)
         MediaPlayerIntentSender.send(
@@ -35,6 +45,10 @@ class JsMusic(
 
     @JavascriptInterface
     fun stop(){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         context?.stopService(
             Intent(terminalFragment.activity, MusicPlayerService::class.java)
         )

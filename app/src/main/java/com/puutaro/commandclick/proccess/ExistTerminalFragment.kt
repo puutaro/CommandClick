@@ -9,7 +9,7 @@ object ExistTerminalFragment {
         terminalFragmentTag: String?
     ): com.puutaro.commandclick.fragment.TerminalFragment? {
         val terminalFragmentSource =
-            TargetFragmentInstance()
+            TargetFragmentInstance
                 .getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
                     fragment.activity,
                     terminalFragmentTag

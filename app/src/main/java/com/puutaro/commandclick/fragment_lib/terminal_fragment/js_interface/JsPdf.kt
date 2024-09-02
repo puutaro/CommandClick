@@ -2,24 +2,28 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.util.Log
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ToastErrMessage
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 class JsPdf(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
 
 
     @JavascriptInterface
@@ -44,6 +48,9 @@ class JsPdf(
                 readCompSignal = true
             }
         }
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
         runBlocking {
             for (i in 1..60){
                 ToastErrMessage.launch(

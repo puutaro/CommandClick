@@ -10,6 +10,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
+import java.lang.ref.WeakReference
 
 object HtmlLauncher{
 
@@ -143,7 +144,7 @@ object HtmlLauncher{
             val menuMapStrListStr= listOf(
                     "${dismissType}=click?${caption}=cancel?${iconName}=cancel"
             ).joinToString("?")
-            JsDialog(terminalFragment).webView_S(
+            JsDialog(WeakReference(terminalFragment)).webView_S(
                 htmlFilePath,
                 String(),
                 menuMapStrListStr,

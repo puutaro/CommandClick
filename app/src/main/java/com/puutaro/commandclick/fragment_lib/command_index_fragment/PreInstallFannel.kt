@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -11,6 +12,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.FannelHistoryGifCreator
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -29,6 +31,7 @@ import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -39,6 +42,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 object PreInstallFannel {
+
+    private var preInstallFannelCreateJob: Job? = null
 
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val cmdclickUpdateFannelInfoSystemDirPath = UsePath.cmdclickUpdateFannelInfoSystemDirPath
@@ -56,11 +61,16 @@ object PreInstallFannel {
 //    ) as String
     private const val concurrencyLimit = 5
 
+    fun exit(){
+        preInstallFannelCreateJob?.cancel()
+    }
+
     fun install(
         cmdIndexFragment: CommandIndexFragment,
     ){
         val context = cmdIndexFragment.context
-        cmdIndexFragment.lifecycleScope.launch {
+        exit()
+        preInstallFannelCreateJob = cmdIndexFragment.lifecycleScope.launch {
             cmdIndexFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 delay(500)
                 val fannelList = withContext(Dispatchers.IO) {
@@ -80,16 +90,29 @@ object PreInstallFannel {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "downloadList.txt").absolutePath,
 //                listOf(
-//                    "fannelRawNameToDownloadList: ${fannelRawNameToDownloadList}").joinToString("\n")
+//                    "fannelRawNameToDownloadList: ${fannelNameToDownloadList}",
+//                    preInstallFannelCreateJob?.isActive.toString()
+//                ).joinToString("\n"),
 //            )
-//            StartFileMaker.makeForConfig(
-////                cmdIndexFragment
-//            )
+//                withContext(Dispatchers.Main){
+//                    ToastUtils.showShort(
+//                        preInstallFannelCreateJob?.isActive.toString()
+//                    )
+//                }
                 val semaphore = Semaphore(concurrencyLimit)
                 withContext(Dispatchers.IO) {
                     val jobList = fannelNameToDownloadList.map {
+//                        if(
+//                            preInstallFannelCreateJob?.isActive != true
+//                        ) return@withContext
                         async {
+//                            if(
+//                                preInstallFannelCreateJob?.isActive != true
+//                            ) return@async
                             semaphore.withPermit {
+//                                if(
+//                                    preInstallFannelCreateJob?.isActive != true
+//                                ) return@withPermit
                                 val fannelName = it.first
                                 val downloadList = it.second
                                 UrlFileSystems.createFileByOverride(

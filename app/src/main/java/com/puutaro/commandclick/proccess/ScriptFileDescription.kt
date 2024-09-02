@@ -37,9 +37,8 @@ object ScriptFileDescription {
 //            currentAppDirPath,
             fannelName,
         )
-        val targetFragmentInstance = TargetFragmentInstance()
         val isTerminalFragment =
-            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+            TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
                 fragment.activity
             ) != null
         val readmeUrl = getReadmeUrl(descCon)
