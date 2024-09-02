@@ -161,9 +161,6 @@ class WebViewJsDialog(
         noShowKeyBoardForPreloadAutoGgle = false
         positionHashMap.clear()
         PocketWebviewGoBack.initPrevBackTime()
-//        val urlToPageFinishGgleFocusJsJsPair = urlToPageFinishGgleFocusJs.makePair(urlStrSrc)
-//        urlToPageFinishGgleFocusJs.setFinishJs(urlToPageFinishGgleFocusJsJsPair.second)
-//        val madeUrl = urlToPageFinishGgleFocusJsJsPair.first
         currentScriptPath = currentScriptPathSrc
         longPressMenuMapListStr = longPressMenuMapListStrSrc
         CoroutineScope(Dispatchers.Main).launch{
@@ -181,19 +178,6 @@ class WebViewJsDialog(
                             terminalFragment?.context,
                             pocketWebView,
                         )
-//                        val jsScriptUrl = withContext(Dispatchers.IO){
-//                            val jsContents = AssetsFileManager.readFromAssets(
-//                                terminalFragment?.context,
-//                                AssetsFileManager.ggleSchBoxFocus
-//                            ).split("\n")
-//                            JavaScriptLoadUrl.makeFromContents(
-//                                terminalFragment?.context,
-//                                jsContents
-//                            )
-//                        }  ?: return@autoFocus
-//                        withContext(Dispatchers.Main){
-//                            pocketWebView?.loadUrl(jsScriptUrl)
-//                        }
                     }
                 else -> {
                     val urlStr = if(
