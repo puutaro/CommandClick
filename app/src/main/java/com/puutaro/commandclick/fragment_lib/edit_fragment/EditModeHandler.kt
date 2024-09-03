@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.widget.EditText
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
@@ -10,7 +9,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextPro
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import kotlinx.coroutines.*
-import java.lang.ref.WeakReference
 
 
 object EditModeHandler{
@@ -23,7 +21,7 @@ object EditModeHandler{
         ) {
             false -> editSettingVariable(
                 editFragment
-            )
+               )
             else -> editCommandVariable(editFragment)
         }
     }
@@ -45,6 +43,11 @@ object EditModeHandler{
             editExecuteValue,
             fannelInfoMap,
         )
+        CoroutineScope(Dispatchers.Main).launch {
+            EditTextProducerForEdit.adds(
+                editFragment,
+            )
+        }
         buttonCreate(
             editFragment,
             ToolbarButtonBariantForEdit.HISTORY,
@@ -87,10 +90,12 @@ object EditModeHandler{
             editFragment,
             ToolbarButtonBariantForEdit.OK,
         )
-        EditTextProducerForEdit.adds(
-            editFragment,
-        true
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            EditTextProducerForEdit.adds(
+                editFragment,
+                true
+            )
+        }
 //        if(editFragment.isToolbarBtnCustomInSettingSelects) {
 //            buttonCreate(
 //                ToolbarButtonBariantForEdit.EDIT,
