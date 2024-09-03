@@ -261,6 +261,7 @@ object ExecMusicPlay {
         playList: List<String>,
         playIndex: Int,
     ): Job {
+        val context = musicPlayerService.applicationContext
         return CoroutineScope(Dispatchers.IO).launch {
             val uri = withContext(Dispatchers.IO) {
                 playList.getOrNull(
@@ -270,6 +271,10 @@ object ExecMusicPlay {
             if(
                 uri.isNullOrEmpty()
             ){
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action,
+                )
                 LogSystems.stdWarn(
                     "playList getIndex failure: ${playIndex} / ${playList.size}"
                 )
