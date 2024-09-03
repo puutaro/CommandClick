@@ -168,13 +168,21 @@ class WebViewJsDialog(
                 startWebView()
             }
             val terminalFragment = terminalFragmentRef.get()
-            when (urlStrSrc == UrlToPageFinishGgleFocusJs.ggleSearchMacro) {
+            when (urlStrSrc == GglePreFocusJs.gglePreFocusMacro) {
                 true ->
                     CoroutineScope(Dispatchers.IO).launch autoFocus@ {
                         withContext(Dispatchers.IO){
-                            delay(100)
+                            for(i in 1..5){
+                                val isFocus = withContext(Dispatchers.Main) {
+                                    pocketWebView?.requestFocus() == true
+                                }
+                                delay(50)
+                                if(
+                                    isFocus
+                                ) break
+                            }
                         }
-                        UrlToPageFinishGgleFocusJs.loadJsGgleFocusJs(
+                        GglePreFocusJs.loadGglePreFocusJs(
                             terminalFragment?.context,
                             pocketWebView,
                         )
@@ -273,32 +281,32 @@ class WebViewJsDialog(
         }
     }
 
-    private object UrlToPageFinishGgleFocusJs {
+    private object GglePreFocusJs {
 
-        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
-        val ggleSearchMacro = "GGLE_SEARCH"
+//        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
+        val gglePreFocusMacro = "GGLE_SEARCH"
 
-        suspend fun execPageFinishJs(
-            context: Context?,
-            webView: WebView?,
-            url: String?
-        ){
-            if(
-                url.isNullOrEmpty()
-            ) return
-            if(
-                url != autoFocusGgleSearchUrl
-            ) return
-            withContext(Dispatchers.IO) {
-                delay(200)
-            }
-            loadJsGgleFocusJs(
-                context,
-                webView,
-            )
-        }
+//        suspend fun execPageFinishJs(
+//            context: Context?,
+//            webView: WebView?,
+//            url: String?
+//        ){
+//            if(
+//                url.isNullOrEmpty()
+//            ) return
+//            if(
+//                url != autoFocusGgleSearchUrl
+//            ) return
+//            withContext(Dispatchers.IO) {
+//                delay(200)
+//            }
+//            loadGglePreFocusJs(
+//                context,
+//                webView,
+//            )
+//        }
 
-        suspend fun loadJsGgleFocusJs(
+        suspend fun loadGglePreFocusJs(
             context: Context?,
             webView: WebView?,
         ){
@@ -667,17 +675,17 @@ class WebViewJsDialog(
                 return super.shouldInterceptRequest(view, request)
             }
 
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                CoroutineScope(Dispatchers.Main).launch {
-                    if(noShowKeyBoardForPreloadAutoGgle) return@launch
-                    UrlToPageFinishGgleFocusJs.execPageFinishJs(
-                        context,
-                        view,
-                        url,
-                    )
-                }
-            }
+//            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+//                super.onPageStarted(view, url, favicon)
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    if(noShowKeyBoardForPreloadAutoGgle) return@launch
+//                    GglePreFocusJs.execPageFinishJs(
+//                        context,
+//                        view,
+//                        url,
+//                    )
+//                }
+//            }
 
             override fun onPageFinished(
                 webview: WebView?,
