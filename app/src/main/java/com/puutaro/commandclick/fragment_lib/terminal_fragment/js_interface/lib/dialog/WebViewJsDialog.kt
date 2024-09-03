@@ -332,6 +332,7 @@ class WebViewJsDialog(
         }
         pocketWebView?.isVisible = true
         firstBottomLinearLayout?.isVisible = true
+        firstBottomLinearLayout?.removeAllViews()
     }
     fun stopWebView(
     ){
