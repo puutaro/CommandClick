@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object PocketWebViewUrlLoader {
@@ -31,13 +32,26 @@ object PocketWebViewUrlLoader {
         terminalFragment.onRegisterPocketWebViewUrl = CoroutineScope(Dispatchers.Main).launch {
             val webSearcherName = SystemFannel.webSearcher
             val systemExecRepTextList = listOf(url)
-
-            ExecJsLoad.execExternalJs(
-                terminalFragment,
+            val isStop = withContext(Dispatchers.IO){
+                for(i in 1..5){
+                    if(
+                        terminalFragment.activity == null
+                        || terminalFragment.pocketWebViewManager == null
+                    ) continue
+                    return@withContext false
+                }
+                true
+            }
+            if(isStop) return@launch
+            withContext(Dispatchers.Main){
+                ExecJsLoad.execExternalJs(
+                    terminalFragment,
 //                        terminalFragment.currentAppDirPath,
-                webSearcherName,
-                systemExecRepTextList
-            )
+                    webSearcherName,
+                    systemExecRepTextList
+                )
+            }
+
 //            when(
 //                terminalFragment.pocketWebViewManager?.pocketWebView?.isVisible == true
 //            ) {

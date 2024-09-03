@@ -28,6 +28,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GgleSchDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
@@ -43,6 +44,7 @@ import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -56,25 +58,6 @@ class TerminalFragment: Fragment() {
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
-//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-//    var languageTypeToSectionHolderMap =
-//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//            languageType
-//        )
-//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//    ) as String
-//
-//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//    ) as String
-//
-//    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-//    ) as String
-//    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-//    ) as String
     var busyboxExecutor: BusyboxExecutor? = null
     var fannelInfoMap = mapOf<String, String>()
     var srcFannelInfoMap: Map<String, String>? = null
@@ -122,6 +105,7 @@ class TerminalFragment: Fragment() {
 //    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
     var pocketWebViewManager: WebViewJsDialog? = null
+    var ggleWebViewManager: GgleSchDialog? = null
 //    var extraMapBitmapList: List<Bitmap?> = emptyList()
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -194,6 +178,7 @@ class TerminalFragment: Fragment() {
             binding.terminalWebView
         )
         pocketWebViewManager = WebViewJsDialog(WeakReference(this))
+        ggleWebViewManager = GgleSchDialog(WeakReference(this))
         TerminalToolbarHandler.handler(this)
         GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
         val keyboardHandleListener = context as? OnKeyboardHandleListenerForTerm
@@ -429,6 +414,7 @@ class TerminalFragment: Fragment() {
         onPocketWebHistoryUpdaterJob?.cancel()
         onRegisterPocketWebViewUrl?.cancel()
         pocketWebViewManager?.destroyWebView()
+        ggleWebViewManager?.destroyWebView()
         val terminalWebView = binding.terminalWebView
         terminalWebView.onPause()
         terminalWebView.webChromeClient = null

@@ -49,21 +49,29 @@ object SearchButtonClickListener {
             val extraMapCon = listOf(
                 "load_local=ON",
             ).joinToString(menuMapSeparator.toString())
-            val jsConSrc = """
-            jsDialog.webView_S(
-                "GGLE_SEARCH",
-                "",
-                "${menuMapStrListCon}",
-                "",
-                "${extraMapCon}",
-            );
-        """.trimIndent()
-            val jsCon = JavaScriptLoadUrl.makeFromContents(
-                cmdIndexFragment.context,
-                jsConSrc.split("\n"),
-            ) ?: return@setOnClickListener
-            terminalFragment.binding.terminalWebView.loadUrl(jsCon)
-            return@setOnClickListener
+            terminalFragment.ggleWebViewManager?.show(
+//                "GGLE_SEARCH",
+//                String(),
+//                menuMapStrListCon,
+//                String(),
+//                extraMapCon,
+
+                )
+//            val jsConSrc = """
+//            jsDialog.webView_S(
+//                "GGLE_SEARCH",
+//                "",
+//                "${menuMapStrListCon}",
+//                "",
+//                "${extraMapCon}",
+//            );
+//        """.trimIndent()
+//            val jsCon = JavaScriptLoadUrl.makeFromContents(
+//                cmdIndexFragment.context,
+//                jsConSrc.split("\n"),
+//            ) ?: return@setOnClickListener
+//            terminalFragment.binding.terminalWebView.loadUrl(jsCon)
+//            return@setOnClickListener
 //            val isGgleSearchUrl =
 //                terminalFragment.binding.terminalWebView.url?.startsWith(
 //                    WebUrlVariables.queryUrlBase

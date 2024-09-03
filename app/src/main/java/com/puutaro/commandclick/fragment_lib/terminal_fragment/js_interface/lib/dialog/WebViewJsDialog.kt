@@ -4,7 +4,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
@@ -80,9 +79,8 @@ import java.time.LocalDateTime
 
 
 class WebViewJsDialog(
-    private val terminalFragmentRef: WeakReference<TerminalFragment>
+    private val terminalFragmentRef: WeakReference<TerminalFragment>,
 ) {
-    private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
     private val longpressMenuGroupId = 110000
     private val clickMenuGroupId = 120000
     private var webViewDialogExtraMapManager: WebViewDialogExtraMapManager? = null
@@ -145,7 +143,6 @@ class WebViewJsDialog(
         webViewLongClickListener(
             pocketWebViewSrc,
         )
-        pocketWebViewSrc?.loadUrl(autoFocusGgleSearchUrl)
         pocketWebViewSrc?.isVisible = false
         pocketWebViewSrc?.onPause()
         pocketWebViewSrc
@@ -176,10 +173,12 @@ class WebViewJsDialog(
                                 val isFocus = withContext(Dispatchers.Main) {
                                     pocketWebView?.requestFocus() == true
                                 }
-                                delay(50)
+                                delay(150)
                                 if(
                                     isFocus
-                                ) break
+                                ) {
+                                    break
+                                }
                             }
                         }
                         GglePreFocusJs.loadGglePreFocusJs(
@@ -357,7 +356,9 @@ class WebViewJsDialog(
             webViewDialogInstance = null
             val terminalFragment = terminalFragmentRef.get()
             noShowKeyBoardForPreloadAutoGgle = true
-            terminalFragment?.pocketWebViewManager = WebViewJsDialog(terminalFragmentRef)
+            terminalFragment?.pocketWebViewManager = WebViewJsDialog(
+                terminalFragmentRef,
+            )
         }
     }
 
@@ -1322,10 +1323,7 @@ private class WebViewDialogExtraMapManager(
             val key: String
         ) {
             FOCUS("focus"),
-            LOAD_LOCAL("load_local"),
         }
-
-        private val loadLocalOn = "ON"
 
         object FocusManager {
 
@@ -1375,12 +1373,6 @@ private class WebViewDialogExtraMapManager(
         context: Context?,
         url: String?
     ): Boolean {
-        val isNotLocalAtLocal = extraMap.get(
-            MainKeys.LOAD_LOCAL.key
-        ) != loadLocalOn
-        if(
-            isNotLocalAtLocal
-        ) return false
         if(
             url.isNullOrEmpty()
         ) return false

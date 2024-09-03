@@ -193,12 +193,11 @@ object ExecSetToolbarButtonImage {
         }
     }
 
-    private suspend fun setImageButton(
+    suspend fun setImageButton(
         imageView: AppCompatImageView?,
         icon: CmdClickIcons
     ){
         if(imageView == null) return
-        val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
         val imageFile = getImageFile(icon.assetsPath)
         if (
             !imageFile.isFile
