@@ -65,7 +65,7 @@ class OnlySpannableGridJsDialog(
         gridView.numColumns = 2
 
         val onlySpannableAdapter = OnlySpannableAdapter(
-            terminalFragment,
+            WeakReference(terminalFragment.activity),
             context
         )
         onlySpannableAdapter.addAll(

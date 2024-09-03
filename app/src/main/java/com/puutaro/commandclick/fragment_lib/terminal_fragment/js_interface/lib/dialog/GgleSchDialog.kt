@@ -391,7 +391,7 @@ class GgleSchDialog(
             pocketWebViewSrc == null
         ) return
         var oldPositionY = 0f
-        val hideShowThreshold = getScreenHeight(terminalFragment?.activity)
+        val hideShowThreshold = ScreenSizeCalculator.getScreenHeight(terminalFragment?.activity)
         with(pocketWebViewSrc){
             setOnTouchListener {
                     v, event ->
@@ -430,17 +430,4 @@ class GgleSchDialog(
             ggleSchButtonCaption?.isVisible = false
         }
     }
-}
-
-private fun getScreenHeight(
-    activity: FragmentActivity?,
-): Int {
-    val dpHeight = ScreenSizeCalculator.dpHeight(
-        activity
-    )
-    val hideShowRate =
-        if(dpHeight > 670f) 3.0f
-        else if(dpHeight > 630) 3.5F
-        else 4.0f
-    return -(dpHeight / hideShowRate).toInt()
 }

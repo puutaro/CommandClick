@@ -251,8 +251,9 @@ class JsQr(
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val drawable =
-            QrLogo(terminalFragment)
+            QrLogo
                 .createMonochrome(
+                    terminalFragment,
                     srcQrStr
                 ) ?: return
         val qrBitMap = QrLogo.toBitMapWrapper(drawable)

@@ -57,7 +57,8 @@ object QrDialogMethod {
             fannelName,
         )
 
-        val passQrLogoDrawable = QrLogo(fragment).createMonochrome(
+        val passQrLogoDrawable = QrLogo.createMonochrome(
+            fragment,
             cpQrStr
         ) ?: return
         val intent = Intent(
@@ -217,8 +218,6 @@ object QrDialogMethod {
         myBitmap: Bitmap
     ){
         val context = fragment.context
-        val activity = fragment.activity
-            ?: return
         FileSystems.removeDir(
             UsePath.cmdclickTempCreateDirPath
         )
@@ -262,7 +261,6 @@ object QrDialogMethod {
         val qrLogoParentDirPath = qrLogoPathObj.parent
             ?: return
         val qrLogoName = qrLogoPathObj.name
-        val qrLogo = QrLogo(fragment)
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO){
                 FileSystems.checkSum(
@@ -273,7 +271,8 @@ object QrDialogMethod {
                 )
             }
             withContext(Dispatchers.IO) {
-                qrLogo.createAndSaveWithGitCloneOrFileCon(
+                QrLogo.createAndSaveWithGitCloneOrFileCon(
+                    context,
 //                    currentAppDirPath,
                     fannelName,
                     isFileCon,
@@ -331,8 +330,7 @@ object QrDialogMethod {
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
         val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
-        val qrLogo = QrLogo(fragment)
-        val qrDesignMap = qrLogo.readQrDesignMapWithCreate(
+        val qrDesignMap = QrLogo.readQrDesignMapWithCreate(
             qrDesignFilePath,
 //            currentAppDirPath,
             fannelName,
@@ -347,7 +345,8 @@ object QrDialogMethod {
                 FileSystems.checkSum(qrLogoPath)
             }
             withContext(Dispatchers.IO) {
-                qrLogo.createAndSaveFromDesignMap(
+                QrLogo.createAndSaveFromDesignMap(
+                    fragment.context,
                     qrDesignMap,
 //                    currentAppDirPath,
                     fannelName,

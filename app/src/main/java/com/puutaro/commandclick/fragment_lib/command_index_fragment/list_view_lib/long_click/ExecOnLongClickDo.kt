@@ -52,7 +52,8 @@ object ExecOnLongClickDo {
                     contextMenuDialog?.setContentView(
                         R.layout.list_dialog_layout
                     )
-                    QrLogo(cmdIndexFragment).setTitleFannelLogo(
+                    QrLogo.setTitleFannelLogo(
+                        cmdIndexFragment,
                         contextMenuDialog?.findViewById<AppCompatImageView>(
                             R.id.list_dialog_title_image
                         ),
@@ -326,7 +327,8 @@ private object UtilitySubMenuDialog {
         utilitySubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
         )
-        QrLogo(cmdIndexFragment).setTitleFannelLogo(
+        QrLogo.setTitleFannelLogo(
+            cmdIndexFragment,
             utilitySubMenuDialog?.findViewById<AppCompatImageView>(
                 R.id.list_dialog_title_image
             ),

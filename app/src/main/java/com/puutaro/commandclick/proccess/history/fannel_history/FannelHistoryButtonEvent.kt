@@ -6,11 +6,13 @@ import android.content.DialogInterface
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
@@ -25,6 +28,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -44,6 +48,7 @@ import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -56,16 +61,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-//private val mainMenuGroupId = 30000
-
-//private enum class HistoryMenuEnums(
-//    val groupId: Int,
-//    val itemId: Int,
-//    val order: Int,
-//    val itemName: String
-//) {
-//    DELETE(mainMenuGroupId, 30100, 1, "delete"),
-//}
 object FannelHistoryButtonEvent {
 
 
@@ -76,17 +71,6 @@ object FannelHistoryButtonEvent {
     private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
     private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-//    private val homeFannelList = when(
-//        fragment
-//    ) {
-//        is CommandIndexFragment -> {
-//            fragment.homeFannelHistoryNameList
-//        }
-//        is EditFragment -> {
-//            fragment.homeFannelHistoryNameList
-//        }
-//        else -> emptyList()
-//    } ?: emptyList()
 
     fun invoke(
        fragment: Fragment
@@ -153,6 +137,11 @@ object FannelHistoryButtonEvent {
         fannelManageListView.adapter = fannelManageListAdapter
         fannelManageListView.layoutManager?.scrollToPosition(
             fannelManageListAdapter.itemCount - 1
+        )
+        SearchEditTextHideShow.monitor(
+            fragment,
+            fannelManageListView,
+            searchText
         )
         makeSearchEditText(
             fannelManageListAdapter,
@@ -339,12 +328,17 @@ object FannelHistoryButtonEvent {
                 when(fannelName == SystemFannel.home){
                     true -> pinFannelToolbarHideShow(
                         fragment,
-                        holder.pinImageButtonView
+                        holder.pinImageView,
+                        holder.pinImageCaption
+//                        holder.pinImageView
                     )
                     else -> pinFannelRA(
                         fragment.context,
                         fannelName,
-                        holder.pinImageButtonView
+                        holder.pinImageView,
+                        holder.pinImageCaption,
+//                        pinFrameButtonView,
+//                        holder.pinImageView
                     )
                 }
             }
@@ -353,7 +347,9 @@ object FannelHistoryButtonEvent {
 
     private fun pinFannelToolbarHideShow(
         fragment: Fragment,
-        pinImageButtonView: AppCompatImageButton
+//        pinFrameButtonView: FrameLayout,
+        pinImageView: AppCompatImageView,
+        pinImageCaption: OutlineTextView
     ){
         val isHide = PinFannelHideShow.isHide()
         val context = fragment.context
@@ -365,8 +361,15 @@ object FannelHistoryButtonEvent {
                     ?: return
                 listener.onPinFannelShow()
                 ToastUtils.showShort("Show pin")
-                pinImageButtonView.imageTintList =
-                    context.getColorStateList(FannelManageAdapter.pinExistColor)
+                pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageView.isEnabled = true
+                pinImageCaption.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageCaption.setFillColor(FannelManageAdapter.pinExistColor)
+//                pinImageCaption.background =
+//                    AppCompatResources.getDrawable(context, FannelManageAdapter.pinExistColor)
+
+//                pinImageButtonView.imageTintList =
+//                    context.getColorStateList(FannelManageAdapter.pinExistColor)
             }
             else -> {
                 val terminalFragment =
@@ -376,8 +379,14 @@ object FannelHistoryButtonEvent {
                     ?: return
                 listener.onPinFannelHide()
                 ToastUtils.showShort("Hide pin")
-                pinImageButtonView.imageTintList =
-                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
+                pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageView.isEnabled = true
+                pinImageCaption.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageCaption.setFillColor(FannelManageAdapter.textFillColor)
+//                pinFrameButtonView.background =
+//                    AppCompatResources.getDrawable(context as Context, FannelManageAdapter.buttonOrdinalyColor)
+//                pinImageButtonView.imageTintList =
+//                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
 
             }
         }
@@ -386,7 +395,9 @@ object FannelHistoryButtonEvent {
     private fun pinFannelRA(
         context: Context?,
         fannelName: String,
-        pinImageButtonView: AppCompatImageButton
+//        pinFrameButtonView: FrameLayout,
+        pinImageView: AppCompatImageView,
+        pinImageCaption: OutlineTextView,
     ){
         val pinFannelList = PinFannelManager.get()
         when(
@@ -395,14 +406,30 @@ object FannelHistoryButtonEvent {
             true -> {
                 PinFannelManager.remove(fannelName)
                 ToastUtils.showShort("Remove ok: ${fannelName}")
-                pinImageButtonView.imageTintList =
-                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
+                pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageView.isEnabled = true
+                pinImageCaption.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageCaption.setFillColor(FannelManageAdapter.textFillColor)
+//                pinFrameButtonView.background = AppCompatResources.getDrawable(
+//                    context as Context,
+//                    FannelManageAdapter.buttonOrdinalyColor
+//                )
+//                pinImageButtonView.imageTintList =
+//                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
             }
             else -> {
                 PinFannelManager.add(fannelName)
                 ToastUtils.showShort("Add ok: ${fannelName}")
-                pinImageButtonView.imageTintList =
-                    context?.getColorStateList(FannelManageAdapter.pinExistColor)
+                pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageView.isEnabled = true
+                pinImageCaption.alpha = FannelManageAdapter.ordinaryAlpha
+                pinImageCaption.setFillColor(FannelManageAdapter.pinExistColor)
+//                pinFrameButtonView.background = AppCompatResources.getDrawable(
+//                    context as Context,
+//                    FannelManageAdapter.pinExistColor
+//                )
+//                pinImageButtonView.imageTintList =
+//                    context?.getColorStateList(FannelManageAdapter.pinExistColor)
             }
         }
         PinFannelManager.updateBroadcast(context)
@@ -436,6 +463,58 @@ object FannelHistoryButtonEvent {
                         fannelName
                     )
                 }
+            }
+        }
+    }
+
+
+    private object SearchEditTextHideShow {
+        fun monitor(
+            fragment: Fragment,
+            fannelManageListView: RecyclerView?,
+            searchBox: AppCompatEditText?,
+        ) {
+            if (
+                fannelManageListView == null
+            ) return
+            var oldPositionY = 0f
+            val hideShowThreshold = ScreenSizeCalculator.getScreenHeight(fragment.activity)
+            fannelManageListView.addOnItemTouchListener(object : OnItemTouchListener {
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    when (e.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            oldPositionY = e.rawY
+                        }
+
+                        MotionEvent.ACTION_UP -> {
+                            execHideShowForSearchBox(
+                                hideShowThreshold,
+                                oldPositionY,
+                                e.rawY,
+                                searchBox
+                            )
+                        }
+                    }
+                    return false
+                }
+
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+            })
+        }
+
+        private fun execHideShowForSearchBox(
+            hideShowThreshold: Int,
+            oldPositionY: Float,
+            rawY: Float,
+            searchBox: AppCompatEditText?
+        ) {
+            val oldCurrYDff = oldPositionY - rawY
+            if (hideShowThreshold < oldCurrYDff && oldCurrYDff < -10) {
+                searchBox?.isVisible = true
+            }
+            if (oldCurrYDff > 10) {
+                searchBox?.isVisible = false
             }
         }
     }

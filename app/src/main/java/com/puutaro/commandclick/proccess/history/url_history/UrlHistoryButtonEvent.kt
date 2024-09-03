@@ -7,9 +7,11 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,6 +33,7 @@ import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -124,7 +127,7 @@ object UrlHistoryButtonEvent{
             terminalFragment.binding.terminalWebView.url
         }
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
-            fragment,
+            fragment.context,
 //            cmdclickDefaultAppDirPath,
             urlHistoryList.toMutableList(),
             currentUrl,
@@ -136,6 +139,12 @@ object UrlHistoryButtonEvent{
         urlHistoryListView.layoutManager?.scrollToPosition(
             urlHistoryDisplayListAdapter.itemCount - 1
         )
+        SearchEditTextHideShow.monitor(
+            fragment,
+            urlHistoryListView,
+            searchText,
+        )
+
         makeSearchEditText(
             urlHistoryDisplayListAdapter,
             urlHistoryListView,
@@ -231,6 +240,57 @@ object UrlHistoryButtonEvent{
                 }
             })
         mIth.attachToRecyclerView(recyclerView)
+    }
+
+    private object SearchEditTextHideShow {
+        fun monitor(
+            fragment: Fragment,
+            urlHistoryListView: RecyclerView?,
+            searchBox: AppCompatEditText?,
+        ) {
+            if (
+                urlHistoryListView == null
+            ) return
+            var oldPositionY = 0f
+            val hideShowThreshold = ScreenSizeCalculator.getScreenHeight(fragment.activity)
+            urlHistoryListView.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    when (e.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            oldPositionY = e.rawY
+                        }
+
+                        MotionEvent.ACTION_UP -> {
+                            execHideShowForSearchBox(
+                                hideShowThreshold,
+                                oldPositionY,
+                                e.rawY,
+                                searchBox
+                            )
+                        }
+                    }
+                    return false
+                }
+
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+            })
+        }
+
+        private fun execHideShowForSearchBox(
+            hideShowThreshold: Int,
+            oldPositionY: Float,
+            rawY: Float,
+            searchBox: AppCompatEditText?
+        ) {
+            val oldCurrYDff = oldPositionY - rawY
+            if (hideShowThreshold < oldCurrYDff && oldCurrYDff < -10) {
+                searchBox?.isVisible = true
+            }
+            if (oldCurrYDff > 10) {
+                searchBox?.isVisible = false
+            }
+        }
     }
 
     private fun makeSearchEditText(
@@ -379,14 +439,14 @@ object UrlHistoryButtonEvent{
     ){
         urlHistoryDisplayListAdapter.logoItemClickListener = object: UrlHistoryAdapter.OnLogoItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
-                val urlHistoryAdapterRelativeLayout = holder.urlHistoryAdapterRelativeLayout
+                val urlHistoryAdapterConstraintLayout = holder.urlHistoryAdapterConstraintLayout
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main){
                         ToastUtils.showShort("share")
                     }
                     val pngImagePathObj = HistoryShareImage.makePngImageFromView(
                         context,
-                        urlHistoryAdapterRelativeLayout
+                        urlHistoryAdapterConstraintLayout
                     ) ?: return@launch
                     withContext(Dispatchers.Main) {
                         IntentVariant.sharePngImage(

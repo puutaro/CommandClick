@@ -12,43 +12,45 @@
     android:paddingTop="10dp"
     android:background="@color/file_dark_green_color"
     >
-    <RelativeLayout
-        android:id="@+id/url_history_adapter_relative_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="0dp"
-        android:layout_margin="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/url_history_adapter_site_logo_container"
-        app:layout_constraintDimensionRatio="h, 1:1.74"
-        >
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/url_history_adapter_relative_layout"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:padding="0dp"-->
+<!--        android:layout_margin="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/url_history_adapter_site_logo_container"-->
+<!--        app:layout_constraintDimensionRatio="h, 1:1.74"-->
+<!--        >-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/url_history_adapter_capture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h, 1:1.74"
             android:adjustViewBounds="true"
             />
         <com.puutaro.commandclick.custom_view.OutlineTextView
             android:id="@+id/url_history_adapter_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/url_history_adapter_capture"
+            app:layout_constraintStart_toStartOf="@+id/url_history_adapter_capture"
+            app:layout_constraintEnd_toEndOf="@+id/url_history_adapter_capture"
+            app:layout_constraintBottom_toBottomOf="@+id/url_history_adapter_capture"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:foregroundGravity="bottom"
             android:textSize="19sp"
             android:textStyle="bold"
             android:layout_margin="15dp"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
             />
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 
 <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
 <!--        android:id="@+id/url_history_adapter_bottom_linear_inner"-->
@@ -62,61 +64,108 @@
 <!--        app:tint="@color/white"-->
 <!--        android:weightSum="1"-->
 <!--        >-->
-    <RelativeLayout
-        android:id="@+id/url_history_adapter_site_logo_container"
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/url_history_adapter_site_logo_container"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/url_history_adapter_relative_layout"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/url_history_adapter_copy"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintHorizontal_chainStyle="spread"-->
+<!--        app:layout_constraintHorizontal_weight="1"-->
+<!--        >-->
+<!--
+android:layout_weight="0.3333"-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/url_history_adapter_site_logo"
         android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/url_history_adapter_relative_layout"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/url_history_adapter_copy"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/internet"
+        android:backgroundTint="@color/file_dark_green_color"
+        app:tint="@color/white"
+        android:scaleType="fitXY"
+        android:padding="0dp"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="1"
-        >
-<!--
-android:layout_weight="0.3333"-->
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/url_history_adapter_site_logo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/internet"
-            android:backgroundTint="@color/file_dark_green_color"
-            app:tint="@color/white"
-            android:scaleType="fitXY"
-            android:padding="0dp"
-            android:layout_centerInParent="true"
-            />
-    </RelativeLayout>
-    <androidx.appcompat.widget.AppCompatImageButton
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        />
+<!--    </RelativeLayout>-->
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/url_history_adapter_copy"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.25"
         android:src="@drawable/ic_copy"
         android:backgroundTint="@color/file_dark_green_color"
         app:tint="@color/white"
         android:layout_gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/url_history_adapter_relative_layout"
-        app:layout_constraintStart_toEndOf="@+id/url_history_adapter_site_logo_container"
+        app:layout_constraintStart_toEndOf="@+id/url_history_adapter_site_logo"
         app:layout_constraintEnd_toStartOf="@+id/url_history_adapter_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         />
+        <com.puutaro.commandclick.custom_view.OutlineTextView
+            android:id="@+id/url_history_adapter_copy_caption"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/url_history_adapter_copy"
+            app:layout_constraintStart_toStartOf="@+id/url_history_adapter_copy"
+            app:layout_constraintEnd_toEndOf="@+id/url_history_adapter_copy"
+            app:layout_constraintBottom_toBottomOf="@+id/url_history_adapter_copy"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:text="copy"
+            />
 <!--     android:layout_weight="0.3333"-->
-    <androidx.appcompat.widget.AppCompatImageButton
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/url_history_adapter_delete"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.25"
         android:src="@drawable/icons8_cancel"
         app:tint="@color/white"
         android:backgroundTint="@color/file_dark_green_color"
         android:layout_gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/url_history_adapter_relative_layout"
         app:layout_constraintStart_toEndOf="@+id/url_history_adapter_copy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         />
+        <com.puutaro.commandclick.custom_view.OutlineTextView
+            android:id="@+id/url_history_adapter_delete_caption"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/url_history_adapter_delete"
+            app:layout_constraintStart_toStartOf="@+id/url_history_adapter_delete"
+            app:layout_constraintEnd_toEndOf="@+id/url_history_adapter_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/url_history_adapter_delete"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:text="del"
+            />
 <!--
 android:layout_weight="0.3333"
 </androidx.appcompat.widget.LinearLayoutCompat>-->

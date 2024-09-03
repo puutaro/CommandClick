@@ -20,6 +20,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.Keyboard
+import java.lang.ref.WeakReference
 
 
 object WithIndexListView{
@@ -87,7 +88,7 @@ object WithIndexListView{
         val editListRecyclerView =
             binding.editListRecyclerView
         val listIndexForEditAdapter = ListIndexAdapter(
-            editFragment,
+            WeakReference(editFragment),
             fileList,
         )
         ItemTouchHelperCallbackForListIndexAdapter.set(

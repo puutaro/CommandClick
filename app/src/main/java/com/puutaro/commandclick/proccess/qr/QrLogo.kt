@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.qr
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
@@ -7,7 +8,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.fragment.app.Fragment
-import coil.load
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -39,10 +39,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Random
 
-class QrLogo(
-    private val fragment: Fragment,
-) {
-    private val context = fragment.context
+object QrLogo {
     private val logoList = FannelIcons.values().map { it.id }
     private val logListSize = logoList.size
     private val qrPngRelativePath = UsePath.qrPngRelativePath
@@ -51,18 +48,18 @@ class QrLogo(
     private val qrNewLine = "cmdclickQRNewLine"
     private val maxQrConLength = 500
 
-    companion object {
-        fun toBitMapWrapper(
-            qrLogoDrawable: Drawable
-        ): Bitmap? {
-            return qrLogoDrawable.toBitmapOrNull(
-                1000,
-                1000
-            )
-        }
+    fun toBitMapWrapper(
+
+        qrLogoDrawable: Drawable
+    ): Bitmap? {
+        return qrLogoDrawable.toBitmapOrNull(
+            1000,
+            1000
+        )
     }
 
     fun setTitleFannelLogo(
+        fragment: Fragment,
         titleImageView: AppCompatImageView?,
 //        currentAppDirPath: String,
         selectedScriptName: String,
@@ -107,6 +104,7 @@ class QrLogo(
     }
 
     fun createAndSaveWithGitCloneOrFileCon(
+        context: Context?,
 //        currentAppDirPath: String,
         fannelName: String,
         isFileCon: Boolean,
@@ -131,6 +129,7 @@ class QrLogo(
             qrContents,
         )
         return createAndSaveFromDesignMap(
+            context,
             qrDesignMap,
 //            currentAppDirPath,
             fannelName,
@@ -138,6 +137,7 @@ class QrLogo(
     }
 
     fun createMonochrome(
+        fragment: Fragment,
         qrSrcStr: String,
     ): Drawable? {
         val context = fragment.context ?: return null
@@ -202,9 +202,10 @@ class QrLogo(
     }
 
     private fun createFromQrDesignMap(
+       context: Context?,
         qrDesignMap: Map<String, String>,
     ): Drawable? {
-        val context = fragment.context ?: return null
+        if(context == null) return null
         val rnd = Random(System.currentTimeMillis())
         val contents = getQrDesignFileKey(
             QrDesignFileKey.CONTENTS.key,
@@ -291,18 +292,24 @@ class QrLogo(
     }
 
     fun createAndSaveFromDesignMap(
+        context: Context?,
         qrDesignMap: Map<String, String>,
 //        currentAppDirPath: String,
         fannelName: String,
     ): Drawable? {
         return qrDrawableSave(
-            createFromQrDesignMap(qrDesignMap),
+            context,
+            createFromQrDesignMap(
+                context,
+                qrDesignMap
+            ),
 //            currentAppDirPath,
             fannelName,
         )
     }
 
     private fun qrDrawableSave(
+        context: Context?,
         qrDrawableSrc: Drawable?,
 //        currentAppDirPath: String,
         fannelName: String,

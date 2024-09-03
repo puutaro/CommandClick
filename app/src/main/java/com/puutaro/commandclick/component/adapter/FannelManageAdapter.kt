@@ -5,9 +5,8 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +14,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryPath
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -45,16 +45,27 @@ class FannelManageAdapter(
     private val pinFannelList = PinFannelManager.get()
     private val homeFannel = SystemFannel.home
     private val switchOn = FannelSettingMap.switchOn
-
+    private val pinButtonImageByteArray = BitmapTool.convertFileToByteArray(
+        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.PIN.assetsPath).absolutePath
+    )
+    private val settingButtonImageByteArray = BitmapTool.convertFileToByteArray(
+        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.SETTING.assetsPath).absolutePath
+    )
+    private val longpressButtonImageByteArray = BitmapTool.convertFileToByteArray(
+        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.LONG_PRESS.assetsPath).absolutePath
+    )
 
     companion object {
 
 //        const val pinLimit = 6
         val pinExistColor = R.color.checked_item_color
-        val buttonOrdinalyColor = R.color.file_dark_green_color
+//        val buttonOrdinalyColor = R.color.file_dark_green_color
+        val textFillColor = R.color.fill_gray
         val buttonGrayOutColor = R.color.gray_out
 //        val editExecuteColor = R.color.fannel_icon_color
         val ordialyBkColor = R.color.setting_menu_footer
+        val disableAlpha = 0.3f
+        val ordinaryAlpha = 1f
     }
     class FannelManageViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
@@ -65,11 +76,17 @@ class FannelManageAdapter(
         val fannelNameTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_name)
         val titleTextView = view.findViewById<OutlineTextView>(R.id.fannel_history_title)
 //        val fannelHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.fannel_history_adapter_bottom_linear_inner)
-        val shareImageRelativeLayoutView = view.findViewById<RelativeLayout>(R.id.fannel_history_adapter_logo_relative_layout)
+//        val shareImageFrameButtonView = view.findViewById<FrameLayout>(R.id.fannel_history_adapter_logo_frame_layout)
         val shareImageView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_icon)
-        val pinImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_pin)
-        val editImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_edit)
-        val longPressImageButtonView = view.findViewById<AppCompatImageButton>(R.id.fannel_history_adapter_long_press)
+//        val pinFrameButtonView = view.findViewById<FrameLayout>(R.id.fannel_history_adapter_pin_frame_layout)
+        val pinImageView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_pin)
+        val pinImageCaption = view.findViewById<OutlineTextView>(R.id.fannel_history_adapter_pin_caption)
+//        val editFrameButtonView = view.findViewById<FrameLayout>(R.id.fannel_history_adapter_edit_frame_layout)
+        val editImageView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_edit)
+        val editImageCaption = view.findViewById<OutlineTextView>(R.id.fannel_history_adapter_edit_caption)
+//        val longPressFrameButtonView = view.findViewById<FrameLayout>(R.id.fannel_history_adapter_long_press_frame_layout)
+        val longPressImageView = view.findViewById<AppCompatImageView>(R.id.fannel_history_adapter_long_press)
+        val longPressImageCaption = view.findViewById<OutlineTextView>(R.id.fannel_history_adapter_long_press_caption)
     }
 
     private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
@@ -169,32 +186,49 @@ class FannelManageAdapter(
                 if(
                     !isIndex
                 ) {
-                    holder.pinImageButtonView.isEnabled = false
-                    holder.pinImageButtonView.imageTintList =
-                        context?.getColorStateList(buttonGrayOutColor)
+                    holder.pinImageView.alpha = disableAlpha
+                    holder.pinImageView.isEnabled = false
+                    holder.pinImageCaption.alpha = disableAlpha
+                    holder.pinImageCaption.setFillColor(buttonGrayOutColor)
+//                        context?.getColorStateList(buttonGrayOutColor)
                     return@withContext
                 }
-                holder.pinImageButtonView.isEnabled = true
+                holder.pinImageView.alpha = ordinaryAlpha
+                holder.pinImageView.isEnabled = true
+                holder.pinImageCaption.alpha = ordinaryAlpha
+                holder.pinImageCaption.setFillColor(textFillColor)
                 if(
                     fannelName == homeFannel
                 ) {
                     val pinColor = when(PinFannelHideShow.isHide()){
-                        true -> context?.getColorStateList(buttonOrdinalyColor)
-                        else -> context?.getColorStateList(pinExistColor)
+                        true -> textFillColor
+//                        context?.getColorStateList(buttonOrdinalyColor)
+                        else -> pinExistColor
+//                        context?.getColorStateList(pinExistColor)
                     }
-                    holder.pinImageButtonView.imageTintList = pinColor
+                    holder.pinImageCaption.setFillColor(pinColor)
+//                    pinColor
                     return@withContext
                 }
 
                 if(
                     !pinFannelList.contains(fannelName)
                 ) {
-                    holder.pinImageButtonView.imageTintList =
-                        context?.getColorStateList(buttonOrdinalyColor)
+                    holder.pinImageView.alpha = ordinaryAlpha
+                    holder.pinImageView.isEnabled = true
+                    holder.pinImageCaption.alpha = ordinaryAlpha
+                    holder.pinImageCaption.setFillColor(textFillColor)
+//                        context?.getColorStateList(buttonOrdinalyColor)
                     return@withContext
                 }
-                holder.pinImageButtonView.imageTintList =
-                    context?.getColorStateList(pinExistColor)
+                holder.pinImageView.alpha = ordinaryAlpha
+                holder.pinImageView.isEnabled = true
+                holder.pinImageCaption.alpha = ordinaryAlpha
+                holder.pinImageCaption.setFillColor(pinExistColor)
+//                holder.pinFrameButtonView.background =
+//                    AppCompatResources.getDrawable(context as Context, pinExistColor)
+//                holder.pinImageView.imageTintList =
+//                    context?.getColorStateList(pinExistColor)
             }
             withContext(Dispatchers.Main){
                 if(
@@ -203,14 +237,24 @@ class FannelManageAdapter(
                     ) != switchOn
                     || !isIndex
                 ) {
-                    holder.longPressImageButtonView.imageTintList =
-                        context?.getColorStateList(buttonGrayOutColor)
-                    holder.longPressImageButtonView.isEnabled = false
+//                    holder.longPressImageCaption.setTextColor(buttonGrayOutColor)
+//                    holder.longPressFrameButtonView.background =
+//                        AppCompatResources.getDrawable(context as Context, buttonGrayOutColor)
+//                        context?.getColorStateList(buttonGrayOutColor)
+                    holder.longPressImageView.alpha = disableAlpha
+                    holder.longPressImageView.isEnabled = false
+                    holder.longPressImageCaption.alpha = disableAlpha
+                    holder.longPressImageCaption.setFillColor(buttonGrayOutColor)
                     return@withContext
                 }
-                holder.longPressImageButtonView.imageTintList =
-                    context?.getColorStateList(buttonOrdinalyColor)
-                holder.longPressImageButtonView.isEnabled = true
+                holder.longPressImageView.alpha = ordinaryAlpha
+                holder.longPressImageView.isEnabled = true
+                holder.longPressImageCaption.alpha = ordinaryAlpha
+                holder.longPressImageCaption.setFillColor(textFillColor)
+//                holder.longPressFrameButtonView.background =
+//                    AppCompatResources.getDrawable(context as Context, buttonOrdinalyColor)
+////                    context?.getColorStateList(buttonOrdinalyColor)
+//                holder.longPressFrameButtonView.isEnabled = true
             }
             withContext(Dispatchers.Main){
                 val isNotHomeFannel = fannelName != homeFannel
@@ -222,14 +266,25 @@ class FannelManageAdapter(
                     disableEditSettingVals
                     || !isIndex
                 ) {
-                    holder.editImageButtonView.isEnabled = false
-                    holder.editImageButtonView.imageTintList =
-                        context?.getColorStateList(buttonGrayOutColor)
+                    holder.editImageView.alpha = disableAlpha
+                    holder.editImageView.isEnabled = true
+                    holder.editImageCaption.alpha = disableAlpha
+                    holder.editImageCaption.setFillColor(buttonGrayOutColor)
+//                    holder.editFrameButtonView.isEnabled = false
+//                    holder.editFrameButtonView.background =
+//                        AppCompatResources.getDrawable(context as Context, buttonGrayOutColor)
+//                        context?.getColorStateList(buttonGrayOutColor)
                     return@withContext
                 }
-                holder.editImageButtonView.isEnabled = true
-                holder.editImageButtonView.imageTintList =
-                    context?.getColorStateList(buttonOrdinalyColor)
+                holder.editImageView.alpha = ordinaryAlpha
+                holder.editImageView.isEnabled = true
+                holder.editImageCaption.alpha = ordinaryAlpha
+                holder.editImageCaption.setFillColor(textFillColor)
+//                holder.editFrameButtonView.isEnabled = true
+//                holder.editFrameButtonView.background =
+//                    AppCompatResources.getDrawable(context as Context, buttonOrdinalyColor)
+//                holder.editImageView.imageTintList =
+//                    context?.getColorStateList(buttonOrdinalyColor)
             }
             withContext(Dispatchers.IO){
                 val logoPngPath = listOf(
@@ -241,15 +296,15 @@ class FannelManageAdapter(
                     )
                 }
                 withContext(Dispatchers.Main) setImage@{
-                    val isEditExecute = settingMap?.get(
-                        FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
-                    ) == switchOn
-                            || fannelName == homeFannel
-                    setLogoBackground(
-                        holder.shareImageRelativeLayoutView,
-                        holder.shareImageView,
-                        isEditExecute,
-                    )
+//                    val isEditExecute = settingMap?.get(
+//                        FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
+//                    ) == switchOn
+//                            || fannelName == homeFannel
+//                    setLogoBackground(
+//                        holder.shareImageFrameButtonView,
+//                        holder.shareImageView,
+//                        isEditExecute,
+//                    )
                     if(
                         fannelName == homeFannel
                     ){
@@ -267,6 +322,20 @@ class FannelManageAdapter(
                         logoPngPath,
                     )
                 }
+            }
+            withContext(Dispatchers.Main){
+                setButtonImage(
+                    holder.editImageView,
+                    settingButtonImageByteArray,
+                )
+                setButtonImage(
+                    holder.pinImageView,
+                    pinButtonImageByteArray,
+                )
+                setButtonImage(
+                    holder.longPressImageView,
+                    longpressButtonImageByteArray,
+                )
             }
             setCaptureImage(
                 holder,
@@ -306,16 +375,16 @@ class FannelManageAdapter(
                 ) setFocus(holder)
             }
             withContext(Dispatchers.Main){
-                holder.shareImageRelativeLayoutView.setOnClickListener {
+                holder.shareImageView.setOnClickListener {
                     shareItemClickListener?.onItemClick(holder)
                 }
-                holder.pinImageButtonView.setOnClickListener {
+                holder.pinImageView.setOnClickListener {
                     pinItemClickListener?.onItemClick(holder)
                 }
-                holder.longPressImageButtonView.setOnClickListener {
+                holder.longPressImageView.setOnClickListener {
                     longPressItemClickListener?.onItemClick(holder)
                 }
-                holder.editImageButtonView.setOnClickListener {
+                holder.editImageView.setOnClickListener {
                     editItemClickListener?.onItemClick(holder)
                 }
             }
@@ -367,14 +436,14 @@ class FannelManageAdapter(
                 context?.getColorStateList(hitFannelColor)
 //            holder.fannelHistoryAdapterBottomLinearInner.backgroundTintList =
 //                context?.getColorStateList(hitFannelColor)
-            holder.shareImageView.backgroundTintList = null
+//            holder.shareImageView.backgroundTintList = null
+////                context?.getColorStateList(hitFannelColor)
+//            holder.pinImageView.backgroundTintList =
 //                context?.getColorStateList(hitFannelColor)
-            holder.pinImageButtonView.backgroundTintList =
-                context?.getColorStateList(hitFannelColor)
-            holder.editImageButtonView.backgroundTintList =
-                context?.getColorStateList(hitFannelColor)
-            holder.longPressImageButtonView.backgroundTintList =
-                context?.getColorStateList(hitFannelColor)
+//            holder.editImageView.backgroundTintList =
+//                context?.getColorStateList(hitFannelColor)
+//            holder.longPressImageView.backgroundTintList =
+//                context?.getColorStateList(hitFannelColor)
 
         }
     }
@@ -415,7 +484,7 @@ class FannelManageAdapter(
     }
 
     private fun setLogoBackground(
-        shareImageRelativeLayoutView: RelativeLayout,
+        shareImageFrameLayoutView: FrameLayout,
         shareImageView: AppCompatImageView,
         isEditExecute: Boolean,
     ){
@@ -423,21 +492,21 @@ class FannelManageAdapter(
             context == null
         ) return
         val logoBkColorId = when(isEditExecute){
-            true -> buttonOrdinalyColor
+            true -> textFillColor
             else -> ordialyBkColor
         }
-        val logoImageColorId = when(isEditExecute){
-            true -> ordialyBkColor
-            else -> buttonOrdinalyColor
-        }
-        shareImageRelativeLayoutView.background =
+//        val logoImageColorId = when(isEditExecute){
+//            true -> ordialyBkColor
+//            else -> buttonOrdinalyColor
+//        }
+        shareImageFrameLayoutView.background =
             AppCompatResources.getDrawable(context, logoBkColorId)
-        shareImageView.imageTintList =
-            context.getColorStateList(logoImageColorId)
-        shareImageView.backgroundTintList = null
-//                                    it.getColorStateList(null)
-        shareImageView.background =
-            AppCompatResources.getDrawable(context, logoBkColorId)
+//        shareImageView.imageTintList =
+//            context.getColorStateList(logoImageColorId)
+//        shareImageView.backgroundTintList = null
+////                                    it.getColorStateList(null)
+//        shareImageView.background =
+//            AppCompatResources.getDrawable(context, logoBkColorId)
     }
 
     private fun setFannelLogo(
@@ -459,6 +528,28 @@ class FannelManageAdapter(
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .thumbnail( requestBuilder )
             .into(shareImageView)
+    }
+
+    private fun setButtonImage(
+        imageView: AppCompatImageView,
+        byteArray: ByteArray?,
+    ){
+        if(
+            byteArray == null
+        ) return
+        val context = imageView.context
+        imageView.imageTintList = null
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        Glide
+            .with(context)
+            .load(byteArray)
+            .skipMemoryCache( true )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail( requestBuilder )
+            .into(imageView)
     }
 
     private fun setFannelShareLogo(

@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -37,22 +36,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class ListIndexAdapter(
-    private val editFragment: EditFragment,
+    private val editFragmentRef: WeakReference<EditFragment>,
     var listIndexList: MutableList<String>,
 ): RecyclerView.Adapter<ListIndexAdapter.ListIndexListViewHolder>()
 {
-    private val fannelInfoMap = editFragment.fannelInfoMap
-    private val context = editFragment.context
-    private val activity = editFragment.activity
+    private val fannelInfoMap = editFragmentRef.get()?.fannelInfoMap
+    private val context = editFragmentRef.get()?.context
+//    private val activity = editFragment.activity
     private val maxTakeSize = 150
     private val listLimitSize = 300
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-    private val busyboxExecutor = editFragment.busyboxExecutor
+    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
 
-    private val listIndexConfigMap = editFragment.listIndexConfigMap
+    private val listIndexConfigMap = editFragmentRef.get()?.listIndexConfigMap
     private val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
         listIndexConfigMap
     )
@@ -68,9 +68,9 @@ class ListIndexAdapter(
         '|'
     ).toMap()
     private val qrDialogConfigMap =
-        editFragment.qrDialogConfig ?: mapOf()
+        editFragmentRef.get()?.qrDialogConfig ?: mapOf()
     private val textImagePngBitMap = ImageAdapterTool.makeFileMarkBitMap(
-        context,
+        editFragmentRef.get()?.context,
         AssetsFileManager.textImagePingPath
     )
     private val qrLogoConfigMap = QrLogoSettingsForQrDialog.makeLogoConfigMap(
@@ -82,7 +82,8 @@ class ListIndexAdapter(
         )
     private val itemNameToNameColorConfigMap =
         QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.makeIconNameConfigMap(
-            editFragment,
+            editFragmentRef.get()?.setReplaceVariableMap,
+            fannelInfoMap,
             iconConfigMap,
         )
     private var recentAppDirPath = String()
@@ -102,7 +103,7 @@ class ListIndexAdapter(
         var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
     }
     class ListIndexListViewHolder(
-        val activity: FragmentActivity?,
+//        val activity: FragmentActivity?,
         val view: View
     ): RecyclerView.ViewHolder(view) {
         val baseLinearLayout =
@@ -157,7 +158,7 @@ class ListIndexAdapter(
             false
         )
         return ListIndexListViewHolder(
-            activity,
+//            activity,
             itemView
         )
     }
@@ -249,7 +250,7 @@ class ListIndexAdapter(
             }
             withContext(Dispatchers.Main) {
                 QrLogoSettingsForQrDialog.OneSideLength.setLayout(
-                    editFragment,
+                    editFragmentRef.get(),
                     holder.baseLinearLayout,
                     holder.materialCardView,
                     holder.fileContentsQrLogoLinearLayout,
@@ -445,7 +446,7 @@ class ListIndexAdapter(
             QrModeSettingKeysForQrDialog.QrMode.FANNEL_REPO -> {
                 val qrLogoHandlerArgsMaker = withContext(Dispatchers.IO) {
                     QrDialogConfig.QrLogoHandlerArgsMaker(
-                        editFragment,
+//                        editFragmentRef.get(),
                         recentAppDirPath,
                         qrLogoConfigMap,
                         filterDir,
@@ -455,6 +456,7 @@ class ListIndexAdapter(
                 }
                 withContext(Dispatchers.Main) {
                     QrLogoSettingsForQrDialog.setQrLogoHandler(
+                        context,
                         qrLogoHandlerArgsMaker
                     )
                 }
@@ -491,24 +493,32 @@ class ListIndexAdapter(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.DELETE.key
         )
-        listIndexTypeKey = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            indexListMap,
-            listIndexTypeKey
-        )
-        filterPrefix = FilePrefixGetter.get(
-            editFragment,
-            indexListMap,
-            ListSettingsForListIndex.ListSettingKey.PREFIX.key
-        )  ?: String()
-        filterSuffix = FilePrefixGetter.get(
-            editFragment,
-            indexListMap,
-            ListSettingsForListIndex.ListSettingKey.SUFFIX.key
-        )  ?: String()
+        listIndexTypeKey = editFragmentRef.get()?.let {
+            ListIndexEditConfig.getListIndexType(
+                it
+            )
+        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+        filterDir = editFragmentRef.get()?.let {
+            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                it,
+                indexListMap,
+                listIndexTypeKey
+            )
+        } ?: String()
+        filterPrefix = editFragmentRef.get()?.let {
+            FilePrefixGetter.get(
+                it,
+                indexListMap,
+                ListSettingsForListIndex.ListSettingKey.PREFIX.key
+            )
+        } ?: String()
+        filterSuffix = editFragmentRef.get()?.let {
+            FilePrefixGetter.get(
+                it,
+                indexListMap,
+                ListSettingsForListIndex.ListSettingKey.SUFFIX.key
+            )
+        }  ?: String()
     }
     fun getLayoutConfigMap(): Map<String, String> {
         return layoutConfigMap

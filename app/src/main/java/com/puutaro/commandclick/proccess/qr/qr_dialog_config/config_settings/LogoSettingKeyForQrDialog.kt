@@ -55,6 +55,7 @@ object QrLogoSettingsForQrDialog {
     }
 
     fun setQrLogoHandler(
+        context: Context?,
         qrLogoHandlerArgsMaker: QrDialogConfig.QrLogoHandlerArgsMaker,
     ){
         val fileName = qrLogoHandlerArgsMaker.fileName
@@ -69,17 +70,20 @@ object QrLogoSettingsForQrDialog {
         when(qrMode){
             QrModeSettingKeysForQrDialog.QrMode.FANNEL_REPO ->
                 setQrLogoForFannelRepo(
+                    context,
                     qrLogoHandlerArgsMaker
                 )
             QrModeSettingKeysForQrDialog.QrMode.TSV_EDIT -> {}
             QrModeSettingKeysForQrDialog.QrMode.NORMAL ->
                 setQrLogoForNormal(
+                    context,
                     qrLogoHandlerArgsMaker
                 )
         }
     }
 
     private fun setQrLogoForNormal(
+        context: Context?,
         qrLogoHandlerArgsMaker: QrDialogConfig.QrLogoHandlerArgsMaker,
     ){
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
@@ -98,8 +102,8 @@ object QrLogoSettingsForQrDialog {
         val isFileCon =
             Type.how(qrLogoConfigMap) ==
                     QrTypeSettingsForQrDialog.QrTypeSettingKey.FILE_CON.type
-        val fragment = qrLogoHandlerArgsMaker.fragment
-        QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
+        QrLogo.createAndSaveWithGitCloneOrFileCon(
+            context,
 //            parentDirPath,
             fileName,
             isFileCon,
@@ -108,6 +112,7 @@ object QrLogoSettingsForQrDialog {
         }
     }
     private fun setQrLogoForFannelRepo(
+        context: Context?,
         qrLogoHandlerArgsMaker: QrDialogConfig.QrLogoHandlerArgsMaker,
     ){
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
@@ -134,11 +139,12 @@ object QrLogoSettingsForQrDialog {
             qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPathObjInCurrentAppDir.absolutePath)
             return
         }
-        val fragment = qrLogoHandlerArgsMaker.fragment
+//        val fragment = qrLogoHandlerArgsMaker.fragment
 //        val parentDirPath = UsePath.cmdclickDefaultAppDirPath
 //            qrLogoHandlerArgsMaker.parentDirPath
-        QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
+        QrLogo.createAndSaveWithGitCloneOrFileCon(
 //            parentDirPath,
+            context,
             fannelName,
             false
         )?.let {
@@ -192,7 +198,7 @@ object QrLogoSettingsForQrDialog {
     object OneSideLength {
 
         fun setLayout(
-            fragment: Fragment,
+            fragment: Fragment?,
             baseLinearLayoutCompat: LinearLayoutCompat?,
             materialCardView: MaterialCardView?,
             fileContentsQrLogoLinearLayout: RelativeLayout?,
@@ -213,7 +219,7 @@ object QrLogoSettingsForQrDialog {
             val oneSideLength = when(layoutType) {
                 LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
                 culc(
-                    fragment.context,
+                    fragment?.context,
                     qrLogoConfigMap
                 )
                 LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
@@ -544,7 +550,8 @@ object QrLogoSettingsForQrDialog {
         }
 
         fun makeIconNameConfigMap(
-            editFragment: EditFragment,
+            setReplaceVariableMap: Map<String, String>?,
+            fannelInfoMap: Map<String, String>?,
             iconConfigMap: Map<String, String>,
         ): Map<String, String> {
             val nameConfigPathKey = QrIcon.NAME_CONFIG_PATH.key
@@ -552,13 +559,13 @@ object QrLogoSettingsForQrDialog {
             if(
                 !iconNameConfigPath.isNullOrEmpty()
             ) {
-                val fannelInfoMap = editFragment.fannelInfoMap
+//                val fannelInfoMap = editFragment.fannelInfoMap
 //                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
                 val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val iconNameMapTsvCon =
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         ReadText(iconNameConfigPath).readText(),
-                        editFragment.setReplaceVariableMap,
+                        setReplaceVariableMap,
 //                        currentAppDirPath,
                         currentFannelName,
                     )

@@ -22,19 +22,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class FannelIndexListAdapter(
-    val cmdIndexFragment: CommandIndexFragment,
+    val cmdIndexFragmentRef: WeakReference<CommandIndexFragment>,
 //    val currentAppDirPath: String,
     var fannelIndexList: MutableList<String>
 ): RecyclerView.Adapter<FannelIndexListAdapter.FannelIndexListViewHolder>()
 {
-    val context = cmdIndexFragment.context
-    val activity = cmdIndexFragment.activity
+    val context = cmdIndexFragmentRef.get()?.context
+    val activity = cmdIndexFragmentRef.get()?.activity
     private val maxTakeSize = 150
     private val qrPngNameRelativePath = UsePath.qrPngRelativePath
-    private val qrLogo = QrLogo(cmdIndexFragment)
 
     class FannelIndexListViewHolder(
         val activity: FragmentActivity?,
@@ -99,8 +99,9 @@ class FannelIndexListAdapter(
                     holder.fannelContentsQrLogoView.load(qrPngPath)
                     return@withContext
                 }
-                qrLogo.createAndSaveWithGitCloneOrFileCon(
+                QrLogo.createAndSaveWithGitCloneOrFileCon(
 //                    currentAppDirPath,
+                    context,
                     fannelName,
                     false,
                 )?.let {

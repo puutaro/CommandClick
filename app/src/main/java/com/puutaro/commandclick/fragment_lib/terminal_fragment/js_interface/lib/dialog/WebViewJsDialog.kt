@@ -23,7 +23,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
@@ -1214,7 +1213,7 @@ class WebViewJsDialog(
             pocketWebViewSrc == null
         ) return
         var oldPositionY = 0f
-        val hideShowThreshold = getScreenHeight(terminalFragment?.activity)
+        val hideShowThreshold = ScreenSizeCalculator.getScreenHeight(terminalFragment?.activity)
         with(pocketWebViewSrc){
             setOnTouchListener {
                     v, event ->
@@ -1252,18 +1251,6 @@ private fun execHideShowForPocketWebview(
     if(oldCurrYDff > 10) {
         firstBottomLinearLayout?.isVisible = false
     }
-}
-private fun getScreenHeight(
-    activity: FragmentActivity?,
-): Int {
-    val dpHeight = ScreenSizeCalculator.dpHeight(
-        activity
-    )
-    val hideShowRate =
-        if(dpHeight > 670f) 3.0f
-        else if(dpHeight > 630) 3.5F
-        else 4.0f
-    return -(dpHeight / hideShowRate).toInt()
 }
 
 enum class WebViewMenuMapType {

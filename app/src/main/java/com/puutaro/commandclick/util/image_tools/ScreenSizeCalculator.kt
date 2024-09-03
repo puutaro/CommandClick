@@ -5,9 +5,23 @@ import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import kotlin.math.roundToInt
 
 object ScreenSizeCalculator {
+
+    fun getScreenHeight(
+        activity: FragmentActivity?,
+    ): Int {
+        val dpHeight = dpHeight(
+            activity
+        )
+        val hideShowRate =
+            if(dpHeight > 670f) 3.0f
+            else if(dpHeight > 630) 3.5F
+            else 4.0f
+        return -(dpHeight / hideShowRate).toInt()
+    }
     fun dpHeight(
         activity: Activity?
     ): Float {
