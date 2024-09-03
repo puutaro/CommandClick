@@ -41,6 +41,7 @@ enum class CmdClickIcons(
     PIN("pin", R.drawable.pin, ButtonAssetsImage.pinPingPath),
     PIN_LOCATION("pin_location", R.drawable.pin_location, ButtonAssetsImage.pinLocationPingPath),
     PLAY("play", R.drawable.icons_play, ButtonAssetsImage.playPingPath),
+    PREF("pref", R.drawable.pref, ButtonAssetsImage.prefPingPath),
     PUZZLE("puzzle", R.drawable.icons8_puzzle, ButtonAssetsImage.puzzlePingPath),
     PLUS("plus", R.drawable.icons8_plus, ButtonAssetsImage.plusPingPath),
     QR("qr", R.drawable.icons_qr_code, ButtonAssetsImage.qrPingPath),

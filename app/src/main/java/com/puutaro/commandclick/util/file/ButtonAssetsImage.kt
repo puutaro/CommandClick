@@ -50,5 +50,6 @@ object ButtonAssetsImage {
     const val updatePingPath = "${resButtonPngDirPath}/update.png"
     const val wheelPingPath = "${resButtonPngDirPath}/wheel.png"
     const val plusPingPath = "${resButtonPngDirPath}/plus.png"
+    const val prefPingPath = "${resButtonPngDirPath}/pref.png"
 
 }

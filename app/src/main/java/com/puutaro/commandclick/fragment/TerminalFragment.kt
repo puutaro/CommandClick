@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -541,6 +542,6 @@ class TerminalFragment: Fragment() {
         fun onKeyboardHandleForTerm(isOpen: Boolean)
     }
     interface OnPinFannelHideListener {
-        fun onPinFannelHide()
+        fun onPinFannelHide(fannelManagerPinImageView: AppCompatImageView? = null)
     }
 }

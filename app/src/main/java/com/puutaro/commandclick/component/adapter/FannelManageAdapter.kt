@@ -54,6 +54,15 @@ class FannelManageAdapter(
     private val longpressButtonImageByteArray = BitmapTool.convertFileToByteArray(
         ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.LONG_PRESS.assetsPath).absolutePath
     )
+    private val prefButtonImageByteArray = BitmapTool.convertFileToByteArray(
+        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.PREF.assetsPath).absolutePath
+    )
+//    private val downButtonImageByteArray = BitmapTool.convertFileToByteArray(
+//        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.DOWN.assetsPath).absolutePath
+//    )
+//    private val topButtonImageByteArray = BitmapTool.convertFileToByteArray(
+//        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.TOP.assetsPath).absolutePath
+//    )
 
     companion object {
 
@@ -66,6 +75,47 @@ class FannelManageAdapter(
         val ordialyBkColor = R.color.setting_menu_footer
         val disableAlpha = 0.3f
         val ordinaryAlpha = 1f
+
+        fun setHomePinImage(
+            pinImageView: AppCompatImageView,
+            isHide: Boolean,
+        ){
+            val setImageByteArray = when(isHide) {
+                true -> BitmapTool.convertFileToByteArray(
+                    ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.TOP.assetsPath).absolutePath
+                )
+                else ->  BitmapTool.convertFileToByteArray(
+                    ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.DOWN.assetsPath).absolutePath
+                )
+            }
+            setButtonImage(
+                pinImageView,
+                setImageByteArray,
+            )
+            return
+        }
+
+        private fun setButtonImage(
+            imageView: AppCompatImageView,
+            byteArray: ByteArray?,
+        ){
+            if(
+                byteArray == null
+            ) return
+            val context = imageView.context
+            imageView.imageTintList = null
+            val requestBuilder: RequestBuilder<Drawable> =
+                Glide.with(context)
+                    .asDrawable()
+                    .sizeMultiplier(0.1f)
+            Glide
+                .with(context)
+                .load(byteArray)
+                .skipMemoryCache( true )
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .thumbnail( requestBuilder )
+                .into(imageView)
+        }
     }
     class FannelManageViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
@@ -257,6 +307,10 @@ class FannelManageAdapter(
 //                holder.longPressFrameButtonView.isEnabled = true
             }
             withContext(Dispatchers.Main){
+                if(fannelName != homeFannel) return@withContext
+                holder.editImageCaption.text = "pref"
+            }
+            withContext(Dispatchers.Main){
                 val isNotHomeFannel = fannelName != homeFannel
                 val disableEditSettingVals =
                     settingMap?.get(
@@ -267,7 +321,7 @@ class FannelManageAdapter(
                     || !isIndex
                 ) {
                     holder.editImageView.alpha = disableAlpha
-                    holder.editImageView.isEnabled = true
+                    holder.editImageView.isEnabled = false
                     holder.editImageCaption.alpha = disableAlpha
                     holder.editImageCaption.setFillColor(buttonGrayOutColor)
 //                    holder.editFrameButtonView.isEnabled = false
@@ -324,14 +378,26 @@ class FannelManageAdapter(
                 }
             }
             withContext(Dispatchers.Main){
-                setButtonImage(
-                    holder.editImageView,
-                    settingButtonImageByteArray,
-                )
-                setButtonImage(
-                    holder.pinImageView,
-                    pinButtonImageByteArray,
-                )
+                when(fannelName == SystemFannel.home) {
+                    true -> prefButtonImageByteArray
+                    else -> settingButtonImageByteArray
+                }.let {
+                    setButtonImage(
+                        holder.editImageView,
+                        it,
+                    )
+                }
+                when(fannelName == SystemFannel.home) {
+                    true -> setHomePinImage(
+                        holder.pinImageView,
+                        PinFannelHideShow.isHide()
+                    )
+                    else -> setButtonImage(
+                        holder.pinImageView,
+                        pinButtonImageByteArray,
+                    )
+                }
+
                 setButtonImage(
                     holder.longPressImageView,
                     longpressButtonImageByteArray,
@@ -528,28 +594,6 @@ class FannelManageAdapter(
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .thumbnail( requestBuilder )
             .into(shareImageView)
-    }
-
-    private fun setButtonImage(
-        imageView: AppCompatImageView,
-        byteArray: ByteArray?,
-    ){
-        if(
-            byteArray == null
-        ) return
-        val context = imageView.context
-        imageView.imageTintList = null
-        val requestBuilder: RequestBuilder<Drawable> =
-            Glide.with(context)
-                .asDrawable()
-                .sizeMultiplier(0.1f)
-        Glide
-            .with(context)
-            .load(byteArray)
-            .skipMemoryCache( true )
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .thumbnail( requestBuilder )
-            .into(imageView)
     }
 
     private fun setFannelShareLogo(

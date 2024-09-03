@@ -63,14 +63,12 @@ import java.io.File
 
 object FannelHistoryButtonEvent {
 
-
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
     private var fannelHistoryDialog: Dialog? = null
     private var updateRecyclerJob: Job? = null
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
     private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
-
 
     fun invoke(
        fragment: Fragment
@@ -81,9 +79,6 @@ object FannelHistoryButtonEvent {
         if(
             context == null
         ) return
-//        deleteOverHistory(
-//            cmdclickAppHistoryDirAdminPath
-//        )
         FileSystems.createFiles(
             File(
                 cmdclickAppHistoryDirAdminPath,
@@ -347,7 +342,6 @@ object FannelHistoryButtonEvent {
 
     private fun pinFannelToolbarHideShow(
         fragment: Fragment,
-//        pinFrameButtonView: FrameLayout,
         pinImageView: AppCompatImageView,
         pinImageCaption: OutlineTextView
     ){
@@ -359,7 +353,7 @@ object FannelHistoryButtonEvent {
                         ?: return
                 val listener = context as? CommandIndexFragment.OnPinFannelShowListener
                     ?: return
-                listener.onPinFannelShow()
+                listener.onPinFannelShow(pinImageView)
                 ToastUtils.showShort("Show pin")
                 pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
                 pinImageView.isEnabled = true
@@ -377,7 +371,7 @@ object FannelHistoryButtonEvent {
                         ?: return
                 val listener = terminalFragment.context as? TerminalFragment.OnPinFannelHideListener
                     ?: return
-                listener.onPinFannelHide()
+                listener.onPinFannelHide(pinImageView)
                 ToastUtils.showShort("Hide pin")
                 pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
                 pinImageView.isEnabled = true
@@ -671,26 +665,11 @@ object FannelHistoryButtonEvent {
                     FactFannel.creatingToast()
                     return
                 }
-//                val urlHistoryAdapterRelativeLayout = holder.fannelHistoryAdapterRelativeLayout
                 CoroutineScope(Dispatchers.Main).launch {
                     QrDialogMethod.launchPassDialog(
                         fragment,
-//                currentAppDirPath,
                         fannelName,
                     )
-//                    withContext(Dispatchers.Main){
-//                        ToastUtils.showShort("share")
-//                    }
-//                    val pngImagePathObj = HistoryShareImage.makePngImageFromView(
-//                        context,
-//                        urlHistoryAdapterRelativeLayout
-//                    ) ?: return@launch
-//                    withContext(Dispatchers.Main) {
-//                        IntentVariant.sharePngImage(
-//                            pngImagePathObj,
-//                            context,
-//                        )
-//                    }
                 }
             }
         }
@@ -761,54 +740,6 @@ object FannelHistoryButtonEvent {
             })
         mIth.attachToRecyclerView(recyclerView)
     }
-
-//    private fun invokeItemSetLongTimeClickListenerForHistory(
-//        historyListAdapter: FannelHistoryAdapter,
-//        searchText: EditText,
-//        cmdclickAppHistoryDirAdminPath: String,
-//    ){
-//        historyListAdapter.itemLongClickListener = object :
-//            FannelHistoryAdapter.OnItemLongClickListener {
-//            override fun onItemLongClick(
-//                itemView: View,
-//                holder: FannelHistoryAdapter.FannelHistoryViewHolder
-//            ) {
-//                val appDirName = holder.appDirNameTextView.text.toString()
-//                val fannelName = holder.fannelNameTextView.text.toString()
-//                val selectedHistoryFile = AppHistoryManager.makeAppHistoryFileNameForInit(
-//                    appDirName,
-//                    fannelName
-//                )
-//                val popup = PopupMenu(
-//                    context,
-//                    itemView
-//                )
-//                val inflater = popup.menuInflater
-//                inflater.inflate(
-//                    com.puutaro.commandclick.R.menu.history_admin_menu,
-//                    popup.menu
-//                )
-//                popup.menu.add(
-//                    HistoryMenuEnums.DELETE.groupId,
-//                    HistoryMenuEnums.DELETE.itemId,
-//                    HistoryMenuEnums.DELETE.order,
-//                    HistoryMenuEnums.DELETE.itemName,
-//                )
-//                popup.setOnMenuItemClickListener {
-//                        menuItem ->
-//                    execDeleteHistoryFile(
-//                        selectedHistoryFile,
-//                        cmdclickAppHistoryDirAdminPath,
-//                        historyListAdapter,
-//                    )
-//                    searchText.text.clear()
-//                    true
-//                }
-//                popup.show()
-//            }
-//        }
-//    }
-
 
     private object DeleteConfirmDialog {
 
@@ -1014,22 +945,6 @@ object FannelHistoryButtonEvent {
     }
 
 
-
-//    fun updateLastModifyForHistoryAndAppDir(
-//        selectedHistoryFilePath: String,
-//        selectedAppDirName: String,
-//    ){
-//        FileSystems.updateLastModified(
-//            selectedHistoryFilePath
-//        )
-//        FileSystems.updateLastModified(
-//            File(
-//                UsePath.cmdclickAppDirAdminPath,
-//                selectedAppDirName + UsePath.JS_FILE_SUFFIX
-//            ).absolutePath
-//        )
-//    }
-
     private fun exitDialog(
         historyListView: RecyclerView
     ){
@@ -1208,31 +1123,6 @@ private object LongPressManageListDialog {
         }
     }
 }
-
-//private fun deleteOverHistory(
-//    cmdclickAppHistoryDirAdminPath: String
-//){
-//    val leavesHistoryNum = 50
-//    val dirFiles = FileSystems.sortedFiles(
-//        cmdclickAppHistoryDirAdminPath,
-//    )
-//    if(dirFiles.isEmpty()) return
-//    val deleteFileNum = dirFiles.size - leavesHistoryNum
-//    if(deleteFileNum <= 0) return
-//    val deletingFiles = dirFiles.take(deleteFileNum)
-//    deletingFiles.forEach {
-//        try {
-//            val fileEntry = File(
-//                cmdclickAppHistoryDirAdminPath,
-//                it
-//            )
-//            if(!fileEntry.isFile) return@forEach
-//            fileEntry.delete()
-//        } catch (e: Exception) {
-//            println("pass")
-//        }
-//    }
-//}
 
 private enum class LongPressMenuName(val menu: String){
     SRC_ANCHOR("src anchor"),

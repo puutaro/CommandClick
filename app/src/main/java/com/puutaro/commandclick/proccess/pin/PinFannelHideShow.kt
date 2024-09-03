@@ -1,8 +1,10 @@
 package com.puutaro.commandclick.proccess.pin
 
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
@@ -48,7 +50,14 @@ object PinFannelHideShow {
     fun execHideShow(
         activity: MainActivity,
         isHide: Boolean,
+        fannelManagerPinImageView: AppCompatImageView? = null
     ){
+        if(fannelManagerPinImageView != null){
+            FannelManageAdapter.setHomePinImage(
+                fannelManagerPinImageView,
+                isHide
+            )
+        }
         val cmdIndexFragment = TargetFragmentInstance.getCmdIndexFragment(
             activity
         ) ?: return

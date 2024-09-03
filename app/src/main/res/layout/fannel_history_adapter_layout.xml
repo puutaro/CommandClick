@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintDimensionRatio="h, 1:1.74"
+            app:layout_constraintDimensionRatio="h, 1:1.9"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             />

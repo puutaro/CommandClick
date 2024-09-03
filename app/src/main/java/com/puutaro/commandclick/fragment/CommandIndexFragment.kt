@@ -9,6 +9,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -423,6 +424,8 @@ class CommandIndexFragment: Fragment() {
     }
 
     interface OnPinFannelShowListener {
-        fun onPinFannelShow()
+        fun onPinFannelShow(
+            fannelManagerPinImageView: AppCompatImageView? = null
+        )
     }
 }

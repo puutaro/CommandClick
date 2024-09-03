@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
@@ -887,17 +888,23 @@ class MainActivity:
         )
     }
 
-    override fun onPinFannelHide() {
+    override fun onPinFannelHide(
+        fannelManagerPinImageView: AppCompatImageView?
+    ) {
         PinFannelHideShow.execHideShow(
             this,
-            true
+            true,
+            fannelManagerPinImageView,
         )
     }
 
-    override fun onPinFannelShow() {
+    override fun onPinFannelShow(
+        fannelManagerPinImageView: AppCompatImageView?
+    ) {
         PinFannelHideShow.execHideShow(
             this,
-            false
+            false,
+            fannelManagerPinImageView,
         )
     }
  }
