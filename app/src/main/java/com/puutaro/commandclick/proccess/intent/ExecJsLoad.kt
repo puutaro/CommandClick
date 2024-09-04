@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.intent
 
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
@@ -12,7 +11,6 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryRegister
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.util.*
@@ -117,8 +115,6 @@ object ExecJsLoad {
                 && currentFannelName != preference
         if(
             isCmdIndex
-            || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
-            || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
         ) {
             val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,

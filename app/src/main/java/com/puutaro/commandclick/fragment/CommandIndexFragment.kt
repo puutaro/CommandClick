@@ -92,33 +92,33 @@ class CommandIndexFragment: Fragment() {
         cmdIndexViewModel.onFocusSearchText = false
         val startUpPref = FannelInfoTool.getSharePref(context)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
-        val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
+//        val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
         val defaultSystemPath =
             "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         FileSystems.createDirs(
             defaultSystemPath
         )
-        FileSystems.createDirs(
-            cmdclickAppHistoryDirAdminPath
-        )
-        FileSystems.createDirs(
-            UsePath.cmdclickJsImportDirPath
-        )
-        FileSystems.createFiles(
-            File(
-                cmdclickAppHistoryDirAdminPath,
-                FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    UsePath.cmdclickDefaultAppDirName,
-                )
-            ).absolutePath
-        )
-        CmdClickSystemFannelManager.create(context)
+//        FileSystems.createDirs(
+//            cmdclickAppHistoryDirAdminPath
+//        )
+//        FileSystems.createDirs(
+//            UsePath.cmdclickJsImportDirPath
+//        )
+//        FileSystems.createFiles(
+//            File(
+//                cmdclickAppHistoryDirAdminPath,
+//                FannelHistoryManager.makeAppHistoryFileNameForInit(
+//                    UsePath.cmdclickDefaultAppDirName,
+//                )
+//            ).absolutePath
+//        )
+//        CmdClickSystemFannelManager.create(context)
 
-        CommandClickScriptVariable.makeAppDirAdminFile(
-            UsePath.cmdclickAppDirAdminPath,
-            UsePath.cmdclickDefaultAppDirName +
-                    UsePath.JS_FILE_SUFFIX
-        )
+//        CommandClickScriptVariable.makeAppDirAdminFile(
+//            UsePath.cmdclickAppDirAdminPath,
+//            UsePath.cmdclickDefaultAppDirName +
+//                    UsePath.JS_FILE_SUFFIX
+//        )
 
 //        ConfigFromConfigFileSetter.set(this)
 

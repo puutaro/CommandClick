@@ -24,8 +24,6 @@ object IndexInitHandler {
 
     private var initJob: Job? = null
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-    private val cmdclickUpdateFannelInfoSystemDirPath =
-        UsePath.cmdclickUpdateFannelInfoSystemDirPath
 
     fun exit(){
         initJob?.cancel()
@@ -45,30 +43,24 @@ object IndexInitHandler {
         ubuntuFiles.setupLinksForBusyBox()
 //            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
 //            listener?.onBackstackDelete()
-        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
+//        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
 //        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-        val onUrlLaunchIntent = UrlLaunchIntentAction.judge(
-            activity
-        )
+//        val onUrlLaunchIntent = UrlLaunchIntentAction.judge(
+//            activity
+//        )
 
-        if (onUrlLaunchIntent) {
-            FileSystems.updateLastModified(
-                File(
-                    cmdclickAppDirAdminPath,
-                    UsePath.cmdclickDefaultAppDirName +
-                            UsePath.JS_FILE_SUFFIX
-                ).absolutePath
-            )
-        } else {
-            UpdateLastModifyFromSharePrefDir.update()
-        }
+//        if (onUrlLaunchIntent) {
+//            FileSystems.updateLastModified(
+//                File(
+//                    cmdclickAppDirAdminPath,
+//                    UsePath.cmdclickDefaultAppDirName +
+//                            UsePath.JS_FILE_SUFFIX
+//                ).absolutePath
+//            )
+//        } else {
+//            UpdateLastModifyFromSharePrefDir.update()
+//        }
 
-//        val currentDirName = FileSystems.filterSuffixJsFiles(
-//            cmdclickAppDirAdminPath,
-//            "on"
-//        ).firstOrNull()?.removeSuffix(
-//            UsePath.JS_FILE_SUFFIX
-//        ) ?: UsePath.cmdclickDefaultAppDirName
         FileSystems.createDirs(
             "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         )
@@ -94,41 +86,10 @@ object IndexInitHandler {
         pageSearchToolbarManager.onKeyListner()
         pageSearchToolbarManager.searchTopClickLisnter()
         pageSearchToolbarManager.searchDownClickLisnter()
-
-//        if(
-//            currentAppDirPath == UsePath.cmdclickSystemAppDirPath
-//        ) return
-        FileSystems.updateLastModified(
-            File(
-                UsePath.cmdclickAppHistoryDirAdminPath,
-                FannelHistoryManager.makeAppHistoryFileNameForInit(
-//                    currentAppDirPath,
-                )
-            ).absolutePath
-        )
-        FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
         exit()
         initJob = CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.IO) {
-//                CmdClickSystemFannelManager.createPreferenceFannel(
-//                    context,
-//                )
-//            }
-            CommandClickScriptVariable.makeButtonExecJS(
-//                currentAppDirPath,
-                UsePath.cmdclickButtonExecShellFileName
-            )
-            CommandClickScriptVariable.makeButtonExecJS(
-//                currentAppDirPath,
-                UsePath.cmdclickInternetButtonExecJsFileName,
-                UsePath.selectMenuFannelPath
-            )
-//            StartFileMaker.makeCmdTerminalListFiles(
-//                cmdIndexFragment,
-//            )
             ConfigFromPreferenceFileSetter.set(
                 cmdIndexFragment,
-//                currentAppDirPath,
             )
 
             AssetsFileManager.copyFileToDirFromAssets(

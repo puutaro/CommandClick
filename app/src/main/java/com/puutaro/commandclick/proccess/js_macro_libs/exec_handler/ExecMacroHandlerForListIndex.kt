@@ -6,7 +6,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataM
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexMenuLauncher
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyAppDir
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFile
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileHere
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileSimple
@@ -15,7 +14,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecEditC
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecEditSettingVal
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemCat
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecRenameAppDir
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecRenameFile
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecShowDescription
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
@@ -102,11 +100,11 @@ object ExecMacroHandlerForListIndex {
                     selectedItem,
                     jsActionMap,
                 )
-            JsPathMacroForListIndex.COPY_APP_DIR ->
-                ExecCopyAppDir.copyAppDir(
-                    editFragment,
-                    selectedItem
-                )
+//            JsPathMacroForListIndex.COPY_APP_DIR ->
+//                ExecCopyAppDir.copyAppDir(
+//                    editFragment,
+//                    selectedItem
+//                )
             JsPathMacroForListIndex.EDIT_C ->
                 ExecEditCmdVal.edit(
                     editFragment,
@@ -122,11 +120,6 @@ object ExecMacroHandlerForListIndex {
                     editFragment,
                     selectedItem,
                     listIndexPosition,
-                )
-            JsPathMacroForListIndex.RENAME_APP_DIR ->
-                ExecRenameAppDir.execRenameAppDir(
-                    editFragment,
-                    selectedItem,
                 )
             JsPathMacroForListIndex.MENU ->
                 ListIndexMenuLauncher.launch(

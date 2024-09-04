@@ -63,7 +63,6 @@ import java.io.File
 
 object FannelHistoryButtonEvent {
 
-    private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
     private var fannelHistoryDialog: Dialog? = null
     private var updateRecyclerJob: Job? = null
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
@@ -79,14 +78,6 @@ object FannelHistoryButtonEvent {
         if(
             context == null
         ) return
-        FileSystems.createFiles(
-            File(
-                cmdclickAppHistoryDirAdminPath,
-                FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    UsePath.cmdclickDefaultAppDirName,
-                )
-            ).absolutePath
-        )
         val fannelNameList = makeUpdateFannelNameList()
         val fannelInfoMap = when(fragment){
             is CommandIndexFragment -> {

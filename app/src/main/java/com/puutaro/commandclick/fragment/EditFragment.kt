@@ -69,25 +69,6 @@ class EditFragment: Fragment() {
 
     private var _binding: EditFragmentBinding? = null
     val binding get() = _binding!!
-//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-//    var languageTypeToSectionHolderMap =
-//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//                languageType
-//            )
-//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//    ) as String
-//
-//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//    ) as String
-//
-//    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-//    ) as String
-//    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-//    ) as String
     var busyboxExecutor: BusyboxExecutor? = null
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
@@ -113,8 +94,6 @@ class EditFragment: Fragment() {
     var enableEditExecute = false
     var currentFannelConList = emptyList<String>()
     var settingFannelConList: List<String>? = null
-//    var homeFannelHistoryNameList: List<String>? = null
-//    var bottomScriptUrlList = emptyList<String>()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
@@ -207,23 +186,6 @@ class EditFragment: Fragment() {
             currentFannelState
         )
 
-//        languageType =
-//            CommandClickVariables.judgeJsOrShellFromSuffix(currentFannelName)
-//
-//        val languageTypeToSectionHolderMap =
-//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-//        settingSectionStart = languageTypeToSectionHolderMap?.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//        ) as String
-//        settingSectionEnd = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//        ) as String
-//        commandSectionStart = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-//        ) as String
-//        commandSectionEnd = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-//        ) as String
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelPath =
             File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath
@@ -261,12 +223,12 @@ class EditFragment: Fragment() {
 //                currentAppDirPath,
             )
         ) {
-            FileSystems.updateLastModified(
-                File(
-                    UsePath.cmdclickAppDirAdminPath,
-                    File(cmdclickDefaultAppDirPath).name + UsePath.JS_FILE_SUFFIX
-                ).absolutePath
-            )
+//            FileSystems.updateLastModified(
+//                File(
+//                    UsePath.cmdclickAppDirAdminPath,
+//                    File(cmdclickDefaultAppDirPath).name + UsePath.JS_FILE_SUFFIX
+//                ).absolutePath
+//            )
             FileSystems.updateLastModified(
                 File(
                     cmdclickDefaultAppDirPath,
@@ -290,9 +252,6 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
-//        val editModeHandler = EditModeHandler.execByHowFullEdit(
-//            this,
-//        )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,
 //            listOf(

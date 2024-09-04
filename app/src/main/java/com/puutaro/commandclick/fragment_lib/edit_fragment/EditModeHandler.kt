@@ -4,7 +4,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifiedForAppHistory
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
@@ -12,16 +11,14 @@ import kotlinx.coroutines.*
 
 
 object EditModeHandler{
-    val settingSectionStart = CommandClickScriptVariable.SETTING_SEC_START
-    val settingSectionEnd = CommandClickScriptVariable.SETTING_SEC_END
+    const val settingSectionStart = CommandClickScriptVariable.SETTING_SEC_START
+    const val settingSectionEnd = CommandClickScriptVariable.SETTING_SEC_END
 
     fun execByHowFullEdit(editFragment: EditFragment){
         when(
             IsCmdEdit.judge(editFragment)
         ) {
-            false -> editSettingVariable(
-                editFragment
-               )
+            false -> editSettingVariable(editFragment)
             else -> editCommandVariable(editFragment)
         }
     }
@@ -29,8 +26,6 @@ object EditModeHandler{
     private fun editCommandVariable(
         editFragment: EditFragment
     ) {
-        val fannelInfoMap = editFragment.fannelInfoMap
-        val editExecuteValue = editFragment.editExecuteValue
         val recordNumToMapNameValueInCommandHolder =
             editFragment.recordNumToMapNameValueInCommandHolder
         if(
@@ -39,10 +34,6 @@ object EditModeHandler{
             backToCmdIndex(editFragment)
             return
         }
-        UpdateLastModifiedForAppHistory.update(
-            editExecuteValue,
-            fannelInfoMap,
-        )
         CoroutineScope(Dispatchers.Main).launch {
             EditTextProducerForEdit.adds(
                 editFragment,
