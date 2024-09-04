@@ -12,10 +12,6 @@ import java.lang.ref.WeakReference
 class JsCcUsage(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-//    private val fannelInfoMap = terminalFragment.fannelInfoMap
-//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//        fannelInfoMap
-//    )
 
     @JavascriptInterface
     fun launch_S(){

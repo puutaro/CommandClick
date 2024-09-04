@@ -142,17 +142,17 @@ object FannelHistoryGifCreator {
 //                                        ).joinToString("\n") + "\n-----------\n"
 //                                    )
 //                                }
-                            if (
-                                !isRecreateGif
-                                || !isActive()
-                            ) return@withPermit
-                            GifCreator.create(
-                                context,
-                                fannelName,
-                                urlPngPathList,
-                            )
+                                if (
+                                    !isRecreateGif
+                                    || !isActive()
+                                ) return@withPermit
+                                GifCreator.create(
+                                    context,
+                                    fannelName,
+                                    urlPngPathList,
+                                )
+                            }
                         }
-                    }
                     }
                     jobList.forEach { it.await() }
                 }
