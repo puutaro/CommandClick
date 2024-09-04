@@ -3,9 +3,7 @@ package com.puutaro.commandclick.fragment
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
@@ -29,7 +27,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
-import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.SettingMenuForCmdIndex
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -251,7 +249,7 @@ class CommandIndexFragment: Fragment() {
 
 
         ExecSetToolbarButtonImage.setForCmdIndex(this)
-        SettingMenuForCmdIndex.launch(this)
+        ExtraMenuForCmdIndex.launch(this)
 //        val toolBarSettingButtonControl = ToolBarSettingButtonControl(
 //            this,
 //        )
@@ -281,6 +279,7 @@ class CommandIndexFragment: Fragment() {
         PreInstallFannel.exit()
         cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
+        IndexInitHandler.exit()
         _binding = null
     }
 

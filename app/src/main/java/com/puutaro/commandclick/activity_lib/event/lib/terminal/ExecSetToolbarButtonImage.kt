@@ -157,6 +157,7 @@ object ExecSetToolbarButtonImage {
                     icon
                 )
             }
+            terminalFragment.ggleWebViewManager?.updateToolbarButton()
         }
 
     }

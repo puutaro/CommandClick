@@ -79,10 +79,7 @@ class GgleSchDialog(
             )
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
-                ExecSetToolbarButtonImage.setImageButton(
-                    ggleSchButtonSrc,
-                    CmdClickIcons.GOOGLE,
-                )
+                updateToolbarButton()
             }
             withContext(Dispatchers.Main){
                 ggleSchButtonSrc?.setOnClickListener {
@@ -236,6 +233,13 @@ class GgleSchDialog(
         webviewDialogLayout?.removeAllViews()
         webViewDialogInstance?.dismiss()
         webViewDialogInstance = null
+    }
+
+    suspend fun updateToolbarButton(){
+        ExecSetToolbarButtonImage.setImageButton(
+            ggleSchButton,
+            CmdClickIcons.GOOGLE,
+        )
     }
 
     private fun webViewSetting(

@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-object SettingMenuForCmdIndex {
+object ExtraMenuForCmdIndex {
 
 
     private var imageDialogObj: Dialog? = null

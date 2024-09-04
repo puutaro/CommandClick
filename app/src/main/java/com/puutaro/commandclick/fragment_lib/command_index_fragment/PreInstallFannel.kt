@@ -47,18 +47,6 @@ object PreInstallFannel {
 
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val cmdclickUpdateFannelInfoSystemDirPath = UsePath.cmdclickUpdateFannelInfoSystemDirPath
-//    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-//    private val languageTypeToSectionHolderMap =
-//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//            languageType
-//        )
-//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//    ) as String
-//
-//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//    ) as String
     private const val concurrencyLimit = 5
 
     fun exit(){
@@ -131,10 +119,14 @@ object PreInstallFannel {
                         BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
                     )
                 }
+                val preInstallFannelListTsvPath = UsePath.preInstallFannelListTsvPath
+                val fannelSettingMapTsvPath = FannelSettingMap.fannelSettingMapTsvPath
                 withContext(Dispatchers.IO) {
                     val isNotUpdateFannelInfo = FileSystems.sortedFiles(
                         cmdclickUpdateFannelInfoSystemDirPath
                     ).isEmpty()
+                            && !File(fannelSettingMapTsvPath).isFile
+                            && !File(preInstallFannelListTsvPath).isFile
                     if (
                         isNotUpdateFannelInfo
                     ) return@withContext
@@ -143,7 +135,7 @@ object PreInstallFannel {
                         fannelNameToDownloadList.map { it.first }
                     )
                     FileSystems.writeFile(
-                        FannelSettingMap.fannelSettingMapTsvPath,
+                        fannelSettingMapTsvPath,
                         fannelSettingMapList.joinToString("\n")
                     )
 //                    FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
@@ -153,7 +145,6 @@ object PreInstallFannel {
                     PinFannelManager.updateBroadcast(context)
                 }
                 withContext(Dispatchers.IO) {
-                    val preInstallFannelListTsvPath = UsePath.preInstallFannelListTsvPath
                     val preInstallFannelList = listOf(SystemFannel.home) + fannelNameList
                     FileSystems.writeFile(
                         preInstallFannelListTsvPath,

@@ -15,16 +15,21 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
 object IndexInitHandler {
 
+    private var initJob: Job? = null
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val cmdclickUpdateFannelInfoSystemDirPath =
         UsePath.cmdclickUpdateFannelInfoSystemDirPath
 
+    fun exit(){
+        initJob?.cancel()
+    }
     fun handle(
         cmdIndexFragment: CommandIndexFragment
     ) {
@@ -102,12 +107,13 @@ object IndexInitHandler {
             ).absolutePath
         )
         FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO) {
-                CmdClickSystemFannelManager.createPreferenceFannel(
-                    context,
-                )
-            }
+        exit()
+        initJob = CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.IO) {
+//                CmdClickSystemFannelManager.createPreferenceFannel(
+//                    context,
+//                )
+//            }
             CommandClickScriptVariable.makeButtonExecJS(
 //                currentAppDirPath,
                 UsePath.cmdclickButtonExecShellFileName

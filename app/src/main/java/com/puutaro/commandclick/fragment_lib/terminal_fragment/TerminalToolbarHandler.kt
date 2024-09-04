@@ -1,13 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
-import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.SettingMenuForCmdIndex
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,12 +72,12 @@ object TerminalToolbarHandler {
         terminalFragment.binding.termUrlHistoryButton.setOnClickListener {
             UrlHistoryButtonEvent.invoke(terminalFragment)
         }
-        SettingMenuForCmdIndex.launch(terminalFragment)
+        ExtraMenuForCmdIndex.launch(terminalFragment)
     }
 
     private fun setSettingButtonClickAction(
         terminalFragment: TerminalFragment
     ){
-        SettingMenuForCmdIndex.launch(terminalFragment)
+        ExtraMenuForCmdIndex.launch(terminalFragment)
     }
 }
