@@ -15,7 +15,6 @@ import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
@@ -29,6 +28,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.JsInterfaceAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
+import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
@@ -79,7 +79,10 @@ class GgleSchDialog(
             )
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
-                updateToolbarButton()
+                ExecSetToolbarButtonImage.setImageButton(
+                    ggleSchButtonSrc,
+                    CmdClickIcons.GOOGLE,
+                )
             }
             withContext(Dispatchers.Main){
                 ggleSchButtonSrc?.setOnClickListener {
@@ -90,6 +93,34 @@ class GgleSchDialog(
             }
         }
         ggleSchButtonSrc
+    }
+
+    private var qrScanButtonCaption = webViewDialogInstance?.findViewById<OutlineTextView>(
+        R.id.ggle_sch_bottom_qr_scan_button_caption
+    )
+
+    private var qrScanButton = let {
+        val qrScanButtonSrc =
+            webViewDialogInstance?.findViewById<AppCompatImageView>(
+                R.id.ggle_sch_bottom_qr_scan_button
+            )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main) {
+                ExecSetToolbarButtonImage.setImageButton(
+                    qrScanButtonSrc,
+                    CmdClickIcons.QR,
+                )
+            }
+            withContext(Dispatchers.Main){
+                qrScanButtonSrc?.setOnClickListener {
+                    val terminalFragment = terminalFragmentRef.get()
+                        ?: return@setOnClickListener
+                    stopWebView()
+                    QrScanner.scanFromCamera(terminalFragment)
+                }
+            }
+        }
+        qrScanButtonSrc
     }
 
     private var ggleSchButtonCaption = webViewDialogInstance?.findViewById<OutlineTextView>(
@@ -239,6 +270,10 @@ class GgleSchDialog(
         ExecSetToolbarButtonImage.setImageButton(
             ggleSchButton,
             CmdClickIcons.GOOGLE,
+        )
+        ExecSetToolbarButtonImage.setImageButton(
+            qrScanButton,
+            CmdClickIcons.QR,
         )
     }
 
@@ -428,10 +463,14 @@ class GgleSchDialog(
         if(hideShowThreshold < oldCurrYDff && oldCurrYDff < -10){
             ggleSchButton?.isVisible = true
             ggleSchButtonCaption?.isVisible = true
+            qrScanButton?.isVisible = true
+            qrScanButtonCaption?.isVisible = true
         }
         if(oldCurrYDff > 10) {
             ggleSchButton?.isVisible = false
             ggleSchButtonCaption?.isVisible = false
+            qrScanButton?.isVisible = false
+            qrScanButtonCaption?.isVisible = false
         }
     }
 }
