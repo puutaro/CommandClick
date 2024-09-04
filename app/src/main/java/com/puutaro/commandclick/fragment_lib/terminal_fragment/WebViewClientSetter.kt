@@ -76,11 +76,11 @@ object WebViewClientSetter {
                 val listener =
                     context as? TerminalFragment.OnPageLoadPageSearchDisableListener
                 listener?.onPageLoadPageSearchDisable()
-                SearchViewAndAutoCompUpdater.update(
-                    terminalFragment,
-                    webView,
-                    url,
-                )
+//                SearchViewAndAutoCompUpdater.update(
+//                    terminalFragment,
+//                    webView,
+//                    url,
+//                )
                 UrlTermLongProcess.trigger(
                     terminalFragment,
                     terminalViewModel,

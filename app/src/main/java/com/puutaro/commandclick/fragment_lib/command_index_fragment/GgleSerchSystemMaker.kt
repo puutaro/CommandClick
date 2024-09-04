@@ -1,11 +1,17 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.widget.AutoCompleteTextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.KeyListenerSetter
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.SearchButtonClickListener
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.TextChangedListenerAdder
+import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.qr.QrScanner
+import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,6 +69,7 @@ object GgleSerchSystemMaker
     fun makeSearchEditTextOnlyCmdIndexFragment(
         fragment: Fragment,
 //        cmdindexSearchButton: LinearLayoutCompat,
+
         cmdSearchEditText: AutoCompleteTextView,
 //        cmdListAdapter: FannelIndexListAdapter,
     ){

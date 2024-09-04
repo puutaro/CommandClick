@@ -29,8 +29,8 @@
         />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ggle_sch_bottom_button"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -51,15 +51,15 @@
             android:foregroundGravity="bottom"
             android:textSize="19sp"
             android:textStyle="bold"
-            android:text="search"
+            android:text="Sch"
             android:layout_margin="3dp"
             android:ellipsize="end"
             android:maxLines="1"
             />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ggle_sch_bottom_qr_scan_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:foreground="?selectableItemBackground"
@@ -79,7 +79,7 @@
         android:foregroundGravity="bottom"
         android:textSize="19sp"
         android:textStyle="bold"
-        android:text="Scan"
+        android:text="Scn"
         android:layout_margin="3dp"
         android:ellipsize="end"
         android:maxLines="1"

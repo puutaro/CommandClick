@@ -172,12 +172,12 @@ class CommandIndexFragment: Fragment() {
 //            fannelIndexListAdapter.itemCount - 1
 //        )
         GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
-        GgleSerchSystemMaker.makeSearchEditTextOnlyCmdIndexFragment(
-            this,
-//            binding.cmdindexSearchButton,
-            binding.cmdSearchEditText
-//            fannelIndexListAdapter,
-        )
+//        GgleSerchSystemMaker.makeSearchEditTextOnlyCmdIndexFragment(
+//            this,
+////            binding.cmdindexSearchButton,
+//            binding.cmdSearchEditText
+////            fannelIndexListAdapter,
+//        )
 
 //        val cmdindexInternetButton = binding.cmdindexInternetButton
         val keyboardHandleListener = context as? OnKeyboardHandleListenerForCmdIndex
@@ -286,9 +286,9 @@ class CommandIndexFragment: Fragment() {
     }
 
     override fun onPause() {
-        savedEditTextContents = binding.cmdSearchEditText.text.toString()
-        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-        cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
+//        savedEditTextContents = binding.s.text.toString()
+//        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+//        cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         showTerminalJobWhenReuse?.cancel()
 //        ExtraMenuGifCreator.exit()
 //        PreInstallFannel.exit()
@@ -302,7 +302,7 @@ class CommandIndexFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         TerminalShower.show(this)
-        EditTextWhenReuse.focus(this)
+//        EditTextWhenReuse.focus(this)
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
         BroadcastRegister.registerBroadcastReceiverMultiActions(
             this,

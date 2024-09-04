@@ -182,6 +182,7 @@ class TerminalFragment: Fragment() {
         ggleWebViewManager = GgleSchDialog(WeakReference(this))
         TerminalToolbarHandler.handler(this)
         GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
+        GgleSchToolbar.set(this)
         val keyboardHandleListener = context as? OnKeyboardHandleListenerForTerm
         activity?.let {
             KeyboardVisibilityEvent.setEventListener(
@@ -238,6 +239,7 @@ class TerminalFragment: Fragment() {
         FannelHistoryGifCreator.watch(this)
         GifCreateMonitor.watch(this)
         ButtonImageCreator.create(this)
+
     }
 
     override fun onStart() {
@@ -327,11 +329,11 @@ class TerminalFragment: Fragment() {
         )
     }
 
-        interface OnSearchTextChangeListener {
-        fun onSearchTextChange(
-            text: String
-        )
-    }
+//    interface OnSearchTextChangeListener {
+//        fun onSearchTextChange(
+//            text: String
+//        )
+//    }
 
 //    interface OnAutoCompUpdateListener {
 //        fun onAutoCompUpdate (

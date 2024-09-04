@@ -36,7 +36,7 @@ object CmdIndexToolbarSwitcher {
         val cmdclickToolBar = binding.cmdindexToolbarLinearLayout
 //            binding.cmdclickToolBar
         val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
-        val cmdSearchEditText = binding.cmdSearchEditText
+//        val cmdSearchEditText = binding.cmdSearchEditText
 
         val linearLayoutParamPageSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -53,14 +53,14 @@ object CmdIndexToolbarSwitcher {
         cmdclickPageSearchToolBar.layoutParams = linearLayoutParamPageSearchToolBar
         cmdclickPageSearchToolBar.isVisible = onPageSearch
         cmdPageSearchEditText.setText(String())
-        cmdSearchEditText.setText(String())
-        cmdclickToolBar.layoutParams = linearLayoutParamToolbar
-        if(onPageSearch) {
-            cmdSearchEditText.clearFocus()
-            cmdPageSearchEditText.requestFocus()
-        } else {
-            cmdPageSearchEditText.clearFocus()
-        }
+//        cmdSearchEditText.setText(String())
+//        cmdclickToolBar.layoutParams = linearLayoutParamToolbar
+//        if(onPageSearch) {
+//            cmdSearchEditText.clearFocus()
+//            cmdPageSearchEditText.requestFocus()
+//        } else {
+//            cmdPageSearchEditText.clearFocus()
+//        }
     }
 }
 

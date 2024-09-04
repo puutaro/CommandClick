@@ -49,11 +49,13 @@ object KeyboardForCmdIndex {
             ) == true
         }
         if(isGgleSearchUrl) {
-            val cmdindexSearchLinearLayout = cmdIndexFragment.binding.cmdindexSearchLinearLayout
-            val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
-            cmdindexSearchLinearLayout.isVisible = false
-            searchEditText.setSelection(0)
-            searchEditText.clearFocus()
+            terminalFragment?.binding?.termGgleFocusImage?.isVisible = isOpen
+            terminalFragment?.binding?.termGgleFocusImageCaption?.isVisible = isOpen
+//            val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
+            terminalFragment?.binding?.termQrScanImage?.isVisible = isOpen
+//            terminalFragment?.binding?.termQrScanImageCaption?.isVisible = isOpen
+//            searchEditText.setSelection(0)
+//            searchEditText.clearFocus()
         }
 //        when(isGgleSearchUrl){
 //            true -> {

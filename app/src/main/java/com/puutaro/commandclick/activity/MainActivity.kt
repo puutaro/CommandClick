@@ -81,7 +81,7 @@ import java.util.*
 
 class MainActivity:
     AppCompatActivity(),
-    TerminalFragment.OnSearchTextChangeListener,
+//    TerminalFragment.OnSearchTextChangeListener,
     TerminalFragment.onBackstackWhenTermLongInRestartListener,
     TerminalFragment.OnToolBarVisibleChangeListener,
     TerminalFragment.OnTermLongChangeListenerForTerminalFragment,
@@ -410,12 +410,12 @@ class MainActivity:
     }
 
 
-    override fun onSearchTextChange(text: String) {
-        ExecOnSearchTextChange.execOnSearchTextChange(
-            this,
-            text
-        )
-    }
+//    override fun onSearchTextChange(text: String) {
+//        ExecOnSearchTextChange.execOnSearchTextChange(
+//            this,
+//            text
+//        )
+//    }
 
 
     override fun onListItemClicked(

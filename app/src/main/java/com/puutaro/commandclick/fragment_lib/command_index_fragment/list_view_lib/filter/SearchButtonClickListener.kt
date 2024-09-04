@@ -34,21 +34,17 @@ object SearchButtonClickListener {
                 terminalFragment.binding.terminalWebView.url?.startsWith(
                     WebUrlVariables.queryUrlBase
                 ) == true
-//            cmdindexSearchLinearLayout.isVisible = !isGgleSearchUrl
             if (isGgleSearchUrl) {
                 execSetGgleFocus(
                     terminalFragment,
-//        searchEditText: AutoCompleteTextView,
+                )
+                val isFocus = terminalFragment.binding.terminalWebView.requestFocus()
+                Keyboard.showKeyboard(
+                    activity,
+                    terminalFragment.binding.terminalWebView,
                 )
                 return@setOnClickListener
             }
-            val menuMapSeparator = '|'
-            val menuMapStrListCon = listOf(
-                "caption=search?iconName=google?clickMenuFilePath=HIGHLIGHT_SCH.js",
-            ).joinToString(menuMapSeparator.toString())
-            val extraMapCon = listOf(
-                "load_local=ON",
-            ).joinToString(menuMapSeparator.toString())
             terminalFragment.ggleWebViewManager?.show(
 //                "GGLE_SEARCH",
 //                String(),
@@ -95,27 +91,28 @@ object SearchButtonClickListener {
 ////                searchEditText,
 //            )
         }
-        cmdIndexFragment.binding.cmdSearchEditText.setOnFocusChangeListener { v, hasFocus ->
-            if(
-                !hasFocus
-            ) return@setOnFocusChangeListener
-
-            val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
-                activity
-            ) ?: return@setOnFocusChangeListener
-            val isGgleSearchUrl =
-                terminalFragment.binding.terminalWebView.url?.startsWith(
-                    WebUrlVariables.queryUrlBase
-                ) == true
-            if (!isGgleSearchUrl) {
-                return@setOnFocusChangeListener
-            }
-            execSetGgleFocus(
-                terminalFragment,
-//                searchEditText,
-            )
-        }
+//        cmdIndexFragment.binding.cmdSearchEditText.setOnFocusChangeListener { v, hasFocus ->
+//            if(
+//                !hasFocus
+//            ) return@setOnFocusChangeListener
+//
+//            val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
+//                activity
+//            ) ?: return@setOnFocusChangeListener
+//            val isGgleSearchUrl =
+//                terminalFragment.binding.terminalWebView.url?.startsWith(
+//                    WebUrlVariables.queryUrlBase
+//                ) == true
+//            if (!isGgleSearchUrl) {
+//                return@setOnFocusChangeListener
+//            }
+//            execSetGgleFocus(
+//                terminalFragment,
+////                searchEditText,
+//            )
+//        }
     }
+
 
     private fun execSetGgleFocus(
         fragment: Fragment,

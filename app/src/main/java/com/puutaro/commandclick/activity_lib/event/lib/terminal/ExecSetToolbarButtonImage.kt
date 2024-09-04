@@ -92,15 +92,6 @@ object ExecSetToolbarButtonImage {
                     icon
                 )
             }
-            cmdClickIconList.firstOrNull {
-                it.str == CmdClickIcons.GOOGLE.str
-            }?.let {
-                    icon ->
-                setImageButton(
-                    binding.cmdindexWebSearchImage,
-                    icon
-                )
-            }
         }
     }
 
@@ -158,6 +149,24 @@ object ExecSetToolbarButtonImage {
                 )
             }
             terminalFragment.ggleWebViewManager?.updateToolbarButton()
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.GOOGLE.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termGgleFocusImage,
+                    icon
+                )
+            }
+            cmdClickIconList.firstOrNull {
+                it.str == CmdClickIcons.QR.str
+            }?.let {
+                    icon ->
+                setImageButton(
+                    binding.termQrScanImage,
+                    icon
+                )
+            }
         }
 
     }
