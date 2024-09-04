@@ -46,7 +46,7 @@ object ExtraMenuGifCreator {
     ){
 
         val context = cmdIndexFragment.context
-        exit()
+//        exit()
         extraMenuGifCreateJob = cmdIndexFragment.lifecycleScope.launch {
             cmdIndexFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 val imageWidth = withContext(Dispatchers.IO) {

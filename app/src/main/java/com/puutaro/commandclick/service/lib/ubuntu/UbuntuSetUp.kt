@@ -17,6 +17,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.gz.GzTool
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -161,7 +162,7 @@ object UbuntuSetUp {
 //                    removeRootfsTarGz()
                 }
                 else -> {
-                    extractTarWithoutOwnership(
+                    GzTool.extractTarWithoutOwnership(
                         UbuntuFiles.downloadRootfsTarGzPath,
                         ubuntuFiles.filesOneRootfs.absolutePath,
                         true
@@ -272,7 +273,7 @@ object UbuntuSetUp {
                             currentRootfsDirPath
                         ).firstOrNull() ?: return@withPermit
                         val rootfsFilePath = File(currentRootfsDirPath, rootfsFileName).absolutePath
-                        extractTarWithoutOwnership(
+                        GzTool.extractTarWithoutOwnership(
                             rootfsFilePath,
                             filesOneRootfsPath,
                             false
@@ -281,66 +282,6 @@ object UbuntuSetUp {
                 }
             }
             jobList.forEach { it.await() }
-        }
-    }
-
-    private suspend fun extractTarWithoutOwnership(
-        tarPath: String,
-        destPath: String,
-        onGzip: Boolean
-    ) {
-        withContext(Dispatchers.IO) {
-            when (onGzip) {
-                true -> TarArchiveInputStream(
-                    BufferedInputStream(
-                        GzipCompressorInputStream(
-                            FileInputStream(tarPath)
-                        )
-                    )
-                )
-                else -> TarArchiveInputStream(
-                    BufferedInputStream(
-                        FileInputStream(tarPath)
-                    )
-                )
-            }.use { tis ->
-                var entry = tis.nextTarEntry
-                while (entry != null) {
-                    val targetPath = Paths.get(destPath, entry.name)
-                    when {
-                        targetPath.exists() ->{}
-                        entry.isDirectory -> {
-                            try {
-                                Files.createDirectories(targetPath)
-                            } catch (e: Exception){
-                                println(e.toString())
-                            }
-//                        println("Creating directory: $targetPath")
-                        }
-                        entry.isSymbolicLink -> {
-                            try {
-                                val linkTarget = entry.linkName
-                                Files.createSymbolicLink(targetPath, Paths.get(linkTarget))
-                            } catch (e: Exception){
-                                println(e.toString())
-                            }
-//                        println("Creating symlink: $targetPath -> $linkTarget")
-                        }
-                        else -> {
-                            try {
-                                Files.createDirectories(targetPath.parent)
-                                Files.newOutputStream(targetPath).use { out ->
-                                    tis.copyTo(out)
-                                }
-                            } catch (e: Exception){
-                                println(e.toString())
-                            }
-//                        println("Extracting file: $targetPath")
-                        }
-                    }
-                    entry = tis.nextTarEntry
-                }
-            }
         }
     }
 

@@ -235,7 +235,9 @@ class TerminalFragment: Fragment() {
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
-//        FannelHistoryGifCreator.watch(this)
+        FannelHistoryGifCreator.watch(this)
+        GifCreateMonitor.watch(this)
+        ButtonImageCreator.create(this)
     }
 
     override fun onStart() {
@@ -256,14 +258,10 @@ class TerminalFragment: Fragment() {
 //        )?.onPause()
 //        terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
-        UrlCaptureWatcher.exit()
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
         binding.terminalWebView.onPause()
-//        FannelHistoryGifCreator.exit()
-//        GifCreateMonitor.exit()
-//        ButtonImageCreator.exit()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
         onScrollPosiSaveJob?.cancel()
@@ -272,9 +270,9 @@ class TerminalFragment: Fragment() {
         onPocketWebHistoryUpdaterJob?.cancel()
         displayUpdateCoroutineJob?.cancel()
         UrlCaptureWatcher.exit()
-        FannelHistoryGifCreator.exit()
-        GifCreateMonitor.exit()
-        ButtonImageCreator.exit()
+//        FannelHistoryGifCreator.exit()
+//        GifCreateMonitor.exit()
+//        ButtonImageCreator.exit()
     }
 
     override fun onResume() {
@@ -310,9 +308,6 @@ class TerminalFragment: Fragment() {
             terminalViewModel,
         )
         UrlCaptureWatcher.watch(this)
-        FannelHistoryGifCreator.watch(this)
-        GifCreateMonitor.watch(this)
-        ButtonImageCreator.create(this)
         previousTerminalTag = tag
     }
 

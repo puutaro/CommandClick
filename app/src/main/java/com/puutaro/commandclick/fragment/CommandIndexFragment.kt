@@ -266,6 +266,8 @@ class CommandIndexFragment: Fragment() {
 //        )
 //        toolBarInternetButtonControl.interneButtontSetOnClickListener()
         PinFannelHideShow.setShowListener(this)
+        PreInstallFannel.install(this)
+        ExtraMenuGifCreator.create(this)
     }
 
 
@@ -288,8 +290,8 @@ class CommandIndexFragment: Fragment() {
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         showTerminalJobWhenReuse?.cancel()
-        ExtraMenuGifCreator.exit()
-        PreInstallFannel.exit()
+//        ExtraMenuGifCreator.exit()
+//        PreInstallFannel.exit()
         BroadcastRegister.unregisterBroadcastReceiver(
             this,
             broadcastReceiverForCmdIndex,
@@ -309,8 +311,8 @@ class CommandIndexFragment: Fragment() {
                 BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action,
             )
         )
-        PreInstallFannel.install(this)
-        ExtraMenuGifCreator.create(this)
+//        PreInstallFannel.install(this)
+//        ExtraMenuGifCreator.create(this)
     }
 
 

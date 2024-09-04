@@ -28,6 +28,10 @@ object UrlFileSystems {
     val gitUserContentFannelPrefix =
         "$cmdclickRepoGitUserContentPrefix/fannel"
 
+    val gitUserContentFannelTarGzPrefix =
+        "$cmdclickRepoGitUserContentPrefix/fannel_tar_gz"
+
+
     val readmeSuffix = "master/${UsePath.fannelReadmeName}"
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
