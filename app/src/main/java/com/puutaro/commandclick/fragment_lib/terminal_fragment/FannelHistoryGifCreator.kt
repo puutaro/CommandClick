@@ -44,7 +44,6 @@ object FannelHistoryGifCreator {
         val concurrentLimit = 5
         val semaphore = Semaphore(concurrentLimit)
         val tag = terminalFragment.tag
-        exit()
         gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 if(

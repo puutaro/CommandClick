@@ -34,7 +34,6 @@ object GifCreateMonitor {
             )
         //: 0 create 1: no_create
 //        var gitCreteTimes = 0
-        exit()
         gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
