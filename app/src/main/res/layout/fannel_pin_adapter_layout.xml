@@ -42,8 +42,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+        android:paddingStart="4.5dp"
+        android:paddingEnd="4.5dp"
         android:textSize="16sp"
         android:textStyle="bold"
         />
