@@ -141,7 +141,7 @@
                     android:maxLines="1"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="search"
+                    android:text="sch"
                     />
             </FrameLayout>
 
