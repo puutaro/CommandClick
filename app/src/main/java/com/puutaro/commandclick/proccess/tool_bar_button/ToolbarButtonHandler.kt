@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.tool_bar_button
 
+import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
@@ -19,7 +20,7 @@ object ToolbarButtonHandler{
         editFragment: EditFragment,
         isLongClick: Boolean,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        buttonLayout: LinearLayoutCompat?,
+        buttonLayout: FrameLayout?,
 //        settingButtonView: ImageButton?,
     ){
         val toolbarButtonConfigMap =

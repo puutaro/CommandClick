@@ -29,7 +29,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/first_bottom_linearlayout"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -16,6 +16,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import androidx.appcompat.content.res.AppCompatResources
@@ -31,7 +32,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
-import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLoadUrlExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
@@ -236,7 +238,7 @@ class WebViewJsDialog(
         }
     }
 
-    private fun loadUrlHandler(
+    fun loadUrlHandler(
         terminalFragment: TerminalFragment?,
         urlCon: String,
     ){
@@ -416,7 +418,7 @@ class WebViewJsDialog(
         culcBtnWeight: Float,
 //        currentScriptPath: String,
 //        webViewDialogExtraMapManager: WebViewDialogExtraMapManager,
-    ): LinearLayoutCompat? {
+    ): FrameLayout? {
         val targetBtn = makeBottomButton(
             terminalFragment,
             targetMenuMap,
@@ -467,7 +469,7 @@ class WebViewJsDialog(
 
     private fun btnActionHandler(
         terminalFragment: TerminalFragment?,
-        targetBtn: LinearLayoutCompat,
+        targetBtn: FrameLayout,
         btnOptionMap: Map<String, String>?,
         menuList: List<String>,
         dismissType: String,
@@ -521,7 +523,7 @@ class WebViewJsDialog(
 
     private fun launchMenu(
         terminalFragment: TerminalFragment?,
-        webViewSearchBtn: LinearLayoutCompat,
+        webViewSearchBtn: FrameLayout,
         menuList: List<String>,
         menuGroupId: Int,
     ){
@@ -873,32 +875,32 @@ class WebViewJsDialog(
         terminalFragment: TerminalFragment?,
         menuBtnMap: Map<String, String>?,
         buttonWeight: Float,
-    ): LinearLayoutCompat? {
+    ): FrameLayout? {
         val context = terminalFragment?.context ?: return null
 
         val inflater = LayoutInflater.from(context)
-        val linearLayoutCompat = inflater.inflate(
+        val frameLayoutButton = inflater.inflate(
             R.layout.icon_caption_layout,
             null
-        ) as LinearLayoutCompat
+        ) as FrameLayout
         val tag = menuBtnMap
             ?.get(
                 WebViewMenuMapType.tag.name
             ) ?: "exec"
-        linearLayoutCompat.tag = tag
+        frameLayoutButton.tag = tag
         val param = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT
         )
         param.weight = buttonWeight
-        linearLayoutCompat.layoutParams = param
+        frameLayoutButton.layoutParams = param
         webViewDialogExtraMapManager?.setDefaultFocus(
             context,
-            linearLayoutCompat,
+            frameLayoutButton,
             tag,
         )
         val imageView =
-            linearLayoutCompat.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)
+            frameLayoutButton.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)
 
         val iconName = menuBtnMap
             ?.get(
@@ -913,14 +915,14 @@ class WebViewJsDialog(
         ) ?: iconName
 
         val captionTextView =
-            linearLayoutCompat.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)
+            frameLayoutButton.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)
 
         makeTextView(
             captionTextView,
             iconName,
             caption,
         )
-        return linearLayoutCompat
+        return frameLayoutButton
 
     }
 
@@ -1106,7 +1108,7 @@ class WebViewJsDialog(
                 debugPath,
             )
             val extraStrPairList = listOf(
-                PocketWebviewExtra.url.schema
+                PocketWebviewLoadUrlExtra.url.schema
                         to launchUrl
             )
             BroadcastSender.normalSend(
@@ -1407,7 +1409,7 @@ private class WebViewDialogExtraMapManager(
     }
     fun setDefaultFocus(
         context: Context?,
-        button: LinearLayoutCompat,
+        button: FrameLayout,
         curTag: String,
     ){
         val isNotDefaultTag = focusMap.get(
@@ -1449,7 +1451,7 @@ private class WebViewDialogExtraMapManager(
             isNotTrigger
         ) return
         val button = firstBottomLinearLayout
-            ?.findViewWithTag<LinearLayoutCompat>(curTag)
+            ?.findViewWithTag<FrameLayout>(curTag)
         setBackground(
             context,
             button,
@@ -1458,7 +1460,7 @@ private class WebViewDialogExtraMapManager(
         bottomBtnTagList.forEach {
             if(it == curTag) return@forEach
             val curButton = firstBottomLinearLayout
-                ?.findViewWithTag<LinearLayoutCompat>(it)
+                ?.findViewWithTag<FrameLayout>(it)
             setBackground(
                 context,
                 curButton,
@@ -1469,7 +1471,7 @@ private class WebViewDialogExtraMapManager(
 
     private fun setBackground(
         context: Context?,
-        button: LinearLayoutCompat?,
+        button: FrameLayout?,
         colorId: Int,
     ){
         when(colorId == CmdClickColor.WHITE.id) {

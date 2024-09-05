@@ -24,21 +24,21 @@ object TerminalToolbarHandler {
             binding.termBottomLinear.isVisible = false
             return
         }
-        setCaptionTextView(
-            binding.termHistoryButtonCaption
-        )
-        setCaptionTextView(
-            binding.termUrlHistoryButtonCaption
-        )
-        setCaptionTextView(
-            binding.termSearchButtonCaption
-        )
-        setCaptionTextView(
-            binding.termHidePinButtonCaption
-        )
-        setCaptionTextView(
-            binding.termSettingButtonCaption
-        )
+//        setCaptionTextView(
+//            binding.termHistoryButtonCaption
+//        )
+//        setCaptionTextView(
+//            binding.termUrlHistoryButtonCaption
+//        )
+//        setCaptionTextView(
+//            binding.termSearchButtonCaption
+//        )
+//        setCaptionTextView(
+//            binding.termHidePinButtonCaption
+//        )
+//        setCaptionTextView(
+//            binding.termSettingButtonCaption
+//        )
         setFannelManagerClickAction(
             terminalFragment
         )
@@ -51,12 +51,12 @@ object TerminalToolbarHandler {
 
     }
 
-    private fun setCaptionTextView(
-        captionTextView: OutlineTextView
-    ){
-        captionTextView.setStrokeColor(R.color.white)
-        captionTextView.setFillColor(R.color.file_dark_green_color)
-    }
+//    private fun setCaptionTextView(
+//        captionTextView: OutlineTextView
+//    ){
+//        captionTextView.setStrokeColor(R.color.white)
+//        captionTextView.setFillColor(R.color.file_dark_green_color)
+//    }
 
     private fun setFannelManagerClickAction(
         terminalFragment: TerminalFragment

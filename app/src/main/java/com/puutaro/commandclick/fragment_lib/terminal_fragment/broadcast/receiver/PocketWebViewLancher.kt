@@ -8,9 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-object PocketWebViewUrlLoader {
+object PocketWebViewLancher {
 
-    fun load(
+    fun launch(
         terminalFragment: TerminalFragment,
         url: String?,
 //        isHistorySave: Boolean
@@ -63,5 +63,19 @@ object PocketWebViewUrlLoader {
 //                    )
 //            }
         }
+    }
+
+    fun loadUrl(
+        terminalFragment: TerminalFragment,
+        url: String?,
+    ){
+        if(
+            url.isNullOrEmpty()
+            || terminalFragment.pocketWebViewManager == null
+        ) return
+        terminalFragment.pocketWebViewManager?.loadUrlHandler(
+            terminalFragment,
+            url,
+        )
     }
 }

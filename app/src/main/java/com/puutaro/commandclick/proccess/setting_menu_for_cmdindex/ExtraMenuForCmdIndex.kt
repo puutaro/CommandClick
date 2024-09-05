@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +120,7 @@ object ExtraMenuForCmdIndex {
 
     private fun toolbarSettingButtonOnClick(
         fragment: Fragment,
-        settingButtonView: LinearLayoutCompat
+        settingButtonView: FrameLayout
     ){
         settingButtonView.setOnClickListener {
                 settingButtonInnerView ->

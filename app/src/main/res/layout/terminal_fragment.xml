@@ -35,7 +35,7 @@
                     android:fadeScrollbars="true"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     />
 
 
@@ -131,7 +131,8 @@
                     android:weightSum="1"
                     >
 <!--                    app:layout_constraintTop_toBottomOf="@+id/progressBar"-->
-                    <androidx.appcompat.widget.LinearLayoutCompat
+
+                    <FrameLayout
                         android:id="@+id/term_history_button"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/toolbar_layout_height"
@@ -148,11 +149,13 @@
                         app:layout_constraintHorizontal_chainStyle="spread"
                         app:layout_constraintHorizontal_weight="1"
                         android:layout_weight="0.2"
+                        android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                        android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                         >
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/term_history_button_image"
-                            android:layout_width="@dimen/toolbar_image_width"
-                            android:layout_height="@dimen/toolbar_image_height"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:src="@drawable/icons8_history"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
@@ -162,22 +165,19 @@
                         <com.puutaro.commandclick.custom_view.OutlineTextView
                             android:id="@+id/term_history_button_caption"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:padding="0dp"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/toolbar_caption_font_size"
                             android:textStyle="bold"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
                             android:text="fnlCntr"
                             android:layout_gravity="center"
                             android:gravity="center"
                             />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    </FrameLayout>
 
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <FrameLayout
                         android:id="@+id/term_url_history_button"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/toolbar_layout_height"
@@ -193,11 +193,13 @@
                         android:foreground="?selectableItemBackground"
                         app:layout_constraintHorizontal_weight="1"
                         android:layout_weight="0.2"
+                        android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                        android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                         >
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/term_url_history_button_image"
-                            android:layout_width="@dimen/toolbar_image_width"
-                            android:layout_height="@dimen/toolbar_image_height"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:src="@drawable/black_history_icons"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
@@ -207,22 +209,20 @@
                         <com.puutaro.commandclick.custom_view.OutlineTextView
                             android:id="@+id/term_url_history_button_caption"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:scaleType="fitCenter"
                             android:padding="0dp"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/toolbar_caption_font_size"
                             android:textStyle="bold"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="urlHistory"
                             />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    </FrameLayout>
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <FrameLayout
                         android:id="@+id/term_search_button"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/toolbar_layout_height"
@@ -238,11 +238,13 @@
                         android:foreground="?selectableItemBackground"
                         app:layout_constraintHorizontal_weight="1"
                         android:layout_weight="0.2"
+                        android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                        android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                         >
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/term_search_button_image"
-                            android:layout_width="@dimen/toolbar_image_width"
-                            android:layout_height="@dimen/toolbar_image_height"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:src="@drawable/icons8_search"
                             app:tint="@color/file_dark_green_color"
                             android:scaleType="fitCenter"
@@ -252,22 +254,20 @@
                         <com.puutaro.commandclick.custom_view.OutlineTextView
                             android:id="@+id/term_search_button_caption"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:scaleType="fitCenter"
                             android:padding="0dp"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/toolbar_caption_font_size"
                             android:textStyle="bold"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="search"
                             />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    </FrameLayout>
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <FrameLayout
                         android:id="@+id/term_hide_pin_button"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/toolbar_layout_height"
@@ -277,47 +277,19 @@
                         app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"
                         android:clickable="true"
                         android:focusable="true"
-                        android:orientation="vertical"
-                        android:background="@null"
-                        android:backgroundTint="@null"
                         android:foreground="?selectableItemBackground"
-                        app:layout_constraintHorizontal_weight="1"
                         android:layout_weight="0.2"
+                        app:layout_constraintHorizontal_weight="1"
+                        android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                        android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                         >
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/term_hide_pin_button_image"
-                            android:layout_width="@dimen/toolbar_image_width"
-                            android:layout_height="@dimen/toolbar_image_height"
-                            android:src="@drawable/ic_down_allow"
-                            app:tint="@color/file_dark_green_color"
-                            android:scaleType="fitCenter"
-                            android:layout_gravity="center"
-                            android:padding="0dp"
-                            />
-                        <com.puutaro.commandclick.custom_view.OutlineTextView
-                            android:id="@+id/term_hide_pin_button_caption"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:scaleType="fitCenter"
-                            android:padding="0dp"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="hidPin"
-                            />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
 <!--                    <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                        android:id="@+id/term_setting_button"-->
+<!--                        android:id="@+id/term_hide_pin_button"-->
 <!--                        android:layout_width="0dp"-->
 <!--                        android:layout_height="@dimen/toolbar_layout_height"-->
 <!--                        app:layout_constraintTop_toBottomOf="@+id/progressBar"-->
-<!--                        app:layout_constraintStart_toEndOf="@+id/term_hide_pin_button"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toEndOf="@+id/term_search_button"-->
+<!--                        app:layout_constraintEnd_toStartOf="@+id/term_setting_button"-->
 <!--                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"-->
 <!--                        android:clickable="true"-->
 <!--                        android:focusable="true"-->
@@ -328,6 +300,31 @@
 <!--                        app:layout_constraintHorizontal_weight="1"-->
 <!--                        android:layout_weight="0.2"-->
 <!--                        >-->
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/term_hide_pin_button_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_down_allow"
+                            app:tint="@color/file_dark_green_color"
+                            android:scaleType="fitCenter"
+                            android:layout_gravity="center"
+                            android:padding="0dp"
+                            />
+                        <com.puutaro.commandclick.custom_view.OutlineTextView
+                            android:id="@+id/term_hide_pin_button_caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitCenter"
+                            android:padding="0dp"
+                            android:textSize="@dimen/toolbar_caption_font_size"
+                            android:textStyle="bold"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="hidPin"
+                            />
+                    </FrameLayout>
                     <FrameLayout
                         android:id="@+id/term_setting_button"
                         android:layout_width="0dp"
@@ -341,8 +338,8 @@
                         android:focusable="true"
                         android:foreground="?selectableItemBackground"
                         android:layout_weight="0.2"
-                        android:layout_marginStart="3dp"
-                        android:layout_marginEnd="3dp"
+                        android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                        android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                         >
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/term_setting_button_image"
@@ -360,7 +357,7 @@
                             android:layout_height="match_parent"
                             android:scaleType="fitCenter"
                             android:padding="0dp"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/toolbar_caption_font_size"
                             android:textStyle="bold"
                             android:ellipsize="end"
                             android:maxLines="1"

@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -38,7 +37,7 @@ object SearchButtonClickListener {
                 execSetGgleFocus(
                     terminalFragment,
                 )
-                val isFocus = terminalFragment.binding.terminalWebView.requestFocus()
+                terminalFragment.binding.terminalWebView.requestFocus()
                 Keyboard.showKeyboard(
                     activity,
                     terminalFragment.binding.terminalWebView,

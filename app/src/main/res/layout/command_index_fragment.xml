@@ -31,7 +31,7 @@
             android:weightSum="1"
             android:visibility="gone"
             >
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <FrameLayout
                 android:id="@+id/cmdindex_history_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/toolbar_layout_height"
@@ -40,11 +40,13 @@
                 android:orientation="vertical"
                 android:foreground="?selectableItemBackground"
                 android:layout_weight="0.2"
+                android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                 >
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/cmdindex_history_button_image"
-                    android:layout_width="@dimen/toolbar_image_width"
-                    android:layout_height="@dimen/toolbar_image_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/icons8_history"
                     android:backgroundTint="@color/white"
                     app:tint="@color/file_dark_green_color"
@@ -52,38 +54,36 @@
                     android:padding="0dp"
                     android:layout_gravity="center"
                     />
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.puutaro.commandclick.custom_view.OutlineTextView
                     android:id="@+id/cmdindex_history_button_caption"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:padding="0dp"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/toolbar_caption_font_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:text="fnlCntr"
                     android:layout_gravity="center"
                     android:gravity="center"
                     />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </FrameLayout>
 
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <FrameLayout
                 android:id="@+id/cmdindex_url_history_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/toolbar_layout_height"
                 android:clickable="true"
                 android:focusable="true"
-                android:orientation="vertical"
                 android:foreground="?selectableItemBackground"
                 android:layout_weight="0.2"
+                android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                 >
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/cmdindex_url_history_button_image"
-                    android:layout_width="@dimen/toolbar_image_width"
-                    android:layout_height="@dimen/toolbar_image_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/black_history_icons"
                     android:backgroundTint="@color/white"
                     app:tint="@color/file_dark_green_color"
@@ -91,38 +91,37 @@
                     android:layout_gravity="center"
                     android:padding="0dp"
                     />
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.puutaro.commandclick.custom_view.OutlineTextView
                     android:id="@+id/cmdindex_url_history_button_caption"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:padding="0dp"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/toolbar_caption_font_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="urlHistory"
                     />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </FrameLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <FrameLayout
                 android:id="@+id/cmdindex_search_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/toolbar_layout_height"
                 android:clickable="true"
                 android:focusable="true"
-                android:orientation="vertical"
                 android:foreground="?selectableItemBackground"
                 android:layout_weight="0.2"
+                android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                 >
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/cmdindex_search_button_image"
-                    android:layout_width="@dimen/toolbar_image_width"
-                    android:layout_height="@dimen/toolbar_image_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/icons8_search"
                     android:backgroundTint="@color/white"
                     app:tint="@color/file_dark_green_color"
@@ -130,38 +129,37 @@
                     android:layout_gravity="center"
                     android:padding="0dp"
                     />
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.puutaro.commandclick.custom_view.OutlineTextView
                     android:id="@+id/cmdindex_search_button_caption"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:padding="0dp"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/toolbar_caption_font_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="search"
                     />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </FrameLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <FrameLayout
                 android:id="@+id/cmdindex_show_clear_toolbar_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/toolbar_layout_height"
                 android:clickable="true"
                 android:focusable="true"
-                android:orientation="vertical"
                 android:foreground="?selectableItemBackground"
                 android:layout_weight="0.2"
+                android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                 >
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/cmdindex_show_pin_button_image"
-                    android:layout_width="@dimen/toolbar_image_width"
-                    android:layout_height="@dimen/toolbar_image_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/ic_top_allow"
                     android:backgroundTint="@color/white"
                     app:tint="@color/file_dark_green_color"
@@ -169,38 +167,37 @@
                     android:layout_gravity="center"
                     android:padding="0dp"
                     />
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.puutaro.commandclick.custom_view.OutlineTextView
                     android:id="@+id/cmdindex_show_pin_button_caption"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:padding="0dp"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/toolbar_caption_font_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="shwPin"
                     />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </FrameLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <FrameLayout
                 android:id="@+id/cmdindex_setting_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/toolbar_layout_height"
                 android:clickable="true"
                 android:focusable="true"
-                android:orientation="vertical"
                 android:foreground="?selectableItemBackground"
                 android:layout_weight="0.2"
+                android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
+                android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                 >
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/cmdindex_setting_button_image"
-                    android:layout_width="@dimen/toolbar_image_width"
-                    android:layout_height="@dimen/toolbar_image_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/extra"
                     android:backgroundTint="@color/white"
                     app:tint="@color/file_dark_green_color"
@@ -208,23 +205,21 @@
                     android:layout_gravity="center"
                     android:padding="0dp"
                     />
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.puutaro.commandclick.custom_view.OutlineTextView
                     android:id="@+id/cmdindex_setting_button_caption"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:padding="0dp"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/toolbar_caption_font_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="extra"
                     />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </FrameLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 

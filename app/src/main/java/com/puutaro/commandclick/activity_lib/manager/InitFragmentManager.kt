@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.provider.Browser
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.EditFragment
@@ -453,9 +453,9 @@ private fun launchUrlByPocketWebView(
         withContext(Dispatchers.IO) {
             BroadcastSender.normalSend(
                 activity,
-                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
+                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LAUNCH.action,
                 listOf(
-                    PocketWebviewExtra.url.schema to urlStr,
+                    PocketWebviewLaunchExtra.url.schema to urlStr,
                 )
             )
         }

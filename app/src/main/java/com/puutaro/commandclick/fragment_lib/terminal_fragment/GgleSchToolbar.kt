@@ -15,7 +15,7 @@ object GgleSchToolbar {
     ){
         setGgleForcusClickListener(
             terminalFragment,
-            terminalFragment.binding.termSearchButtonImage
+            terminalFragment.binding.termGgleFocusImage
         )
         setQrScanClickListener(
             terminalFragment,

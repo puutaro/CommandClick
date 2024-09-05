@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import android.graphics.drawable.Drawable
+import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -57,7 +57,7 @@ object ExecSetToolbarButtonImage {
                 )
             }
             cmdClickIconList.firstOrNull {
-                it.str == CmdClickIcons.SETTING.str
+                it.str == CmdClickIcons.EXTRA.str
             }?.let {
                     icon ->
                 setImageButton(
@@ -176,13 +176,13 @@ object ExecSetToolbarButtonImage {
     ){
         CoroutineScope(Dispatchers.IO).launch {
             ToolbarButtonBariantForEdit.values().forEach {
-                val linearLayout = withContext(Dispatchers.Main) {
-                    editFragment.binding.editToolbarLinearLayout.findViewWithTag<LinearLayoutCompat>(
+                val frameLayout = withContext(Dispatchers.Main) {
+                    editFragment.binding.editToolbarLinearLayout.findViewWithTag<FrameLayout>(
                         it.str
                     )
                 } ?: return@forEach
                 val imageView = withContext(Dispatchers.Main) {
-                    linearLayout.children.forEach imageSet@{
+                    frameLayout.children.forEach imageSet@{
                             view ->
                         if (
                             view !is AppCompatImageView

@@ -176,7 +176,7 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/edit_toolbar_linear_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </android.widget.Toolbar>
