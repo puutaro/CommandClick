@@ -188,7 +188,7 @@ class GgleSchDialog(
                 }
                 CoroutineScope(Dispatchers.Main).launch {
                     withContext(Dispatchers.IO){
-                        delay(100)
+                        delay(200)
                     }
                     Keyboard.showKeyboard(
                         terminalFragment?.context,

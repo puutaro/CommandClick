@@ -10,10 +10,8 @@ function schBoxFocus(){
             if(!el) return;
             const isAreaLabel = el.getAttribute('aria-label');
             if(!isAreaLabel) return;
-            el.blur();
             setTimeout(
                 function(){
-                    el.blur();
                     el.focus();
                     el.select();
                 },
