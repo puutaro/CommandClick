@@ -37,12 +37,12 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         />
 

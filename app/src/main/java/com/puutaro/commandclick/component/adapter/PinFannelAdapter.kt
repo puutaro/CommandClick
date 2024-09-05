@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
@@ -83,16 +84,16 @@ class PinFannelAdapter(
                 ) == switchOn
                 when(isEditExecute) {
                     false -> {
-                        holder.fannelPinAdapterNameView.setStrokeColor(R.color.file_dark_green_color)
+                        holder.fannelPinAdapterNameView.setStrokeColor(R.color.fill_gray)
                         holder.fannelPinAdapterNameView.setFillColor(R.color.white)
                     }
                     else -> {
                         holder.fannelPinAdapterNameView.setStrokeColor(R.color.white)
-                        holder.fannelPinAdapterNameView.setFillColor(R.color.file_dark_green_color)
+                        holder.fannelPinAdapterNameView.setFillColor(R.color.fill_gray)
                     }
                 }
-                holder.fannelPinAdapterNameView.outlineWidthSrc = 1
-                holder.fannelPinAdapterNameView.text = fannelName
+                holder.fannelPinAdapterNameView.outlineWidthSrc = 2
+                holder.fannelPinAdapterNameView.text = CcPathTool.trimAllExtend(fannelName)
             }
             val fannelLogoPngPath = withContext(Dispatchers.IO) {
                 ScriptPreWordReplacer.replace(

@@ -218,7 +218,7 @@
                             android:maxLines="1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="urlHistory"
+                            android:text="urlHistry"
                             />
                     </FrameLayout>
 

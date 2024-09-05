@@ -12,18 +12,6 @@
     android:paddingTop="10dp"
     android:background="@color/file_dark_green_color"
     >
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/url_history_adapter_relative_layout"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:padding="0dp"-->
-<!--        android:layout_margin="0dp"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/url_history_adapter_site_logo_container"-->
-<!--        app:layout_constraintDimensionRatio="h, 1:1.74"-->
-<!--        >-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/url_history_adapter_capture"
             android:layout_width="0dp"
@@ -50,34 +38,7 @@
             android:textStyle="bold"
             android:layout_margin="15dp"
             />
-<!--    </RelativeLayout>-->
 
-<!--    <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--        android:id="@+id/url_history_adapter_bottom_linear_inner"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="30dp"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/url_history_adapter_relative_layout"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:background="@color/file_dark_green_color"-->
-<!--        app:tint="@color/white"-->
-<!--        android:weightSum="1"-->
-<!--        >-->
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/url_history_adapter_site_logo_container"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="30dp"-->
-<!--        android:layout_gravity="center"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/url_history_adapter_relative_layout"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/url_history_adapter_copy"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintHorizontal_chainStyle="spread"-->
-<!--        app:layout_constraintHorizontal_weight="1"-->
-<!--        >-->
-<!--
-android:layout_weight="0.3333"-->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/url_history_adapter_site_logo"
         android:layout_width="0dp"
@@ -127,7 +88,7 @@ android:layout_weight="0.3333"-->
             app:layout_constraintBottom_toBottomOf="@+id/url_history_adapter_copy"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:textSize="13sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_margin="2dp"
             android:text="copy"
@@ -161,7 +122,7 @@ android:layout_weight="0.3333"-->
             app:layout_constraintBottom_toBottomOf="@+id/url_history_adapter_delete"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:textSize="13sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_margin="2dp"
             android:text="del"

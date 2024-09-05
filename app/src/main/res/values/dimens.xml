@@ -4,7 +4,7 @@
     <dimen name="global_menu_string_size">20sp</dimen>
     <dimen name="toolbar_layout_height">50dp</dimen>
     <dimen name="toolbar_button_horizon_margin">4dp</dimen>
-    <dimen name="toolbar_caption_font_size">13sp</dimen>
+    <dimen name="toolbar_caption_font_size">16sp</dimen>
     <dimen name="toolbar_image_height">40dp</dimen>
     <dimen name="toolbar_image_width">40dp</dimen>
     <dimen name="extra_toolbar_image_one_side">100dp</dimen>

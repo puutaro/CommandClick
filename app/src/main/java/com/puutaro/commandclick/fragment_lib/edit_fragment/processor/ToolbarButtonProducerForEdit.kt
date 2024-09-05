@@ -227,7 +227,7 @@ object ToolbarButtonProducerForEdit {
             }?.str ?: String()
         }
         captionTextView.setStrokeColor(R.color.white)
-        captionTextView.setFillColor(R.color.web_icon_color)
+        captionTextView.setFillColor(R.color.fill_gray)
     }
 
 //    private fun makeTextView(
