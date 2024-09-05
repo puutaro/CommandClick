@@ -421,7 +421,7 @@ private object BackstackManager {
             if(it == null) return@forEach
             transaction.remove(it)
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 }
 

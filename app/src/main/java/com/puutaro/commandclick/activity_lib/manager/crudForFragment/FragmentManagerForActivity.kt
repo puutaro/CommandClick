@@ -14,7 +14,7 @@ object FragmentManagerForActivity{
     fun commit(
         transaction: FragmentTransaction
     ){
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     fun deleteAllBackStack(
