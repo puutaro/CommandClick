@@ -30,6 +30,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.Exe
 import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.url.WebUrlVariables
@@ -185,6 +186,10 @@ class GgleSchDialog(
                         }
                     }
                 }
+                Keyboard.showKeyboard(
+                    terminalFragment?.context,
+                    pocketGgleSchWebView
+                )
                 GglePreFocusJs.loadGglePreFocusJs(
                     terminalFragment?.context,
                     pocketGgleSchWebView,
