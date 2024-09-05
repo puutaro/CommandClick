@@ -541,4 +541,8 @@ class TerminalFragment: Fragment() {
     interface OnPinFannelHideListener {
         fun onPinFannelHide(fannelManagerPinImageView: AppCompatImageView? = null)
     }
+
+    interface OnPageSearchSwitchListenerForTerm{
+        fun onPageSearchSwitchForTerm()
+    }
 }

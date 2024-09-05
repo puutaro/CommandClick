@@ -95,7 +95,7 @@ private fun execReflectForCmdIndex(
         )
     } else {
         cmdindexSearchTotal.setTextColor(
-            activity.getColor(R.color.black)
+            activity.getColor(R.color.fill_gray)
         )
     }
 }
@@ -117,7 +117,7 @@ private fun execReflectForCmdEdit(
         )
     } else {
         cmdEditSearchTotal.setTextColor(
-            activity.getColor(R.color.black)
+            activity.getColor(R.color.fill_gray)
         )
     }
 }

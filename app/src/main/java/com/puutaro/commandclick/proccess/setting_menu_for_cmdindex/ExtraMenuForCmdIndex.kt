@@ -13,9 +13,10 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -40,7 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-object ExtraMenuForCmdIndex {
+object ExtraMenuForCmdIndex  {
 
 
     private var imageDialogObj: Dialog? = null
@@ -227,16 +228,25 @@ object ExtraMenuForCmdIndex {
                     }
                 }
                 imageDialogObj?.findViewById<AppCompatImageView>(
-                    R.id.extra_popup_cmdindex_scan_qr_image
+                    R.id.extra_popup_cmdindex_page_search_image
                 )?.let {
                     ImageButtonSetterForCmdIndexPopup.set(
                         it,
-                        CmdClickIcons.QR,
+                        CmdClickIcons.SEARCH,
                     )
                     withContext(Dispatchers.Main){
                         it.setOnClickListener {
                             exitDialog(constraintLayout)
-                            QrScanner.scanFromCamera(fragment)
+                            when(fragment){
+                                is CommandIndexFragment -> {
+                                    val listener = fragment.context as? CommandIndexFragment.OnPageSearchSwitchListener
+                                    listener?.onPageSearchSwitch()
+                                }
+                                is TerminalFragment -> {
+                                    val listener = fragment.context as? TerminalFragment.OnPageSearchSwitchListenerForTerm
+                                    listener?.onPageSearchSwitchForTerm()
+                                }
+                            }
                         }
                     }
                 }

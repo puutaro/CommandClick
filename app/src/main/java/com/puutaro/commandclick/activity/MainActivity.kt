@@ -66,6 +66,7 @@ import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.service.FannelRepoDownloadService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -110,6 +111,7 @@ class MainActivity:
     TerminalFragment.OnSearchButtonMakeListenerForTerm,
     TerminalFragment.OnKeyboardHandleListenerForTerm,
     TerminalFragment.OnPinFannelHideListener,
+    TerminalFragment.OnPageSearchSwitchListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -126,6 +128,7 @@ class MainActivity:
     CommandIndexFragment.OnSearchButtonMakeListenerForCmdIndex,
     CommandIndexFragment.OnKeyboardHandleListenerForCmdIndex,
     CommandIndexFragment.OnPinFannelShowListener,
+    CommandIndexFragment.OnPageSearchSwitchListener,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -905,6 +908,18 @@ class MainActivity:
             this,
             false,
             fannelManagerPinImageView,
+        )
+    }
+
+    override fun onPageSearchSwitch() {
+        PageSearchManager.switch(
+            this
+        )
+    }
+
+    override fun onPageSearchSwitchForTerm() {
+        PageSearchManager.switch(
+            this
         )
     }
  }

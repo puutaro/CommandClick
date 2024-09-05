@@ -81,7 +81,7 @@
         app:layout_constraintWidth_percent="0.22"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/extra_popup_cmdindex_debugger_image"
-        app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_scan_qr_image"
+        app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_page_search_image"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintHorizontal_bias="0.4"
         android:src="@drawable/icons8_launch"
@@ -165,7 +165,7 @@
 
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/extra_popup_cmdindex_scan_qr_image"
+        android:id="@+id/extra_popup_cmdindex_page_search_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1:1"
@@ -176,7 +176,7 @@
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintHorizontal_bias="0.2"
-        android:src="@drawable/icons_qr_code"
+        android:src="@drawable/icons8_search"
         app:tint="@color/cmdclick_text_black"
         android:clickable="true"
         android:focusable="true"
@@ -193,13 +193,13 @@
         />
 <!--     app:layout_constraintTop_toBottomOf="@+id/extra_popup_cmdindex_restart_ubuntu_image"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
-        android:id="@+id/extra_popup_cmdindex_scan_qr_caption"
+        android:id="@+id/extra_popup_cmdindex_page_search_caption"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="@+id/extra_popup_cmdindex_scan_qr_image"
-        app:layout_constraintStart_toStartOf="@+id/extra_popup_cmdindex_scan_qr_image"
-        app:layout_constraintEnd_toEndOf="@+id/extra_popup_cmdindex_scan_qr_image"
-        app:layout_constraintBottom_toBottomOf="@+id/extra_popup_cmdindex_scan_qr_image"
+        app:layout_constraintTop_toTopOf="@+id/extra_popup_cmdindex_page_search_image"
+        app:layout_constraintStart_toStartOf="@+id/extra_popup_cmdindex_page_search_image"
+        app:layout_constraintEnd_toEndOf="@+id/extra_popup_cmdindex_page_search_image"
+        app:layout_constraintBottom_toBottomOf="@+id/extra_popup_cmdindex_page_search_image"
         android:padding="5dp"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -207,7 +207,7 @@
         android:textColor="@color/white"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:text="ScnQr"
+        android:text="pSch"
         android:layout_gravity="center"
         android:gravity="center"
         />
@@ -217,7 +217,7 @@
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintWidth_percent="0.22"
-        app:layout_constraintStart_toEndOf="@+id/extra_popup_cmdindex_scan_qr_image"
+        app:layout_constraintStart_toEndOf="@+id/extra_popup_cmdindex_page_search_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/extra_popup_cmdindex_nav_reload_iamge_view"
         app:layout_constraintHorizontal_weight="1"

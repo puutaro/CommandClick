@@ -1,15 +1,20 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import android.widget.Toolbar
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.WebUrlVariables
 
 
 object KeyboardForCmdIndex {
+
 
     fun historyAndSearchHideShow(
         activity: MainActivity,
@@ -20,42 +25,37 @@ object KeyboardForCmdIndex {
             activity
         ) ?: return
         val isPinHide = PinFannelHideShow.isHide()
+        val pageSearch = cmdIndexFragment.binding.pageSearch
+        val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
+        val isPageSearch = cmdclickPageSearchToolBar.isVisible
         when(isFromTerminal){
             true -> {
                 val toolbarLinear = TargetFragmentInstance
                     .getCurrentTerminalFragment(activity)
                     ?.binding
                     ?.termBottomLinear
-                toolbarLinear?.isVisible = !isOpen && !isPinHide
+                toolbarLinear?.isVisible = !isOpen && !isPinHide && !isPageSearch
             }
             else -> {
                 val toolbarLinear = cmdIndexFragment.binding.cmdindexToolbarLinearLayout
-                toolbarLinear.isVisible = !isOpen && isPinHide
+                toolbarLinear.isVisible = !isOpen && isPinHide && !isPageSearch
             }
         }
         val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
             activity
         )
         terminalFragment?.binding?.fannelPinRecyclerView?.isVisible =
-            !isOpen && !isPinHide
+            !isOpen && !isPinHide && !isPageSearch
 
-        val isGgleSearchUrl = when(
-                terminalFragment == null
-                || !terminalFragment.isVisible
-            ) {
-            true -> false
-            else -> terminalFragment.binding.terminalWebView.url?.startsWith(
-                WebUrlVariables.queryUrlBase
-            ) == true
-        }
-        if(isGgleSearchUrl) {
-            terminalFragment?.binding?.termGgleFocusImage?.isVisible = isOpen
-            terminalFragment?.binding?.termGgleFocusImageCaption?.isVisible = isOpen
-//            val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
-            terminalFragment?.binding?.termQrScanImage?.isVisible = isOpen
-//            terminalFragment?.binding?.termQrScanImageCaption?.isVisible = isOpen
-//            searchEditText.setSelection(0)
-//            searchEditText.clearFocus()
+        when(isPageSearch) {
+            true -> {
+                if(!isOpen) return
+                pageSearch.cmdPageSearchEditText.requestFocus()
+            }
+            else -> execGgleFocus(
+                terminalFragment,
+                isOpen,
+            )
         }
 //        when(isGgleSearchUrl){
 //            true -> {
@@ -143,6 +143,31 @@ object KeyboardForCmdIndex {
 //            )
 //        )
 //    }
+
+    fun execGgleFocus(
+        terminalFragment: TerminalFragment?,
+        isOpen: Boolean,
+    ){
+        val isGgleSearchUrl = when(
+            terminalFragment == null
+                    || !terminalFragment.isVisible
+        ) {
+            true -> false
+            else -> terminalFragment.binding.terminalWebView.url?.startsWith(
+                WebUrlVariables.queryUrlBase
+            ) == true
+        }
+        if(isGgleSearchUrl) {
+            terminalFragment?.binding?.termGgleFocusImage?.isVisible = isOpen
+            terminalFragment?.binding?.termGgleFocusImageCaption?.isVisible = isOpen
+//            val searchEditText = cmdIndexFragment.binding.cmdSearchEditText
+            terminalFragment?.binding?.termQrScanImage?.isVisible = isOpen
+//            terminalFragment?.binding?.termQrScanImageCaption?.isVisible = isOpen
+//            searchEditText.setSelection(0)
+//            searchEditText.clearFocus()
+        }
+    }
+
 
     private fun setSearchEditText(
         cmdindexSearchLinearLayout: LinearLayoutCompat,

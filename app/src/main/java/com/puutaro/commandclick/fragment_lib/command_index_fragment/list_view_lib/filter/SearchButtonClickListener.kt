@@ -7,6 +7,11 @@ import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object SearchButtonClickListener {
 
@@ -29,19 +34,28 @@ object SearchButtonClickListener {
             val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(
                 activity
             ) ?: return@setOnClickListener
+            val terminalWebView =
+                terminalFragment.binding.terminalWebView
             val isGgleSearchUrl =
-                terminalFragment.binding.terminalWebView.url?.startsWith(
+                terminalWebView.url?.startsWith(
                     WebUrlVariables.queryUrlBase
                 ) == true
             if (isGgleSearchUrl) {
                 execSetGgleFocus(
                     terminalFragment,
                 )
-                terminalFragment.binding.terminalWebView.requestFocus()
-                Keyboard.showKeyboard(
-                    activity,
-                    terminalFragment.binding.terminalWebView,
-                )
+                terminalWebView.requestFocus()
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO){
+                        delay(200)
+                    }
+                    withContext(Dispatchers.Main) {
+                        Keyboard.showKeyboard(
+                            activity,
+                            terminalWebView,
+                        )
+                    }
+                }
                 return@setOnClickListener
             }
             terminalFragment.ggleWebViewManager?.show(

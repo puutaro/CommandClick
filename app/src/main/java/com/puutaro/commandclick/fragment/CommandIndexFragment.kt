@@ -28,6 +28,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -258,6 +259,7 @@ class CommandIndexFragment: Fragment() {
 //        val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
 //            this,
 //        )
+        PageSearchManager.set(this)
         ToolBarHistoryButtonControl.historyButtonClick(this)
 
 //        val toolBarInternetButtonControl = ToolBarInternetButtonControl(
@@ -428,5 +430,9 @@ class CommandIndexFragment: Fragment() {
         fun onPinFannelShow(
             fannelManagerPinImageView: AppCompatImageView? = null
         )
+    }
+
+    interface OnPageSearchSwitchListener {
+        fun onPageSearchSwitch()
     }
 }
