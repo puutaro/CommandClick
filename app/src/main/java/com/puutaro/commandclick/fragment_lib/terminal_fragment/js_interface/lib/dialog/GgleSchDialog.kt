@@ -186,10 +186,15 @@ class GgleSchDialog(
                         }
                     }
                 }
-                Keyboard.showKeyboard(
-                    terminalFragment?.context,
-                    pocketGgleSchWebView
-                )
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO){
+                        delay(100)
+                    }
+                    Keyboard.showKeyboard(
+                        terminalFragment?.context,
+                        pocketGgleSchWebView
+                    )
+                }
                 GglePreFocusJs.loadGglePreFocusJs(
                     terminalFragment?.context,
                     pocketGgleSchWebView,
@@ -208,7 +213,7 @@ class GgleSchDialog(
             val jsScriptUrl = withContext(Dispatchers.IO) {
                 val jsContents = AssetsFileManager.readFromAssets(
                     context,
-                    AssetsFileManager.ggleSchBoxFocus,
+                    AssetsFileManager.firstFocusGleSchPocket,
                 ).split("\n")
                 JavaScriptLoadUrl.makeFromContents(
                     context,
