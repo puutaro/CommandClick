@@ -15,11 +15,8 @@ object ExecOnToolBarVisibleChange {
         commandIndexFragment: CommandIndexFragment,
         toolBarVisible: Boolean
     ){
-//        val layoutParam = LinearLayout.LayoutParams(
-//            ViewGroup.LayoutParams.MATCH_PARENT,
-//            0
-//        )
-//        layoutParam.weight =
+        val isPageSearch = commandIndexFragment.binding.pageSearch.cmdclickPageSearchToolBar.isVisible
+        if(isPageSearch) return
         changeCmdIndex(
             activity,
             commandIndexFragment,

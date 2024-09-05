@@ -57,7 +57,7 @@ object PageSearchManager {
 //        cmdPageSearchEditText.requestFocus()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                delay(100)
+                delay(200)
             }
             withContext(Dispatchers.Main) {
                 Keyboard.showKeyboard(
