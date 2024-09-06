@@ -172,8 +172,6 @@ object UsePath {
     val fannelSettingsDirPath = "${cmdclickDefaultAppDirPath}/\${001}/settings"
 //    val homeFannelsFilePath =
 //        "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
-    val longPressInfoMapPath =
-        "${fannelSettingsDirPath}/longPressInfoMap.txt"
     val settingImagesDirName = "settingImages"
     val fannelSettingImagesDirPath = "${cmdclickDefaultAppDirPath}/\${001}/${settingImagesDirName}"
     private const val fannelLogoDirName = "logo"

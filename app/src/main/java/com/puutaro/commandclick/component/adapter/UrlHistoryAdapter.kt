@@ -232,6 +232,7 @@ class UrlHistoryAdapter(
                 true -> {
                     holder.urlCaptureView.imageTintList = null
                     val requestBuilder: RequestBuilder<Drawable> =
+
                         Glide.with(context)
                             .asDrawable()
                             .sizeMultiplier(0.1f)

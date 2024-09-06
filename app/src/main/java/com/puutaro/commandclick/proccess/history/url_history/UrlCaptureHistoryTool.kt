@@ -76,10 +76,6 @@ object UrlCaptureHistoryTool {
             File(partsPngDirPath, partPngName).absolutePath,
             byteArray,
         )
-        FileSystems.writeFromByteArray(
-            File(UsePath.cmdclickDefaultAppDirPath, "gif.png").absolutePath,
-            byteArray,
-        )
         val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
 //            currentAppDirPath,
             currentUrl,

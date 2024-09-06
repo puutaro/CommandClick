@@ -690,7 +690,7 @@ object PreInstallFannel {
             settingVariableList: List<String>?,
             repValsMap: Map<String, String>?
         ): String {
-            val longPressInfoMapPath = UsePath.longPressInfoMapPath
+            val longPressInfoMapPath = LongPressMenuTool.longPressInfoMapPath
             val longPressInfoMapCon = SetReplaceVariabler.execReplaceByReplaceVariables(
                 ReadText(longPressInfoMapPath).readText(),
                 repValsMap,
@@ -698,7 +698,7 @@ object PreInstallFannel {
             )
             val longPressInfoMap = CmdClickMap.createMap(
                 longPressInfoMapCon,
-                '\n'
+                LongPressMenuTool.longPressInfoMapSeparator
             ).toMap()
             val isDisable = longPressInfoMap.get(
                 LongPressMenuTool.LongPressKey.DISABLE.key
