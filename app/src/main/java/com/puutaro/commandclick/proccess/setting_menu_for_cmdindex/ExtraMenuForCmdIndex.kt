@@ -61,6 +61,8 @@ object ExtraMenuForCmdIndex  {
         R.color.light_ao,
         R.color.ao,
         R.color.white_green,
+//        R.color.wine_red,
+//        R.color.pink,
 //        R.color.yellow,
 
         )
@@ -316,6 +318,9 @@ object ExtraMenuForCmdIndex  {
         colorId: Int,
 
     ){
+        if(
+            bitmapList.isEmpty()
+        ) return
         val animation = AnimationDrawable()
 
         val rndList = (14..20)
