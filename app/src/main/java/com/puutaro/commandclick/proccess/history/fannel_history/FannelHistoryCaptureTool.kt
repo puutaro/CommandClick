@@ -73,7 +73,7 @@ object FannelHistoryCaptureTool {
         exit()
         captureJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                delay(1000)
+                delay(2000)
             }
             val currentDateTime = LocalDateTime.now()
             if(
