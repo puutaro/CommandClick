@@ -881,10 +881,10 @@ object FannelHistoryButtonEvent {
                         UrlFileSystems.getFannelList(context).split("\n")
                     }
                     withContext(Dispatchers.IO) {
-                        UrlFileSystems.createFileByOverride(
+                        PreInstallFannel.DownloadByVersion.download(
                             context,
-                            createFannelName,
-                            fannelList
+                            listOf(createFannelName),
+                            fannelList,
                         )
                     }
                 }

@@ -195,7 +195,7 @@ object PreInstallFannel {
 //                                ) return@withPermit
                         val fannelName = it.first
                         val downloadList = it.second
-                        UrlFileSystems.createFileByOverride(
+                        createFileByOverride(
                             context,
                             fannelName,
                             downloadList
@@ -264,7 +264,7 @@ object PreInstallFannel {
         return fanneNameToDownLoadListList
     }
 
-    private object DownloadByVersion {
+    object DownloadByVersion {
 
         private val preInstallDir = File(UsePath.cmdclickTempSystemDirPath, "preInstall")
         private val preInstallTarGzDir = File(preInstallDir.absolutePath, "tarGz")
@@ -794,6 +794,42 @@ object PreInstallFannel {
                 FannelSettingMap.keySeparator.toString(),
                 " "
             )?.trim() ?: String()
+        }
+    }
+
+    private fun createFileByOverride(
+        context: Context?,
+        fannelName: String,
+        fannelList: List<String>,
+    ){
+
+        fannelList.filter {
+            UrlFileSystems.isFannelListByName(
+                it,
+                fannelName,
+            )
+        }.forEach {
+            val destiFileObj = File("${cmdclickDefaultAppDirPath}/$it")
+            if(
+                destiFileObj.absolutePath.contains(
+                    "/${FannelHistoryPath.makePartPngDirCut()}/"
+                )
+            ) return@forEach
+            val downloadUrl = "${UrlFileSystems.gitUserContentFannelPrefix}/$it"
+            val conByteArray = CurlManager.get(
+                context,
+                downloadUrl,
+                String(),
+                String(),
+                2000,
+            )
+            if(
+                !CurlManager.isConnOk(conByteArray)
+            ) return@forEach
+            FileSystems.writeFromByteArray(
+                destiFileObj.absolutePath,
+                conByteArray
+            )
         }
     }
 }

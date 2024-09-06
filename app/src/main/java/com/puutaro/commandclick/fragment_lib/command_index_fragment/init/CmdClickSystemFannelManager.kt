@@ -52,22 +52,22 @@ object CmdClickSystemFannelManager {
 //        )
 //    }
 
-    suspend fun createPreferenceFannel(
-        context: Context?,
-    ){
-        if(
-            File(UsePath.cmdclickDefaultAppDirPath, SystemFannel.preference).isFile
-        ) return
-        val fannelList = withContext(Dispatchers.IO){
-            UrlFileSystems.getFannelList(context).split("\n")
-        }
-        withContext(Dispatchers.IO){
-            UrlFileSystems.createFileByOverride(
-                context,
-                SystemFannel.preference,
-                fannelList
-            )
-        }
+//    suspend fun createPreferenceFannel(
+//        context: Context?,
+//    ){
+//        if(
+//            File(UsePath.cmdclickDefaultAppDirPath, SystemFannel.preference).isFile
+//        ) return
+//        val fannelList = withContext(Dispatchers.IO){
+//            UrlFileSystems.getFannelList(context).split("\n")
+//        }
+//        withContext(Dispatchers.IO){
+//            UrlFileSystems.createFileByOverride(
+//                context,
+//                SystemFannel.preference,
+//                fannelList
+//            )
+//        }
 
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
@@ -77,7 +77,7 @@ object CmdClickSystemFannelManager {
 ////            currentAppDirPath,
 //            "preference",
 //        )
-    }
+//    }
 
 //    object FannelVersion {
 //        fun create(
