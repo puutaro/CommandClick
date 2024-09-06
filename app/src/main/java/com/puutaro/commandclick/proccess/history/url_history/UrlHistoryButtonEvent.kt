@@ -26,6 +26,7 @@ import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
 import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -68,6 +69,7 @@ object UrlHistoryButtonEvent{
     fun invoke(
         fragment: Fragment,
     ){
+        HistoryCaptureTool.launchCapture(fragment)
         val context = fragment.context
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)

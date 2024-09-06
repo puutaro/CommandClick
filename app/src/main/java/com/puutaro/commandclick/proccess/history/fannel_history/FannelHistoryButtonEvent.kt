@@ -36,6 +36,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.PreInstallFa
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
@@ -72,6 +73,7 @@ object FannelHistoryButtonEvent {
     fun invoke(
        fragment: Fragment
     ) {
+        HistoryCaptureTool.launchCapture(fragment)
         val context = fragment.context
         val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)
         val listLinearWeight = 1F - searchTextLinearWeight

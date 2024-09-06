@@ -8,13 +8,13 @@ import android.view.PixelCopy
 import android.view.View
 import android.view.Window
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,6 +25,11 @@ object FannelHistoryCaptureTool {
 
     private var beforeHash = String()
     private var beforeTime = LocalDateTime.parse("2020-02-15T21:30:50")
+    private var captureJob: Job? = null
+
+    fun exit(){
+        captureJob?.cancel()
+    }
 
 
     fun getCapture(
@@ -65,9 +70,10 @@ object FannelHistoryCaptureTool {
         startUpPref:  FannelInfoTool.FannelInfoSharePref,
         capture: Bitmap
     ){
-        CoroutineScope(Dispatchers.IO).launch {
+        exit()
+        captureJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                delay(2000)
+                delay(1000)
             }
             val currentDateTime = LocalDateTime.now()
             if(
@@ -92,12 +98,12 @@ object FannelHistoryCaptureTool {
 //            val currentAppDirPath = withContext(Dispatchers.IO){
 //                FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
 //            }
+            val homeFannelNull = null
             val currentFannelName = withContext(Dispatchers.IO){
                 FannelInfoTool.getCurrentFannelName(fannelInfoMap).let {
-                    val isEmpty = it.isEmpty()
-                            || it == FannelInfoSetting.current_fannel_name.defalutStr
+                    val isEmpty = FannelInfoTool.isEmptyFannelName(it)
                     when(isEmpty){
-                        true -> null
+                        true -> homeFannelNull
                         else -> it
                     }
                 }
@@ -123,6 +129,7 @@ object FannelHistoryCaptureTool {
             }
             if(
                 !File(captureGifPath).isFile
+                || currentFannelName == homeFannelNull
             ){
                 FileSystems.writeFromByteArray(
                     captureGifPath,

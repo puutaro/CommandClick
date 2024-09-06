@@ -17,6 +17,11 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import java.io.File
 
 object LongPressMenuTool {
@@ -66,59 +71,73 @@ object LongPressMenuTool {
             longPressType: LongPressType,
             linkUrlList: List<String>,
         ): List<Map<LongPressKey, String>> {
-            return longPressScriptList.map { fannelNameOrOriginalLongPressInfoPath ->
-                val isFannelName =
-                    File(
-                        cmdclickDefaultAppDirPath,
-                        fannelNameOrOriginalLongPressInfoPath
-                    ).isFile
-                val curLongPressFannelName = when(isFannelName){
-                    true -> fannelNameOrOriginalLongPressInfoPath
-                    else -> if(
-                        File(fannelNameOrOriginalLongPressInfoPath).isFile
-                    ) CcPathTool.getMainFannelFilePath(fannelNameOrOriginalLongPressInfoPath).let {
-                        File(it).name
-                    } else return@map emptyMap()
-                }
-                val curLongPressFannelPath =
-                    File(cmdclickDefaultAppDirPath, curLongPressFannelName).absolutePath
-                val fannelConList = ReadText(
-                    curLongPressFannelPath
-                ).textToList()
-                val settingVariableListSrc = CommandClickVariables.extractValListFromHolder(
-                    fannelConList,
-                    CommandClickScriptVariable.SETTING_SEC_START,
-                    CommandClickScriptVariable.SETTING_SEC_END,
-                ) ?: emptyList()
-
-                val setReplaceVariables = SetReplaceVariabler.makeSetReplaceVariableMap(
-                    context,
-                    settingVariableListSrc,
-                    curLongPressFannelName
-                )
-
-                val settingVariableList = SetReplaceVariabler.execReplaceByReplaceVariables(
-                    settingVariableListSrc.joinToString("\n"),
-                    setReplaceVariables,
-                    fannelNameOrOriginalLongPressInfoPath
-                ).split("\n")
-                val longPressInfoMap = when (isFannelName) {
-                    true -> {
-                        val longPressInfoMapSrc = ScriptPreWordReplacer.replace(
-                            longPressInfoMapPath,
-                            curLongPressFannelName,
-                        ).let {
-                            val longPressInfoMapCon =
-                                SetReplaceVariabler.execReplaceByReplaceVariables(
-                                    ReadText(it).readText(),
-                                    setReplaceVariables,
-                                    curLongPressFannelName
+            val indexTolongPressInfoMapList: MutableList<Pair<Int, Map<LongPressKey, String>>> =
+                mutableListOf()
+            val semaphore = Semaphore(5)
+            val channel = Channel<Pair<Int, Map<LongPressKey, String>>>(longPressScriptList.size)
+            runBlocking {
+                val jobList =
+                    longPressScriptList.mapIndexed {
+                            index, fannelNameOrOriginalLongPressInfoPath ->
+                            async {
+                                semaphore.withPermit {
+                            val isFannelName =
+                                File(
+                                    cmdclickDefaultAppDirPath,
+                                    fannelNameOrOriginalLongPressInfoPath
+                                ).isFile
+                            val curLongPressFannelName = when (isFannelName) {
+                                true -> fannelNameOrOriginalLongPressInfoPath
+                                else -> if (
+                                    File(fannelNameOrOriginalLongPressInfoPath).isFile
+                                ) CcPathTool.getMainFannelFilePath(
+                                    fannelNameOrOriginalLongPressInfoPath
                                 )
-                            CmdClickMap.createMap(
-                                longPressInfoMapCon,
-                                longPressInfoMapSeparator
-                            ).toMap()
-                        }
+                                    .let {
+                                        File(it).name
+                                    } else return@withPermit
+                            }
+                            val curLongPressFannelPath =
+                                File(cmdclickDefaultAppDirPath, curLongPressFannelName).absolutePath
+                            val fannelConList = ReadText(
+                                curLongPressFannelPath
+                            ).textToList()
+                            val settingVariableListSrc =
+                                CommandClickVariables.extractValListFromHolder(
+                                    fannelConList,
+                                    CommandClickScriptVariable.SETTING_SEC_START,
+                                    CommandClickScriptVariable.SETTING_SEC_END,
+                                ) ?: emptyList()
+
+                            val setReplaceVariables = SetReplaceVariabler.makeSetReplaceVariableMap(
+                                context,
+                                settingVariableListSrc,
+                                curLongPressFannelName
+                            )
+
+                            val settingVariableList =
+                                SetReplaceVariabler.execReplaceByReplaceVariables(
+                                    settingVariableListSrc.joinToString("\n"),
+                                    setReplaceVariables,
+                                    fannelNameOrOriginalLongPressInfoPath
+                                ).split("\n")
+                            val longPressInfoMap = when (isFannelName) {
+                                true -> {
+                                    val longPressInfoMapSrc = ScriptPreWordReplacer.replace(
+                                        longPressInfoMapPath,
+                                        curLongPressFannelName,
+                                    ).let {
+                                        val longPressInfoMapCon =
+                                            SetReplaceVariabler.execReplaceByReplaceVariables(
+                                                ReadText(it).readText(),
+                                                setReplaceVariables,
+                                                curLongPressFannelName
+                                            )
+                                        CmdClickMap.createMap(
+                                            longPressInfoMapCon,
+                                            longPressInfoMapSeparator
+                                        ).toMap()
+                                    }
 //                        FileSystems.updateFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "longpressMapInner.txt").absolutePath,
 //                            listOf(
@@ -136,29 +155,29 @@ object LongPressMenuTool {
 //                                "longPressInfoMapSrc: ${longPressInfoMapSrc}",
 //                            ).joinToString("\n")
 //                        )
-                        execMakeLongPressMap(
-                            longPressInfoMapSrc,
-                            fannelNameOrOriginalLongPressInfoPath,
-                            longPressType,
-                            linkUrlList,
-                            curLongPressFannelName,
-                            settingVariableList,
-                        )
-                    }
+                                    execMakeLongPressMap(
+                                        longPressInfoMapSrc,
+                                        fannelNameOrOriginalLongPressInfoPath,
+                                        longPressType,
+                                        linkUrlList,
+                                        curLongPressFannelName,
+                                        settingVariableList,
+                                    )
+                                }
 
-                    else -> {
-                        val longPressInfoMapSrc = let {
-                            val longPressInfoMapCon =
-                                SetReplaceVariabler.execReplaceByReplaceVariables(
-                                    ReadText(fannelNameOrOriginalLongPressInfoPath).readText(),
-                                    setReplaceVariables,
-                                    curLongPressFannelName
-                                )
-                            CmdClickMap.createMap(
-                                longPressInfoMapCon,
-                                longPressInfoMapSeparator
-                            ).toMap()
-                        }
+                                else -> {
+                                    val longPressInfoMapSrc = let {
+                                        val longPressInfoMapCon =
+                                            SetReplaceVariabler.execReplaceByReplaceVariables(
+                                                ReadText(fannelNameOrOriginalLongPressInfoPath).readText(),
+                                                setReplaceVariables,
+                                                curLongPressFannelName
+                                            )
+                                        CmdClickMap.createMap(
+                                            longPressInfoMapCon,
+                                            longPressInfoMapSeparator
+                                        ).toMap()
+                                    }
 //                        FileSystems.updateFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "longpressMapInnerByInfo.txt").absolutePath,
 //                            listOf(
@@ -176,19 +195,21 @@ object LongPressMenuTool {
 //                                "longPressInfoMapSrc: ${longPressInfoMapSrc}",
 //                            ).joinToString("\n")
 //                        )
-                        if (
-                            longPressInfoMapSrc.get(LongPressKey.JS_PATH.key).isNullOrEmpty()
-                        ) return@map emptyMap()
-                        execMakeLongPressMap(
-                            longPressInfoMapSrc,
-                            fannelNameOrOriginalLongPressInfoPath,
-                            longPressType,
-                            linkUrlList,
-                            curLongPressFannelName,
-                            settingVariableList,
-                        )
-                    }
-                }
+                                    if (
+                                        longPressInfoMapSrc.get(LongPressKey.JS_PATH.key)
+                                            .isNullOrEmpty()
+                                    ) return@withPermit
+                                    execMakeLongPressMap(
+                                        longPressInfoMapSrc,
+                                        fannelNameOrOriginalLongPressInfoPath,
+                                        longPressType,
+                                        linkUrlList,
+                                        curLongPressFannelName,
+                                        settingVariableList,
+                                    )
+                                }
+                            }
+                            channel.send(index to longPressInfoMap)
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "longpressMap.txt").absolutePath,
 //                    listOf(
@@ -201,8 +222,24 @@ object LongPressMenuTool {
 //                        "longPressInfoMap: ${longPressInfoMap}",
 //                    ).joinToString("\n")
 //                )
-                longPressInfoMap
-            }.filter { it.isNotEmpty() }
+//                            longPressInfoMap
+                        }
+//                                    .filter { it.isNotEmpty() }
+                    }
+                }
+                jobList.forEach { it.await() }
+                channel.close()
+                for(indexToLongPressInfoMap in channel){
+                    if(
+                        indexToLongPressInfoMap.second.isEmpty()
+                    ) continue
+                    indexTolongPressInfoMapList.add(indexToLongPressInfoMap)
+                }
+            }
+            indexTolongPressInfoMapList.sortBy { it.first }
+            return indexTolongPressInfoMapList.map {
+                it.second
+            }
         }
 
         private fun execMakeLongPressMap(

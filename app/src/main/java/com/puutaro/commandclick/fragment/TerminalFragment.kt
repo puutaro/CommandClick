@@ -36,6 +36,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -404,6 +405,7 @@ class TerminalFragment: Fragment() {
         FannelHistoryGifCreator.exit()
         GifCreateMonitor.exit()
         ButtonImageCreator.exit()
+        FannelHistoryCaptureTool.exit()
         this.onPageFinishedCoroutineJob?.cancel()
         onScrollPosiSaveJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
@@ -544,5 +546,9 @@ class TerminalFragment: Fragment() {
 
     interface OnPageSearchSwitchListenerForTerm{
         fun onPageSearchSwitchForTerm()
+    }
+
+    interface OnCaptureActivityListenerForTerm {
+        fun onCaptureActivityForTerm()
     }
 }

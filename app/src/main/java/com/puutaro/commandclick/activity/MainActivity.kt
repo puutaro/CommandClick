@@ -112,6 +112,7 @@ class MainActivity:
     TerminalFragment.OnKeyboardHandleListenerForTerm,
     TerminalFragment.OnPinFannelHideListener,
     TerminalFragment.OnPageSearchSwitchListenerForTerm,
+    TerminalFragment.OnCaptureActivityListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -839,6 +840,14 @@ class MainActivity:
     }
 
     override fun onCaptureActivityForEdit() {
+        val startUpPref = FannelInfoTool.getSharePref(this)
+        FannelHistoryCaptureTool.getCapture(
+            startUpPref,
+            activityMainBinding.rootContainer
+        )
+    }
+
+    override fun onCaptureActivityForTerm() {
         val startUpPref = FannelInfoTool.getSharePref(this)
         FannelHistoryCaptureTool.getCapture(
             startUpPref,

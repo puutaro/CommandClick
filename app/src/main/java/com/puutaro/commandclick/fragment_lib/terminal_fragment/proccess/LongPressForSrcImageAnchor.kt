@@ -21,6 +21,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 import java.lang.ref.WeakReference
+import java.time.LocalDateTime
 
 class LongPressForSrcImageAnchor(
     private val terminalFragmentRef: WeakReference<TerminalFragment>,
