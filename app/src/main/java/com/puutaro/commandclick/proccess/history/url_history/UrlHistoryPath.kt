@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.history.url_history
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import java.io.File
 
 
@@ -14,10 +15,11 @@ object UrlHistoryPath {
     fun makePathNameFromUrl(
         url: String
     ): String {
-        return url.replace(
+        val originalUrl = url.trim().removePrefix(WebUrlVariables.queryUrl).replace(
             Regex("[^a-zA-Z0-9_%-]+"),
-            ""
-        ).takeLast(20)
+            String()
+        )
+        return originalUrl.take(15) + originalUrl.takeLast(15)
     }
 
     fun getCapturePngPathsByUrl(

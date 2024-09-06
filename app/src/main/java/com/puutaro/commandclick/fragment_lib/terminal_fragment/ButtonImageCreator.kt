@@ -128,7 +128,7 @@ object ButtonImageCreator {
             if(
                 dirPath.isEmpty()
             ) return@let null
-            FileSystems.sortedFiles(dirPath).firstOrNull()?.let fileList@ {
+            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
                 if(
                     it.isEmpty()
                 ) return@fileList null
