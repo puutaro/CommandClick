@@ -24,6 +24,13 @@ object CcPathTool {
                     rndFileName
         }
     }
+
+    fun toValidPathWord(path: String): String {
+        return path.replace(
+            Regex("[^a-zA-Z0-9_%-]+"),
+            String()
+        )
+    }
     fun makeFannelDirName(
         fannelNameSrc: String
     ): String {

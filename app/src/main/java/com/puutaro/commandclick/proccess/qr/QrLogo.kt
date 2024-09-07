@@ -49,12 +49,12 @@ object QrLogo {
     private val maxQrConLength = 500
 
     fun toBitMapWrapper(
-
-        qrLogoDrawable: Drawable
+        qrLogoDrawable: Drawable,
+        oneSideLength: Int = 1000
     ): Bitmap? {
         return qrLogoDrawable.toBitmapOrNull(
-            1000,
-            1000
+            oneSideLength,
+            oneSideLength
         )
     }
 
