@@ -167,7 +167,9 @@ class JsIntent(
 //                )
 //            }
             val byteArray = BitmapTool.getLowScreenShotFromView(terminalFragment.view)?.let {
-                BitmapTool.convertBitmapToByteArray(it)
+                BitmapTool.convertBitmapToByteArray(
+                    BitmapTool.resizeByMaxHeight(it, 1000.0)
+                )
             } ?: return null
             val captureFile = File(cmdclickTempDownloadDirPath, "${CcPathTool.toValidPathWord(title)}.png")
             FileSystems.writeFromByteArray(
