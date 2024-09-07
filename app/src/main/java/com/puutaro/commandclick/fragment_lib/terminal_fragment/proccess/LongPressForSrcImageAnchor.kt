@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.ListAdapter
 import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -85,14 +86,14 @@ class LongPressForSrcImageAnchor(
         val menuList = LongPressMenuTool.LongPressInfoMapList.extractTitleIconOathList(
             longPressMenuMapList
         )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "longpress.txt").absolutePath,
-            listOf(
-                "longPressScriptList: ${longPressScriptList}",
-                "longPressMenuMapList: ${longPressMenuMapList}",
-                "menuList: ${menuList}",
-            ).joinToString("\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "longpress.txt").absolutePath,
+//            listOf(
+//                "longPressScriptList: ${longPressScriptList}",
+//                "longPressMenuMapList: ${longPressMenuMapList}",
+//                "menuList: ${menuList}",
+//            ).joinToString("\n\n")
+//        )
         if(
             menuList.size == 1
         ){
@@ -201,6 +202,11 @@ class LongPressForSrcImageAnchor(
             longPressSrcImageAnchorDialog = null
             val menuListAdapter = subMenuListView.adapter as HistoryListAdapter
             val title =  menuListAdapter.getItem(pos)
+                ?: return@setOnItemClickListener
+            HistoryListAdapter.saveItemToList(
+                context,
+                title
+            )
             val selectedJsPath = longPressMenuMapList.firstOrNull {
                 it.get(LongPressMenuTool.LongPressKey.TITLE) == title
             }?.get(LongPressMenuTool.LongPressKey.JS_PATH) ?: return@setOnItemClickListener

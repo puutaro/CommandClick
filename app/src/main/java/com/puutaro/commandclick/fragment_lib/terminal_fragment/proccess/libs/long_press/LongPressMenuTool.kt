@@ -26,7 +26,6 @@ import java.io.File
 
 object LongPressMenuTool {
 
-    private val icons8Wheel = R.drawable.icons8_wheel
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
     fun makeExecJsPath(
@@ -328,53 +327,6 @@ object LongPressMenuTool {
                 LongPressKey.ICON_PATH to iconPath,
             )
         }
-    }
-    fun makeMenuList2(
-        longPressScriptList: List<String>,
-    ): List<Pair<String, Int>> {
-        return longPressScriptList.map {
-
-            val menuNameAndPathList = it.split("\t")
-            val fannelName = when(menuNameAndPathList.size){
-                2 -> menuNameAndPathList.first()
-                1 -> File(menuNameAndPathList.first()).name
-                else -> String()
-            }
-            val menuName = when(menuNameAndPathList.size){
-                2 -> menuNameAndPathList.first()
-                1 -> File(menuNameAndPathList.first()).name
-                else -> String()
-            }
-            menuName to icons8Wheel
-        }.filter {
-            it.first.isNotEmpty()
-        }
-    }
-
-    fun extractJsPathFromLongPressMenuList(
-        selectedMenuName: String,
-        longPressScriptList: List<String>,
-    ): String? {
-        return longPressScriptList.map {
-            val menuNameAndPathList = it.split("\t")
-            return@map when(menuNameAndPathList.size){
-                2 -> {
-                    if(
-                        menuNameAndPathList.first() == selectedMenuName
-                    ) menuNameAndPathList.last()
-                    else String()
-                }
-                1 -> {
-                    val jsPathEntry = menuNameAndPathList.first()
-                    if(File(jsPathEntry).name == selectedMenuName
-                    ) jsPathEntry
-                    else String()
-                }
-                else -> String()
-            }
-        }.filter {
-            it.isNotEmpty()
-        }.firstOrNull()
     }
 
     fun extractSettingValList(

@@ -13,12 +13,20 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
 
 class HistoryListAdapter(
     context: Context,
@@ -28,10 +36,45 @@ class HistoryListAdapter(
     R.layout.menu_list_adapter_layout,
     menuMapList.map { it.first }
 ) {
+
+
     private val mInflater =
         context.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE
         ) as LayoutInflater
+
+
+    companion object {
+
+        val listHistoryPath = File(UsePath.fannelSystemDirPath, "listHistory.tsv").absolutePath
+        fun saveItemToList(
+            context: Context?,
+            menuName: String
+        ) {
+            val sharePref = FannelInfoTool.getSharePref(context)
+            CoroutineScope(Dispatchers.IO).launch {
+                val currentFannelName = withContext(Dispatchers.IO) {
+                    FannelInfoTool.getStringFromFannelInfo(
+                        sharePref,
+                        FannelInfoSetting.current_fannel_name
+                    )
+                }
+                val listHistoryPath = withContext(Dispatchers.IO) {
+                    ScriptPreWordReplacer.replace(
+                        listHistoryPath,
+                        currentFannelName,
+                    )
+                }
+                withContext(Dispatchers.IO) {
+                    val insertLine = "${menuName}\t${LocalDateTime.now()}"
+                    TsvTool.insertByLastUpdate(
+                        listHistoryPath,
+                        insertLine
+                    )
+                }
+            }
+        }
+    }
 
     override fun getView(
         position: Int,

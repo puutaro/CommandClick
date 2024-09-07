@@ -170,6 +170,7 @@ object UsePath {
     val ignoreHistoryPathsConfig = "ignoreHistoryPaths.js"
     val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
     val fannelSettingsDirPath = "${cmdclickDefaultAppDirPath}/\${001}/settings"
+    val fannelSystemDirPath = "${cmdclickDefaultAppDirPath}/\${001}/system"
 //    val homeFannelsFilePath =
 //        "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
     val settingImagesDirName = "settingImages"

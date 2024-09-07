@@ -185,6 +185,11 @@ class LongPressForSrcAnchor(
             longPressSrcAnchorDialog = null
             val menuListAdapter = dialogListView.adapter as HistoryListAdapter
             val title =  menuListAdapter.getItem(pos)
+                ?: return@setOnItemClickListener
+            HistoryListAdapter.saveItemToList(
+                context,
+                title
+            )
             val selectedJsPath = longPressMenuMapList.firstOrNull {
                 it.get(LongPressMenuTool.LongPressKey.TITLE) == title
             }?.get(LongPressMenuTool.LongPressKey.JS_PATH) ?: return@setOnItemClickListener
