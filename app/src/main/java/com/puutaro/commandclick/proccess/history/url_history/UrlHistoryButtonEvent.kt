@@ -141,6 +141,7 @@ object UrlHistoryButtonEvent{
         urlHistoryListView.layoutManager?.scrollToPosition(
             urlHistoryDisplayListAdapter.itemCount - 1
         )
+        urlHistoryListView.setHasFixedSize(true)
         SearchEditTextHideShow.monitor(
             fragment,
             urlHistoryListView,

@@ -126,6 +126,7 @@ object FannelHistoryButtonEvent {
         fannelManageListView.layoutManager?.scrollToPosition(
             fannelManageListAdapter.itemCount - 1
         )
+        fannelManageListView.setHasFixedSize(true)
         SearchEditTextHideShow.monitor(
             fragment,
             fannelManageListView,
