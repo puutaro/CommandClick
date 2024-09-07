@@ -16,8 +16,6 @@ import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarBu
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
-import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.tsv.TsvTool

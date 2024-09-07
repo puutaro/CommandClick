@@ -350,29 +350,33 @@ class WebViewJsDialog(
     }
     fun stopWebView(
     ){
-        val isAutoFocusUrl =
-            pocketWebView?.url?.contains(WebUrlVariables.autoFocusGgleSearchUrl) == true
-        firstBottomLinearLayout?.removeAllViews()
-        pocketWebView?.onPause()
-        pocketWebView?.isVisible = false
-        if(!isAutoFocusUrl) {
-            pocketWebView?.webChromeClient = null
-            pocketWebView?.clearHistory()
-            pocketWebView?.clearCache(true)
-            pocketWebView?.removeAllViews()
-            pocketWebView?.destroy()
-            positionHashMap.clear()
-            firstBottomLinearLayout?.isVisible = false
-            webviewDialogLayout?.removeAllViews()
-        }
-        webViewDialogInstance?.dismiss()
-        if(!isAutoFocusUrl) {
-            webViewDialogInstance = null
-            val terminalFragment = terminalFragmentRef.get()
-            noShowKeyBoardForPreloadAutoGgle = true
-            terminalFragment?.pocketWebViewManager = WebViewJsDialog(
-                terminalFragmentRef,
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main) {
+                val isAutoFocusUrl =
+                    pocketWebView?.url?.contains(WebUrlVariables.autoFocusGgleSearchUrl) == true
+                firstBottomLinearLayout?.removeAllViews()
+                pocketWebView?.onPause()
+                pocketWebView?.isVisible = false
+                if (!isAutoFocusUrl) {
+                    pocketWebView?.webChromeClient = null
+                    pocketWebView?.clearHistory()
+                    pocketWebView?.clearCache(true)
+                    pocketWebView?.removeAllViews()
+                    pocketWebView?.destroy()
+                    positionHashMap.clear()
+                    firstBottomLinearLayout?.isVisible = false
+                    webviewDialogLayout?.removeAllViews()
+                }
+                webViewDialogInstance?.dismiss()
+                if (!isAutoFocusUrl) {
+                    webViewDialogInstance = null
+                    val terminalFragment = terminalFragmentRef.get()
+                    noShowKeyBoardForPreloadAutoGgle = true
+                    terminalFragment?.pocketWebViewManager = WebViewJsDialog(
+                        terminalFragmentRef,
+                    )
+                }
+            }
         }
     }
 

@@ -51,7 +51,7 @@
    header{
       position: fixed; 
       top: 0; 
-      left: 0; 
+      left: 0;
       width: 100%;
       margin: 0 auto;
       z-index: 10;
@@ -395,9 +395,14 @@
       };
       document.title = CommandClickSiteTitle;
       document.getElementsByTagName("h1")[0].textContent = CommandClickSiteTitle;
-      var headerHeight = document.getElementById("header").offsetHeight;
       if(!addUrlsSourceFilePath) document.getElementById("form").style.display ="none";
-      document.getElementsByTagName("body")[0].style.marginTop = parseInt(headerHeight) + 10 + "px";
+      setTimeout(
+         function(){
+            var headerHeight = document.getElementById("header").offsetHeight;
+            document.getElementsByTagName("body")[0].style.marginTop = parseInt(headerHeight) + 10 + "px";
+         },
+         200
+      );
       sortableJsWrapper();
       fetchBoookmark();
       bookmarkListClickListner()
@@ -424,10 +429,10 @@
    function launchUrl(thisItem){
       setTimeout(
          function(){
+            jsUrl.loadUrl(latestUrlString);
             if(
                onDialog
             ) jsWebViewDialogManager.dismiss();
-            jsUrl.loadUrl(latestUrlString);
          },
          100
       );
@@ -498,10 +503,10 @@
    };
 
    function onLinkClick(addUrl){
+      jsUrl.loadUrl(addUrl);
       if(
          onDialog
       ) jsWebViewDialogManager.dismiss();
-      jsUrl.loadUrl(addUrl);
    };
 
    function launchExtraMenu(thisItem){
