@@ -166,43 +166,55 @@ class WebViewJsDialog(
                 startWebView()
             }
             val terminalFragment = terminalFragmentRef.get()
-            when (urlStrSrc == GglePreFocusJs.gglePreFocusMacro) {
-                true ->
-                    CoroutineScope(Dispatchers.IO).launch autoFocus@ {
-                        withContext(Dispatchers.IO){
-                            for(i in 1..5){
-                                val isFocus = withContext(Dispatchers.Main) {
-                                    pocketWebView?.requestFocus() == true
-                                }
-                                delay(150)
-                                if(
-                                    isFocus
-                                ) {
-                                    break
-                                }
-                            }
-                        }
-                        GglePreFocusJs.loadGglePreFocusJs(
-                            terminalFragment?.context,
-                            pocketWebView,
-                        )
-                    }
-                else -> {
-                    val urlStr = if(
-                        urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
-                        || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
-                        || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
-                        || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
-                        || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
-                    ) urlStrSrc
-                    else "${WebUrlVariables.queryUrl}${urlStrSrc}"
-                    loadUrlHandler(
-                        terminalFragment,
-                        urlStr,
-                    )
-                }
-
-            }
+//            when (urlStrSrc == GglePreFocusJs.gglePreFocusMacro) {
+//                true ->
+//                    CoroutineScope(Dispatchers.IO).launch autoFocus@ {
+//                        withContext(Dispatchers.IO){
+//                            for(i in 1..5){
+//                                val isFocus = withContext(Dispatchers.Main) {
+//                                    pocketWebView?.requestFocus() == true
+//                                }
+//                                delay(150)
+//                                if(
+//                                    isFocus
+//                                ) {
+//                                    break
+//                                }
+//                            }
+//                        }
+//                        GglePreFocusJs.loadGglePreFocusJs(
+//                            terminalFragment?.context,
+//                            pocketWebView,
+//                        )
+//                    }
+//                else -> {
+//                    val urlStr = if(
+//                        urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
+//                        || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
+//                        || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
+//                        || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
+//                        || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
+//                    ) urlStrSrc
+//                    else "${WebUrlVariables.queryUrl}${urlStrSrc}"
+//                    loadUrlHandler(
+//                        terminalFragment,
+//                        urlStr,
+//                    )
+//                }
+//
+//            }
+            val urlStr = if(
+                urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
+                || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
+                || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
+                || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
+                || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
+            ) urlStrSrc
+            else "${WebUrlVariables.queryUrl}${urlStrSrc}"
+            loadUrlHandler(
+                terminalFragment,
+                urlStr,
+            )
             val menuMapStrList = QuoteTool.splitBySurroundedIgnore(
                 menuMapStrListStr,
                 '|'
@@ -281,50 +293,50 @@ class WebViewJsDialog(
         }
     }
 
-    private object GglePreFocusJs {
-
-//        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
-        val gglePreFocusMacro = "GGLE_SEARCH"
-
-//        suspend fun execPageFinishJs(
+//    private object GglePreFocusJs {
+//
+////        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
+//        val gglePreFocusMacro = "GGLE_SEARCH"
+//
+////        suspend fun execPageFinishJs(
+////            context: Context?,
+////            webView: WebView?,
+////            url: String?
+////        ){
+////            if(
+////                url.isNullOrEmpty()
+////            ) return
+////            if(
+////                url != autoFocusGgleSearchUrl
+////            ) return
+////            withContext(Dispatchers.IO) {
+////                delay(200)
+////            }
+////            loadGglePreFocusJs(
+////                context,
+////                webView,
+////            )
+////        }
+//
+//        suspend fun loadGglePreFocusJs(
 //            context: Context?,
 //            webView: WebView?,
-//            url: String?
 //        ){
-//            if(
-//                url.isNullOrEmpty()
-//            ) return
-//            if(
-//                url != autoFocusGgleSearchUrl
-//            ) return
-//            withContext(Dispatchers.IO) {
-//                delay(200)
+//            val jsScriptUrl = withContext(Dispatchers.IO) {
+//                val jsContents = AssetsFileManager.readFromAssets(
+//                    context,
+//                    AssetsFileManager.ggleSchBoxFocus,
+//                ).split("\n")
+//                JavaScriptLoadUrl.makeFromContents(
+//                    context,
+//                    jsContents
+//                )
+//            } ?: return
+//            withContext(Dispatchers.Main) {
+//                webView?.loadUrl(jsScriptUrl)
 //            }
-//            loadGglePreFocusJs(
-//                context,
-//                webView,
-//            )
 //        }
-
-        suspend fun loadGglePreFocusJs(
-            context: Context?,
-            webView: WebView?,
-        ){
-            val jsScriptUrl = withContext(Dispatchers.IO) {
-                val jsContents = AssetsFileManager.readFromAssets(
-                    context,
-                    AssetsFileManager.ggleSchBoxFocus,
-                ).split("\n")
-                JavaScriptLoadUrl.makeFromContents(
-                    context,
-                    jsContents
-                )
-            } ?: return
-            withContext(Dispatchers.Main) {
-                webView?.loadUrl(jsScriptUrl)
-            }
-        }
-    }
+//    }
 
     private fun startWebView(){
         try {
@@ -643,14 +655,14 @@ class WebViewJsDialog(
                         return true
                     }
                 }
-                val isLoadLocal = webViewDialogExtraMapManager?.loadAtLocal(
-                    context,
-                    requestUrl.toString()
-                ) == true
-                if(isLoadLocal) {
-                    stopWebView()
-                    return true
-                }
+//                val isLoadLocal = webViewDialogExtraMapManager?.loadAtLocal(
+//                    context,
+//                    requestUrl.toString()
+//                ) == true
+//                if(isLoadLocal) {
+//                    stopWebView()
+//                    return true
+//                }
                 positionHashMap.put(
                     "${view?.url}",
                     view?.scrollY ?: 0
