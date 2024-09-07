@@ -10,6 +10,7 @@ object SystemFannel {
     val textToSpeech = "textToSpeech.js"
     val cmdBookmaker = "cmdBookmaker.js"
     val copyLink = "copyLink.js"
+    val shareImage = "shareImage.js"
     val preference = "preference.js"
     val qrLReader = "qrLReader.js"
     val saveGmailConDialog = "saveGmailConDialog.js"
@@ -34,7 +35,8 @@ object SystemFannel {
         saveGmailConDialog,
         savePageUrlDialog,
         saveWebConDialog,
-        urlIntender
+        urlIntender,
+        shareImage,
     )
 
     val allowIntentSystemFannelList = listOf(
