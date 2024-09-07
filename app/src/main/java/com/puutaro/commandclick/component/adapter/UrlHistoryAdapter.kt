@@ -138,14 +138,14 @@ class UrlHistoryAdapter(
                     ReadText(logoBase64TxtPath).readText()
                 }
             }
-            val capturePngPathOrMacro =
+            val captureGifPath =
                      UrlHistoryPath.getCaptureGifPath(
                         urlStr,
                     )
 
             setCaptureImage(
                 holder,
-                capturePngPathOrMacro,
+                captureGifPath,
                 urlStr
             )
             setSiteLogo(
@@ -196,7 +196,7 @@ class UrlHistoryAdapter(
 
     private suspend fun setCaptureImage(
         holder: UrlHistoryViewHolder,
-        capturePngPathOrMacro: String?,
+        captureGifPath: String?,
         url: String,
     ){
         if (
@@ -205,8 +205,8 @@ class UrlHistoryAdapter(
 
         val urlCaptureView = holder.urlCaptureView
         val context = urlCaptureView.context
-        val isFile = !capturePngPathOrMacro.isNullOrEmpty()
-                && File(capturePngPathOrMacro).isFile
+        val isFile = !captureGifPath.isNullOrEmpty()
+                && File(captureGifPath).isFile
         withContext(Dispatchers.Main) {
             when (isFile) {
                 true -> {
@@ -218,7 +218,7 @@ class UrlHistoryAdapter(
                             .sizeMultiplier(0.1f)
                     Glide
                         .with(context)
-                        .load(capturePngPathOrMacro)
+                        .load(captureGifPath)
                         .skipMemoryCache( true )
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .thumbnail( requestBuilder )
