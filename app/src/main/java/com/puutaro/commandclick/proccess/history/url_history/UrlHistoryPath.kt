@@ -19,7 +19,7 @@ object UrlHistoryPath {
         val originalUrl = url.trim().removePrefix(WebUrlVariables.queryUrl).let {
             CcPathTool.toValidPathWord(it)
         }
-        return originalUrl.take(15) + originalUrl.takeLast(15)
+        return originalUrl.take(10) + originalUrl.takeLast(10)
     }
 
     fun getCapturePngPathsByUrl(
@@ -83,18 +83,18 @@ object UrlHistoryPath {
         )
     }
 
-    fun getCaptureGifTextPath(
-//        currentAppDirPath: String,
-        currentUrl: String,
-    ): String {
-        return listOf(
-            makeCaptureHistoryDirPath(),
-            makePathNameFromUrl(currentUrl),
-            "gif.txt"
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
-    }
+//    fun getCaptureGifTextPath(
+////        currentAppDirPath: String,
+//        currentUrl: String,
+//    ): String {
+//        return listOf(
+//            makeCaptureHistoryDirPath(),
+//            makePathNameFromUrl(currentUrl),
+//            "gif.txt"
+//        ).joinToString("/").replace(
+//            Regex("[/]+"), "/"
+//        )
+//    }
 
     fun getCaptureGifPath(
 //        currentAppDirPath: String,

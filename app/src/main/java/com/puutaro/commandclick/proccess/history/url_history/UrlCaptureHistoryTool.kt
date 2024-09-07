@@ -76,14 +76,13 @@ object UrlCaptureHistoryTool {
             File(partsPngDirPath, partPngName).absolutePath,
             byteArray,
         )
-        val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
-//            currentAppDirPath,
-            currentUrl,
-        )
-//        val gifPath = UrlHistoryPath.getCaptureGifPath(
-//            currentAppDirPath,
+//        val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
+////            currentAppDirPath,
 //            currentUrl,
 //        )
+        val gifPath = UrlHistoryPath.getCaptureGifPath(
+            currentUrl,
+        )
         FileSystems.writeFile(
             UrlHistoryPath.makeCaptureHistoryLastModifiedFilePath(
 //                currentAppDirPath,
@@ -91,17 +90,17 @@ object UrlCaptureHistoryTool {
             ),
             String()
         )
-        if(!File(gifTxtPath).isFile){
+        if(!File(gifPath).isFile){
 //            FileSystems.writeFromByteArray(
 //                gifPath,
 //                BitmapTool.convertBitmapToByteArray(smallBitmap)
 //            )
-            BitmapTool.Base64Tool.encode(smallBitmap)?.let {
-                FileSystems.writeFile(
-                    gifTxtPath,
-                    it,
+//            BitmapTool.Base64Tool.encode(smallBitmap)?.let {
+                FileSystems.writeFromByteArray(
+                    gifPath,
+                    BitmapTool.convertBitmapToByteArray(smallBitmap),
                 )
-            }
+//            }
             return
         }
     }

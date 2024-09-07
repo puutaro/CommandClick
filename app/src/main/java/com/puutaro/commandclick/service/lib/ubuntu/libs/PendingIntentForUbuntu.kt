@@ -21,7 +21,7 @@ object PendingIntentForUbuntu {
 //                ),
                 Pair(
                     UbuntuServerIntentExtra.fannelName.schema,
-                    SystemFannel.cmdTerminal
+                    SystemFannel.tapTerminal
                 ),
             )
         )

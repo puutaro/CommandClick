@@ -7,7 +7,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
 object StartFileMaker {
@@ -17,7 +16,7 @@ object StartFileMaker {
     ){
         val context = fragment.context
         val fannelDirName = CcPathTool.makeFannelDirName(
-            SystemFannel.cmdTerminal
+            SystemFannel.tapTerminal
         )
         makeCmdTerminalListFile(
             context,

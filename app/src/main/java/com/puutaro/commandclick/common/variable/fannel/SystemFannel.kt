@@ -1,14 +1,11 @@
 package com.puutaro.commandclick.common.variable.fannel
 
 object SystemFannel {
-    const val cmdTerminal = "cmdTerminal.js"
-//    val jsImportManagerFannelName = "jsImportManager.js"
-//    val appDirManagerFannelName = "appDirManager.js"
-//    val fannelRepoFannelName = "fannelRepo.js"
+    const val tapTerminal = "tapTerminal.js"
     val home = "system.js"
     val webSearcher = "webSearcher.js"
     val textToSpeech = "textToSpeech.js"
-    val cmdBookmaker = "cmdBookmaker.js"
+    val cmdBookmaker = "bookmaker.js"
     val copyLink = "copyLink.js"
     val shareImage = "shareImage.js"
     val preference = "preference.js"
@@ -40,7 +37,7 @@ object SystemFannel {
     )
 
     val allowIntentSystemFannelList = listOf(
-        cmdTerminal,
+        tapTerminal,
 //        fannelRepoFannelName
     )
 }

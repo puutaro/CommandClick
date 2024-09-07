@@ -29,7 +29,6 @@ import java.io.File
 
 class UrlHistoryAdapter(
     private val context: Context?,
-//    private val currentAppDirPath: String,
     var urlHistoryMapList: MutableList<Map<String, String>>,
     private val currentUrl: String?,
 ): RecyclerView.Adapter<UrlHistoryAdapter.UrlHistoryViewHolder>(){
@@ -51,14 +50,7 @@ class UrlHistoryAdapter(
         ){
             TITLE("title"),
             URL("url"),
-            ICON_BASE64_STR("iconBase64Str"),
-            CAPTURE_BASE64_STR("captureBase64Str"),
         }
-
-//        enum class FileType{
-//            BOTTOM_FANNEL,
-//            NORMAL_FANNEL,
-//        }
     }
 
     private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
@@ -125,14 +117,6 @@ class UrlHistoryAdapter(
                     val hitUrlColor = R.color.gold_yellow
                     holder.urlHistoryAdapterConstraintLayout.backgroundTintList =
                         context?.getColorStateList(hitUrlColor)
-//                    holder.urlHistoryAdapterBottomLinearInner.backgroundTintList =
-//                        context?.getColorStateList(hitUrlColor)
-//                    holder.copyImageButtonView.backgroundTintList =
-//                        context?.getColorStateList(hitUrlColor)
-//                    holder.deleteImageButtonView.backgroundTintList =
-//                        context?.getColorStateList(hitUrlColor)
-//                    holder.urlSiteLogoView.backgroundTintList =
-//                        context?.getColorStateList(hitUrlColor)
                 }
             }
             withContext(Dispatchers.Main){
@@ -146,20 +130,16 @@ class UrlHistoryAdapter(
                 )
             }
             val iconBase64Str = withContext(Dispatchers.IO) {
-                urlHistoryMap.get(UrlHistoryMapKey.ICON_BASE64_STR.key)
-                    ?: let {
-                        val logoBase64TxtPath = UrlLogoHistoryTool.getCaptureBase64TxtPathByUrl(
-//                            currentAppDirPath,
-                            urlStr,
-                        )?.absolutePath
-                            ?: return@let null
-                        ReadText(logoBase64TxtPath).readText()
-                    }
+                let {
+                    val logoBase64TxtPath = UrlLogoHistoryTool.getCaptureBase64TxtPathByUrl(
+                        urlStr,
+                    )?.absolutePath
+                        ?: return@let null
+                    ReadText(logoBase64TxtPath).readText()
+                }
             }
             val capturePngPathOrMacro =
-                urlHistoryMap.get(UrlHistoryMapKey.CAPTURE_BASE64_STR.key)
-                    ?: UrlHistoryPath.getCaptureGifPath(
-//                        currentAppDirPath,
+                     UrlHistoryPath.getCaptureGifPath(
                         urlStr,
                     )
 

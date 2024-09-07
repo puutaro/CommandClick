@@ -240,7 +240,7 @@ object GifCreateMonitor {
         ).absolutePath
     }
 
-    fun getCaptureGifPath(
+    private fun getCaptureGifPath(
 //        currentAppDirPath: String,
         urlUniqueDirName: String
     ): String {
@@ -253,17 +253,17 @@ object GifCreateMonitor {
         ).absolutePath
     }
 
-    private fun getCaptureGifTextPath(
-//        currentAppDirPath: String,
-        urlUniqueDirName: String
-    ): String {
-        return File(
-            getCaptureUniqueDirPath(
-//                currentAppDirPath,
-                urlUniqueDirName
-            ),
-        "gif.txt"
-        ).absolutePath
-
-    }
+//    private fun getCaptureGifTextPath(
+////        currentAppDirPath: String,
+//        urlUniqueDirName: String
+//    ): String {
+//        return File(
+//            getCaptureUniqueDirPath(
+////                currentAppDirPath,
+//                urlUniqueDirName
+//            ),
+//        "gif.txt"
+//        ).absolutePath
+//
+//    }
 }
