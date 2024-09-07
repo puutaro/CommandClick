@@ -119,11 +119,10 @@ class JsIntent(
             captureUri?.let {
                 gmailIntent.putExtra(Intent.EXTRA_STREAM, it)
             }
-            ToastUtils.showShort("save")
             context.startActivity(
                 Intent.createChooser(
                     gmailIntent,
-                    "Choose gmail"
+                    "✉ Choose gmail"
                 )
             )
         } catch (e: Exception){

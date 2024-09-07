@@ -39,6 +39,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
@@ -319,15 +320,12 @@ object FannelHistoryButtonEvent {
                         fragment,
                         holder.pinImageView,
                         holder.pinImageCaption
-//                        holder.pinImageView
                     )
-                    else -> pinFannelRA(
+                    else -> pinFannelRemoveOrAdd(
                         fragment.context,
                         fannelName,
                         holder.pinImageView,
                         holder.pinImageCaption,
-//                        pinFrameButtonView,
-//                        holder.pinImageView
                     )
                 }
             }
@@ -380,7 +378,7 @@ object FannelHistoryButtonEvent {
         }
     }
 
-    private fun pinFannelRA(
+    private fun pinFannelRemoveOrAdd(
         context: Context?,
         fannelName: String,
 //        pinFrameButtonView: FrameLayout,
@@ -392,12 +390,12 @@ object FannelHistoryButtonEvent {
             pinFannelList.contains(fannelName)
         ){
             true -> {
-                PinFannelManager.remove(fannelName)
                 ToastUtils.showShort("Remove ok: ${fannelName}")
-                pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
-                pinImageView.isEnabled = true
-                pinImageCaption.alpha = FannelManageAdapter.ordinaryAlpha
-                pinImageCaption.setFillColor(FannelManageAdapter.textFillColor)
+                removePin(
+                    fannelName,
+                    pinImageView,
+                    pinImageCaption,
+                )
 //                pinFrameButtonView.background = AppCompatResources.getDrawable(
 //                    context as Context,
 //                    FannelManageAdapter.buttonOrdinalyColor
@@ -421,6 +419,18 @@ object FannelHistoryButtonEvent {
             }
         }
         PinFannelManager.updateBroadcast(context)
+    }
+
+    private fun removePin(
+        fannelName: String,
+        pinImageView: AppCompatImageView,
+        pinImageCaption: OutlineTextView,
+    ){
+        PinFannelManager.remove(fannelName)
+        pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
+        pinImageView.isEnabled = true
+        pinImageCaption.alpha = FannelManageAdapter.ordinaryAlpha
+        pinImageCaption.setFillColor(FannelManageAdapter.textFillColor)
     }
 
     private fun setFannelManageListViewOnEditItemClickListener(
@@ -697,6 +707,7 @@ object FannelHistoryButtonEvent {
                         direction != ItemTouchHelper.LEFT
                         && direction != ItemTouchHelper.RIGHT
                     ) return
+                    val viewHolder = viewHolder as FannelManageAdapter.FannelManageViewHolder
                     val position = viewHolder.layoutPosition
                     val fannelName = fannelManageAdapter.fannelNameList.getOrNull(position)
                         ?: return
@@ -711,6 +722,8 @@ object FannelHistoryButtonEvent {
                         fannelManageAdapter,
                         position,
                         searchText,
+                        viewHolder.pinImageView,
+                        viewHolder.pinImageCaption
                     )
                 }
 
@@ -746,6 +759,8 @@ object FannelHistoryButtonEvent {
             fannelManageAdapter: FannelManageAdapter,
             position: Int,
             searchText: AppCompatEditText?,
+            pinImageView: AppCompatImageView,
+            pinImageCaption: OutlineTextView
         ){
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
@@ -756,6 +771,8 @@ object FannelHistoryButtonEvent {
                         fannelManageAdapter,
                         position,
                         searchText,
+                        pinImageView,
+                        pinImageCaption
                     )
                 }
             }
@@ -767,6 +784,8 @@ object FannelHistoryButtonEvent {
             fannelManageAdapter: FannelManageAdapter,
             position: Int,
             searchText: AppCompatEditText?,
+            pinImageView: AppCompatImageView,
+            pinImageCaption: OutlineTextView
         ){
             val context = fragment.context
                 ?: return
@@ -826,6 +845,8 @@ object FannelHistoryButtonEvent {
                     fannelManageAdapter,
                     position,
                     searchText,
+                    pinImageView,
+                    pinImageCaption
                 )
             }
             deleteConfirmDialog?.window?.setLayout(
@@ -861,8 +882,9 @@ object FannelHistoryButtonEvent {
             fannelManageAdapter: FannelManageAdapter,
             position: Int,
             searchText: AppCompatEditText?,
+            pinImageView: AppCompatImageView,
+            pinImageCaption: OutlineTextView,
         ) {
-            PinFannelManager.remove(fannelName)
             LongPressMenuTool.removeAll(fannelName)
             deleteFannel(fannelName)
             val isPreInstallFannel =
@@ -889,6 +911,21 @@ object FannelHistoryButtonEvent {
                             listOf(createFannelName),
                             fannelList,
                         )
+                    }
+                }
+            }
+            if(fannelName != SystemFannel.home) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO){
+                        delay(1000)
+                    }
+                    withContext(Dispatchers.Main) {
+                        removePin(
+                            fannelName,
+                            pinImageView,
+                            pinImageCaption,
+                        )
+                        PinFannelManager.updateBroadcast(context)
                     }
                 }
             }
