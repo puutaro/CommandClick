@@ -2,16 +2,13 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.webkit.JavascriptInterface
-import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ServiceUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.MediaPlayerIntentSender
 import com.puutaro.commandclick.service.MusicPlayerService
-import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -40,6 +37,14 @@ class JsMusic(
             fannelRawName,
             listFilePath,
             extraSettingMapStr,
+        )
+    }
+
+    @JavascriptInterface
+    fun isRun(): Boolean {
+        val musicPlayerClassPath = MusicPlayerService::class.java.name
+        return ServiceUtils.isServiceRunning(
+            musicPlayerClassPath
         )
     }
 

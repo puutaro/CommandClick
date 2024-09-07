@@ -147,25 +147,25 @@ class JsIntent(
                 ?: return null
             val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
             FileSystems.removeAndCreateDir(cmdclickTempDownloadDirPath)
-            val gifFile = File(UrlHistoryPath.getCaptureGifPath(url))
-            if(
-                gifFile.isFile
-            ) {
-                val shareGifFile =
-                    File(
-                        cmdclickTempDownloadDirPath,
-                        CcPathTool.toValidPathWord(title) + ".gif"
-                    )
-               FileSystems.copyFile(
-                   gifFile.absolutePath,
-                   shareGifFile.absolutePath
-               )
-                return FileProvider.getUriForFile(
-                    context,
-                    context.applicationContext.packageName + ".provider",
-                    shareGifFile
-                )
-            }
+//            val gifFile = File(UrlHistoryPath.getCaptureGifPath(url))
+//            if(
+//                gifFile.isFile
+//            ) {
+//                val shareGifFile =
+//                    File(
+//                        cmdclickTempDownloadDirPath,
+//                        CcPathTool.toValidPathWord(title) + ".gif"
+//                    )
+//               FileSystems.copyFile(
+//                   gifFile.absolutePath,
+//                   shareGifFile.absolutePath
+//               )
+//                return FileProvider.getUriForFile(
+//                    context,
+//                    context.applicationContext.packageName + ".provider",
+//                    shareGifFile
+//                )
+//            }
             val byteArray = BitmapTool.getLowScreenShotFromView(terminalFragment.view)?.let {
                 BitmapTool.convertBitmapToByteArray(it)
             } ?: return null

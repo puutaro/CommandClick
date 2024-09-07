@@ -23,16 +23,10 @@ class JsToast(
     fun short(
         contents: String,
     ) {
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return
-        val context = terminalFragment.context
-
         CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(
-                context,
+            ToastUtils.showShort(
                 contents,
-                Toast.LENGTH_SHORT
-            ).show()
+            )
         }
     }
 
@@ -52,16 +46,10 @@ class JsToast(
     fun long(
         contents: String,
     ) {
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return
-        val context = terminalFragment.context
-
         CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(
-                context,
+            ToastUtils.showLong(
                 contents,
-                Toast.LENGTH_LONG
-            ).show()
+            )
         }
     }
 }

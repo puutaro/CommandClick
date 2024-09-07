@@ -4,6 +4,8 @@ import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ServiceUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.TextToSpeechIntentSender
@@ -42,11 +44,18 @@ class JsTextToSpeech(
     }
 
     @JavascriptInterface
+    fun isRun(): Boolean {
+        val textToSpeechClassPath = TextToSpeechService::class.java.name
+        return ServiceUtils.isServiceRunning(
+            textToSpeechClassPath
+        )
+    }
+
+    @JavascriptInterface
     fun stopService(){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val context = terminalFragment.context
-
         context?.stopService(
             Intent(terminalFragment.activity, TextToSpeechService::class.java)
         )
