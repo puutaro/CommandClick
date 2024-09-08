@@ -16,10 +16,10 @@ object UrlHistoryPath {
     fun makePathNameFromUrl(
         url: String
     ): String {
-        val originalUrl = url.trim().removePrefix(WebUrlVariables.queryUrl).let {
-            CcPathTool.toValidPathWord(it)
+        val originalUrl = url.trim().let {
+            CcPathTool.toValidPathWord(it.hashCode().toString())
         }
-        return originalUrl.take(10) + originalUrl.takeLast(10)
+        return originalUrl.take(20)
     }
 
     fun getCapturePngPathsByUrl(
