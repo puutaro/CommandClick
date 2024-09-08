@@ -32,7 +32,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
-import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLoadUrlExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -60,7 +59,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -293,9 +291,9 @@ class WebViewJsDialog(
         }
     }
 
-//    private object GglePreFocusJs {
+    private object GgleFocusJs {
 //
-////        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
+        private val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
 //        val gglePreFocusMacro = "GGLE_SEARCH"
 //
 ////        suspend fun execPageFinishJs(
@@ -318,25 +316,35 @@ class WebViewJsDialog(
 ////            )
 ////        }
 //
-//        suspend fun loadGglePreFocusJs(
-//            context: Context?,
-//            webView: WebView?,
-//        ){
-//            val jsScriptUrl = withContext(Dispatchers.IO) {
-//                val jsContents = AssetsFileManager.readFromAssets(
-//                    context,
-//                    AssetsFileManager.ggleSchBoxFocus,
-//                ).split("\n")
-//                JavaScriptLoadUrl.makeFromContents(
-//                    context,
-//                    jsContents
-//                )
-//            } ?: return
-//            withContext(Dispatchers.Main) {
-//                webView?.loadUrl(jsScriptUrl)
-//            }
-//        }
-//    }
+
+        suspend fun load(
+            context: Context?,
+            webView: WebView?,
+            previousUrl: String?,
+        ){
+            val url = webView?.url ?: return
+            if(
+                url != autoFocusGgleSearchUrl
+                || previousUrl?.contains(autoFocusGgleSearchUrl) == true
+            ) {
+                return
+            }
+
+            val jsScriptUrl = withContext(Dispatchers.IO) {
+                val jsContents = AssetsFileManager.readFromAssets(
+                    context,
+                    AssetsFileManager.ggleSchBoxFocus,
+                ).split("\n")
+                JavaScriptLoadUrl.makeFromContents(
+                    context,
+                    jsContents
+                )
+            } ?: return
+            withContext(Dispatchers.Main) {
+                webView.loadUrl(jsScriptUrl)
+            }
+        }
+    }
 
     private fun startWebView(){
         try {
@@ -659,14 +667,6 @@ class WebViewJsDialog(
                         return true
                     }
                 }
-//                val isLoadLocal = webViewDialogExtraMapManager?.loadAtLocal(
-//                    context,
-//                    requestUrl.toString()
-//                ) == true
-//                if(isLoadLocal) {
-//                    stopWebView()
-//                    return true
-//                }
                 positionHashMap.put(
                     "${view?.url}",
                     view?.scrollY ?: 0
@@ -694,18 +694,6 @@ class WebViewJsDialog(
                 return super.shouldInterceptRequest(view, request)
             }
 
-//            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-//                super.onPageStarted(view, url, favicon)
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    if(noShowKeyBoardForPreloadAutoGgle) return@launch
-//                    GglePreFocusJs.execPageFinishJs(
-//                        context,
-//                        view,
-//                        url,
-//                    )
-//                }
-//            }
-
             override fun onPageFinished(
                 webview: WebView?,
                 url: String?
@@ -718,26 +706,25 @@ class WebViewJsDialog(
                         webview?.scrollY = it
                     }
                 }
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "history.txt").absolutePath,
-                    "${webview?.title}\t${url.toString()}",
-                )
                 WrapWebHistoryUpdater.updateForPocketWebview(
                     terminalFragment,
                     webview,
                     url,
                     previousUrl
                 )
+                val prevUrl = previousUrl
+                CoroutineScope(Dispatchers.Main).launch {
+                    GgleFocusJs.load(
+                        context,
+                        webview,
+                        prevUrl
+                    )
+                }
                 if(
                     previousUrl?.length != url?.length
                 ) {
                     previousUrl = url
                 }
-//                urlToFinishJs?.execPageFinishJs(
-//                    context,
-//                    webView,
-//                    url,
-//                )
                 super.onPageFinished(webview, url)
             }
         }
@@ -1373,32 +1360,6 @@ private class WebViewDialogExtraMapManager(
             extraMapCon,
             keySeparator,
         ).toMap()
-    }
-
-    fun loadAtLocal(
-        context: Context?,
-        url: String?
-    ): Boolean {
-        if(
-            url.isNullOrEmpty()
-        ) return false
-        if(
-            WebUrlVariables.isGgleSearchIndexPage(url)
-        ) return false
-        val query = url.removePrefix(
-            WebUrlVariables.queryUrl
-        ).trim()
-        val isNotSearchUrl =
-            query.isEmpty() || query == WebUrlVariables.blankEncodeQuery
-        if(isNotSearchUrl) {
-            return false
-        }
-        BroadCastIntent.sendUrlCon(
-            context,
-            url
-        )
-        return true
-
     }
 
     private fun makeBottomButtonTagList(
