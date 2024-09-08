@@ -56,7 +56,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
-            android:relinquishTaskIdentity="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
