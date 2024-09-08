@@ -254,14 +254,21 @@ object LongPressMenuTool {
             if(
                 disable
             ) return emptyMap()
-            val isTrigger = longPressInfoMapSrc.get(LongPressKey.TRIGGER_WORD.key).let {
+            val isTrigger = longPressInfoMapSrc.get(LongPressKey.TRIGGER_WORDS.key).let {
                 triggerWord ->
                    when(
                        triggerWord.isNullOrEmpty()
                    ) {
                        true -> true
-                       else -> linkUrlList.any {
-                           it.contains(triggerWord)
+                       else -> {
+                           val triggerWordList = triggerWord.split("&")
+                           linkUrlList.any {
+                               url ->
+                               triggerWordList.any {
+                                   triggerWord ->
+                                   url.contains(triggerWord)
+                               }
+                           }
                        }
                    }
             }
@@ -441,7 +448,7 @@ object LongPressMenuTool {
 
     enum class LongPressKey(val key: String){
         TITLE("title"),
-        TRIGGER_WORD("triggerWord"),
+        TRIGGER_WORDS("triggerWords"),
         DISABLE("disable"),
         JS_PATH("jsPath"),
         ICON_PATH("iconPath"),
