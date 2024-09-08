@@ -126,6 +126,11 @@ object InitFragmentManager{
             val isQueryWebSearch =
                 acIntent.action == Intent.ACTION_WEB_SEARCH
                         && !query.isNullOrEmpty()
+            val plainText =
+                acIntent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
+            val isPlainTextWebSearch =
+                acIntent.action == Intent.ACTION_PROCESS_TEXT
+                        && !plainText.isNullOrEmpty()
 //            ToastUtils.showLong(
 //                "${acIntent.extras.toString()}|${acIntent.action}|${acIntent.data}|${acIntent.categories}"
 //            )
