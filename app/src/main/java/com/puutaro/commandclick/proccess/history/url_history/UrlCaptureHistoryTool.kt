@@ -1,24 +1,23 @@
 package com.puutaro.commandclick.proccess.history.url_history
 
 import android.graphics.Bitmap
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import java.io.File
-import java.time.LocalDateTime
 
 
 object UrlCaptureHistoryTool {
 
     const val takeHistoryNum = 200
     var prevSize = 1000
+    private const val baseThresholdDiff = 50_000
+    private const val baseResolutionWidth = 1080
 
     fun insertToHistory(
-//        currentAppDirPath: String,
-        title: String?,
         currentUrl: String?,
         capture: Bitmap?,
+        pxWidth: Int
     ){
 //        val start = LocalDateTime.now()
         if(
@@ -43,7 +42,7 @@ object UrlCaptureHistoryTool {
         val curHash = BitmapTool.hash(capture)
         val curRawSize = BitmapTool.convertBitmapToByteArray(capture).size
 //            val curSize = curRawSize - curRawSize % 10000
-        val saveDiffThreshold = 50_000
+        val saveDiffThreshold = (baseThresholdDiff * pxWidth) / baseResolutionWidth
         if(
             Math.abs(curRawSize - prevSize) < saveDiffThreshold
         ) return
@@ -86,9 +85,9 @@ object UrlCaptureHistoryTool {
 //            currentAppDirPath,
             currentUrl,
         )
-        val isPartsPng = FileSystems.sortedFiles(
-            partsPngDirPath
-        ).isNotEmpty()
+//        val isPartsPng = FileSystems.sortedFiles(
+//            partsPngDirPath
+//        ).isNotEmpty()
         execTrimFiles(partsPngDirPath)
         val partPngName = "${curHash}.png"
 //        CoroutineScope(Dispatchers.Main).launch {
@@ -107,7 +106,6 @@ object UrlCaptureHistoryTool {
         )
         FileSystems.writeFile(
             UrlHistoryPath.makeCaptureHistoryLastModifiedFilePath(
-//                currentAppDirPath,
                 currentUrl,
             ),
             String()

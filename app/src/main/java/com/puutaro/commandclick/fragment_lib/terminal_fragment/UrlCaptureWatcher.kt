@@ -1,12 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.View
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlCaptureHistoryTool
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,6 +41,9 @@ object UrlCaptureWatcher {
                     null
                 }
             } ?: return@launch
+            val pxWidth = withContext(Dispatchers.IO){
+                ScreenSizeCalculator.pxWidth(terminalFragment)
+            }
             val previousUrl = withContext(Dispatchers.Main) {
                 terminalWebView.url
             }
@@ -108,9 +113,8 @@ object UrlCaptureWatcher {
                     }
                     val saveOk = CaptureSaver.save(
                         captureView,
-//                        terminalFragment.currentAppDirPath,
                         url,
-                        title,
+                        pxWidth,
                     )
                     if(
                         !saveOk
@@ -124,44 +128,20 @@ object UrlCaptureWatcher {
 
     private object CaptureSaver {
 
-
         suspend fun save(
             terminalWebViewFrameLayout: View?,
-//            currentAppDirPath: String,
             url: String,
-            title: String?,
+            pxWidth: Int,
         ): Boolean {
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
-//                listOf(
-//                    "start-start ${LocalDateTime.now()}"
-//                ).joinToString("\n")
-//            )
             val capture = withContext(Dispatchers.Main) {
                 BitmapTool.getLowScreenShotFromView(terminalWebViewFrameLayout)
             } ?: let {
-//                withContext(Dispatchers.Main){
-//                    ToastUtils.showShort("exit getLowScreenShotFromView")
-//                }
                 return false
             }
-//            val curRawSize = BitmapTool.convertBitmapToByteArray(capture).size
-////            val curSize = curRawSize - curRawSize % 10000
-//            if(
-//                abs(curRawSize - prevSize) < 50_000
-//            ) return false
-//            prevSize = curRawSize
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
-//                listOf(
-//                    "end ${LocalDateTime.now()}"
-//                ).joinToString("\n")
-//            )
             UrlCaptureHistoryTool.insertToHistory(
-//                currentAppDirPath,
-                title,
                 url,
-                capture
+                capture,
+                pxWidth,
             )
             return true
         }
