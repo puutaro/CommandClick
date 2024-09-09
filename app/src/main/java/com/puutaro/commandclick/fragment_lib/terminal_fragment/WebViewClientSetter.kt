@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.graphics.Bitmap
 import android.webkit.*
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
@@ -36,15 +37,15 @@ object WebViewClientSetter {
                 it
             )
         }
-        var previousUrl: String? = null
 
         binding.terminalWebView.webViewClient = object : WebViewClient() {
+            val allowedRequest = false
+            val notAllowedRequest = true
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
-                val allowedRequest = false
-                val notAllowedRequest = true
+                UrlCaptureWatcher.exit()
 
                 val url = request?.url
                     ?: return notAllowedRequest
@@ -60,7 +61,7 @@ object WebViewClientSetter {
                 }
                 return allowedRequest
             }
-
+            var previousUrl: String? = null
             override fun doUpdateVisitedHistory(webView: WebView?, url: String?, isReload: Boolean) {
                 super.doUpdateVisitedHistory(webView, url, isReload)
                 terminalFragment.currentUrl = url
@@ -111,6 +112,12 @@ object WebViewClientSetter {
                 return super.shouldInterceptRequest(view, request)
             }
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                UrlCaptureWatcher.exit()
+            }
+
+            var previousUrlForPageFinished: String? = null
             override fun onPageFinished(
                 webview: WebView?,
                 url: String?
@@ -150,6 +157,14 @@ object WebViewClientSetter {
                             it,
                         )
                     }
+                }
+                val isMap =  WebUrlVariables.isMapUrl(
+                    previousUrlForPageFinished,
+                    url,
+                )
+                previousUrlForPageFinished = url
+                if(!isMap){
+                    UrlCaptureWatcher.watch(terminalFragment)
                 }
                 val appUrlSystemDirPath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                 terminalFragment.onPageFinishedCoroutineJob = CoroutineScope(Dispatchers.IO).launch {

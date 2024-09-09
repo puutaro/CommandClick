@@ -36,6 +36,16 @@ object WebUrlVariables {
                 && url.contains("google")
                 && !url.contains("search?q=")
     }
+
+    fun isMapUrl(
+        previousUrl: String?,
+        curUrl: String?
+    ): Boolean {
+        return (previousUrl?.length == curUrl?.length
+                && curUrl?.contains("/maps/") == true
+                )
+                && curUrl.contains("google")
+    }
     fun makeUrlHistoryFile(
         dirPath: String,
     ){

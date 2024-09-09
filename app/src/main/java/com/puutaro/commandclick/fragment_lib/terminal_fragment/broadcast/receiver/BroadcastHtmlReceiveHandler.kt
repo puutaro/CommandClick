@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentE
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.UrlCaptureWatcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager.TxtHtmlLauncher
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
@@ -20,6 +21,7 @@ object BroadcastHtmlReceiveHandler {
         terminalFragment: TerminalFragment,
         intent: Intent,
     ){
+        UrlCaptureWatcher.exit()
         val binding = terminalFragment.binding
         val urlStr = intent.getStringExtra(
             BroadCastIntentSchemeTerm.ULR_LAUNCH.scheme

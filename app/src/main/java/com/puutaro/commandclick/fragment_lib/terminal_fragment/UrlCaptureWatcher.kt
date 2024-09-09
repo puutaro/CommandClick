@@ -1,13 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.View
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlCaptureHistoryTool
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +13,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.lang.Math.abs
 import java.time.LocalDateTime
 
@@ -101,15 +98,19 @@ object UrlCaptureWatcher {
                     }
                     prevCaptureTime = curCaptureTime
                     val captureView = withContext(Dispatchers.Main){
-                        terminalFragment.requireView()
+                        terminalFragment.binding.terminalWebViewFrameLayout
                     }
 //                    withContext(Dispatchers.Main){
 //                        ToastUtils.showShort("shot")
 //                    }
+                    val title = withContext(Dispatchers.Main){
+                        terminalWebView.title
+                    }
                     val saveOk = CaptureSaver.save(
                         captureView,
 //                        terminalFragment.currentAppDirPath,
                         url,
+                        title,
                     )
                     if(
                         !saveOk
@@ -123,17 +124,13 @@ object UrlCaptureWatcher {
 
     private object CaptureSaver {
 
+
         suspend fun save(
-            terminalFragmentView: View?,
+            terminalWebViewFrameLayout: View?,
 //            currentAppDirPath: String,
             url: String,
+            title: String?,
         ): Boolean {
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
-//                listOf(
-//                    "start ${LocalDateTime.now()}"
-//                ).joinToString("\n")
-//            )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
 //                listOf(
@@ -141,13 +138,19 @@ object UrlCaptureWatcher {
 //                ).joinToString("\n")
 //            )
             val capture = withContext(Dispatchers.Main) {
-                BitmapTool.getLowScreenShotFromView(terminalFragmentView)
+                BitmapTool.getLowScreenShotFromView(terminalWebViewFrameLayout)
             } ?: let {
 //                withContext(Dispatchers.Main){
 //                    ToastUtils.showShort("exit getLowScreenShotFromView")
 //                }
                 return false
             }
+//            val curRawSize = BitmapTool.convertBitmapToByteArray(capture).size
+////            val curSize = curRawSize - curRawSize % 10000
+//            if(
+//                abs(curRawSize - prevSize) < 50_000
+//            ) return false
+//            prevSize = curRawSize
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "scren.txt").absolutePath,
 //                listOf(
@@ -156,6 +159,7 @@ object UrlCaptureWatcher {
 //            )
             UrlCaptureHistoryTool.insertToHistory(
 //                currentAppDirPath,
+                title,
                 url,
                 capture
             )

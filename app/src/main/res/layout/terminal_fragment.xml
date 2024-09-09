@@ -14,16 +14,22 @@
                 android:orientation="vertical"
                 android:background="@null"
                 >
-                <WebView
-                    android:id="@+id/terminal_web_view"
+                <FrameLayout
+                    android:id="@+id/terminal_web_view_frame_layout"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    >
+                <WebView
+                    android:id="@+id/terminal_web_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scrollbarThumbVertical="@android:color/darker_gray"
                     />
+            </FrameLayout>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fannel_pin_recycler_view"
                     android:layout_width="match_parent"
@@ -139,7 +145,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/progressBar"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/term_url_history_button"
-                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"
+                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view_frame_layout"
                         android:clickable="true"
                         android:focusable="true"
                         android:orientation="vertical"
@@ -184,7 +190,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/progressBar"
                         app:layout_constraintStart_toEndOf="@+id/term_history_button"
                         app:layout_constraintEnd_toStartOf="@+id/term_search_button"
-                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"
+                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view_frame_layout"
                         android:clickable="true"
                         android:focusable="true"
                         android:orientation="vertical"
@@ -229,7 +235,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/progressBar"
                         app:layout_constraintStart_toEndOf="@+id/term_url_history_button"
                         app:layout_constraintEnd_toStartOf="@+id/term_hide_pin_button"
-                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"
+                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view_frame_layout"
                         android:clickable="true"
                         android:focusable="true"
                         android:orientation="vertical"
@@ -274,7 +280,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/progressBar"
                         app:layout_constraintStart_toEndOf="@+id/term_search_button"
                         app:layout_constraintEnd_toStartOf="@+id/term_setting_button"
-                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"
+                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view_frame_layout"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?selectableItemBackground"
@@ -283,23 +289,6 @@
                         android:layout_marginStart="@dimen/toolbar_button_horizon_margin"
                         android:layout_marginEnd="@dimen/toolbar_button_horizon_margin"
                         >
-<!--                    <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                        android:id="@+id/term_hide_pin_button"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="@dimen/toolbar_layout_height"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/progressBar"-->
-<!--                        app:layout_constraintStart_toEndOf="@+id/term_search_button"-->
-<!--                        app:layout_constraintEnd_toStartOf="@+id/term_setting_button"-->
-<!--                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"-->
-<!--                        android:clickable="true"-->
-<!--                        android:focusable="true"-->
-<!--                        android:orientation="vertical"-->
-<!--                        android:background="@null"-->
-<!--                        android:backgroundTint="@null"-->
-<!--                        android:foreground="?selectableItemBackground"-->
-<!--                        app:layout_constraintHorizontal_weight="1"-->
-<!--                        android:layout_weight="0.2"-->
-<!--                        >-->
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/term_hide_pin_button_image"
                             android:layout_width="match_parent"
@@ -332,7 +321,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/progressBar"
                         app:layout_constraintStart_toEndOf="@+id/term_hide_pin_button"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view"
+                        app:layout_constraintBottom_toBottomOf="@+id/terminal_web_view_frame_layout"
                         app:layout_constraintHorizontal_weight="1"
                         android:clickable="true"
                         android:focusable="true"

@@ -34,10 +34,10 @@ object WrapWebHistoryUpdater {
             FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
         ) return
         if(
-            (previousUrl?.length == webViewUrl?.length
-                    && webViewUrl?.contains("/maps/") == true
-                    )
-            && webViewUrl.contains("google")
+            WebUrlVariables.isMapUrl(
+                previousUrl,
+                webViewUrl,
+            )
         ) return
         if(webView == null) return
         if(
@@ -77,7 +77,7 @@ object WrapWebHistoryUpdater {
             if(
                 urlTitleString.isNullOrEmpty()
             ) return@launch
-            UrlCaptureWatcher.watch(terminalFragment)
+//            UrlCaptureWatcher.watch(terminalFragment)
             withContext(Dispatchers.IO) {
                 execUpdate(
                     terminalFragment,
@@ -95,10 +95,10 @@ object WrapWebHistoryUpdater {
         previousUrl: String?
     ){
         if(
-            (previousUrl?.length == webViewUrl?.length
-                    && webViewUrl?.contains("/maps/") == true
-                    )
-            && webViewUrl.contains("google")
+            WebUrlVariables.isMapUrl(
+                previousUrl,
+                webViewUrl
+            )
         ) return
         if(webView == null) return
         if(
