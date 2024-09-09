@@ -88,6 +88,9 @@ object ScrollPosition {
                         "return (document.scrollingElement || document.body).scrollTop;" +
                         "})()",
                 ValueCallback<String?> { scrollY ->
+                    if(
+                        scrollY.isEmpty()
+                    ) return@ValueCallback
                     FileSystems.writeFile(
                         File(
                             scrollPosiSaveDirPath,
@@ -216,7 +219,7 @@ object ScrollPosition {
             if(
                 it.isEmpty()
             ) return@filter false
-            currentUrl.startsWith(it)
+            currentUrl.startsWith("${it}\t")
         }.isNotEmpty()
     }
 }
