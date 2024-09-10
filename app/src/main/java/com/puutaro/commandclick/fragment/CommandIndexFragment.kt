@@ -22,10 +22,8 @@ import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonV
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemFannelManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
@@ -37,7 +35,6 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
-import java.io.File
 
 
 class CommandIndexFragment: Fragment() {
@@ -140,6 +137,7 @@ class CommandIndexFragment: Fragment() {
         PageSearchManager.set(this)
         ToolBarHistoryButtonControl.historyButtonClick(this)
         PinFannelHideShow.setShowListener(this)
+        TextSelectionBarCtrl.setOnClickListener(this)
         PreInstallFannel.install(this)
         ExtraMenuGifCreator.create(this)
     }

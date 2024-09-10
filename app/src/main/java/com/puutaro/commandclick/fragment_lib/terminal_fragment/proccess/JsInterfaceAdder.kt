@@ -72,9 +72,11 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelExecer
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsKeyboard
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSelectionText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsService
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSharePref
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsStateChange
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolBarCtrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolbarSwitcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsUrlHistory
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddGmailCon
@@ -413,6 +415,14 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsToolbarSwitcher(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsToolBarCtrl(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsSelectionText(terminalFragmentRef)
         )
     }
 

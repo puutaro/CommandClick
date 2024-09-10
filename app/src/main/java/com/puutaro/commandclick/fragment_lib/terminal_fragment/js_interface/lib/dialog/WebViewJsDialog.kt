@@ -376,14 +376,14 @@ class WebViewJsDialog(
                     webviewDialogLayout?.removeAllViews()
                 }
                 webViewDialogInstance?.dismiss()
-                if (!isAutoFocusUrl) {
-                    webViewDialogInstance = null
-                    val terminalFragment = terminalFragmentRef.get()
-                    noShowKeyBoardForPreloadAutoGgle = true
-                    terminalFragment?.pocketWebViewManager = WebViewJsDialog(
-                        terminalFragmentRef,
-                    )
-                }
+//                if (!isAutoFocusUrl) {
+                webViewDialogInstance = null
+                val terminalFragment = terminalFragmentRef.get()
+                noShowKeyBoardForPreloadAutoGgle = true
+                terminalFragment?.pocketWebViewManager = WebViewJsDialog(
+                    terminalFragmentRef,
+                )
+//                }
             }
         }
     }

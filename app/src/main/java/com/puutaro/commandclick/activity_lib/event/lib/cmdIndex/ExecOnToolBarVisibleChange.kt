@@ -17,6 +17,8 @@ object ExecOnToolBarVisibleChange {
     ){
         val isPageSearch = commandIndexFragment.binding.pageSearch.cmdclickPageSearchToolBar.isVisible
         if(isPageSearch) return
+        val isTextSelection = commandIndexFragment.binding.cmdindexSelectionSearchButton.isVisible
+        if(isTextSelection) return
         changeCmdIndex(
             activity,
             commandIndexFragment,

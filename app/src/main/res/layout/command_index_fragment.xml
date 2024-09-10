@@ -22,6 +22,45 @@
             layout="@layout/page_search"
             android:id="@+id/page_search"
             />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cmdindex_selection_search_button"
+            android:layout_height="@dimen/toolbar_layout_height"
+            android:layout_width="match_parent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            >
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/cmdindex_selection_search_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/google"
+                android:backgroundTint="@color/white"
+                app:tint="@color/file_dark_green_color"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                android:alpha="0.8"
+                android:layout_weight="1"
+                />
+            <com.puutaro.commandclick.custom_view.OutlineTextView
+                android:id="@+id/cmdindex_selection_search_caption"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="0dp"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Search"
+                />
+        </androidx.cardview.widget.CardView>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/cmdindex_toolbar_linear_layout"
             android:layout_width="match_parent"

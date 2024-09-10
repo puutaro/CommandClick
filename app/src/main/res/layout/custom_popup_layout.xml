@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/myCustomMenuLinearLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:elevation="5dp"
+        android:layout_margin="12dp">
+
+        <TextView
+            android:id="@+id/menuOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mark With Color"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/menuTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mark As Important"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/menuThree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show More"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            android:maxLines="1"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

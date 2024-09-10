@@ -189,9 +189,11 @@ object ButtonImageCreator {
 //            cornerDips,
 //            borderDips,
 //        )
-        val bkBitmapSrc = makeGradientBitmap2(
+        val bkBitmapSrc = BitmapTool.GradientBitmap.makeGradientBitmap2(
             original.width,
             original.height,
+            colorList.random(),
+            colorList.random(),
         )
 //            .let {
 //            BitmapTool.convertBitmapToByteArray(it)
@@ -363,21 +365,7 @@ object ButtonImageCreator {
 //        return outputimage
 //    }
 
-    private val colorList = listOf(
-        "#67ebdb",
-        "#175759",
-        "#1926e3",
-        "#e0094a",
-        "#e8e51a",
-        "#c5f0eb",
-        "#1a9618",
-        "#8cf59f",
-        "#075769",
-        "#2bccf0",
-        "#4332c7",
-        "#e36517",
-        "#573824"
-    )
+    private val colorList = BitmapTool.colorList
 
 //    private val lightColorList = listOf(
 //        "#c7f0d2",

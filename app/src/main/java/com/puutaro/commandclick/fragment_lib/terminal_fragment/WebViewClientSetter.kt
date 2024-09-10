@@ -1,19 +1,23 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.graphics.Bitmap
-import android.webkit.*
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.activityViewModels
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.url.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +43,8 @@ object WebViewClientSetter {
         }
 
         binding.terminalWebView.webViewClient = object : WebViewClient() {
+
+
             val allowedRequest = false
             val notAllowedRequest = true
             override fun shouldOverrideUrlLoading(
@@ -46,7 +52,6 @@ object WebViewClientSetter {
                 request: WebResourceRequest?
             ): Boolean {
                 UrlCaptureWatcher.exit()
-
                 val url = request?.url
                     ?: return notAllowedRequest
 
@@ -115,6 +120,13 @@ object WebViewClientSetter {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 UrlCaptureWatcher.exit()
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.Main) {
+                        val listenerForSelectionBar =
+                            context as TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm
+                        listenerForSelectionBar.onSelectionSearchBarSwitchForTerm(false)
+                    }
+                }
             }
 
             var previousUrlForPageFinished: String? = null
@@ -182,8 +194,6 @@ object WebViewClientSetter {
                     }
                 }
             }
-
-
         }
     }
 }

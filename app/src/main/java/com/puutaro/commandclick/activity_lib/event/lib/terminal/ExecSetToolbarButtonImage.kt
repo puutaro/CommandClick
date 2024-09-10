@@ -1,5 +1,8 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
+import android.graphics.Bitmap
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
@@ -10,17 +13,20 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+
 
 object ExecSetToolbarButtonImage {
 
@@ -91,6 +97,137 @@ object ExecSetToolbarButtonImage {
                     binding.cmdindexShowPinButtonImage,
                     icon
                 )
+            }
+
+            setImageButton(
+                binding.cmdindexSelectionSearchImage,
+                CmdClickIcons.values().random()
+            )
+            SelectionBarButton.setPocketSearch(
+                binding,
+            )
+        }
+    }
+
+
+    object SelectionBarButton {
+
+        fun updatePocketSearchImage(
+            binding: CommandIndexFragmentBinding,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch{
+                withContext(Dispatchers.IO){
+                    setPocketSearch(
+                        binding,
+                    )
+                }
+            }
+        }
+
+        suspend fun setPocketSearch(
+            binding: CommandIndexFragmentBinding,
+        ) {
+            val degreeRndList = listOf(90f, -90f)
+            val originalImagePath = withContext(Dispatchers.IO) {
+                (1..3).map {
+                    makeCapturePartPngDirPathList().shuffled().firstOrNull()?.let { dirPath ->
+                        if (
+                            dirPath.isEmpty()
+                        ) return@let null
+                        FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@{
+                            if (
+                                it.isEmpty()
+                            ) return@fileList String()
+                            File(dirPath, it).absolutePath
+                        }
+                    }?.let {
+                        val bitmap = BitmapTool.convertFileToBitmap(it)
+                            ?: return@let null
+                        val rotateBitmap = BitmapTool.rotate(
+                            bitmap,
+                            degreeRndList.random()
+                        )
+                        val bitmapWidth = rotateBitmap.width
+                        val limitWidth = (bitmapWidth - 100).let remake@ {
+                            if(it > 0) return@remake it
+                            bitmapWidth
+                        }
+                        val limitHeightSrc = 200
+                        val bitmapHeight = rotateBitmap.height
+                        val limitHeight =
+                            if(bitmapHeight - limitHeightSrc > 0) limitHeightSrc
+                            else bitmapHeight
+                        BitmapTool.ImageRemaker.cut(
+                            rotateBitmap,
+                            limitWidth,
+                            limitHeight
+                        )
+                    }
+                }
+            }
+            withContext(Dispatchers.Main) {
+                execSetImageButtonForSelectinBar(
+                    binding.cmdindexSelectionSearchImage,
+                    originalImagePath,
+                )
+            }
+        }
+
+        private fun execSetImageButtonForSelectinBar(
+            imageButton: AppCompatImageView?,
+            bitmapList: List<Bitmap?>
+        ){
+            if(imageButton == null) return
+            val context = imageButton.context
+            val animation = AnimationDrawable()
+
+            val rndList = (14..20)
+            bitmapList.forEach {
+                animation.addFrame(
+                    BitmapDrawable(context.resources, it),
+                    800
+                )
+            }
+            animation.isOneShot = false
+
+            imageButton.imageTintList = null
+//                context.getColorStateList(colorId)
+            imageButton.setImageDrawable(animation)
+            animation.start()
+        }
+
+        private fun execSetCaptionIconTint(
+            imageButton: AppCompatImageView?,
+        ){
+            if(imageButton == null) return
+            val tintBitmapSrc = BitmapTool.GradientBitmap.makeGradientBitmap2(
+                500,
+                500,
+                BitmapTool.colorList.random(),
+                BitmapTool.colorList.random(),
+            )
+            val context = imageButton.context
+            imageButton.setImageDrawable(
+                BitmapDrawable(
+                    context.resources,
+                    tintBitmapSrc
+                )
+            )
+        }
+
+        private fun makeCapturePartPngDirPathList(): List<String> {
+            val lastModifyExtend = UrlHistoryPath.lastModifyExtend
+            val partPngDirName = UrlHistoryPath.partPngDirName
+            val captureDirPath = UrlHistoryPath.makeCaptureHistoryDirPath()
+            return FileSystems.sortedFiles(
+                captureDirPath
+            ).map {
+                val dirName = it.removeSuffix(lastModifyExtend)
+                listOf(
+                    captureDirPath,
+                    dirName,
+                    partPngDirName
+                ).joinToString("/")
             }
         }
     }
@@ -218,7 +355,6 @@ object ExecSetToolbarButtonImage {
             icon.str
         )
     }
-
     fun isImageFile(assetsPath: String?): Boolean {
         if(
             assetsPath.isNullOrEmpty()
@@ -234,16 +370,14 @@ object ExecSetToolbarButtonImage {
         )
     }
 
+
     private suspend fun execSetImageButton(
         imageButton: AppCompatImageView?,
         imagePath: String,
-        iconMacro: String
+        iconMacro: String,
     ){
         if(imageButton == null) return
         val context = imageButton.context
-        withContext(Dispatchers.Main) {
-            imageButton.imageTintList = null
-        }
 //        val bitmap = withContext(Dispatchers.IO) {
 //            BitmapTool.convertFileToBitmap(
 //                File(imagePath).absolutePath
@@ -261,6 +395,9 @@ object ExecSetToolbarButtonImage {
             if(
                 beforeChecksum == checksum
             ) return@withContext
+            withContext(Dispatchers.Main) {
+                imageButton.imageTintList = null
+            }
             imageButton.tag = TagManager.make(
                 iconMacro,
                 checksum

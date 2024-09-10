@@ -55,7 +55,7 @@ import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.KeyboardForCmdIndex
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.ToolbarCtrlForCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.SearchButtonClickListener
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -113,6 +113,7 @@ class MainActivity:
     TerminalFragment.OnPinFannelHideListener,
     TerminalFragment.OnPageSearchSwitchListenerForTerm,
     TerminalFragment.OnCaptureActivityListenerForTerm,
+    TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -394,22 +395,26 @@ class MainActivity:
         toolBarVisible: Boolean,
         bottomFragment: Fragment?
     ) {
-        when(bottomFragment) {
-            is CommandIndexFragment -> {
-                ExecOnToolBarVisibleChange.execOnToolBarVisibleChange(
-                    this,
-                    bottomFragment,
-                    toolBarVisible
-                )
+        CoroutineScope(Dispatchers.Main).launch {
+            when (bottomFragment) {
+                is CommandIndexFragment -> {
+                    ExecOnToolBarVisibleChange.execOnToolBarVisibleChange(
+                        this@MainActivity,
+                        bottomFragment,
+                        toolBarVisible
+                    )
+                }
+
+                is EditFragment -> {
+                    ExecOnToolBarVisibleChangeForEdit.execOnToolBarVisibleChangeForEdit(
+                        this@MainActivity,
+                        bottomFragment,
+                        toolBarVisible
+                    )
+                }
+
+                else -> {}
             }
-            is EditFragment -> {
-                ExecOnToolBarVisibleChangeForEdit.execOnToolBarVisibleChangeForEdit(
-                    this,
-                    bottomFragment,
-                    toolBarVisible
-                )
-            }
-            else ->{}
         }
     }
 
@@ -885,7 +890,7 @@ class MainActivity:
     override fun onKeyboardHandleForCmdIndex(
         isOpen: Boolean
     ) {
-        KeyboardForCmdIndex.historyAndSearchHideShow(
+        ToolbarCtrlForCmdIndex.hideShow(
             this,
             isOpen,
             false,
@@ -893,11 +898,22 @@ class MainActivity:
     }
 
     override fun onKeyboardHandleForTerm(isOpen: Boolean) {
-        KeyboardForCmdIndex.historyAndSearchHideShow(
+        ToolbarCtrlForCmdIndex.hideShow(
             this,
             isOpen,
             true,
         )
+    }
+
+    override fun onSelectionSearchBarSwitchForTerm(
+        isShow: Boolean
+    ) {
+        CoroutineScope(Dispatchers.Main).launch {
+            ToolbarCtrlForCmdIndex.hideShowForTextSelection(
+                this@MainActivity,
+                isShow
+            )
+        }
     }
 
     override fun onPinFannelHide(
@@ -931,4 +947,5 @@ class MainActivity:
             this
         )
     }
- }
+
+}

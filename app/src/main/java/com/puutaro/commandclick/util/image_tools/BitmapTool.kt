@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.util.image_tools
 
 import android.R
+import android.R.attr.height
+import android.R.attr.width
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,9 +12,12 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.drawable.GradientDrawable
 import android.util.Base64
 import android.view.View
+import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -23,6 +28,22 @@ import java.util.Arrays
 
 
 object BitmapTool {
+
+    val colorList = listOf(
+        "#67ebdb",
+        "#175759",
+        "#1926e3",
+        "#e0094a",
+        "#e8e51a",
+        "#c5f0eb",
+        "#1a9618",
+        "#8cf59f",
+        "#075769",
+        "#2bccf0",
+        "#4332c7",
+        "#e36517",
+        "#573824"
+    )
 
     fun hash(
         bitmap: Bitmap
@@ -49,11 +70,48 @@ object BitmapTool {
         )
     }
 
+    fun rotate(
+        bitmapOrg: Bitmap,
+        degrees: Float,
+    ): Bitmap {
+        val matrix = Matrix().apply { postRotate(degrees) }
+        return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.width, bitmapOrg.height, matrix, true)
+    }
+
     fun convertFileToBitmap(path: String): Bitmap? {
         return try {
             BitmapFactory.decodeFile(path)
         } catch (e: Exception){
             null
+        }
+    }
+
+    object GradientBitmap {
+        private val gradientOrientationList = listOf(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            GradientDrawable.Orientation.BOTTOM_TOP,
+            GradientDrawable.Orientation.LEFT_RIGHT,
+            GradientDrawable.Orientation.RIGHT_LEFT,
+            GradientDrawable.Orientation.BL_TR,
+            GradientDrawable.Orientation.TR_BL,
+            GradientDrawable.Orientation.TL_BR,
+            GradientDrawable.Orientation.BR_TL,
+        )
+
+        fun makeGradientBitmap2(
+            width: Int,
+            height: Int,
+            startColor: String,
+            endColor: String,
+        ): Bitmap {
+            val color = intArrayOf(
+                Color.parseColor(startColor),
+                Color.parseColor(endColor),
+            )
+
+            val gradient = GradientDrawable(gradientOrientationList.random(), color)
+            gradient.cornerRadius = 0f
+            return gradient.toBitmap(width, height)
         }
     }
 

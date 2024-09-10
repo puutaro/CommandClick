@@ -19,22 +19,21 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ReadLines
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.GgleSerchSystemMaker
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GgleSchDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
-import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
+import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
@@ -43,10 +42,9 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -54,7 +52,8 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 import java.lang.ref.WeakReference
 
 
-class TerminalFragment: Fragment() {
+class TerminalFragment:
+    Fragment() {
 
 
     private var _binding: TerminalFragmentBinding? = null
@@ -108,6 +107,7 @@ class TerminalFragment: Fragment() {
     var goBackFlag = false
     var pocketWebViewManager: WebViewJsDialog? = null
     var ggleWebViewManager: GgleSchDialog? = null
+    var selectionText = String()
 //    var extraMapBitmapList: List<Bitmap?> = emptyList()
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -546,6 +546,13 @@ class TerminalFragment: Fragment() {
 
     interface OnPageSearchSwitchListenerForTerm{
         fun onPageSearchSwitchForTerm()
+    }
+
+
+    interface OnSelectionSearchBarSwitchListenerForTerm {
+        fun onSelectionSearchBarSwitchForTerm(
+            isShow: Boolean
+        )
     }
 
     interface OnCaptureActivityListenerForTerm {
