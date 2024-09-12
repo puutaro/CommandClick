@@ -12,6 +12,7 @@ object UrlHistoryPath {
     const val lastModifyExtend = ".lastModified"
     const val partPngDirName = "partPng"
     val toolbarUrlImageDirPath = File(UsePath.cmdclickFannelSystemDirPath, "toolbarButtonImage").absolutePath
+    val selectionTextBarImageDirPath = File(UsePath.cmdclickFannelSystemDirPath, "selectionTextBarImage").absolutePath
 
     fun makePathNameFromUrl(
         url: String

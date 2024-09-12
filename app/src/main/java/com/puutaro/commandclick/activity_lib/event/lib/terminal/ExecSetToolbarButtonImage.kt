@@ -1,10 +1,13 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.children
 import com.bumptech.glide.Glide
@@ -17,6 +20,7 @@ import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
@@ -40,7 +44,9 @@ object ExecSetToolbarButtonImage {
         ) ?: return
         when(bottomFragment) {
             is CommandIndexFragment -> {
-                setForCmdIndex(bottomFragment)
+                setForCmdIndex(
+                    bottomFragment
+                )
                 setForTerminalFragment(activity)
             }
             is EditFragment ->
@@ -50,7 +56,9 @@ object ExecSetToolbarButtonImage {
         }
     }
 
-    fun setForCmdIndex(cmdIndexFragment: CommandIndexFragment){
+    fun setForCmdIndex(
+        cmdIndexFragment: CommandIndexFragment
+    ){
         val binding = cmdIndexFragment.binding
         CoroutineScope(Dispatchers.IO).launch {
             cmdClickIconList.firstOrNull {
@@ -99,81 +107,46 @@ object ExecSetToolbarButtonImage {
                 )
             }
 
-            setImageButton(
-                binding.cmdindexSelectionSearchImage,
-                CmdClickIcons.values().random()
-            )
-            SelectionBarButton.setPocketSearch(
-                binding,
-            )
+//            setImageButton(
+//                binding.cmdindexSelectionSearchImage,
+//                CmdClickIcons.values().random()
+//            )
+//            SelectionBarButton.setPocketSearch(
+//                binding,
+//            )
         }
     }
 
 
-    object SelectionBarButton {
 
+    object SelectionBarButton {
         fun updatePocketSearchImage(
             binding: CommandIndexFragmentBinding,
         ) {
             CoroutineScope(Dispatchers.IO).launch{
-                withContext(Dispatchers.IO){
-                    setPocketSearch(
-                        binding,
+                setPocketSearchIconImage(
+                    binding
+                )
+            }
+        }
+
+        private suspend fun setPocketSearchIconImage(
+            binding: CommandIndexFragmentBinding
+        ){
+            val baseIconViewList = listOf(
+                binding.cmdindexSelectionSearchIcon1,
+            )
+            withContext(Dispatchers.Main) {
+                baseIconViewList.forEach {
+                    setIconForSelectionBarActiveGBar(
+                        it,
                     )
                 }
             }
         }
 
-        suspend fun setPocketSearch(
-            binding: CommandIndexFragmentBinding,
-        ) {
-            val degreeRndList = listOf(90f, -90f)
-            val originalImagePath = withContext(Dispatchers.IO) {
-                (1..3).map {
-                    makeCapturePartPngDirPathList().shuffled().firstOrNull()?.let { dirPath ->
-                        if (
-                            dirPath.isEmpty()
-                        ) return@let null
-                        FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@{
-                            if (
-                                it.isEmpty()
-                            ) return@fileList String()
-                            File(dirPath, it).absolutePath
-                        }
-                    }?.let {
-                        val bitmap = BitmapTool.convertFileToBitmap(it)
-                            ?: return@let null
-                        val rotateBitmap = BitmapTool.rotate(
-                            bitmap,
-                            degreeRndList.random()
-                        )
-                        val bitmapWidth = rotateBitmap.width
-                        val limitWidth = (bitmapWidth - 100).let remake@ {
-                            if(it > 0) return@remake it
-                            bitmapWidth
-                        }
-                        val limitHeightSrc = 200
-                        val bitmapHeight = rotateBitmap.height
-                        val limitHeight =
-                            if(bitmapHeight - limitHeightSrc > 0) limitHeightSrc
-                            else bitmapHeight
-                        BitmapTool.ImageRemaker.cut(
-                            rotateBitmap,
-                            limitWidth,
-                            limitHeight
-                        )
-                    }
-                }
-            }
-            withContext(Dispatchers.Main) {
-                execSetImageButtonForSelectinBar(
-                    binding.cmdindexSelectionSearchImage,
-                    originalImagePath,
-                )
-            }
-        }
 
-        private fun execSetImageButtonForSelectinBar(
+        private fun execSetIconForSelectionBarActiveGBar(
             imageButton: AppCompatImageView?,
             bitmapList: List<Bitmap?>
         ){
@@ -181,54 +154,112 @@ object ExecSetToolbarButtonImage {
             val context = imageButton.context
             val animation = AnimationDrawable()
 
-            val rndList = (14..20)
-            bitmapList.forEach {
+            bitmapList.shuffled().forEach {
                 animation.addFrame(
                     BitmapDrawable(context.resources, it),
-                    800
+                    400
                 )
             }
             animation.isOneShot = false
 
             imageButton.imageTintList = null
-//                context.getColorStateList(colorId)
             imageButton.setImageDrawable(animation)
+            imageButton.scaleType = ImageView.ScaleType.FIT_XY
             animation.start()
+            imageButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ff8800"))
         }
 
-        private fun execSetCaptionIconTint(
+        private fun setIconForSelectionBarActiveGBar(
             imageButton: AppCompatImageView?,
-        ){
-            if(imageButton == null) return
-            val tintBitmapSrc = BitmapTool.GradientBitmap.makeGradientBitmap2(
-                500,
-                500,
-                BitmapTool.colorList.random(),
-                BitmapTool.colorList.random(),
-            )
-            val context = imageButton.context
-            imageButton.setImageDrawable(
-                BitmapDrawable(
-                    context.resources,
-                    tintBitmapSrc
+        ) {
+            val rectColor = BitmapTool.ccColorList.random()
+            val isAll = (1..10).random() < 4
+            val rotateRndList = listOf(0f, 180f)
+            val bitmapListSrc = (1..2).map {
+                createGBarActiveBitmap(
+                    isAll,
+                    rectColor,
+                )
+            } +  listOf(
+                createGBarActiveBitmap(
+                    true,
+                    rectColor
                 )
             )
+            val bitmapList = bitmapListSrc.map {
+                if(
+                    it == null
+                ) return@map null
+                BitmapTool.rotate(
+                    it,
+                    rotateRndList.random()
+                )
+            }
+            execSetIconForSelectionBarActiveGBar(
+                imageButton,
+                bitmapList,
+            )
         }
 
-        private fun makeCapturePartPngDirPathList(): List<String> {
-            val lastModifyExtend = UrlHistoryPath.lastModifyExtend
-            val partPngDirName = UrlHistoryPath.partPngDirName
-            val captureDirPath = UrlHistoryPath.makeCaptureHistoryDirPath()
-            return FileSystems.sortedFiles(
-                captureDirPath
-            ).map {
-                val dirName = it.removeSuffix(lastModifyExtend)
-                listOf(
-                    captureDirPath,
-                    dirName,
-                    partPngDirName
-                ).joinToString("/")
+        private fun createGBarActiveBitmap(
+            isAllG: Boolean,
+            rectColor: String,
+        ): Bitmap? {
+            val gBitmap =
+                ButtonImageCreator.getSelectionBarBitmapList().shuffled().firstOrNull()
+                    ?: return null
+            val repeatTime = 5
+            val gRepeatTimes = when(isAllG) {
+                true -> repeatTime //(4..repeatTime).random()
+                else -> (0..repeatTime).random()
             }
+            val rotateAngleList = listOf(-90f, 0f, 90f)
+            var gOutBitmap: Bitmap? = null
+            if(gRepeatTimes > 0) {
+                gOutBitmap = gBitmap
+                (1 until gRepeatTimes).forEach { _ ->
+                    val outBitmapEntry = gOutBitmap
+                        ?: return@forEach
+                    val rotateGBitmap = BitmapTool.rotate(
+                        gBitmap,
+                        rotateAngleList.random()
+                    )
+                    gOutBitmap = BitmapTool.concatByHorizon(
+                        outBitmapEntry,
+                        rotateGBitmap,
+                    )
+                }
+            }
+            val colorRepeatTimes = repeatTime - gRepeatTimes
+            if(
+                colorRepeatTimes == 0
+            ) return gOutBitmap
+            val colorRect = BitmapTool.ImageRemaker.makeRect(
+                rectColor,
+                gBitmap.width,
+                gBitmap.height
+            )
+            var colorOutBitmap: Bitmap? = colorRect
+            (1 until colorRepeatTimes).forEach { _ ->
+                val outBitmapEntry = colorOutBitmap
+                    ?: return@forEach
+                colorOutBitmap = BitmapTool.concatByHorizon(
+                    outBitmapEntry,
+                    colorRect,
+                )
+            }
+            val gOutBitmapResult = gOutBitmap
+                ?: return colorOutBitmap
+            val colorOutBitmapResult = colorOutBitmap
+                ?: return gOutBitmapResult
+//            FileSystems.writeFromByteArray(
+//                "${UsePath.cmdclickDefaultAppDirPath}/button/white_${whiteOutBitmapResult.hashCode()}.png",
+//                BitmapTool.convertBitmapToByteArray(whiteOutBitmapResult)
+//            )
+            return BitmapTool.concatByHorizon(
+                gOutBitmapResult,
+                colorOutBitmapResult,
+            )
         }
     }
 

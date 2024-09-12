@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -21,10 +22,13 @@ object TextSelectionBarCtrl {
     ){
         val binding = cmdIndexFragment.binding
 //        binding.cmdindexSelectionSearchLinearLayout.isVisible = true
+        ExecSetToolbarButtonImage.SelectionBarButton.updatePocketSearchImage(
+            binding
+        )
         binding.cmdindexSelectionSearchCaption.apply {
 //            setFillColor(R.color.file_dark_green_color)
             outlineWidthSrc = 5
-            text = "\uD83D\uDD0D Search"
+//            text = "\uD83D\uDD0D Search"
         }
         val cmdindexSelectionSearchButton = binding.cmdindexSelectionSearchButton
         val context = cmdIndexFragment.context ?: return

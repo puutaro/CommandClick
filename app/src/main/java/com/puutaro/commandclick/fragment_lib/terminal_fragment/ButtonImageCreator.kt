@@ -35,8 +35,9 @@ import java.io.File
 
 object ButtonImageCreator {
 
-    private
-    var buttonImageCreateJob: Job? = null
+    private var buttonImageCreateJob: Job? = null
+
+//    private var selectionBarBitmapList = listOf<Bitmap?>()
 
     fun exit(){
         buttonImageCreateJob?.cancel()
@@ -46,8 +47,6 @@ object ButtonImageCreator {
         terminalFragment: TerminalFragment
     ){
         val context = terminalFragment.context
-        val concurrentLimit = 5
-        val semaphore = Semaphore(concurrentLimit)
         val toolbarUrlImageDirPath = UrlHistoryPath.toolbarUrlImageDirPath
         buttonImageCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -58,10 +57,6 @@ object ButtonImageCreator {
 //                        "start ${LocalDateTime.now()}"
 //                    )
 //                }
-                val capturePartPngDirPathList = withContext(Dispatchers.IO) {
-                    makeCapturePartPngDirPathList()
-                }
-
                 val defaultUrlCapBitmap = withContext(Dispatchers.IO){
                     AssetsFileManager.assetsByteArray(
                         context,
@@ -70,43 +65,25 @@ object ButtonImageCreator {
                         BitmapFactory.decodeByteArray(it, 0, it.size)
                     }
                 }
-                withContext(Dispatchers.IO) {
-                    val jobList = CmdClickIcons.values().map {
-                        it.assetsPath
-                    }.map { assetsPath ->
-                        async {
-                            semaphore.withPermit {
-                                val fileName = File(assetsPath).name
-                                val toolbarButtonImageFile = File(toolbarUrlImageDirPath, fileName)
-
-                                if (
-                                    toolbarButtonImageFile.isFile
-                                ) {
-                                    if (
-                                        (1..4).random() % 4 <= 2
-                                    ) return@async
-                                }
-                                val byteArray = cropImage(
-                                    context,
-                                    assetsPath,
-                                    capturePartPngDirPathList,
-                                    defaultUrlCapBitmap,
-                                ) ?: return@async
-
-                                FileSystems.writeFromByteArray(
-                                    toolbarButtonImageFile.absolutePath,
-                                    byteArray
-                                )
-                            }
-                        }
-                    }
-                    jobList.forEach { it.await() }
+                val assetsPathList = CmdClickIcons.values().map {
+                    it.assetsPath
                 }
+                execCreate(
+                    context,
+                    assetsPathList,
+                    toolbarUrlImageDirPath,
+                    defaultUrlCapBitmap,
+                )
                 withContext(Dispatchers.Main) {
                     val listener = context as? TerminalFragment.OnSetToolbarButtonImageListener
                         ?: return@withContext
                     listener.onSetToolbarButtonImage()
                 }
+                execCreateForSelectionBarButton(
+                    context,
+                    listOf(CmdClickIcons.GOOGLE.assetsPath),
+                    defaultUrlCapBitmap,
+                )
 //                withContext(Dispatchers.IO){
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "image.txt").absolutePath,
@@ -117,24 +94,171 @@ object ButtonImageCreator {
         }
     }
 
+    private suspend fun execCreate(
+        context: Context?,
+        assetsPathList: List<String>,
+        imageDirPath: String,
+        defaultUrlCapBitmap: Bitmap?,
+    ) {
+        val concurrentLimit = 5
+        val semaphore = Semaphore(concurrentLimit)
+        val capturePartPngDirPathList = makeCapturePartPngDirPathList()
+        withContext(Dispatchers.IO) {
+            val jobList = assetsPathList.map { assetsPath ->
+                async {
+                    semaphore.withPermit {
+                        val fileName = File(assetsPath).name
+                        val toolbarButtonImageFile = File(imageDirPath, fileName)
+
+                        if (
+                            toolbarButtonImageFile.isFile
+                        ) {
+                            if (
+                                (1..4).random() % 4 <= 2
+                            ) return@async
+                        }
+                        val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
+                                dirPath ->
+                            if(
+                                dirPath.isEmpty()
+                            ) return@let null
+                            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
+                                if(
+                                    it.isEmpty()
+                                ) return@fileList null
+                                File(dirPath, it).absolutePath
+                            }
+                        }
+                        val byteArray = cropImage(
+                            context,
+                            assetsPath,
+                            originalImagePath,
+                            defaultUrlCapBitmap,
+                            null,
+                            null,
+                        ) ?: return@async
+
+                        FileSystems.writeFromByteArray(
+                            toolbarButtonImageFile.absolutePath,
+                            byteArray
+                        )
+                    }
+                }
+            }
+            jobList.forEach { it.await() }
+        }
+    }
+
+    private suspend fun execCreateForSelectionBarButton(
+        context: Context?,
+        assetsPathList: List<String>,
+        defaultUrlCapBitmap: Bitmap?,
+    ) {
+        val capturePartPngDirPathList = makeCapturePartPngDirPathList()
+        val concurrentLimit = 5
+        val semaphore = Semaphore(concurrentLimit)
+        val imageToAssetsPathList = assetsPathList.map {
+            assetsPath ->
+            (1..5).map {
+                index ->
+               makeSelectionBarImagePathFromAssetsPath(
+                   assetsPath,
+                   index,
+               ) to assetsPath
+            }
+        }.flatten()
+        val ccColorList = BitmapTool.ccGradColorList
+        withContext(Dispatchers.IO) {
+            val jobList = imageToAssetsPathList.map { imageToAssetsPath ->
+                val selectionBarImageFile = imageToAssetsPath.first
+                val assetsPath = imageToAssetsPath.second
+                async {
+                    semaphore.withPermit {
+                        if (
+                            selectionBarImageFile.isFile
+                        ) {
+                            if (
+                                (1..4).random() % 4 <= 2
+                            ) return@async
+                        }
+                        val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
+                                dirPath ->
+                            if(
+                                dirPath.isEmpty()
+                            ) return@let null
+                            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
+                                if(
+                                    it.isEmpty()
+                                ) return@fileList null
+                                File(dirPath, it).absolutePath
+                            }
+                        }
+                        val byteArray = cropImage(
+                            context,
+                            assetsPath,
+                            originalImagePath,
+                            defaultUrlCapBitmap,
+                            ccColorList.random(),
+                            ccColorList.random(),
+                        ) ?: return@async
+                        FileSystems.writeFromByteArray(
+                            selectionBarImageFile.absolutePath,
+                            byteArray
+                        )
+                    }
+                }
+            }
+            jobList.forEach { it.await() }
+        }
+    }
+
+    fun getSelectionBarBitmapList(): List<Bitmap?> {
+        return getSelectionBarImagePathFromAssetsPath(
+            CmdClickIcons.GOOGLE.assetsPath
+        ).map {
+            BitmapTool.convertFileToBitmap(it)
+        }
+    }
+
+    private const val selectionImageFileNumSeparator = "_"
+    private fun makeSelectionBarImagePathFromAssetsPath(
+        assetsPath: String,
+        num: Int,
+    ): File {
+        return File(
+            UrlHistoryPath.selectionTextBarImageDirPath,
+            listOf(
+                num,
+                File(assetsPath).name
+            ).joinToString(selectionImageFileNumSeparator)
+        )
+    }
+
+
+    fun getSelectionBarImagePathFromAssetsPath(
+        assetsPath: String,
+    ): List<String> {
+        val selectionTextBarImageDirPath =
+            UrlHistoryPath.selectionTextBarImageDirPath
+        val fileName = File(assetsPath).name
+        return FileSystems.sortedFiles(
+            selectionTextBarImageDirPath,
+        ).filter {
+            it.endsWith("${selectionImageFileNumSeparator}${fileName}")
+        }.map {
+            File(selectionTextBarImageDirPath, it).absolutePath
+        }
+
+    }
+
     private suspend fun cropImage(
         context: Context?,
         maskAssetsPath: String,
-        captureDirList: List<String>,
+        originalImagePath: String?,
         defaultUrlCapBitmap: Bitmap?,
+        startGradColor: String?,
+        endGradColor: String?
     ): ByteArray? {
-        val originalImagePath = captureDirList.shuffled().firstOrNull()?.let {
-                dirPath ->
-            if(
-                dirPath.isEmpty()
-            ) return@let null
-            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
-                if(
-                    it.isEmpty()
-                ) return@fileList null
-                File(dirPath, it).absolutePath
-            }
-        }
         val original = withContext(Dispatchers.IO) {
             when(originalImagePath.isNullOrEmpty()){
                 true -> defaultUrlCapBitmap
@@ -175,36 +299,19 @@ object ButtonImageCreator {
             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
             val canvas = Canvas(output)
             canvas.drawBitmap(original, 0f, 0f, null)
-//        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = -0x1000000
             canvas.drawBitmap(src, 0f, 0f, paint)
             return@withContext output
         }
         val cornerDips = (2..8).random()
-//        val borderDips = (0..3).random()
-//        val borderFrameBitmap = drawBorderFrame(
-//            context,
-//            original,
-//            lightColorList.random(),
-//            cornerDips,
-//            borderDips,
-//        )
         val bkBitmapSrc = BitmapTool.GradientBitmap.makeGradientBitmap2(
             original.width,
             original.height,
-            colorList.random(),
-            colorList.random(),
+            startGradColor ?: colorList.random(),
+            endGradColor ?: colorList.random(),
         )
-//            .let {
-//            BitmapTool.convertBitmapToByteArray(it)
-//        }
-//        val bkBitmap = overlayBitmap(
-//            borderFrameBitmap,
-//            bkBitmapSrc
-//        ) ?: return null
          val overBitmap = overlayBitmap(
              bkBitmapSrc,
-//             BitmapFactory.decodeByteArray(bkByteArray, 0, bkByteArray.size),
              outBitmap,
         ) ?: return null
         val resultBitmap = getRoundedCornerBitmap(
@@ -212,8 +319,6 @@ object ButtonImageCreator {
             overBitmap,
             cornerDips,
         ) ?: return null
-//        getRoundedBitmap(overBitmap)
-//            ?: return null
         return BitmapTool.convertBitmapToByteArray(resultBitmap)
     }
 
@@ -262,42 +367,6 @@ object ButtonImageCreator {
         return overlayBitmap
     }
 
-//    private fun getRoundedBitmap(bitmap: Bitmap): Bitmap? {
-//        val resultBitmap: Bitmap
-//        val originalWidth = bitmap.width
-//        val originalHeight = bitmap.height
-//        val r: Float
-//        if (originalWidth > originalHeight) {
-//            resultBitmap = Bitmap.createBitmap(
-//                originalHeight, originalHeight,
-//                Bitmap.Config.ARGB_8888
-//            )
-//            r = (originalHeight / 2).toFloat()
-//        } else {
-//            resultBitmap = Bitmap.createBitmap(
-//                originalWidth, originalWidth,
-//                Bitmap.Config.ARGB_8888
-//            )
-//            r = (originalWidth / 2).toFloat()
-//        }
-//        val canvas = Canvas(resultBitmap)
-//        val paint = Paint()
-//        val rect = Rect(
-//            0,
-//            0, originalWidth, originalHeight
-//        )
-//        paint.isAntiAlias = true
-//        canvas.drawARGB(
-//            0, 0,
-//            0, 0
-//        )
-//        val radias = (r * 12) / 10
-//        canvas.drawCircle(r, r, radias, paint)
-//        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-//        canvas.drawBitmap(bitmap, rect, rect, paint)
-//        return resultBitmap
-//    }
-
     private fun getRoundedCornerBitmap(
         context: Context?,
         bitmap: Bitmap,
@@ -328,42 +397,6 @@ object ButtonImageCreator {
         canvas.drawBitmap(bitmap, rect, rect, paint)
         return output
     }
-
-
-//    private fun drawBorderFrame(
-//        context: Context?,
-//        bitmap: Bitmap,
-//        color: String,
-//        cornerDips: Int,
-//        borderDips: Int,
-//    ): Bitmap {
-//        val rectRndList = (1..5)
-//        val rectPlusWidth = rectRndList.random() - rectRndList.random()
-//        val rectPlusHeight = rectRndList.random() - rectRndList.random()
-//        val bWidth = bitmap.width + rectPlusWidth
-//        val bHeight = bitmap.height + rectPlusHeight
-//        val outputimage = Bitmap.createBitmap(
-//            bWidth,
-//            bHeight,
-//            Bitmap.Config.ARGB_8888
-//        )
-//        val cornerSizePx = TypedValue.applyDimension(
-//            TypedValue.COMPLEX_UNIT_DIP, cornerDips.toFloat(),
-//            context?.resources?.displayMetrics
-//        ).toInt()
-//
-//        val rectB = Rect(0, 0, bWidth, bHeight)
-//        val rectBF = RectF(rectB)
-//        val paint = Paint()
-////        val rect = Rect(0, 0, bWidth, bHeight)
-////        val rectF = RectF(rect)
-//        val canvas = Canvas(outputimage)
-//        paint.color = Color.parseColor(color)
-//        paint.style = Paint.Style.STROKE
-//        paint.strokeWidth = borderDips.toFloat()
-//        canvas.drawRoundRect(rectBF, cornerSizePx.toFloat(), cornerSizePx.toFloat(), paint)
-//        return outputimage
-//    }
 
     private val colorList = BitmapTool.colorList
 

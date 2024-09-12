@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.util.image_tools
 
 import android.R
-import android.R.attr.height
-import android.R.attr.width
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,7 +15,6 @@ import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -30,21 +27,55 @@ import java.util.Arrays
 object BitmapTool {
 
     val colorList = listOf(
-        "#67ebdb",
-        "#175759",
-        "#1926e3",
+        "#67ebdb", // light green
+        "#175759", // thick ao
+        "#1926e3", // blue
         "#e0094a",
         "#e8e51a",
-        "#c5f0eb",
-        "#1a9618",
-        "#8cf59f",
-        "#075769",
-        "#2bccf0",
-        "#4332c7",
-        "#e36517",
-        "#573824"
+        "#c5f0eb", // white green
+        "#1a9618", // green
+        "#8cf59f", // yellow green
+        "#075769", // black ao
+        "#2bccf0", // water blue
+        "#4332c7", // purple
+        "#e36517", // orange
+        "#573824"  // brown
     )
 
+    val ccGradColorList = listOf(
+        "#67ebdb", // light green
+        "#c5f0eb", // white green
+        "#8cf59f", // yellow green
+        "#042b13", // dark green
+        "#1a9618", // green
+        "#175759", // thick ao
+        "#1926e3", // blue
+        "#075769", // black ao
+        "#2bccf0", // water blue
+        "#ebf7ff", // white blue
+        "#e6eafc", // white blue purple
+        "#4332c7", // purple
+
+    )
+    val ccColorList = listOf(
+        "#67ebdb", // light green
+        "#c5f0eb", // white green
+        "#8cf59f", // yellow green
+        "#042b13", // dark green
+        "#75eb9e", // android green
+        "#417037", // thick green
+        "#1a9618", // green
+        "#5e704a", // carki
+        "#175759", // thick ao
+        "#1926e3", // blue
+        "#075769", // black ao
+        "#2bccf0", // water blue
+        "#ebf7ff", // white blue
+        "#e6eafc", // white blue purple
+        "#4332c7", // purple
+        "#573824",  // brown
+        "#826e19" // gold yellow
+    )
     fun hash(
         bitmap: Bitmap
     ): String {
@@ -76,6 +107,40 @@ object BitmapTool {
     ): Bitmap {
         val matrix = Matrix().apply { postRotate(degrees) }
         return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.width, bitmapOrg.height, matrix, true)
+    }
+
+    fun concatByHorizon(
+        c: Bitmap,
+        s: Bitmap
+    ): Bitmap? { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+        var cs: Bitmap? = null
+        val width = c.width + s.width
+        val height = when(c.height > s.height) {
+            false -> s.height
+            else -> c.height
+        }
+//        if (c.width > s.width) {
+//            width = c.width + s.width
+//            height = c.height
+//        } else {
+//            width = s.width + s.width
+//            height = c.height
+//        }
+        cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val comboImage = Canvas(cs)
+        comboImage.drawBitmap(c, 0f, 0f, null)
+        comboImage.drawBitmap(s, c.width.toFloat(), 0f, null)
+
+        // this is an extra bit I added, just incase you want to save the new image somewhere and then return the location
+        /*String tmpImg = String.valueOf(System.currentTimeMillis()) + ".png";
+
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(loc + tmpImg);
+      cs.compress(CompressFormat.PNG, 100, os);
+    } catch(IOException e) {
+      Log.e("combineImages", "problem combining images", e);
+    }*/return cs
     }
 
     fun convertFileToBitmap(path: String): Bitmap? {
@@ -240,7 +305,7 @@ object BitmapTool {
         }
 
         fun makeRect(
-            color: String,
+            color: String?,
             width: Int,
             height: Int,
         ): Bitmap {
@@ -250,7 +315,10 @@ object BitmapTool {
             // paint background with the trick
             val rect_paint = Paint()
             rect_paint.style = Paint.Style.FILL
-            rect_paint.color = Color.parseColor(color)
+            rect_paint.color = when(color == null) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(color)
+            }
 //            rect_paint.alpha = 0x80 // optional
 
             canvas.drawRect(0f, 0f, R.attr.width.toFloat(), R.attr.height.toFloat(), rect_paint) // that
