@@ -172,7 +172,7 @@ object ExecSetToolbarButtonImage {
         private fun setIconForSelectionBarActiveGBar(
             imageButton: AppCompatImageView?,
         ) {
-            val rectColor = BitmapTool.ccColorList.random()
+            val rectColor = BitmapTool.rectColorList.random()
             val isAll = (1..10).random() < 4
             val rotateRndList = listOf(0f, 180f)
             val bitmapListSrc = (1..2).map {

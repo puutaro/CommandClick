@@ -50,7 +50,7 @@ object BitmapTool {
         "#175759", // thick ao
         "#1926e3", // blue
         "#075769", // black ao
-        "#2bccf0", // water blue
+        "#0ed5e3", // water blue
         "#ebf7ff", // white blue
         "#4332c7", // purple
         "#061245", // navy
@@ -79,7 +79,7 @@ object BitmapTool {
         "#75eb9e", // android green
         "#417037", // thick green
         "#1a9618", // green
-        "#5e704a", // carki
+//        "#5e704a", // carki
         "#175759", // thick ao
         "#1926e3", // blue
         "#075769", // black ao
@@ -87,8 +87,30 @@ object BitmapTool {
         "#ebf7ff", // white blue
         "#e6eafc", // white blue purple
         "#4332c7", // purple
-        "#573824",  // brown
-        "#826e19" // gold yellow
+        "#21140c",  // brown
+        "#826e19", // gold yellow
+        "#061245", // navy
+    )
+
+    val rectColorList = listOf(
+        "#67ebdb", // light green
+        "#c5f0eb", // white green
+        "#8cf59f", // yellow green
+        "#042b13", // dark green
+        "#75eb9e", // android green
+        "#417037", // thick green
+//        "#5e704a", // carki
+        "#175759", // thick ao
+        "#1926e3", // blue
+        "#075769", // black ao
+        "#2bccf0", // water blue
+        "#ebf7ff", // white blue
+        "#e6eafc", // white blue purple
+        "#4332c7", // purple
+        "#21140c",  // dark brown
+//        "#787614", // gold yellow
+        "#717829", // gold yellow
+        "#061245", // navy
     )
     fun hash(
         bitmap: Bitmap
