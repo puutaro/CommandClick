@@ -168,6 +168,8 @@ object ButtonImageCreator {
             }
         }.flatten()
         val ccColorList = BitmapTool.ccGradColorList
+            //BitmapTool.ccGradColorList //+ BitmapTool.ccDeepColorList
+//        val ccDeepColorList = BitmapTool.ccDeepColorList
         withContext(Dispatchers.IO) {
             val jobList = imageToAssetsPathList.map { imageToAssetsPath ->
                 val selectionBarImageFile = imageToAssetsPath.first

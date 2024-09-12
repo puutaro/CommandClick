@@ -45,7 +45,6 @@ object BitmapTool {
     val ccGradColorList = listOf(
         "#67ebdb", // light green
         "#c5f0eb", // white green
-        "#8cf59f", // yellow green
         "#042b13", // dark green
         "#1a9618", // green
         "#175759", // thick ao
@@ -53,8 +52,23 @@ object BitmapTool {
         "#075769", // black ao
         "#2bccf0", // water blue
         "#ebf7ff", // white blue
-        "#e6eafc", // white blue purple
         "#4332c7", // purple
+        "#061245", // navy
+//        "#17084d", // blue dark purple
+        "#5e704a", // carki
+
+    )
+
+    val ccDeepColorList = listOf(
+        "#042b13", // dark green
+        "#1a9618", // green
+        "#175759", // thick ao
+        "#1926e3", // blue
+        "#075769", // black ao
+        "#4332c7", // purple
+        "#061245", // navy
+        "#17084d", // blue dark purple
+        "#5e704a", // carki
 
     )
     val ccColorList = listOf(
