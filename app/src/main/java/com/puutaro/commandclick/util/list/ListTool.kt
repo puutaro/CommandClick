@@ -12,4 +12,15 @@ object ListTool {
         list[to] = fromEl
         list[from] = toEl
     }
+
+    fun switchMapList(
+        list: MutableList<Map<String, String>>,
+        from: Int,
+        to: Int,
+    ){
+        val fromEl = list[from]
+        val toEl = list[to]
+        list[to] = fromEl
+        list[from] = toEl
+    }
 }

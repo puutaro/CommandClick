@@ -51,7 +51,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
-import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
@@ -164,43 +163,6 @@ class WebViewJsDialog(
                 startWebView()
             }
             val terminalFragment = terminalFragmentRef.get()
-//            when (urlStrSrc == GglePreFocusJs.gglePreFocusMacro) {
-//                true ->
-//                    CoroutineScope(Dispatchers.IO).launch autoFocus@ {
-//                        withContext(Dispatchers.IO){
-//                            for(i in 1..5){
-//                                val isFocus = withContext(Dispatchers.Main) {
-//                                    pocketWebView?.requestFocus() == true
-//                                }
-//                                delay(150)
-//                                if(
-//                                    isFocus
-//                                ) {
-//                                    break
-//                                }
-//                            }
-//                        }
-//                        GglePreFocusJs.loadGglePreFocusJs(
-//                            terminalFragment?.context,
-//                            pocketWebView,
-//                        )
-//                    }
-//                else -> {
-//                    val urlStr = if(
-//                        urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
-//                        || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
-//                        || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
-//                        || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
-//                        || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
-//                    ) urlStrSrc
-//                    else "${WebUrlVariables.queryUrl}${urlStrSrc}"
-//                    loadUrlHandler(
-//                        terminalFragment,
-//                        urlStr,
-//                    )
-//                }
-//
-//            }
             val urlStr = if(
                 urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
                 || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
@@ -247,6 +209,26 @@ class WebViewJsDialog(
             webViewDialogInstance?.show()
         }
     }
+
+//    fun preLoadUrlHandler(
+//        terminalFragment: TerminalFragment?,
+//        urlCon: String,
+//    ){
+//        CoroutineScope(Dispatchers.Main).launch {
+//            withContext(Dispatchers.Main){
+//                ToastUtils.showShort(urlCon)
+//            }
+//            try {
+//                pocketWebView?.onResume()
+//            } catch (e: Exception){
+//                println("")
+//            }
+//            loadUrlHandler(
+//                terminalFragment,
+//                urlCon,
+//            )
+//        }
+//    }
 
     fun loadUrlHandler(
         terminalFragment: TerminalFragment?,

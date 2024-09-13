@@ -48,6 +48,10 @@ enum class BroadCastIntentSchemeTerm(
         "com.puutaro.commandclick.pocket_webview_launch.launch",
         ""
     ),
+//    POCKET_WEBVIEW_PRELOAD_URL(
+//        "com.puutaro.commandclick.pocket_webview_preloadurl.load",
+//        ""
+//    ),
     POCKET_WEBVIEW_LOAD_URL(
         "com.puutaro.commandclick.pocket_webview_loadurl.load",
         ""

@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -127,11 +128,17 @@ object LongPressMenuTool {
                                         curLongPressFannelName,
                                     ).let {
                                         val longPressInfoMapCon =
-                                            SetReplaceVariabler.execReplaceByReplaceVariables(
-                                                ReadText(it).readText(),
+                                            SettingFile.read(
+                                                it,
+                                                curLongPressFannelPath,
                                                 setReplaceVariables,
-                                                curLongPressFannelName
+                                                false,
                                             )
+//                                            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                                                ReadText(it).readText(),
+//                                                setReplaceVariables,
+//                                                curLongPressFannelName
+//                                            )
                                         CmdClickMap.createMap(
                                             longPressInfoMapCon,
                                             longPressInfoMapSeparator
@@ -167,11 +174,17 @@ object LongPressMenuTool {
                                 else -> {
                                     val longPressInfoMapSrc = let {
                                         val longPressInfoMapCon =
-                                            SetReplaceVariabler.execReplaceByReplaceVariables(
-                                                ReadText(fannelNameOrOriginalLongPressInfoPath).readText(),
+                                            SettingFile.read(
+                                                fannelNameOrOriginalLongPressInfoPath,
+                                                curLongPressFannelPath,
                                                 setReplaceVariables,
-                                                curLongPressFannelName
+                                                false,
                                             )
+//                                            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                                                ReadText(fannelNameOrOriginalLongPressInfoPath).readText(),
+//                                                setReplaceVariables,
+//                                                curLongPressFannelName
+//                                            )
                                         CmdClickMap.createMap(
                                             longPressInfoMapCon,
                                             longPressInfoMapSeparator
@@ -459,5 +472,5 @@ object LongPressMenuTool {
     const val longPressDisableOn = "ON"
 
     val longPressInfoMapPath = "${UsePath.fannelSettingsDirPath}/longPressInfoMap.txt"
-    val longPressInfoMapSeparator = '\n'
+    val longPressInfoMapSeparator = ','
 }

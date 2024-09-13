@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewLancher
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object BroadcastHandlerForTerm {
     fun handle(
@@ -80,12 +81,23 @@ object BroadcastHandlerForTerm {
                 terminalFragment,
                 intent.getStringExtra(PocketWebviewLoadUrlExtra.url.schema),
             )
+//            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_PRELOAD_URL
+//            -> PocketWebViewLancher.preLoadUrl(
+//                terminalFragment,
+//                intent.getStringExtra(PocketWebviewPreLoadUrlExtra.url.schema),
+//            )
             BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE
-            -> PinFannelBarManager.update(
-                terminalFragment.context,
-                terminalFragment.tag,
-                terminalFragment.binding.fannelPinRecyclerView
-            )
+            -> {
+                val cmdindexSelectionSearchButton = TargetFragmentInstance.getCmdIndexFragmentFromFrag(
+                    terminalFragment.activity
+                )?.binding?.cmdindexSelectionSearchButton
+                PinFannelBarManager.update(
+                    terminalFragment.context,
+                    terminalFragment.tag,
+                    terminalFragment.binding.fannelPinRecyclerView,
+                    cmdindexSelectionSearchButton,
+                )
+            }
         }
     }
 }

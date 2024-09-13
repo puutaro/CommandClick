@@ -72,6 +72,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelExecer
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsKeyboard
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsPinFannel
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSelectionText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsService
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSharePref
@@ -423,6 +424,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsSelectionText(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsPinFannel(terminalFragmentRef)
         )
     }
 

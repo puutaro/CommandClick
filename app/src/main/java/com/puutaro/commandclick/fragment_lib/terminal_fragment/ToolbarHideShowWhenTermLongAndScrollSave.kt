@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.app.Activity
 import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -46,6 +45,11 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                             v.performClick()
                         }
                         MotionEvent.ACTION_UP -> {
+//                            pocketWebviewPreload(
+//                                context,
+//                                terminalFragment.selectionText,
+//                                bottomFragment
+//                            )
                             execHideShow(
                                 bottomFragment,
                                 hideShowThreshold,
@@ -72,6 +76,29 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
             }
         }
     }
+
+//    private fun pocketWebviewPreload(
+//        context: Context?,
+//        selectText: String,
+//        bottomFragment: Fragment?
+//    ){
+//        if(
+//            selectText.isEmpty()
+//            || bottomFragment !is CommandIndexFragment
+//        ) return
+//        if(
+//            !bottomFragment.binding.cmdindexSelectionSearchButton.isVisible
+//        ) return
+//        val preLoadUrl = "${WebUrlVariables.queryUrl}${selectText}"
+//        BroadcastSender.normalSend(
+//            context,
+//            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_PRELOAD_URL.action,
+//            listOf(
+//                PocketWebviewPreLoadUrlExtra.url.schema to preLoadUrl
+//            )
+//
+//        )
+//    }
 }
 
 

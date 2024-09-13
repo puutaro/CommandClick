@@ -15,13 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URLEncoder
 
 object TextSelectionBarCtrl {
     fun setOnClickListener(
         cmdIndexFragment: CommandIndexFragment,
     ){
         val binding = cmdIndexFragment.binding
-//        binding.cmdindexSelectionSearchLinearLayout.isVisible = true
         ExecSetToolbarButtonImage.SelectionBarButton.updatePocketSearchImage(
             binding
         )
@@ -39,7 +39,10 @@ object TextSelectionBarCtrl {
                 ) ?: return@launch
                 withContext(Dispatchers.IO) {
                     val selectionText = terminalFragment.selectionText
-                    val queryUrl = "${WebUrlVariables.queryUrl}${selectionText}"
+                    if(
+                        selectionText.isEmpty()
+                    ) return@withContext
+                    val queryUrl = "${WebUrlVariables.queryUrl}${URLEncoder.encode(selectionText, "utf-8")}"
                     BroadcastSender.normalSend(
                         context,
                         BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LAUNCH.action,

@@ -72,6 +72,5 @@ class JsToolBarCtrl(
         val context = terminalFragment.context ?: return
         val listener = context as TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm
         listener.onSelectionSearchBarSwitchForTerm(isShow)
-
     }
 }

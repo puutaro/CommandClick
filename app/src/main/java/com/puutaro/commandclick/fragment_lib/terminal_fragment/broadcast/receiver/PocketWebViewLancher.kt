@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
@@ -13,13 +14,12 @@ object PocketWebViewLancher {
     fun launch(
         terminalFragment: TerminalFragment,
         url: String?,
-//        isHistorySave: Boolean
     ){
         if (
             url.isNullOrEmpty()
         ) return
         terminalFragment.onRegisterPocketWebViewUrl?.cancel()
-        terminalFragment.onRegisterPocketWebViewUrl = CoroutineScope(Dispatchers.Main).launch {
+        terminalFragment.onRegisterPocketWebViewUrl = CoroutineScope(Dispatchers.Main).launch pocketLaunch@ {
             val webSearcherName = SystemFannel.webSearcher
             val systemExecRepTextList = listOf(url)
             val isStop = withContext(Dispatchers.IO){
@@ -32,38 +32,30 @@ object PocketWebViewLancher {
                 }
                 true
             }
-            if(isStop) return@launch
+            if(isStop) return@pocketLaunch
             withContext(Dispatchers.Main){
                 ExecJsLoad.execExternalJs(
                     terminalFragment,
-//                        terminalFragment.currentAppDirPath,
                     webSearcherName,
                     systemExecRepTextList
                 )
             }
-
-//            when(
-//                terminalFragment.pocketWebViewManager?.pocketWebView?.isVisible == true
-//            ) {
-//                false -> {
-//                    val webSearcherName = SystemFannel.webSearcher
-//                    val systemExecRepTextList = listOf(url)
-//
-//                    ExecJsLoad.execExternalJs(
-//                        terminalFragment,
-////                        terminalFragment.currentAppDirPath,
-//                        webSearcherName,
-//                        systemExecRepTextList
-//                    )
-//                }
-//                else ->
-//                    terminalFragment.pocketWebViewManager?.loadUrlHandler(
-//                        terminalFragment,
-//                        url,
-//                    )
-//            }
         }
     }
+
+//    fun preLoadUrl(
+//        terminalFragment: TerminalFragment,
+//        url: String?,
+//    ){
+//        if(
+//            url.isNullOrEmpty()
+//            || terminalFragment.pocketWebViewManager == null
+//        ) return
+//        terminalFragment.pocketWebViewManager?.preLoadUrlHandler(
+//            terminalFragment,
+//            url,
+//        )
+//    }
 
     fun loadUrl(
         terminalFragment: TerminalFragment,

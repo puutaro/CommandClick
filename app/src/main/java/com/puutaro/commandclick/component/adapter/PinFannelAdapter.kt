@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -24,8 +26,8 @@ import kotlinx.coroutines.withContext
 
 class PinFannelAdapter(
     private val context: Context?,
-    var pinFannelList: MutableList<String>,
-    var fannelSettingInfoMap: Map<String, Map<String, String>>
+    var pinFannelInfoMapList: MutableList<Map<String, String>>,
+    var fannelSettingInfoMap: Map<String, Map<String, String>>,
 ): RecyclerView.Adapter<PinFannelAdapter.PinFannelViewHolder>() {
 
     private val switchOn = FannelSettingMap.switchOn
@@ -39,7 +41,7 @@ class PinFannelAdapter(
         val fannelPinAdapterNameView = view.findViewById<OutlineTextView>(R.id.fannel_pin_adapter_name)
     }
 
-    override fun getItemCount(): Int = pinFannelList.size
+    override fun getItemCount(): Int = pinFannelInfoMapList.size
 
     override fun getItemId(position: Int): Long {
         //return super.getItemId(position)
@@ -74,7 +76,9 @@ class PinFannelAdapter(
         position: Int
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val fannelName = pinFannelList[position]
+            val fannelName = pinFannelInfoMapList[position].get(
+                PinFannelManager.PinFannelKey.FANNEL_NAME.key
+            ) ?: return@launch
             val fannelNameSettingMap = fannelSettingInfoMap.get(
                fannelName
             )

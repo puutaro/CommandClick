@@ -345,7 +345,6 @@ object ExecSetToolbarButtonImage {
                 )
             }
         }
-
     }
 
     fun setForEditFragment(

@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,9 +21,11 @@ import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.FactFannel
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.list.ListTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FannelSettingMap
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,7 +51,9 @@ object PinFannelBarManager {
                 pinFannelRecyclerView.isVisible = false
             }
             else -> {
-                val fannelSettingInfoMap = PinFannelManager.get().map {
+                val fannelSettingInfoMap = ReadText(
+                    FannelSettingMap.fannelSettingMapTsvPath
+                ).textToList().map {
                         fannelAdapterInfoLine ->
                     val fanneNameAndMapCon = fannelAdapterInfoLine.split("\t")
                     val fannelName = fanneNameAndMapCon.firstOrNull() ?: String()
@@ -58,7 +63,12 @@ object PinFannelBarManager {
                         FannelSettingMap.keySeparator
                     ).toMap()
                 }.toMap()
-                val pinFannelList = PinFannelManager.get()
+                val cmdindexSelectionSearchButton =
+                    TargetFragmentInstance.getCmdIndexFragmentFromFrag(
+                        terminalFragment.activity
+                    )?.binding?.cmdindexSelectionSearchButton
+                val pinFannelList =
+                    PinFannelManager.extractPinFannelMapList(cmdindexSelectionSearchButton)
                 val pinFannelAdapter = PinFannelAdapter(
                     context,
                     pinFannelList.toMutableList(),
@@ -96,6 +106,7 @@ object PinFannelBarManager {
         context: Context?,
         tag: String?,
         fannelPinRecyclerView: RecyclerView,
+        cmdindexSelectionSearchButton: CardView?,
     ){
         if(
             tag == context?.getString(R.string.edit_terminal_fragment)
@@ -103,14 +114,14 @@ object PinFannelBarManager {
         val pinFannelAdapter =
             fannelPinRecyclerView.adapter as? PinFannelAdapter
                 ?: return
-        val pinList = PinFannelManager.get()
+        val pinList = PinFannelManager.extractPinFannelMapList(cmdindexSelectionSearchButton)
         val fannelSettingMap = FannelSettingMap.create()
         if(
-            pinFannelAdapter.pinFannelList == pinList
+            pinFannelAdapter.pinFannelInfoMapList == pinList
             && pinFannelAdapter.fannelSettingInfoMap == fannelSettingMap
         ) return
-        pinFannelAdapter.pinFannelList.clear()
-        pinFannelAdapter.pinFannelList.addAll(pinList)
+        pinFannelAdapter.pinFannelInfoMapList.clear()
+        pinFannelAdapter.pinFannelInfoMapList.addAll(pinList)
         pinFannelAdapter.fannelSettingInfoMap = fannelSettingMap
         pinFannelAdapter.notifyDataSetChanged()
     }
@@ -122,8 +133,9 @@ object PinFannelBarManager {
         pinFannelListAdapter.itemClickListener = object: PinFannelAdapter.OnItemClickListener {
             override fun onItemClick(holder: PinFannelAdapter.PinFannelViewHolder) {
                 val position = holder.bindingAdapterPosition
-                val fannelName = pinFannelListAdapter.pinFannelList.getOrNull(position)
-                    ?: return
+                val fannelName = pinFannelListAdapter.pinFannelInfoMapList.getOrNull(position)?.get(
+                    PinFannelManager.PinFannelKey.FANNEL_NAME.key
+                ) ?: return
                 if(
                     !FactFannel.isFactFannel(fannelName)
                 ){
@@ -165,13 +177,13 @@ object PinFannelBarManager {
                     val from = fromViewHolder.bindingAdapterPosition
                     val to = toViewHolder.bindingAdapterPosition
                     adapter.notifyItemMoved(from, to)
-                    ListTool.switchList(
-                        pinFannelAdapter.pinFannelList,
+                    ListTool.switchMapList(
+                        pinFannelAdapter.pinFannelInfoMapList,
                         from,
                         to,
                     )
                     PinFannelManager.save(
-                        pinFannelAdapter.pinFannelList
+                        pinFannelAdapter.pinFannelInfoMapList
                     )
                     return true
                 }
@@ -186,9 +198,9 @@ object PinFannelBarManager {
                     val listIndexViewHolder =
                         viewHolder as PinFannelAdapter.PinFannelViewHolder
                     val fannelName =
-                        pinFannelAdapter.pinFannelList.getOrNull(
+                        pinFannelAdapter.pinFannelInfoMapList.getOrNull(
                             listIndexViewHolder.bindingAdapterPosition
-                        ) ?: return
+                        )?.get(PinFannelManager.PinFannelKey.FANNEL_NAME.key) ?: return
                     CoroutineScope(Dispatchers.Main).launch {
                         DeleteConfirmDialog.launch(
                             terminalFragment,
@@ -335,10 +347,10 @@ object PinFannelBarManager {
             pinFannelAdapter: PinFannelAdapter,
             position: Int,
         ) {
-            pinFannelAdapter.pinFannelList.removeAt(position)
+            pinFannelAdapter.pinFannelInfoMapList.removeAt(position)
             pinFannelAdapter.notifyItemRemoved(position)
             PinFannelManager.save(
-                pinFannelAdapter.pinFannelList
+                pinFannelAdapter.pinFannelInfoMapList
 
             )
         }

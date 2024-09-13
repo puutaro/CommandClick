@@ -42,7 +42,7 @@ class FannelManageAdapter(
     ): RecyclerView.Adapter<FannelManageAdapter.FannelManageViewHolder>(){
 
     private val fannelSettingInfoMap = FannelSettingMap.create()
-    private val pinFannelList = PinFannelManager.get()
+    private val pinFannelInfoMapList = PinFannelManager.extractPinFannelMapList(null)
     private val homeFannel = SystemFannel.home
     private val switchOn = FannelSettingMap.switchOn
     private val pinButtonImageByteArray = BitmapTool.convertFileToByteArray(
@@ -261,8 +261,12 @@ class FannelManageAdapter(
                     return@withContext
                 }
 
+                val pinFannelNameKey = PinFannelManager.PinFannelKey.FANNEL_NAME.key
                 if(
-                    !pinFannelList.contains(fannelName)
+                    !pinFannelInfoMapList.any {
+                        map ->
+                        map.get(pinFannelNameKey) == fannelName
+                    }
                 ) {
                     holder.pinImageView.alpha = ordinaryAlpha
                     holder.pinImageView.isEnabled = true

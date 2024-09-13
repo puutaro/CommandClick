@@ -3,7 +3,9 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.WebUrlVariables
@@ -73,6 +75,10 @@ object ToolbarCtrlForCmdIndex {
             isPageSearch
         ) return
         binding.cmdindexSelectionSearchButton.isVisible = isShow
+        BroadcastSender.normalSend(
+            activity,
+            BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE.action,
+        )
         if(isShow) {
             ExecSetToolbarButtonImage.SelectionBarButton.updatePocketSearchImage(
                 binding,
@@ -96,8 +102,8 @@ object ToolbarCtrlForCmdIndex {
         if(!isShow) {
             terminalFragment.selectionText = String()
         }
-        terminalFragment.binding.fannelPinRecyclerView.isVisible =
-            !isShow && !isPinHide
+        terminalFragment.binding.fannelPinRecyclerView.isVisible = !isPinHide
+//            !isShow && !isPinHide
     }
 
 

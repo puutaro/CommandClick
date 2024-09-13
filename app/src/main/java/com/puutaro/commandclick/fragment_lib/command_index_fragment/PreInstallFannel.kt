@@ -161,7 +161,7 @@ object PreInstallFannel {
                     FileSystems.removeAndCreateDir(cmdclickUpdateFannelInfoSystemDirPath)
                 }
                 withContext(Dispatchers.IO){
-                    PinFannelManager.saveForPreInstall()
+                    PinFannelManager.saveForPreInstall(context)
                     PinFannelManager.updateBroadcast(context)
                 }
                 withContext(Dispatchers.IO) {

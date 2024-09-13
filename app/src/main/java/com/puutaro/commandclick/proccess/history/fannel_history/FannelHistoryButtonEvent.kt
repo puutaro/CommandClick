@@ -39,7 +39,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
@@ -303,10 +302,8 @@ object FannelHistoryButtonEvent {
         fragment: Fragment,
         fannelManageListAdapter: FannelManageAdapter,
     ) {
-//        val pinLimit = FannelManageAdapter.pinLimit
         fannelManageListAdapter.pinItemClickListener = object: FannelManageAdapter.OnPinItemClickListener {
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
-//                terminalViewModel.onDialog = false
                 val position = holder.bindingAdapterPosition
                 val fannelName = fannelManageListAdapter.fannelNameList[position]
                 if(
@@ -322,14 +319,14 @@ object FannelHistoryButtonEvent {
                         holder.pinImageCaption
                     )
                     else -> pinFannelRemoveOrAdd(
-                        fragment.context,
-                        fannelName,
-                        holder.pinImageView,
-                        holder.pinImageCaption,
-                    )
+                            fragment,
+                            fannelName,
+                            holder.pinImageView,
+                            holder.pinImageCaption,
+                        )
+                    }
                 }
             }
-        }
     }
 
     private fun pinFannelToolbarHideShow(
@@ -379,15 +376,24 @@ object FannelHistoryButtonEvent {
     }
 
     private fun pinFannelRemoveOrAdd(
-        context: Context?,
+        fragment: Fragment,
         fannelName: String,
 //        pinFrameButtonView: FrameLayout,
         pinImageView: AppCompatImageView,
         pinImageCaption: OutlineTextView,
     ){
-        val pinFannelList = PinFannelManager.get()
+        val context = fragment.context
+        val cmdindexSelectionSearchButton = TargetFragmentInstance.getCmdIndexFragmentFromFrag(
+            fragment.activity
+        )?.binding?.cmdindexSelectionSearchButton
+        val pinFannelInfoMapList =
+            PinFannelManager.extractPinFannelMapList(cmdindexSelectionSearchButton)
+        val pinFannelNameKey = PinFannelManager.PinFannelKey.FANNEL_NAME.key
         when(
-            pinFannelList.contains(fannelName)
+            pinFannelInfoMapList.any {
+                pinFannelInfoMap ->
+                pinFannelInfoMap.get(pinFannelNameKey) == fannelName
+            }
         ){
             true -> {
                 ToastUtils.showShort("Remove ok: ${fannelName}")
@@ -404,7 +410,10 @@ object FannelHistoryButtonEvent {
 //                    context?.getColorStateList(FannelManageAdapter.buttonOrdinalyColor)
             }
             else -> {
-                PinFannelManager.add(fannelName)
+                PinFannelManager.add(
+                    context,
+                    listOf(fannelName)
+                )
                 ToastUtils.showShort("Add ok: ${fannelName}")
                 pinImageView.alpha = FannelManageAdapter.ordinaryAlpha
                 pinImageView.isEnabled = true
