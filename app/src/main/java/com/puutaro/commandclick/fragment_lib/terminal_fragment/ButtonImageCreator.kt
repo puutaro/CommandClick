@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
@@ -79,7 +80,7 @@ object ButtonImageCreator {
                         ?: return@withContext
                     listener.onSetToolbarButtonImage()
                 }
-                execCreateForSelectionBarButton(
+                SelectionBarButton.create(
                     context,
                     listOf(CmdClickIcons.GOOGLE.assetsPath),
                     defaultUrlCapBitmap,
@@ -149,108 +150,125 @@ object ButtonImageCreator {
         }
     }
 
-    private suspend fun execCreateForSelectionBarButton(
-        context: Context?,
-        assetsPathList: List<String>,
-        defaultUrlCapBitmap: Bitmap?,
-    ) {
-        val capturePartPngDirPathList = makeCapturePartPngDirPathList()
-        val concurrentLimit = 5
-        val semaphore = Semaphore(concurrentLimit)
-        val imageToAssetsPathList = assetsPathList.map {
-            assetsPath ->
-            (1..5).map {
-                index ->
-               makeSelectionBarImagePathFromAssetsPath(
-                   assetsPath,
-                   index,
-               ) to assetsPath
-            }
-        }.flatten()
-        val ccColorList = BitmapTool.ccGradColorList
+
+    object SelectionBarButton {
+
+        private const val selectionImageFileNumSeparator = "_"
+
+        private val ccGradColorList = listOf(
+            CmdClickColorStr.LIGHT_GREEN.str,
+            CmdClickColorStr.WHITE_GREEN.str,
+            CmdClickColorStr.DARK_GREEN.str,
+            CmdClickColorStr.GREEN.str,
+            CmdClickColorStr.THICK_AO.str,
+            CmdClickColorStr.BLUE.str,
+            CmdClickColorStr.BLACK_AO.str,
+            CmdClickColorStr.WATER_BLUE.str,
+            CmdClickColorStr.WHITE_BLUE.str,
+            CmdClickColorStr.PURPLE.str,
+            CmdClickColorStr.NAVY.str,
+            CmdClickColorStr.CARKI.str,
+        )
+        suspend fun create(
+            context: Context?,
+            assetsPathList: List<String>,
+            defaultUrlCapBitmap: Bitmap?,
+        ) {
+            val capturePartPngDirPathList = makeCapturePartPngDirPathList()
+            val concurrentLimit = 5
+            val semaphore = Semaphore(concurrentLimit)
+            val imageToAssetsPathList = assetsPathList.map { assetsPath ->
+                (1..5).map { index ->
+                    makeSelectionBarImagePathFromAssetsPath(
+                        assetsPath,
+                        index,
+                    ) to assetsPath
+                }
+            }.flatten()
             //BitmapTool.ccGradColorList //+ BitmapTool.ccDeepColorList
 //        val ccDeepColorList = BitmapTool.ccDeepColorList
-        withContext(Dispatchers.IO) {
-            val jobList = imageToAssetsPathList.map { imageToAssetsPath ->
-                val selectionBarImageFile = imageToAssetsPath.first
-                val assetsPath = imageToAssetsPath.second
-                async {
-                    semaphore.withPermit {
-                        if (
-                            selectionBarImageFile.isFile
-                        ) {
+            withContext(Dispatchers.IO) {
+                val jobList = imageToAssetsPathList.map { imageToAssetsPath ->
+                    val selectionBarImageFile = imageToAssetsPath.first
+                    val assetsPath = imageToAssetsPath.second
+                    async {
+                        semaphore.withPermit {
                             if (
-                                (1..4).random() % 4 <= 2
-                            ) return@async
-                        }
-                        val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
-                                dirPath ->
-                            if(
-                                dirPath.isEmpty()
-                            ) return@let null
-                            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
-                                if(
-                                    it.isEmpty()
-                                ) return@fileList null
-                                File(dirPath, it).absolutePath
+                                selectionBarImageFile.isFile
+                            ) {
+                                if (
+                                    (1..4).random() % 4 <= 2
+                                ) return@async
                             }
+                            val originalImagePath =
+                                capturePartPngDirPathList.shuffled().firstOrNull()?.let { dirPath ->
+                                    if (
+                                        dirPath.isEmpty()
+                                    ) return@let null
+                                    FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()
+                                        ?.let fileList@{
+                                            if (
+                                                it.isEmpty()
+                                            ) return@fileList null
+                                            File(dirPath, it).absolutePath
+                                        }
+                                }
+                            val byteArray = cropImage(
+                                context,
+                                assetsPath,
+                                originalImagePath,
+                                defaultUrlCapBitmap,
+                                ccGradColorList.random(),
+                                ccGradColorList.random(),
+                            ) ?: return@async
+                            FileSystems.writeFromByteArray(
+                                selectionBarImageFile.absolutePath,
+                                byteArray
+                            )
                         }
-                        val byteArray = cropImage(
-                            context,
-                            assetsPath,
-                            originalImagePath,
-                            defaultUrlCapBitmap,
-                            ccColorList.random(),
-                            ccColorList.random(),
-                        ) ?: return@async
-                        FileSystems.writeFromByteArray(
-                            selectionBarImageFile.absolutePath,
-                            byteArray
-                        )
                     }
                 }
+                jobList.forEach { it.await() }
             }
-            jobList.forEach { it.await() }
-        }
-    }
-
-    fun getSelectionBarBitmapList(): List<Bitmap?> {
-        return getSelectionBarImagePathFromAssetsPath(
-            CmdClickIcons.GOOGLE.assetsPath
-        ).map {
-            BitmapTool.convertFileToBitmap(it)
-        }
-    }
-
-    private const val selectionImageFileNumSeparator = "_"
-    private fun makeSelectionBarImagePathFromAssetsPath(
-        assetsPath: String,
-        num: Int,
-    ): File {
-        return File(
-            UrlHistoryPath.selectionTextBarImageDirPath,
-            listOf(
-                num,
-                File(assetsPath).name
-            ).joinToString(selectionImageFileNumSeparator)
-        )
-    }
-
-
-    fun getSelectionBarImagePathFromAssetsPath(
-        assetsPath: String,
-    ): List<String> {
-        val selectionTextBarImageDirPath =
-            UrlHistoryPath.selectionTextBarImageDirPath
-        val fileName = File(assetsPath).name
-        return FileSystems.sortedFiles(
-            selectionTextBarImageDirPath,
-        ).filter {
-            it.endsWith("${selectionImageFileNumSeparator}${fileName}")
-        }.map {
-            File(selectionTextBarImageDirPath, it).absolutePath
         }
 
+        fun getSelectionBarBitmapList(): List<Bitmap?> {
+            return getSelectionBarImagePathFromAssetsPath(
+                CmdClickIcons.GOOGLE.assetsPath
+            ).map {
+                BitmapTool.convertFileToBitmap(it)
+            }
+        }
+
+        private fun makeSelectionBarImagePathFromAssetsPath(
+            assetsPath: String,
+            num: Int,
+        ): File {
+            return File(
+                UrlHistoryPath.selectionTextBarImageDirPath,
+                listOf(
+                    num,
+                    File(assetsPath).name
+                ).joinToString(selectionImageFileNumSeparator)
+            )
+        }
+
+
+        private fun getSelectionBarImagePathFromAssetsPath(
+            assetsPath: String,
+        ): List<String> {
+            val selectionTextBarImageDirPath =
+                UrlHistoryPath.selectionTextBarImageDirPath
+            val fileName = File(assetsPath).name
+            return FileSystems.sortedFiles(
+                selectionTextBarImageDirPath,
+            ).filter {
+                it.endsWith("${selectionImageFileNumSeparator}${fileName}")
+            }.map {
+                File(selectionTextBarImageDirPath, it).absolutePath
+            }
+
+        }
     }
 
     private suspend fun cropImage(
@@ -400,7 +418,21 @@ object ButtonImageCreator {
         return output
     }
 
-    private val colorList = BitmapTool.colorList
+    private val colorList = listOf(
+        CmdClickColorStr.LIGHT_GREEN.str,
+        CmdClickColorStr.THICK_AO.str,
+        CmdClickColorStr.BLUE.str,
+        CmdClickColorStr.SKERLET.str,
+        CmdClickColorStr.YELLOW.str,
+        CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.GREEN.str,
+        CmdClickColorStr.YELLOW_GREEN.str,
+        CmdClickColorStr.BLACK_AO.str,
+        CmdClickColorStr.WATER_BLUE.str,
+        CmdClickColorStr.PURPLE.str,
+        CmdClickColorStr.ORANGE.str,
+        CmdClickColorStr.BROWN.str,
+    )
 
 //    private val lightColorList = listOf(
 //        "#c7f0d2",

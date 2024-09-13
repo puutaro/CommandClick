@@ -15,6 +15,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -110,6 +111,24 @@ object ExecSetToolbarButtonImage {
     }
 
     object SelectionBarButton {
+
+        val rectColorList = listOf(
+            CmdClickColorStr.LIGHT_GREEN.str,
+            CmdClickColorStr.WHITE_GREEN.str,
+            CmdClickColorStr.YELLOW_GREEN.str,
+            CmdClickColorStr.DARK_GREEN.str,
+            CmdClickColorStr.ANDROID_GREEN.str,
+            CmdClickColorStr.THICK_GREEN.str,
+            CmdClickColorStr.THICK_AO.str,
+            CmdClickColorStr.BLUE.str,
+            CmdClickColorStr.BLACK_AO.str,
+            CmdClickColorStr.WATER_BLUE.str,
+            CmdClickColorStr.WHITE_BLUE.str,
+            CmdClickColorStr.WHITE_BLUE_PURPLE.str,
+            CmdClickColorStr.DARK_BROWN.str,
+            CmdClickColorStr.GOLD_YELLOW.str,
+            CmdClickColorStr.NAVY.str,
+        )
         fun updatePocketSearchImage(
             binding: CommandIndexFragmentBinding,
         ) {
@@ -162,7 +181,7 @@ object ExecSetToolbarButtonImage {
         private fun setIconForSelectionBarActiveGBar(
             imageButton: AppCompatImageView?,
         ) {
-            val rectColor = BitmapTool.rectColorList.random()
+            val rectColor = rectColorList.random()
             val isAll = (1..10).random() < 3
             val rotateRndList = listOf(0f, 180f)
             val bitmapListSrc = (1..2).map {
@@ -196,7 +215,7 @@ object ExecSetToolbarButtonImage {
             rectColor: String,
         ): Bitmap? {
             val gBitmap =
-                ButtonImageCreator.getSelectionBarBitmapList().shuffled().firstOrNull()
+                ButtonImageCreator.SelectionBarButton.getSelectionBarBitmapList().shuffled().firstOrNull()
                     ?: return null
             val repeatTime = 5
             val gRepeatTimes = when(isAllG) {
@@ -399,15 +418,6 @@ object ExecSetToolbarButtonImage {
     ){
         if(imageButton == null) return
         val context = imageButton.context
-//        val bitmap = withContext(Dispatchers.IO) {
-//            BitmapTool.convertFileToBitmap(
-//                File(imagePath).absolutePath
-//            )
-//        }
-//        val isEqualBitmap = withContext(Dispatchers.Main) {
-//            imageButton.drawable.toBitmap()
-//        } == bitmap
-//        if(isEqualBitmap) return
         val checksum = withContext(Dispatchers.IO){
             FileSystems.checkSum(imagePath)
         }

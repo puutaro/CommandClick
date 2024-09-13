@@ -15,6 +15,7 @@ import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -26,92 +27,38 @@ import java.util.Arrays
 
 object BitmapTool {
 
-    val colorList = listOf(
-        "#67ebdb", // light green
-        "#175759", // thick ao
-        "#1926e3", // blue
-        "#e0094a",
-        "#e8e51a",
-        "#c5f0eb", // white green
-        "#1a9618", // green
-        "#8cf59f", // yellow green
-        "#075769", // black ao
-        "#2bccf0", // water blue
-        "#4332c7", // purple
-        "#e36517", // orange
-        "#573824"  // brown
-    )
+//    val ccDeepColorList = listOf(
+//        CmdClickColorStr.DARK_GREEN.str,
+//        CmdClickColorStr.GREEN.str,
+//        CmdClickColorStr.THICK_AO.str,
+//        CmdClickColorStr.BLUE.str,
+//        CmdClickColorStr.BLACK_AO.str,
+//        CmdClickColorStr.PURPLE.str,
+//        CmdClickColorStr.NAVY.str,
+//        CmdClickColorStr.BLUE_DARK_PURPLE.str,
+//        CmdClickColorStr.CARKI.str,
+//    )
+//    val ccColorList = listOf(
+//        "#67ebdb", // light green
+//        "#c5f0eb", // white green
+//        "#8cf59f", // yellow green
+//        "#042b13", // dark green
+//        "#75eb9e", // android green
+//        "#417037", // thick green
+//        "#1a9618", // green
+////        "#5e704a", // carki
+//        "#175759", // thick ao
+//        "#1926e3", // blue
+//        "#075769", // black ao
+//        "#2bccf0", // water blue
+//        "#ebf7ff", // white blue
+//        "#e6eafc", // white blue purple
+//        "#4332c7", // purple
+//        "#21140c",  // brown
+//        "#826e19", // gold yellow
+//        "#061245", // navy
+//    )
 
-    val ccGradColorList = listOf(
-        "#67ebdb", // light green
-        "#c5f0eb", // white green
-        "#042b13", // dark green
-        "#1a9618", // green
-        "#175759", // thick ao
-        "#1926e3", // blue
-        "#075769", // black ao
-        "#0ed5e3", // water blue
-        "#ebf7ff", // white blue
-        "#4332c7", // purple
-        "#061245", // navy
-//        "#17084d", // blue dark purple
-        "#5e704a", // carki
-
-    )
-
-    val ccDeepColorList = listOf(
-        "#042b13", // dark green
-        "#1a9618", // green
-        "#175759", // thick ao
-        "#1926e3", // blue
-        "#075769", // black ao
-        "#4332c7", // purple
-        "#061245", // navy
-        "#17084d", // blue dark purple
-        "#5e704a", // carki
-
-    )
-    val ccColorList = listOf(
-        "#67ebdb", // light green
-        "#c5f0eb", // white green
-        "#8cf59f", // yellow green
-        "#042b13", // dark green
-        "#75eb9e", // android green
-        "#417037", // thick green
-        "#1a9618", // green
-//        "#5e704a", // carki
-        "#175759", // thick ao
-        "#1926e3", // blue
-        "#075769", // black ao
-        "#2bccf0", // water blue
-        "#ebf7ff", // white blue
-        "#e6eafc", // white blue purple
-        "#4332c7", // purple
-        "#21140c",  // brown
-        "#826e19", // gold yellow
-        "#061245", // navy
-    )
-
-    val rectColorList = listOf(
-        "#67ebdb", // light green
-        "#c5f0eb", // white green
-        "#8cf59f", // yellow green
-        "#042b13", // dark green
-        "#75eb9e", // android green
-        "#417037", // thick green
-//        "#5e704a", // carki
-        "#175759", // thick ao
-        "#1926e3", // blue
-        "#075769", // black ao
-        "#2bccf0", // water blue
-        "#ebf7ff", // white blue
-        "#e6eafc", // white blue purple
-        "#4332c7", // purple
-        "#21140c",  // dark brown
-//        "#787614", // gold yellow
-        "#717829", // gold yellow
-        "#061245", // navy
-    )
     fun hash(
         bitmap: Bitmap
     ): String {

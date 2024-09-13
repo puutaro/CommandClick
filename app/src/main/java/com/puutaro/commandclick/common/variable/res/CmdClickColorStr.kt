@@ -1,0 +1,27 @@
+package com.puutaro.commandclick.common.variable.res
+
+enum class CmdClickColorStr(val str: String) {
+    LIGHT_GREEN("#67ebdb"),
+    WHITE_GREEN("#c5f0eb"),
+    ANDROID_GREEN("#75eb9e"),
+    YELLOW_GREEN("#8cf59f"),
+    GREEN("#1a9618"),
+    THICK_GREEN("#417037"),
+    DARK_GREEN("#042b13"),
+    CARKI("#5e704a"),
+    GOLD_YELLOW("#717829"),
+    WATER_BLUE("#0ed5e3"),
+    WHITE_BLUE("#ebf7ff"),
+    THICK_AO("#175759"),
+    BLACK_AO("#075769"),
+    BLUE("#1926e3"),
+    WHITE_BLUE_PURPLE("#e6eafc"),
+    BLUE_DARK_PURPLE("#17084d"),
+    NAVY("#061245"),
+    PURPLE("#4332c7"),
+    ORANGE("#e36517"),
+    BROWN("#573824"),
+    DARK_BROWN("#21140c"),
+    YELLOW("#e8e51a"),
+    SKERLET("#e0094a"),
+}
