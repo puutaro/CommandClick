@@ -351,18 +351,20 @@ class JsDialog(
     fun webView_S(
         urlStr: String,
         currentFannelPath: String,
-        menuMapStrListStr: String,
-        longPressMenuMapListStr: String,
-        extraMapCon: String,
+        webViewConfigMapCon: String,
+//        menuMapStrListStr: String,
+//        longPressMenuMapListStr: String,
+//        extraMapCon: String,
     ){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         terminalFragment.pocketWebViewManager?.show(
             urlStr,
             currentFannelPath,
-            menuMapStrListStr,
-            longPressMenuMapListStr,
-            extraMapCon,
+            webViewConfigMapCon,
+//            menuMapStrListStr,
+//            longPressMenuMapListStr,
+//            extraMapCon,
         )
     }
 

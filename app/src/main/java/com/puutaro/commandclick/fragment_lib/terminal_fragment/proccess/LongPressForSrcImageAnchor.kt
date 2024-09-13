@@ -94,8 +94,12 @@ class LongPressForSrcImageAnchor(
 //                "menuList: ${menuList}",
 //            ).joinToString("\n\n")
 //        )
+        val menuListSize = menuList.size
         if(
-            menuList.size == 1
+            menuListSize == 0
+        ) return
+        if(
+            menuListSize == 1
         ){
             val firstMenuTitle = menuList.first().first
             val jsPath = longPressMenuMapList.firstOrNull {

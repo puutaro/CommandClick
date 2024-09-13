@@ -58,6 +58,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -79,6 +80,52 @@ import java.time.LocalDateTime
 class WebViewJsDialog(
     private val terminalFragmentRef: WeakReference<TerminalFragment>,
 ) {
+    companion object {
+        const val sectionSeparator = ','
+        const val typeSeparator = '|'
+        const val keySeparator = '?'
+        const val valueSeparator = '&'
+
+        enum class WebViewConfigMapSection{
+            toolBar,
+            longPressMenu,
+            textSelectionBar,
+            extra,
+        }
+
+        enum class WebViewMenuMapType {
+            clickMenuFilePath,
+            longPressMenuFilePath,
+            dismissType,
+            dismissDelayMiliTime,
+            caption,
+            iconName,
+            tag,
+        }
+
+        enum class WebDialogLongPressType {
+            srcImageAnchorMenuFilePath,
+            srcAnchorMenuFilePath,
+            imageMenuFilePath,
+        }
+
+        enum class DismissType {
+            longpress,
+            click,
+            both,
+        }
+
+        enum class JsMacroType(val str: String) {
+            HIGHLIGHT_SCH_JS("HIGHLIGHT_SCH.js"),
+            GO_BACK_JS("GO_BACK.js"),
+            GO_FORWARD_JS("GO_FORWARD.js"),
+            LAUNCH_LOCAL_JS("LAUNCH_LOCAL.js"),
+            HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js"),
+            OPEN_SRC_JS_ACTION_REPORT("OPEN_SRC_JS_ACTION_REPORT.js"),
+            OPEN_GENERATED_JS_ACTION_REPORT("OPEN_GENERATED_JS_ACTION_REPORT.js"),
+            OPEN_JS_REPORT("OPEN_JS_REPORT.js"),
+        }
+    }
     private val longpressMenuGroupId = 110000
     private val clickMenuGroupId = 120000
     private var webViewDialogExtraMapManager: WebViewDialogExtraMapManager? = null
@@ -149,15 +196,23 @@ class WebViewJsDialog(
     fun show(
         urlStrSrc: String,
         currentScriptPathSrc: String,
-        menuMapStrListStr: String,
-        longPressMenuMapListStrSrc: String,
-        extraMapCon: String,
+        webViewConfigMapCon: String,
+//        menuMapStrListStr: String,
+//        longPressMenuMapListStrSrc: String,
+//        extraMapCon: String,
     ) {
         noShowKeyBoardForPreloadAutoGgle = false
         positionHashMap.clear()
         PocketWebviewGoBack.initPrevBackTime()
+        val webViewConfigMap = CmdClickMap.createMap(
+            webViewConfigMapCon,
+            sectionSeparator
+        ).toMap()
         currentScriptPath = currentScriptPathSrc
-        longPressMenuMapListStr = longPressMenuMapListStrSrc
+        longPressMenuMapListStr = webViewConfigMap.get(
+            WebViewConfigMapSection.longPressMenu.name
+        ) ?: String()
+//        longPressMenuMapListStrSrc
         CoroutineScope(Dispatchers.Main).launch{
             withContext(Dispatchers.Main){
                 startWebView()
@@ -175,13 +230,19 @@ class WebViewJsDialog(
                 terminalFragment,
                 urlStr,
             )
+            val menuMapStrListStr =
+                webViewConfigMap.get(WebViewConfigMapSection.toolBar.name)
+                    ?: String()
+
             val menuMapStrList = QuoteTool.splitBySurroundedIgnore(
                 menuMapStrListStr,
-                '|'
+                typeSeparator,
             )
             val btnWeight = withContext(Dispatchers.IO) {
                 culcBtnWeight(menuMapStrList)
             }
+            val extraMapCon = webViewConfigMap.get(WebViewConfigMapSection.extra.name)
+                ?: String()
             withContext(Dispatchers.IO) {
                 webViewDialogExtraMapManager = null
                 webViewDialogExtraMapManager = WebViewDialogExtraMapManager(
@@ -193,7 +254,8 @@ class WebViewJsDialog(
             withContext(Dispatchers.IO) {
                 menuMapStrList.forEach {
                     val btnMenuMap = makeBtnOptionMap(
-                        it
+                        it,
+                        keySeparator
                     )
                     withContext(Dispatchers.Main) {
                         webViewBottomBtnSetter(
@@ -715,7 +777,8 @@ class WebViewJsDialog(
 
     private fun makeBtnOptionMap(
 //        currentScriptPath: String,
-        centerMenuMapStr: String
+        centerMenuMapStr: String,
+        separator: Char,
     ): Map<String, String>? {
         val currentScriptPathObj = File(currentScriptPath)
         if(
@@ -732,7 +795,7 @@ class WebViewJsDialog(
         ).let {
             CmdClickMap.createMap(
                 it,
-                '?'
+                separator
             )
         }.toMap()
     }
@@ -748,7 +811,8 @@ class WebViewJsDialog(
             val currentPageUrl = pocketWebView?.url
             val longPressMenuMap = makeBtnOptionMap(
 //                currentScriptPath,
-                longPressMenuMapListStr
+                longPressMenuMapListStr,
+                typeSeparator
             )
             val httpsStartStr = WebUrlVariables.httpsPrefix
             val httpStartStr = WebUrlVariables.httpPrefix
@@ -1241,38 +1305,8 @@ private fun execHideShowForPocketWebview(
     }
 }
 
-enum class WebViewMenuMapType {
-    clickMenuFilePath,
-    longPressMenuFilePath,
-    dismissType,
-    dismissDelayMiliTime,
-    caption,
-    iconName,
-    tag,
-}
 
-private enum class WebDialogLongPressType {
-    srcImageAnchorMenuFilePath,
-    srcAnchorMenuFilePath,
-    imageMenuFilePath,
-}
 
-private enum class DismissType {
-    longpress,
-    click,
-    both,
-}
-
-enum class JsMacroType(val str: String) {
-    HIGHLIGHT_SCH_JS("HIGHLIGHT_SCH.js"),
-    GO_BACK_JS("GO_BACK.js"),
-    GO_FORWARD_JS("GO_FORWARD.js"),
-    LAUNCH_LOCAL_JS("LAUNCH_LOCAL.js"),
-    HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js"),
-    OPEN_SRC_JS_ACTION_REPORT("OPEN_SRC_JS_ACTION_REPORT.js"),
-    OPEN_GENERATED_JS_ACTION_REPORT("OPEN_GENERATED_JS_ACTION_REPORT.js"),
-    OPEN_JS_REPORT("OPEN_JS_REPORT.js"),
-}
 
 enum class WevViewDialogUriPrefix(
     val prefix: String,
@@ -1291,7 +1325,9 @@ private class WebViewDialogExtraMapManager(
     private var focusMap = emptyMap<String, String>()
 
     companion object {
-        private const val keySeparator = '|'
+
+        private const val typeSeparator = WebViewJsDialog.typeSeparator
+        private const val keySeparator = WebViewJsDialog.keySeparator
         private var bottomBtnTagList = emptyList<String>()
 
         private enum class MainKeys(
@@ -1302,7 +1338,6 @@ private class WebViewDialogExtraMapManager(
 
         object FocusManager {
 
-            const val focusKeySeparator = '?'
             val focusColorId = CmdClickColor.LIGHT_AO.id
 
             enum class FocusKey(
@@ -1340,7 +1375,7 @@ private class WebViewDialogExtraMapManager(
     private fun setExtraMap(extraMapCon: String) {
         extraMap = CmdClickMap.createMap(
             extraMapCon,
-            keySeparator,
+            typeSeparator,
         ).toMap()
     }
 
@@ -1350,9 +1385,9 @@ private class WebViewDialogExtraMapManager(
         bottomBtnTagList = menuMapStrList.map {
             val menuMap = CmdClickMap.createMap(
                 it,
-                '?'
+                keySeparator
             ).toMap()
-            menuMap.get(WebViewMenuMapType.tag.name)
+            menuMap.get(WebViewJsDialog.Companion.WebViewMenuMapType.tag.name)
                 ?: String()
         }.filter { it.isNotEmpty() }
     }
@@ -1363,7 +1398,7 @@ private class WebViewDialogExtraMapManager(
         )
         focusMap = CmdClickMap.createMap(
             focusMapCon,
-            FocusManager.focusKeySeparator
+            keySeparator
         ).toMap()
     }
     fun setDefaultFocus(
@@ -1403,7 +1438,7 @@ private class WebViewDialogExtraMapManager(
         }
         val triggerList =
             focusMap.get(FocusManager.FocusKey.TRIGGERS.key)
-                ?.split("&")
+                ?.split(WebViewJsDialog.valueSeparator)
                 ?: return
         val isNotTrigger = !triggerList.contains(triggerType)
         if(

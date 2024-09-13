@@ -519,7 +519,7 @@ class QrScanJsDialog(
         return try {
             btnOptionMap
                 ?.get(
-                    WebViewMenuMapType.dismissDelayMiliTime.name
+                    WebViewJsDialog.Companion.WebViewMenuMapType.dismissDelayMiliTime.name
                 )?.toLong() ?: 0L
         } catch (e: Exception){
             0L
