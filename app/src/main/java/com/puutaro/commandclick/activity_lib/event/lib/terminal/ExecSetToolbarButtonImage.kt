@@ -106,18 +106,8 @@ object ExecSetToolbarButtonImage {
                     icon
                 )
             }
-
-//            setImageButton(
-//                binding.cmdindexSelectionSearchImage,
-//                CmdClickIcons.values().random()
-//            )
-//            SelectionBarButton.setPocketSearch(
-//                binding,
-//            )
         }
     }
-
-
 
     object SelectionBarButton {
         fun updatePocketSearchImage(
@@ -157,7 +147,7 @@ object ExecSetToolbarButtonImage {
             bitmapList.shuffled().forEach {
                 animation.addFrame(
                     BitmapDrawable(context.resources, it),
-                    400
+                    300
                 )
             }
             animation.isOneShot = false
@@ -173,7 +163,7 @@ object ExecSetToolbarButtonImage {
             imageButton: AppCompatImageView?,
         ) {
             val rectColor = BitmapTool.rectColorList.random()
-            val isAll = (1..10).random() < 4
+            val isAll = (1..10).random() < 3
             val rotateRndList = listOf(0f, 180f)
             val bitmapListSrc = (1..2).map {
                 createGBarActiveBitmap(
