@@ -809,8 +809,10 @@ class WebViewJsDialog(
     }
 
     fun textSelectionHideShow(isShow: Boolean){
-        textSelectionLinearLayout?.isVisible = isShow
-        firstBottomLinearLayout?.isVisible = !isShow
+        CoroutineScope(Dispatchers.Main).launch {
+            textSelectionLinearLayout?.isVisible = isShow
+            firstBottomLinearLayout?.isVisible = !isShow
+        }
     }
 
 
@@ -1341,7 +1343,7 @@ class WebViewJsDialog(
                             hideShowThreshold,
                             oldPositionY,
                             event.rawY,
-                            firstBottomLinearLayout
+                            firstBottomLinearLayout,
                         )
                     }
                 }
@@ -1356,7 +1358,7 @@ private fun execHideShowForPocketWebview(
     hideShowThreshold: Int,
     oldPositionY: Float,
     rawY: Float,
-    firstBottomLinearLayout: LinearLayoutCompat?
+    firstBottomLinearLayout: LinearLayoutCompat?,
 ) {
     val oldCurrYDff = oldPositionY - rawY
     if(hideShowThreshold < oldCurrYDff && oldCurrYDff < -10){
