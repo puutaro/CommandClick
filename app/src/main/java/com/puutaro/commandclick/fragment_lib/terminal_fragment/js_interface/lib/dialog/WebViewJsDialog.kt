@@ -4,6 +4,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
@@ -51,6 +52,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
@@ -58,7 +60,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -159,6 +160,9 @@ class WebViewJsDialog(
     private var firstBottomLinearLayout = webViewDialogInstance?.findViewById<LinearLayoutCompat>(
         R.id.first_bottom_linearlayout
     )
+    private var textSelectionLinearLayout = webViewDialogInstance?.findViewById<LinearLayoutCompat>(
+        R.id.text_selection_linearlayout
+    )
     var pocketWebView = let {
         val pocketWebViewSrc = webViewDialogInstance?.findViewById<WebView>(
             R.id.webview_dialog_webview
@@ -197,9 +201,6 @@ class WebViewJsDialog(
         urlStrSrc: String,
         currentScriptPathSrc: String,
         webViewConfigMapCon: String,
-//        menuMapStrListStr: String,
-//        longPressMenuMapListStrSrc: String,
-//        extraMapCon: String,
     ) {
         noShowKeyBoardForPreloadAutoGgle = false
         positionHashMap.clear()
@@ -230,6 +231,7 @@ class WebViewJsDialog(
                 terminalFragment,
                 urlStr,
             )
+            webViewDialogInstance?.show()
             val menuMapStrListStr =
                 webViewConfigMap.get(WebViewConfigMapSection.toolBar.name)
                     ?: String()
@@ -240,6 +242,17 @@ class WebViewJsDialog(
             )
             val btnWeight = withContext(Dispatchers.IO) {
                 culcBtnWeight(menuMapStrList)
+            }
+            val textSelectionMapStrListStr =
+                webViewConfigMap.get(WebViewConfigMapSection.textSelectionBar.name)
+                    ?: String()
+            val textSelectionMapStrList = QuoteTool.splitBySurroundedIgnore(
+                textSelectionMapStrListStr,
+                typeSeparator,
+            ).filter{ it.isNotEmpty() }
+            textSelectionLinearLayout?.tag = textSelectionMapStrList.isNotEmpty()
+            val txtSelectionButtonWeight = withContext(Dispatchers.IO) {
+                culcBtnWeight(textSelectionMapStrList)
             }
             val extraMapCon = webViewConfigMap.get(WebViewConfigMapSection.extra.name)
                 ?: String()
@@ -268,7 +281,23 @@ class WebViewJsDialog(
                     }
                 }
             }
-            webViewDialogInstance?.show()
+            withContext(Dispatchers.IO) {
+                textSelectionMapStrList.forEach {
+                    val textSelectionBtnMenuMap = makeBtnOptionMap(
+                        it,
+                        keySeparator
+                    )
+                    withContext(Dispatchers.Main) {
+                        webViewBottomBtnSetter(
+                            terminalFragment,
+                            textSelectionBtnMenuMap,
+                            txtSelectionButtonWeight,
+                        )?.let {
+                            textSelectionLinearLayout?.addView(it)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -738,6 +767,11 @@ class WebViewJsDialog(
                 return super.shouldInterceptRequest(view, request)
             }
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                textSelectionHideShow(false)
+            }
+
             override fun onPageFinished(
                 webview: WebView?,
                 url: String?
@@ -772,6 +806,11 @@ class WebViewJsDialog(
                 super.onPageFinished(webview, url)
             }
         }
+    }
+
+    fun textSelectionHideShow(isShow: Boolean){
+        textSelectionLinearLayout?.isVisible = isShow
+        firstBottomLinearLayout?.isVisible = !isShow
     }
 
 
@@ -817,6 +856,26 @@ class WebViewJsDialog(
             val httpsStartStr = WebUrlVariables.httpsPrefix
             val httpStartStr = WebUrlVariables.httpPrefix
             when (hitTestResult?.type) {
+                WebView.HitTestResult.UNKNOWN_TYPE -> {
+                    if(
+                        textSelectionLinearLayout?.tag != true
+                    ) return@setOnLongClickListener false
+                    val terminalFragment =
+                        terminalFragmentRef.get()
+                            ?: return@setOnLongClickListener false
+                    val context = terminalFragment.context
+                    textSelectionHideShow(true)
+                    val jsContents = AssetsFileManager.readFromAssets(
+                        context,
+                        AssetsFileManager.textSelectionStartForPocketJs
+                    ).split("\n")
+                    val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+                        context,
+                        jsContents
+                    ) ?: return@setOnLongClickListener false
+                    pocketWebView?.loadUrl(jsScriptUrl)
+                    false
+                }
                 WebView.HitTestResult.IMAGE_TYPE -> {
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
@@ -1275,6 +1334,9 @@ class WebViewJsDialog(
                         v.performClick()
                     }
                     MotionEvent.ACTION_UP -> {
+                        if(
+                            textSelectionLinearLayout?.isVisible == true
+                        ) return@setOnTouchListener false
                         execHideShowForPocketWebview(
                             hideShowThreshold,
                             oldPositionY,

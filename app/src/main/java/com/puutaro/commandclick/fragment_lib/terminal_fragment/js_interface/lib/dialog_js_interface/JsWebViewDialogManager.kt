@@ -16,4 +16,11 @@ class JsWebViewDialogManager(
 //        terminalFragment.pocketWebViewManager.dismiss()
 //        terminalFragment.webViewDialogInstance = null
     }
+
+    @JavascriptInterface
+    fun visibleSelectionBar(isShow: Boolean){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.textSelectionHideShow(isShow)
+    }
 }

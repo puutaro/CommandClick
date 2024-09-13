@@ -168,6 +168,7 @@ class GgleSchDialog(
         loadAtLocal = true
         PocketWebviewGoBack.initPrevBackTime()
         CoroutineScope(Dispatchers.Main).launch{
+            webViewDialogInstance?.show()
             withContext(Dispatchers.Main){
                 startWebView()
             }
@@ -200,7 +201,6 @@ class GgleSchDialog(
                     pocketGgleSchWebView,
                 )
             }
-            webViewDialogInstance?.show()
         }
     }
 
