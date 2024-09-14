@@ -1,9 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
@@ -59,6 +63,20 @@ object ToolbarCtrlForCmdIndex {
         }
     }
 
+    fun updateTextSelection(
+        activity: MainActivity,
+        updateText: String,
+    ){
+        val cmdIndexFragment = TargetFragmentInstance.getCmdIndexFragment(
+            activity
+        ) ?: return
+        val binding = cmdIndexFragment.binding
+        binding.cmdindexSelectionSearchCurText.apply {
+            isVisible = true
+            text = updateText
+        }
+    }
+
     fun hideShowForTextSelection(
         activity: MainActivity,
         isShow: Boolean,
@@ -75,6 +93,10 @@ object ToolbarCtrlForCmdIndex {
             isPageSearch
         ) return
         binding.cmdindexSelectionSearchButton.isVisible = isShow
+        if(!isShow) {
+            binding.cmdindexSelectionSearchCurText.text = String()
+            binding.cmdindexSelectionSearchCurText.isVisible = false
+        }
         BroadcastSender.normalSend(
             activity,
             BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE.action,

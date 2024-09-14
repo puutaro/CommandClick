@@ -104,6 +104,7 @@ object CommandClickScriptVariable {
     val SRC_ANCHOR_LONG_PRESS_JS_PATH = "srcAnchorLongPressJsPath"
     val IMAGE_LONG_PRESS_JS_PATH = "imageLongPressJsPath"
     val UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF = "ubuntuSleepDelayMinInScreenOff"
+    val MUST_UBUNTU_SETUP = "mustUbuntuSetup"
     val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
     val SETTING_IMPORT = "settingImport"
     val IMPORT_DISABLE_VAL_LIST = "importDisableValList"

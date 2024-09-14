@@ -115,4 +115,8 @@ object SettingVariableSelects {
         ON,
         OFF,
     }
+
+    enum class MustUbuntuSetupSelects {
+        ON,
+    }
 }

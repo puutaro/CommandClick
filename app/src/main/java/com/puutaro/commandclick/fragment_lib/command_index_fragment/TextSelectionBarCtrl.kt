@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import androidx.core.view.isVisible
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
@@ -29,6 +31,11 @@ object TextSelectionBarCtrl {
 //            setFillColor(R.color.file_dark_green_color)
             outlineWidthSrc = 5
 //            text = "\uD83D\uDD0D Search"
+        }
+        binding.cmdindexSelectionSearchCurText.apply {
+            isVisible = false
+            setFillColor(R.color.white)
+            setStrokeColor(R.color.fannel_icon_color)
         }
         val cmdindexSelectionSearchButton = binding.cmdindexSelectionSearchButton
         val context = cmdIndexFragment.context ?: return

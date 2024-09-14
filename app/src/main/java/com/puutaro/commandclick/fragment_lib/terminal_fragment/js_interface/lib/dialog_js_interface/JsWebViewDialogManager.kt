@@ -23,4 +23,11 @@ class JsWebViewDialogManager(
             ?: return
         terminalFragment.pocketWebViewManager?.textSelectionHideShow(isShow)
     }
+
+    @JavascriptInterface
+    fun updateSelectionTextView(updateText: String){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.updateCurSelectionTextView(updateText)
+    }
 }

@@ -2,24 +2,38 @@
 
 setTimeout(
     function(){
-        var firstSelection = document.getSelection().toString();
+        var firstSelection = getTextSelection();
         if(!firstSelection){
-            jsSelectionText.updateText("");
+            jsSelectionText.updateRegisterText("");
             jsToolBarCtrl.visibleSelectionBar(false);
             return;
         }
-        jsSelectionText.updateText(
+        jsSelectionText.updateSelectionTextView(firstSelection);
+        jsSelectionText.updateRegisterText(
             firstSelection
         );
 
         document.addEventListener('selectionchange', detectSelectChange = function detect(e) {
-            const selectText = document.getSelection().toString();
-            jsSelectionText.updateText(selectText);
+            const selectText = getTextSelection();
+            jsSelectionText.updateSelectionTextView(selectText);
+            jsSelectionText.updateRegisterText(selectText);
             if(selectText) return;
-            jsSelectionText.updateText("");
+            jsSelectionText.updateRegisterText("");
             jsToolBarCtrl.visibleSelectionBar(false);
             document.removeEventListener('selectionchange', detectSelectChange);
         });
     },
-    200
+    50
 );
+
+function getTextSelection(){
+    if (window.getSelection) {
+        var selectionRange = window.getSelection();
+        return selectionRange.toString();
+    }
+    if (document.selection.type == 'None') {
+        return "";
+    }
+    var textRange = document.selection.createRange();
+    return textRange.text;
+}

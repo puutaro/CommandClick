@@ -159,9 +159,23 @@ class WebViewJsDialog(
     private var firstBottomLinearLayout = webViewDialogInstance?.findViewById<LinearLayoutCompat>(
         R.id.first_bottom_linearlayout
     )
-    private var textSelectionLinearLayout = webViewDialogInstance?.findViewById<LinearLayoutCompat>(
-        R.id.text_selection_linearlayout
+    private var textSelectionFrameLayout = webViewDialogInstance?.findViewById<FrameLayout>(
+        R.id.dialog_webview_text_selection_bar_frame
     )
+    private var textSelectionLinearLayout = webViewDialogInstance?.findViewById<LinearLayoutCompat>(
+        R.id.dialog_webview_text_selection_linearlayout
+    )
+    private var textSelectionCurTextView = let {
+        val textSelectionCurTextViewSrc = webViewDialogInstance?.findViewById<OutlineTextView>(
+            R.id.dialog_webview_text_selection_search_cur_text
+        )
+        textSelectionCurTextViewSrc?.apply{
+            setFillColor(R.color.white)
+            setStrokeColor(R.color.web_icon_color)
+            isVisible = false
+        }
+
+    }
     var pocketWebView = let {
         val pocketWebViewSrc = webViewDialogInstance?.findViewById<WebView>(
             R.id.webview_dialog_webview
@@ -249,7 +263,7 @@ class WebViewJsDialog(
                 textSelectionMapStrListStr,
                 typeSeparator,
             ).filter{ it.isNotEmpty() }
-            textSelectionLinearLayout?.tag = textSelectionMapStrList.isNotEmpty()
+            textSelectionFrameLayout?.tag = textSelectionMapStrList.isNotEmpty()
             val txtSelectionButtonWeight = withContext(Dispatchers.IO) {
                 culcBtnWeight(textSelectionMapStrList)
             }
@@ -813,8 +827,23 @@ class WebViewJsDialog(
 
     fun textSelectionHideShow(isShow: Boolean){
         CoroutineScope(Dispatchers.Main).launch {
-            textSelectionLinearLayout?.isVisible = isShow
+            textSelectionFrameLayout?.isVisible = isShow
+            if(!isShow){
+                textSelectionCurTextView?.apply {
+                    text = String()
+                    isVisible = false
+                }
+            }
             firstBottomLinearLayout?.isVisible = !isShow
+        }
+    }
+
+    fun updateCurSelectionTextView(updateText: String){
+        CoroutineScope(Dispatchers.Main).launch {
+            textSelectionCurTextView?.apply {
+                text = updateText
+                isVisible = true
+            }
         }
     }
 
@@ -863,7 +892,7 @@ class WebViewJsDialog(
             when (hitTestResult?.type) {
                 WebView.HitTestResult.UNKNOWN_TYPE -> {
                     if(
-                        textSelectionLinearLayout?.tag != true
+                        textSelectionFrameLayout?.tag != true
                     ) return@setOnLongClickListener false
                     val terminalFragment =
                         terminalFragmentRef.get()
@@ -1048,6 +1077,7 @@ class WebViewJsDialog(
             it.str == iconName
         } ?: CmdClickIcons.OK
         captionTextView.text = caption.ifEmpty { icon.str }
+        captionTextView.textSize = 18f
         captionTextView.setStrokeColor(R.color.white)
         captionTextView.setFillColor(R.color.web_icon_color)
     }
@@ -1340,7 +1370,7 @@ class WebViewJsDialog(
                     }
                     MotionEvent.ACTION_UP -> {
                         if(
-                            textSelectionLinearLayout?.isVisible == true
+                            textSelectionFrameLayout?.isVisible == true
                         ) return@setOnTouchListener false
                         execHideShowForPocketWebview(
                             hideShowThreshold,

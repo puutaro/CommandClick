@@ -555,6 +555,12 @@ class TerminalFragment:
         )
     }
 
+    interface OnUpdateSelectionTextViewListenerForTerm {
+        fun onUpdateSelectionTextViewForTerm(
+            updateText: String
+        )
+    }
+
     interface OnCaptureActivityListenerForTerm {
         fun onCaptureActivityForTerm()
     }

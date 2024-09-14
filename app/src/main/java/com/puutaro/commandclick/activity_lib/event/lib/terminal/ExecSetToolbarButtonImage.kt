@@ -166,7 +166,7 @@ object ExecSetToolbarButtonImage {
             bitmapList.shuffled().forEach {
                 animation.addFrame(
                     BitmapDrawable(context.resources, it),
-                    270
+                    300
                 )
             }
             animation.isOneShot = false

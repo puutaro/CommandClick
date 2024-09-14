@@ -33,6 +33,9 @@
             android:visibility="gone"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
             >
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/cmdindex_selection_search_icon1"
@@ -47,7 +50,7 @@
             />
             <com.puutaro.commandclick.custom_view.OutlineTextView
                 android:id="@+id/cmdindex_selection_search_caption"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:padding="0dp"
                 android:textSize="30sp"
@@ -56,8 +59,23 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:layout_gravity="center"
-                android:gravity="center"
+                android:gravity="top"
                 android:text="Search"
+                />
+            <com.puutaro.commandclick.custom_view.OutlineTextView
+                android:id="@+id/cmdindex_selection_search_cur_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="0dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_gravity="center"
+                android:gravity="bottom"
+                android:visibility="gone"
+                android:alpha="0.9"
                 />
         </androidx.cardview.widget.CardView>
         <androidx.appcompat.widget.LinearLayoutCompat

@@ -8,11 +8,19 @@ class JsSelectionText(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
     @JavascriptInterface
-    fun updateText(
+    fun updateRegisterText(
         text: String
     ){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         terminalFragment.selectionText = text
+    }
+
+    @JavascriptInterface
+    fun updateSelectionTextView(updateText: String){
+        val terminalFragment = terminalFragmentRef.get() ?: return
+        val context = terminalFragment.context ?: return
+        val listener = context as TerminalFragment.OnUpdateSelectionTextViewListenerForTerm
+        listener.onUpdateSelectionTextViewForTerm(updateText)
     }
 }

@@ -1,12 +1,23 @@
 package com.puutaro.commandclick.proccess.intent
 
 
+import android.app.Dialog
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.view.Gravity
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -17,8 +28,10 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryAdminEvent
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryJsEvent
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -63,6 +76,18 @@ object EditExecuteOrElse {
 //                        appDirName,
                 fannelName,
             ).split("\n")
+        }
+        val isMustUbuntuSetup =
+            CommandClickVariables.substituteCmdClickVariable(
+                mainFannelSettingConList,
+                CommandClickScriptVariable.MUST_UBUNTU_SETUP,
+            ) == SettingVariableSelects.MustUbuntuSetupSelects.ON.name
+        ubuntuSetupAlertHandler(
+            context,
+            isMustUbuntuSetup
+        ).let {
+            isAlert ->
+            if(isAlert) return
         }
         val isEditExecute =
             CommandClickVariables.substituteCmdClickVariable(
@@ -209,6 +234,96 @@ object EditExecuteOrElse {
                     )
                 }
             }
+        }
+    }
+
+    private fun ubuntuSetupAlertHandler(
+        context: Context?,
+        isMustUbuntuSetup: Boolean,
+    ): Boolean {
+        if(
+            !isMustUbuntuSetup
+        ) return false
+        if(
+            context == null
+        ) return false
+        val okSetup = UbuntuFiles(context).ubuntuSetupCompFile.isFile
+        if(
+            okSetup
+        ) return false
+        UbuntuSetupAlert.get(context)
+        return true
+
+    }
+
+    private object UbuntuSetupAlert{
+        private var ubuntuSetupAlertDialog: Dialog? = null
+
+        fun get(context: Context) {
+            ubuntuSetupAlertDialog = Dialog(
+                context
+            )
+            ubuntuSetupAlertDialog?.setContentView(
+                R.layout.only_alert_dialog_layout
+            )
+//            val confirmTitleTextView =
+//                getSdcardTreeUriConfirmDialog?.findViewById<AppCompatTextView>(
+//                    com.puutaro.commandclick.R.id.confirm_text_dialog_title
+//                )
+//            confirmTitleTextView?.text = title
+            ubuntuSetupAlertDialog?.findViewById<AppCompatImageView>(
+                R.id.only_alert_dialog_bk_image
+            )?.let {
+                val ccRoboGifByteArray = AssetsFileManager.assetsByteArray(
+                    context,
+                    AssetsFileManager.ccRoboGifPath
+                )
+                val requestBuilder: RequestBuilder<Drawable> =
+                    Glide.with(context)
+                        .asDrawable()
+                        .sizeMultiplier(0.1f)
+                Glide
+                    .with(it.context)
+                    .load(ccRoboGifByteArray)
+                    .placeholder(R.mipmap.ic_cmdclick_launcher)
+                    .thumbnail(requestBuilder)
+                    .centerCrop()
+                    .into(it)
+            }
+            val confirmContentTextView =
+                ubuntuSetupAlertDialog?.findViewById<OutlineTextView>(
+                    R.id.only_alert_dialog_text_view
+                )
+            confirmContentTextView?.outlineWidthSrc = 5
+            confirmContentTextView?.text =
+                "\n".repeat(4) + "Setup ubuntu on notification bar, ok?"
+            val okButton =
+                ubuntuSetupAlertDialog?.findViewById<AppCompatImageView>(
+                    R.id.only_alert_dialog_ok
+                )
+            CoroutineScope(Dispatchers.Main).launch {
+                ExecSetToolbarButtonImage.setImageButton(
+                    okButton,
+                    CmdClickIcons.OK,
+                )
+            }
+
+            okButton?.setOnClickListener {
+                ubuntuSetupAlertDialog?.dismiss()
+                ubuntuSetupAlertDialog = null
+            }
+            ubuntuSetupAlertDialog?.setOnCancelListener {
+                ubuntuSetupAlertDialog?.dismiss()
+                ubuntuSetupAlertDialog = null
+            }
+            ubuntuSetupAlertDialog?.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            ubuntuSetupAlertDialog?.window?.setGravity(
+                Gravity.CENTER
+            )
+            ubuntuSetupAlertDialog?.show()
         }
     }
 }

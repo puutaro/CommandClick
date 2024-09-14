@@ -114,6 +114,7 @@ class MainActivity:
     TerminalFragment.OnPageSearchSwitchListenerForTerm,
     TerminalFragment.OnCaptureActivityListenerForTerm,
     TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm,
+    TerminalFragment.OnUpdateSelectionTextViewListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -912,6 +913,15 @@ class MainActivity:
             ToolbarCtrlForCmdIndex.hideShowForTextSelection(
                 this@MainActivity,
                 isShow
+            )
+        }
+    }
+
+    override fun onUpdateSelectionTextViewForTerm(updateText: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            ToolbarCtrlForCmdIndex.updateTextSelection(
+                this@MainActivity,
+                updateText,
             )
         }
     }
