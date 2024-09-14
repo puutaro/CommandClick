@@ -34,8 +34,9 @@ object TextSelectionBarCtrl {
         }
         binding.cmdindexSelectionSearchCurText.apply {
             isVisible = false
+            outlineWidthSrc = 3
             setFillColor(R.color.white)
-            setStrokeColor(R.color.fannel_icon_color)
+            setStrokeColor(R.color.fill_gray)
         }
         val cmdindexSelectionSearchButton = binding.cmdindexSelectionSearchButton
         val context = cmdIndexFragment.context ?: return
