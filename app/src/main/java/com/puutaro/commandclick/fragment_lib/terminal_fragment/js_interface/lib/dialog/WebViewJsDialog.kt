@@ -52,7 +52,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
-import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
@@ -182,7 +181,7 @@ class WebViewJsDialog(
         )
         webViewClientSetter(
             terminalFragment,
-            pocketWebViewSrc
+            pocketWebViewSrc,
         )
         WebChromeClientSetter.set(
             terminalFragment,
@@ -712,7 +711,7 @@ class WebViewJsDialog(
 
     private fun webViewClientSetter(
         terminalFragment: TerminalFragment?,
-        pocketWebView: WebView?
+        pocketWebView: WebView?,
     ){
         var previousUrl: String? = null
         if(
@@ -784,12 +783,16 @@ class WebViewJsDialog(
                         webview?.scrollY = it
                     }
                 }
-                WrapWebHistoryUpdater.updateForPocketWebview(
-                    terminalFragment,
-                    webview,
-                    url,
-                    previousUrl
-                )
+                if(
+                    webViewDialogExtraMapManager?.isUrlHistorySave() != false
+                ) {
+                    WrapWebHistoryUpdater.updateForPocketWebview(
+                        terminalFragment,
+                        webview,
+                        url,
+                        previousUrl
+                    )
+                }
                 val prevUrl = previousUrl
                 CoroutineScope(Dispatchers.Main).launch {
                     GgleFocusJs.load(
@@ -1387,6 +1390,7 @@ private class WebViewDialogExtraMapManager(
 ) {
     private var extraMap = emptyMap<String, String>()
     private var focusMap = emptyMap<String, String>()
+    private var urlHistoryMap = emptyMap<String, String>()
 
     companion object {
 
@@ -1398,6 +1402,7 @@ private class WebViewDialogExtraMapManager(
             val key: String
         ) {
             FOCUS("focus"),
+            URL_HISTORY("urlHistory")
         }
 
         object FocusManager {
@@ -1419,6 +1424,17 @@ private class WebViewDialogExtraMapManager(
 
             }
         }
+
+        object UrlHistoryManager {
+
+            const val switchOn = "ON"
+            enum class UrlHistoryKey(
+                val key: String,
+            ){
+                DISABLE_SAVE("disableSave"),
+            }
+        }
+
     }
 
     init {
@@ -1433,6 +1449,7 @@ private class WebViewDialogExtraMapManager(
     ){
         setExtraMap(extraMapCon)
         setFocusMap(extraMap)
+        setUrlHistoryMap(extraMap)
         makeBottomButtonTagList(menuMapStrList)
     }
 
@@ -1442,6 +1459,22 @@ private class WebViewDialogExtraMapManager(
             typeSeparator,
         ).toMap()
     }
+
+    private fun setUrlHistoryMap(extraMap: Map<String, String>) {
+        val urlHistoryMapCon = extraMap.get(
+                       MainKeys.URL_HISTORY.key
+                           )
+                urlHistoryMap = CmdClickMap.createMap(
+                        urlHistoryMapCon,
+                        keySeparator
+                           ).toMap()
+            }
+
+        fun isUrlHistorySave(): Boolean {
+            return urlHistoryMap.get(
+                UrlHistoryManager.UrlHistoryKey.DISABLE_SAVE.key
+            ) != UrlHistoryManager.switchOn
+        }
 
     private fun makeBottomButtonTagList(
         menuMapStrList: List<String>

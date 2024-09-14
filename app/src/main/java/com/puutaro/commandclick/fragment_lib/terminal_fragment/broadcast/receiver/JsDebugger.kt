@@ -291,7 +291,7 @@ object JsDebugger {
             UsePath.jsSrcAcDebugReportPath,
         )
         val sectionSeparator = WebViewJsDialog.sectionSeparator.toString()
-        val menuMapSeparator = WebViewJsDialog.typeSeparator.toString()
+        val typeSeparator = WebViewJsDialog.typeSeparator.toString()
         val keySeparator = WebViewJsDialog.keySeparator.toString()
         val menuMapStrListCon = listOf(
             listOf(
@@ -318,13 +318,13 @@ object JsDebugger {
                 "tag=js",
                 "clickMenuFilePath=OPEN_JS_REPORT.js"
             ).joinToString(keySeparator),
-        ).joinToString(menuMapSeparator)
+        ).joinToString(typeSeparator)
         val extraMapCon = listOf(
-            listOf(
-                "focus=defaultTag=jsSrcAction",
+            "focus=" + listOf(
+                "defaultTag=jsSrcAction",
                 "triggers=click",
-            ).joinToString(menuMapSeparator)
-        ).joinToString(menuMapSeparator)
+            ).joinToString(keySeparator)
+        ).joinToString(typeSeparator)
         val toolBar = WebViewJsDialog.Companion.WebViewConfigMapSection.toolBar.name
         val extra = WebViewJsDialog.Companion.WebViewConfigMapSection.extra.name
         val webviewConfigMapCon = listOf(
