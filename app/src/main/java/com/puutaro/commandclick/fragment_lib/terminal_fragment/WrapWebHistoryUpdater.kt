@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.webkit.ValueCallback
 import android.webkit.WebView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -12,7 +11,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryRegister
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
@@ -105,13 +103,16 @@ object WrapWebHistoryUpdater {
             terminalFragment.onUrlHistoryRegister
             != CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
         ) return
+        val isQueryUrl = webViewUrl?.startsWith(WebUrlVariables.queryUrl) == true
+        val isIgnoreHistoryPath = !terminalFragment.ignoreHistoryPathList
+            ?.joinToString("")
+            .isNullOrEmpty()
+                && terminalFragment.ignoreHistoryPathList?.any {
+            webViewUrl?.contains(it) == true
+        } == true
         if(
-            !terminalFragment.ignoreHistoryPathList
-                ?.joinToString("")
-                .isNullOrEmpty()
-            && terminalFragment.ignoreHistoryPathList?.any {
-                webViewUrl?.contains(it) == true
-            } == true
+            isQueryUrl
+            || isIgnoreHistoryPath
         ) return
         terminalFragment.onPocketWebHistoryUpdaterJob?.cancel()
         var urlTitleString: String? = null
