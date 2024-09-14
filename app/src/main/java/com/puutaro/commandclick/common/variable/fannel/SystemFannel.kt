@@ -6,6 +6,7 @@ object SystemFannel {
     val webSearcher = "webSearcher.js"
     val textToSpeech = "textToSpeech.js"
     val cmdBookmaker = "bookmaker.js"
+    val ggleTranslator = "ggleTranslator.js"
     val copyLink = "copyLink.js"
     val shareImage = "shareImage.js"
     val preference = "preference.js"

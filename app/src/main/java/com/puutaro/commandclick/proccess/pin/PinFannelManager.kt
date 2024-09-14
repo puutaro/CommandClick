@@ -35,6 +35,7 @@ object PinFannelManager {
     private val firstPinFannelList = listOf(
         SystemFannel.textToSpeech,
         SystemFannel.cmdBookmaker,
+        SystemFannel.ggleTranslator,
     )
 
     fun extractPinFannelMapList(
