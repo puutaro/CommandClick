@@ -19,33 +19,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-    <ScrollView
-        android:id="@+id/only_alert_dialog_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:scrollbars="vertical"
-        android:orientation="vertical"
-        android:descendantFocusability="blocksDescendants"
-        android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        >
+<!--    <ScrollView-->
+<!--        android:id="@+id/only_alert_dialog_scroll"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        android:scrollbars="vertical"-->
+<!--        android:orientation="vertical"-->
+<!--        android:descendantFocusability="blocksDescendants"-->
+<!--        android:scrollbarThumbVertical="@android:color/darker_gray"-->
+<!--        android:paddingTop="15dp"-->
+<!--        android:paddingBottom="15dp"-->
+<!--        android:paddingStart="15dp"-->
+<!--        android:paddingEnd="15dp"-->
+<!--        >-->
         <com.puutaro.commandclick.custom_view.OutlineTextView
             android:id="@+id/only_alert_dialog_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/only_alert_dialog_ok"
+            android:layout_gravity="center"
+            android:gravity="bottom"
             android:textSize="35sp"
             android:textStyle="bold"
-            android:layout_margin="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="25dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             />
-    </ScrollView>
+<!--         android:layout_margin="15dp"-->
+<!--    </ScrollView>-->
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/only_alert_dialog_ok"

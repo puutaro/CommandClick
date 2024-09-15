@@ -298,7 +298,8 @@ object EditExecuteOrElse {
                 )
             confirmContentTextView?.outlineWidthSrc = 5
             confirmContentTextView?.text =
-                "\n".repeat(2) + "Setup ubuntu on notification bar, ok?"
+                "Setup ubuntu on notification bar, ok?"
+//            "\n".repeat(2) +
             val okButton =
                 ubuntuSetupAlertDialog?.findViewById<AppCompatImageView>(
                     R.id.only_alert_dialog_ok
