@@ -547,4 +547,18 @@ object FileSystems {
         val dtf = DateTimeFormatter.ofPattern(format)
         return LocalDateTime.parse(localDatetimeStr, dtf)
     }
+
+    fun convertFileToByteArray(
+        path: String,
+    ): ByteArray? {
+        val pathFile = File(path)
+        if(
+            !pathFile.isFile
+        ) return null
+        return try {
+            pathFile.readBytes()
+        } catch (e: Exception){
+            null
+        }
+    }
 }

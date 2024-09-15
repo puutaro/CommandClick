@@ -21,6 +21,7 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.UrlImageDownloader
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
@@ -31,7 +32,6 @@ import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryJsE
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -266,25 +266,27 @@ object EditExecuteOrElse {
             ubuntuSetupAlertDialog?.setContentView(
                 R.layout.only_alert_dialog_layout
             )
-//            val confirmTitleTextView =
-//                getSdcardTreeUriConfirmDialog?.findViewById<AppCompatTextView>(
-//                    com.puutaro.commandclick.R.id.confirm_text_dialog_title
-//                )
-//            confirmTitleTextView?.text = title
             ubuntuSetupAlertDialog?.findViewById<AppCompatImageView>(
                 R.id.only_alert_dialog_bk_image
             )?.let {
-                val ccRoboGifByteArray = AssetsFileManager.assetsByteArray(
-                    context,
-                    AssetsFileManager.ccRoboGifPath
-                )
+                val ubuntuSetupProcedureGifByteArray =
+                    FileSystems.convertFileToByteArray(
+                        File(
+                            UrlImageDownloader.imageDirPrefix,
+                            UrlImageDownloader.ubuntuAlertGifSuffix
+                        ).absolutePath
+                    )
+//                    AssetsFileManager.assetsByteArray(
+//                    context,
+//                    AssetsFileManager.ccRoboGifPath
+//                )
                 val requestBuilder: RequestBuilder<Drawable> =
                     Glide.with(context)
                         .asDrawable()
                         .sizeMultiplier(0.1f)
                 Glide
                     .with(it.context)
-                    .load(ccRoboGifByteArray)
+                    .load(ubuntuSetupProcedureGifByteArray)
                     .placeholder(R.mipmap.ic_cmdclick_launcher)
                     .thumbnail(requestBuilder)
                     .centerCrop()
@@ -296,7 +298,7 @@ object EditExecuteOrElse {
                 )
             confirmContentTextView?.outlineWidthSrc = 5
             confirmContentTextView?.text =
-                "\n".repeat(4) + "Setup ubuntu on notification bar, ok?"
+                "\n".repeat(2) + "Setup ubuntu on notification bar, ok?"
             val okButton =
                 ubuntuSetupAlertDialog?.findViewById<AppCompatImageView>(
                     R.id.only_alert_dialog_ok

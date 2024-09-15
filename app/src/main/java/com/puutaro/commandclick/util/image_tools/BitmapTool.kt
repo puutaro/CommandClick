@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.util.file.FileSystems
+import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -167,8 +168,9 @@ object BitmapTool {
         path: String,
         quality: Int = 100,
     ): ByteArray? {
+        val pathFile = File(path)
         if(
-            !File(path).isFile
+            !pathFile.isFile
         ) return null
         return try {
             val stream = ByteArrayOutputStream()

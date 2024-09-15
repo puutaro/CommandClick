@@ -140,6 +140,7 @@ class CommandIndexFragment: Fragment() {
         TextSelectionBarCtrl.setOnClickListener(this)
         PreInstallFannel.install(this)
         ExtraMenuGifCreator.create(this)
+        UrlImageDownloader.save(this)
     }
 
 
@@ -150,6 +151,7 @@ class CommandIndexFragment: Fragment() {
 ////            binding.cmdList
 //        )
         ExtraMenuGifCreator.exit()
+        UrlImageDownloader.exit()
         PreInstallFannel.exit()
         cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
