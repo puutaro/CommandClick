@@ -7,8 +7,8 @@ plugins {
 
 val applicationName = "CommandClick"
 val versionMajor = 1
-val versionMinor = 3
-val versionPatch = 19
+val versionMinor = 4
+val versionPatch = 1
 
 android {
     namespace = "com.puutaro.commandclick"
@@ -27,7 +27,7 @@ android {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
         targetSdk = 33
-        versionCode = 80
+        versionCode = 81
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
