@@ -13,7 +13,7 @@ enum class UbuntuServerIntentExtra(
     backgroundArgsTabSepaStr("args"),
     backgroundMonitorFileName("monitor_file_name"),
     backgroundResFilePath("res_file_path"),
-    fannelDirPath("fannel_dir_path"),
+//    fannelDirPath("fannel_dir_path"),
     fannelName("fannel_name"),
     foregroundShellPath("shell_path"),
     foregroundArgsTabSepaStr("args"),

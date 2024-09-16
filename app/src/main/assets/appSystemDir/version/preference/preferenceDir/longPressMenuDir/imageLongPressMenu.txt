@@ -1,3 +1,0 @@
-urlIntender.js
-shareImage.js
-qrLReader.js

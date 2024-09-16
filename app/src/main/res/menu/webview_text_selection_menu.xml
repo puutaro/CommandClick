@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item android:id="@+id/webview_text_selection_menu_search"
+        android:title="Search" />
+    <item android:id="@+id/webview_text_selection_menu_copy"
+        android:title="Copy" />
+    <item android:id="@+id/webview_text_selection_menu_select_all"
+        android:title="Select all" />
+    <item android:id="@+id/webview_text_selection_menu_dictionary"
+        android:title="Dictionary" />
+
+</menu>

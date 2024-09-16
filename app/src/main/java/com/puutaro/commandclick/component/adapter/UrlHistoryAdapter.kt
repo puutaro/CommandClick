@@ -1,19 +1,18 @@
 package com.puutaro.commandclick.component.adapter
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
-import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
@@ -29,21 +28,20 @@ import java.io.File
 
 
 class UrlHistoryAdapter(
-    private val fragment: Fragment,
-    private val currentAppDirPath: String,
+    private val context: Context?,
     var urlHistoryMapList: MutableList<Map<String, String>>,
     private val currentUrl: String?,
 ): RecyclerView.Adapter<UrlHistoryAdapter.UrlHistoryViewHolder>(){
 
     class UrlHistoryViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val urlHistoryAdapterConstraintLayout = view.findViewById<ConstraintLayout>(R.id.url_history_adapter_constraint_layout)
-        val urlHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.url_history_adapter_relative_layout)
+//        val urlHistoryAdapterRelativeLayout = view.findViewById<RelativeLayout>(R.id.url_history_adapter_relative_layout)
         val urlCaptureView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_capture)
         val urlTitleTextView = view.findViewById<OutlineTextView>(R.id.url_history_adapter_title)
 //        val urlHistoryAdapterBottomLinearInner = view.findViewById<LinearLayoutCompat>(R.id.url_history_adapter_bottom_linear_inner)
-        val urlSiteLogoView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_site_logo)
-        val copyImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_copy)
-        val deleteImageButtonView = view.findViewById<AppCompatImageButton>(R.id.url_history_adapter_delete)
+        val urlSiteLogoView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_site_logo)
+        val copyImageButtonView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_copy)
+        val deleteImageButtonView = view.findViewById<AppCompatImageView>(R.id.url_history_adapter_delete)
     }
 
     companion object {
@@ -52,17 +50,8 @@ class UrlHistoryAdapter(
         ){
             TITLE("title"),
             URL("url"),
-            ICON_BASE64_STR("iconBase64Str"),
-            CAPTURE_BASE64_STR("captureBase64Str"),
-        }
-
-        enum class FileType{
-            BOTTOM_FANNEL,
-            NORMAL_FANNEL,
         }
     }
-
-    private val context = fragment.context
 
     private val urlHistoryGifByteArray = AssetsFileManager.assetsByteArray(
         context,
@@ -73,30 +62,14 @@ class UrlHistoryAdapter(
         AssetsFileManager.internetGifPath
     )
 
-//    private val tileHeight = ScreenSizeCalculator.dpWidth(fragment).let {
-//        (it * 3) / 2
-//    }
-//
-//    private val tileRelativeLayoutParam = LinearLayoutCompat.LayoutParams(
-//        LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-//        tileHeight.toInt()
-//    )
-//
-//    private val recyclerViewLayoutParam = RecyclerView.LayoutParams(
-//        RecyclerView.LayoutParams.MATCH_PARENT,
-//        tileHeight.toInt() + ScreenSizeCalculator.toDp(fragment.context, 40)
-//    )
+    private val copyButtonImageByteArray =
+        BitmapTool.convertFileToByteArray(
+            ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.COPY.assetsPath).absolutePath
+        )
 
-
-//    private val intrudeGifByteArray = AssetsFileManager.assetsByteArray(
-//        context,
-//        AssetsFileManager.intrudeGifPath
-//    )
-//
-//    private val ccRoboGifByteArray = AssetsFileManager.assetsByteArray(
-//        context,
-//        AssetsFileManager.ccRoboGifPath
-//    )
+    private val deleteButtonImageByteArray =BitmapTool.convertFileToByteArray(
+        ExecSetToolbarButtonImage.getImageFile(CmdClickIcons.CANCEL.assetsPath).absolutePath
+    )
 
 
     override fun onCreateViewHolder(
@@ -144,37 +117,35 @@ class UrlHistoryAdapter(
                     val hitUrlColor = R.color.gold_yellow
                     holder.urlHistoryAdapterConstraintLayout.backgroundTintList =
                         context?.getColorStateList(hitUrlColor)
-//                    holder.urlHistoryAdapterBottomLinearInner.backgroundTintList =
-//                        context?.getColorStateList(hitUrlColor)
-                    holder.copyImageButtonView.backgroundTintList =
-                        context?.getColorStateList(hitUrlColor)
-                    holder.deleteImageButtonView.backgroundTintList =
-                        context?.getColorStateList(hitUrlColor)
-                    holder.urlSiteLogoView.backgroundTintList =
-                        context?.getColorStateList(hitUrlColor)
                 }
             }
-            val iconBase64Str = withContext(Dispatchers.IO) {
-                urlHistoryMap.get(UrlHistoryMapKey.ICON_BASE64_STR.key)
-                    ?: let {
-                        val logoBase64TxtPath = UrlLogoHistoryTool.getCaptureBase64TxtPathByUrl(
-                            currentAppDirPath,
-                            urlStr,
-                        )?.absolutePath
-                            ?: return@let null
-                        ReadText(logoBase64TxtPath).readText()
-                    }
+            withContext(Dispatchers.Main){
+                setButtonImage(
+                    holder.copyImageButtonView,
+                    copyButtonImageByteArray,
+                )
+                setButtonImage(
+                    holder.deleteImageButtonView,
+                    deleteButtonImageByteArray,
+                )
             }
-            val capturePngPathOrMacro =
-                urlHistoryMap.get(UrlHistoryMapKey.CAPTURE_BASE64_STR.key)
-                    ?: UrlHistoryPath.getCaptureGifPath(
-                        currentAppDirPath,
+            val iconBase64Str = withContext(Dispatchers.IO) {
+                let {
+                    val logoBase64TxtPath = UrlLogoHistoryTool.getCaptureBase64TxtPathByUrl(
+                        urlStr,
+                    )?.absolutePath
+                        ?: return@let null
+                    ReadText(logoBase64TxtPath).readText()
+                }
+            }
+            val captureGifPath =
+                     UrlHistoryPath.getCaptureGifPath(
                         urlStr,
                     )
 
             setCaptureImage(
                 holder,
-                capturePngPathOrMacro,
+                captureGifPath,
                 urlStr
             )
             setSiteLogo(
@@ -225,7 +196,7 @@ class UrlHistoryAdapter(
 
     private suspend fun setCaptureImage(
         holder: UrlHistoryViewHolder,
-        capturePngPathOrMacro: String?,
+        captureGifPath: String?,
         url: String,
     ){
         if (
@@ -234,19 +205,20 @@ class UrlHistoryAdapter(
 
         val urlCaptureView = holder.urlCaptureView
         val context = urlCaptureView.context
-        val isFile = !capturePngPathOrMacro.isNullOrEmpty()
-                && File(capturePngPathOrMacro).isFile
+        val isFile = !captureGifPath.isNullOrEmpty()
+                && File(captureGifPath).isFile
         withContext(Dispatchers.Main) {
             when (isFile) {
                 true -> {
                     holder.urlCaptureView.imageTintList = null
                     val requestBuilder: RequestBuilder<Drawable> =
+
                         Glide.with(context)
                             .asDrawable()
                             .sizeMultiplier(0.1f)
                     Glide
                         .with(context)
-                        .load(capturePngPathOrMacro)
+                        .load(captureGifPath)
                         .skipMemoryCache( true )
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .thumbnail( requestBuilder )
@@ -274,26 +246,6 @@ class UrlHistoryAdapter(
         urlStr: String,
     ){
         if(context == null) return
-        val fileType = FileType.values().firstOrNull {
-            it.name == iconBase64Str
-        }
-        if(fileType != null) {
-            val color = when(fileType){
-                FileType.BOTTOM_FANNEL -> R.color.fannel_icon_color
-                FileType.NORMAL_FANNEL -> R.color.orange
-            }
-            withContext(Dispatchers.Main) {
-                Glide
-                    .with(holder.urlSiteLogoView.context)
-                    .load(R.drawable.icons8_file)
-                    .centerCrop()
-                    .into(holder.urlSiteLogoView)
-//                holder.urlSiteLogoView.load(R.drawable.icons8_file)
-                holder.urlSiteLogoView.imageTintList =
-                    context.getColorStateList(color)
-            }
-            return
-        }
         val iconBitMap = withContext(Dispatchers.IO) {
             BitmapTool.Base64Tool.decode(
                 iconBase64Str
@@ -312,8 +264,7 @@ class UrlHistoryAdapter(
 //                holder.urlSiteLogoView.load(iconBitMap)
                 return@withContext
             }
-            holder.urlSiteLogoView.imageTintList =
-                when(
+            holder.urlSiteLogoView.imageTintList = when(
                     EnableUrlPrefix.isHttpPrefix(urlStr)
                 ) {
                     false -> {
@@ -338,6 +289,28 @@ class UrlHistoryAdapter(
         }
     }
 
+    private fun setButtonImage(
+        imageView: AppCompatImageView,
+        byteArray: ByteArray?,
+    ){
+        if(
+            byteArray == null
+        ) return
+        val context = imageView.context
+        imageView.imageTintList = null
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        Glide
+            .with(context)
+            .load(byteArray)
+            .skipMemoryCache( true )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail( requestBuilder )
+            .into(imageView)
+    }
+
     private suspend fun setTitle(
         holder: UrlHistoryViewHolder,
         titleSrc: String?,
@@ -351,6 +324,7 @@ class UrlHistoryAdapter(
         }
         withContext(Dispatchers.Main) {
             holder.urlTitleTextView.text = title
+            holder.urlTitleTextView.setFillColor(R.color.file_dark_green_color)
         }
     }
 }

@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.broadcast.receiver
 import android.content.Intent
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -27,8 +27,8 @@ object BroadcastReceiveHandlerForEdit {
                     editFragment,
                     ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                         editFragment,
-                        ListIndexForEditAdapter.indexListMap,
-                        ListIndexForEditAdapter.listIndexTypeKey
+                        ListIndexAdapter.indexListMap,
+                        ListIndexAdapter.listIndexTypeKey
                     )
                 )
             }

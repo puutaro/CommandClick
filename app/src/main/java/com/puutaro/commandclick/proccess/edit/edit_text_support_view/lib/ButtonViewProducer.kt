@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Intent
 import android.view.MotionEvent
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -66,12 +67,9 @@ object ButtonViewProducer {
         weight: Float,
         currentComponentIndex: Int,
     ): Button {
-        val context = editParameters.context
+        val context = editFragment.context
         val currentId = editParameters.currentId
 
-        val scriptFileSaver = ScriptFileSaver(
-            editFragment,
-        )
         val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
             editParameters
         )
@@ -81,9 +79,9 @@ object ButtonViewProducer {
             currentSetVariableValue,
             currentComponentIndex
         )
-        val linearParamsForButton = LinearLayout.LayoutParams(
+        val linearParamsForButton = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForButton.weight = weight
         val insertButton = Button(context)
@@ -105,7 +103,6 @@ object ButtonViewProducer {
             editFragment,
             insertEditText,
             currentVariableName,
-            scriptFileSaver,
             editParameters,
             buttonMap,
             currentSetVariableValue
@@ -184,7 +181,7 @@ object ButtonViewProducer {
             ButtonEditKey.tag.name
         )
 
-        buttonEventArgs.scriptFileSaver.save()
+        ScriptFileSaver.save(editFragment)
         ListContentsSaverByTag.save(
             editFragment,
             listOf(currentButtonTag)
@@ -286,7 +283,7 @@ object ButtonViewProducer {
             -> execShellScriptByTermux(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
-                innerExecCmd,
+//                innerExecCmd,
             )
             ButtonCmdType.bashb
             -> execShellScriptByBackground(
@@ -300,6 +297,7 @@ object ButtonViewProducer {
             )
             ButtonCmdType.jsCode
             -> jsConExecutor(
+                editFragment,
                 buttonEventArgs,
                 innerExecCmd,
             )
@@ -314,7 +312,7 @@ object ButtonViewProducer {
     private fun execShellScriptByTermux(
         editFragment: EditFragment,
         execCmdAfterTrimButtonEditExecVariant: String,
-        innerExecCmd: String,
+//        innerExecCmd: String,
     ){
         val context = editFragment.context
             ?: return
@@ -377,7 +375,7 @@ object ButtonViewProducer {
             -> execShellScriptByTermux(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
-                innerExecCmd,
+//                innerExecCmd,
             )
         }
     }
@@ -463,16 +461,17 @@ object ButtonViewProducer {
         execCmdAfterTrimButtonEditExecVariant: String,
     ): String {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val fannelDirName = CcPathTool.makeFannelDirName(
             currentScriptName
         )
-        val fannelDirPath = "${currentAppDirPath}/$fannelDirName"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/$fannelDirName"
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         val outputMonitorPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
         val execCmd = if(
@@ -814,13 +813,11 @@ object ButtonViewProducer {
     }
 
     private fun jsConExecutor(
+        editFragment: EditFragment,
         buttonEventArgs: ButtonEventArgs,
         jsConSrc: String,
     ){
         val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
-        val editFragment =
-            buttonEventArgs.editParameters.currentFragment
-        if(editFragment !is EditFragment) return
         val currentVariableName = buttonEventArgs.currentVariableName
         val currentEditTextCon = currentVariableName?.let {
             EditVariableName.getText(editFragment, it)
@@ -900,9 +897,9 @@ object ButtonViewProducer {
         currentComponentIndex: Int
     ): Map<String, String> {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -923,7 +920,7 @@ object ButtonViewProducer {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             )
         }.let {
@@ -1000,7 +997,6 @@ object ButtonViewProducer {
         val editFragment: EditFragment,
         val insertEditText: EditText,
         val currentVariableName: String?,
-        val scriptFileSaver: ScriptFileSaver,
         val editParameters: EditParameters,
         val buttonMap: Map<String, String>?,
         val currentSetVariableValue: String?

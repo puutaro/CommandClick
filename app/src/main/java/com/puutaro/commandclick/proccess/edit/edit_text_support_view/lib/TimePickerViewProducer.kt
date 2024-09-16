@@ -7,17 +7,20 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import java.util.Calendar
 
 object TimePickerViewProducer {
     fun make(
+        editFragment: EditFragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         weight: Float
     ): Button {
-        val context = editParameters.context
+        val context = editFragment.context
         val chooseButtonStr = "time"
 
         val insertButtonView = Button(context)
@@ -26,9 +29,9 @@ object TimePickerViewProducer {
             insertButtonView,
             insertEditText
         )
-        val insertButtonViewParam = LinearLayout.LayoutParams(
+        val insertButtonViewParam = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         insertButtonViewParam.weight = weight
         insertButtonView.layoutParams = insertButtonViewParam

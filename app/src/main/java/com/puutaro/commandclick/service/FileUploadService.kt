@@ -118,17 +118,18 @@ class FileUploadService: Service() {
         fileUploadJob?.cancel()
 
 
-        currentAppDirPath = intent?.getStringExtra(
-            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema
-        ).let {
-            if(
-                !it.isNullOrEmpty()
-            ) return@let it
-            val stanIntent = Intent()
-            stanIntent.action = BroadCastIntentSchemeFileUpload.STAN_FILE_UPLOAD.action
-            applicationContext.sendBroadcast(stanIntent)
-            return START_NOT_STICKY
-        }
+        currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        intent?.getStringExtra(
+//            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema
+//        ).let {
+//            if(
+//                !it.isNullOrEmpty()
+//            ) return@let it
+//            val stanIntent = Intent()
+//            stanIntent.action = BroadCastIntentSchemeFileUpload.STAN_FILE_UPLOAD.action
+//            applicationContext.sendBroadcast(stanIntent)
+//            return START_NOT_STICKY
+//        }
         notificationBuilder = NotificationCompat.Builder(
             applicationContext,
             notificationIdToImportance.id

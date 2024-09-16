@@ -13,6 +13,7 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
@@ -289,24 +290,52 @@ object JsDebugger {
         val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
             UsePath.jsSrcAcDebugReportPath,
         )
-        val menuMapSeparator = '|'
-        val cancelLabel = "❌"
+        val sectionSeparator = WebViewJsDialog.sectionSeparator.toString()
+        val typeSeparator = WebViewJsDialog.typeSeparator.toString()
+        val keySeparator = WebViewJsDialog.keySeparator.toString()
         val menuMapStrListCon = listOf(
-            "dismissType=both?label=${cancelLabel}?tag=cancel",
-            "label=AC?tag=jsSrcAction?clickMenuFilePath=OPEN_SRC_JS_ACTION_REPORT.js",
-            "label=GAC?tag=jsGenAction?clickMenuFilePath=OPEN_GENERATED_JS_ACTION_REPORT.js",
-            "label=JS?tag=js?clickMenuFilePath=OPEN_JS_REPORT.js",
-        ).joinToString(menuMapSeparator.toString())
+            listOf(
+                "dismissType=both",
+                "caption=cancel",
+                "iconName=cancel",
+                "tag=cancel"
+            ).joinToString(keySeparator),
+            listOf(
+                "caption=action",
+                "iconName=debug",
+                "tag=jsSrcAction",
+                "clickMenuFilePath=OPEN_SRC_JS_ACTION_REPORT.js"
+            ).joinToString(keySeparator),
+            listOf(
+                "caption=genAc",
+                "iconName=search",
+                "tag=jsGenAction",
+                "clickMenuFilePath=OPEN_GENERATED_JS_ACTION_REPORT.js"
+            ).joinToString(keySeparator),
+            listOf(
+                "caption=js",
+                "iconName=js",
+                "tag=js",
+                "clickMenuFilePath=OPEN_JS_REPORT.js"
+            ).joinToString(keySeparator),
+        ).joinToString(typeSeparator)
         val extraMapCon = listOf(
-            "focus=defaultTag=jsSrcAction?triggers=click"
-        ).joinToString(menuMapSeparator.toString())
+            "focus=" + listOf(
+                "defaultTag=jsSrcAction",
+                "triggers=click",
+            ).joinToString(keySeparator)
+        ).joinToString(typeSeparator)
+        val toolBar = WebViewJsDialog.Companion.WebViewConfigMapSection.toolBar.name
+        val extra = WebViewJsDialog.Companion.WebViewConfigMapSection.extra.name
+        val webviewConfigMapCon = listOf(
+            "${toolBar}=${menuMapStrListCon}",
+            "${extra}=${extraMapCon}",
+        ).joinToString(sectionSeparator)
         val jsConSrc = """
             jsDialog.webView_S(
                 "${launchUrl}",
                 "",
-                "${menuMapStrListCon}",
-                "",
-                "${extraMapCon}",
+                "${webviewConfigMapCon}",
             );
         """.trimIndent()
         val jsCon = JavaScriptLoadUrl.makeFromContents(
@@ -327,13 +356,19 @@ object JsDebugger {
         val context = terminalFragment.context
             ?: return
         val cancelLabel = "❌"
+        val toolBarSecName = WebViewJsDialog.Companion.WebViewConfigMapSection.toolBar.name
+        val keySeparator = WebViewJsDialog.keySeparator.toString()
+        val toolbarConfig = listOf(
+            "dismissType=both",
+            "caption=${cancelLabel}",
+            "iconName=cancel"
+        ).joinToString(keySeparator)
+        val webViewConfigMapCon = "${toolBarSecName}=${toolbarConfig}"
         val jsConSrc = """
             jsDialog.webView_S(
                 "${launchUrl}",
                 "",
-                "dismissType=both?label=${cancelLabel}",
-                "",
-                "",
+                "${webViewConfigMapCon}",
             );
         """.trimIndent()
         val jsCon = JavaScriptLoadUrl.makeFromContents(

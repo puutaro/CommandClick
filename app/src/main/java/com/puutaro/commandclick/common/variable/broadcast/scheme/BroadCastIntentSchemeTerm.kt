@@ -44,8 +44,20 @@ enum class BroadCastIntentSchemeTerm(
     "com.puutaro.commandclick.js_debug.close",
     "debugger_close"
     ),
+    POCKET_WEBVIEW_LAUNCH(
+        "com.puutaro.commandclick.pocket_webview_launch.launch",
+        ""
+    ),
+//    POCKET_WEBVIEW_PRELOAD_URL(
+//        "com.puutaro.commandclick.pocket_webview_preloadurl.load",
+//        ""
+//    ),
     POCKET_WEBVIEW_LOAD_URL(
         "com.puutaro.commandclick.pocket_webview_loadurl.load",
         ""
     ),
+    FANNEL_PIN_BAR_UPDATE(
+        "com.puutaro.commandclick.fannel_pin_bar_update.update",
+        String()
+    )
 }

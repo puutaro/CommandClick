@@ -1,41 +1,45 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.state.FragmentTagManager
 
 class DecideEditTag(
     private val shellContentsList: List<String>,
-    private val currentAppDirPath: String,
+//    private val currentAppDirPath: String,
     private val selectedScriptFileName: String,
     private val fannelState: String,
 ) {
+//    private val languageType =
+//        CommandClickVariables.judgeJsOrShellFromSuffix(selectedScriptFileName)
 
-    private val languageType =
-        CommandClickVariables.judgeJsOrShellFromSuffix(selectedScriptFileName)
-
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+//    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+//    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
     private val enableCommandHolderVariablesEdit = howEnableVariableHolder(
-        commandSectionStart,
-        commandSectionEnd
+        CommandClickScriptVariable.CMD_SEC_START,
+        CommandClickScriptVariable.CMD_SEC_END
+//        commandSectionStart,
+//        commandSectionEnd
     )
 
     private val enableSettingHolderVariablesEdit = howEnableVariableHolder(
-        settingSectionStart,
-        settingSectionEnd
+        CommandClickScriptVariable.SETTING_SEC_START,
+        CommandClickScriptVariable.SETTING_SEC_END,
+//        settingSectionStart,
+//        settingSectionEnd
     )
 
     fun decide(): String? {
@@ -46,13 +50,13 @@ class DecideEditTag(
         }
         return if(enableCommandHolderVariablesEdit) {
             FragmentTagManager.makeCmdValEditTag(
-                currentAppDirPath,
+//                currentAppDirPath,
                 selectedScriptFileName,
                 fannelState
             )
         } else {
             FragmentTagManager.makeSettingValEditTag(
-                currentAppDirPath,
+//                currentAppDirPath,
                 selectedScriptFileName,
             )
         }
@@ -66,13 +70,13 @@ class DecideEditTag(
         }
         return if(enableCommandHolderVariablesEdit) {
             FragmentTagManager.makeCmdValEditTag(
-                currentAppDirPath,
+//                currentAppDirPath,
                 selectedScriptFileName,
                 fannelState
             )
         } else {
             FragmentTagManager.makeSettingValEditTag(
-                currentAppDirPath,
+//                currentAppDirPath,
                 selectedScriptFileName,
             )
         }

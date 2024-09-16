@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.li
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecSwitcherForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -18,7 +18,7 @@ object ItemTouchHelperCallbackForListIndexAdapter {
     fun set(
         editFragment: EditFragment,
         recyclerView: RecyclerView,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
+        listIndexForEditAdapter: ListIndexAdapter,
     ){
         val editByDragMap = ListSettingsForListIndex.makeEditByDragMap(
             editFragment.listIndexConfigMap,
@@ -39,11 +39,11 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                     viewHolder: RecyclerView.ViewHolder,
                     target: RecyclerView.ViewHolder
                 ): Boolean {
-                    val adapter = recyclerView.adapter as ListIndexForEditAdapter
+                    val adapter = recyclerView.adapter as ListIndexAdapter
                     val fromViewHolder = viewHolder as
-                            ListIndexForEditAdapter.ListIndexListViewHolder
+                            ListIndexAdapter.ListIndexListViewHolder
                     val toViewHolder = target as
-                            ListIndexForEditAdapter.ListIndexListViewHolder
+                            ListIndexAdapter.ListIndexListViewHolder
                     val from = fromViewHolder.bindingAdapterPosition
                     val to = toViewHolder.bindingAdapterPosition
                     adapter.notifyItemMoved(from, to)
@@ -69,7 +69,7 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                         direction != ItemTouchHelper.LEFT
                     ) return
                     val listIndexViewHolder =
-                        viewHolder as ListIndexForEditAdapter.ListIndexListViewHolder
+                        viewHolder as ListIndexAdapter.ListIndexListViewHolder
                     ExecSimpleDelete.removeController(
                         editFragment,
                         recyclerView,
@@ -102,13 +102,13 @@ object ItemTouchHelperCallbackForListIndexAdapter {
 
     private fun switchHandler(
         editFragment: EditFragment,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
-        fromViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
-        toViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder
+        listIndexForEditAdapter: ListIndexAdapter,
+        fromViewHolder: ListIndexAdapter.ListIndexListViewHolder,
+        toViewHolder: ListIndexAdapter.ListIndexListViewHolder
     ){
-        val listIndexTypeKey = ListIndexForEditAdapter.listIndexTypeKey
+        val listIndexTypeKey = ListIndexAdapter.listIndexTypeKey
         when(listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
                 val fromFileName = fromViewHolder.fileName
                 val toFileName = toViewHolder.fileName
@@ -120,8 +120,8 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                 toMaterialCardView.isChecked = fromChecked
                 val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
                 FileSystems.switchLastModify(
                     File(parentDirPath, fromFileName),

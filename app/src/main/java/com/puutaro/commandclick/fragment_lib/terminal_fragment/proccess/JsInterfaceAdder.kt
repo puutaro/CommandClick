@@ -61,7 +61,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.J
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrLogoEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAction
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAppDirAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsBackstack
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsCancel
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsCmdValFrag
@@ -69,13 +68,16 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSelectMonitor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSystemFannel
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsConfigEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsExit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelExecer
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsKeyboard
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsPinFannel
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSelectionText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsService
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSharePref
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsStateChange
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolBarCtrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolbarSwitcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsUrlHistory
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddGmailCon
@@ -90,484 +92,498 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsCmdValSaveAndBack
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirListGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsUrlAdder
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsUrlHistoryLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tsv.JsTsv
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
+import java.lang.ref.WeakReference
 
 object JsInterfaceAdder {
     fun add(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsIntent(terminalFragment),
+            JsIntent(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsDialog(terminalFragment),
+            JsDialog(terminalFragmentRef),
         )
 
         ExecJsInterfaceAdder.add(
             webView,
-            JsArgs(terminalFragment),
+            JsArgs(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCmdIntent(terminalFragment),
+            JsCmdIntent(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCurl(terminalFragment),
+            JsCurl(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsToast(terminalFragment),
+            JsToast(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsUtil(terminalFragment),
+            JsUtil(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsUrl(terminalFragment),
+            JsUrl(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCsv(terminalFragment),
+            JsCsv(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsText(terminalFragment),
+            JsText(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsPath(terminalFragment),
+            JsPath(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsTextToSpeech(terminalFragment),
+            JsTextToSpeech(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsPdf(terminalFragment),
+            JsPdf(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsPulseAudioReceiver(terminalFragment),
+            JsPulseAudioReceiver(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsSendKey(terminalFragment),
+            JsSendKey(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsNetTool(terminalFragment),
+            JsNetTool(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsHtml(terminalFragment),
+            JsHtml(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsUbuntu(terminalFragment),
+            JsUbuntu(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsLinux(terminalFragment),
+            JsLinux(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsDirect(terminalFragment),
+            JsDirect(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsBroadcast(terminalFragment),
+            JsBroadcast(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFannelInstaller(terminalFragment),
+            JsFannelInstaller(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsIconSelectBox(terminalFragment),
+            JsIconSelectBox(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsMap(terminalFragment),
+            JsMap(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsMusic(terminalFragment)
+            JsMusic(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCon(terminalFragment)
+            JsCon(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsVar(terminalFragment)
+            JsVar(terminalFragmentRef)
         )
         dialogAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         editAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         fileAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView,
         )
         qrAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         qrLogoAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         systemAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         toolbarAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView,
         )
         indexListAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         tsvAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView
         )
         judgeAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView,
         )
         collectionAdder(
-            terminalFragment,
+            terminalFragmentRef,
             webView,
         )
     }
 
     private fun dialogAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsDialog(terminalFragment),
+            JsDialog(terminalFragmentRef),
         )
     }
 
     private fun fileAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView,
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsFileSystem(terminalFragment),
+            JsFileSystem(terminalFragmentRef),
         )
     }
 
     private fun qrAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsQr(terminalFragment),
+            JsQr(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsQrEdit(terminalFragment),
+            JsQrEdit(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-                JsQrGetter(terminalFragment)
+                JsQrGetter(terminalFragmentRef)
         )
     }
 
     private fun editAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsDirSelect(terminalFragment),
+            JsDirSelect(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsEdit(terminalFragment),
+            JsEdit(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsEditor(terminalFragment),
+            JsEditor(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFileSelect(terminalFragment),
+            JsFileSelect(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsListSelect(terminalFragment),
+            JsListSelect(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsReplaceVariables(terminalFragment),
+            JsReplaceVariables(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsScript(terminalFragment),
+            JsScript(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsValEdit(terminalFragment),
+            JsValEdit(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFannelConSaver(terminalFragment)
+            JsFannelConSaver(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsListConSBSaver(terminalFragment)
+            JsListConSBSaver(terminalFragmentRef)
         )
     }
 
     private fun systemAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsPermission(terminalFragment),
+            JsPermission(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsSystemFannel(terminalFragment),
+            JsSystemFannel(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsMonitorSizing(terminalFragment)
+            JsService(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsSettingValFrag(terminalFragment)
+            JsMonitorSizing(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsSelectMonitor(terminalFragment)
+            JsSettingValFrag(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsConfigEdit(terminalFragment),
+            JsSelectMonitor(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsAppDirAdder(terminalFragment),
+            JsMonitorShower(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsMonitorShower(terminalFragment)
+            JsFannelExecer(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFannelExecer(terminalFragment)
+            JsCancel(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCancel(terminalFragment)
+            JsCmdValFrag(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCmdValFrag(terminalFragment),
+            JsBackstack(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsBackstack(terminalFragment)
+            JsAction(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsAction(terminalFragment)
+            JsExit(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsExit(terminalFragment)
+            JsSharePref(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsSharePref(terminalFragment)
+            JsKeyboard(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsKeyboard(terminalFragment)
+            JsStateChange(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsStateChange(terminalFragment)
+            JsUrlHistory(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsUrlHistory(terminalFragment)
+            JsToolbarSwitcher(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsToolbarSwitcher(terminalFragment)
+            JsToolBarCtrl(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsSelectionText(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsPinFannel(terminalFragmentRef)
         )
     }
 
     private fun toolbarAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsToolbar(terminalFragment),
+            JsToolbar(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFileAdder(terminalFragment),
+            JsFileAdder(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFileOrDirListGetter(terminalFragment)
+            JsFileOrDirListGetter(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsProcessKiller(terminalFragment),
+            JsProcessKiller(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCcUsage(terminalFragment),
+            JsCcUsage(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsQrScanner(terminalFragment),
+            JsQrScanner(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsMonitorRefresh(terminalFragment),
+            JsMonitorRefresh(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsFileOrDirGetter(terminalFragment)
+            JsFileOrDirGetter(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsEditToolbarSwitcher(terminalFragment)
+            JsEditToolbarSwitcher(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsAddFromUrlHistory(terminalFragment)
+            JsAddFromUrlHistory(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsAddUrlCon(terminalFragment)
+            JsAddUrlCon(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsAddGmailCon(terminalFragment)
+            JsAddGmailCon(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsUrlAdder(terminalFragment)
+            JsUrlAdder(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCmdValSaveAndBack(terminalFragment)
+            JsCmdValSaveAndBack(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsUrlHistoryLauncher(terminalFragmentRef)
         )
     }
 
     private fun indexListAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsDeleteItem(terminalFragment)
+            JsDeleteItem(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsShowItemCon(terminalFragment)
+            JsShowItemCon(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCopyItem(terminalFragment)
+            JsCopyItem(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsCopySItem(terminalFragment)
+            JsCopySItem(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsRenameItem(terminalFragment)
+            JsRenameItem(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsDesc(terminalFragment)
+            JsDesc(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsEditorItem(terminalFragment)
+            JsEditorItem(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsListTsvUpdater(terminalFragment)
+            JsListTsvUpdater(terminalFragmentRef)
         )
     }
 
     private fun qrLogoAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsExecQr(terminalFragment),
+            JsExecQr(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsQrLogoEdit(terminalFragment)
+            JsQrLogoEdit(terminalFragmentRef)
         )
     }
 
     private fun tsvAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsTsv(terminalFragment)
+            JsTsv(terminalFragmentRef)
         )
     }
 
     private fun judgeAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView,
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsBeforeInfo(terminalFragment)
+            JsBeforeInfo(terminalFragmentRef)
         )
     }
 
     private fun collectionAdder(
-        terminalFragment: TerminalFragment,
+        terminalFragmentRef: WeakReference<TerminalFragment>,
         webView: WebView,
     ){
         ExecJsInterfaceAdder.add(
             webView,
-            JsDiff(terminalFragment)
+            JsDiff(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsToListFilter(terminalFragment)
+            JsToListFilter(terminalFragmentRef)
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsToListMap(terminalFragment)
+            JsToListMap(terminalFragmentRef)
         )
     }
 }

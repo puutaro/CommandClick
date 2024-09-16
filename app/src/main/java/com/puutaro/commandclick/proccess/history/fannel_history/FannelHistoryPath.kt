@@ -23,12 +23,12 @@ object FannelHistoryPath {
 
 
     fun getCapturePartsPngDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String?,
     ): String {
         return listOf(
             makeFannelSettingImagesCaptureDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ),
             partPngDirName
@@ -38,12 +38,12 @@ object FannelHistoryPath {
     }
 
     fun getCaptureFacePngDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String?,
     ): String {
         return listOf(
             makeFannelSettingImagesCaptureDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ),
             faceDirName
@@ -54,12 +54,12 @@ object FannelHistoryPath {
 
 
     fun getCaptureGifPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String?,
     ): String {
         return listOf(
             makeFannelSettingImagesCaptureDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ),
             gifFileName
@@ -69,12 +69,12 @@ object FannelHistoryPath {
     }
 
     fun getCaptureGifDesignPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String?,
     ): String {
         return listOf(
             makeFannelSettingImagesCaptureDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ),
             gifDesignName
@@ -84,12 +84,12 @@ object FannelHistoryPath {
     }
 
     private fun makeFannelSettingImagesCaptureDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String?,
     ): String {
         return File(
             makeFannelSettingImagesDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ),
             captureDirName
@@ -97,7 +97,7 @@ object FannelHistoryPath {
     }
 
     private fun makeFannelSettingImagesDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String?,
     ): String {
         val replaceFannelName = when(
@@ -109,7 +109,7 @@ object FannelHistoryPath {
         }
         return ScriptPreWordReplacer.replace(
             UsePath.fannelSettingImagesDirPath,
-            currentAppDirPath,
+//            currentAppDirPath,
             replaceFannelName
         )
     }

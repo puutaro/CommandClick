@@ -1,22 +1,25 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.url.HistoryUrlContents
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsAddUrlCon(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
-    private val fannelInfoMap =
-        terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
+//    private val fannelInfoMap =
+//        terminalFragment.fannelInfoMap
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val keySeparator = '|'
 
     @JavascriptInterface
@@ -59,7 +62,7 @@ class JsAddUrlCon(
             AddUrlConKey.URL_STRING_OR_MACRO.key
         ) ?: String()
         val urlString = HistoryUrlContents.extract(
-            currentAppDirPath,
+//            currentAppDirPath,
             urlStrOrMacro
         ) ?: String()
         val onSearchBtn = extraMap.get(
@@ -74,9 +77,11 @@ class JsAddUrlCon(
         val saveUrlHistory = extraMap.get(
             AddUrlConKey.ON_SAVE_URL_HISTORY.key
         ) ?: "-"
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         ExecJsLoad.execExternalJs(
             terminalFragment,
-            UsePath.cmdclickSystemAppDirPath,
+//            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveWebConDialogFannelName,
             listOf(
                 urlString,

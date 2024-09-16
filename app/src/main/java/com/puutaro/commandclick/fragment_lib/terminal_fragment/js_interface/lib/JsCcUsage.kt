@@ -1,28 +1,26 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.lang.ref.WeakReference
 
 class JsCcUsage(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun launch_S(){
-        val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                UsePath.JS_FILE_SUFFIX
+        val terminalFragment = terminalFragmentRef.get() ?: return
+
+        val webSearcherName = SystemFannel.webSearcher
         ExecJsLoad.execExternalJs(
             terminalFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             webSearcherName,
             listOf(WebUrlVariables.commandClickUsageUrl),
         )

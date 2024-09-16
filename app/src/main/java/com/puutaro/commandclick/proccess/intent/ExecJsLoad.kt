@@ -2,8 +2,8 @@ package com.puutaro.commandclick.proccess.intent
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -11,7 +11,6 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryRegister
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.util.*
@@ -19,6 +18,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -33,14 +33,15 @@ object ExecJsLoad {
 
     fun execJsLoad(
         currentFragment: Fragment,
-        recentAppDirPath: String,
+//        recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
         jsArgs: String = String()
     ) {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         if (
             !File(
-                recentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 selectedJsFileName
             ).isFile
         ) return
@@ -63,22 +64,25 @@ object ExecJsLoad {
             }
         }
         val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
-        val languageType = LanguageTypeSelects.JAVA_SCRIPT
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType = LanguageTypeSelects.JAVA_SCRIPT
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
 
         val jsContents = if (
             jsContentsListSource.isNullOrEmpty()
         ) {
             ReadText(
                 File(
-                    recentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     selectedJsFileName
                 ).absolutePath
             ).readText()
@@ -86,7 +90,7 @@ object ExecJsLoad {
         val jsContentsList =
             ScriptPreWordReplacer.replace(
                 jsContents,
-                recentAppDirPath,
+//                recentAppDirPath,
                 selectedJsFileName,
             ).split("\n")
         val substituteSettingVariableList =
@@ -106,22 +110,25 @@ object ExecJsLoad {
             sharePref,
             FannelInfoSetting.current_fannel_name
         )
-        val isCmdIndex = selectedJsFileName == UsePath.cmdclickPreferenceJsName
-                && currentFannelName != UsePath.cmdclickPreferenceJsName
+        val preference = SystemFannel.preference
+        val isCmdIndex = selectedJsFileName == preference
+                && currentFannelName != preference
         if(
             isCmdIndex
-            || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
-            || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
         ) {
             val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
                 CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
             ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
-
+            val curUrl =
+                TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                    currentFragment.activity,
+                )?.binding?.terminalWebView?.url
             UrlLaunchMacro.launch(
                 terminalViewModel,
-                recentAppDirPath,
+//                recentAppDirPath,
                 onUrlLaunchMacro,
+                curUrl,
             )
             JavascriptExecuter.exec(
                 currentFragment,
@@ -138,11 +145,11 @@ object ExecJsLoad {
         )
         val updateScriptArgsMapList = makeUpdateScriptArgsMapList(
             currentFragment,
-            recentAppDirPath,
+//            recentAppDirPath,
             selectedJsFileName,
         )
         val execJsPath = decideLoadJsPath(
-            recentAppDirPath,
+//            recentAppDirPath,
             selectedJsFileName,
             updateScriptArgsMapList,
             jsArgs,
@@ -176,10 +183,10 @@ object ExecJsLoad {
             tempOnDisplayUpdate,
         )
 
-        UrlHistoryRegister.insertJsPath(
-            recentAppDirPath,
-            selectedJsFileName,
-        )
+//        UrlHistoryRegister.insertJsPath(
+////            recentAppDirPath,
+//            selectedJsFileName,
+//        )
 
         val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
@@ -196,7 +203,7 @@ object ExecJsLoad {
         ) return
         FileSystems.updateLastModified(
             File(
-                recentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 selectedJsFileName
             ).absolutePath
         )
@@ -204,15 +211,16 @@ object ExecJsLoad {
 
     fun execExternalJs(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         systemExecReplaceTextList: List<String>,
     ){
         val context = fragment.context
             ?: return
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val externalExecJsPath = "${currentAppDirPath}/${fannelDirName}/${UsePath.externalExecJsDirName}/${UsePath.externalJsForExecFannel}"
-        val fannelPathObj = File("${currentAppDirPath}/${fannelName}")
+        val externalExecJsPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}/${UsePath.externalExecJsDirName}/${UsePath.externalJsForExecFannel}"
+        val fannelPathObj = File("${cmdclickDefaultAppDirPath}/${fannelName}")
         val externalExecJsPathObj = File(externalExecJsPath)
         val isExternalExecJsPath = externalExecJsPathObj.isFile
         val execJsPathObj = when(isExternalExecJsPath){
@@ -234,6 +242,12 @@ object ExecJsLoad {
             jsContentsListSource,
             extraRepValMap = replaceMarkMap
         ) ?: return
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "wUrl.txt").absolutePath,
+            listOf(
+                "externalJsCon: ${externalJsCon}",
+            ).joinToString("\n")
+        )
         JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
             externalJsCon
@@ -242,24 +256,28 @@ object ExecJsLoad {
 
     private fun makeUpdateScriptArgsMapList(
         fragment: Fragment,
-        scriptDirPath: String,
+//        scriptDirPath: String,
         scriptName: String,
     ): List<Map<String, String>> {
         val context = fragment.context
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(fragment, String())
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             context,
-            File(scriptDirPath, scriptName).absolutePath
+            File(cmdclickDefaultAppDirPath, scriptName).absolutePath
         )
         val currentSettingFannelPath = FannelStateRooterManager.getSettingFannelPath(
             fannelInfoMap,
@@ -274,7 +292,7 @@ object ExecJsLoad {
         )
         return ScriptArgsMapList.makeUpdateScriptArgsMapList(
             context,
-            scriptDirPath,
+//            scriptDirPath,
             scriptName,
             settingSectionVariableList,
         )
@@ -296,13 +314,14 @@ object ExecJsLoad {
 
 
     private fun decideLoadJsPath(
-        scriptDirPath: String,
+//        scriptDirPath: String,
         scriptName: String,
         updateScriptArgsMapList: List<Map<String, String>>,
         jsArgs: String,
     ): String {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentScriptPath =
-            File(scriptDirPath, scriptName).absolutePath
+            File(cmdclickDefaultAppDirPath, scriptName).absolutePath
         return updateScriptArgsMapList.firstOrNull {
             it.get(nameKey) == jsArgs
         }?.let {
@@ -317,7 +336,7 @@ object ExecJsLoad {
                 LogSystems.stdWarn("Blank jsName: ${jsName}")
                 return@let currentScriptPath
             }
-            val exeJsPath = "${scriptDirPath}/$fannelDirName/${dirName}/${jsName}"
+            val exeJsPath = "${cmdclickDefaultAppDirPath}/$fannelDirName/${dirName}/${jsName}"
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "args_decideLoadJsPath.txt").absolutePath,
 //                listOf(

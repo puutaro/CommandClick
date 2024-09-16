@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
@@ -23,17 +22,18 @@ object AddConfirmDialogForSettingButton {
     private var addConfirmDialog: Dialog? = null
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String,
-        languageTypeSelects: LanguageTypeSelects
+//        languageTypeSelects: LanguageTypeSelects
     ){
         val context = cmdIndexFragment.context
             ?: return
         val binding = cmdIndexFragment.binding
-        val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
-                .get(languageTypeSelects)
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val shellScriptPath = "${cmdclickDefaultAppDirPath}/${shellScriptName}"
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
+//                .get(languageTypeSelects)
 
 
         addConfirmDialog = Dialog(
@@ -54,13 +54,13 @@ object AddConfirmDialogForSettingButton {
         confirmContentTextView?.text = "\tpath: path: ${shellScriptPath}"
         cancelButtonListener(
             binding,
-            currentAppDirPath,
+//            currentAppDirPath,
             shellScriptName
         )
         okButtonListener(
             binding,
-            languageTypeToSectionHolderMap,
-            currentAppDirPath,
+//            languageTypeToSectionHolderMap,
+//            currentAppDirPath,
             shellScriptName,
         )
         addConfirmDialog?.setOnCancelListener {
@@ -79,7 +79,7 @@ object AddConfirmDialogForSettingButton {
 
     private fun cancelButtonListener(
         binding: CommandIndexFragmentBinding,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         shellScriptName: String
     ){
         val confirmCancelButton =
@@ -89,23 +89,23 @@ object AddConfirmDialogForSettingButton {
         confirmCancelButton?.setOnClickListener {
             addConfirmDialog?.dismiss()
             addConfirmDialog = null
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             FileSystems.removeFiles(
                 File(
-                    currentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     shellScriptName,
                 ).absolutePath
             )
-            CommandListManager.execListUpdateForCmdIndex(
-                currentAppDirPath,
-                binding.cmdList,
-            )
+//            CommandListManager.execListUpdateForCmdIndex(
+//                binding.cmdList,
+//            )
         }
     }
 
     private fun okButtonListener(
         binding: CommandIndexFragmentBinding,
-        languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
-        currentAppDirPath: String,
+//        languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
+//        currentAppDirPath: String,
         shellScriptName: String,
     ){
         val confirmOkButton =
@@ -117,8 +117,8 @@ object AddConfirmDialogForSettingButton {
             addConfirmDialog = null
             confirmOkExecutor(
                 binding,
-                languageTypeToSectionHolderMap,
-                currentAppDirPath,
+//                languageTypeToSectionHolderMap,
+//                currentAppDirPath,
                 shellScriptName,
             )
         }
@@ -126,59 +126,64 @@ object AddConfirmDialogForSettingButton {
 
     private fun confirmOkExecutor(
         binding: CommandIndexFragmentBinding,
-        languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
-        currentAppDirPath: String,
+//        languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
+//        currentAppDirPath: String,
         shellScriptName: String,
     ){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val shellContentsList = ReadText(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 shellScriptName
             ).absolutePath
         ).textToList()
 
         val shellScriptContentsLabelCommentOut = CommentOutLabelingSection.commentOut(
             shellContentsList,
-            shellScriptName
+//            shellScriptName
         )
         val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
             shellScriptContentsLabelCommentOut,
-            languageTypeToSectionHolderMap
+//            languageTypeToSectionHolderMap
         )
         FileSystems.writeFile(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 shellScriptName,
             ).absolutePath,
             shellScriptContentsQuoteComp
         )
-        CommandListManager.execListUpdateForCmdIndex(
-            currentAppDirPath,
-            binding.cmdList,
-        )
+//        CommandListManager.execListUpdateForCmdIndex(
+////            currentAppDirPath,
+//            binding.cmdList,
+//        )
     }
 }
 
 
 private fun makeShellScriptContentsQuoteComp(
     shellContentsList: List<String>,
-    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
+//    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
 ): String {
     val recordNumToMapNameValueInCommandHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
-            languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-            ) as String,
-            languageTypeToSectionHolderMap[
-                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-            ] as String,
+            CommandClickScriptVariable.CMD_SEC_START,
+            CommandClickScriptVariable.CMD_SEC_END,
+//            languageTypeToSectionHolderMap?.get(
+//                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//            ) as String,
+//            languageTypeToSectionHolderMap[
+//                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//            ] as String,
         )
     val recordNumToMapNameValueInSettingHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
-            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START) as String,
-            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END] as String,
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START) as String,
+//            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END] as String,
             true,
         )
     val shellScriptListQuoteCompForCmdVariables = quoteCompShellScriptListVariables(

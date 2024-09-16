@@ -9,6 +9,9 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerInte
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryAdminEvent
+import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -23,12 +26,15 @@ import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabe
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.sd.SdCardTool
 import com.puutaro.commandclick.util.sd.SdFileSystems
 import com.puutaro.commandclick.util.sd.SdPath
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -325,15 +331,38 @@ object UbuntuBroadcastHandler {
             }
             return
         }
-        val fannelDirPath = intent.getStringExtra(
-            UbuntuServerIntentExtra.fannelDirPath.schema
-        ) ?: return
         val fannelName = intent.getStringExtra(
             UbuntuServerIntentExtra.fannelName.schema
         ) ?: String()
+        val mainFannelConList = ReadText(
+            File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
+        ).textToList()
+        val context = ubuntuService.applicationContext
+        val sharePref = FannelInfoTool.getSharePref(context)
+        val setReplaceVariableMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                context,
+                mainFannelConList,
+                fannelName,
+            )
+        val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
+            mainFannelConList,
+//            fannelName
+        ).let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it?.joinToString("\n") ?: String(),
+                setReplaceVariableMap,
+//                        appDirName,
+                fannelName,
+            ).split("\n")
+        }
+        FannelHistoryAdminEvent.register(
+            sharePref,
+            fannelName,
+            mainFannelSettingConList,
+            setReplaceVariableMap,
+        )
         IntentManager.launchFannelIntent(
             ubuntuService.applicationContext,
-            fannelDirPath,
             fannelName,
         )
     }

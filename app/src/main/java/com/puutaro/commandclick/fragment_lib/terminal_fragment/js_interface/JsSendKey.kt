@@ -7,13 +7,13 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.TerminalFragment
+import java.lang.ref.WeakReference
 
 
 class JsSendKey(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
-    private val context = terminalFragment.context
     private val mKeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
     private val makeModifierSeparator = "___"
 
@@ -22,15 +22,16 @@ class JsSendKey(
     fun sendPocket(
         keyName: String,
     ){
-        val webView = terminalFragment.webViewDialogInstance?.findViewById<WebView>(
-            R.id.webview_dialog_webview
-        ) ?: return
+        val terminalFragment = terminalFragmentRef.get() ?: return
+//        val webView = terminalFragment.webViewDialogInstance?.findViewById<WebView>(
+//            R.id.webview_dialog_webview
+//        ) ?: return
         SpecialKeys.values().filter {
             it.str == keyName
         }.firstOrNull()?.let {
             keyDownEvent(
                 it.keyCode,
-                webView
+                terminalFragment.pocketWebViewManager?.pocketWebView
             )
             return
         }
@@ -41,6 +42,7 @@ class JsSendKey(
     fun send(
         keyName: String,
     ){
+        val terminalFragment = terminalFragmentRef.get() ?: return
         SpecialKeys.values().filter {
             it.str == keyName
         }.firstOrNull()?.let {
@@ -69,6 +71,7 @@ class JsSendKey(
         metaCode: Int,
         keycode: Int
     ){
+        val terminalFragment = terminalFragmentRef.get() ?: return
         terminalFragment.binding.terminalWebView.dispatchKeyEvent(
             KeyEvent(
                 SystemClock.uptimeMillis(),
@@ -177,6 +180,7 @@ class JsSendKey(
         str: String
     ){
         val events = mKeyCharacterMap.getEvents(str.toCharArray())
+        val terminalFragment = terminalFragmentRef.get() ?: return
         val terminalWebView = terminalFragment.binding.terminalWebView
         events.forEach {
             terminalWebView.dispatchKeyEvent(

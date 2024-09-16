@@ -4,13 +4,10 @@ import android.view.View
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsToolbarSwitcher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
@@ -18,26 +15,23 @@ import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
+import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
-import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddFileForEdit
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddGmailCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrl
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrlCon
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AppDirAdder
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ChangeSettingFannel
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.GeneralFileGetter
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.GeneralFileListGetter
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ListSyncer
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.OkButtonHandler
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.PopupSettingMenu
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.QrConGetterDialog
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.SyncFannelRepo
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarMenuDialog
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.UrlHistoryAddToTsv
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
@@ -129,10 +123,10 @@ object JsPathHandlerForToolbarButton {
                 fragment,
                 mainOrSubFannelPath,
             )
-        val currentAppDirPath =
-            FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//        val currentAppDirPath =
+//            FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
         val currentFannelName =
             FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap,
@@ -151,7 +145,7 @@ object JsPathHandlerForToolbarButton {
             MacroForToolbarButton.Macro.KILL
             -> AppProcessManager.killDialog(
                 fragment,
-                currentAppDirPath,
+//                cmdclickDefaultAppDirPath,
                 currentFannelName
             )
             MacroForToolbarButton.Macro.USAGE
@@ -161,7 +155,7 @@ object JsPathHandlerForToolbarButton {
             MacroForToolbarButton.Macro.NO_SCROLL_SAVE_URL
             -> NoScrollUrlSaver.save(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 String()
             )
             MacroForToolbarButton.Macro.QR_SCAN
@@ -185,20 +179,20 @@ object JsPathHandlerForToolbarButton {
                     )
                 )
             }
-            MacroForToolbarButton.Macro.TERMUX_SETUP
-            -> {
-                val listener =
-                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                listener?.onToolbarMenuCategories(
-                    ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
-                    EditFragmentArgs(
-                        fannelInfoMap,
-                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                    )
-                )
-            }
-            MacroForToolbarButton.Macro.CONFIG
-            -> ConfigEdit.edit(fragment)
+//            MacroForToolbarButton.Macro.TERMUX_SETUP
+//            -> {
+//                val listener =
+//                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+//                listener?.onToolbarMenuCategories(
+//                    ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
+//                    EditFragmentArgs(
+//                        fannelInfoMap,
+//                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+//                    )
+//                )
+//            }
+//            MacroForToolbarButton.Macro.CONFIG
+//            -> ConfigEdit.edit(fragment)
 
             MacroForToolbarButton.Macro.REFRESH_MONITOR
             -> TermRefresh.refresh(
@@ -213,12 +207,12 @@ object JsPathHandlerForToolbarButton {
                 fragment.activity
             )
 
-            MacroForToolbarButton.Macro.INSTALL_FANNEL
-            -> SystemFannelLauncher.launch(
-                fragment,
-                UsePath.cmdclickSystemAppDirPath,
-                SystemFannel.fannelRepoFannelName
-            )
+//            MacroForToolbarButton.Macro.INSTALL_FANNEL
+//            -> SystemFannelLauncher.launch(
+//                fragment,
+////                UsePath.cmdclickDefaultAppDirPath,
+//                SystemFannel.fannelRepoFannelName
+//            )
 
             MacroForToolbarButton.Macro.ADD
                 -> {
@@ -230,29 +224,29 @@ object JsPathHandlerForToolbarButton {
                     jsActionMap,
                 )
             }
-            MacroForToolbarButton.Macro.ADD_APP_DIR
-            -> {
-                if(
-                    fragment !is EditFragment
-                ) return
-                AppDirAdder.add(
-                    fragment
-                )
-            }
+//            MacroForToolbarButton.Macro.ADD_APP_DIR
+//            -> {
+//                if(
+//                    fragment !is EditFragment
+//                ) return
+//                AppDirAdder.add(
+//                    fragment
+//                )
+//            }
 
-            MacroForToolbarButton.Macro.JS_IMPORT
-            -> SystemFannelLauncher.launch(
-                fragment,
-                UsePath.cmdclickSystemAppDirPath,
-                SystemFannel.jsImportManagerFannelName
-            )
+//            MacroForToolbarButton.Macro.JS_IMPORT
+//            -> SystemFannelLauncher.launch(
+//                fragment,
+////                UsePath.cmdclickDefaultAppDirPath,
+//                SystemFannel.jsImportManagerFannelName
+//            )
 
-            MacroForToolbarButton.Macro.APP_DIR_MANAGER
-            -> SystemFannelLauncher.launch(
-                fragment,
-                UsePath.cmdclickSystemAppDirPath,
-                SystemFannel.appDirManagerFannelName
-            )
+//            MacroForToolbarButton.Macro.APP_DIR_MANAGER
+//            -> SystemFannelLauncher.launch(
+//                fragment,
+////                UsePath.cmdclickDefaultAppDirPath,
+//                SystemFannel.appDirManagerFannelName
+//            )
 
             MacroForToolbarButton.Macro.SIZING
             -> {
@@ -342,14 +336,14 @@ object JsPathHandlerForToolbarButton {
                     jsActionMap
                 )
             }
-
-            MacroForToolbarButton.Macro.FANNEL_REPO_SYNC
-            -> {
-                if(
-                    fragment !is EditFragment
-                ) return
-                SyncFannelRepo.sync(fragment)
-            }
+//
+//            MacroForToolbarButton.Macro.FANNEL_REPO_SYNC
+//            -> {
+//                if(
+//                    fragment !is EditFragment
+//                ) return
+//                SyncFannelRepo.sync(fragment)
+//            }
 
             MacroForToolbarButton.Macro.EDIT
             -> ChangeSettingFannel.change(
@@ -373,6 +367,10 @@ object JsPathHandlerForToolbarButton {
                     """.trimIndent()
                 )
             }
+            MacroForToolbarButton.Macro.URL_HISTORY
+            -> {
+                UrlHistoryButtonEvent.invoke(fragment)
+            }
             MacroForToolbarButton.Macro.OK
             -> {
                 if(
@@ -387,10 +385,10 @@ object JsPathHandlerForToolbarButton {
                 if(
                     fragment !is EditFragment
                 ) return
-                UrlHistoryAddToTsv(
+                UrlHistoryAddToTsv.invoke(
                     fragment,
                     jsActionMap,
-                ).invoke()
+                )
             }
             MacroForToolbarButton.Macro.ADD_URL_CON
             -> {

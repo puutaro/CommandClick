@@ -13,16 +13,16 @@ object ExecOkForEdit{
         callOwnerFragmentTag : String?,
         fannelInfoMap: Map<String, String>,
     ) {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val supportFragmentManager = activity.supportFragmentManager
-        if(
-            currentAppDirPath == UsePath.cmdclickAppDirAdminPath
-        ) {
-            supportFragmentManager.popBackStackImmediate()
-            return
-        }
+//        if(
+//            currentAppDirPath == UsePath.cmdclickAppDirAdminPath
+//        ) {
+//            supportFragmentManager.popBackStackImmediate()
+//            return
+//        }
         val context = activity.applicationContext
         if(
             callOwnerFragmentTag?.startsWith(

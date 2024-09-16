@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.file
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import java.io.ByteArrayOutputStream
@@ -15,6 +16,11 @@ object AssetsFileManager {
     const val resPngDirPath = "res/png"
     const val textImagePingPath = "${resPngDirPath}/text_image.png"
     const val pdfImagePingPath = "${resPngDirPath}/pdf_image.png"
+    const val urlPngDirPath = "${resPngDirPath}/url"
+    const val firstUrlCapPngPath = "${urlPngDirPath}/first_url_cap.png"
+    const val extraMenuDirPath = "${resPngDirPath}/extra_menu"
+    const val textViewDecoDirPath = "${resPngDirPath}/text_view_deco"
+    const val underLinePngPath = "${textViewDecoDirPath}/under_line.png"
     const val resGifDirPath = "res/gif"
     const val urlHistoryGifPath = "${resGifDirPath}/url_history.gif"
     const val internetGifPath = "${resGifDirPath}/internet.gif"
@@ -29,6 +35,10 @@ object AssetsFileManager {
     const val assetsHighlightCopy =
         "$assetsDialogWebViewDirPath/highlightCopy.js"
     const val ggleSchBoxFocus = "${assetsDialogWebViewDirPath}/ggleSchBoxFocus.js"
+    const val firstFocusGleSchPocket = "${assetsDialogWebViewDirPath}/firstFocusGleSchPocket.js"
+    const val textSelectionStartJs = "${assetsDialogWebViewDirPath}/textSelectionStart.js"
+    const val clearSelectionTextJs = "${assetsDialogWebViewDirPath}/clearSelectionText.js"
+    const val textSelectionStartForPocketJs = "${assetsDialogWebViewDirPath}/textSelectionStartForPocket.js"
     private const val assetsEditDirPath = "$assetsFannelsDirName/edit"
     const val iconSelectBox = "$assetsEditDirPath/iconSelectBox.js"
     const val fannelShellDirPath = "$assetsFannelsDirName/shell"
@@ -43,6 +53,13 @@ object AssetsFileManager {
         assetRelativePath: String,
     ): Uri {
         return Uri.parse("file:///android_asset/${assetRelativePath}")
+    }
+
+    fun makeDrawable(
+        context: Context,
+        assetsPath: String,
+    ): Drawable? {
+        return Drawable.createFromStream(context.assets.open(assetsPath), null)
     }
     fun concatAssetsPath(
         pathList: List<String>

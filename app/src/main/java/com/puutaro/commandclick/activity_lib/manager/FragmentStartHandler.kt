@@ -4,7 +4,6 @@ import android.app.ActivityManager
 import androidx.databinding.DataBindingUtil
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
 
 
 object FragmentStartHandler {
@@ -15,12 +14,11 @@ object FragmentStartHandler {
 //        ToastUtils.showShort(
 //            activity.intent.extras.toString()
 //        )
-        val initFragmentManager = InitFragmentManager(activity)
 //        val isHandle = initFragmentManager.queryIntentHandle()
 //        if(
 //            isHandle
 //        ) return
-        val isRegister = initFragmentManager.intentHandler()
+        val isRegister = InitFragmentManager.intentHandler(activity)
         if(
             isRegister
         ) return
@@ -28,8 +26,9 @@ object FragmentStartHandler {
             activity,
             R.layout.activity_main
         )
-        ExecBackstackHandle.initBeforeAfterUrlPair(activity)
-        initFragmentManager.startFragment(
+//        ExecBackstackHandle.initBeforeAfterUrlPair(activity)
+        InitFragmentManager.startFragment(
+            activity,
             activity.savedInstanceStateVal
         )
     }

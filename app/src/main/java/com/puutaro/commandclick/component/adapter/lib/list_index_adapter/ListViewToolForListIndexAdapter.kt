@@ -3,7 +3,7 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,7 @@ object ListViewToolForListIndexAdapter {
             !editListRecyclerView.isVisible
         ) return
         val listIndexForEditAdapter =
-            editListRecyclerView.adapter as? ListIndexForEditAdapter
+            editListRecyclerView.adapter as? ListIndexAdapter
                 ?: return
         if(
             listIndexForEditAdapter.listIndexList ==
@@ -42,7 +42,7 @@ object ListViewToolForListIndexAdapter {
 
     fun scrollToBottom(
         editListRecyclerView: RecyclerView,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
+        listIndexForEditAdapter: ListIndexAdapter,
     ){
         listIndexScrollToBottomJob?.cancel()
         listIndexScrollToBottomJob = CoroutineScope(Dispatchers.Main).launch {

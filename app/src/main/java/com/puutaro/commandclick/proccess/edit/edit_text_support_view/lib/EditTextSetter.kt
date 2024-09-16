@@ -4,6 +4,7 @@ import android.text.InputType
 import android.util.TypedValue
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -20,13 +21,13 @@ import com.puutaro.commandclick.view_model.activity.EditViewModel
 object EditTextSetter {
 
     fun set(
+        fragment: Fragment,
         editParameters: EditParameters,
         editTextPropertyMap: Map<String, String>?,
         editTextWeight: Float
     ): EditText {
-        val currentFragment = editParameters.currentFragment
-        val editViewModel: EditViewModel by currentFragment.activityViewModels()
-        val context = editParameters.context
+        val editViewModel: EditViewModel by fragment.activityViewModels()
+        val context = fragment.context
         val currentId = editParameters.currentId
         val currentVariableValue = editParameters.currentVariableValue
         val currentVariableName = editParameters.currentVariableName
@@ -43,7 +44,7 @@ object EditTextSetter {
 
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         val editTextCon = EditTextMaker.make(
-            currentFragment,
+            fragment,
             editTextPropertyMap,
             currentVariableValue,
         )
@@ -97,7 +98,7 @@ object EditTextSetter {
                 defaultHeight
             }
         }
-        val linearParamsForEditTextTest = LinearLayout.LayoutParams(
+        val linearParamsForEditTextTest = LinearLayoutCompat.LayoutParams(
             0,
             layoutHeight,
         )

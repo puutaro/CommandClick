@@ -15,8 +15,8 @@ object HtmlDescriber {
         val terminalColor = terminalFragment.terminalColor
         val terminalFontColor = terminalFragment.terminalFontColor
         val onBottomScrollbyJs = terminalViewModel.onBottomScrollbyJs
-        val currentAppDirPath = terminalFragment.currentAppDirPath
-        val scrollPosiFilePath = "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/${UsePath.cmdclickMonitorScrollPosiFileName}"
+//        val currentAppDirPath = terminalFragment.currentAppDirPath
+        val scrollPosiFilePath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/${UsePath.cmdclickMonitorScrollPosiFileName}"
         val leavesLineForTerm = ReadText.leavesLineForTerm
         val sb = StringBuilder("％")
         val percentZenkakuChar = sb[0]

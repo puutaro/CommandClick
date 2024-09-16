@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.broadcast.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeFileDownload
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
@@ -125,18 +126,20 @@ class FileDownloadService: Service() {
             applicationContext.sendBroadcast(stanIntent)
             return START_NOT_STICKY
         }
-        currentAppDirPath = intent?.getStringExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema
-        ).let {
-            if(
-                !it.isNullOrEmpty()
-            ) return@let it
-            applicationContext.sendBroadcast(stanIntent)
-            return START_NOT_STICKY
-        }
-        currentAppDirPathForUploader = intent?.getStringExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
-        )
+        currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//            intent?.getStringExtra(
+//            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema
+//        ).let {
+//            if(
+//                !it.isNullOrEmpty()
+//            ) return@let it
+//            applicationContext.sendBroadcast(stanIntent)
+//            return START_NOT_STICKY
+//        }
+        currentAppDirPathForUploader = UsePath.cmdclickDefaultAppDirPath
+//            intent?.getStringExtra(
+//            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
+//        )
         isMoveToCurrentDir = intent?.getStringExtra(
             FileDownloadExtra.IS_MOVE_TO_CURRENT_DIR.schema
         )

@@ -16,6 +16,6 @@ object ClickScriptSaver {
                 clickConfigMap
             )
         if(!enableClickSave) return
-        ScriptFileSaver(editFragment).save()
+        ScriptFileSaver.save(editFragment)
     }
 }

@@ -23,36 +23,36 @@ object RunCommandSetter {
 
     private var termuxSetupDialogObj: Dialog? = null
 
-    fun getPermissionAndSet(
-        activity: MainActivity
-    ){
-        val runCommandPermissionName = "com.termux.permission.RUN_COMMAND"
-
-        val checkingRunCommandPermission =
-            ContextCompat.checkSelfPermission(
-                activity,
-                runCommandPermissionName
-            )
-        if(
-            checkingRunCommandPermission ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            termuxSetupAndStorageAccessPermissionProcessLauncher(
-                activity
-            )
-            return
-        }
-        try {
-            activity.getRunCommandPermissionAndStartFragmentLauncher.launch(
-                runCommandPermissionName
-            )
-        } catch (e: Exception){
-            launchDialogTitleMessageOnly(
-                activity,
-                "termux not installed"
-            )
-        }
-    }
+//    fun getPermissionAndSet(
+//        activity: MainActivity
+//    ){
+//        val runCommandPermissionName = "com.termux.permission.RUN_COMMAND"
+//
+//        val checkingRunCommandPermission =
+//            ContextCompat.checkSelfPermission(
+//                activity,
+//                runCommandPermissionName
+//            )
+//        if(
+//            checkingRunCommandPermission ==
+//            PackageManager.PERMISSION_GRANTED
+//        ) {
+//            termuxSetupAndStorageAccessPermissionProcessLauncher(
+//                activity
+//            )
+//            return
+//        }
+//        try {
+//            activity.getRunCommandPermissionAndStartFragmentLauncher.launch(
+//                runCommandPermissionName
+//            )
+//        } catch (e: Exception){
+//            launchDialogTitleMessageOnly(
+//                activity,
+//                "termux not installed"
+//            )
+//        }
+//    }
 
     private fun launchDialogTitleMessageOnly(
         activity: MainActivity,

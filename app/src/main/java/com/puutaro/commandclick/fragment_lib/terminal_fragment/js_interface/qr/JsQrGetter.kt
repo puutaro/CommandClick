@@ -1,9 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 
 import android.webkit.JavascriptInterface
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -16,22 +15,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
+import java.lang.ref.WeakReference
 
 class JsQrGetter(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun get_S(
@@ -73,7 +61,7 @@ class JsQrGetter(
                 `
         */
 
-        val contentsName = JsDialog(terminalFragment).prompt(
+        val contentsName = JsDialog(terminalFragmentRef).prompt(
             "Input contents name",
             String(),
             String()
@@ -99,9 +87,19 @@ class JsQrGetter(
         compPrefix: String,
         compSuffix: String,
     ){
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState,
         ) ?: return
@@ -111,11 +109,11 @@ class JsQrGetter(
         )
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
         ListIndexDuplicate.isFileDetect(
-            parentDirPath,
+//            parentDirPath,
             fileName
         ).let {
                 isDetect ->

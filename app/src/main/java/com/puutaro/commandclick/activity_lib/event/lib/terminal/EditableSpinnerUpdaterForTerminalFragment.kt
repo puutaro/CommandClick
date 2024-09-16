@@ -22,10 +22,10 @@ object EditableSpinnerUpdaterForTerminalFragment {
         if(spinnerId == null) return
         val throughMark = "-"
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -34,9 +34,9 @@ object EditableSpinnerUpdaterForTerminalFragment {
             sharePref,
             FannelInfoSetting.current_fannel_state
         )
-        val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+        val editExecuteFragment = TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         )

@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -24,27 +24,26 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.Filter
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object FileSelectGridViewProducer {
-    private const val noExtend = "NoExtend"
+//    private const val noExtend = "NoExtend"
     private const val gridButtonLabel = "GSL"
 
     private var gridDialogObj: Dialog? = null
 
     fun make (
+        editFragment: EditFragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val editFragment = editParameters.currentFragment as EditFragment
-        val context = editParameters.context
+        val context = editFragment.context
         val currentId = editParameters.currentId
-        val linearParamsForGrid = LinearLayout.LayoutParams(
+        val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForGrid.weight = weight
         val fcbMap = getFcbMap(
@@ -72,7 +71,7 @@ object FileSelectGridViewProducer {
             )
             setGridListView(
                 editFragment,
-                editParameters,
+//                editParameters,
                 insertEditText,
                 fcbMap
             )
@@ -93,7 +92,7 @@ object FileSelectGridViewProducer {
 
     private fun setGridListView(
         currentFragment: EditFragment,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
         insertEditText: EditText,
         fcbMap: Map<String, String>?
     ) {
@@ -101,7 +100,7 @@ object FileSelectGridViewProducer {
             ?: return
         val filterDir = getSelectDirPath(
             fcbMap,
-            editParameters,
+//            editParameters,
         )
         val filterPrefix = getFilterPrefix(
             fcbMap,
@@ -145,7 +144,7 @@ object FileSelectGridViewProducer {
             insertEditText,
             listDialogSearchEditText,
             gridView,
-            editParameters,
+//            editParameters,
             fcbMap,
         )
     }
@@ -155,18 +154,18 @@ object FileSelectGridViewProducer {
         insertEditText: EditText,
         searchText: EditText,
         gridView: GridView,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
         fcbMap: Map<String, String>?
     ){
         Keyboard.hiddenKeyboardForFragment(
             editFragment
         )
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
         val filterDir = getSelectDirPath(
             fcbMap,
-            editParameters,
+//            editParameters,
         )
         val filterPrefixListCon = getFilterPrefix(
             fcbMap,
@@ -201,16 +200,16 @@ object FileSelectGridViewProducer {
                 )
             }.get(pos)
             val selectedFileName = File(selectedItem).name
-            if(
-                currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
-            ) {
-                FileSystems.updateLastModified(
-                    File(
-                        filterDir,
-                        selectedFileName
-                    ).absolutePath
-                )
-            }
+//            if(
+//                currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
+//            ) {
+            FileSystems.updateLastModified(
+                File(
+                    filterDir,
+                    selectedFileName
+                ).absolutePath
+            )
+//            }
             val selectUpdatedGridList = listOf(
                 selectedItem,
             ) + currentGridList.filter {
@@ -327,19 +326,20 @@ object FileSelectGridViewProducer {
 
     private fun getSelectDirPath(
         fcbMap: Map<String, String>?,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
         )?.let {
             if (
                 it.isEmpty()
-            ) return@let currentAppDirPath
+            ) return@let cmdclickDefaultAppDirPath
             it
-        } ?: currentAppDirPath
+        } ?: cmdclickDefaultAppDirPath
     }
 
     private fun getFilterPrefix(

@@ -2,15 +2,32 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import java.lang.ref.WeakReference
 
 class JsWebViewDialogManager(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
 
     @JavascriptInterface
     fun dismiss(){
-        terminalFragment.webViewDialogInstance?.dismiss()
-        terminalFragment.webViewDialogInstance = null
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.stopWebView()
+//        terminalFragment.pocketWebViewManager.dismiss()
+//        terminalFragment.webViewDialogInstance = null
+    }
+
+    @JavascriptInterface
+    fun visibleSelectionBar(isShow: Boolean){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.textSelectionHideShow(isShow)
+    }
+
+    @JavascriptInterface
+    fun updateSelectionTextView(updateText: String){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        terminalFragment.pocketWebViewManager?.updateCurSelectionTextView(updateText)
     }
 }

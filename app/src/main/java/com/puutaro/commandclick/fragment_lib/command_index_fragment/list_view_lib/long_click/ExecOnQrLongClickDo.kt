@@ -20,12 +20,13 @@ object ExecOnQrLongClickDo {
 
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ) {
 
         val context = cmdIndexFragment.context
             ?: return
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         fannelIndexListAdapter.qrLongClickListener =
             object: FannelIndexListAdapter.OnQrLongClickListener {
                 override fun onQrLongClick(
@@ -35,7 +36,7 @@ object ExecOnQrLongClickDo {
                 ) {
                     val fannelName = holder.fannelNameTextView.text.toString()
                     val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-                    val qrLogoPath = "${currentAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+                    val qrLogoPath = "${cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
                     qrLogoDialogObj = Dialog(
                         context
                     )
@@ -53,7 +54,7 @@ object ExecOnQrLongClickDo {
 
                     setPassButton(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         fannelName,
                     )
                     setShareButton(
@@ -62,7 +63,7 @@ object ExecOnQrLongClickDo {
                     )
                     setChangeButton(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         fannelName,
                     )
                     val cancelButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
@@ -109,7 +110,7 @@ object ExecOnQrLongClickDo {
 
     private fun setPassButton(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val passButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
@@ -120,7 +121,7 @@ object ExecOnQrLongClickDo {
             qrLogoDialogObj = null
             QrDialogMethod.launchPassDialog(
                 cmdIndexFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
             )
         }
@@ -128,7 +129,7 @@ object ExecOnQrLongClickDo {
 
     private fun setChangeButton(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val changeButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
@@ -137,7 +138,7 @@ object ExecOnQrLongClickDo {
         changeButton?.setOnClickListener {
             QrDialogMethod.execChange(
                 cmdIndexFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
                 qrLogoDialogObj,
                 R.id.qr_logo_dialog_top_image

@@ -3,14 +3,13 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn.*
@@ -35,47 +34,49 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class FormDialogForListIndexOrButton(
-    private val editFragment: EditFragment
-) {
+object FormDialogForListIndexOrButton {
 
     private var formDialog: Dialog? = null
     private var returnValue = String()
-    private val variableTypeDefineListForMiniEdit
-            = TypeVariable.variableTypeDefineListForMiniEdit
-    private val context = editFragment.context
-    private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-
     private val exitTextStartId = 110000
 
-        private val withEditComponentForListIndex = WithEditComponentForListIndex()
+    private val variableTypeDefineListForMiniEdit = TypeVariable.variableTypeDefineListForMiniEdit
 
-    private val languageType =
-        LanguageTypeSelects.JAVA_SCRIPT
+//    private val languageType =
+//        LanguageTypeSelects.JAVA_SCRIPT
 
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+//    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
+//
+//    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+//    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
+    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+    private val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+    private val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
 
 
     fun create(
+        editFragment: EditFragment,
         title: String,
         parentDirPath: String,
         selectedScriptName: String,
         onSetting: String,
     ) {
+        val context = editFragment.context
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+
         val scriptContents = ReadText(
             File(
                 parentDirPath,
@@ -86,6 +87,7 @@ class FormDialogForListIndexOrButton(
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    editFragment,
                     title,
                     parentDirPath,
                     selectedScriptName,
@@ -104,12 +106,15 @@ class FormDialogForListIndexOrButton(
 
 
     private fun execCreate(
+        editFragment: EditFragment,
         title: String,
         parentDirPath: String,
         selectedScriptName: String,
         scriptContentsList: List<String>,
         onSetting: String
     ) {
+        val context = editFragment.context
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         if(
             context == null
         ) {
@@ -133,14 +138,14 @@ class FormDialogForListIndexOrButton(
         ) confirmTitleTextView?.text = title
         else confirmTitleTextView?.isVisible = false
         val linearLayout =
-            formDialog?.findViewById<LinearLayout>(
+            formDialog?.findViewById<LinearLayoutCompat>(
                 com.puutaro.commandclick.R.id.form_dialog_contents_linear
             ) ?: return
 
 
         val virtualReadPreffrenceMap = mapOf(
-            FannelInfoSetting.current_app_dir.name
-                    to parentDirPath,
+//            FannelInfoSetting.current_app_dir.name
+//                    to parentDirPath,
             FannelInfoSetting.current_fannel_name.name
                     to selectedScriptName
         )
@@ -163,7 +168,7 @@ class FormDialogForListIndexOrButton(
         ) {
             val setVariableForCmdHolder = SetVariableTyper.makeSetVariableTypeList(
                 recordNumToMapNameValueInSettingHolder,
-                parentDirPath,
+//                parentDirPath,
                 selectedScriptName,
                 editFragment.setReplaceVariableMap
             )
@@ -195,7 +200,7 @@ class FormDialogForListIndexOrButton(
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 context,
                 settingVariableList,
-                parentDirPath,
+//                parentDirPath,
                 selectedScriptName,
             )
         } else {
@@ -206,7 +211,7 @@ class FormDialogForListIndexOrButton(
             onSetting.isEmpty()
         ) {
             EditParameters(
-                editFragment,
+//                editFragment,
                 scriptContentsList,
                 recordNumToMapNameValueInCommandHolder,
                 recordNumToMapNameValueInSettingHolder,
@@ -223,7 +228,7 @@ class FormDialogForListIndexOrButton(
                 settingVariableList,
             )
             EditParameters(
-                editFragment,
+//                editFragment,
                 scriptContentsList,
                 recordNumToMapNameValueInSettingHolder,
                 null,
@@ -235,6 +240,7 @@ class FormDialogForListIndexOrButton(
         }
 
         execFormPartsAdd(
+            editFragment,
             editParameters,
             recordNumToSetVariableMaps,
             exitTextStartId,
@@ -268,9 +274,8 @@ class FormDialogForListIndexOrButton(
                 recordNumToMapNameValueInHolder.isNullOrEmpty()
             ) scriptContentsList
             else {
-                ScriptContentsLister(
-                    listOf(linearLayout)
-                ).update(
+                ScriptContentsLister.update(
+                    listOf(linearLayout),
                     recordNumToMapNameValueInHolder,
                     scriptContentsList,
                     exitTextStartId
@@ -304,15 +309,16 @@ class FormDialogForListIndexOrButton(
 
 
     private fun execFormPartsAdd(
+        editFragment: EditFragment,
         editParameters: EditParameters,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
         editTextStartId: Int,
-        linearLayout: LinearLayout
+        linearLayout: LinearLayoutCompat
     ){
         val recordNumToNameToValueInHolderSize =
             editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
-            val linearParams = LinearLayout.LayoutParams(
+            val linearParams = LinearLayoutCompat.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             )
@@ -323,6 +329,7 @@ class FormDialogForListIndexOrButton(
                 )
             val currentRecordNumToNameToValueInHolder =
                 currentRecordNumToMapNameValueInHolder.value
+            val context = editFragment.context
             val insertTextView = TextView(context)
             val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
                 VARIABLE_NAME.name
@@ -350,7 +357,8 @@ class FormDialogForListIndexOrButton(
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
 
-            val horizontalLinearLayout = withEditComponentForListIndex.insert(
+            val horizontalLinearLayout = WithEditComponentForListIndex.insert(
+                editFragment,
                 insertTextView,
                 editParameters,
             )

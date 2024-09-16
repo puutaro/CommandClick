@@ -2,14 +2,18 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import java.lang.ref.WeakReference
 
 class JsBackstack(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val activity = terminalFragment.activity
 
     @JavascriptInterface
     fun count(): Int {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return 0
+        val activity = terminalFragment.activity
         val backstackCount = activity
             ?.supportFragmentManager
             ?.backStackEntryCount

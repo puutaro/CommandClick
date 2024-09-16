@@ -5,17 +5,17 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.Comma
 import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object ListViewUpdaterOnStart {
-    fun update(
-        cmdIndexFragment: CommandIndexFragment
-    ){
-        val binding = cmdIndexFragment.binding
-        val fannelInfoMap = cmdIndexFragment.fannelInfoMap
-        val cmdList = binding.cmdList
-        CommandListManager.execListUpdateForCmdIndex(
-            FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            ),
-            cmdList,
-        )
-    }
+//    fun update(
+//        cmdIndexFragment: CommandIndexFragment
+//    ){
+//        val binding = cmdIndexFragment.binding
+////        val fannelInfoMap = cmdIndexFragment.fannelInfoMap
+//        val cmdList = binding.cmdList
+//        CommandListManager.execListUpdateForCmdIndex(
+////            FannelInfoTool.getCurrentAppDirPath(
+////                fannelInfoMap
+////            ),
+//            cmdList,
+//        )
+//    }
 }

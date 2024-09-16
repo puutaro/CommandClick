@@ -187,18 +187,18 @@ class GetFileForEdit(
         val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             sharedPref
         )
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val currentFannelState = FannelInfoTool.getCurrentStateName(
             fannelInfoMap
         )
-        return TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+        return TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         )
@@ -214,8 +214,8 @@ class GetFileForEdit(
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> {
                 if(onDirectoryPick) return

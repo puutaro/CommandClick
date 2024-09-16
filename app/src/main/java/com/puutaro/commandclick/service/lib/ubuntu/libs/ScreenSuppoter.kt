@@ -2,6 +2,7 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
@@ -88,8 +89,8 @@ object ScreenMonitor {
         val defaultDelaySleepTime = 20L
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
-                UsePath.cmdclickSystemAppDirPath,
-                UsePath.cmdclickConfigFileName
+//                UsePath.cmdclickDefaultAppDirPath,
+                SystemFannel.preference
             ),
             settingSectionStart,
             settingSectionEnd

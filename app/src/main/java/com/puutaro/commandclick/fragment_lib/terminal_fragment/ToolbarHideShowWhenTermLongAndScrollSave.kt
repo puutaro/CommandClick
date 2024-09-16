@@ -24,17 +24,16 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
         val listener =
             context as? TerminalFragment.OnToolBarVisibleChangeListener
         var oldPositionY = 0f
-        val hideShowThreshold = getScreenHeight(terminalFragment)
+        val hideShowThreshold = ScreenSizeCalculator.getScreenHeight(activity)
         with(binding.terminalWebView){
             setOnTouchListener {
                     v, event ->
-                val targetFragmentInstance = TargetFragmentInstance()
-                val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-                val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+                val cmdEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(activity)
+                val bottomFragment = TargetFragmentInstance.getCurrentBottomFragmentInFrag(
                     activity,
                     cmdEditFragmentTag,
                 )
-                val bottomFragmentWeight = targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
+                val bottomFragmentWeight = TargetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
                 if(
                     terminalFragment.isVisible
                     && bottomFragmentWeight != ReadLines.LONGTH
@@ -46,6 +45,11 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                             v.performClick()
                         }
                         MotionEvent.ACTION_UP -> {
+//                            pocketWebviewPreload(
+//                                context,
+//                                terminalFragment.selectionText,
+//                                bottomFragment
+//                            )
                             execHideShow(
                                 bottomFragment,
                                 hideShowThreshold,
@@ -55,8 +59,9 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                             )
                             val url = terminalWebView.url
                             CoroutineScope(Dispatchers.IO).launch {
-                                    ScrollPosition.save(
+                                ScrollPosition.save(
                                     terminalFragment,
+                                    terminalWebView,
                                     url,
                                     terminalWebView.scrollY,
                                     oldPositionY,
@@ -71,6 +76,29 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
             }
         }
     }
+
+//    private fun pocketWebviewPreload(
+//        context: Context?,
+//        selectText: String,
+//        bottomFragment: Fragment?
+//    ){
+//        if(
+//            selectText.isEmpty()
+//            || bottomFragment !is CommandIndexFragment
+//        ) return
+//        if(
+//            !bottomFragment.binding.cmdindexSelectionSearchButton.isVisible
+//        ) return
+//        val preLoadUrl = "${WebUrlVariables.queryUrl}${selectText}"
+//        BroadcastSender.normalSend(
+//            context,
+//            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_PRELOAD_URL.action,
+//            listOf(
+//                PocketWebviewPreLoadUrlExtra.url.schema to preLoadUrl
+//            )
+//
+//        )
+//    }
 }
 
 
@@ -94,17 +122,4 @@ private fun execHideShow(
             bottomFragment
         )
     }
-}
-
-private fun getScreenHeight(
-    terminalFragment: TerminalFragment
-): Int {
-    val dpHeight = ScreenSizeCalculator.dpHeight(
-        terminalFragment
-    )
-    val hideShowRate =
-        if(dpHeight > 670f) 3.0f
-        else if(dpHeight > 630) 3.5F
-        else 4.0f
-    return -(dpHeight / hideShowRate).toInt()
 }

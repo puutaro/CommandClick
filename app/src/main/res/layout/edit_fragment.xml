@@ -21,16 +21,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constrainedHeight="true"
             android:orientation="vertical"
             android:descendantFocusability="blocksDescendants"
             android:scrollbarThumbVertical="@android:color/darker_gray"
             tools:context="com.puutaro.commandclick.fragment.TerminalFragment"
-            android:layout_above="@+id/edit_tool_bar_linear_layout"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
+            android:layout_above="@+id/edit_tool_bar_linear_layout"
+
             >
-            <LinearLayout
+<!--
+ app:layout_constraintStart_toStartOf="parent"
+            app:layout_constrainedHeight="true"
+ android:layout_above="@+id/edit_tool_bar_linear_layout"-->
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/edit_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,9 +75,9 @@
                         />
                     <requestFocus/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/edit_list_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +89,8 @@
             android:weightSum="1"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
             >
-            <LinearLayout
+<!--            android:layout_above="@+id/edit_tool_bar_linear_layout"-->
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/edit_list_inner_top_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +100,7 @@
                 android:focusableInTouchMode="true"
                 android:background="@color/white"
                 >
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_list_recycler_view"
@@ -124,7 +128,7 @@
                 android:autofillHints=""
                 android:inputType="text"
                 />
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/edit_list_inner_bottom_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,18 +137,19 @@
                 android:focusableInTouchMode="true"
                 android:background="@color/white"
                 >
-            </LinearLayout>
-        </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/edit_tool_bar_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/toolbar_layout_height"
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:weightSum="1"
             >
+<!--            android:layout_alignParentBottom="true"-->
             <include
                 layout="@layout/page_search"
                 android:id="@+id/page_search"
@@ -168,13 +173,13 @@
                 android:focusableInTouchMode="true"
                 android:layout_weight="1"
                 >
-                <LinearLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/edit_toolbar_linear_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
-                </LinearLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </android.widget.Toolbar>
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>
 </layout>

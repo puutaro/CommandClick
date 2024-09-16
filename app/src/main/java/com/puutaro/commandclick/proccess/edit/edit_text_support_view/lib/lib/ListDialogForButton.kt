@@ -70,7 +70,7 @@ object ListDialogForButton {
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
         )
-        val searchTextWeight = SearchTextLinearWeight.calculate(editFragment)
+        val searchTextWeight = SearchTextLinearWeight.calculate(editFragment.activity)
         val listWeight = 1F - searchTextWeight
         val linearLayoutForListView = NestLinearLayout.make(
             context,

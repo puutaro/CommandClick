@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -13,74 +12,66 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.webkit.WebView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.GgleSerchSystemMaker
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
-import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GgleSchDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
+import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
+import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import java.lang.ref.WeakReference
 
 
-class TerminalFragment: Fragment() {
+class TerminalFragment:
+    Fragment() {
 
 
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
-    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-    var languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
     var busyboxExecutor: BusyboxExecutor? = null
     var fannelInfoMap = mapOf<String, String>()
     var srcFannelInfoMap: Map<String, String>? = null
     var editType =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-    var currentAppDirPath = String()
+//    var currentAppDirPath = String()
     var currentFannelName = String()
     var setReplaceVariableMap: Map<String, String>? = null
     var settingFannelPath: String = String()
     var displayUpdateCoroutineJob: Job? = null
     var loadAssetCoroutineJob: Job? = null
     var onPageFinishedCoroutineJob: Job? = null
+    var onScrollPosiSaveJob: Job? = null
     var registerUrlHistoryTitleCoroutineJob: Job? = null
     var onWebHistoryUpdaterJob: Job? = null
     var onPocketWebHistoryUpdaterJob: Job? = null
@@ -112,8 +103,12 @@ class TerminalFragment: Fragment() {
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
-    var webViewDialogInstance: Dialog? = null
+//    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
+    var pocketWebViewManager: WebViewJsDialog? = null
+    var ggleWebViewManager: GgleSchDialog? = null
+    var selectionText = String()
+//    var extraMapBitmapList: List<Bitmap?> = emptyList()
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             BroadcastHandlerForTerm.handle(
@@ -155,9 +150,9 @@ class TerminalFragment: Fragment() {
         }
         fannelInfoMap = EditFragmentArgs.getFannelInfoMap(arguments)
         srcFannelInfoMap = EditFragmentArgs.getSrcFannelInfoMap(arguments)
-        currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -166,14 +161,13 @@ class TerminalFragment: Fragment() {
                 this
             )
         val fannelContentsList = CommandClickVariables.makeMainFannelConList(
-            currentAppDirPath,
             currentValidFannelName
         )
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 context,
                 fannelContentsList,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentValidFannelName,
             )
         settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
@@ -181,11 +175,42 @@ class TerminalFragment: Fragment() {
             setReplaceVariableMap
         )
         editType = EditFragmentArgs.getEditType(arguments)
-
         ExecDownLoadManager.set(
             this,
             binding.terminalWebView
         )
+        pocketWebViewManager = WebViewJsDialog(WeakReference(this))
+        ggleWebViewManager = GgleSchDialog(WeakReference(this))
+        TerminalToolbarHandler.handler(this)
+        GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
+        GgleSchToolbar.set(this)
+        val keyboardHandleListener = context as? OnKeyboardHandleListenerForTerm
+        activity?.let {
+            KeyboardVisibilityEvent.setEventListener(
+                it,
+                this.viewLifecycleOwner,
+                KeyboardVisibilityEventListener {
+                        isOpen ->
+                    // some code depending on keyboard visiblity status
+                    if(
+                        !this.isVisible
+                    ) return@KeyboardVisibilityEventListener
+                    if(
+                        view.height == 0
+                    ) return@KeyboardVisibilityEventListener
+                    if(
+                        !view.hasWindowFocus()
+                    ) return@KeyboardVisibilityEventListener
+                    keyboardHandleListener?.onKeyboardHandleForTerm(isOpen)
+                })
+        }
+        PinFannelBarManager.set(
+            this,
+            tag,
+            binding.fannelPinRecyclerView
+        )
+        PinFannelHideShow.setHideListener(this)
+
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
         )
@@ -196,7 +221,7 @@ class TerminalFragment: Fragment() {
             terminalViewModel
         )
         UrlHistoryBackUp.backup(this)
-        ScrollYPosiBackUp.backup(this)
+        ScrollYPosiBackUp.backup()
         AddBlockerHandler.handle(this)
 
         WebChromeClientSetter.set(
@@ -212,15 +237,17 @@ class TerminalFragment: Fragment() {
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
-        GifCreateMonitor.watch(this)
         FannelHistoryGifCreator.watch(this)
+        GifCreateMonitor.watch(this)
+        ButtonImageCreator.create(this)
+
     }
 
     override fun onStart() {
         super.onStart()
+        ExecBackstackHandle.initPrevBackTime()
         TerminalOnHandlerForEdit.handle(this)
         JsDebugger.stockLogSender(this)
-        UrlCaptureWatcher.watch(this)
     }
 
 
@@ -229,35 +256,38 @@ class TerminalFragment: Fragment() {
         val terminalViewModel: TerminalViewModel by activityViewModels()
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
-        webViewDialogInstance?.findViewById<WebView>(
-            R.id.webview_dialog_webview
-        )?.onPause()
-        terminalViewModel.onDialog = false
+//        webViewDialogInstance?.findViewById<WebView>(
+//            R.id.webview_dialog_webview
+//        )?.onPause()
+//        terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
-        UrlCaptureWatcher.exit()
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
         binding.terminalWebView.onPause()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
+        onScrollPosiSaveJob?.cancel()
         registerUrlHistoryTitleCoroutineJob?.cancel()
         onWebHistoryUpdaterJob?.cancel()
         onPocketWebHistoryUpdaterJob?.cancel()
         displayUpdateCoroutineJob?.cancel()
+        UrlCaptureWatcher.exit()
+//        FannelHistoryGifCreator.exit()
+//        GifCreateMonitor.exit()
+//        ButtonImageCreator.exit()
     }
 
     override fun onResume() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
-        val targetFragmentInstance = TargetFragmentInstance()
-        val cmdVariableEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+        val cmdVariableEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = TargetFragmentInstance.getCurrentBottomFragmentInFrag(
             activity,
             cmdVariableEditFragmentTag
         )
         val currentBottomFragmentWeight =
-            targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
+            TargetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
         firstDisplayUpdate = if(
             !firstDisplayUpdate
             && currentBottomFragmentWeight == ReadLines.LONGTH
@@ -267,10 +297,10 @@ class TerminalFragment: Fragment() {
         InitCurrentMonitorFile.trim(this)
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
-        webViewDialogInstance?.findViewById<WebView>(
-            R.id.webview_dialog_webview
-        )?.onResume()
-        terminalViewModel.onDialog = false
+//        webViewDialogInstance?.findViewById<WebView>(
+//            R.id.webview_dialog_webview
+//        )?.onResume()
+//        terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
 //        UrlLaunchIntentAction.handle(this)
@@ -280,6 +310,7 @@ class TerminalFragment: Fragment() {
             this,
             terminalViewModel,
         )
+        UrlCaptureWatcher.watch(this)
         previousTerminalTag = tag
     }
 
@@ -299,17 +330,17 @@ class TerminalFragment: Fragment() {
         )
     }
 
-        interface OnSearchTextChangeListener {
-        fun onSearchTextChange(
-            text: String
-        )
-    }
+//    interface OnSearchTextChangeListener {
+//        fun onSearchTextChange(
+//            text: String
+//        )
+//    }
 
-    interface OnAutoCompUpdateListener {
-        fun onAutoCompUpdate (
-            currentAppDirPath: String
-        )
-    }
+//    interface OnAutoCompUpdateListener {
+//        fun onAutoCompUpdate (
+////            currentAppDirPath: String
+//        )
+//    }
 
     interface OnTermLongChangeListenerForTerminalFragment {
         fun onTermLongChangeForTerminalFragment(
@@ -370,15 +401,32 @@ class TerminalFragment: Fragment() {
             broadcastReceiverForTerm
         )
         UrlCaptureWatcher.exit()
+        PinFannelBarManager.clear(binding.fannelPinRecyclerView)
+        FannelHistoryGifCreator.exit()
+        GifCreateMonitor.exit()
+        ButtonImageCreator.exit()
+        FannelHistoryCaptureTool.exit()
         this.onPageFinishedCoroutineJob?.cancel()
+        onScrollPosiSaveJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
         onPocketWebHistoryUpdaterJob?.cancel()
         onRegisterPocketWebViewUrl?.cancel()
+        pocketWebViewManager?.destroyWebView()
+        ggleWebViewManager?.destroyWebView()
+        val terminalWebView = binding.terminalWebView
+        terminalWebView.onPause()
+        terminalWebView.webChromeClient = null
+        terminalWebView.clearHistory()
+        terminalWebView.clearCache(true)
+        terminalWebView.removeAllViews()
+        terminalWebView.destroy()
+        binding.terminalFragment.removeAllViews()
         _binding = null
-        webViewDialogInstance?.dismiss()
-        webViewDialogInstance = null
+        pocketWebViewManager = null
+//        webViewDialogInstance?.dismiss()
+//        webViewDialogInstance = null
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
         firstDisplayUpdate = true
@@ -466,5 +514,54 @@ class TerminalFragment: Fragment() {
         fun getSdcardDirForTerm(
             isCreate: Boolean
         )
+    }
+
+    interface OnRestartListenerForTerm {
+        fun onRestartForTerm()
+    }
+
+    interface OnPinClickForTermListener {
+        fun onPinClickForTerm(
+            longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
+            editFragmentArgs: EditFragmentArgs,
+            editFragmentTag: String,
+            terminalFragmentTag: String
+        )
+    }
+
+    interface OnSetToolbarButtonImageListener {
+        fun onSetToolbarButtonImage()
+    }
+
+    interface OnSearchButtonMakeListenerForTerm {
+        fun onSearchButtonMakeForTerm()
+    }
+
+    interface OnKeyboardHandleListenerForTerm {
+        fun onKeyboardHandleForTerm(isOpen: Boolean)
+    }
+    interface OnPinFannelHideListener {
+        fun onPinFannelHide(fannelManagerPinImageView: AppCompatImageView? = null)
+    }
+
+    interface OnPageSearchSwitchListenerForTerm{
+        fun onPageSearchSwitchForTerm()
+    }
+
+
+    interface OnSelectionSearchBarSwitchListenerForTerm {
+        fun onSelectionSearchBarSwitchForTerm(
+            isShow: Boolean
+        )
+    }
+
+    interface OnUpdateSelectionTextViewListenerForTerm {
+        fun onUpdateSelectionTextViewForTerm(
+            updateText: String
+        )
+    }
+
+    interface OnCaptureActivityListenerForTerm {
+        fun onCaptureActivityForTerm()
     }
 }

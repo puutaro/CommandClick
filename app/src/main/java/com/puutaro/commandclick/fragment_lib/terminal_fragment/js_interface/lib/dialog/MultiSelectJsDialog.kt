@@ -7,18 +7,21 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import java.lang.ref.WeakReference
 
 class MultiSelectJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
     fun create(
         title: String,
         currentItemListStr: String,
         preSelectedItemListStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.multiSelectTabString = String()
         val currentItemList = currentItemListStr.split("\n")
         val preSelectedItemList = preSelectedItemListStr.split("\n")

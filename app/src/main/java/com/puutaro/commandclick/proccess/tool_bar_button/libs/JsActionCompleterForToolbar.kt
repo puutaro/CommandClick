@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
@@ -47,7 +48,7 @@ object JsActionCompleterForToolbar {
         val fannelInfoMap =
             editFragment.fannelInfoMap
         val mainFannelPath = File(
-            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            UsePath.cmdclickDefaultAppDirPath,
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
         val jsActionMapSrc = JsActionTool.makeJsActionMap(

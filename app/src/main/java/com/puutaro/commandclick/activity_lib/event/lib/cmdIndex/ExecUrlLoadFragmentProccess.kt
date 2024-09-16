@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 import android.content.Context
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
@@ -31,18 +32,18 @@ object ExecUrlLoadFragmentProccess {
         if(!cmdIndexFragment.isVisible) return
         val context = cmdIndexFragment.context
         val binding = cmdIndexFragment.binding
-        val cmdindexInternetButton = binding.cmdindexInternetButton
-        binding.cmdListSwipeToRefresh.isVisible = false
-        context?.let {
-            cmdindexInternetButton.setImageResource(
-                SearchSwichImage.WEB.image
-            )
-            cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
-            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color))
-            (it.getColor(R.color.white))
-        }
+//        val cmdindexInternetButton = binding.cmdindexInternetButton
+//        binding.cmdListSwipeToRefresh.isVisible = false
+//        context?.let {
+//            cmdindexInternetButton.setImageResource(
+//                SearchSwichImage.WEB.image
+//            )
+//            cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
+//            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color))
+//            (it.getColor(R.color.white))
+//        }
         val linearLayoutParam =
-            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
         if(linearLayoutParam.weight == ReadLines.LONGTH) {
             ExecTerminalLongOrShort.open<CommandIndexFragment>(
                 cmdIndexFragmentTag,
@@ -57,10 +58,10 @@ object ExecUrlLoadFragmentProccess {
         activity: MainActivity,
     ){
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -70,7 +71,7 @@ object ExecUrlLoadFragmentProccess {
             FannelInfoSetting.current_fannel_state
         )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         )
@@ -89,7 +90,7 @@ object ExecUrlLoadFragmentProccess {
             false
         )
         val linearLayoutParam =
-            editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+            editFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
         if(
             linearLayoutParam.weight != ReadLines.LONGTH
         ) return

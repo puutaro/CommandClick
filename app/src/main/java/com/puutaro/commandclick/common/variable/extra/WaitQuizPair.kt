@@ -37,7 +37,7 @@ object WaitQuizPair {
     private val mv2sd = "mv2sd"
     private val repbash = "repbash"
     private val jsAction = "js action"
-    private val cmdTerminal = SystemFannel.cmdTerminal
+    private val cmdTerminal = SystemFannel.tapTerminal
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(

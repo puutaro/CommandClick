@@ -14,9 +14,9 @@ object SetVariableTypesSetterForEdit {
         fannelInfoMap: Map<String, String>,
         settingVariableList: List<String>?,
     ): List<String> {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -42,7 +42,7 @@ object SetVariableTypesSetterForEdit {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             )
         }.split("\n").filter {

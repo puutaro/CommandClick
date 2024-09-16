@@ -2,10 +2,24 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tex
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import java.lang.ref.WeakReference
 
 class JsText(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
+
+    @JavascriptInterface
+    fun removeAllQuote(
+        con: String
+    ): String {
+
+        /*
+       ## Description
+
+       Remove all quote (double quote ,single quote, back quote)
+       */
+        return con.replace(Regex("[\"'`]"), String())
+    }
 
     @JavascriptInterface
     fun trimNewLine(con: String): String{

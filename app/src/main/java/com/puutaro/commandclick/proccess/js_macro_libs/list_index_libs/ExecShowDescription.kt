@@ -18,8 +18,8 @@ object ExecShowDescription {
             listIndexPosition,
         ) ?: return
         val showFilePathObj = File(showFilePath)
-        val showFileParentDirPath = showFilePathObj.parent
-            ?: return
+//        val showFileParentDirPath = showFilePathObj.parent
+//            ?: return
         val showFileName = showFilePathObj.name
         ScriptFileDescription.show(
             editFragment,
@@ -28,7 +28,7 @@ object ExecShowDescription {
                     showFilePath
                 ).absolutePath
             ).textToList(),
-            showFileParentDirPath,
+//            showFileParentDirPath,
             showFileName
         )
     }

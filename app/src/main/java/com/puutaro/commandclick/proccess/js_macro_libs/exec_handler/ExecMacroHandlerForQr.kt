@@ -35,19 +35,19 @@ object ExecMacroHandlerForQr {
                 ScriptFileDescription.show(
                     editFragment,
                     contents.split("\n"),
-                    parentDirPath,
+//                    parentDirPath,
                     clickFileName
                 )
             }
 
             JsMacroForQr.EDIT_LOGO
             -> {
-                val parentDirPath = ActionToolForQr.getParentDirPath(
-                    editFragment
-                )
+//                val parentDirPath = ActionToolForQr.getParentDirPath(
+//                    editFragment
+//                )
                 QrLogoEditDialogLauncher.launch(
                     editFragment,
-                    parentDirPath,
+//                    parentDirPath,
                     clickFileName,
                     editFragment.qrDialogConfig ?: emptyMap(),
 //                    qrDialogConfigMap

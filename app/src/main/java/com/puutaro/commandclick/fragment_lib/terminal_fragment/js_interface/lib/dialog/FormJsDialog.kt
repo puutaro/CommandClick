@@ -6,12 +6,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
+//import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -22,38 +23,42 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
 
 class FormJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
     private var formDialog: Dialog? = null
     private var returnValue = String()
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private val variableTypeDefineListForMiniEdit
         = TypeVariable.variableTypeDefineListForMiniEdit
 
     private val exitTextStartId = 90000
 
-    private val withEditComponentForFormJsDialog = WithEditComponentForFormJsDialog()
-    private val languageType =
-        LanguageTypeSelects.JAVA_SCRIPT
+//    private val withEditComponentForFormJsDialog = WithEditComponentForFormJsDialog()
+//    private val languageType =
+//        LanguageTypeSelects.JAVA_SCRIPT
 
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
+//    private val languageTypeToSectionHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+    private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+//    languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    ) as String
+    private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+//    languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    ) as String
 
-    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
+    private val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+//    CommandClickScriptVariable.SETTING_SEC_END,
+//    languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    ) as String
+    private val commandSectionEnd = CommandClickScriptVariable.CMD_SEC_END
+//    languageTypeToSectionHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    ) as String
 
 
     fun create(
@@ -61,6 +66,9 @@ class FormJsDialog(
         formSettingVariables: String,
         formCommandVariables: String
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         runBlocking {
             withContext(Dispatchers.Main) {
@@ -90,6 +98,10 @@ class FormJsDialog(
         formSettingVariables: String,
         formCommandVariables: String
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ) {
@@ -122,20 +134,20 @@ class FormJsDialog(
                 settingSectionStart,
                 settingSectionEnd
             ),
-            String(),
+//            String(),
             String(),
         )
 
         val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
             recordNumToMapNameValueInSettingHolder,
             String(),
-            String(),
+//            String(),
             null
         )?.joinToString("\n")?.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                String(),
+//                String(),
                 String()
             )
         }?.split("\n")
@@ -163,25 +175,26 @@ class FormJsDialog(
         ) confirmTitleTextView?.text = title
         else confirmTitleTextView?.isVisible = false
         val linearLayout =
-            formDialog?.findViewById<LinearLayout>(
+            formDialog?.findViewById<LinearLayoutCompat>(
                 R.id.form_dialog_contents_linear
             ) ?: return
-        val virtualReadPreffrenceMap = mapOf(
-            FannelInfoSetting.current_app_dir.name
-                to terminalFragment.currentAppDirPath
-        )
+//        val virtualReadPreffrenceMap = mapOf(
+//            FannelInfoSetting.current_app_dir.name
+//                to terminalFragment.currentAppDirPath
+//        )
         val editParameters = EditParameters(
-            terminalFragment,
+//            terminalFragment,
             virtualJsContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            virtualReadPreffrenceMap,
+            emptyMap(),
             setReplaceVariableMap,
             true,
             emptyList()
         )
 
         execFormPartsAdd(
+            terminalFragment,
             editParameters,
             recordNumToSetVariableMaps,
             exitTextStartId,
@@ -212,9 +225,8 @@ class FormJsDialog(
                 recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
             ) virtualJsContentsList
             else {
-                ScriptContentsLister(
-                    listOf(linearLayout)
-                ).update(
+                ScriptContentsLister.update(
+                    listOf(linearLayout),
                     recordNumToMapNameValueInCommandHolder,
                     virtualJsContentsList,
                     exitTextStartId
@@ -275,15 +287,19 @@ class FormJsDialog(
     }
 
     private fun execFormPartsAdd(
+        fragment: Fragment,
         editParameters: EditParameters,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
         editTextStartId: Int,
-        linearLayout: LinearLayout
+        linearLayout: LinearLayoutCompat
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val recordNumToNameToValueInHolderSize =
             editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
-            val linearParams = LinearLayout.LayoutParams(
+            val linearParams = LinearLayoutCompat.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             )
@@ -334,7 +350,8 @@ class FormJsDialog(
                 false
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
-            val horizontalLinearLayout = withEditComponentForFormJsDialog.insert(
+            val horizontalLinearLayout = WithEditComponentForFormJsDialog.insert(
+                fragment,
                 insertTextView,
                 editParameters
             )

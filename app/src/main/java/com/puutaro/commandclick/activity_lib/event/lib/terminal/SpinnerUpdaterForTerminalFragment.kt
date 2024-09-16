@@ -23,10 +23,10 @@ object SpinnerUpdaterForTerminalFragment {
     ) {
         if(spinnerId == null) return
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -36,11 +36,11 @@ object SpinnerUpdaterForTerminalFragment {
             FannelInfoSetting.current_fannel_state
         )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         )
-        val cmdEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
+        val cmdEditFragment = TargetFragmentInstance.getFromActivity<EditFragment>(
             activity,
             cmdEditFragmentTag
         ) ?: return

@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
@@ -11,14 +10,14 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.EditViewModel
-import java.io.File
+import java.lang.ref.WeakReference
 
 class JsEdit(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
-    private val editViewModel: EditViewModel by terminalFragment.activityViewModels()
+//    private val context = terminalFragment.context
+//    private val activity = terminalFragment.activity
+//    private val editViewModel: EditViewModel by terminalFragment.activityViewModels()
 
 
     @JavascriptInterface
@@ -27,7 +26,7 @@ class JsEdit(
         targetVariableName: String,
         updateVariableValue: String,
     ){
-        val jsScript = JsScript(terminalFragment)
+        val jsScript = JsScript(terminalFragmentRef)
         updateEditText(
             targetVariableName,
             updateVariableValue
@@ -50,7 +49,11 @@ class JsEdit(
         updateVariableName: String,
         updateVariableValue: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val listener = context as? TerminalFragment.OnEditTextUpdateListenerForTermFragment
+        val editViewModel: EditViewModel by terminalFragment.activityViewModels()
         val editTextId = editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
         listener?.onEditTextUpdateForTermFragment(
             editTextId,
@@ -62,11 +65,13 @@ class JsEdit(
     fun getFromEditText(
         targetVariableName: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val fannelInfoMap =
             terminalFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
 
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
@@ -74,9 +79,10 @@ class JsEdit(
         val fannelState = FannelInfoTool.getCurrentStateName(
             fannelInfoMap
         )
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val activity = terminalFragment.activity
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         ) ?: return String()
@@ -92,7 +98,11 @@ class JsEdit(
         updateVariableName: String,
         updateVariableValue: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val listener = context as? TerminalFragment.OnSpinnerUpdateListenerForTermFragment
+        val editViewModel: EditViewModel by terminalFragment.activityViewModels()
         val editTextId =
             editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
                 ?:return

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
@@ -17,18 +18,21 @@ import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.shell.LinuxCmd
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 class JsUbuntu(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
     private val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
 
     @JavascriptInterface
@@ -36,6 +40,10 @@ class JsUbuntu(
         executeShellPath:String,
         tabSepaArgs: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         if(
             !UbuntuProcessChecker.isExist(
                 context,
@@ -61,6 +69,10 @@ class JsUbuntu(
         timeMilisec: Int,
         monitorNum: Int,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+
         if(
             !UbuntuProcessChecker.isExist(
                 context,
@@ -86,6 +98,9 @@ class JsUbuntu(
         argsTabSepaStr:String,
         monitorNum: Int,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+
         UbuntuController.execScriptByBackground(
             terminalFragment,
             backgroundShellPath,
@@ -101,6 +116,10 @@ class JsUbuntu(
         if(
             cmdName.isEmpty()
         ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
@@ -117,10 +136,11 @@ class JsUbuntu(
         execCode: String,
         delayMiliTime: Int
     ){
-        if(
-            context == null
-        ) return
-        val jsUrl = JsUrl(terminalFragment)
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
+
+        val jsUrl = JsUrl(terminalFragmentRef)
         val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
             context,
             execCode.split("\n")
@@ -200,18 +220,20 @@ class JsUbuntu(
 
     @JavascriptInterface
     fun isSetup(): Boolean {
-        if(
-            context == null
-        ) return false
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return false
+        val context = terminalFragment.context ?: return false
+
         val isSetupFile = UbuntuFiles(context).ubuntuSetupCompFile.isFile
         return isSetupFile
     }
 
     @JavascriptInterface
     fun boot(){
-        if(
-            context == null
-        ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
+
         var isBootSuccess = false
         if(
             !UbuntuFiles(context).ubuntuSetupCompFile.isFile
@@ -238,7 +260,7 @@ class JsUbuntu(
                         isBootSuccess = true
                         break
                     }
-                    delay(2000)
+                    delay(4000)
                 }
             }
         }
@@ -253,6 +275,10 @@ class JsUbuntu(
     fun isProc(
         processName: String
     ): Boolean {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return false
+        val context = terminalFragment.context
+
         return LinuxCmd.isProcessCheck(
             context,
             processName
@@ -266,7 +292,7 @@ class JsUbuntu(
         if(
             isSetup()
         ) return
-        JsUrl(terminalFragment).loadJsPath(launchJsPath, String())
+        JsUrl(terminalFragmentRef).loadJsPath(launchJsPath, String())
     }
 
     @JavascriptInterface
@@ -324,7 +350,7 @@ class JsUbuntu(
             isInstall = true
             return isInstall
         }
-        val jsDialog = JsDialog(terminalFragment)
+        val jsDialog = JsDialog(terminalFragmentRef)
         val installTitleToMsg = makeTitleToMsg(installConfirmTitleAndMessage)
         val el = jsDialog.listDialog(
             installTitleToMsg.first,
@@ -338,12 +364,12 @@ class JsUbuntu(
             return isInstall
         }
         val cautionTitleToMsg = makeTitleToMsg(cautionTitleAndMessage)
-        JsDialog(terminalFragment).listDialog(
+        JsDialog(terminalFragmentRef).listDialog(
             cautionTitleToMsg.first,
             cautionTitleToMsg.second,
             String()
         )
-        JsUrl(terminalFragment).exit_S()
+        JsUrl(terminalFragmentRef).exit_S()
         isInstall = false
         return isInstall
     }

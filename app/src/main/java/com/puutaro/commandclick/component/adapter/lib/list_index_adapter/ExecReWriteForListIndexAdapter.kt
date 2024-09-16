@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ object ExecReWriteForListIndexAdapter {
     ){
         val binding = editFragment.binding
         val listIndexAdapter =
-            binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            binding.editListRecyclerView.adapter as ListIndexAdapter
         val srcAndRepLinePairListSize = srcAndRepLinePairList.size
         CoroutineScope(Dispatchers.IO).launch {
             srcAndRepLinePairList.forEach {

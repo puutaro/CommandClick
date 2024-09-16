@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -13,8 +13,8 @@ object ExecEditCmdVal {
     ){
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
         if(
             NoFileChecker.isNoFile(
@@ -22,10 +22,8 @@ object ExecEditCmdVal {
                 selectedItem,
             )
         ) return
-        val formDialogForListIndexOrButton = FormDialogForListIndexOrButton(
-            editFragment
-        )
-        formDialogForListIndexOrButton.create(
+        FormDialogForListIndexOrButton.create(
+            editFragment,
             "edit command variable",
             parentDirPath,
             selectedItem,

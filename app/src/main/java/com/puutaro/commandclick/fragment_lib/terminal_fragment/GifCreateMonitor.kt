@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,18 +17,24 @@ import java.io.File
 
 object GifCreateMonitor {
 
+    private var gifCreateJob: Job? = null
+
+    fun exit(){
+        gifCreateJob?.cancel()
+    }
+
     fun watch(
         terminalFragment: TerminalFragment,
-    ){
+    ) {
         val lastModifyExtend = UrlHistoryPath.lastModifyExtend
-        val currentAppDirPath = terminalFragment.currentAppDirPath
+//        val currentAppDirPath = terminalFragment.currentAppDirPath
         val captureHistoryDirPath =
             UrlHistoryPath.makeCaptureHistoryDirPath(
-                currentAppDirPath
+//                currentAppDirPath
             )
         //: 0 create 1: no_create
 //        var gitCreteTimes = 0
-        terminalFragment.lifecycleScope.launch {
+        gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
                     var previousPngList: List<String> = emptyList()
@@ -60,7 +67,7 @@ object GifCreateMonitor {
 //                            ).joinToString("\n")
 //                        )
                         val capturePartsPngDirPath = getCapturePartsPngDirPath(
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             firstUpdateDirName
                         )
                         val curPngPathList =
@@ -78,7 +85,7 @@ object GifCreateMonitor {
 
                         createGifFromPngs(
                             curPngPathList,
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             firstUpdateDirName,
                         )
 
@@ -90,7 +97,7 @@ object GifCreateMonitor {
 
     private fun createGifFromPngs(
         pingPathList: List<String>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         urlUniqueDirName: String,
     ){
         val bitMapList = pingPathList.map {
@@ -101,7 +108,7 @@ object GifCreateMonitor {
                 File(UsePath.cmdclickDefaultAppDirPath, "gif_failue.txt").absolutePath,
                 listOf(
                     "pingPathList: ${pingPathList}",
-                    "currentAppDirPath: ${currentAppDirPath}"
+//                    "currentAppDirPath: ${currentAppDirPath}"
                 ).joinToString("\n")
             )
             return
@@ -116,7 +123,7 @@ object GifCreateMonitor {
 //            urlUniqueDirName
 //        )
         val gifPath = getCaptureGifPath(
-            currentAppDirPath,
+//            currentAppDirPath,
             urlUniqueDirName
         )
         BitmapTool.saveGif(
@@ -211,52 +218,52 @@ object GifCreateMonitor {
     }
 
     private fun getCaptureUniqueDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         urlUniqueDirName: String
     ): String {
         return File(
-            UrlHistoryPath.makeCaptureHistoryDirPath(currentAppDirPath),
+            UrlHistoryPath.makeCaptureHistoryDirPath(),
             urlUniqueDirName,
         ).absolutePath
     }
 
     private fun getCapturePartsPngDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         urlUniqueDirName: String
     ): String {
         return File(
             getCaptureUniqueDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 urlUniqueDirName
             ),
             "partPng"
         ).absolutePath
     }
 
-    fun getCaptureGifPath(
-        currentAppDirPath: String,
+    private fun getCaptureGifPath(
+//        currentAppDirPath: String,
         urlUniqueDirName: String
     ): String {
         return File(
             getCaptureUniqueDirPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 urlUniqueDirName
             ),
             "gif.gif"
         ).absolutePath
     }
 
-    private fun getCaptureGifTextPath(
-        currentAppDirPath: String,
-        urlUniqueDirName: String
-    ): String {
-        return File(
-            getCaptureUniqueDirPath(
-                currentAppDirPath,
-                urlUniqueDirName
-            ),
-        "gif.txt"
-        ).absolutePath
-
-    }
+//    private fun getCaptureGifTextPath(
+////        currentAppDirPath: String,
+//        urlUniqueDirName: String
+//    ): String {
+//        return File(
+//            getCaptureUniqueDirPath(
+////                currentAppDirPath,
+//                urlUniqueDirName
+//            ),
+//        "gif.txt"
+//        ).absolutePath
+//
+//    }
 }

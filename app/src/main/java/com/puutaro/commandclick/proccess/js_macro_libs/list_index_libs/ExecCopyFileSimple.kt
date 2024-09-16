@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
@@ -161,15 +161,15 @@ object ExecSimpleCopy {
             editFragment
         )
         return when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            -> null
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            -> null
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> selectedItem
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> {
                 val listDirPath = FilePrefixGetter.get(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexAdapter.indexListMap,
                     ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
                 )
                 File(listDirPath, selectedItem).absolutePath
@@ -235,8 +235,8 @@ object ExecSimpleCopy {
             -> DirOrTsvType.DIR.type
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> DirOrTsvType.TSV.type
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> String()
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> String()
         }
     }
 }

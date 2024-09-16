@@ -1,34 +1,41 @@
-package com.puutaro.commandclick.activity_lib.manager.curdForFragment;
+package com.puutaro.commandclick.activity_lib.manager.curdForFragment
 
 import android.util.Log
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
-class FragmentManagerForActivity(
-    private val supportFragmentManager: FragmentManager,
-) {
-    private val transaction = supportFragmentManager.beginTransaction()
+object FragmentManagerForActivity{
+//    private val transaction = supportFragmentManager.beginTransaction()
 
-    fun commit(){
-        transaction.commit()
+    fun commit(
+        transaction: FragmentTransaction
+    ){
+        transaction.commitAllowingStateLoss()
     }
 
-    fun deleteAllBackStack(){
+    fun deleteAllBackStack(
+        supportFragmentManager: FragmentManager?,
+    ){
+        if(supportFragmentManager == null) return
         for (i in 0..supportFragmentManager.backStackEntryCount) {
             supportFragmentManager.popBackStack()
         }
     }
 
 
-    fun addToBackStack(){
+    fun addToBackStack(
+        transaction: FragmentTransaction
+    ){
         transaction.addToBackStack(null)
     }
 
 
     fun initFragments(
+        transaction: FragmentTransaction,
         terminalFragment: String,
         commandIndexFragment: String
     ) {
@@ -48,8 +55,11 @@ class FragmentManagerForActivity(
 
 
     fun <T: androidx.fragment.app.Fragment> showFragment(
+        supportFragmentManager: FragmentManager?,
+        transaction: FragmentTransaction,
         terminalFragmentTag: String
     ) {
+        if(supportFragmentManager == null) return
         val fragmentTop = try {
             supportFragmentManager.findFragmentByTag(terminalFragmentTag) as T
         } catch (e: java.lang.Exception) {
@@ -61,8 +71,11 @@ class FragmentManagerForActivity(
 
 
     fun <T: androidx.fragment.app.Fragment> hideFragment (
+        supportFragmentManager: FragmentManager?,
+        transaction: FragmentTransaction,
         terminalFragmentTag: String
     ) {
+        if(supportFragmentManager == null) return
         val sampleFragmentTop = try {
             supportFragmentManager.findFragmentByTag(terminalFragmentTag) as T
         } catch (e: java.lang.Exception) {
@@ -73,8 +86,13 @@ class FragmentManagerForActivity(
     }
 
     fun <T: androidx.fragment.app.Fragment> removeFragment(
+        supportFragmentManager: FragmentManager?,
+        transaction: FragmentTransaction,
         cmdIndexFragmentTag: String,
     ) {
+        if(
+            supportFragmentManager == null
+        ) return
         val cmdIndexFragment = try {
             supportFragmentManager.findFragmentByTag(cmdIndexFragmentTag) as T
         } catch (e: java.lang.Exception) {
@@ -85,6 +103,7 @@ class FragmentManagerForActivity(
     }
 
     fun replaceFragment(
+        transaction: FragmentTransaction,
         fragmentId: Int,
         replaceFragment: androidx.fragment.app.Fragment,
         replaceFragmentTag: String,
@@ -97,6 +116,7 @@ class FragmentManagerForActivity(
     }
 
     fun addFragment(
+        transaction: FragmentTransaction,
         addFragment: androidx.fragment.app.Fragment,
         addFragmentTag: String,
     ) {

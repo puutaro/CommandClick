@@ -95,11 +95,6 @@ object SettingVariableSelects {
         foreground,
         background,
     }
-
-    enum class ToolbarBtnCustomInSettingSelects {
-        ON
-    }
-
     enum class OnRootfsSdCardSaveSelects {
         ON,
         OFF,
@@ -114,5 +109,14 @@ object SettingVariableSelects {
     enum class OnLaunchUrlHistoryByBackstack {
         ON,
         OFF
+    }
+
+    enum class DisableSettingValsEdit {
+        ON,
+        OFF,
+    }
+
+    enum class MustUbuntuSetupSelects {
+        ON,
     }
 }

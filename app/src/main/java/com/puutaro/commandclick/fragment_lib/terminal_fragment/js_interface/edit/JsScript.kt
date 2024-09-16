@@ -2,49 +2,56 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
+import java.lang.ref.WeakReference
 
 class JsScript(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val languageTypeHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP[
-                LanguageTypeSelects.JAVA_SCRIPT
-        ]
-    private val labelingStartHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-    )
-    private val labelingEndHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-    )
-    private val settingStartHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    )
-    private val settingEndHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    )
-    private val commandStartHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    )
-    private val commandEndHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    )
-    private val setReplaceVariableMap = terminalFragment.setReplaceVariableMap
+//    private val context = terminalFragment.context
+//    private val languageTypeHolderMap =
+//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP[
+//                LanguageTypeSelects.JAVA_SCRIPT
+//        ]
+    private val labelingStartHolder =  CommandClickScriptVariable.LABELING_SEC_START
+//        languageTypeHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+//    )
+    private val labelingEndHolder =  CommandClickScriptVariable.LABELING_SEC_END
+//        languageTypeHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+//    )
+    private val settingStartHolder =  CommandClickScriptVariable.SETTING_SEC_START
+//        languageTypeHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//    )
+    private val settingEndHolder = CommandClickScriptVariable.SETTING_SEC_END
+//        languageTypeHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//    )
+    private val commandStartHolder =  CommandClickScriptVariable.CMD_SEC_START
+//    languageTypeHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//    )
+    private val commandEndHolder =  CommandClickScriptVariable.CMD_SEC_END
+//    CommandClickScriptVariable.SETTING_SEC_END,
+//    languageTypeHolderMap?.get(
+//        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//    )
+//    private val setReplaceVariableMap = terminalFragment.setReplaceVariableMap
 
     @JavascriptInterface
     fun subLabelingVars(
         jsContents: String
     ): String {
-        if(
-            labelingStartHolder.isNullOrEmpty()
-            || labelingEndHolder.isNullOrEmpty()
-        ) return String()
+//        if(
+//            labelingStartHolder.isNullOrEmpty()
+//            || labelingEndHolder.isNullOrEmpty()
+//        ) return String()
         return CommandClickVariables.extractValListFromHolder(
             jsContents.split("\n"),
             labelingStartHolder,

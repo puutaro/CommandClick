@@ -11,7 +11,7 @@ object ExecPageLoadPageSearchDisable {
         activity: MainActivity,
     ){
         val cmdIndexFragment =
-            TargetFragmentInstance()
+            TargetFragmentInstance
                 .getFromFragment<CommandIndexFragment>(
                     activity,
                     activity.getString(R.string.command_index_fragment)

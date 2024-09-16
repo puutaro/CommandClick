@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util.state
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -54,22 +55,22 @@ object FannelInfoTool {
             CcPathTool.getMainFannelFilePath(mainOrSubFannelPath)
         ).name
         return mapOf(
-            FannelInfoSetting.current_app_dir.name
-                    to currentAppDirPath,
+//            FannelInfoSetting.current_app_dir.name
+//                    to currentAppDirPath,
             FannelInfoSetting.current_fannel_name.name
                     to currentFannelName,
         )
 
     }
 
-    fun getCurrentAppDirPath(
-        fannelInfoMap: Map<String, String>,
-    ): String {
-        return getValFromFannelInfoMap(
-            fannelInfoMap,
-            FannelInfoSetting.current_app_dir
-        )
-    }
+//    fun getCurrentAppDirPath(
+//        fannelInfoMap: Map<String, String>,
+//    ): String {
+//        return getValFromFannelInfoMap(
+//            fannelInfoMap,
+//            FannelInfoSetting.current_app_dir
+//        )
+//    }
 
     fun getCurrentFannelName(
         fannelInfoMap: Map<String, String>?,
@@ -81,6 +82,13 @@ object FannelInfoTool {
             fannelInfoMap,
             FannelInfoSetting.current_fannel_name
         )
+    }
+
+    fun isEmptyFannelName(
+        currentFannelName: String
+    ): Boolean {
+        return currentFannelName.isEmpty()
+                || currentFannelName == FannelInfoSetting.current_fannel_name.defalutStr
     }
 
     fun getCurrentStateName(
@@ -139,15 +147,15 @@ object FannelInfoTool {
 
     fun putAllFannelInfo(
         fannelInfoSharePref: FannelInfoSharePref?,
-        currentAppDirPath: String?,
+//        currentAppDirPath: String?,
         currentFannelName: String?,
         onShortcutValue: String?,
         currentFannelState: String?,
     ){
         val nullStr = "NULL_STR"
         val fannelInfoMap = listOf(
-            FannelInfoSetting.current_app_dir.name
-                    to (currentAppDirPath ?: nullStr),
+//            FannelInfoSetting.current_app_dir.name
+//                    to (currentAppDirPath ?: nullStr),
             FannelInfoSetting.current_fannel_name.name
                     to (currentFannelName ?: nullStr),
             FannelInfoSetting.on_shortcut.name
@@ -168,10 +176,7 @@ object FannelInfoTool {
     fun makeFannelInfoMapByShare(
         fannelInfoSharePref: FannelInfoSharePref?
     ): Map<String, String> {
-        val sharedCurrentAppPath = getStringFromFannelInfo(
-            fannelInfoSharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val sharedCurrentAppPath = UsePath.cmdclickDefaultAppDirPath
 
         val sharedCurrentShellFileName = getStringFromFannelInfo(
             fannelInfoSharePref,
@@ -188,8 +193,8 @@ object FannelInfoTool {
         )
 
         return mapOf(
-            FannelInfoSetting.current_app_dir.name
-                    to sharedCurrentAppPath,
+//            FannelInfoSetting.current_app_dir.name
+//                    to sharedCurrentAppPath,
             FannelInfoSetting.current_fannel_name.name
                     to sharedCurrentShellFileName,
             FannelInfoSetting.on_shortcut.name
@@ -200,13 +205,13 @@ object FannelInfoTool {
     }
 
     fun makeFannelInfoMapByString(
-        currentAppDirPath: String = String(),
+//        currentAppDirPath: String = String(),
         currentFannelName: String = String(),
         currentFannelState: String = String()
     ): Map<String, String> {
         return mapOf(
-            FannelInfoSetting.current_app_dir.name
-                    to currentAppDirPath,
+//            FannelInfoSetting.current_app_dir.name
+//                    to currentAppDirPath,
             FannelInfoSetting.current_fannel_name.name
                     to currentFannelName,
             FannelInfoSetting.current_fannel_state.name

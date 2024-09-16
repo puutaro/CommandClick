@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
-import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
@@ -15,34 +16,35 @@ import java.io.File
 
 object ScriptFileEdit {
     fun edit(
-        cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+        fragment: Fragment,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val sharedPref =
-            FannelInfoTool.getSharePref(cmdIndexFragment.context)
+            FannelInfoTool.getSharePref(fragment.context)
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             FannelInfoSetting.on_shortcut.defalutStr,
             FannelInfoSetting.current_fannel_state.defalutStr
         )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val shellContentsList = ReadText(
             File(
-                currentAppDirPath,
+                cmdclickDefaultAppDirPath,
                 fannelName
             ).absolutePath,
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
-            cmdIndexFragment,
+            fragment,
             shellContentsList,
             fannelName
         )
         if(validateErrMessage.isNotEmpty()){
-            val shellScriptPath = "${currentAppDirPath}/${fannelName}"
+            val shellScriptPath = "${cmdclickDefaultAppDirPath}/${fannelName}"
             VariationErrDialog.show(
-                cmdIndexFragment,
+                fragment,
                 shellScriptPath,
                 validateErrMessage
             )
@@ -50,18 +52,18 @@ object ScriptFileEdit {
         }
         val editFragmentTag = DecideEditTag(
             shellContentsList,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             FannelInfoSetting.current_fannel_state.defalutStr,
         ).decideForEdit()
             ?: return
         val fannelInfoMap = EditFragmentArgs.createFannelInfoMap(
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
             FannelInfoSetting.on_shortcut.defalutStr,
             FannelInfoSetting.current_fannel_state.defalutStr,
         )
-        val context = cmdIndexFragment.context
+        val context = fragment.context
             ?: return
         val listener = context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener

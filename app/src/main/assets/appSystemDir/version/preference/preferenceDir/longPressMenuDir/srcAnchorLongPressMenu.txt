@@ -1,4 +1,0 @@
-siteSummary.js
-urlIntender.js
-copyLink.js
-webSearcher.js

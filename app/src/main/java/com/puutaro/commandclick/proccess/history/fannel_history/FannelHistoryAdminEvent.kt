@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.history.fannel_history
 
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
@@ -14,7 +15,6 @@ import java.io.File
 object FannelHistoryAdminEvent {
     fun register(
         sharedPref: FannelInfoTool.FannelInfoSharePref?,
-        selectedAppDirPath: String,
         selectedFannelName: String,
         mainFannelSettingConList: List<String>,
         setReplaceVariableMap: Map<String, String>?
@@ -28,7 +28,7 @@ object FannelHistoryAdminEvent {
         if (!onEditExecute) {
             FannelInfoTool.putAllFannelInfo(
                 sharedPref,
-                selectedAppDirPath,
+//                selectedAppDirPath,
                 FannelInfoSetting.current_fannel_name.defalutStr,
                 FannelInfoSetting.on_shortcut.defalutStr,
                 FannelInfoSetting.current_fannel_state.defalutStr,
@@ -36,7 +36,7 @@ object FannelHistoryAdminEvent {
             return
         }
         val selectedAppShellFilePathObj = File(
-            selectedAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             selectedFannelName
         )
         FileSystems.updateLastModified(
@@ -54,14 +54,14 @@ object FannelHistoryAdminEvent {
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         }
         val fannelState = FannelStateManager.getState(
-            selectedAppDirPath,
+//            selectedAppDirPath,
             selectedFannelName,
             mainFannelSettingConList,
             setReplaceVariableMap,
         )
         FannelInfoTool.putAllFannelInfo(
             sharedPref,
-            selectedAppDirPath,
+//            selectedAppDirPath,
             selectedFannelName,
             onShortCut,
             fannelState,

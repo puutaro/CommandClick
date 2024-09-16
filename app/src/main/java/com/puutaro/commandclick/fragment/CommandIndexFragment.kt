@@ -7,27 +7,26 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -36,7 +35,6 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
-import java.io.File
 
 
 class CommandIndexFragment: Fragment() {
@@ -55,15 +53,16 @@ class CommandIndexFragment: Fragment() {
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
     var savedEditTextContents = String()
-    var homeFannelHistoryNameList: List<String>? = null
-    var bottomScriptUrlList = emptyList<String>()
+//    var extraMapBitmapList: List<Bitmap?> = emptyList()
+//    var homeFannelHistoryNameList: List<String>? = null
+//    var bottomScriptUrlList = emptyList<String>()
 
     private var broadcastReceiverForCmdIndex: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            BroadcastReceiveHandlerForCmdIndex.handle(
-                this@CommandIndexFragment,
-                intent,
-            )
+//            BroadcastReceiveHandlerForCmdIndex.handle(
+//                this@CommandIndexFragment,
+//                intent,
+//            )
         }
     }
 
@@ -91,35 +90,11 @@ class CommandIndexFragment: Fragment() {
         cmdIndexViewModel.onFocusSearchText = false
         val startUpPref = FannelInfoTool.getSharePref(context)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
-        val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
         val defaultSystemPath =
             "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         FileSystems.createDirs(
             defaultSystemPath
         )
-        FileSystems.createDirs(
-            cmdclickAppHistoryDirAdminPath
-        )
-        FileSystems.createDirs(
-            UsePath.cmdclickJsImportDirPath
-        )
-        FileSystems.createFiles(
-            File(
-                cmdclickAppHistoryDirAdminPath,
-                FannelHistoryManager.makeAppHistoryFileNameForInit(
-                    UsePath.cmdclickDefaultAppDirName,
-                )
-            ).absolutePath
-        )
-        CmdClickSystemAppDir.create(context)
-
-        CommandClickScriptVariable.makeAppDirAdminFile(
-            UsePath.cmdclickAppDirAdminPath,
-            UsePath.cmdclickDefaultAppDirName +
-                    UsePath.JS_FILE_SUFFIX
-        )
-
-        ConfigFromConfigFileSetter.set(this)
 
         IndexInitHandler.handle(this)
 
@@ -138,43 +113,8 @@ class CommandIndexFragment: Fragment() {
         fannelInfoMap = FannelInfoTool.makeFannelInfoMapByShare(
             startUpPref
         )
-//        FDialogTempFile.removeByCoroutine(
-//            readSharePreffernceMap
-//        )
-
-        val cmdListView = binding.cmdList
-        cmdListView.setHasFixedSize(true)
-        cmdListView.setItemViewCacheSize(100)
-        val makeListView = MakeListView(
-            binding,
-            this,
-            fannelInfoMap
-        )
-        val fannelIndexListAdapter = makeListView.makeList(
-            requireContext()
-        )
-        makeListView.makeClickItemListener(
-            fannelIndexListAdapter
-        )
-        makeListView.onLongClickQrDo(
-            fannelIndexListAdapter
-        )
-        makeListView.onLongClickDo(
-            fannelIndexListAdapter
-        )
-        makeListView.cmdListSwipeToRefresh()
-        cmdListView.adapter = fannelIndexListAdapter
-        cmdListView.layoutManager = PreLoadLayoutManager(
-            context,
-        )
-        cmdListView.layoutManager?.scrollToPosition(
-            fannelIndexListAdapter.itemCount - 1
-        )
-        makeListView.makeTextFilter(
-            fannelIndexListAdapter,
-        )
-
-        val cmdindexInternetButton = binding.cmdindexInternetButton
+        GgleSerchSystemMaker.makeSearchButtonFromActivity(this)
+        val keyboardHandleListener = context as? OnKeyboardHandleListenerForCmdIndex
         activity?.let {
             KeyboardVisibilityEvent.setEventListener(
                 it,
@@ -186,93 +126,46 @@ class CommandIndexFragment: Fragment() {
                         !this.isVisible
                     ) return@KeyboardVisibilityEventListener
                     if(
-                        terminalViewModel.onDialog
+                        !view.hasWindowFocus()
                     ) return@KeyboardVisibilityEventListener
-                    val linearLayoutParam =
-                        binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
-                    val cmdIndexFragmentWeight = linearLayoutParam.weight
-                    val enableInternetButton = (
-                            !isOpen
-                            || cmdIndexFragmentWeight != ReadLines.LONGTH
-                            )
-                    cmdindexInternetButton.isEnabled = enableInternetButton
-                    if(enableInternetButton){
-                        cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
-                    } else {
-                        cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
-                    }
-                    val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
-                    if(isLongth) {
-                        KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
-                                isOpen,
-                                this,
-                        )
-                        return@KeyboardVisibilityEventListener
-                    }
-                    KeyboardForCmdIndex.historyAndSearchHideShow(
-                        isOpen,
-                        this,
-                    )
-                    val listener = context as? OnKeyboardVisibleListener
-                    val isOpenKeyboard = if(
-                        isOpen
-                    ) onTermVisibleWhenKeyboard !=
-                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-                    else isOpen
-                    listener?.onKeyBoardVisibleChange(
-                        isOpenKeyboard,
-                        this.isVisible,
-                        this.WebSearchSwitch
-                    )
-                    if(
-                        !isOpen
-                        && binding.cmdListSwipeToRefresh.isVisible
-                    ){
-                        CoroutineScope(Dispatchers.Main).launch {
-                            delay(100)
-                            cmdListView.scrollToPosition(
-                                fannelIndexListAdapter.itemCount - 1
-                            )
-                        }
-                    }
+                    keyboardHandleListener?.onKeyboardHandleForCmdIndex(isOpen)
                 })
         }
 
-        val toolBarSettingButtonControl = ToolBarSettingButtonControl(
-            this,
-        )
-        toolBarSettingButtonControl.toolbarSettingButtonOnClick()
-        toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
-
-        val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
-            this,
-        )
-        toolBarHistoryButtonControl.historyButtonClick()
-
-        val toolBarInternetButtonControl = ToolBarInternetButtonControl(
-            this,
-            fannelInfoMap
-        )
-        toolBarInternetButtonControl.interneButtontSetOnClickListener()
+        ExecSetToolbarButtonImage.setForCmdIndex(this)
+        ExtraMenuForCmdIndex.launch(this)
+        PageSearchManager.set(this)
+        ToolBarHistoryButtonControl.historyButtonClick(this)
+        PinFannelHideShow.setShowListener(this)
+        TextSelectionBarCtrl.setOnClickListener(this)
+        PreInstallFannel.install(this)
+        ExtraMenuGifCreator.create(this)
+        UrlImageDownloader.save(this)
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-        exitDialog(
-            binding.cmdList
-        )
+//        exitDialog(
+////            binding.cmdList
+//        )
+        ExtraMenuGifCreator.exit()
+        UrlImageDownloader.exit()
+        PreInstallFannel.exit()
         cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
+        IndexInitHandler.exit()
         _binding = null
     }
 
     override fun onPause() {
-        savedEditTextContents = binding.cmdSearchEditText.text.toString()
-        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-        cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
+//        savedEditTextContents = binding.s.text.toString()
+//        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+//        cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         showTerminalJobWhenReuse?.cancel()
+//        ExtraMenuGifCreator.exit()
+//        PreInstallFannel.exit()
         BroadcastRegister.unregisterBroadcastReceiver(
             this,
             broadcastReceiverForCmdIndex,
@@ -283,7 +176,7 @@ class CommandIndexFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         TerminalShower.show(this)
-        EditTextWhenReuse.focus(this)
+//        EditTextWhenReuse.focus(this)
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
         BroadcastRegister.registerBroadcastReceiverMultiActions(
             this,
@@ -292,13 +185,15 @@ class CommandIndexFragment: Fragment() {
                 BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action,
             )
         )
+//        PreInstallFannel.install(this)
+//        ExtraMenuGifCreator.create(this)
     }
 
 
-    override fun onStart() {
-        super.onStart()
-        ListViewUpdaterOnStart.update(this)
-    }
+//    override fun onStart() {
+//        super.onStart()
+////        ListViewUpdaterOnStart.update(this)
+//    }
 
     interface OnLongClickMenuItemsForCmdIndexListener {
         fun onLongClickMenuItemsforCmdIndex(
@@ -359,7 +254,7 @@ class CommandIndexFragment: Fragment() {
 
     interface OnUpdateNoSaveUrlPathsListener {
         fun onUpdateNoSaveUrlPaths(
-            currentAppDirPath: String,
+//            currentAppDirPath: String,
             fannelName: String,
         )
     }
@@ -388,5 +283,28 @@ class CommandIndexFragment: Fragment() {
         cmdList.adapter = null
         cmdList.recycledViewPool.clear()
         cmdList.removeAllViews()
+    }
+
+    interface OnZeroSizingListener {
+        fun onZeroSizing()
+    }
+
+    interface OnSearchButtonMakeListenerForCmdIndex {
+        fun onSearchButtonMakeForCmdIndex()
+    }
+
+
+    interface OnKeyboardHandleListenerForCmdIndex {
+        fun onKeyboardHandleForCmdIndex(isOpen: Boolean)
+    }
+
+    interface OnPinFannelShowListener {
+        fun onPinFannelShow(
+            fannelManagerPinImageView: AppCompatImageView? = null
+        )
+    }
+
+    interface OnPageSearchSwitchListener {
+        fun onPageSearchSwitch()
     }
 }

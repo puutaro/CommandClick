@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.filer.FileRenamer
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -26,7 +26,7 @@ object ExecRenameFile {
         )
         CoroutineScope(Dispatchers.Main).launch {
             when (type) {
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
                 -> execFileRename(
                     editFragment,
@@ -48,8 +48,8 @@ object ExecRenameFile {
     ){
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
 
         if(
@@ -60,7 +60,7 @@ object ExecRenameFile {
         ) return
         FileRenamer.rename(
             editFragment,
-            parentDirPath,
+//            parentDirPath,
             selectedItem
         )
     }
@@ -71,14 +71,14 @@ object ExecRenameFile {
     ){
         val binding = editFragment.binding
         val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            binding.editListRecyclerView.adapter as ListIndexAdapter
         val selectedTsvLine =
             listIndexForEditAdapter.listIndexList.getOrNull(
                 listIndexPosition
             ) ?: return
         val tsvPath = FilePrefixGetter.get(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
+            ListIndexAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         ) ?: String()
         val isExist = ReadText(

@@ -1,17 +1,23 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.webkit.*
+import android.graphics.Bitmap
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.url.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,16 +41,17 @@ object WebViewClientSetter {
                 it
             )
         }
-        var previousUrl: String? = null
 
         binding.terminalWebView.webViewClient = object : WebViewClient() {
+
+
+            val allowedRequest = false
+            val notAllowedRequest = true
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
-                val allowedRequest = false
-                val notAllowedRequest = true
-
+                UrlCaptureWatcher.exit()
                 val url = request?.url
                     ?: return notAllowedRequest
 
@@ -59,7 +66,7 @@ object WebViewClientSetter {
                 }
                 return allowedRequest
             }
-
+            var previousUrl: String? = null
             override fun doUpdateVisitedHistory(webView: WebView?, url: String?, isReload: Boolean) {
                 super.doUpdateVisitedHistory(webView, url, isReload)
                 terminalFragment.currentUrl = url
@@ -75,11 +82,11 @@ object WebViewClientSetter {
                 val listener =
                     context as? TerminalFragment.OnPageLoadPageSearchDisableListener
                 listener?.onPageLoadPageSearchDisable()
-                SearchViewAndAutoCompUpdater.update(
-                    terminalFragment,
-                    webView,
-                    url,
-                )
+//                SearchViewAndAutoCompUpdater.update(
+//                    terminalFragment,
+//                    webView,
+//                    url,
+//                )
                 UrlTermLongProcess.trigger(
                     terminalFragment,
                     terminalViewModel,
@@ -110,6 +117,19 @@ object WebViewClientSetter {
                 return super.shouldInterceptRequest(view, request)
             }
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                UrlCaptureWatcher.exit()
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.Main) {
+                        val listenerForSelectionBar =
+                            context as TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm
+                        listenerForSelectionBar.onSelectionSearchBarSwitchForTerm(false)
+                    }
+                }
+            }
+
+            var previousUrlForPageFinished: String? = null
             override fun onPageFinished(
                 webview: WebView?,
                 url: String?
@@ -138,7 +158,7 @@ object WebViewClientSetter {
                     return
                 }
                 super.onPageFinished(webview, url)
-                CoroutineScope(Dispatchers.Main).launch{
+                terminalFragment.onScrollPosiSaveJob = CoroutineScope(Dispatchers.Main).launch{
                     if(
                         FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
                     ) return@launch
@@ -150,7 +170,15 @@ object WebViewClientSetter {
                         )
                     }
                 }
-                val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+                val isMap =  WebUrlVariables.isMapUrl(
+                    previousUrlForPageFinished,
+                    url,
+                )
+                previousUrlForPageFinished = url
+                if(!isMap){
+                    UrlCaptureWatcher.watch(terminalFragment)
+                }
+                val appUrlSystemDirPath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                 terminalFragment.onPageFinishedCoroutineJob = CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.IO) {
                         if(

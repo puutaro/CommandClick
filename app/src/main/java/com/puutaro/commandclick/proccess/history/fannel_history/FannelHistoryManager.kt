@@ -8,10 +8,10 @@ object FannelHistoryManager {
 
     private val jsSuffix = UsePath.JS_FILE_SUFFIX
     fun makeAppHistoryFileNameForInit (
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentScriptFileName: String? = null
     ): String {
-        val currentAppDirName = File(currentAppDirPath).name
+        val currentAppDirName = File(UsePath.cmdclickDefaultAppDirPath).name
         if(
             currentScriptFileName.isNullOrEmpty()
         ) return "${currentAppDirName}__${UsePath.JS_FILE_SUFFIX}"

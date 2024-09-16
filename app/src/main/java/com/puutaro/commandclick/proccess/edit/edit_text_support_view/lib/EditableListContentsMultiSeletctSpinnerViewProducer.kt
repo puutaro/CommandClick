@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -14,6 +15,7 @@ import java.io.File
 object EditableListContentsMultiSeletctSpinnerViewProducer {
 
     fun make (
+        editFragment: EditFragment,
         insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters,
@@ -21,12 +23,12 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         weight: Float,
         isInsertTextViewVisible: Boolean = false
     ): Button {
-        val context = editParameters.context
+        val context = editFragment.context
         val currentId = editParameters.currentId
 
-        val linearParamsForSpinner = LinearLayout.LayoutParams(
+        val linearParamsForSpinner = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
         val elcbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
@@ -79,9 +81,9 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
             )
         }
 
-        val linearParamsForButton = LinearLayout.LayoutParams(
+        val linearParamsForButton = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForButton.weight = weight
         insertButton.layoutParams = linearParamsForButton

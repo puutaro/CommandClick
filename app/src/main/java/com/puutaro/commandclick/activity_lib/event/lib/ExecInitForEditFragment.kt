@@ -5,26 +5,24 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecTermSizing
 import com.puutaro.commandclick.activity_lib.variable.TerminalFragmentSize
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 
-class ExecInitForEditFragment {
-    companion object {
-        fun execInitForEditFragment (
-            activity: MainActivity,
-            editInitType: EditInitType,
-        ){
-            when(editInitType) {
-                EditInitType.TERMINAL_SHRINK -> {
+object ExecInitForEditFragment {
+    fun execInitForEditFragment (
+        activity: MainActivity,
+        editInitType: EditInitType,
+    ){
+        when(editInitType) {
+            EditInitType.TERMINAL_SHRINK -> {
 
-                    ExecTermSizing.execTermSizing(
-                        activity,
-                        TerminalFragmentSize.SHRINK.size
-                    )
-                }
-                EditInitType.TERMINAL_SHOW -> {
-                    ExecTermSizing.execTermSizing(
-                        activity,
-                        TerminalFragmentSize.SHOW.size
-                    )
-                }
+                ExecTermSizing.execTermSizing(
+                    activity,
+                    TerminalFragmentSize.SHRINK.size
+                )
+            }
+            EditInitType.TERMINAL_SHOW -> {
+                ExecTermSizing.execTermSizing(
+                    activity,
+                    TerminalFragmentSize.SHOW.size
+                )
             }
         }
     }

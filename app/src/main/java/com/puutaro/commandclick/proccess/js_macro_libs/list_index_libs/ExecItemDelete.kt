@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -36,7 +36,7 @@ object ExecItemDelete {
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> return
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
@@ -184,107 +184,11 @@ object ExecItemDelete {
                         editFragment,
                         ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                             editFragment,
-                            ListIndexForEditAdapter.indexListMap,
-                            ListIndexForEditAdapter.listIndexTypeKey
+                            ListIndexAdapter.indexListMap,
+                            ListIndexAdapter.listIndexTypeKey
                         )
                     )
                 }
-                withContext(Dispatchers.Main) {
-                    DeleteAppDir.deleteAppDirItSelf(
-                        editFragment,
-                        parentDirPath,
-                        selectedItem,
-                    )
-                }
-            }
-        }
-
-        object DeleteAppDir {
-
-            private var confirmDialog2: Dialog? = null
-
-            fun deleteAppDirItSelf(
-                editFragment: EditFragment,
-                parentDirPath: String,
-                selectedItem: String,
-            ) {
-                val context = editFragment.context
-                    ?: return
-                if (
-                    parentDirPath.removeSuffix("/")
-                    != UsePath.cmdclickAppDirAdminPath
-                ) return
-                val deleteAppDirName = selectedItem.removeSuffix(
-                    UsePath.JS_FILE_SUFFIX
-                )
-                val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                val displayDeleteAppDirPath =
-                    "${
-                        UsePath.makeTermuxPathByReplace(
-                            cmdclickAppDirPath
-                        )
-                    }/${deleteAppDirName}"
-
-
-                confirmDialog2 = Dialog(
-                    context
-                )
-                confirmDialog2?.setContentView(
-                    R.layout.confirm_text_dialog
-                )
-                val confirmTitleForDeleteAppDirTextView =
-                    confirmDialog2?.findViewById<AppCompatTextView>(
-                        R.id.confirm_text_dialog_title
-                    )
-                confirmTitleForDeleteAppDirTextView?.text =
-                    "Delete bellow App dir, ok?"
-                val confirmContentTextViewForDeleteAppDir =
-                    confirmDialog2?.findViewById<AppCompatTextView>(
-                        R.id.confirm_text_dialog_text_view
-                    )
-                confirmContentTextViewForDeleteAppDir?.text =
-                    "\tpath: ${displayDeleteAppDirPath}"
-                val confirmCancelButtonForDeleteAppDir =
-                    confirmDialog2?.findViewById<AppCompatImageButton>(
-                        R.id.confirm_text_dialog_cancel
-                    )
-                confirmCancelButtonForDeleteAppDir?.setOnClickListener {
-                    confirmDialog2?.dismiss()
-                    confirmDialog2 = null
-                }
-                val confirmOkButtonForDeleteAppDir =
-                    confirmDialog2?.findViewById<AppCompatImageButton>(
-                        R.id.confirm_text_dialog_ok
-                    )
-                confirmOkButtonForDeleteAppDir?.setOnClickListener {
-                    confirmDialog2?.dismiss()
-                    confirmDialog2 = null
-                    val deleteAppDirPath =
-                        "${cmdclickAppDirPath}/${deleteAppDirName}"
-                    FileSystems.removeDir(
-                        deleteAppDirPath
-                    )
-                    ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                        editFragment,
-                        ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                            editFragment,
-                            ListIndexForEditAdapter.indexListMap,
-                            ListIndexForEditAdapter.listIndexTypeKey
-                        )
-                    )
-                }
-                confirmDialog2?.setOnCancelListener {
-                    confirmDialog2?.dismiss()
-                    confirmDialog2 = null
-                }
-                confirmDialog2?.window?.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                confirmDialog2?.window?.setGravity(
-                    Gravity.BOTTOM
-                )
-                confirmDialog2?.show()
             }
         }
     }

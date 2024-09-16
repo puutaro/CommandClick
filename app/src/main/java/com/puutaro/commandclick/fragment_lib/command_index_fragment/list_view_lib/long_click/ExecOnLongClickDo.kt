@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -31,7 +32,7 @@ object ExecOnLongClickDo {
 
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ) {
         val context = cmdIndexFragment.context
@@ -51,11 +52,12 @@ object ExecOnLongClickDo {
                     contextMenuDialog?.setContentView(
                         R.layout.list_dialog_layout
                     )
-                    QrLogo(cmdIndexFragment).setTitleQrLogo(
+                    QrLogo.setTitleFannelLogo(
+                        cmdIndexFragment,
                         contextMenuDialog?.findViewById<AppCompatImageView>(
                             R.id.list_dialog_title_image
                         ),
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         selectedFannelName,
                     )
                     val listDialogTitle = contextMenuDialog?.findViewById<AppCompatTextView>(
@@ -80,7 +82,7 @@ object ExecOnLongClickDo {
 
                     setContextMenuListView(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         selectedFannelName,
                     )
                     contextMenuDialog?.setOnCancelListener {
@@ -100,7 +102,7 @@ object ExecOnLongClickDo {
 
     private fun setContextMenuListView(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptName: String
     ) {
         val context = cmdIndexFragment.context
@@ -119,7 +121,7 @@ object ExecOnLongClickDo {
         contextMenuListView.adapter = subMenuAdapter
         invokeItemSetClickListnerForContextMenuList(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             contextMenuListView,
             selectedScriptName
         )
@@ -127,7 +129,7 @@ object ExecOnLongClickDo {
 
     private fun invokeItemSetClickListnerForContextMenuList(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         contextMenuListView: ListView,
         selectedScriptName: String,
     ) {
@@ -143,20 +145,20 @@ object ExecOnLongClickDo {
                 ContextMenuEnums.KILL.itemName
                 -> AppProcessManager.killDialog(
                     cmdIndexFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     selectedScriptName
                 )
                 ContextMenuEnums.DELETE.itemName
                 -> ConfirmDialogForDelete.show(
                     cmdIndexFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     selectedScriptName,
-                    cmdIndexFragment.binding.cmdList
+//                    cmdIndexFragment.binding.cmdList
                 )
                 ContextMenuEnums.EDIT.itemName
                 -> ScriptFileEdit.edit(
                         cmdIndexFragment,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         selectedScriptName,
                     )
 
@@ -169,7 +171,7 @@ object ExecOnLongClickDo {
                 ContextMenuEnums.UTILITY.itemName
                 -> UtilitySubMenuDialog.launch(
                     cmdIndexFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     selectedScriptName
                 )
 
@@ -314,7 +316,7 @@ private object UtilitySubMenuDialog {
     private var utilitySubMenuDialog: Dialog? = null
     fun launch(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptName: String,
     ){
         val context = cmdIndexFragment.context
@@ -325,11 +327,12 @@ private object UtilitySubMenuDialog {
         utilitySubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
         )
-        QrLogo(cmdIndexFragment).setTitleQrLogo(
+        QrLogo.setTitleFannelLogo(
+            cmdIndexFragment,
             utilitySubMenuDialog?.findViewById<AppCompatImageView>(
                 R.id.list_dialog_title_image
             ),
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedScriptName,
         )
         val listDialogTitle = utilitySubMenuDialog?.findViewById<AppCompatTextView>(
@@ -354,7 +357,7 @@ private object UtilitySubMenuDialog {
 
         utilitySubMenuListView(
             cmdIndexFragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedScriptName,
         )
         utilitySubMenuDialog?.setOnCancelListener {
@@ -371,7 +374,7 @@ private object UtilitySubMenuDialog {
 
     private fun utilitySubMenuListView(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptName: String,
     ) {
         val context = cmdIndexFragment.context
@@ -391,7 +394,7 @@ private object UtilitySubMenuDialog {
         invokeItemSetClickListnerForUtility(
             cmdIndexFragment,
             utilityMenuListView,
-            currentAppDirPath,
+//            currentAppDirPath,
             selectedScriptName
         )
     }
@@ -399,7 +402,7 @@ private object UtilitySubMenuDialog {
     private fun invokeItemSetClickListnerForUtility(
         cmdIndexFragment: CommandIndexFragment,
         copyMenuListView: ListView,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         selectedScriptName: String,
     ){
         val context = cmdIndexFragment.context
@@ -417,7 +420,7 @@ private object UtilitySubMenuDialog {
             when(utilitySubMenuEnums){
                 UtilitySubMenuEnums.WRITE
                 -> EditorByIntent(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     selectedScriptName,
                     context
                 ).byIntent()
@@ -431,12 +434,12 @@ private object UtilitySubMenuDialog {
                 UtilitySubMenuEnums.RENAME
                 -> FileRenamer.rename(
                     cmdIndexFragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     selectedScriptName
                 )
                 UtilitySubMenuEnums.COPY_PATH
                 -> {
-                    val shellFilePathByTermux = "${currentAppDirPath}/${selectedScriptName}"
+                    val shellFilePathByTermux = "${UsePath.cmdclickDefaultAppDirPath}/${selectedScriptName}"
                     val clipboard = context.getSystemService(
                         Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip: ClipData = ClipData.newPlainText(
@@ -448,11 +451,10 @@ private object UtilitySubMenuDialog {
                 }
 
                 UtilitySubMenuEnums.COPY_FILE
-                -> CopyFileEvent(
-                    cmdIndexFragment,
-                    currentAppDirPath,
+                ->  CopyFileEvent.execInvokeItemSetClickListnerForCopyFile(
+//                    cmdIndexFragment.binding.cmdList,
                     selectedScriptName,
-                ).invoke()
+                )
 //                UtilitySubMenuEnums.KILL.itemName
 //                -> AppProcessManager.killDialog(
 //                    cmdIndexFragment,

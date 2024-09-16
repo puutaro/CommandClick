@@ -12,14 +12,13 @@ object ExecReload {
         activity: MainActivity
     ){
 
-        val targetFragmentInstance = TargetFragmentInstance()
         val indexTerminalFragment =
-            targetFragmentInstance.getFromActivity<TerminalFragment>(
+            TargetFragmentInstance.getFromActivity<TerminalFragment>(
                 activity,
                 activity.getString(R.string.index_terminal_fragment)
             )
         val editExecuteTerminalFragment =
-            targetFragmentInstance.getFromActivity<TerminalFragment>(
+            TargetFragmentInstance.getFromActivity<TerminalFragment>(
                 activity,
                 activity.getString(R.string.edit_terminal_fragment)
             )

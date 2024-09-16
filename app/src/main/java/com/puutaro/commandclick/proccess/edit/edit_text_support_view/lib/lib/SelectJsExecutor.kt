@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.file.ReadText
@@ -35,14 +36,15 @@ object SelectJsExecutor {
                 )
             )
             if (!onLaunchUrl) return@launch
-            val currentAppDir = jsFilePathObj.parent
-                ?: return@launch
-            val scriptName = jsFilePathObj.name
+//            val currentAppDir = jsFilePathObj.parent
+//                ?: return@launch
+//            val scriptName = jsFilePathObj.name
             val jsFileContents = withContext(Dispatchers.IO) {
-                makeSelectJsContents(
-                    currentAppDir,
-                    scriptName,
-                )
+                ReadText(jsFilePath).textToList()
+//                makeSelectJsContents(
+////                    currentAppDir,
+//                    scriptName,
+//                )
             }
             withContext(Dispatchers.Main) {
                 jsHandler(
@@ -76,20 +78,17 @@ object SelectJsExecutor {
         )
     }
 }
-private fun makeSelectJsContents(
-    currentAppDir: String,
-    scriptName: String,
-): List<String> {
-    return ReadText(
-        File(
-            currentAppDir,
-            scriptName
-        ).absolutePath
-    ).readText().let {
-        ScriptPreWordReplacer.replace(
-            it,
-            currentAppDir,
-            scriptName
-        )
-    }.split("\n")
-}
+//private fun makeSelectJsContents(
+//    selectedJsPath: String
+//): List<String> {
+//    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//    return ReadText(
+//        selectedJsPath
+//    ).readText().let {
+//        ScriptPreWordReplacer.replace(
+//            it,
+////            cmdclickDefaultAppDirPath,
+//            scriptName
+//        )
+//    }.split("\n")
+//}

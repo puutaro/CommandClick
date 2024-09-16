@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.state
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CcPathTool
 
 object VirtualSubFannel {
@@ -10,7 +11,7 @@ object VirtualSubFannel {
             FannelInfoTool.getCurrentFannelName(fannelInfoMap),
         )
         return listOf(
-            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            UsePath.cmdclickDefaultAppDirPath,
             fannelDirName,
             "virtualSubFannel.js",
         ).joinToString("/")

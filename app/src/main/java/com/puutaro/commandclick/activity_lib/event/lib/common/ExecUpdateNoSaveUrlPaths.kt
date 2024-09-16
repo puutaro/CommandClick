@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -16,11 +17,11 @@ import java.io.File
 object ExecUpdateNoSaveUrlPaths {
     fun update(
         activity: MainActivity?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val indexTerminalFragment =
-            TargetFragmentInstance().getFromFragment<TerminalFragment>(
+            TargetFragmentInstance.getFromFragment<TerminalFragment>(
                 activity,
                 activity?.getString(R.string.index_terminal_fragment)
             )
@@ -31,13 +32,13 @@ object ExecUpdateNoSaveUrlPaths {
             execSave(
                 activity,
                 indexTerminalFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName
             )
             return
         }
         val editExecuteTerminalFragment =
-            TargetFragmentInstance().getFromFragment<TerminalFragment>(
+            TargetFragmentInstance.getFromFragment<TerminalFragment>(
                 activity,
                 activity?.getString(R.string.edit_terminal_fragment)
             )
@@ -48,7 +49,7 @@ object ExecUpdateNoSaveUrlPaths {
             execSave(
                 activity,
                 editExecuteTerminalFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName,
             )
         }
@@ -58,7 +59,7 @@ object ExecUpdateNoSaveUrlPaths {
     private fun execSave(
         activity: MainActivity?,
         terminalFragment: TerminalFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val domain =
@@ -69,10 +70,10 @@ object ExecUpdateNoSaveUrlPaths {
                 ?: return
 
         val currentFannelName =
-            fannelName.ifEmpty { UsePath.cmdclickPreferenceJsName }
+            fannelName.ifEmpty { SystemFannel.preference }
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         )
         val noScrollSaveUrlsFilePathObj = File(noScrollSaveUrlsFilePath)

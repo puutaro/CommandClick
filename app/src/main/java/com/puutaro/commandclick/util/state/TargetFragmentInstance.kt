@@ -1,8 +1,7 @@
 package com.puutaro.commandclick.util.state
 
 import android.app.Activity
-import android.content.Context
-import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
@@ -13,7 +12,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
-class TargetFragmentInstance {
+object TargetFragmentInstance {
     fun <T: Fragment> getFromFragment(
         activity: FragmentActivity?,
         targetFragmentTag: String?
@@ -44,6 +43,25 @@ class TargetFragmentInstance {
         activity: MainActivity,
     ): CommandIndexFragment? {
         val cmdIndexFragment = getFromActivity<CommandIndexFragment>(
+            activity,
+            activity.getString(R.string.command_index_fragment)
+        )
+        if(
+            cmdIndexFragment != null
+            && cmdIndexFragment.isVisible
+        ) {
+            return cmdIndexFragment
+        }
+        return null
+    }
+
+    fun getCmdIndexFragmentFromFrag(
+        activity: FragmentActivity?,
+    ): CommandIndexFragment? {
+        if(
+            activity == null
+        ) return null
+        val cmdIndexFragment = getFromFragment<CommandIndexFragment>(
             activity,
             activity.getString(R.string.command_index_fragment)
         )
@@ -118,12 +136,12 @@ class TargetFragmentInstance {
 
     fun getCurrentEditFragmentFromActivity(
         activity: MainActivity,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelPath: String,
         fannelState: String,
     ): EditFragment? {
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
             fannelState,
         )
@@ -139,7 +157,7 @@ class TargetFragmentInstance {
             return cmdVariableEditFragment
         }
         val settingEditFragTag = FragmentTagManager.makeSettingValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
         )
         val settingVariableEditFragment = getFromActivity<EditFragment>(
@@ -157,7 +175,7 @@ class TargetFragmentInstance {
 
     fun getCurrentEditFragmentFromFragment(
         activity: FragmentActivity?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelPath: String,
         fannelState: String,
     ): EditFragment? {
@@ -165,7 +183,7 @@ class TargetFragmentInstance {
             activity == null
         ) return null
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
             fannelState,
         )
@@ -182,7 +200,7 @@ class TargetFragmentInstance {
             return cmdVariableEditFragment
         }
         val settingEditFragTag = FragmentTagManager.makeSettingValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelPath,
         )
         val settingVariableEditFragment = getFromFragment<EditFragment>(
@@ -204,12 +222,12 @@ class TargetFragmentInstance {
         return when(currentBottomFragment){
             is CommandIndexFragment -> {
                 val linearLayoutParam =
-                    currentBottomFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                    currentBottomFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 linearLayoutParam.weight
             }
             is EditFragment -> {
                 val linearLayoutParam =
-                    currentBottomFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    currentBottomFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 linearLayoutParam.weight
             }
             else -> null
@@ -223,10 +241,10 @@ class TargetFragmentInstance {
             activity == null
         ) return String()
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -236,7 +254,7 @@ class TargetFragmentInstance {
             FannelInfoSetting.current_fannel_state
         )
         return FragmentTagManager.makeCmdValEditTag(
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         )
@@ -250,8 +268,7 @@ class TargetFragmentInstance {
         ) return null
         val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
         val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_terminal_fragment)
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromActivity<TerminalFragment>(
+        val indexTerminalFragment = getFromActivity<TerminalFragment>(
             activity,
             indexTerminalFragmentTag
         )
@@ -259,7 +276,7 @@ class TargetFragmentInstance {
             indexTerminalFragment != null
             && indexTerminalFragment.isVisible
         ) return indexTerminalFragment
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromActivity<TerminalFragment>(
+        val editExecuteTerminalFragment = getFromActivity<TerminalFragment>(
             activity,
             editExecuteTerminalFragmentTag
         )
@@ -277,8 +294,7 @@ class TargetFragmentInstance {
         ) return null
         val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
         val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_terminal_fragment)
-        val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val indexTerminalFragment = getFromFragment<TerminalFragment>(
             activity,
             indexTerminalFragmentTag
         )
@@ -286,7 +302,7 @@ class TargetFragmentInstance {
             indexTerminalFragment != null
             && indexTerminalFragment.isVisible
         ) return indexTerminalFragment
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val editExecuteTerminalFragment = getFromFragment<TerminalFragment>(
             activity,
             editExecuteTerminalFragmentTag
         )

@@ -84,7 +84,7 @@ object SettingVariableReader {
         settingVariableList: List<String>?,
         variableName: String,
         scriptName: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
     ): List<String> {
         val variableValueListSource = CommandClickVariables.substituteCmdClickVariableList(
             settingVariableList,
@@ -92,7 +92,7 @@ object SettingVariableReader {
         )?.joinToString(",") ?: String()
         return ScriptPreWordReplacer.replace(
             variableValueListSource,
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptName
         ).let {
             QuoteTool.splitBySurroundedIgnore(

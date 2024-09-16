@@ -50,9 +50,9 @@ object ListSettingVariableListMaker {
         settingVariablesList: List<String>?,
         onImport: Boolean = true
     ): List<String> {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -61,8 +61,9 @@ object ListSettingVariableListMaker {
             settingVariablesList,
             settingVariableName,
             currentFannelName,
-            currentAppDirPath
+//            currentAppDirPath
         )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         return listSettingVariableListSource.map {
             when (
                 it.startsWith(filePrefix)
@@ -74,12 +75,12 @@ object ListSettingVariableListMaker {
                             settingVariableName,
                             it,
                             setReplaceVariableMap,
-                            currentAppDirPath,
+//                            currentAppDirPath,
                             currentFannelName
                         )
                     SettingFile.read(
                         listSettingVariablePath,
-                        File(currentAppDirPath, currentFannelName).absolutePath,
+                        File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                         setReplaceVariableMap,
                         onImport
                     )
@@ -95,7 +96,7 @@ object ListSettingVariableListMaker {
             removeMultipleNewLinesAndReplace(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
         }.let {
@@ -113,15 +114,15 @@ object ListSettingVariableListMaker {
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val settingValCon = ScriptPreWordReplacer.replace(
             settingValConSrc,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentScriptFileName,
         )
         val configMapPairList = when (true) {
@@ -134,7 +135,7 @@ object ListSettingVariableListMaker {
         }.let {
             replaceByPreWordAndRepValMap(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentScriptFileName,
                 setReplaceVariableMap,
             )
@@ -151,13 +152,13 @@ object ListSettingVariableListMaker {
     private fun removeMultipleNewLinesAndReplace(
         valueList: List<String>,
         setReplaceVariableMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
     ): List<String> {
         return execRemoveMultipleNewLinesAndReplace(
             valueList.joinToString("\n"),
             setReplaceVariableMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
         ).split("\n")
     }
@@ -165,7 +166,7 @@ object ListSettingVariableListMaker {
     fun execRemoveMultipleNewLinesAndReplace(
         valueListCon: String,
         setReplaceVariableMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
     ): String {
         return valueListCon.replace(
@@ -178,7 +179,7 @@ object ListSettingVariableListMaker {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                 )
             }
@@ -186,21 +187,21 @@ object ListSettingVariableListMaker {
 
     private fun replaceByPreWordAndRepValMap(
         targetStr: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentScriptFileName: String,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
         return targetStr.let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentScriptFileName
             )
         }.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentScriptFileName
             )
         }
@@ -210,7 +211,7 @@ object ListSettingVariableListMaker {
         variableName: String,
         lineWithFilePrefix: String,
         setReplaceVariableMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
     ): String {
         val isFilePrefix =
@@ -225,7 +226,7 @@ object ListSettingVariableListMaker {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
         }

@@ -3,6 +3,8 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Context
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -25,21 +27,21 @@ object FileSelectSpinnerViewProducer {
     private val throughMark = "-"
 
     fun make (
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
-        val currentFragment = editParameters.currentFragment
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
 
-        val linearParamsForSpinner = LinearLayout.LayoutParams(
+        val linearParamsForSpinner = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
         val adapter = ArrayAdapter<String>(
@@ -52,7 +54,7 @@ object FileSelectSpinnerViewProducer {
         )
         val filterDir = getSelectDirPath(
             fcbMap,
-            editParameters,
+//            editParameters,
         )
         val filterPrefixListCon = getFilterPrefix(
             fcbMap,
@@ -106,7 +108,7 @@ object FileSelectSpinnerViewProducer {
                     ?: return
                 if(
                     selectedItem != throughMark
-                    && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
+//                    && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
                     && File(selectedItem).isFile
                 ) {
                     FileSystems.updateLastModified(
@@ -141,7 +143,7 @@ object FileSelectSpinnerViewProducer {
                 ) return
                 insertEditText.setText(selectedItem)
                 SelectJsExecutor.exec(
-                    currentFragment,
+                    fragment,
                     selectJsPath,
                     selectedItem,
                 )
@@ -212,19 +214,20 @@ object FileSelectSpinnerViewProducer {
 
     private fun getSelectDirPath(
         fcbMap: Map<String, String>?,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
         )?.let {
                 if (
                     it.isEmpty()
-                ) return@let currentAppDirPath
+                ) return@let cmdclickDefaultAppDirPath
                 it
-            } ?: currentAppDirPath
+            } ?: cmdclickDefaultAppDirPath
     }
 
     private fun getFilterPrefix(
@@ -274,9 +277,9 @@ object FileSelectSpinnerViewProducer {
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentScriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -287,7 +290,7 @@ object FileSelectSpinnerViewProducer {
             ?.let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentScriptName
                 )
             }?.let{

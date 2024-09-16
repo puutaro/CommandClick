@@ -10,47 +10,20 @@
 <br>
 <br>
 
-`CommandClick` is rich bookmarklet development android app.    
-You can use and create a bookmarklet that goes beyond common sense.  
-For example, ubuntu terminal emulator, ubuntu file manager, youtube scraping player, etc...  
+`CommandClick` has "another history"  that existing android browsers do not have.  
+<br>
+<br>
+This browser show "another history" from various perspectives.   
+<br>
+<br>
+For example, UI, functions, ubuntu etc.    
 
 <br>
 <br>
 <br>
-
-I hoped.  
-By one app, create multiple applet.  
-So I put my eye at webview js interface.  
-If I use bookmarklet on webview js interface, bring out os feature: file system, media player, connection with other system via webview.      
-<br>
-<br>
-Although its implementation did well, I want to get more extensibility, for example, like the linux package system.   
-If we could use apt package or other programing feature on ubuntu from bookmarklet, how splendid!   
-If we can do that, we can use and create high functionality bookmarklet.  
-<br>
-<br>
-Furthermore, I create original js library for bookmarklet.  
-However, I didn't just want to make it, I wanted to make it more readable.  
-Most of the engineers are mostly reading, even when they're writing code.  
-This is because we believe that improving readability is directly linked to productivity.  
-<br>
 <br>
 
-By the way  
-if you make it, you'll want to spread it around, right?  
-Just as useful ubuntu packages were spread through the apt system, I felt the need to consider a distribution system for CC as well.   
-And, I decided to entrust the distribution of bookmarklet to QR code.  
-By CommmandClick's original QR code, we can distribute via github.
-<br>
-<br>
-<br>
-This android app is bookmarklet developer tool, and at the same time distribution tool.
-
-<br>
-<br>
-<br>
-
-Welcome bookmarklet total development world.
+Welcome to the stream that aims for a different dimension of history.
 
 <br>
 <br>
@@ -93,72 +66,24 @@ CommandClick
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
 
-Screenshots
---------
-<a href="https://github.com/user-attachments/assets/a923b09c-e9b2-4742-b8c2-05f3803fc4f8"><img src="https://github.com/user-attachments/assets/a923b09c-e9b2-4742-b8c2-05f3803fc4f8" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568"><img src="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568" width="30%" />
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537"><img src="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537" width="30%" /></a>
-<a href="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612"><img src="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612" width="30%" /></a>
 
-##### ●  Exist bookmarklet is simple. But `CommmandClick` bookmrklet is not only simple but also more functinal.  
-##### ●  Exist bookmarklet is used to vanila javascript. `CommmandClick` bookmarklet is used to original fragmework that is more readable and maintainable.  
-##### ●  Exist bookmarklet is limit feature. But, `CommmandClick` bookmarklet is versatile powerd by webview, ubuntu, media player.  
-##### ●  Exist bookmarklet is not supported with distribution. But, `CommmandClick` bookmarklet is supported with distribution by QR code.  
+## Existing browsers do not have a rich URL history. But `CommmandClick` increase your resolution to URL history.
+
+<img src="https://github.com/user-attachments/assets/f51e234f-1c7f-417e-ac81-96c1021aa4fa" width="400">  
+
+## Existing browsers UI is similar, But `CommmandClick`'s UI is another and functional, using previous site capture.  
+
+<img src="https://github.com/user-attachments/assets/108234cc-77fb-4cd5-bd2e-e2acb401dc07" width="49%">
+<img src="https://github.com/user-attachments/assets/cf780064-afa9-493f-ac22-a68782ad17e0" width="49%">
 
 
-- In `CommandClick`, call bookmarklet `fannel`.
+## Existing browsers lack a masterpiece of human technology, but 'CommandClick' has today's great backend, **Ubuntu**.  
 
-Fannel (bookmarklet) Table
------
+<img src="https://github.com/user-attachments/assets/fd98401d-88e1-495a-9790-45d3b665efd6" width="400">
 
+## Exist browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you.    
 
-<details>
-
-<summary>fannel: <code>Ubuntu terminal</code>, ritch <code>QR</code> reader & creator, <code>youtube</code> scraping player, ubuntu file manager ...</summary>
-
-<br>
-<br>
-
-`CommandClick` has multiple feature  by bookmarklet.   
-
-<br>
-
-Detail is bellow.
-
-<br>
-
-
-| Janre                               | fannel(bookmarklet) name                                                                                                                                                                                        |
-|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| File transfer                       | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader                                          | 
-| File transfer                       | [fileManager.js](https://github.com/puutaro/fileManager)                                                                                                                                                        | 
-| fannel (bookmarklet) store          | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)                                                                                                                          |
-| fannel (bookmarklet) store          | [fannelStore.js](https://github.com/puutaro/fannelStore)                                                                                                                                                        |
-| Typing tool                         | [selectTyper](https://github.com/puutaro/selectTyper)                                                                                                                                                           |   
-| Ubuntu terminal                     | [cmdTerminal.js](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu)                                                  | 
-| Ubuntu terminal                     | [sshTerminal.js](https://github.com/puutaro/sshTerminal)                                     |  
-| Music player                        | [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU)                                                                              |  
-| Youtube scraping player             | [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU)                                                                                          |  
-| Text to speech                      | textToSpeech.js (builtin)  |
-| Text to speech player               | [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer)  |
-| pdf to text reader and player       | [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer)|
-| total pdf to text reader and player | [ctsvViewer.js](https://github.com/puutaro/ctsvViewer)                                                                                           |
-| News scraping player                | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)                                                                                                                                                      |
-| Google calendar register            | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter)                                                                                                                                          |
-| Clip board formater                 | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker)                                                                                                                                                |  
-| Train route seacher                 | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher)                                                                                                                                           |  
-| File manager                        | [fileManager.js](https://github.com/puutaro/fileManager)                                                                                                                                                        |  
-| Input support tool                  | [selectTyper.js](https://github.com/puutaro/selectTyper)                                                                                                                                                        |  
-| Pocket web search                   | [webSearcher.js](https://github.com/puutaro/webSearcher)                                                                                                                                                        | 
-| Gpt3.5 client                       | askGpt35.js (builtin)                                                                                                                                   |
-| Gpt3.5 client                       | [cmdGpt35.js](https://github.com/puutaro/cmdGpt35)                                                                                                                                    |
-| Ascii art maker                     | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt)                                                                                                                                                  |  
-| Gmail draft saver                   | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail)                                                                                                                                                    |
-
-</details>
-
+<img src="https://github.com/user-attachments/assets/f85523e6-17a2-486f-8a27-de68b5152789" width="400">
 
 App installation
 -----  
@@ -196,44 +121,29 @@ And more, we can use custom command for fannel (bookmarklet) development.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
--> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
-
-Setup other fannel (bookmarklet)
-------
-
-[Procedure]
-
-1. Long press right bottom gear button
-2. Click `install_fannel`
-3. Click sync button in left bottom sync button  
-4. You can install `fannel` by clicking.
-
-<img src="https://github.com/user-attachments/assets/a347990d-6988-4b0b-87cb-23d554a3328b" width="400">  
+[//]: # ()
+[//]: # (-> [More detail]&#40;https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu&#41;)
 
 
-Fannel (bookmarklet) Distribution
--------------------
+[//]: # (Usage)
 
-Please follow bellow.
+[//]: # (------)
 
--> [Register fannel(bookmarklet) to repo](https://github.com/puutaro/commandclick-repository/tree/master?tab=readme-ov-file#your-fannel-register-condition).  
+[//]: # ()
+[//]: # (<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> )
 
--> [Qr reader](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#scan-qr)
+[//]: # ()
+[//]: # (For fannel &#40;bookmarklet&#41; developer)
 
+[//]: # (--------)
 
-Usage
-------
+[//]: # ()
+[//]: # (### -> [Quick start shell]&#40;https://github.com/puutaro/quickStartShell?tab=readme-ov-file&#41;)
 
-<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
+[//]: # ()
+[//]: # (### -> [Reference]&#40;https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md&#41;)
 
-
-For fannel (bookmarklet) developer
---------
-
-### -> [Quick start shell](https://github.com/puutaro/quickStartShell?tab=readme-ov-file)
-
-### -> [Reference](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
-
+[//]: # ()
 
 Acknowledge
 --------

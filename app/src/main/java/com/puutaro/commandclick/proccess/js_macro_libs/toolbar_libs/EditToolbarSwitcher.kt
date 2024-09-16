@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
@@ -23,14 +24,14 @@ object EditToolbarSwitcher {
         val editExecuteTerminalTag = context?.getString(
             R.string.edit_terminal_fragment
         )
-        val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
+        val editExecuteTerminal = TargetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,
             editExecuteTerminalTag
         ) ?: return
         if(
             !editExecuteTerminal.isVisible
         ) return
-        val cmdEditFragmentConfirm = TargetFragmentInstance().getFromFragment<EditFragment>(
+        val cmdEditFragmentConfirm = TargetFragmentInstance.getFromFragment<EditFragment>(
             activity,
             cmdEditFragment.tag
         ) ?: return
@@ -54,17 +55,17 @@ object EditToolbarSwitcher {
         val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
         val cmdWebSearchEditText = webSearch.cmdWebSearchEditText
 
-        val linearLayoutParamPageSearchToolBar = LinearLayout.LayoutParams(
+        val linearLayoutParamPageSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
         cmdclickPageSearchToolBar.layoutParams = linearLayoutParamPageSearchToolBar
-        val linearLayoutParamPageWebSearchToolBar = LinearLayout.LayoutParams(
+        val linearLayoutParamPageWebSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
         webSearchToolbar.layoutParams = linearLayoutParamPageWebSearchToolBar
-        val linearLayoutParamToolbar = LinearLayout.LayoutParams(
+        val linearLayoutParamToolbar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )

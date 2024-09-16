@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -15,7 +14,7 @@ object TerminalShowByTerminalDoWhenReuse {
         editFragment: EditFragment,
         shellContentsList: List<String>?
     ){
-        TargetFragmentInstance().getFromFragment<TerminalFragment>(
+        TargetFragmentInstance.getFromFragment<TerminalFragment>(
             editFragment.activity,
             editFragment.context?.getString(R.string.edit_terminal_fragment)
         ) ?: return
@@ -29,8 +28,8 @@ object TerminalShowByTerminalDoWhenReuse {
         ) return
         val variablesSettingHolderList = CommandClickVariables.extractValListFromHolder(
             shellContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
         )
         val terminalDo = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,
@@ -41,8 +40,9 @@ object TerminalShowByTerminalDoWhenReuse {
                         || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
                 )
         if(
-            editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT
-            && onTerminalDoOffAndTermux
+//            editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT
+//            &&
+            onTerminalDoOffAndTermux
         ) return
         val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
         listener?.onKeyBoardVisibleChangeForEditFragment(

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsMacroForQr
@@ -16,7 +17,7 @@ object JsActionCompleterForQr {
         val fannelInfoMap =
             editFragment.fannelInfoMap
         val mainFannelPath = File(
-            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            UsePath.cmdclickDefaultAppDirPath,
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
         val jsActionMap = JsActionTool.makeJsActionMap(

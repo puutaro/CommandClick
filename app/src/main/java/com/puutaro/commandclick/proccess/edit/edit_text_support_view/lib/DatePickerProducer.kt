@@ -2,23 +2,21 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.R
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
-import com.puutaro.commandclick.common.variable.edit.EditParameters
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import java.util.Calendar
 
 object DatePickerProducer {
     fun make(
+        context: Context?,
         insertEditText: EditText,
-        editParameters: EditParameters,
         weight: Float,
     ): Button {
-        val context = editParameters.context
         val chooseButtonStr = "date"
         val insertButtonView = Button(context)
         insertButtonView.text = chooseButtonStr
@@ -33,9 +31,9 @@ object DatePickerProducer {
             insertEditText
         )
 
-        val insertButtonViewParam = LinearLayout.LayoutParams(
+        val insertButtonViewParam = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         insertButtonViewParam.weight = weight
         insertButtonView.layoutParams = insertButtonViewParam

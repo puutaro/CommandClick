@@ -53,6 +53,7 @@ object ExecMusicPlay {
         playIndex: Int,
         fileListConBeforePlayMode: String,
     ){
+        val context = musicPlayerService.applicationContext
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "music_last.txt").absolutePath,
 //            listOf(
@@ -61,6 +62,28 @@ object ExecMusicPlay {
 //                "isOver: ${musicPlayerService.currentTrackIndex >= playList.lastIndex}"
 //            ).joinToString("\n")
 //        )
+
+        if(playIndex > playList.lastIndex){
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeMusicPlayer.DESTROY_MUSIC_PLAYER.action
+            )
+            return
+        }
+        val uri = playList.getOrNull(playIndex)
+        val isNotExistPath =
+            !EnableUrlPrefix.isHttpPrefix(uri)
+                    && !File(uri ?: String()).isFile
+        if(
+            uri.isNullOrEmpty()
+            || isNotExistPath
+        ){
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action
+            )
+            return
+        }
         musicPlayerService.notiSetter?.setOnStop()
         val isStreamingUrl = judgeStreamingUri(
             playList,
@@ -261,6 +284,7 @@ object ExecMusicPlay {
         playList: List<String>,
         playIndex: Int,
     ): Job {
+        val context = musicPlayerService.applicationContext
         return CoroutineScope(Dispatchers.IO).launch {
             val uri = withContext(Dispatchers.IO) {
                 playList.getOrNull(
@@ -272,6 +296,10 @@ object ExecMusicPlay {
             ){
                 LogSystems.stdWarn(
                     "playList getIndex failure: ${playIndex} / ${playList.size}"
+                )
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action,
                 )
                 return@launch
             }

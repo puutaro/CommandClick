@@ -38,24 +38,28 @@ object WebChromeClientSetter {
     private var promptDialogObj: Dialog? = null
 
     fun set(
-        terminalFragment: TerminalFragment,
-        webView: WebView,
+        terminalFragment: TerminalFragment?,
+        webView: WebView?,
         progressBar: ProgressBar
     ){
+        if(
+            terminalFragment == null
+        ) return
         val context = terminalFragment.context
         val packageName = context?.packageName
 
-        webView.webChromeClient = object : WebChromeClient() {
+        webView?.webChromeClient = object : WebChromeClient() {
             override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
                 super.onReceivedIcon(view, icon)
                 CoroutineScope(Dispatchers.Main).launch {
                     UrlLogoHistoryTool.insertToHistory(
-                        terminalFragment.currentAppDirPath,
+//                        terminalFragment.currentAppDirPath,
                         view?.url,
                         icon,
                     )
                 }
             }
+
 
 
             override fun onProgressChanged(view: WebView, newProgress: Int) {
@@ -86,11 +90,15 @@ object WebChromeClientSetter {
 
 
             override fun getDefaultVideoPoster(): Bitmap? {
-                return Bitmap.createBitmap(
-                    50,
-                    50,
-                    Bitmap.Config.ARGB_8888
-                )
+                return if (super.getDefaultVideoPoster() == null) {
+                    Bitmap.createBitmap(
+                        50,
+                        50,
+                        Bitmap.Config.ARGB_8888
+                    )
+                } else {
+                    super.getDefaultVideoPoster()
+                }
             }
 
             override fun onPermissionRequest(request: PermissionRequest) {

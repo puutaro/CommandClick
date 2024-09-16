@@ -19,10 +19,10 @@ object EditTextUpdaterForTerminalFragment {
     ) {
         if(editTextId == null) return
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_app_dir
-        )
+//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_app_dir
+//        )
         val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
             sharePref,
             FannelInfoSetting.current_fannel_name
@@ -31,9 +31,9 @@ object EditTextUpdaterForTerminalFragment {
             sharePref,
             FannelInfoSetting.current_fannel_state
         )
-        val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+        val editExecuteFragment = TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             fannelState
         ) ?: return

@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
@@ -25,6 +26,7 @@ import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecSimpleRestartActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecUpdateNoSaveUrlPaths
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecWifiSet
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
@@ -44,7 +46,6 @@ import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentMan
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
-import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.permission.SdCardDirGetter
 import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
@@ -54,6 +55,8 @@ import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.ToolbarCtrlForCmdIndex
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.SearchButtonClickListener
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
@@ -62,6 +65,8 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
+import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
+import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.service.FannelRepoDownloadService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -71,12 +76,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 import java.util.*
 
 
 class MainActivity:
     AppCompatActivity(),
-    TerminalFragment.OnSearchTextChangeListener,
+//    TerminalFragment.OnSearchTextChangeListener,
     TerminalFragment.onBackstackWhenTermLongInRestartListener,
     TerminalFragment.OnToolBarVisibleChangeListener,
     TerminalFragment.OnTermLongChangeListenerForTerminalFragment,
@@ -99,6 +105,16 @@ class MainActivity:
     TerminalFragment.OnGetFileListenerForTerm,
     TerminalFragment.OnGetFileListListenerForTerm,
     TerminalFragment.GetSdcardDirListenerForTerm,
+    TerminalFragment.OnRestartListenerForTerm,
+    TerminalFragment.OnPinClickForTermListener,
+    TerminalFragment.OnSetToolbarButtonImageListener,
+    TerminalFragment.OnSearchButtonMakeListenerForTerm,
+    TerminalFragment.OnKeyboardHandleListenerForTerm,
+    TerminalFragment.OnPinFannelHideListener,
+    TerminalFragment.OnPageSearchSwitchListenerForTerm,
+    TerminalFragment.OnCaptureActivityListenerForTerm,
+    TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm,
+    TerminalFragment.OnUpdateSelectionTextViewListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -111,6 +127,11 @@ class MainActivity:
     CommandIndexFragment.OnGetPermissionListenerForCmdIndex,
     CommandIndexFragment.OnConnectWifiListenerForCmdIndex,
     CommandIndexFragment.OnCaptureActivityListenerForIndex,
+    CommandIndexFragment.OnZeroSizingListener,
+    CommandIndexFragment.OnSearchButtonMakeListenerForCmdIndex,
+    CommandIndexFragment.OnKeyboardHandleListenerForCmdIndex,
+    CommandIndexFragment.OnPinFannelShowListener,
+    CommandIndexFragment.OnPageSearchSwitchListener,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -149,7 +170,7 @@ class MainActivity:
         storageHelper,
     )
     private val getFileListForEdit = GetFileListForEdit(
-        this,
+        WeakReference(this),
         storageHelper
     )
 
@@ -160,8 +181,8 @@ class MainActivity:
     val manageFullStoragePermissionResultLauncher =
             StorageAccessSetter.setForFullStorageAccess(this)
 
-    val getRunCommandPermissionAndStartFragmentLauncher =
-        RunCommandSetter.set(this)
+//    val getRunCommandPermissionAndStartFragmentLauncher =
+//        RunCommandSetter.set(this)
 
     val getNotifierSetterLaunch =
         NotifierSetter.set(this)
@@ -205,7 +226,7 @@ class MainActivity:
             true,
             false
         )
-        InitManager(this).invoke()
+        InitManager.invoke(this)
 //        CoroutineScope(Dispatchers.IO).launch {
 //            val view = withContext(Dispatchers.IO) {
 //                while (true) {
@@ -256,6 +277,21 @@ class MainActivity:
         )
     }
 
+    override fun onPinClickForTerm(
+        longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
+        editFragmentArgs: EditFragmentArgs,
+        editFragmentTag: String,
+        terminalFragmentTag: String
+    ) {
+        ExecLongClickMenuItemsforCmdIndex.execLongClickMenuItemsforCmdIndex(
+            this,
+            longClickMenuItemsforCmdIndex,
+            editFragmentTag,
+            editFragmentArgs,
+            terminalFragmentTag
+        )
+    }
+
 
     override fun onToolbarMenuCategories(
         toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
@@ -276,10 +312,10 @@ class MainActivity:
         val startUpPref = FannelInfoTool.getSharePref(this)
         val cmdEditFragmentTag =
             FragmentTagManager.makeCmdValEditTag(
-                FannelInfoTool.getStringFromFannelInfo(
-                    startUpPref,
-                    FannelInfoSetting.current_app_dir
-                ),
+//                FannelInfoTool.getStringFromFannelInfo(
+//                    startUpPref,
+////                    FannelInfoSetting.current_app_dir
+//                ),
                 FannelInfoTool.getStringFromFannelInfo(
                     startUpPref,
                     FannelInfoSetting.current_fannel_name
@@ -328,10 +364,10 @@ class MainActivity:
                 )
                 return@launch
             }
-            ExecCmdIndexSizingInTermShort.execCmdIndexSizingInTermShort(
-                this@MainActivity,
-                isKeyboardShowing,
-            )
+//            ExecCmdIndexSizingInTermShort.execCmdIndexSizingInTermShort(
+//                this@MainActivity,
+//                isKeyboardShowing,
+//            )
         }
 
     }
@@ -360,32 +396,36 @@ class MainActivity:
         toolBarVisible: Boolean,
         bottomFragment: Fragment?
     ) {
-        when(bottomFragment) {
-            is CommandIndexFragment -> {
-                ExecOnToolBarVisibleChange.execOnToolBarVisibleChange(
-                    this,
-                    bottomFragment,
-                    toolBarVisible
-                )
+        CoroutineScope(Dispatchers.Main).launch {
+            when (bottomFragment) {
+                is CommandIndexFragment -> {
+                    ExecOnToolBarVisibleChange.execOnToolBarVisibleChange(
+                        this@MainActivity,
+                        bottomFragment,
+                        toolBarVisible
+                    )
+                }
+
+                is EditFragment -> {
+                    ExecOnToolBarVisibleChangeForEdit.execOnToolBarVisibleChangeForEdit(
+                        this@MainActivity,
+                        bottomFragment,
+                        toolBarVisible
+                    )
+                }
+
+                else -> {}
             }
-            is EditFragment -> {
-                ExecOnToolBarVisibleChangeForEdit.execOnToolBarVisibleChangeForEdit(
-                    this,
-                    bottomFragment,
-                    toolBarVisible
-                )
-            }
-            else ->{}
         }
     }
 
 
-    override fun onSearchTextChange(text: String) {
-        ExecOnSearchTextChange.execOnSearchTextChange(
-            this,
-            text
-        )
-    }
+//    override fun onSearchTextChange(text: String) {
+//        ExecOnSearchTextChange.execOnSearchTextChange(
+//            this,
+//            text
+//        )
+//    }
 
 
     override fun onListItemClicked(
@@ -455,10 +495,7 @@ class MainActivity:
 
 
     override fun onBackstackDelete(){
-        val fragmentManagerForActivity = FragmentManagerForActivity(
-            supportFragmentManager
-        )
-        fragmentManagerForActivity.deleteAllBackStack()
+        FragmentManagerForActivity.deleteAllBackStack(supportFragmentManager)
     }
 
     override fun onLaunchUrlByWebView(
@@ -643,23 +680,23 @@ class MainActivity:
     }
 
     override fun onUpdateNoSaveUrlPaths(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         ExecUpdateNoSaveUrlPaths.update(
             this,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
     }
 
     override fun onUpdateNoSaveUrlPathsForEdit(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         ExecUpdateNoSaveUrlPaths.update(
             this,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
     }
@@ -815,4 +852,110 @@ class MainActivity:
             activityMainBinding.rootContainer
         )
     }
- }
+
+    override fun onCaptureActivityForTerm() {
+        val startUpPref = FannelInfoTool.getSharePref(this)
+        FannelHistoryCaptureTool.getCapture(
+            startUpPref,
+            activityMainBinding.rootContainer
+        )
+    }
+
+    override fun onRestartForTerm() {
+        ExecSimpleRestartActivity.execSimpleRestartActivity(this)
+    }
+
+    override fun onSetToolbarButtonImage() {
+        ExecSetToolbarButtonImage.set(
+            this
+        )
+    }
+
+    override fun onZeroSizing() {
+    }
+
+    override fun onSearchButtonMakeForCmdIndex() {
+        SearchButtonClickListener.handle(
+            this,
+            false,
+        )
+    }
+
+    override fun onSearchButtonMakeForTerm() {
+        SearchButtonClickListener.handle(
+            this,
+            true,
+        )
+    }
+
+    override fun onKeyboardHandleForCmdIndex(
+        isOpen: Boolean
+    ) {
+        ToolbarCtrlForCmdIndex.hideShow(
+            this,
+            isOpen,
+            false,
+        )
+    }
+
+    override fun onKeyboardHandleForTerm(isOpen: Boolean) {
+        ToolbarCtrlForCmdIndex.hideShow(
+            this,
+            isOpen,
+            true,
+        )
+    }
+
+    override fun onSelectionSearchBarSwitchForTerm(
+        isShow: Boolean
+    ) {
+        CoroutineScope(Dispatchers.Main).launch {
+            ToolbarCtrlForCmdIndex.hideShowForTextSelection(
+                this@MainActivity,
+                isShow
+            )
+        }
+    }
+
+    override fun onUpdateSelectionTextViewForTerm(updateText: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            ToolbarCtrlForCmdIndex.updateTextSelection(
+                this@MainActivity,
+                updateText,
+            )
+        }
+    }
+
+    override fun onPinFannelHide(
+        fannelManagerPinImageView: AppCompatImageView?
+    ) {
+        PinFannelHideShow.execHideShow(
+            this,
+            true,
+            fannelManagerPinImageView,
+        )
+    }
+
+    override fun onPinFannelShow(
+        fannelManagerPinImageView: AppCompatImageView?
+    ) {
+        PinFannelHideShow.execHideShow(
+            this,
+            false,
+            fannelManagerPinImageView,
+        )
+    }
+
+    override fun onPageSearchSwitch() {
+        PageSearchManager.switch(
+            this
+        )
+    }
+
+    override fun onPageSearchSwitchForTerm() {
+        PageSearchManager.switch(
+            this
+        )
+    }
+
+}

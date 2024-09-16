@@ -4,7 +4,7 @@ object TypeSettingsForListIndex {
     enum class ListIndexTypeKey(
         val key: String,
     ) {
-        INSTALL_FANNEL("installFannel"),
+//        INSTALL_FANNEL("installFannel"),
         TSV_EDIT("tsvEdit"),
         NORMAL("normal"),
     }

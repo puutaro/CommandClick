@@ -17,12 +17,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 class OnlySpannableGridJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var alertDialog: AlertDialog? = null
 
@@ -31,11 +30,15 @@ class OnlySpannableGridJsDialog(
         message: String,
         imagePathListTabSepaStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    terminalFragment,
                     title,
                     message,
                     imagePathListTabSepaStr
@@ -53,14 +56,16 @@ class OnlySpannableGridJsDialog(
     }
 
     private fun createLinearLayoutForGridView(
+        terminalFragment: TerminalFragment,
         imagePathList: List<String>,
     ): LinearLayout {
-
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val gridView = GridView(context)
         gridView.numColumns = 2
 
         val onlySpannableAdapter = OnlySpannableAdapter(
-            terminalFragment,
+            WeakReference(terminalFragment.activity),
             context
         )
         onlySpannableAdapter.addAll(
@@ -76,7 +81,7 @@ class OnlySpannableGridJsDialog(
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
         )
-        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
+        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment.activity)
         val listWeight = 1F - searchTextWeight
         val linearLayoutForListView = NestLinearLayout.make(
             context,
@@ -93,16 +98,19 @@ class OnlySpannableGridJsDialog(
     }
 
     private fun execCreate(
+        terminalFragment: TerminalFragment,
         title: String,
         message: String,
         imagePathListTabSepaStr: String,
     ) {
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val imagePathList =
             imagePathListTabSepaStr
                 .split("\t")
                 .toMutableList()
-        val context = context ?: return
         val linearLayoutForGridView = createLinearLayoutForGridView(
+            terminalFragment,
             imagePathList,
         )
 

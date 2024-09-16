@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 
@@ -23,8 +23,8 @@ object ListIndexReplacer {
                 ?: String()
         val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
         return jsOrAcCon?.replace(
             "\${ITEM_TITLE}",

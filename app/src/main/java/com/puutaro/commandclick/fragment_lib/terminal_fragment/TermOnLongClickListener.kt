@@ -3,13 +3,23 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
+import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
+import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.url.WebUrlVariables
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 object TermOnLongClickListener {
@@ -22,17 +32,17 @@ object TermOnLongClickListener {
         val binding = terminalFragment.binding
         val terminalWebView = binding.terminalWebView
         val longPressForSrcImageAnchor = LongPressForSrcImageAnchor(
-            terminalFragment,
+            WeakReference(terminalFragment),
             context,
             terminalFragment.srcImageAnchorLongPressMenuFilePath
         )
         val longPressForSrcAnchor = LongPressForSrcAnchor(
-            terminalFragment,
+            WeakReference(terminalFragment),
             context,
             terminalFragment.srcAnchorLongPressMenuFilePath
         )
         val longPressForImage = LongPressForImage(
-            terminalFragment,
+            WeakReference(terminalFragment),
             context,
             terminalFragment.imageLongPressMenuFilePath
         )
@@ -53,16 +63,52 @@ object TermOnLongClickListener {
                         terminalFragment.disableShowToolbarWhenHighlight
                         == SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
                     ) return@setOnLongClickListener false
-                    val targetFragmentInstance = TargetFragmentInstance()
-                    val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
-                    val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
-                        activity,
-                        cmdEditFragmentTag,
-                    )
-                    listener?.onToolBarVisibleChange(
-                        true,
-                        bottomFragment
-                    )
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val cmdEditFragmentTag = withContext(Dispatchers.IO) {
+                            TargetFragmentInstance.getCmdEditFragmentTag(
+                                activity
+                            )
+                        }
+                        val bottomFragment = withContext(Dispatchers.IO) {
+                            TargetFragmentInstance.getCurrentBottomFragmentInFrag(
+                                activity,
+                                cmdEditFragmentTag,
+                            )
+                        }
+                        withContext(Dispatchers.Main) {
+                            listener?.onToolBarVisibleChange(
+                                true,
+                                bottomFragment
+                            )
+                        }
+                        val cmdIndexFragment = withContext(Dispatchers.IO) {
+                            TargetFragmentInstance.getCmdIndexFragmentFromFrag(
+                                terminalFragment.activity
+                            )
+                        } ?: return@launch
+                        if(
+                            cmdIndexFragment.binding.pageSearch.cmdclickPageSearchToolBar.isVisible
+                        ) return@launch
+                        withContext(Dispatchers.Main){
+                            val listenerForSelectionBar =
+                                context as TerminalFragment.OnSelectionSearchBarSwitchListenerForTerm
+                            listenerForSelectionBar.onSelectionSearchBarSwitchForTerm(true)
+                        }
+                        withContext(Dispatchers.IO) {
+                            val jsContents = AssetsFileManager.readFromAssets(
+                                context,
+                                AssetsFileManager.textSelectionStartJs
+                            ).split("\n")
+                            val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+                                context,
+                                jsContents
+                            ) ?: return@withContext
+                            BroadCastIntent.sendUrlCon(
+                                context,
+                                jsScriptUrl
+                            )
+                        }
+                    }
                     false
                 }
                 WebView.HitTestResult.IMAGE_TYPE -> {

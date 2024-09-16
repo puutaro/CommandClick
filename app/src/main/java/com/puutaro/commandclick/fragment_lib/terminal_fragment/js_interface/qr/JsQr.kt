@@ -16,7 +16,6 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoPadd
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoShape
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelShape
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -35,13 +34,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.lang.ref.WeakReference
 import java.util.Random
 
 
 class JsQr(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun qrPrefixList(): String {
@@ -65,14 +64,17 @@ class JsQr(
 
     @JavascriptInterface
     fun launchUploader(){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val intent = Intent(
             context,
             FileUploadService::class.java
         )
-        intent.putExtra(
-            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
-            terminalFragment.currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
+//            terminalFragment.currentAppDirPath
+//        )
         context?.let {
             ContextCompat.startForegroundService(context, intent)
         }
@@ -82,6 +84,8 @@ class JsQr(
     fun scanFromImage(
         qrImagePath: String
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val errMassage = QrScanner.scanFromImage(
             terminalFragment,
             qrImagePath
@@ -93,9 +97,11 @@ class JsQr(
     fun scanHandler(
         decodedText: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         QrUriHandler.handle(
             terminalFragment,
-            terminalFragment.currentAppDirPath,
+//            terminalFragment.currentAppDirPath,
             decodedText,
         )
     }
@@ -104,21 +110,24 @@ class JsQr(
     fun scanConfirmHandler(
         qrImagePath: String
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val decodedText = QrScanner.scanFromImage(
             terminalFragment,
             qrImagePath,
         )
         CoroutineScope(Dispatchers.Main).launch {
-            QrConfirmDialog(
+            QrConfirmDialog.launch(
                 terminalFragment,
                 null,
-                terminalFragment.currentAppDirPath,
+//                terminalFragment.currentAppDirPath,
                 QrDecodedTitle.makeTitle(
                     context,
                     decodedText
                 ),
                 decodedText
-            ).launch()
+            )
         }
     }
 
@@ -145,9 +154,9 @@ class JsQr(
     fun createAndSave(
         qrSrcStr: String,
     ) {
-        if(
-            context == null
-        ) return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
         try {
             val data = QrData.Url(qrSrcStr)
 
@@ -212,6 +221,8 @@ class JsQr(
 
     @JavascriptInterface
     fun makeScpQrSrcStr(dirPath: String): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val scpQrSrcStr = QrDialogMethod.makeScpDirQrStr(
             terminalFragment,
             dirPath
@@ -223,6 +234,8 @@ class JsQr(
     fun makeCpFileQr(
         path: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
         val cpQrFileQr = QrDialogMethod.makeCpFileQrNormal(
             terminalFragment,
             path,
@@ -235,9 +248,12 @@ class JsQr(
         srcQrStr: String,
         savePath: String,
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         val drawable =
-            QrLogo(terminalFragment)
+            QrLogo
                 .createMonochrome(
+                    terminalFragment,
                     srcQrStr
                 ) ?: return
         val qrBitMap = QrLogo.toBitMapWrapper(drawable)
@@ -252,6 +268,9 @@ class JsQr(
     fun createAndSaveRnd(
         qrSrcStr: String,
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         val blueGreen = Color(
             255, 64, 199, 190,
         )

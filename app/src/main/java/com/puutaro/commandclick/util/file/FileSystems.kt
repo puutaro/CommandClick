@@ -230,21 +230,21 @@ object FileSystems {
         }
     }
 
-    fun getRecentAppDirPath(): String {
-        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-        val jsSuffix = UsePath.JS_FILE_SUFFIX
-        val cmdclickSystemAppDirNameJs = "${UsePath.cmdclickSystemAppDirName}${jsSuffix}"
-        val recentAppDirName = filterSuffixJsFiles(
-            cmdclickAppDirAdminPath,
-            "on"
-        ).filter { it != cmdclickSystemAppDirNameJs }.firstOrNull()?.removeSuffix(
-            jsSuffix
-        ) ?: UsePath.cmdclickDefaultAppDirName
-        return File(
-            UsePath.cmdclickAppDirPath,
-            recentAppDirName,
-        ).absolutePath
-    }
+//    fun getRecentAppDirPath(): String {
+//        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
+//        val jsSuffix = UsePath.JS_FILE_SUFFIX
+//        val cmdclickSystemAppDirNameJs = "${UsePath.cmdclickDefaultAppDirName}${jsSuffix}"
+//        val recentAppDirName = filterSuffixJsFiles(
+//            cmdclickAppDirAdminPath,
+//            "on"
+//        ).filter { it != cmdclickSystemAppDirNameJs }.firstOrNull()?.removeSuffix(
+//            jsSuffix
+//        ) ?: UsePath.cmdclickDefaultAppDirName
+//        return File(
+//            UsePath.cmdclickAppDirPath,
+//            recentAppDirName,
+//        ).absolutePath
+//    }
 
     fun filterSuffixShellOrJsFiles(
         dirPath: String,
@@ -546,5 +546,19 @@ object FileSystems {
         val localDatetimeStr = now.format(f)
         val dtf = DateTimeFormatter.ofPattern(format)
         return LocalDateTime.parse(localDatetimeStr, dtf)
+    }
+
+    fun convertFileToByteArray(
+        path: String,
+    ): ByteArray? {
+        val pathFile = File(path)
+        if(
+            !pathFile.isFile
+        ) return null
+        return try {
+            pathFile.readBytes()
+        } catch (e: Exception){
+            null
+        }
     }
 }

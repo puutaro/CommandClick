@@ -91,61 +91,61 @@ object PopupSettingMenu {
             )
             return
         }
-        menuPopupWindow = PopupWindow(
-            context,
-        ).apply {
-            elevation = 5f
-            isFocusable = true
-            isOutsideTouchable = true
-            setBackgroundDrawable(null)
-            animationStyle = R.style.popup_window_animation_phone
-            val inflater = LayoutInflater.from(context)
-            contentView = inflater.inflate(
-                R.layout.setting_popup_for_index,
-                LinearLayoutCompat(context),
-                false
-            ).apply {
-                val menuListView =
-                    this.findViewById<NoScrollListView>(
-                        R.id.setting_menu_list_view
-                    )
-                val menuListAdapter = SubMenuAdapter(
-                    context,
-                    menuListMap.toMutableList()
-                )
-                menuListView.adapter = menuListAdapter
-                menuListViewSetOnItemClickListener(
-                    editFragment,
-                    settingButtonView,
-                    menuListView,
-                    jsActionMap,
-                )
-                footerSettingHandler(
-                    editFragment,
-                    this,
-                    jsActionMap,
-                )
-                measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                )
-            }
-        }.also { popupWindow ->
-            // Absolute location of the anchor view
-            val location = IntArray(2).apply {
-                settingButtonView.getLocationOnScreen(this)
-            }
-            val size = Size(
-                popupWindow.contentView.measuredWidth,
-                popupWindow.contentView.measuredHeight
-            )
-            popupWindow.showAtLocation(
-                settingButtonView,
-                Gravity.TOP or Gravity.START,
-                location[0] - (size.width - settingButtonView.width) / 2,
-                location[1] - size.height
-            )
-        }
+//        menuPopupWindow = PopupWindow(
+//            context,
+//        ).apply {
+//            elevation = 5f
+//            isFocusable = true
+//            isOutsideTouchable = true
+//            setBackgroundDrawable(null)
+//            animationStyle = R.style.popup_window_animation_phone
+//            val inflater = LayoutInflater.from(context)
+//            contentView = inflater.inflate(
+//                R.layout.setting_popup_for_index,
+//                LinearLayoutCompat(context),
+//                false
+//            ).apply {
+//                val menuListView =
+//                    this.findViewById<NoScrollListView>(
+//                        R.id.setting_menu_list_view
+//                    )
+//                val menuListAdapter = SubMenuAdapter(
+//                    context,
+//                    menuListMap.toMutableList()
+//                )
+//                menuListView.adapter = menuListAdapter
+//                menuListViewSetOnItemClickListener(
+//                    editFragment,
+//                    settingButtonView,
+//                    menuListView,
+//                    jsActionMap,
+//                )
+//                footerSettingHandler(
+//                    editFragment,
+//                    this,
+//                    jsActionMap,
+//                )
+//                measure(
+//                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+//                )
+//            }
+//        }.also { popupWindow ->
+//            // Absolute location of the anchor view
+//            val location = IntArray(2).apply {
+//                settingButtonView.getLocationOnScreen(this)
+//            }
+//            val size = Size(
+//                popupWindow.contentView.measuredWidth,
+//                popupWindow.contentView.measuredHeight
+//            )
+//            popupWindow.showAtLocation(
+//                settingButtonView,
+//                Gravity.TOP or Gravity.START,
+//                location[0] - (size.width - settingButtonView.width) / 2,
+//                location[1] - size.height
+//            )
+//        }
     }
 
     private fun howFooterVisible(

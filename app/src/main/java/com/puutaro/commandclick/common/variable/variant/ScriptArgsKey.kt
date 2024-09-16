@@ -18,7 +18,7 @@ object ScriptArgsMapList {
 
     fun makeUpdateScriptArgsMapList(
         context: Context?,
-        scriptDirPath: String,
+//        scriptDirPath: String,
         scriptName: String,
         settingSectionVariableList: List<String>?,
     ): List<Map<String, String>> {
@@ -41,7 +41,7 @@ object ScriptArgsMapList {
             updateScriptArgsMapList = execUpdateScriptArgsMapList(
                 context,
                 updateScriptArgsMapList,
-                scriptDirPath,
+//                scriptDirPath,
                 scriptName,
                 settingSectionVariableList,
                 it
@@ -53,7 +53,6 @@ object ScriptArgsMapList {
     private fun execUpdateScriptArgsMapList(
         context: Context?,
         scriptArgsMapList: List<Map<String, String>>,
-        scriptDirPath: String,
         scriptName: String,
         settingSectionVariableList: List<String>?,
         settingValAndArgsNamePair: Pair<String, String>
@@ -63,9 +62,10 @@ object ScriptArgsMapList {
         val settingArgMap = scriptArgsMapList.first {
             it.get(nameKey) == argName
         }
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
-        val fannelDirPath = File(scriptDirPath, fannelDirName).absolutePath
-        val scriptPathObj = File(scriptDirPath, scriptName)
+        val fannelDirPath = File(cmdclickDefaultAppDirPath, fannelDirName).absolutePath
+        val scriptPathObj = File(cmdclickDefaultAppDirPath, scriptName)
         val scriptPath = scriptPathObj.absolutePath
         val settingPathSrc = CommandClickVariables.substituteFilePrefixPath(
             settingSectionVariableList,
@@ -86,7 +86,7 @@ object ScriptArgsMapList {
         val settingPath = SetReplaceVariabler.execReplaceByReplaceVariables(
             settingPathSrc,
             setReplaceVariable,
-            scriptDirPath,
+//            scriptDirPath,
             scriptName
         )
         val settingPathObj = File(settingPath)
@@ -108,7 +108,7 @@ object ScriptArgsMapList {
                 it.get(nameKey) == argName
             when(isArgName){
                 true -> makeAutoExecArgMapForFilePrefix(
-                    scriptDirPath,
+//                    scriptDirPath,
                     scriptName,
                     settingArgMap,
                     settingPathObj,
@@ -119,7 +119,7 @@ object ScriptArgsMapList {
     }
 
     private fun makeAutoExecArgMapForFilePrefix(
-        scriptDirPath: String,
+//        scriptDirPath: String,
         scriptName: String,
         autoExecArgMap: Map<String, String>,
         autoExecPathObj: File,
@@ -131,7 +131,7 @@ object ScriptArgsMapList {
             autoExecPath.isEmpty()
         ) return autoExecArgMap
         val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
-        val fannelDirPath = File(scriptDirPath, fannelDirName).absolutePath
+        val fannelDirPath = File(UsePath.cmdclickDefaultAppDirPath, fannelDirName).absolutePath
         val dirName = autoExecJsDirPath.replace(
             fannelDirPath,
             String()

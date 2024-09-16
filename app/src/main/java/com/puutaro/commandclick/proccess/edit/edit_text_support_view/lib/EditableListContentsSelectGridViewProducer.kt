@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.ImageAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getElsbMap
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getLimitNum
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getSelectJsPath
@@ -32,16 +33,16 @@ object EditableListContentsSelectGridViewProducer {
     private val gridButtonLabel = "GSL"
 
     fun make (
+        editFragment: EditFragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val currentFragment = editParameters.currentFragment
-        val context = editParameters.context
-        val linearParamsForGridButton = LinearLayout.LayoutParams(
+        val context = editFragment.context
+        val linearParamsForGridButton = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForGridButton.weight = weight
 
@@ -69,7 +70,7 @@ object EditableListContentsSelectGridViewProducer {
                 com.puutaro.commandclick.R.layout.grid_dialog_layout
             )
             setGridListView(
-                currentFragment,
+                editFragment,
                 editParameters,
                 insertEditText,
                 listContentsFilePath,
@@ -154,9 +155,9 @@ object EditableListContentsSelectGridViewProducer {
         elcbMap: Map<String, String>?,
     ){
         val fannelInfoMap = editParameters.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val scriptName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -170,7 +171,7 @@ object EditableListContentsSelectGridViewProducer {
 
         val selectJsPath = getSelectJsPath(
             elcbMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             scriptName,
         )
         gridView.setOnItemClickListener {

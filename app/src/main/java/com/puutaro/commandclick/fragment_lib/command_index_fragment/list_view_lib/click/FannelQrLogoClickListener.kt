@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click
 
 import android.view.View
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
@@ -10,7 +11,7 @@ import java.io.File
 object FannelQrLogoClickListener {
     fun set(
         cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){
         fannelIndexListAdapter.fannelQrLogoClickListener = object: FannelIndexListAdapter.OnFannelQrLogoItemClickListener {
@@ -19,17 +20,17 @@ object FannelQrLogoClickListener {
                 holder: FannelIndexListAdapter.FannelIndexListViewHolder
             ) {
                 val fannelNameTextView = holder.fannelNameTextView
-                val itemContext = itemView.context
+//                val itemContext = itemView.context
                 val fannelName = fannelNameTextView.text.toString()
                 ScriptFileDescription.show(
                     cmdIndexFragment,
                     ReadText(
                         File(
-                            currentAppDirPath,
+                            UsePath.cmdclickDefaultAppDirPath,
                             fannelName
                         ).absolutePath
                     ).textToList(),
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName
                 )
             }

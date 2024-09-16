@@ -9,7 +9,7 @@ object SettingVariableImportManager {
     fun import(
         settingVariableList: List<String>?,
         importDisableValList: List<String>,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
         settingSectionStart: String,
@@ -52,7 +52,7 @@ object SettingVariableImportManager {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             )
         }?.split("\n")

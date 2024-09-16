@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.R
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.EditFragment
@@ -12,55 +13,90 @@ import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
+import java.lang.ref.WeakReference
 
 
-class EditTextProducerForEdit(
-    private val editFragment: EditFragment,
-) {
-    private val binding = editFragment.binding
-    private val context = editFragment.context
-    private val currentScriptContentsList = editFragment.currentFannelConList
-    private val editViewModel: EditViewModel by editFragment.activityViewModels()
+object EditTextProducerForEdit {
+//    private val binding = editFragment.binding
+//    private val context = editFragment.context
+//    private val currentScriptContentsList = editFragment.currentFannelConList
+//    private val editViewModel: EditViewModel by editFragment.activityViewModels()
+//
+//    private val fannelInfoMap = editFragment.fannelInfoMap
+////    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////        fannelInfoMap
+////    )
 
-    private val fannelInfoMap = editFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-
-    private val setReplaceVariableMap = editFragment.setReplaceVariableMap
+//    private val setReplaceVariableMap = editFragment.setReplaceVariableMap
     private val descriptionHidValName = "description"
 
 
-    private val editParameters = EditParameters(
-        editFragment,
-        currentScriptContentsList,
-        editFragment.recordNumToMapNameValueInCommandHolder,
-        editFragment.recordNumToMapNameValueInSettingHolder,
-        fannelInfoMap,
-        setReplaceVariableMap,
-        false,
-        editFragment.hideSettingVariableList,
-    )
+//    private val editParameters = EditParameters(
+////        editFragment,
+//        currentScriptContentsList,
+//        editFragment.recordNumToMapNameValueInCommandHolder,
+//        editFragment.recordNumToMapNameValueInSettingHolder,
+//        fannelInfoMap,
+//        setReplaceVariableMap,
+//        false,
+//        editFragment.hideSettingVariableList,
+//    )
 
-    private val withEditComponent = WithEditComponent(
-        editFragment,
-    )
-
-    private val withIndexListView = WithIndexListView(
-        editFragment,
-    )
+//    private val withEditComponent = WithEditComponent(
+//        editFragment,
+//    )
+//
+//    private val withIndexListView = WithIndexListView(
+//        editFragment,
+//    )
 
     fun adds(
+        editFragment: EditFragment,
         onSettingEdit: Boolean = false
     ) {
+        val binding = editFragment.binding
+        val currentScriptContentsList = editFragment.currentFannelConList
+        val editViewModel: EditViewModel by editFragment.activityViewModels()
+
+        val fannelInfoMap = editFragment.fannelInfoMap
+//    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
+
+        val setReplaceVariableMap = editFragment.setReplaceVariableMap
+        val descriptionHidValName = "description"
+
+
+        val editParameters = EditParameters(
+//        editFragment,
+            currentScriptContentsList,
+            editFragment.recordNumToMapNameValueInCommandHolder,
+            editFragment.recordNumToMapNameValueInSettingHolder,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            false,
+            editFragment.hideSettingVariableList,
+        )
+
+//        val withEditComponent = WithEditComponent(
+//            editFragment,
+//        )
+//
+//        val withIndexListView = WithIndexListView(
+//            editFragment,
+//        )
         editViewModel.variableNameToEditTextIdMap.clear()
         editFragment.listConSelectBoxMapList.clear()
         when (onSettingEdit) {
             true -> execAddEditComponent(
+                editFragment,
+                editParameters,
                 editFragment.recordNumToMapNameValueInSettingHolder,
                 EditTextIdForEdit.SETTING_VARIABLE.id,
             )
             false -> execAddEditComponent(
+                editFragment,
+                editParameters,
                 editFragment.recordNumToMapNameValueInCommandHolder,
                 EditTextIdForEdit.COMMAND_VARIABLE.id,
             )
@@ -77,6 +113,8 @@ class EditTextProducerForEdit(
     }
 
     private fun execAddEditComponent(
+        editFragment: EditFragment,
+        editParameters: EditParameters,
         recordNumToMapNameValueInCommandOrSettingHolder:  Map<Int, Map<String, String>?>?,
         editTextStartId: Int,
     ){
@@ -96,6 +134,8 @@ class EditTextProducerForEdit(
 //            ).joinToString("\n\n\n")
 //        )
         execAdd(
+            editFragment,
+            editParameters,
             recordNumToMapNameValueInCommandOrSettingHolder,
             recordNumToSetVariableMaps,
             editTextStartId
@@ -103,10 +143,14 @@ class EditTextProducerForEdit(
     }
 
     private fun execAdd(
+        editFragment: EditFragment,
+        editParameters: EditParameters,
         recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
         recordNumToSetVariableMaps: Map<Int, Map<String, String>?>?,
         editTextStartId: Int,
     ) {
+        val context = editFragment.context
+        val binding = editFragment.binding
         val existIndexList = editFragment.existIndexList
         val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach {
@@ -155,6 +199,8 @@ class EditTextProducerForEdit(
             editParameters.variableTypeList = variableTypeList
             if(existIndexList){
                 setListIndexLayoutComponent(
+                    editFragment,
+                    editParameters,
                     recordNumToSetVariableMaps,
                     currentRecordNum,
                     insertTextView,
@@ -162,7 +208,8 @@ class EditTextProducerForEdit(
                 return@forEach
             }
             if(editFragment.existIndexList) return@forEach
-            withEditComponent.insert(
+            WithEditComponent.insert(
+                editFragment,
                 insertTextView,
                 editParameters,
             ).let {
@@ -172,10 +219,13 @@ class EditTextProducerForEdit(
     }
 
     private fun setListIndexLayoutComponent(
+        editFragment: EditFragment,
+        editParameters: EditParameters,
         recordNumToSetVariableMaps: Map<Int, Map<String, String>?>?,
         currentRecordNum: Int,
         insertTextView: TextView,
     ){
+        val binding = editFragment.binding
         val listIndexOrder = recordNumToSetVariableMaps?.filter {
             val setValTypeEl = it.value
             val variableType = setValTypeEl?.get(SetVariableTypeColumn.VARIABLE_TYPE.name)
@@ -185,18 +235,21 @@ class EditTextProducerForEdit(
         }?.keys?.firstOrNull() ?: 0
         when(true){
             (currentRecordNum < listIndexOrder) ->
-                withEditComponent.insert(
+                WithEditComponent.insert(
+                    editFragment,
                     insertTextView,
                     editParameters,
                 ).let {
                     binding.editListInnerTopLinearLayout.addView(it)
                 }
             (currentRecordNum == listIndexOrder) ->
-                withIndexListView.create(
+                WithIndexListView.create(
+                    editFragment,
                     editParameters
                 )
             else ->
-                withEditComponent.insert(
+                WithEditComponent.insert(
+                    editFragment,
                     insertTextView,
                     editParameters,
                 ).let {
@@ -215,9 +268,9 @@ class EditTextProducerForEdit(
         val descriptionButton = Button(context)
         val buttonLabel = "Description"
         descriptionButton.text = buttonLabel
-        val linearParamsForButton = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+        val linearParamsForButton = LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         descriptionButton.layoutParams = linearParamsForButton
         context?.let {
@@ -233,7 +286,7 @@ class EditTextProducerForEdit(
             ScriptFileDescription.show(
                 editFragment,
                 editFragment.currentFannelConList,
-                currentAppDirPath,
+//                currentAppDirPath,
                 FannelInfoTool.getCurrentFannelName(
                     fannelInfoMap
                 )

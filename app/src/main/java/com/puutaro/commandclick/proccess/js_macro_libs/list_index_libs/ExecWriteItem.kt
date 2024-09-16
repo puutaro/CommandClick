@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -23,7 +23,7 @@ object ExecWriteItem {
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> writeFile(
                 editFragment,
@@ -45,8 +45,8 @@ object ExecWriteItem {
         val context = editFragment.context
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
+            ListIndexAdapter.indexListMap,
+            ListIndexAdapter.listIndexTypeKey
         )
         if(
             NoFileChecker.isNoFile(
@@ -55,7 +55,7 @@ object ExecWriteItem {
             )
         ) return
         val editorByIntent = EditorByIntent(
-            parentDirPath,
+//            parentDirPath,
             selectedItem,
             context
         )
@@ -69,14 +69,14 @@ object ExecWriteItem {
         val context = editFragment.context ?: return
         val binding = editFragment.binding
         val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            binding.editListRecyclerView.adapter as ListIndexAdapter
         val selectedTsvLine =
             listIndexForEditAdapter.listIndexList.getOrNull(
                 listIndexPosition
             ) ?: return
         val tsvPath = FilePrefixGetter.get(
             editFragment,
-            ListIndexForEditAdapter.indexListMap,
+            ListIndexAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         ) ?: return
         val isExist = ReadText(tsvPath)
@@ -93,10 +93,10 @@ object ExecWriteItem {
         val filePathOrConObj = File(filePathOrCon)
         val isWithFileRename = filePathOrConObj.isFile
         if(!isWithFileRename) return
-        val parentDirPath = filePathOrConObj.parent ?: return
+//        val parentDirPath = filePathOrConObj.parent ?: return
         val fileName = filePathOrConObj.name
         val editorByIntent = EditorByIntent(
-            parentDirPath,
+//            parentDirPath,
             fileName,
             context
         )

@@ -45,13 +45,12 @@ class GoogleSuggest(
         ) return
         suggestEditTexter.setItemClickListener()
         mDispText = String()
-        if(searchEditable.isNullOrEmpty()) return
+        if(searchEditable?.trim().isNullOrEmpty()) return
         if(
             !NetworkTool.isOnline(context)
         ) return
         val localLanguage = Locale.getDefault().toString()
-        val searchWord = searchEditable.toString()
-            .trim()
+        val searchWord = searchEditable?.trim().toString()
             .replace(Regex("　　*"), " ")
             .replace("　", " ")
         if(

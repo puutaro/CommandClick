@@ -22,19 +22,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class FannelIndexListAdapter(
-    val cmdIndexFragment: CommandIndexFragment,
-    val currentAppDirPath: String,
+    val cmdIndexFragmentRef: WeakReference<CommandIndexFragment>,
+//    val currentAppDirPath: String,
     var fannelIndexList: MutableList<String>
 ): RecyclerView.Adapter<FannelIndexListAdapter.FannelIndexListViewHolder>()
 {
-    val context = cmdIndexFragment.context
-    val activity = cmdIndexFragment.activity
+    val context = cmdIndexFragmentRef.get()?.context
+    val activity = cmdIndexFragmentRef.get()?.activity
     private val maxTakeSize = 150
     private val qrPngNameRelativePath = UsePath.qrPngRelativePath
-    private val qrLogo = QrLogo(cmdIndexFragment)
 
     class FannelIndexListViewHolder(
         val activity: FragmentActivity?,
@@ -79,6 +79,7 @@ class FannelIndexListAdapter(
         holder: FannelIndexListViewHolder,
         position: Int
     ) {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         CoroutineScope(Dispatchers.IO).launch {
             val fannelName = fannelIndexList[position]
             withContext(Dispatchers.Main) {
@@ -86,11 +87,11 @@ class FannelIndexListAdapter(
             }
             val fannelConList = withContext(Dispatchers.IO) {
                 ReadText(
-                    File(currentAppDirPath, fannelName).absolutePath,
+                    File(cmdclickDefaultAppDirPath, fannelName).absolutePath,
                 ).textToList().take(maxTakeSize)
             }
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-            val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
+            val qrPngPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
             val qrPngPathObj = File(qrPngPath)
 
             withContext(Dispatchers.Main) {
@@ -98,8 +99,9 @@ class FannelIndexListAdapter(
                     holder.fannelContentsQrLogoView.load(qrPngPath)
                     return@withContext
                 }
-                qrLogo.createAndSaveWithGitCloneOrFileCon(
-                    currentAppDirPath,
+                QrLogo.createAndSaveWithGitCloneOrFileCon(
+//                    currentAppDirPath,
+                    context,
                     fannelName,
                     false,
                 )?.let {
@@ -194,21 +196,23 @@ class FannelIndexListAdapter(
         if(
             context == null
         ) return com.puutaro.commandclick.R.color.fannel_icon_color
-        val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+//        val languageType =
+//            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
 
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             fannelConList,
-            settingSectionStart,
-            settingSectionEnd
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+//            settingSectionStart,
+//            settingSectionEnd
         )
         val editExecuteValue = SettingVariableReader.getStrValue(
             settingVariableList,

@@ -16,11 +16,11 @@ function schBoxFocusOrSearch(){
             if(!el) return;
             const isAreaLabel = el.getAttribute('aria-label');
             if(!isAreaLabel) return;
-            el.blur();
+//            el.blur();
             jsKeyboard.show();
             setTimeout(
                 function(){
-                    el.blur();
+//                    el.blur();
                     el.focus();
                     el.select();
                 },

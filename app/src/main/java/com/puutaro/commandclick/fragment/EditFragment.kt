@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -22,10 +22,9 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -70,25 +69,6 @@ class EditFragment: Fragment() {
 
     private var _binding: EditFragmentBinding? = null
     val binding get() = _binding!!
-    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-    var languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageType
-            )
-    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
-
-    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-    ) as String
     var busyboxExecutor: BusyboxExecutor? = null
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
@@ -114,8 +94,6 @@ class EditFragment: Fragment() {
     var enableEditExecute = false
     var currentFannelConList = emptyList<String>()
     var settingFannelConList: List<String>? = null
-    var homeFannelHistoryNameList: List<String>? = null
-    var bottomScriptUrlList = emptyList<String>()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
@@ -123,13 +101,12 @@ class EditFragment: Fragment() {
     var qrDialogConfig: Map<String, String>? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
-    val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
+    val toolBarButtonIconMap: MutableMap<ToolbarButtonBariantForEdit, Pair<Int, String>> = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var editBoxTitleConfig: Map<String, String> = emptyMap()
     var filterDir = String()
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
-    var isToolbarBtnCustomInSettingSelects = false
     var disableKeyboardFragmentChange = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
     var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
@@ -174,9 +151,9 @@ class EditFragment: Fragment() {
             EditFragmentArgs.getFannelInfoMap(arguments)
         srcFannelInfoMap =
             EditFragmentArgs.getSrcFannelInfoMap(arguments)
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -200,41 +177,24 @@ class EditFragment: Fragment() {
                 UbuntuFiles(it)
             )
         }
-        SetConfigInfo.set(this)
+//        SetConfigInfo.set(this)
         FannelInfoTool.putAllFannelInfo(
             sharePref,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             onShortcutValue,
             currentFannelState
         )
 
-        languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(currentFannelName)
-
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
-        commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-        ) as String
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelPath =
-            File(currentAppDirPath, currentFannelName).absolutePath
+            File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath
         val mainFannelConList =
             ReadText(currentFannelPath).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 context,
                 mainFannelConList,
-                currentAppDirPath,
                 currentFannelName,
             )
         settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
@@ -258,35 +218,33 @@ class EditFragment: Fragment() {
         buttonWeight =
             ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
-            UpdateLastModifyForEdit().judge(
+            UpdateLastModifyForEdit.judge(
                 this,
-                currentAppDirPath,
+//                currentAppDirPath,
             )
         ) {
+//            FileSystems.updateLastModified(
+//                File(
+//                    UsePath.cmdclickAppDirAdminPath,
+//                    File(cmdclickDefaultAppDirPath).name + UsePath.JS_FILE_SUFFIX
+//                ).absolutePath
+//            )
             FileSystems.updateLastModified(
                 File(
-                    UsePath.cmdclickAppDirAdminPath,
-                    File(currentAppDirPath).name + UsePath.JS_FILE_SUFFIX
-                ).absolutePath
-            )
-            FileSystems.updateLastModified(
-                File(
-                    currentAppDirPath,
+                    cmdclickDefaultAppDirPath,
                     currentFannelName
                 ).absolutePath,
             )
-            val pageSearchToolbarManagerForEdit =
-                PageSearchToolbarManagerForEdit(this)
-            pageSearchToolbarManagerForEdit.cancleButtonClickListener()
-            pageSearchToolbarManagerForEdit.onKeyListner()
-            pageSearchToolbarManagerForEdit.pageSearchTextChangeListner()
-            pageSearchToolbarManagerForEdit.searchTopClickLisnter()
-            pageSearchToolbarManagerForEdit.searchDownClickLisnter()
-            val webSearchToolbarManagerForEdit =
-                WebSearchToolbarManagerForEdit(this)
-            webSearchToolbarManagerForEdit.setKeyListener()
-            webSearchToolbarManagerForEdit.setCancelListener()
-            webSearchToolbarManagerForEdit.setGoogleSuggest()
+//            val pageSearchToolbarManagerForEdit =
+//                PageSearchToolbarManagerForEdit(this)
+            PageSearchToolbarManagerForEdit.cancleButtonClickListener(this)
+            PageSearchToolbarManagerForEdit.onKeyListner(this)
+            PageSearchToolbarManagerForEdit.pageSearchTextChangeListner(this)
+            PageSearchToolbarManagerForEdit.searchTopClickLisnter(this)
+            PageSearchToolbarManagerForEdit.searchDownClickLisnter(this)
+            WebSearchToolbarManagerForEdit.setKeyListener(this)
+            WebSearchToolbarManagerForEdit.setCancelListener(this)
+            WebSearchToolbarManagerForEdit.setGoogleSuggest(this)
         }
 
         val window = activity?.window
@@ -294,9 +252,6 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
-        val editModeHandler = EditModeHandler(
-            this,
-        )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,
 //            listOf(
@@ -314,7 +269,7 @@ class EditFragment: Fragment() {
 //                "recordNumToMapNameValueInCommandHolder: ${recordNumToMapNameValueInCommandHolder}"
 //            ).joinToString("\n\n")
 //        )
-        editModeHandler.execByHowFullEdit()
+        EditModeHandler.execByHowFullEdit(this)
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
         context?.let {
@@ -339,7 +294,7 @@ class EditFragment: Fragment() {
 //            if(terminalViewModel.onDialog) return@setEventListener
                     binding.editTitleLinearlayout.isVisible = !isOpen
                     val linearLayoutParam =
-                        binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                        binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                     val editFragmentWeight = linearLayoutParam.weight
                     if(
                         editFragmentWeight != ReadLines.LONGTH
@@ -420,8 +375,8 @@ class EditFragment: Fragment() {
                 this@EditFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     this@EditFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
             )
         }
@@ -526,7 +481,7 @@ class EditFragment: Fragment() {
 
     interface OnUpdateNoSaveUrlPathsListenerForEdit {
         fun onUpdateNoSaveUrlPathsForEdit(
-            currentAppDirPath: String,
+//            currentAppDirPath: String,
             fannelName: String,
         )
     }

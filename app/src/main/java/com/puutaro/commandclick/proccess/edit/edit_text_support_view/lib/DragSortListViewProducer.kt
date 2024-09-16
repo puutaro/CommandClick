@@ -5,9 +5,9 @@ import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -41,12 +41,12 @@ object DragSortListViewProducer {
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val currentFragment = editParameters.currentFragment
-        val context = editParameters.context
+
+        val context = editFragment.context
         val currentId = editParameters.currentId
-        val linearParamsForDragSortListView = LinearLayout.LayoutParams(
+        val linearParamsForDragSortListView = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForDragSortListView.weight = weight
         val elsbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
@@ -89,7 +89,7 @@ object DragSortListViewProducer {
                 )
             titleTextView?.text = "Sort by drag, or remove by swipe"
             setDragSortRecyclerView(
-                currentFragment,
+                editFragment,
                 listContentsFilePath,
             )
             dragSortDialogObj?.setOnCancelListener {

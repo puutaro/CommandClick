@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.history.libs
 import android.content.Context
 import android.graphics.Bitmap
 import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
@@ -17,7 +18,7 @@ object HistoryShareImage {
 
     suspend fun makePngImageFromView(
         context: Context?,
-        urlHistoryAdapterRelativeLayout: RelativeLayout
+        urlHistoryAdapterConstraintLayout: ConstraintLayout
     ): File? {
         withContext(Dispatchers.IO) {
             FileSystems.removeAndCreateDir(
@@ -28,7 +29,7 @@ object HistoryShareImage {
             for(i in 1..10) {
                 try {
                     val bm = BitmapTool.getScreenShotFromView(
-                        urlHistoryAdapterRelativeLayout
+                        urlHistoryAdapterConstraintLayout
                     )
                     return@withContext bm
                 } catch (e: Exception) {

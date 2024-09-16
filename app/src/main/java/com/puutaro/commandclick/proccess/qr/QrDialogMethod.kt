@@ -13,12 +13,12 @@ import androidx.fragment.app.Fragment
 import coil.load
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.broadcast.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -45,7 +45,7 @@ object QrDialogMethod {
 
     fun launchPassDialog(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ) {
         val context = fragment.context
@@ -53,21 +53,22 @@ object QrDialogMethod {
 
         val cpQrStr = makeCpFileQrStr(
             fragment,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
 
-        val passQrLogoDrawable = QrLogo(fragment).createMonochrome(
+        val passQrLogoDrawable = QrLogo.createMonochrome(
+            fragment,
             cpQrStr
         ) ?: return
         val intent = Intent(
             context,
             fileUploadService
         )
-        intent.putExtra(
-            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
-            currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
+//            currentAppDirPath
+//        )
         context.let {
             ContextCompat.startForegroundService(context, intent)
         }
@@ -81,7 +82,7 @@ object QrDialogMethod {
             R.id.image_dialog_title
         )
         titleTextView?.text = makePassDialogTitle(
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         val imageContentsView = imageDialogObj?.findViewById<AppCompatImageView>(
@@ -123,42 +124,45 @@ object QrDialogMethod {
     }
 
     private fun makePassDialogTitle(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): String {
-        val isAppDirAdmin = currentAppDirPath.removeSuffix("/") ==
-                UsePath.cmdclickAppDirAdminPath
-        return when(isAppDirAdmin){
-            true
-            -> "Pass AppDir: ${CcPathTool.makeFannelRawName(fannelName)}"
-            else
-            -> "Pass: ${fannelName}"
-        }
+//        val isAppDirAdmin = UsePath.cmdclickDefaultAppDirPath.removeSuffix("/") ==
+//                UsePath.cmdclickAppDirAdminPath
+//        return when(isAppDirAdmin){
+//            true
+//            -> "Pass AppDir: ${CcPathTool.makeFannelRawName(fannelName)}"
+//            else
+//            -> "Pass: ${fannelName}"
+//        }
+        return "Pass: ${SystemFannel.convertDisplayNameToFannelName(fannelName)}"
     }
 
     private fun makeCpFileQrStr(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ): String {
         val context = fragment.context
         val ipV4Address = NetworkTool.getIpv4Address(context)
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
-        val isAppDirAdmin = currentAppDirPath.removeSuffix("/") ==
-                UsePath.cmdclickAppDirAdminPath
+        val cmdclickDefaultAppDirPath =  UsePath.cmdclickDefaultAppDirPath
+        val isAppDirAdmin = fannelName == SystemFannel.home
+//            cmdclickDefaultAppDirPath.removeSuffix("/") ==
+//                UsePath.cmdclickAppDirAdminPath
         return when(isAppDirAdmin){
             true -> {
-                val appDirPathForCpFile = "${UsePath.cmdclickAppDirPath}/$fannelRawName"
+                val appDirPathForCpFile = UsePath.cmdclickDefaultAppDirPath
                 QrLaunchType.CpFile.prefix + listOf(
                     "${CpFileKey.ADDRESS.key}=${ipV4Address}:${UsePort.COPY_FANNEL_PORT.num}",
                     "${CpFileKey.PATH.key}=$appDirPathForCpFile",
-                    "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${appDirPathForCpFile}"
+//                    "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${appDirPathForCpFile}"
                 ).joinToString(";")
             }
             else -> {
                 makeCpFileQrNormal(
                     fragment,
-                    "$currentAppDirPath/$fannelRawName",
+                    "${cmdclickDefaultAppDirPath}/$fannelRawName",
                 )
             }
         }
@@ -214,8 +218,6 @@ object QrDialogMethod {
         myBitmap: Bitmap
     ){
         val context = fragment.context
-        val activity = fragment.activity
-            ?: return
         FileSystems.removeDir(
             UsePath.cmdclickTempCreateDirPath
         )
@@ -243,7 +245,7 @@ object QrDialogMethod {
 
     fun execChange(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
@@ -252,13 +254,13 @@ object QrDialogMethod {
 
         val context = fragment.context ?: return
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val qrLogoPath = "${fannelDirPath}/${UsePath.qrPngRelativePath}"
         val qrLogoPathObj = File(qrLogoPath)
         val qrLogoParentDirPath = qrLogoPathObj.parent
             ?: return
         val qrLogoName = qrLogoPathObj.name
-        val qrLogo = QrLogo(fragment)
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO){
                 FileSystems.checkSum(
@@ -269,8 +271,9 @@ object QrDialogMethod {
                 )
             }
             withContext(Dispatchers.IO) {
-                qrLogo.createAndSaveWithGitCloneOrFileCon(
-                    currentAppDirPath,
+                QrLogo.createAndSaveWithGitCloneOrFileCon(
+                    context,
+//                    currentAppDirPath,
                     fannelName,
                     isFileCon,
                 )
@@ -306,8 +309,8 @@ object QrDialogMethod {
                             fragment,
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
-                                ListIndexForEditAdapter.indexListMap,
-                                ListIndexForEditAdapter.listIndexTypeKey
+                                ListIndexAdapter.indexListMap,
+                                ListIndexAdapter.listIndexTypeKey
                             )
                         )
                     }
@@ -318,18 +321,18 @@ object QrDialogMethod {
 
     fun execConUpdate(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
     ){
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
         val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
-        val qrLogo = QrLogo(fragment)
-        val qrDesignMap = qrLogo.readQrDesignMapWithCreate(
+        val qrDesignMap = QrLogo.readQrDesignMapWithCreate(
             qrDesignFilePath,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName,
         )
         val qrLogoPath = "${fannelDirPath}/${UsePath.qrPngRelativePath}"
@@ -342,9 +345,10 @@ object QrDialogMethod {
                 FileSystems.checkSum(qrLogoPath)
             }
             withContext(Dispatchers.IO) {
-                qrLogo.createAndSaveFromDesignMap(
+                QrLogo.createAndSaveFromDesignMap(
+                    fragment.context,
                     qrDesignMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                 )
             }
@@ -385,8 +389,8 @@ object QrDialogMethod {
                             fragment,
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
-                                ListIndexForEditAdapter.indexListMap,
-                                ListIndexForEditAdapter.listIndexTypeKey
+                                ListIndexAdapter.indexListMap,
+                                ListIndexAdapter.listIndexTypeKey
                             )
                         )
                     }

@@ -1,5 +1,0 @@
-recent setting	${recentSettingHideSettingVariablePath}
-webview setting	${webviewSettingHideSettingVariablePath}
-webview extra setting	${webviewExtraSettingHideSettingVariablePath}
-history setting	${historySettingHideSettingVariablePath}
-ubuntu setting	${ubuntuSettingHideSettingVariablePath}

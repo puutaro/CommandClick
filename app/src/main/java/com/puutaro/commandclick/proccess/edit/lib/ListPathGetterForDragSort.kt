@@ -33,9 +33,9 @@ object ListPathGetterForDragSort {
         ) return String()
         val fannelInfoMap = editFragment.fannelInfoMap
         val currentScriptContentsList = editFragment.currentFannelConList
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -52,7 +52,7 @@ object ListPathGetterForDragSort {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             )
         }

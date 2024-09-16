@@ -2,7 +2,6 @@ package com.puutaro.commandclick.common.variable.variables
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.CurlManager
@@ -14,10 +13,10 @@ import java.io.File
 object FannelListVariable {
 
     val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
-    val descriptionFirstLineLimit = 50
+    val descriptionFirstLineLimit = 100
 
     val fannelNameIndex = 0
-    val editExecuteValueIndex = 1
+//    val editExecuteValueIndex = 1
     val descIndex = 2
 
     fun getFannelName(conLine: String): String {
@@ -25,21 +24,21 @@ object FannelListVariable {
             .getOrNull(fannelNameIndex) ?: String()
     }
 
-    fun getEditExecute(conLine: String): String {
-        return conLine.split("\n")
-            .getOrNull(editExecuteValueIndex)
-            ?.trim()
-            ?: String()
-    }
+//    fun getEditExecute(conLine: String): String {
+//        return conLine.split("\n")
+//            .getOrNull(editExecuteValueIndex)
+//            ?.trim()
+//            ?: String()
+//    }
 
-    fun getDesc(conLine: String): String {
-        return conLine
-            .split("\n")
-            .getOrNull(descIndex)
-            ?.trim()
-            ?.removePrefix("-")
-            ?: String()
-    }
+//    fun getDesc(conLine: String): String {
+//        return conLine
+//            .split("\n")
+//            .getOrNull(descIndex)
+//            ?.trim()
+//            ?.removePrefix("-")
+//            ?: String()
+//    }
 
     fun makeFannelListMemoryContents(
         context: Context?
@@ -58,11 +57,11 @@ object FannelListVariable {
             ).textToList()
             val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
                 fannelConList,
-                LanguageTypeSelects.JAVA_SCRIPT
+//                LanguageTypeSelects.JAVA_SCRIPT
             )
             val descConSrc = ScriptFileDescription.makeDescriptionContents(
                 fannelConList,
-                cmdclickFannelItselfDirPath,
+//                cmdclickFannelItselfDirPath,
                 it
             )
             val readmeUrl = ScriptFileDescription.getReadmeUrl(descConSrc)
@@ -76,11 +75,11 @@ object FannelListVariable {
                     String(),
                     String(),
                     2000
-                ).let {
-                    val isConnOk = CurlManager.isConnOk(it)
-                    if(!isConnOk) return@let String()
-                    String(it)
-                }
+                    ).let {
+                        val isConnOk = CurlManager.isConnOk(it)
+                        if(!isConnOk) return@let String()
+                        String(it)
+                    }
             }
             val descFirstLineSource = descCon.split('\n').take(firstDescriptionLineRange).filter {
                 val trimLine = it.trim()

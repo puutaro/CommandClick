@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.checkIndexNum
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.culcSetVariableTypeMarkIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextSetter
@@ -24,16 +26,17 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.updateSetVa
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.updateVariableTypeListByExcludeSupportView
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 
-class WithEditComponentForFormJsDialog {
+object WithEditComponentForFormJsDialog {
 
     private val textAndLabelList = TypeVariable.textAndLabelList
     private val noIndexTypeList = TypeVariable.noIndexTypeList
 
     fun insert(
+        fragment: Fragment,
         insertTextView: TextView,
         editParameters: EditParameters,
     ): LinearLayout {
-        val context = editParameters.context
+        val context = fragment.context
 
         val textLabelIndex = culcSetVariableTypeMarkIndex(
             editParameters,
@@ -87,6 +90,7 @@ class WithEditComponentForFormJsDialog {
             variableTypeList,
         )
         val insertEditText = EditTextSetter.set(
+            fragment,
             editParameters,
             editTextPropertyMap,
             editTextWeight
@@ -96,6 +100,7 @@ class WithEditComponentForFormJsDialog {
         )
 
         checkIndexNum(
+            fragment,
             editParameters,
             noIndexTypeList
         )
@@ -111,6 +116,7 @@ class WithEditComponentForFormJsDialog {
             when(variableTypeList[it]){
                 EditTextSupportViewName.CHECK_BOX.str -> {
                     val insertSpinner = SpinnerViewProducer.make(
+                        fragment.context,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -120,6 +126,7 @@ class WithEditComponentForFormJsDialog {
                 }
                 EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
                     val insertSpinner = EditableSpinnerViewProducer.make(
+                        fragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -129,6 +136,7 @@ class WithEditComponentForFormJsDialog {
                 }
                 EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
                     val editableFileSelectSpinner = FileSelectSpinnerViewProducer.make(
+                        fragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -138,6 +146,7 @@ class WithEditComponentForFormJsDialog {
                 }
                 EditTextSupportViewName.LIST_CONTENTS_SELECT_BOX.str -> {
                     val insertListConSpinner = ListContentsSelectSpinnerViewProducer.make(
+                        fragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -147,6 +156,7 @@ class WithEditComponentForFormJsDialog {
                 }
                 EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
                     val insertListConSpinner = EditableListContentsSelectSpinnerViewProducer.make(
+                        fragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -156,6 +166,7 @@ class WithEditComponentForFormJsDialog {
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
                     val incButton = InDeCrementerViewProducer.make(
+                        fragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -164,6 +175,7 @@ class WithEditComponentForFormJsDialog {
                     )
                     horizontalLinearLayout.addView(incButton)
                     val decButton = InDeCrementerViewProducer.make(
+                        fragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,

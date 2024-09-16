@@ -19,6 +19,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -169,6 +170,15 @@ object JavascriptExecuter {
                     execJsConList,
                     extraRepValMap = extraMapCon
                 ) ?: String()
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "js_button.txt").absolutePath,
+//                    listOf(
+//                        "execJsPath: ${execJsPath}",
+//                        "execJsConList: ${execJsConList}",
+//                        "execJsCon: ${execJsCon}",
+//                        "extraMapCon: ${extraMapCon}"
+//                    ).joinToString("\n")
+//                )
                 val separator = "----------"
                 val logSrcCon = CheckTool.LogVisualManager.makeSpanTagHolder(
                     CheckTool.LogVisualManager.logGreenPair,
@@ -241,6 +251,9 @@ object JavascriptExecuter {
         launchUrlString: String,
         webView: WebView? = null
     ){
+        if(
+            launchUrlString.isEmpty()
+        ) return
         when (currentFragment) {
             is CommandIndexFragment -> {
                 currentFragment.jsExecuteJob?.cancel()

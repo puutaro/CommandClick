@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -21,7 +22,7 @@ object CmdIndexToolbarSwitcher {
             )
         ) return
         val linearLayoutParam =
-            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayoutCompat.LayoutParams
         val cmdIndexFragmentWeight = linearLayoutParam.weight
         if(
             cmdIndexFragment.WebSearchSwitch
@@ -32,17 +33,18 @@ object CmdIndexToolbarSwitcher {
         val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
         if(cmdclickPageSearchToolBar.isVisible == onPageSearch) return
 
-        val cmdclickToolBar = binding.cmdclickToolBar
+        val cmdclickToolBar = binding.cmdindexToolbarLinearLayout
+//            binding.cmdclickToolBar
         val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
-        val cmdSearchEditText = binding.cmdSearchEditText
+//        val cmdSearchEditText = binding.cmdSearchEditText
 
-        val linearLayoutParamPageSearchToolBar = LinearLayout.LayoutParams(
+        val linearLayoutParamPageSearchToolBar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
         linearLayoutParamPageSearchToolBar.weight = weightSwicher(onPageSearch)
 
-        val linearLayoutParamToolbar = LinearLayout.LayoutParams(
+        val linearLayoutParamToolbar = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             0,
         )
@@ -51,14 +53,14 @@ object CmdIndexToolbarSwitcher {
         cmdclickPageSearchToolBar.layoutParams = linearLayoutParamPageSearchToolBar
         cmdclickPageSearchToolBar.isVisible = onPageSearch
         cmdPageSearchEditText.setText(String())
-        cmdSearchEditText.setText(String())
-        cmdclickToolBar.layoutParams = linearLayoutParamToolbar
-        if(onPageSearch) {
-            cmdSearchEditText.clearFocus()
-            cmdPageSearchEditText.requestFocus()
-        } else {
-            cmdPageSearchEditText.clearFocus()
-        }
+//        cmdSearchEditText.setText(String())
+//        cmdclickToolBar.layoutParams = linearLayoutParamToolbar
+//        if(onPageSearch) {
+//            cmdSearchEditText.clearFocus()
+//            cmdPageSearchEditText.requestFocus()
+//        } else {
+//            cmdPageSearchEditText.clearFocus()
+//        }
     }
 }
 

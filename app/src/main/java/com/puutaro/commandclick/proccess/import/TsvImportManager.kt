@@ -1,5 +1,6 @@
 
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -22,23 +23,28 @@ object TsvImportManager {
         setReplaceVariableCompleteMap: Map<String, String>? = null
     ): Map<String, String>? {
         val jsFileObj = File(scriptPath)
-        if(!jsFileObj.isFile) return setReplaceVariableCompleteMap
-        val recentAppDirPath = jsFileObj.parent
-            ?: return setReplaceVariableCompleteMap
-        val scriptFileName = jsFileObj.name
+        if(
+            !jsFileObj.isFile
+        ) return setReplaceVariableCompleteMap
+//        val recentAppDirPath = jsFileObj.parent
+//            ?: return setReplaceVariableCompleteMap
+//        jsFileObj.name
+        val fannelName = File(
+            CcPathTool.getMainFannelFilePath(scriptPath)
+        ).name
         val jsConForTsv = SetReplaceVariabler.execReplaceByReplaceVariables(
             trimJsConForTsv(jsList),
             setReplaceVariableCompleteMap,
-            recentAppDirPath,
-            scriptFileName
+//            recentAppDirPath,
+            fannelName
         )
         val result = tsvImportRegex.findAll("\n$jsConForTsv")
 
         val tsvKeyValueMap = makeTsvKeyValueMap(
             result,
             setReplaceVariableCompleteMap,
-            recentAppDirPath,
-            scriptFileName
+//            recentAppDirPath,
+            fannelName
         )
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
             true -> tsvKeyValueMap
@@ -54,7 +60,7 @@ object TsvImportManager {
         val tsvKeyValueMap = makeTsvKeyValueMap(
             result,
             setReplaceVariableCompleteMap,
-            String(),
+//            String(),
             String()
         )
 //        FileSystems.writeFile(
@@ -73,14 +79,14 @@ object TsvImportManager {
     private fun makeTsvKeyValueMap(
         result: Sequence<MatchResult>,
         setReplaceVariableCompleteMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fanneName: String,
     ): Map<String, String> {
         val tsvKeyValueListSrc =
             makeTsvKeyValueListSrc(
                 result,
                 setReplaceVariableCompleteMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fanneName,
             )
         val tsvKeyValueList = tsvKeyValueListSrc
@@ -111,7 +117,7 @@ object TsvImportManager {
     private fun makeTsvKeyValueListSrc(
         result: Sequence<MatchResult>,
         setReplaceVariableCompleteMap: Map<String, String>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fanneName: String,
     ): Sequence<String> {
         return result.map {
@@ -191,7 +197,7 @@ object TsvImportManager {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it,
                         setReplaceVariableCompleteMap,
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         fanneName,
                     )
                 }.let {

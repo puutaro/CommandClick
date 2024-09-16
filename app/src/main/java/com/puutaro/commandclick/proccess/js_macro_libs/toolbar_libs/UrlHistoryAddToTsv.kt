@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -17,25 +18,20 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellT
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
 
-class UrlHistoryAddToTsv (
-    private val editFragment: EditFragment,
-    private val jsActionMap: Map<String, String>
-){
+object UrlHistoryAddToTsv {
 
-    private val context = editFragment.context
     private var urlHistoryToTsvDialog: Dialog? = null
     private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
-    fun invoke(){
-        if(
-            context == null
-        ) return
+    fun invoke(
+         editFragment: EditFragment,
+         jsActionMap: Map<String, String>
+    ){
+        val context = editFragment.context ?: return
         urlHistoryToTsvDialog = Dialog(
             context
         )
@@ -62,7 +58,10 @@ class UrlHistoryAddToTsv (
             urlHistoryToTsvDialog = null
         }
 
-        setListView()
+        setListView(
+            editFragment,
+            jsActionMap,
+        )
         urlHistoryToTsvDialog?.setOnCancelListener {
             urlHistoryToTsvDialog?.dismiss()
             urlHistoryToTsvDialog = null
@@ -75,38 +74,53 @@ class UrlHistoryAddToTsv (
         urlHistoryToTsvDialog?.show()
     }
 
-    private fun setListView() {
-        if(
-            context == null
-        ) return
+    private fun setListView(
+        editFragment: EditFragment,
+        jsActionMap: Map<String, String>
+    ) {
+        val context = editFragment.context ?: return
         val urlHistoryToTsvListView =
             urlHistoryToTsvDialog?.findViewById<ListView>(
                 com.puutaro.commandclick.R.id.list_dialog_list_view
             ) ?: return
         val subMenuAdapter = SubMenuAdapter(
             context,
-            makeUrlHistoryList().toMutableList()
+            makeUrlHistoryList(
+                editFragment,
+                jsActionMap,
+            ).toMutableList()
         )
         urlHistoryToTsvListView.adapter = subMenuAdapter
         invokeItemSetClickListnerForUrlToTsv(
             editFragment,
+            jsActionMap,
             urlHistoryToTsvListView,
         )
         invokeItemSetLongClickListenerForUrlToTsv(
             editFragment,
+            jsActionMap,
             urlHistoryToTsvListView,
         )
     }
 
-    private fun makeUrlHistoryList(): List<Pair<String, Int>> {
-        return takeFromUrlHistoryList().map {
+    private fun makeUrlHistoryList(
+        editFragment: EditFragment,
+        jsActionMap: Map<String, String>
+    ): List<Pair<String, Int>> {
+        return takeFromUrlHistoryList(
+            editFragment,
+            jsActionMap
+        ).map {
             val titleUrlList = it.split("\t")
             val title = titleUrlList.first()
             title to icons8Wheel
         }
     }
 
-    private fun takeFromUrlHistoryList(): List<String> {
+    private fun takeFromUrlHistoryList(
+        editFragment: EditFragment,
+        jsActionMap: Map<String, String>
+    ): List<String> {
         val historyFirstExtractNum = 50
         val busyboxExecutor = editFragment.busyboxExecutor
         val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
@@ -122,13 +136,12 @@ class UrlHistoryAddToTsv (
             defaultShellCon
         }
         val takeLines = 5
-        val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
 
         val urlHistoryParentDirPath = File(
-            currentAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
         ).absolutePath
         val srcTsvCon = ReadText(
@@ -152,6 +165,7 @@ class UrlHistoryAddToTsv (
 
     private fun invokeItemSetClickListnerForUrlToTsv(
         editFragment: EditFragment,
+        jsActionMap: Map<String, String>,
         urlHistoryToTsvListView: ListView,
     ) {
         urlHistoryToTsvListView.setOnItemClickListener {
@@ -159,7 +173,10 @@ class UrlHistoryAddToTsv (
             val menuListAdapter = urlHistoryToTsvListView.adapter as SubMenuAdapter
             val selectedTitle = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
-            val selectedUrlHistoryLine = takeFromUrlHistoryList().find {
+            val selectedUrlHistoryLine = takeFromUrlHistoryList(
+                editFragment,
+                jsActionMap,
+            ).find {
                 it.startsWith(selectedTitle)
             } ?: return@setOnItemClickListener
             ExecAddForListIndexAdapter.execAddForTsv(
@@ -174,6 +191,7 @@ class UrlHistoryAddToTsv (
 
     private fun invokeItemSetLongClickListenerForUrlToTsv(
         editFragment: EditFragment,
+        jsActionMap: Map<String, String>,
         urlHistoryToTsvListView: ListView,
     ) {
         urlHistoryToTsvListView.setOnItemLongClickListener {
@@ -181,20 +199,22 @@ class UrlHistoryAddToTsv (
             val menuListAdapter = urlHistoryToTsvListView.adapter as SubMenuAdapter
             val selectedTitle = menuListAdapter.getItem(pos)
                 ?: return@setOnItemLongClickListener false
-            val selectedUrlHistoryLine = takeFromUrlHistoryList().find {
+            val selectedUrlHistoryLine = takeFromUrlHistoryList(
+                editFragment,
+                jsActionMap,
+            ).find {
                 it.startsWith(selectedTitle)
             } ?: return@setOnItemLongClickListener false
             val selectedUrl = selectedUrlHistoryLine.split("\t").lastOrNull()
                 ?: return@setOnItemLongClickListener false
-            val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                    UsePath.JS_FILE_SUFFIX
-            val fannelInfoMap = editFragment.fannelInfoMap
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+            val webSearcherName = SystemFannel.webSearcher
+//            val fannelInfoMap = editFragment.fannelInfoMap
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             ExecJsLoad.execExternalJs(
                 editFragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 webSearcherName,
                 listOf(selectedUrl),
             )

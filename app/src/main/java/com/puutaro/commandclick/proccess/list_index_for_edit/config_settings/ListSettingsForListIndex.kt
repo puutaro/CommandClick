@@ -163,8 +163,8 @@ object ListSettingsForListIndex  {
 //                ).joinToString("\n\n")
 //            )
             return when(listIndexTypeKey) {
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-                -> makeFannelListForListView().toMutableList()
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//                -> makeFannelListForListView().toMutableList()
                 TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
                     makeTsvConList(
                         editFragment,
@@ -186,8 +186,8 @@ object ListSettingsForListIndex  {
             listIndexType : TypeSettingsForListIndex.ListIndexTypeKey,
         ): String {
             return when(listIndexType){
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-                -> UsePath.cmdclickFannelItselfDirPath
+//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//                -> UsePath.cmdclickFannelItselfDirPath
                 TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
                 -> String()
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL ->
@@ -471,9 +471,9 @@ object ListSettingsForListIndex  {
                 filterShellPath.isEmpty()
             ) return String()
             val fannelInfoMap = editFragment.fannelInfoMap
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             val currentFannelName = FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
@@ -483,7 +483,7 @@ object ListSettingsForListIndex  {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     editFragment.setReplaceVariableMap,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName
                 )
             }
@@ -585,9 +585,9 @@ private object CompPathManager {
         initTsvPathObj: File,
     ): List<String> {
         val fannelInfoMap = editFragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -597,7 +597,7 @@ private object CompPathManager {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ).split("\n")
         }

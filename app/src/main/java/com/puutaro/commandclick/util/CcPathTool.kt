@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -22,6 +23,13 @@ object CcPathTool {
             else -> "${parentDirPath}/" +
                     rndFileName
         }
+    }
+
+    fun toValidPathWord(path: String): String {
+        return path.replace(
+            Regex("[^a-zA-Z0-9_%-]+"),
+            String()
+        )
     }
     fun makeFannelDirName(
         fannelNameSrc: String
@@ -206,9 +214,10 @@ object CcPathTool {
 
     fun convertAppDirPathToLocal(
         path: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         commonDirPath: String? = null
     ): String {
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         return when(
             !commonDirPath.isNullOrEmpty()
         ) {
@@ -217,10 +226,10 @@ object CcPathTool {
                 val commonDirPathRegexNewLine = Regex("\n${commonDirPath}")
                 path.replace(
                     commonDirPathRegex,
-                    currentAppDirPath
+                    cmdclickDefaultAppDirPath
                 ).replace(
                     commonDirPathRegexNewLine,
-                    "\n$currentAppDirPath"
+                    "\n$cmdclickDefaultAppDirPath"
                 )
             }
             else -> {
@@ -228,10 +237,10 @@ object CcPathTool {
                 val currentAppDirPathRegexNewLine = Regex("\n${UsePath.cmdclickAppDirPath}/[^/]*")
                 path.replace(
                     currentAppDirPathRegex,
-                    currentAppDirPath
+                    cmdclickDefaultAppDirPath
                 ).replace(
                     currentAppDirPathRegexNewLine,
-                    "\n$currentAppDirPath"
+                    "\n$cmdclickDefaultAppDirPath"
                 )
             }
         }
@@ -266,7 +275,7 @@ object CcPathTool {
             currentScriptFileName.isEmpty()
             || currentScriptFileName == "-"
             || currentScriptFileName == CommandClickScriptVariable.EMPTY_STRING
-        ) return UsePath.cmdclickPreferenceJsName
+        ) return SystemFannel.preference
         return currentScriptFileName
     }
 

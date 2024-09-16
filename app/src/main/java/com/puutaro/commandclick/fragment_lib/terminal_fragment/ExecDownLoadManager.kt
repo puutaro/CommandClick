@@ -12,9 +12,13 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 
 object ExecDownLoadManager {
     fun set(
-        terminalFragment: TerminalFragment,
-        webView: WebView,
+        terminalFragment: TerminalFragment?,
+        webView: WebView?,
     ){
+        if(
+            webView == null
+            || terminalFragment == null
+        ) return
         val context = terminalFragment.context
         webView.setDownloadListener(DownloadListener {
                 url, userAgent, contentDisposition, mimetype, contentLength ->

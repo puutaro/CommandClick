@@ -7,9 +7,12 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,26 +21,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
 import com.puutaro.commandclick.proccess.history.libs.HistoryShareImage
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.Intent.IntentVariant
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.url.EnableUrlPrefix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,26 +48,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
 
-class UrlHistoryButtonEvent(
-    private val fragment: androidx.fragment.app.Fragment,
-    private val fannelInfoMap: Map<String, String>,
-) {
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-    private val fragmentTag = fragment.tag
-    private val context = fragment.context
-    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
-    private val listLinearWeight = 1F - searchTextLinearWeight
+object UrlHistoryButtonEvent{
+    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        FannelInfoTool.getCurrentAppDirPath(
+//        fannelInfoMap
+//    )
     private val takeUrlListNum = 400
     private var urlHistoryDialog: Dialog? = null
     private val titleKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.TITLE.key
     private val urlKey = UrlHistoryAdapter.Companion.UrlHistoryMapKey.URL.key
-    private val iconBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.ICON_BASE64_STR.key
-    private val bottomFannelFileType = UrlHistoryAdapter.Companion.FileType.BOTTOM_FANNEL
+//    private val iconBase64Key = UrlHistoryAdapter.Companion.UrlHistoryMapKey.ICON_BASE64_STR.key
+//    private val bottomFannelFileType = UrlHistoryAdapter.Companion.FileType.BOTTOM_FANNEL
     private val urlHistoryMapKeys = listOf(
         titleKey,
         urlKey,
@@ -73,7 +67,13 @@ class UrlHistoryButtonEvent(
 
 
     fun invoke(
+        fragment: Fragment,
     ){
+        HistoryCaptureTool.launchCapture(fragment)
+        val context = fragment.context
+        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+        val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)
+        val listLinearWeight = 1F - searchTextLinearWeight
         if(
             context == null
         ) return
@@ -119,7 +119,7 @@ class UrlHistoryButtonEvent(
             LinearLayoutManager.VERTICAL,
             false
         )
-        val currentUrl = TargetFragmentInstance().getCurrentTerminalFragmentFromFrag(fragment.activity).let {
+        val currentUrl = TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity).let {
             terminalFragment ->
             if(
                 terminalFragment == null
@@ -129,8 +129,8 @@ class UrlHistoryButtonEvent(
             terminalFragment.binding.terminalWebView.url
         }
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
-            fragment,
-            currentAppDirPath,
+            fragment.context,
+//            cmdclickDefaultAppDirPath,
             urlHistoryList.toMutableList(),
             currentUrl,
         )
@@ -141,6 +141,13 @@ class UrlHistoryButtonEvent(
         urlHistoryListView.layoutManager?.scrollToPosition(
             urlHistoryDisplayListAdapter.itemCount - 1
         )
+        urlHistoryListView.setHasFixedSize(true)
+        SearchEditTextHideShow.monitor(
+            fragment,
+            urlHistoryListView,
+            searchText,
+        )
+
         makeSearchEditText(
             urlHistoryDisplayListAdapter,
             urlHistoryListView,
@@ -162,14 +169,17 @@ class UrlHistoryButtonEvent(
         urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog?.show()
         setUrlHistoryListViewOnItemClickListener(
+            fragment,
             urlHistoryListView,
             urlHistoryDisplayListAdapter,
             searchText
         )
         setUrlHistoryListViewOnLogoItemClickListener (
+            context,
             urlHistoryDisplayListAdapter,
         )
         setUrlHistoryListViewOnCopyItemClickListener (
+            context,
             urlHistoryDisplayListAdapter,
             searchText,
         )
@@ -235,6 +245,57 @@ class UrlHistoryButtonEvent(
         mIth.attachToRecyclerView(recyclerView)
     }
 
+    private object SearchEditTextHideShow {
+        fun monitor(
+            fragment: Fragment,
+            urlHistoryListView: RecyclerView?,
+            searchBox: AppCompatEditText?,
+        ) {
+            if (
+                urlHistoryListView == null
+            ) return
+            var oldPositionY = 0f
+            val hideShowThreshold = ScreenSizeCalculator.getScreenHeight(fragment.activity)
+            urlHistoryListView.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    when (e.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            oldPositionY = e.rawY
+                        }
+
+                        MotionEvent.ACTION_UP -> {
+                            execHideShowForSearchBox(
+                                hideShowThreshold,
+                                oldPositionY,
+                                e.rawY,
+                                searchBox
+                            )
+                        }
+                    }
+                    return false
+                }
+
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+            })
+        }
+
+        private fun execHideShowForSearchBox(
+            hideShowThreshold: Int,
+            oldPositionY: Float,
+            rawY: Float,
+            searchBox: AppCompatEditText?
+        ) {
+            val oldCurrYDff = oldPositionY - rawY
+            if (hideShowThreshold < oldCurrYDff && oldCurrYDff < -10) {
+                searchBox?.isVisible = true
+            }
+            if (oldCurrYDff > 10) {
+                searchBox?.isVisible = false
+            }
+        }
+    }
+
     private fun makeSearchEditText(
         urlHistoryListAdapter: UrlHistoryAdapter,
         urlHistoryListView: RecyclerView?,
@@ -278,6 +339,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnItemClickListener (
+        fragment: Fragment,
         urlHistoryListView: RecyclerView,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
         searchText: AppCompatEditText,
@@ -303,7 +365,7 @@ class UrlHistoryButtonEvent(
                     ?.let {
                         ScriptPreWordReplacer.settingValReplace(
                             it,
-                            currentAppDirPath
+                            cmdclickDefaultAppDirPath
                         )
                     } ?: let {
                     exitDialog(urlHistoryListView)
@@ -320,33 +382,54 @@ class UrlHistoryButtonEvent(
                         UsePath.JSX_FILE_SUFFIX,
                     )
                 ) {
-                    execScriptFile(selectedUrl)
+                    execScriptFile(
+                        fragment,
+                        selectedUrl
+                    )
                     exitDialog(urlHistoryListView)
                     return
                 }
 
-                if (
-                    fragmentTag == context?.getString(
-                        R.string.command_index_fragment
-                    )
-                ) {
-                    val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
-                    listener?.onLaunchUrlByWebView(
-                        selectedUrl,
-                    )
-                    exitDialog(urlHistoryListView)
-                    return
-                } else if (
-                    fragmentTag?.startsWith(
-                        FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
-                    ) == true
-                ) {
-                    val listener = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-                    listener?.onLaunchUrlByWebViewForEdit(
-                        selectedUrl,
-                    )
-                    exitDialog(urlHistoryListView)
-                    return
+                when (fragment) {
+                    is CommandIndexFragment -> {
+                        val listener = fragment.context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
+                        listener?.onLaunchUrlByWebView(
+                            selectedUrl,
+                        )
+                        exitDialog(urlHistoryListView)
+                        return
+                    }
+                    is EditFragment -> {
+//                        if(
+//                            fragmentTag?.startsWith(
+//                                FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
+//                            ) != true
+//                        ) {
+//                            exitDialog(urlHistoryListView)
+//                            return
+//                        }
+                        val listener =
+                            fragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                        listener?.onLaunchUrlByWebViewForEdit(
+                            selectedUrl,
+                        )
+                        exitDialog(urlHistoryListView)
+                        return
+                    }
+                    is TerminalFragment -> {
+//                        if(
+//                            fragmentTag?.startsWith(
+//                                context?.getString(R.string.index_terminal_fragment)
+//                                    ?: String()
+//                            ) != true
+//                        ) {
+//                            exitDialog(urlHistoryListView)
+//                            return
+//                        }
+                        fragment.binding.terminalWebView.loadUrl(selectedUrl)
+                        exitDialog(urlHistoryListView)
+                        return
+                    }
                 }
                 exitDialog(urlHistoryListView)
             }
@@ -354,18 +437,19 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnLogoItemClickListener (
+        context: Context?,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
     ){
         urlHistoryDisplayListAdapter.logoItemClickListener = object: UrlHistoryAdapter.OnLogoItemClickListener {
             override fun onItemClick(holder: UrlHistoryAdapter.UrlHistoryViewHolder) {
-                val urlHistoryAdapterRelativeLayout = holder.urlHistoryAdapterRelativeLayout
+                val urlHistoryAdapterConstraintLayout = holder.urlHistoryAdapterConstraintLayout
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main){
                         ToastUtils.showShort("share")
                     }
                     val pngImagePathObj = HistoryShareImage.makePngImageFromView(
                         context,
-                        urlHistoryAdapterRelativeLayout
+                        urlHistoryAdapterConstraintLayout
                     ) ?: return@launch
                     withContext(Dispatchers.Main) {
                         IntentVariant.sharePngImage(
@@ -380,6 +464,7 @@ class UrlHistoryButtonEvent(
     }
 
     private fun setUrlHistoryListViewOnCopyItemClickListener (
+        context: Context?,
         urlHistoryDisplayListAdapter: UrlHistoryAdapter,
         searchText: AppCompatEditText,
     ){
@@ -404,7 +489,7 @@ class UrlHistoryButtonEvent(
                     ?.let {
                         ScriptPreWordReplacer.settingValReplace(
                             it,
-                            currentAppDirPath
+                            cmdclickDefaultAppDirPath
                         )
                     } ?: return
                 ToastUtils.showShort("copy")
@@ -438,7 +523,7 @@ class UrlHistoryButtonEvent(
 
     private fun makeUrlHistoryList(): List<Map<String, String>> {
         return makeCompleteListSourceNoJsExclude(
-            currentAppDirPath,
+            cmdclickDefaultAppDirPath,
         ).reversed()
     }
 
@@ -448,14 +533,13 @@ class UrlHistoryButtonEvent(
         if(
             currentAppDirPath.isNullOrEmpty()
         ) return emptyList()
-        val urlList = makeUrlListFromHistory()
-        val urlHistoryList = makeBottomScriptUrlList() + urlList
+        val urlHistoryList = makeUrlListFromHistory()
         val urlHistoryListSize = urlHistoryList.size
         return when(
             urlHistoryListSize % 2 == 1
                     && urlHistoryListSize > 3
         ){
-            true -> urlHistoryList + urlList.last()
+            true -> urlHistoryList + urlHistoryList.last()
             else -> urlHistoryList
         }
     }
@@ -465,17 +549,23 @@ class UrlHistoryButtonEvent(
         val usedUrl = mutableSetOf<String>()
         return ReadText(
             File(
-                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
+                "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
                 UsePath.cmdclickUrlHistoryFileName
             ).absolutePath
         ).textToList()
             .distinct()
             .take(takeUrlListNum)
             .filter {
+                historySourceRow ->
+                val titleAndUrlList = historySourceRow
+                    .split("\t")
                 isNotDuplicate(
-                    it,
+                    titleAndUrlList,
                     usedTitle,
                     usedUrl,
+                ) && EnableUrlPrefix.isHttpPrefix(
+                    titleAndUrlList
+                    .getOrNull(1)
                 )
             }.map {
                     titleAndUrl ->
@@ -490,110 +580,109 @@ class UrlHistoryButtonEvent(
     }
 
     private fun execScriptFile(
+        fragment: Fragment,
         selectedUrlSource: String
     ) {
         val shellFileObj = File(selectedUrlSource)
         if(!shellFileObj.isFile) return
-        val parentDirPath =
-            shellFileObj.parent ?: return
+//        val parentDirPath =
+//            shellFileObj.parent ?: return
         ExecJsOrSellHandler.handle(
             fragment,
-            parentDirPath,
+//            parentDirPath,
             shellFileObj.name,
             args = ScriptArgsMapList.ScriptArgsName.URL_HISTORY_CLICK.str
         )
     }
 
-    private fun makeBottomScriptUrlList(
-    ): List<Map<String, String>> {
-        val fannelName = when(fragment) {
-            is CommandIndexFragment
-            -> String()
-            else
-            -> FannelInfoTool.getCurrentFannelName(
-                fannelInfoMap
-            )
-        }
-        val replaceVariableMap = when(
-            fannelName.isEmpty()
-        ) {
-            true -> null
-            else -> SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                context,
-                "${currentAppDirPath}/${fannelName}",
-            )
-        }
-        val bottomScriptUrlList =
-            when(fragment){
-                is CommandIndexFragment
-                -> fragment.bottomScriptUrlList
-                is EditFragment
-                -> fragment.bottomScriptUrlList
-                else
-                -> return emptyList()
-            }
-        return convertBottomScriptUrlListToUrlList(
-            bottomScriptUrlList,
-            replaceVariableMap,
-            fannelName,
-        )
-    }
+//    private fun makeBottomScriptUrlList(
+//    ): List<Map<String, String>> {
+//        val fannelName = when(fragment) {
+//            is CommandIndexFragment
+//            -> String()
+//            else
+//            -> FannelInfoTool.getCurrentFannelName(
+//                fannelInfoMap
+//            )
+//        }
+//        val replaceVariableMap = when(
+//            fannelName.isEmpty()
+//        ) {
+//            true -> null
+//            else -> SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+//                context,
+//                "${cmdclickDefaultAppDirPath}/${fannelName}",
+//            )
+//        }
+//        val bottomScriptUrlList =
+//            when(fragment){
+//                is CommandIndexFragment
+//                -> fragment.bottomScriptUrlList
+//                is EditFragment
+//                -> fragment.bottomScriptUrlList
+//                else
+//                -> return emptyList()
+//            }
+//        return convertBottomScriptUrlListToUrlList(
+//            bottomScriptUrlList,
+//            replaceVariableMap,
+//            fannelName,
+//        )
+//    }
 
-    private fun convertBottomScriptUrlListToUrlList(
-        bottomScriptUrlList: List<String>,
-        replaceVariableMap: Map<String, String>?,
-        fannelName: String,
-    ): List<Map<String, String>> {
-        return execSetRepalceVariable(
-            bottomScriptUrlList,
-            replaceVariableMap,
-            fannelName,
-        ).map {
-                url ->
-            val replaceUrl = ScriptPreWordReplacer.replace(
-                url,
-                currentAppDirPath,
-                String(),
-            )
-            val title = url.split("/")
-                .lastOrNull()
-                ?: String()
-            mapOf(
-                titleKey to title,
-                urlKey to replaceUrl,
-                iconBase64Key to bottomFannelFileType.name
-            )
-        }.filter {
-            it.isNotEmpty()
-        }.reversed()
-    }
+//    private fun convertBottomScriptUrlListToUrlList(
+//        bottomScriptUrlList: List<String>,
+//        replaceVariableMap: Map<String, String>?,
+//        fannelName: String,
+//    ): List<Map<String, String>> {
+//        return execSetRepalceVariable(
+//            bottomScriptUrlList,
+//            replaceVariableMap,
+//            fannelName,
+//        ).map {
+//                url ->
+//            val replaceUrl = ScriptPreWordReplacer.replace(
+//                url,
+////                cmdclickDefaultAppDirPath,
+//                String(),
+//            )
+//            val title = url.split("/")
+//                .lastOrNull()
+//                ?: String()
+//            mapOf(
+//                titleKey to title,
+//                urlKey to replaceUrl,
+//                iconBase64Key to bottomFannelFileType.name
+//            )
+//        }.filter {
+//            it.isNotEmpty()
+//        }.reversed()
+//    }
 
-    private fun execSetRepalceVariable(
-        bottomScriptUrlList: List<String>,
-        replaceVariableMap: Map<String, String>?,
-        fannelName: String,
-    ): List<String> {
-        return bottomScriptUrlList.joinToString("\n").let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                replaceVariableMap,
-                currentAppDirPath,
-                fannelName
-            )
-        }.split("\n")
-    }
+//    private fun execSetRepalceVariable(
+//        bottomScriptUrlList: List<String>,
+//        replaceVariableMap: Map<String, String>?,
+//        fannelName: String,
+//    ): List<String> {
+//        return bottomScriptUrlList.joinToString("\n").let {
+//            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                it,
+//                replaceVariableMap,
+////                cmdclickDefaultAppDirPath,
+//                fannelName
+//            )
+//        }.split("\n")
+//    }
 
     private fun isNotDuplicate(
-        historySourceRow: String,
+        titleAndUrlList: List<String>,
         usedTitle: MutableSet<String>,
         usedUrl: MutableSet<String>,
     ): Boolean {
-        val historySourceRowList = historySourceRow
-            .split("\t")
-        val duliEntryTitle = historySourceRowList
+        val duliEntryTitle = titleAndUrlList
             .firstOrNull()
             ?: return false
-        val duliEntryUrl = historySourceRowList
+        val duliEntryUrl = titleAndUrlList
             .getOrNull(1)
             ?: return false
         return if(
@@ -651,32 +740,32 @@ class UrlHistoryButtonEvent(
             ?.let {
                 ScriptPreWordReplacer.settingValReplace(
                     it,
-                    currentAppDirPath
+                    cmdclickDefaultAppDirPath
                 )
             } ?: return
         val selectedUrl = selectedUrlHistoryMap.get(urlKey)
             ?.let {
                 ScriptPreWordReplacer.settingValReplace(
                     it,
-                    currentAppDirPath
+                    cmdclickDefaultAppDirPath
                 )
             } ?: return
-        val bottomScriptUrlList = makeBottomScriptUrlList()
-        val isBottomScript = bottomScriptUrlList.filter {
-            map ->
-            val url = map.get(urlKey)
-                ?: return@filter false
-            url == selectedUrl
-        }.isNotEmpty()
-        if(isBottomScript) {
-            ToastUtils.showShort(
-                "Bottom script must be deleted bellow\n" +
-                    "\tat ${CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH}\n" +
-                    "\t\tin start up script"
-            )
-            return
-        }
-        val urlHistoryDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+//        val bottomScriptUrlList = makeBottomScriptUrlList()
+//        val isBottomScript = bottomScriptUrlList.filter {
+//            map ->
+//            val url = map.get(urlKey)
+//                ?: return@filter false
+//            url == selectedUrl
+//        }.isNotEmpty()
+//        if(isBottomScript) {
+//            ToastUtils.showShort(
+//                "Bottom script must be deleted bellow\n" +
+//                    "\tat ${CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH}\n" +
+//                    "\t\tin start up script"
+//            )
+//            return
+//        }
+        val urlHistoryDirPath = "${cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         val cmdclickUrlHistoryFilePath = File(
             urlHistoryDirPath,
@@ -701,6 +790,19 @@ class UrlHistoryButtonEvent(
         )
         urlHistoryDisplayListAdapter.urlHistoryMapList.removeAt(position)
         urlHistoryDisplayListAdapter.notifyItemRemoved(position)
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                val captureUniqueDirPath = UrlHistoryPath.getCaptureUniqueDirPath(
+                    selectedUrl
+                )
+                FileSystems.removeDir(captureUniqueDirPath)
+                val captureHistoryLastModifiedPath =
+                    UrlHistoryPath.makeCaptureHistoryLastModifiedFilePath(
+                        selectedUrl
+                    )
+                FileSystems.removeFiles(captureHistoryLastModifiedPath)
+            }
+        }
     }
 
     private fun makeDeletedUrlHistoryCon(

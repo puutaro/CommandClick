@@ -5,17 +5,15 @@ import android.os.Build
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
-import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCmdListAjustForKeyboard
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoBack
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForword
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForward
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecReload
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.ShortCutManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import java.lang.ref.WeakReference
 
 object ExecToolbarMenuCategoriesForCmdIndex {
     fun <T: Fragment> execToolbarMenuCategories(
@@ -46,22 +44,22 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT -> {
-                val shortCutManager = ShortCutManager(activity)
+                val shortCutManager = ShortCutManager(WeakReference(activity))
                 shortCutManager.createShortCut()
             }
-            ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
-                SystemFannelLauncher.launchFromActivity(
-                    activity,
-                    editFragmentArgs,
-                    UsePath.cmdclickSystemAppDirPath,
-                    UsePath.cmdclickConfigFileName,
-                )
-            }
-            ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {
-                    RunCommandSetter.getPermissionAndSet(
-                    activity
-                )
-            }
+//            ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
+//                SystemFannelLauncher.launchFromActivity(
+//                    activity,
+//                    editFragmentArgs,
+////                    UsePath.cmdclickDefaultAppDirPath,
+//                    UsePath.cmdclickPreferenceJsName,
+//                )
+//            }
+//            ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {
+//                    RunCommandSetter.getPermissionAndSet(
+//                    activity
+//                )
+//            }
             ToolbarMenuCategoriesVariantForCmdIndex.INSTALL_FANNEL -> {
                 if(Build.VERSION.SDK_INT < 33) return
                 NotifierSetter.getPermissionAndSet(
@@ -86,7 +84,7 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.FORWARD -> {
-                ExecGoForword.execGoForword(
+                ExecGoForward.execGoForword(
                     activity
                 )
             }

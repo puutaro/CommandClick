@@ -5,11 +5,12 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentE
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewMenuMapType
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
+import java.lang.ref.WeakReference
 
 object HtmlLauncher{
 
@@ -137,18 +138,28 @@ object HtmlLauncher{
         if(
             onDialog == "true"
         ) {
-            val label = WebViewMenuMapType.label.name
-            val dismissType = WebViewMenuMapType.dismissType.name
-            val cancelStr = "❌"
-            val menuMapStrListStr= listOf(
-                    "${dismissType}=click?${label}=${cancelStr}"
-            ).joinToString("?")
-            JsDialog(terminalFragment).webView_S(
+            val caption = WebViewJsDialog.Companion.WebViewMenuMapType.caption.name
+            val iconName = WebViewJsDialog.Companion.WebViewMenuMapType.iconName.name
+            val dismissType = WebViewJsDialog.Companion.WebViewMenuMapType.dismissType.name
+//            val sectionSeparator = WebViewJsDialog.sectionSeparator
+//            val typeSeparator = WebViewJsDialog.typeSeparator
+            val toolBarSection = WebViewJsDialog.Companion.WebViewConfigMapSection.toolBar.name
+            val keySeparator = WebViewJsDialog.keySeparator
+            val webViewConfigMapCon=
+                listOf(
+                    "${toolBarSection}=",
+                    listOf (
+                        "${dismissType}=click",
+                        "${caption}=cancel",
+                        "${iconName}=cancel"
+                    ).joinToString(
+                        keySeparator.toString()
+                    )
+                ).joinToString(String())
+            JsDialog(WeakReference(terminalFragment)).webView_S(
                 htmlFilePath,
                 String(),
-                menuMapStrListStr,
-                String(),
-                String()
+                webViewConfigMapCon,
             )
         } else binding.terminalWebView.loadUrl(htmlFilePath)
     }

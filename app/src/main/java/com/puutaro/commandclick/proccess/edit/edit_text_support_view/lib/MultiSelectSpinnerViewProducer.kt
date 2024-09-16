@@ -1,7 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.widget.*
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -12,6 +14,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 
 object MultiSelectSpinnerViewProducer {
     fun make(
+        fragment: Fragment,
         insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters,
@@ -19,13 +22,13 @@ object MultiSelectSpinnerViewProducer {
         weight: Float,
         isInsertTextViewVisible: Boolean = false
     ): Button {
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
         val currentSetVariableMap = editParameters.setVariableMap
 
-        val linearParamsForButton = LinearLayout.LayoutParams(
+        val linearParamsForButton = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForButton.weight = weight
         val insertButton = Button(context)

@@ -35,16 +35,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class QrScanJsDialog(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
     private val longpressMenuGroupId = 210000
     private val clickMenuGroupId = 220000
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var qrScanDialogObj: Dialog? = null
-    private var webView = terminalFragment.binding.terminalWebView
 
     fun create(
         title: String,
@@ -52,10 +50,14 @@ class QrScanJsDialog(
         callBackJsPath: String,
         menuMapStrListStr: String,
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main){
                 execCreate(
+                    terminalFragment,
                     title,
                     currentFannelPath,
                     callBackJsPath,
@@ -66,11 +68,14 @@ class QrScanJsDialog(
     }
 
     private fun execCreate(
+        terminalFragment: TerminalFragment,
         title: String,
         currentFannelPath: String,
         callBackJsPath: String,
         menuMapStrListStr: String,
     ){
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ) return
@@ -115,9 +120,11 @@ class QrScanJsDialog(
                 qrScanDialogObj = null
                 terminalViewModel.onDialog = false
                 loadJsForQrMenu(
+                    context,
+                    terminalViewModel,
                     currentFannelPath,
                     callBackJsPath,
-                    webView,
+                    terminalFragment.binding.terminalWebView,
                     decodeText
 //                    "${qrDecodeTextReplaceMark}=${decodeText}"
                 )
@@ -149,7 +156,9 @@ class QrScanJsDialog(
                 it
             )
             val imageButton = qrBtnSetter(
-                webView,
+                context,
+                terminalFragment.binding.terminalWebView,
+                terminalViewModel,
                 btnMenuMap,
                 btnWeight,
                 currentFannelPath
@@ -176,16 +185,22 @@ class QrScanJsDialog(
         codeScanner.releaseResources()
         qrScanDialogObj?.dismiss()
         qrScanDialogObj = null
-        terminalViewModel.onDialog = false
+        terminalFragmentRef.get()?.let {
+            val terminalViewModel: TerminalViewModel by it.activityViewModels()
+            terminalViewModel.onDialog = false
+        }
     }
 
     private fun qrBtnSetter(
+        context: Context?,
         webView: WebView,
+        terminalViewModel: TerminalViewModel,
         targetMenuMap: Map<String, String>?,
         culcBtnWeight: Float,
         currentScriptPath: String,
     ): ImageButton {
         val targetBtn = makeImageButton(
+            context,
             targetMenuMap,
             culcBtnWeight
         )
@@ -201,6 +216,7 @@ class QrScanJsDialog(
             val btnContext = it.context
             btnActionHandler(
                 btnContext,
+                terminalViewModel,
                 targetBtn,
                 targetMenuMap,
                 clickMenuList,
@@ -214,6 +230,7 @@ class QrScanJsDialog(
             val btnContext = it.context
             btnActionHandler(
                 btnContext,
+                terminalViewModel,
                 targetBtn,
                 targetMenuMap,
                 longPressMenuList,
@@ -229,6 +246,7 @@ class QrScanJsDialog(
 
     private fun btnActionHandler(
         contextSrc: Context?,
+        terminalViewModel: TerminalViewModel,
         targetBtn: ImageButton,
         btnOptionMap: Map<String, String>?,
         menuList: List<String>,
@@ -239,6 +257,7 @@ class QrScanJsDialog(
     ){
         launchMenu(
             contextSrc,
+            terminalViewModel,
             targetBtn,
             menuList,
             webView,
@@ -253,6 +272,7 @@ class QrScanJsDialog(
 
     private fun launchMenu(
         contextSrc: Context?,
+        terminalViewModel: TerminalViewModel,
         webViewSearchBtn: ImageButton,
         menuList: List<String>,
         webView: WebView,
@@ -264,6 +284,8 @@ class QrScanJsDialog(
         ) return
         if(menuList.size == 1){
             loadJsForQrMenu(
+                contextSrc,
+                terminalViewModel,
                 currentScriptPath,
                 getJsPathFromMenuSrc(menuList.first()),
                 webView,
@@ -293,6 +315,8 @@ class QrScanJsDialog(
             )
         }
         popupMenuItemSelected(
+            context,
+            terminalViewModel,
             popupMenu,
             menuList,
             webView,
@@ -302,6 +326,8 @@ class QrScanJsDialog(
     }
 
     private fun popupMenuItemSelected(
+        context: Context,
+        terminalViewModel: TerminalViewModel,
         popup: PopupMenu,
         menuList: List<String>,
         webView: WebView,
@@ -315,6 +341,8 @@ class QrScanJsDialog(
                 menuList,
             )
             loadJsForQrMenu(
+                context,
+                terminalViewModel,
                 currentScriptPath,
                 selectedJsPath,
                 webView,
@@ -324,6 +352,8 @@ class QrScanJsDialog(
     }
 
     private fun loadJsForQrMenu(
+        context: Context?,
+        terminalViewModel: TerminalViewModel,
         currentFannelPath: String,
         jsPath: String,
         webView: WebView,
@@ -339,17 +369,17 @@ class QrScanJsDialog(
         )
         val fannelPathObj = File(fannelPath)
         if(!fannelPathObj.isFile) return
-        val currentAppDirPath = fannelPathObj.parent
-            ?: return
+//        val currentAppDirPath = fannelPathObj.parent
+//            ?: return
         val fannelName = fannelPathObj.name
         val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
             ScriptPreWordReplacer.replace(
                 jsPath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName
             ),
             setReplaceVariableMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             fannelName
         )
         terminalViewModel.jsArguments = decodedText
@@ -402,9 +432,9 @@ class QrScanJsDialog(
             !currentFannelPathObj.isFile
             && currentFannelPath.isNotEmpty()
         ) return null
-        val currentAppDirPath =
-            currentFannelPathObj.parent
-                ?: String()
+//        val currentAppDirPath =
+//            currentFannelPathObj.parent
+//                ?: String()
         val fannelName =
             currentFannelPathObj.name
                 ?: String()
@@ -412,7 +442,7 @@ class QrScanJsDialog(
         return centerMenuMapStr.let {
             ScriptPreWordReplacer.replace(
                 it,
-                currentAppDirPath,
+//                currentAppDirPath,
                 fannelName
             )
         }.let {
@@ -435,6 +465,7 @@ class QrScanJsDialog(
     }
 
     private fun makeImageButton(
+        context: Context?,
         menuBtnMap: Map<String, String>?,
         buttonWeight: Float,
     ): ImageButton {
@@ -488,7 +519,7 @@ class QrScanJsDialog(
         return try {
             btnOptionMap
                 ?.get(
-                    WebViewMenuMapType.dismissDelayMiliTime.name
+                    WebViewJsDialog.Companion.WebViewMenuMapType.dismissDelayMiliTime.name
                 )?.toLong() ?: 0L
         } catch (e: Exception){
             0L

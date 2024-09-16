@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.text.Editable
 import android.text.InputType
@@ -21,13 +22,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 
 class GridJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private var webViewDialog: AlertDialog? = null
 
@@ -36,6 +36,9 @@ class GridJsDialog(
         message: String,
         imagePathListTabSepaStr: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
@@ -58,9 +61,11 @@ class GridJsDialog(
     }
 
     private fun createLinearLayoutForGridView(
+        terminalFragment: TerminalFragment,
         imagePathList: List<String>,
     ): LinearLayout {
-
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val gridView = GridView(context)
         gridView.numColumns = 2
 
@@ -85,7 +90,7 @@ class GridJsDialog(
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
         )
-        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
+        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment.activity)
         val listWeight = 1F - searchTextWeight
         val linearLayoutForListView = NestLinearLayout.make(
             context,
@@ -111,11 +116,15 @@ class GridJsDialog(
             imagePathListNewlineSepaStr
                 .split("\n")
                 .toMutableList()
-        val context = context ?: return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+            ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val linearLayoutForGridView = createLinearLayoutForGridView(
-                imagePathList,
-            )
-
+            terminalFragment,
+            imagePathList,
+        )
         val titleString = if(
             title.isNotEmpty()
         ){

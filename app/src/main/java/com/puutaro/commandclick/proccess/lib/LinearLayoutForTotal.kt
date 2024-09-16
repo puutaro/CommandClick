@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.lib
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 
 object LinearLayoutForTotal {
     fun make(
@@ -11,7 +12,7 @@ object LinearLayoutForTotal {
         val linearLayoutForTotal = LinearLayout(context)
         linearLayoutForTotal.orientation =  LinearLayout.VERTICAL
         linearLayoutForTotal.weightSum = 1F
-        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
+        val linearLayoutParamForTotal = LinearLayoutCompat.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT,
         )

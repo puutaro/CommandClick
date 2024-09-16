@@ -35,10 +35,10 @@ object MultiSelectDialogForEdit {
                     dataString: String
                 ) {
                     val sharePref = FannelInfoTool.getSharePref(activity)
-                    val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-                        sharePref,
-                        FannelInfoSetting.current_app_dir
-                    )
+//                    val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//                        sharePref,
+//                        FannelInfoSetting.current_app_dir
+//                    )
                     val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
                         sharePref,
                         FannelInfoSetting.current_fannel_name
@@ -48,22 +48,22 @@ object MultiSelectDialogForEdit {
                         FannelInfoSetting.current_fannel_state
                     )
                     val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         currentFannelName,
                         currentFannelState
                     )
                     val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         currentFannelName,
                     )
-                    val editFragmentSource = TargetFragmentInstance().getFromActivity<EditFragment>(
+                    val editFragmentSource = TargetFragmentInstance.getFromActivity<EditFragment>(
                         activity,
                         cmdEditFragmentTag
                     )
                     val editFragment = if(
                         editFragmentSource == null
                     ){
-                        TargetFragmentInstance().getFromActivity<EditFragment>(
+                        TargetFragmentInstance.getFromActivity<EditFragment>(
                             activity,
                             settingEditFragmentTag
                         )

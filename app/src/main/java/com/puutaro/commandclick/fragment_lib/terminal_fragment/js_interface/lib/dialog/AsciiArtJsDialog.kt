@@ -29,14 +29,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.ref.WeakReference
 
 
 class AsciiArtJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
-    val activity = terminalFragment.activity
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var spannableDialogObj: Dialog? = null
     private val asciiArtMapSeparator = '|'
     private var isSuccess = false
@@ -47,6 +45,9 @@ class AsciiArtJsDialog(
         asciiArtMapCon: String,
     ): Boolean {
         isSuccess = false
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return false
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         runBlocking {
             val asciiArtSpannable = withContext(Dispatchers.IO){
@@ -83,6 +84,10 @@ class AsciiArtJsDialog(
         spannable: Spannable?,
         asciiArtMap: Map<String, String>
     ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ){
@@ -175,7 +180,10 @@ class AsciiArtJsDialog(
 
     private fun exitDialog(isOk: Boolean){
         isSuccess = isOk
-        terminalViewModel.onDialog = false
+        terminalFragmentRef.get()?.let {
+            val terminalViewModel: TerminalViewModel by it.activityViewModels()
+            terminalViewModel.onDialog = false
+        }
         spannableDialogObj?.dismiss()
         spannableDialogObj = null
     }
@@ -184,6 +192,9 @@ class AsciiArtJsDialog(
         val shareButton = spannableDialogObj?.findViewById<AppCompatImageButton>(
             com.puutaro.commandclick.R.id.spannable_dialog_share
         )
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return null
+        val context = terminalFragment.context
         shareButton?.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 val spannableImagePathObj =
@@ -211,6 +222,8 @@ class AsciiArtJsDialog(
                 com.puutaro.commandclick.R.id.spannable_dialog_contents
             )
         }?: return null
+        val terminalFragment = terminalFragmentRef.get() ?: return null
+        val context = terminalFragment.context
         val bitmap = withContext(Dispatchers.Main) {
             for(i in 1..10) {
                 try {
@@ -256,6 +269,8 @@ class AsciiArtJsDialog(
         if(
             !File(imagePath).isFile
         ) return null
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return null
         val beforeResizeBitMap = withContext(
             Dispatchers.IO
         ) {
@@ -275,7 +290,7 @@ class AsciiArtJsDialog(
             }
         }
         val baseWidth = withContext(Dispatchers.IO) {
-            ScreenSizeCalculator.dpWidth(terminalFragment)
+            ScreenSizeCalculator.dpWidth(terminalFragment.activity)
         }
         val beforeResizeBitMapWidth = withContext(Dispatchers.IO){
             beforeResizeBitMap.width

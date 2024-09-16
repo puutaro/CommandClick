@@ -4,8 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
-import android.widget.LinearLayout
-import androidx.fragment.app.activityViewModels
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.GoogleSuggest
@@ -13,23 +12,16 @@ import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPres
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditToolbarSwitcher
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class WebSearchToolbarManagerForEdit(
-    private val cmdEditFragment: EditFragment
-) {
-    val context = cmdEditFragment.context
-    val terminalViewModel: TerminalViewModel by cmdEditFragment.activityViewModels()
-    val binding = cmdEditFragment.binding
-    val webSearch = binding.webSearch
-    val cmdWebSearchEditText = webSearch.cmdWebSearchEditText
-    val webSearchCancel = webSearch.webSearchCancel
-    val googleSuggest = GoogleSuggest(
-        cmdEditFragment,
-        cmdWebSearchEditText
-    )
+object WebSearchToolbarManagerForEdit {
+
     fun setKeyListener(
+        cmdEditFragment: EditFragment
     ){
+
+        val binding = cmdEditFragment.binding
+        val webSearch = binding.webSearch
+        val cmdWebSearchEditText = webSearch.cmdWebSearchEditText
         cmdWebSearchEditText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.getAction() != KeyEvent.ACTION_DOWN ||
@@ -51,7 +43,16 @@ class WebSearchToolbarManagerForEdit(
         })
     }
 
-    fun setGoogleSuggest(){
+    fun setGoogleSuggest(
+        cmdEditFragment: EditFragment
+    ){
+        val binding = cmdEditFragment.binding
+        val webSearch = binding.webSearch
+        val cmdWebSearchEditText = webSearch.cmdWebSearchEditText
+        val googleSuggest = GoogleSuggest(
+            cmdEditFragment,
+            cmdWebSearchEditText
+        )
         cmdWebSearchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -59,7 +60,7 @@ class WebSearchToolbarManagerForEdit(
                     !cmdWebSearchEditText.hasFocus()
                 ) return
                 val linearLayoutParam =
-                    cmdEditFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    cmdEditFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
                 val editFragmentWeight = linearLayoutParam.weight
                 if(
                     editFragmentWeight == ReadLines.LONGTH
@@ -79,7 +80,12 @@ class WebSearchToolbarManagerForEdit(
         })
     }
 
-    fun setCancelListener(){
+    fun setCancelListener(
+        cmdEditFragment: EditFragment
+    ){
+        val binding = cmdEditFragment.binding
+        val webSearch = binding.webSearch
+        val webSearchCancel = webSearch.webSearchCancel
         webSearchCancel.setOnClickListener {
                 cancelView ->
             EditToolbarSwitcher.switch(

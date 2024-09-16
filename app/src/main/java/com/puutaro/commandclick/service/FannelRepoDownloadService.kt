@@ -188,11 +188,10 @@ class FannelRepoDownloadService: Service() {
     private suspend fun fannelRepoDownload(
         context: Context
     ){
-        val urlFileSystems = UrlFileSystems()
         val concurrentLimit = 10
         val semaphore = Semaphore(concurrentLimit)
         val fannelList = withContext(Dispatchers.IO) {
-            urlFileSystems.execGetFannelList(context).split("\n")
+            UrlFileSystems.getFannelList(context).split("\n")
         }
         withContext(Dispatchers.IO) {
             val jobList = fannelList.map {
@@ -201,7 +200,7 @@ class FannelRepoDownloadService: Service() {
                 ) return@map null
                 async {
                     semaphore.withPermit {
-                        val downloadUrl = "${urlFileSystems.gitUserContentFannelPrefix}/${it}"
+                        val downloadUrl = "${UrlFileSystems.gitUserContentFannelPrefix}/${it}"
                         val conByteArray = CurlManager.get(
                             context,
                             downloadUrl,

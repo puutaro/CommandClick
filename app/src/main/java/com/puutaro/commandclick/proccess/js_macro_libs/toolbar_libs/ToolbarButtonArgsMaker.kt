@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -9,7 +9,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.CcPathTool
@@ -17,58 +16,63 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
+import java.lang.ref.WeakReference
 
 class ToolbarButtonArgsMaker(
-    val editFragment: EditFragment,
+//    val editFragment: WeakReference<EditFragment>,
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     private val isLongClick: Boolean,
 ) {
-    private val context = editFragment.context
-    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
-    private val languageTypeToSectionHolderMap =
-        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-            languageType
-        )
-    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-    ) as String
+//    private val context = editFragment.context
+////    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
+////    private val languageTypeToSectionHolderMap =
+////        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+////            languageType
+////        )
+//    val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+//    val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+//
+////    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+////        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+////    ) as String
+////
+////    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+////        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+////    ) as String
+//
+//    val fannelInfoMap = editFragment.fannelInfoMap
+//
+//    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+////        FannelInfoTool.getCurrentAppDirPath(
+////        fannelInfoMap
+////    )
+//    val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
+//        fannelInfoMap
+//    )
+//    val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+//
+//    private val currentScriptContentsList = ReadText(
+//        File(
+//            cmdclickDefaultAppDirPath,
+//            currentScriptFileName
+//        ).absolutePath
+//    ).textToList()
+//    val setReplaceVariableMap = let {
+//        val settingVariableList = CommandClickVariables.extractValListFromHolder(
+//            currentScriptContentsList,
+//            settingSectionStart,
+//            settingSectionEnd
+//        )
+//        SetReplaceVariabler.makeSetReplaceVariableMap(
+//            context,
+//            settingVariableList,
+////            cmdclickDefaultAppDirPath,
+//            currentScriptFileName,
+//        )
+//    }
 
-    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    val fannelInfoMap = editFragment.fannelInfoMap
-
-    val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-    val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-
-    private val currentScriptContentsList = ReadText(
-        File(
-            currentAppDirPath,
-            currentScriptFileName
-        ).absolutePath
-    ).textToList()
-    val setReplaceVariableMap = let {
-        val settingVariableList = CommandClickVariables.extractValListFromHolder(
-            currentScriptContentsList,
-            settingSectionStart,
-            settingSectionEnd
-        )
-        SetReplaceVariabler.makeSetReplaceVariableMap(
-            context,
-            settingVariableList,
-            currentAppDirPath,
-            currentScriptFileName,
-        )
-    }
-
-    val toolbarButtonConfigMap =
-        editFragment.toolbarButtonConfigMap?.get(toolbarButtonBariantForEdit)
+//    val toolbarButtonConfigMap =
+//        editFragment.toolbarButtonConfigMap?.get(toolbarButtonBariantForEdit)
 
     companion object {
         private val onScriptSaveOffInClick = ClickSettingsForToolbarButton.OnScriptSave.OFF.name
@@ -106,9 +110,9 @@ class ToolbarButtonArgsMaker(
             jsActionMap: Map<String, String>?
         ): List<List<Pair<String, String>>> {
             val fannelInfoMap = editFragment.fannelInfoMap
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             val currentFannelName = FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
@@ -128,10 +132,11 @@ class ToolbarButtonArgsMaker(
                     true -> settingMenuSettingFilePathObj.isFile
                     else -> false
                 }
+            val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             val settingMenuMapCon = when(isSettingMenuSettingFilePath){
                 true -> SettingFile.read(
                     settingMenuSettingFilePathObj.absolutePath,
-                    File(currentAppDirPath, currentFannelName).absolutePath,
+                    File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,
                 )
                 else -> SettingFile.formSettingContents(
@@ -142,7 +147,7 @@ class ToolbarButtonArgsMaker(
                 editFragment.context,
                 editFragment.busyboxExecutor,
                 settingMenuMapCon,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
                 setReplaceVariableMap
             )
@@ -153,12 +158,12 @@ class ToolbarButtonArgsMaker(
         }
     }
 
-    fun decideClickKey(): String {
-        return when(isLongClick){
-            true -> SettingButtonConfigMapKey.LONG_CLICK.key
-            else -> SettingButtonConfigMapKey.CLICK.key
-        }
-    }
+//    fun decideClickKey(): String {
+//        return when(isLongClick){
+//            true -> SettingButtonConfigMapKey.LONG_CLICK.key
+//            else -> SettingButtonConfigMapKey.CLICK.key
+//        }
+//    }
 }
 
 private fun makeSettingMenuDefaultConForEdit(): String {
@@ -199,13 +204,15 @@ private fun makeSettingMenuDefaultConForEdit(): String {
                     |${iconKey}=setting
                     |${jsPathKey}=${MacroForToolbarButton.Macro.SHORTCUT.name}
                     |${parentMenuKey}=setting,
-                ${menuNameKey}=termux setup
-                    |${iconKey}=setup
-                    |${jsPathKey}=${MacroForToolbarButton.Macro.TERMUX_SETUP.name}
-                    |${parentMenuKey}=setting,
-                ${menuNameKey}=config
-                    |${iconKey}=edit_frame
-                    |${jsPathKey}=${MacroForToolbarButton.Macro.CONFIG.name}
-                    |${parentMenuKey}=setting,
     """.trimIndent()
 }
+
+
+//${menuNameKey}=config
+//|${iconKey}=edit_frame
+//|${jsPathKey}=${MacroForToolbarButton.Macro.CONFIG.name}
+//|${parentMenuKey}=setting,
+//${menuNameKey}=termux setup
+//|${iconKey}=setup
+//|${jsPathKey}=${MacroForToolbarButton.Macro.TERMUX_SETUP.name}
+//|${parentMenuKey}=setting,

@@ -32,9 +32,9 @@ object SearchBoxSettingsForListIndex {
             fragment !is EditFragment
         ) return currentVariableValue
         val fannelInfoMap = fragment.fannelInfoMap
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -57,7 +57,7 @@ object SearchBoxSettingsForListIndex {
         ){
             true -> {
                 val fannelTitleStr = TitleImageAndViewSetter.makeCompressFannelPath(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                 )
                 replaceBackstackCurrentVariableValue.replace(

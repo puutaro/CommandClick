@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
@@ -9,22 +10,23 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.lang.ref.WeakReference
 
 class JsFileOrDirGetter(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap = terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
+//    private val context = terminalFragment.context
+//    private val activity = terminalFragment.activity
+//    private val fannelInfoMap = terminalFragment.fannelInfoMap
+////    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////        fannelInfoMap
+////    )
+//    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
+//        fannelInfoMap
+//    )
+//    private val currentFannelState = FannelInfoTool.getCurrentStateName(
+//        fannelInfoMap
+//    )
     private val filterMapSeparator = '|'
 
     @JavascriptInterface
@@ -71,9 +73,21 @@ class JsFileOrDirGetter(
         ```
                 `
         */
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
@@ -83,10 +97,10 @@ class JsFileOrDirGetter(
             ) {
                 true -> ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                     editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                    ListIndexAdapter.indexListMap,
+                    ListIndexAdapter.listIndexTypeKey
                 )
-                else -> currentAppDirPath
+                else -> UsePath.cmdclickDefaultAppDirPath
             }
         val filterMap = CmdClickMap.createMap(
             filterMapCon,

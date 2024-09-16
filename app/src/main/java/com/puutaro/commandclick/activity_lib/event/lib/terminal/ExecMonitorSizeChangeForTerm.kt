@@ -41,10 +41,9 @@ object ExecMonitorSizeChangeForTerm {
         activity: MainActivity,
         fannelInfoMap: Map<String, String>,
     ){
-        val targetFragmentInstance = TargetFragmentInstance()
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -53,16 +52,16 @@ object ExecMonitorSizeChangeForTerm {
         )
 
         val cmdIndexFragment =
-            targetFragmentInstance.getCmdIndexFragment(activity)
+            TargetFragmentInstance.getCmdIndexFragment(activity)
         if(cmdIndexFragment != null){
-            MonitorSizeManager.changeForCmdIndexFragment(
-                cmdIndexFragment,
-            )
+//            MonitorSizeManager.changeForCmdIndexFragment(
+//                cmdIndexFragment,
+//            )
             return
         }
-        val editFragment = targetFragmentInstance.getCurrentEditFragmentFromActivity(
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromActivity(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return

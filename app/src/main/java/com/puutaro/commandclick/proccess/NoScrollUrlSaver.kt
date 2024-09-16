@@ -6,7 +6,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 object NoScrollUrlSaver {
     fun save(
         fragment: androidx.fragment.app.Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         fannelName: String,
     ){
         val context = fragment.context
@@ -14,14 +14,14 @@ object NoScrollUrlSaver {
             is CommandIndexFragment -> {
                 val listener = context as? CommandIndexFragment.OnUpdateNoSaveUrlPathsListener
                 listener?.onUpdateNoSaveUrlPaths(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                 )
             }
             is EditFragment -> {
                 val listener = context as? EditFragment.OnUpdateNoSaveUrlPathsListenerForEdit
                 listener?.onUpdateNoSaveUrlPathsForEdit(
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     fannelName,
                 )
             }

@@ -7,8 +7,7 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.FannelListVariable
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ClickScriptSaver
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
@@ -36,7 +35,7 @@ object ListIndexEditConfig {
         editFragment: EditFragment,
         isLongClick: Boolean,
         selectedItem: String,
-        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        holder: ListIndexAdapter.ListIndexListViewHolder,
         listIndexPosition: Int
     ){
         val clickConfigListCon = makeClickConfigListStr(
@@ -66,7 +65,7 @@ object ListIndexEditConfig {
 //            ).joinToString("\n\n")
 //        )
         val mainFannelPath = File(
-            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+            UsePath.cmdclickDefaultAppDirPath,
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
         val jsActionMap = JsActionTool.makeJsActionMap(
@@ -81,7 +80,8 @@ object ListIndexEditConfig {
             '|'
         )
         val listIndexArgsMaker = ListIndexArgsMaker(
-            editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
             clickConfigPairList,
         )
 
@@ -237,8 +237,8 @@ object ListIndexEditConfig {
         busyboxExecutor: BusyboxExecutor?,
     ): String {
         return when(listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> fileNameSrc
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> fileNameSrc
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> {
                 makeFannelName(
@@ -317,11 +317,11 @@ object ListIndexEditConfig {
     fun makeFileDesc(
         makeFileDescArgsMaker: MakeFileDescArgsMaker
     ): String? {
-        return when(ListIndexForEditAdapter.listIndexTypeKey){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
-                FannelListVariable.getDesc(
-                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
-                )
+        return when(ListIndexAdapter.listIndexTypeKey){
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
+//                FannelListVariable.getDesc(
+//                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
+//                )
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
                 makeDescCon(
                     makeFileDescArgsMaker,

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.EditFragment
@@ -26,23 +26,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsFileAdder(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-
-    private val activity = terminalFragment.activity
-    private val fannelInfoMap =
-        terminalFragment.fannelInfoMap
-    private val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-        fannelInfoMap
-    )
-    private val currentFannelName = FannelInfoTool.getCurrentFannelName(
-        fannelInfoMap
-    )
-    private val currentFannelState = FannelInfoTool.getCurrentStateName(
-        fannelInfoMap
-    )
 
     @JavascriptInterface
     fun add(
@@ -81,9 +69,19 @@ class JsFileAdder(
 
         */
 
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val activity = terminalFragment.activity
+        val fannelInfoMap = terminalFragment.fannelInfoMap
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+            fannelInfoMap
+        )
+        val currentFannelState = FannelInfoTool.getCurrentStateName(
+            fannelInfoMap
+        )
+        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentFannelState
         ) ?: return
@@ -100,7 +98,7 @@ class JsFileAdder(
         compFileNameMapCon: String,
         separator: String,
     ){
-        val fileName = JsDialog(terminalFragment).prompt(
+        val fileName = JsDialog(terminalFragmentRef).prompt(
             "Type item name",
             String(),
             String()
@@ -112,8 +110,8 @@ class JsFileAdder(
             editFragment
         )
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> return
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
                 execAddForTsv(
                     editFragment,
@@ -141,8 +139,8 @@ class JsFileAdder(
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.indexListMap,
+                ListIndexAdapter.listIndexTypeKey
             )
         val compFileNameMap = CmdClickMap.createMap(
             compFileNameMapCon,
@@ -154,7 +152,7 @@ class JsFileAdder(
             compFileNameMap,
         )
         ListIndexDuplicate.isFileDetect(
-            parentDirPath,
+//            parentDirPath,
             compFileName,
         ).let {
             isDetect ->
@@ -207,7 +205,7 @@ class JsFileAdder(
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
+                ListIndexAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
             )  ?: String()
         ListIndexDuplicate.isTsvDetect(

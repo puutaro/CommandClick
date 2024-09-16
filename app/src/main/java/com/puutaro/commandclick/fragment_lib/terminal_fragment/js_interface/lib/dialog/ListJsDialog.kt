@@ -20,13 +20,12 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
 
 class ListJsDialog(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private val searchSwitchThreshold = 5
     private var listDialog: Dialog? = null
@@ -42,6 +41,9 @@ class ListJsDialog(
         message: String,
         listSource: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
@@ -68,7 +70,10 @@ class ListJsDialog(
         message: String,
         listSource: String,
     ) {
-        val context = context ?: return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         listDialog = Dialog(
             context
         )
@@ -143,6 +148,7 @@ class ListJsDialog(
         })
 
         invokeListItemSetClickListenerForListDialog(
+            terminalViewModel,
             dialogListView,
         )
 
@@ -150,9 +156,9 @@ class ListJsDialog(
 
 
     private fun invokeListItemSetClickListenerForListDialog(
+        terminalViewModel: TerminalViewModel,
         dialogListView: ListView?,
     ) {
-
         dialogListView?.setOnItemClickListener {
                 parent, View, pos, id
             ->

@@ -8,8 +8,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/menu_list_thumbnail"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:padding="0dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
@@ -30,6 +30,7 @@
         android:paddingEnd="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        android:gravity="center_vertical"
         />
 <!--    android:drawableStart="@drawable/icons8_edit"-->
 <!--    android:drawablePadding="20dp"-->

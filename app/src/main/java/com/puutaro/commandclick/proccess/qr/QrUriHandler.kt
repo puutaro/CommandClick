@@ -3,18 +3,17 @@ package com.puutaro.commandclick.proccess.qr
 import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
-import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.GitDownloadExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -23,11 +22,12 @@ import com.puutaro.commandclick.service.GitDownloadService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CopyToClip
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.datetime.DateTimeConverter
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +41,7 @@ object QrUriHandler {
 
     fun handle(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         loadConSrcWithNewline: String,
         isMoveCurrentDir: String? = null
     ) {
@@ -51,27 +51,27 @@ object QrUriHandler {
             loadConSrc.startsWith(QrLaunchType.Https.prefix),
                 -> loadUrl(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc
             )
             loadConSrc.startsWith(QrLaunchType.JsDesc.prefix),
             loadConSrc.startsWith(QrLaunchType.Javascript.prefix),
             -> load(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc
             )
             loadConSrc.startsWith(QrLaunchType.CpFile.prefix),
             -> execCpFile(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc,
                 isMoveCurrentDir
             )
             loadConSrc.startsWith(QrLaunchType.ScpDir.prefix),
             -> execScpDir(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc,
             )
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix),
@@ -109,7 +109,7 @@ object QrUriHandler {
             loadConSrc.startsWith(QrLaunchType.ON_GIT.prefix)
             -> execOnGit(
                 fragment,
-                currentAppDirPath,
+//                currentAppDirPath,
                 loadConSrc,
             )
             else
@@ -124,14 +124,18 @@ object QrUriHandler {
         fragment: Fragment,
         copyString: String,
     ){
-        JsUtil(fragment).copyToClipboard(copyString, 10)
+        CopyToClip.copy(
+            fragment,
+            copyString,
+            10
+        )
         ToastUtils.showShort("Copy ok")
     }
 
 
     private fun execCpFile(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cpQrString: String,
         isMoveCurrentDirSrc: String? = null
     ){
@@ -147,8 +151,8 @@ object QrUriHandler {
             cpFileMap,
             CpFileKey.PATH.key,
         ) ?: return
-        val parentDirPath =
-            cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
+//        val parentDirPath =
+//            cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
         val isMoveCurrentDir =
             cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key)
                 ?: isMoveCurrentDirSrc
@@ -164,22 +168,22 @@ object QrUriHandler {
             FileDownloadExtra.FULL_PATH_OR_FANNEL_RAW_NAME.schema,
             filePath
         )
-        intent.putExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
-            currentAppDirPath
-        )
+//        intent.putExtra(
+//            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
+//            currentAppDirPath
+//        )
         isMoveCurrentDir?.let {
             intent.putExtra(
                 FileDownloadExtra.IS_MOVE_TO_CURRENT_DIR.schema,
                 it
             )
         }
-        parentDirPath?.let {
-            intent.putExtra(
-                FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
-                it
-            )
-        }
+//        parentDirPath?.let {
+//            intent.putExtra(
+//                FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
+//                it
+//            )
+//        }
         try {
             context?.let {
                 ContextCompat.startForegroundService(context, intent)
@@ -194,7 +198,7 @@ object QrUriHandler {
 
     private fun execScpDir(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         cpQrString: String,
     ) {
         val context = fragment.context
@@ -206,7 +210,7 @@ object QrUriHandler {
         ) ?: return
         val destiDirPath = CcPathTool.convertAppDirPathToLocal(
             srcDirPath,
-            currentAppDirPath,
+//            currentAppDirPath,
         )
         val ipv4Address = getRequireKey(
             scpDirMap,
@@ -292,7 +296,7 @@ object QrUriHandler {
 
     private fun execOnGit(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         onGitCon: String
     ){
         val gitDownloadService = GitDownloadService::class.java
@@ -323,10 +327,10 @@ object QrUriHandler {
             GitDownloadExtra.FANNEL_RAW_NAME.schema,
             fannelRawName
         )
-        intent.putExtra(
-            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
-            currentAppDirPath
-        )
+//        intent.putExtra(
+//            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
+//            currentAppDirPath
+//        )
         intent.putExtra(
             GitDownloadExtra.FANNEL_LIST_PATH.schema,
             fannelListPath
@@ -379,7 +383,6 @@ object QrUriHandler {
         val gCalendarMap = QrMapper.convertScanConToMap(
             gCalendarStr
         )
-        val jsUtil = JsUtil(fragment)
         gCalendarMap.get(GCalendarKey.TITLE.key)
             ?: return
         putExtraStr(
@@ -406,13 +409,11 @@ object QrUriHandler {
             intent,
             gCalendarMap,
             GCalendarKey.BIGIN_TIME.key,
-            jsUtil,
         )
         putExtraDate(
             intent,
             gCalendarMap,
             GCalendarKey.END_TIME.key,
-            jsUtil,
         )
         context.startActivity(intent)
     }
@@ -437,10 +438,9 @@ object QrUriHandler {
         intent: Intent,
         map: Map<String, String?>?,
         key: String,
-        jsUtil: JsUtil,
     ){
         map?.get(key)?.let {
-            val miliTime =  jsUtil.convertDateTimeToMiliTime(it)
+            val miliTime =  DateTimeConverter.convert(it)
             intent.putExtra(
                 key,
                 miliTime
@@ -533,29 +533,27 @@ object QrUriHandler {
 
     fun loadUrl(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         loadConSrc: String
     ) {
-        val targetFragmentInstance = TargetFragmentInstance()
         val terminalFragment =
-            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
+            TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
                 ?: return
 
-        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
+        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayoutCompat.LayoutParams
             ?: return
         val loadUrl =
             ScriptPreWordReplacer.replaceForQr(
                 loadConSrc,
-                currentAppDirPath
+//                currentAppDirPath
             )
         val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
         when(onLaunchByWebViewDialog){
             true -> {
-                val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                        UsePath.JS_FILE_SUFFIX
+                val webSearcherName = SystemFannel.webSearcher
                 ExecJsLoad.execExternalJs(
                     fragment,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     webSearcherName,
                     listOf(loadUrl)
                 )
@@ -568,14 +566,14 @@ object QrUriHandler {
     }
     fun load(
         fragment: Fragment,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         loadConSrc: String
     ) {
         val jsDesc = QrLaunchType.JsDesc.prefix
         val replaceLoadUrlSrc =
             ScriptPreWordReplacer.replaceForQr(
                 loadConSrc,
-                currentAppDirPath
+//                currentAppDirPath
             )
         val loadUrl =
             if (

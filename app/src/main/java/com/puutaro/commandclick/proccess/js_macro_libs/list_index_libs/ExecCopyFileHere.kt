@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -21,8 +21,8 @@ object ExecCopyFileHere {
         )
         ToastUtils.showShort("Copy ok")
         when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//            -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> execCopyHereForNormal(
                 editFragment,
@@ -41,7 +41,7 @@ object ExecCopyFileHere {
         listIndexPosition: Int,
     ){
         val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
         val addLine =
             listIndexForEditAdapter.listIndexList[listIndexPosition].let {
                 val titleConList = it.split("\t")
@@ -67,8 +67,8 @@ object ExecCopyFileHere {
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.indexListMap,
+                ListIndexAdapter.listIndexTypeKey
             )
         val srcFilePath = File(parentDirPath, selectedItem).absolutePath
         ExecAddForListIndexAdapter.execAddByCopyFileHere(

@@ -25,14 +25,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.ref.WeakReference
 
 
 class ImageJsDialog(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    val context = terminalFragment.context
-    val activity = terminalFragment.activity
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var imageDialogObj: Dialog? = null
     private val imageDialogMapSeparator = '|'
     private var isSuccess = false
@@ -49,6 +47,10 @@ class ImageJsDialog(
             return false
         }
         isSuccess = false
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return false
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         val imageDialogMap = CmdClickMap.createMap(
             imageDialogMapCon,
@@ -85,7 +87,10 @@ class ImageJsDialog(
         imageSrcFilePath: String,
         imageDialogMap: Map<String, String>?,
     ){
-
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         if(
             context == null
         ){
@@ -157,7 +162,10 @@ class ImageJsDialog(
 
     private fun exitDialog(isOk: Boolean){
         isSuccess = isOk
-        terminalViewModel.onDialog = false
+        terminalFragmentRef.get()?.let {
+            val terminalViewModel: TerminalViewModel by it.activityViewModels()
+            terminalViewModel.onDialog = false
+        }
         imageDialogObj?.dismiss()
         imageDialogObj = null
     }
@@ -185,6 +193,9 @@ class ImageJsDialog(
             FileOutputStream(file).use { stream ->
                 myBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             }
+            val terminalFragment = terminalFragmentRef.get()
+                ?: return@setOnClickListener
+            val context = terminalFragment.context
             IntentVariant.sharePngImage(
                 file,
                 context,

@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.broadcast.extra.GitDownloadExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeGitDownload
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.OnGitKey
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
@@ -137,19 +138,20 @@ class GitDownloadService: Service() {
             applicationContext.sendBroadcast(stanIntent)
             return START_NOT_STICKY
         }
-        currentAppDirPath = intent?.getStringExtra(
-            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema
-        ).let {
-            if(
-                !it.isNullOrEmpty()
-            ) return@let it
-            stanIntent.putExtra(
-                stanSchema,
-                "currentAppDirPath must be specified"
-            )
-            applicationContext.sendBroadcast(stanIntent)
-            return START_NOT_STICKY
-        }
+        currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        intent?.getStringExtra(
+//            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema
+//        ).let {
+//            if(
+//                !it.isNullOrEmpty()
+//            ) return@let it
+//            stanIntent.putExtra(
+//                stanSchema,
+//                "currentAppDirPath must be specified"
+//            )
+//            applicationContext.sendBroadcast(stanIntent)
+//            return START_NOT_STICKY
+//        }
         fannelListPath = intent?.getStringExtra(
             GitDownloadExtra.FANNEL_LIST_PATH.schema
         )

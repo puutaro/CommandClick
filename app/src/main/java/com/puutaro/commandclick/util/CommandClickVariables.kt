@@ -1,18 +1,24 @@
 package com.puutaro.commandclick.util
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.file.UrlFileSystems
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 
 object CommandClickVariables {
+
+    private const val settingSecStart = CommandClickScriptVariable.SETTING_SEC_START
+    private const val settingSecEnd = CommandClickScriptVariable.SETTING_SEC_END
 
     fun substituteCmdClickVariable(
         substituteSettingVariableList: List<String>?,
@@ -97,35 +103,35 @@ object CommandClickVariables {
             }
     }
 
-    fun judgeJsOrShellFromSuffix(
-        shellScriptName: String
-    ): LanguageTypeSelects {
-        if(
-            shellScriptName.endsWith(
-                UsePath.SHELL_FILE_SUFFIX
-            )
-        ) return LanguageTypeSelects.SHELL_SCRIPT
-        return  LanguageTypeSelects.JAVA_SCRIPT
-    }
+//    fun judgeJsOrShellFromSuffix(
+//        shellScriptName: String
+//    ): LanguageTypeSelects {
+//        if(
+//            shellScriptName.endsWith(
+//                UsePath.SHELL_FILE_SUFFIX
+//            )
+//        ) return LanguageTypeSelects.SHELL_SCRIPT
+//        return  LanguageTypeSelects.JAVA_SCRIPT
+//    }
 
     fun extractSettingValListByFannelName(
         shellContentsList: List<String>?,
-        fannelName: String,
+//        fannelName: String,
     ): List<String>? {
-        val languageType =
-            judgeJsOrShellFromSuffix(fannelName)
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        val languageType =
+//            judgeJsOrShellFromSuffix(fannelName)
+//        val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
         return extractValListFromHolder(
             shellContentsList,
-            settingSectionStart,
-            settingSectionEnd,
+            settingSecStart,
+            settingSecEnd,
         )
     }
 
@@ -134,8 +140,8 @@ object CommandClickVariables {
         startHolderName: String?,
         endHolderName: String?,
     ): List<String>? {
-        if(startHolderName.isNullOrEmpty()) return null
-        if(endHolderName.isNullOrEmpty()) return null
+//        if(startHolderName.isNullOrEmpty()) return null
+//        if(endHolderName.isNullOrEmpty()) return null
         if(shellContentsList == null) return null
         val sectionPromptStartNum = shellContentsList.indexOf(
             startHolderName
@@ -156,39 +162,39 @@ object CommandClickVariables {
 
     fun returnSettingVariableList(
         shellContentsList: List<String>,
-        languageTypeSelects: LanguageTypeSelects
+//        languageTypeSelects: LanguageTypeSelects
     ): List<String>? {
-        val languageTypeHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageTypeSelects
-            )
+//        val languageTypeHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//                languageTypeSelects
+//            )
         return extractValListFromHolder(
-                shellContentsList,
-                languageTypeHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-                ),
-                languageTypeHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-                )
+            shellContentsList,
+            settingSecStart,
+            settingSecEnd
+//                languageTypeHolderMap?.get(
+//                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//                ),
+//                languageTypeHolderMap?.get(
+//                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//                )
             )
     }
     fun returnEditExecuteValueStr(
         shellContentsList: List<String>,
-        languageTypeSelects: LanguageTypeSelects
+//        languageTypeSelects: LanguageTypeSelects
     ): String {
-        val languageTypeHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-                languageTypeSelects
-            )
+//        val languageTypeHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+//                languageTypeSelects
+//            )
         val variablesSettingHolderList =
             extractValListFromHolder(
                 shellContentsList,
-                languageTypeHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-                ),
-                languageTypeHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-                )
+                settingSecStart,
+                settingSecEnd
+//                settingSecStart,
+//                settingSecEnd
             )
 
         return substituteCmdClickVariable(
@@ -198,32 +204,62 @@ object CommandClickVariables {
     }
 
     fun makeMainFannelConList(
-        currentAppDirPath: String,
-        scriptName: String,
+//        currentAppDirPath: String,
+        fannelName: String,
         setReplaceVariableMap: Map<String, String>? = null,
     ): List<String> {
-        val isMainFannelDir = currentAppDirPath.removePrefix(
-            UsePath.cmdclickAppDirPath
-        ).removePrefix("/").let{
-            File(it).parent
-        }.isNullOrEmpty()
-        val isFileName = File(scriptName).parent.isNullOrEmpty()
+//        val isMainFannelDir = currentAppDirPath.removePrefix(
+//            UsePath.cmdclickAppDirPath
+//        ).removePrefix("/").let{
+//            File(it).parent
+//        }.isNullOrEmpty()
+        val isFannelName = FannelInfoTool.isEmptyFannelName(fannelName)
         if(
-            !isMainFannelDir
-            && isFileName
+//            !isMainFannelDir
+            isFannelName
         ) return emptyList()
-        val scriptConList = ReadText(
+        val scriptCon = ReadText(
             File(
-                currentAppDirPath,
-                scriptName
+                UsePath.cmdclickDefaultAppDirPath,
+                fannelName
             ).absolutePath
-        ).readText().let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                scriptName,
+        ).readText()
+        return replace(
+            scriptCon,
+            fannelName,
+            setReplaceVariableMap,
+        )
+    }
+
+    fun makeMainFannelConListFromUrl(
+        context: Context?,
+        fannelName: String,
+        setReplaceVariableMap: Map<String, String>? = null,
+    ): List<String> {
+        val fannelCon = runBlocking {
+            UrlFileSystems.getFannel(
+                context,
+                fannelName,
             )
-        }.split("\n")
+        } ?: return emptyList()
+        return replace(
+            fannelCon,
+            fannelName,
+            setReplaceVariableMap,
+        )
+    }
+
+    private fun replace(
+        con: String,
+        fannelName: String,
+        setReplaceVariableMap: Map<String, String>?,
+    ): List<String> {
+
+        val scriptConList = ScriptPreWordReplacer.replace(
+            con,
+//                currentAppDirPath,
+            fannelName,
+        ).split("\n")
         return when(
             setReplaceVariableMap.isNullOrEmpty()
         ){
@@ -231,8 +267,8 @@ object CommandClickVariables {
             else -> SetReplaceVariabler.execReplaceByReplaceVariables(
                 scriptConList.joinToString("\n"),
                 setReplaceVariableMap,
-                currentAppDirPath,
-                scriptName
+//                currentAppDirPath,
+                fannelName
             ).split("\n")
         }
     }

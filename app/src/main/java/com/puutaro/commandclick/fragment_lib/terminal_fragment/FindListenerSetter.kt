@@ -18,9 +18,9 @@ object FindListenerSetter {
                 activeMatchOrdinal, numberOfMatches, isDoneCounting ->
             if(!isDoneCounting) return@setFindListener
             val fannelInfoMap = terminalFragment.fannelInfoMap
-            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-                fannelInfoMap
-            )
+//            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                fannelInfoMap
+//            )
             val currentFannelName = FannelInfoTool.getCurrentFannelName(
                 fannelInfoMap
             )
@@ -28,17 +28,17 @@ object FindListenerSetter {
                 fannelInfoMap
             )
             val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
                 fannelState
             )
             val commandIndexFragment =
-                TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
+                TargetFragmentInstance.getFromFragment<CommandIndexFragment>(
                     terminalFragment.activity,
                     context?.getString(R.string.command_index_fragment)
                 )
             val cmdEditFragment =
-                TargetFragmentInstance().getFromFragment<EditFragment>(
+                TargetFragmentInstance.getFromFragment<EditFragment>(
                     terminalFragment.activity,
                     cmdEditFragmentTag
                 )

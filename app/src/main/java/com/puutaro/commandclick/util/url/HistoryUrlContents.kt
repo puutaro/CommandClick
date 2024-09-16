@@ -8,13 +8,14 @@ import java.io.File
 object HistoryUrlContents {
 
     fun extract(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         macroStr: String,
     ): String? {
         val appUrlSystemPath = File(
-            currentAppDirPath,
+            UsePath.cmdclickDefaultAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
         ).absolutePath
+        val autoFocusGgleSearchUrl = WebUrlVariables.autoFocusGgleSearchUrl
         return when(macroStr) {
             SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name -> {
                 ReadText(
@@ -24,9 +25,12 @@ object HistoryUrlContents {
                     ).absolutePath
                 ).textToList()
                     .filter {
-                        EnableUrlPrefix.isHttpOrFilePrefix(
+                        EnableUrlPrefix.isHttpPrefix(
                             it.split("\t").lastOrNull()
-                        )
+                        ) && !it.contains(autoFocusGgleSearchUrl)
+//                        EnableUrlPrefix.isHttpOrFilePrefix(
+//                            it.split("\t").lastOrNull()
+//                        )
                     }
                     .firstOrNull()
                     ?.split("\t")?.lastOrNull()
@@ -39,9 +43,12 @@ object HistoryUrlContents {
                     ).absolutePath
                 ).textToList()
                     .filter {
-                        EnableUrlPrefix.isHttpOrFilePrefix(
+                        EnableUrlPrefix.isHttpPrefix(
                             it.split("\t").lastOrNull()
                         )
+//                        EnableUrlPrefix.isHttpOrFilePrefix(
+//                            it.split("\t").lastOrNull()
+//                        )
                     }
                     .groupBy { it }
                     .mapValues { it.value.size }

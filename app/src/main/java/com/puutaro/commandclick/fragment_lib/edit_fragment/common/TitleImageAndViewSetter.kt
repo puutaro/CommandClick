@@ -1,15 +1,22 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
+import android.graphics.drawable.Drawable
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
-import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import java.io.File
 
 object TitleImageAndViewSetter {
 
@@ -73,9 +80,9 @@ object TitleImageAndViewSetter {
         val fannelInfoMap =
             editFragment.fannelInfoMap
 
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -85,17 +92,19 @@ object TitleImageAndViewSetter {
         return listOf(
             "(${backstackOrder})",
             makeCompressFannelPath(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName
             ),
         ).joinToString(backstackCountSeparator)
     }
 
     fun makeCompressFannelPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentScriptFileName: String
     ): String {
-        return "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
+        return CcPathTool.trimAllExtend(
+            UsePath.makeOmitPath(currentScriptFileName)
+        )
     }
 
     fun makeBackstackCount(
@@ -117,19 +126,72 @@ object TitleImageAndViewSetter {
         val fannelInfoMap =
             editFragment.fannelInfoMap
 
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val binding = editFragment.binding
         val editTitleImageView = binding.editTitleImage
-        QrLogo(editFragment).setTitleQrLogo(
+        FannelLogoSetter.setTitleFannelLogo(
+            editFragment,
             editTitleImageView,
-            currentAppDirPath,
-            currentFannelName
+//        currentAppDirPath: String,
+            currentFannelName,
         )
+//        QrLogo(editFragment).setTitleFannelLogo(
+//            editTitleImageView,
+////            currentAppDirPath,
+//            currentFannelName
+//        )
+    }
+}
+
+private object FannelLogoSetter {
+    fun setTitleFannelLogo(
+        editFragment: EditFragment,
+        titleImageView: AppCompatImageView?,
+//        currentAppDirPath: String,
+        selectedScriptName: String,
+    ){
+        val context = editFragment.context
+            ?: return
+        if(
+            titleImageView == null
+        ) return
+//        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
+        val logoPngPath = listOf(
+            UsePath.fannelLogoPngPath,
+        ).joinToString("/").let {
+            ScriptPreWordReplacer.replace(
+                it,
+                selectedScriptName
+            )
+        }
+//            "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+        if(!File(logoPngPath).isFile) return
+
+//        val isEditExecute = checkEditExecute(
+////            currentAppDirPath,
+//            selectedScriptName,
+//        )
+        titleImageView.setPadding(2, 2,2,2)
+//        titleImageView.background = if(isEditExecute) {
+//            AppCompatResources.getDrawable(context, R.color.terminal_color)
+//        } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
+        val requestBuilder: RequestBuilder<Drawable> =
+            Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        Glide
+            .with(context)
+            .load(logoPngPath)
+            .skipMemoryCache( true )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail( requestBuilder )
+            .into(titleImageView)
+//        titleImageView.load(logoPngPath)
     }
 }
 
@@ -172,9 +234,9 @@ private object EditTextMaker {
         val fannelInfoMap =
             editFragment.fannelInfoMap
 
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -195,7 +257,7 @@ private object EditTextMaker {
             editFragment,
             repValMap,
             shellConSrc,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             currentVariableValue
         )
@@ -223,14 +285,14 @@ private object EditTextMaker {
         editFragment: EditFragment,
         repValMap: Map<String, String>?,
         shellConSrc: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         currentVariableValue: String?
     ): String? {
         val shellCon = SetReplaceVariabler.execReplaceByReplaceVariables(
             shellConSrc,
             editFragment.setReplaceVariableMap,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName
         ).replace(
             "\${defaultEditBoxTitle}",

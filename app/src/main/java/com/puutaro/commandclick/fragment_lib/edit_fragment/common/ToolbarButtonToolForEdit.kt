@@ -15,11 +15,11 @@ object ToolbarButtonToolForEdit {
     )
 
     fun createInitButtonIconMap() = mutableMapOf(
-        ToolbarButtonBariantForEdit.HISTORY to R.drawable.icons8_history,
-        ToolbarButtonBariantForEdit.OK to R.drawable.icons8_check_ok,
-        ToolbarButtonBariantForEdit.EDIT to R.drawable.icons8_edit,
-        ToolbarButtonBariantForEdit.SETTING to R.drawable.icons8_setting,
-        ToolbarButtonBariantForEdit.EXTRA to R.drawable.icons8_setup,
+        ToolbarButtonBariantForEdit.HISTORY to Pair(R.drawable.icons8_history, "fnlCntr"),
+        ToolbarButtonBariantForEdit.OK to Pair(R.drawable.icons8_check_ok, "ok"),
+        ToolbarButtonBariantForEdit.EDIT to Pair(R.drawable.icons8_edit, "edit"),
+        ToolbarButtonBariantForEdit.SETTING to Pair(R.drawable.icons8_setting, "setting"),
+        ToolbarButtonBariantForEdit.EXTRA to Pair(R.drawable.icons8_setup, "setup"),
     )
 
     fun culcButtonWeight(

@@ -43,14 +43,16 @@ function schBoxFocusOrSearch(highlightUrlString){
             if(!isAreaLabel) return;
             el.blur();
             jsKeyboard.show();
-            setTimeout(
-                function(){
-                    el.blur();
-                    el.focus();
-                    el.select();
-                },
-                200
-            );
+             el.focus();
+            el.select();
+//            setTimeout(
+//                function(){
+//                    //el.blur();
+//                    el.focus();
+//                    el.select();
+//                },
+//                50
+//            );
             focusOk = true;
             return true;
         });

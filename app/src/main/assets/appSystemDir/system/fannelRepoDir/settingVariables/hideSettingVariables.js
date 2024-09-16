@@ -1,7 +1,0 @@
-terminalDo,
-editExecute,
-onUrlHistoryRegister,
-onUpdateLastModify,
-disablePlayButton,
-setReplaceVariables,
-setVariableTypes,

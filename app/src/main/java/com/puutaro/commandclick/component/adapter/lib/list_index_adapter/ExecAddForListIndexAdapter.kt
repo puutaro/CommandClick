@@ -2,7 +2,7 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -22,7 +22,7 @@ object ExecAddForListIndexAdapter {
 
     private fun getInsertIndex(
         sortType: ListSettingsForListIndex.SortByKey,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
+        listIndexForEditAdapter: ListIndexAdapter,
         addLine: String,
     ): Int {
         val virtualListIndexList = listIndexForEditAdapter.listIndexList + listOf(addLine)
@@ -40,7 +40,7 @@ object ExecAddForListIndexAdapter {
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
         val listIndexAdapter =
-            binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            binding.editListRecyclerView.adapter as ListIndexAdapter
         listIndexAdapter.listIndexList.add(insertIndex, addLine)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -62,12 +62,12 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         sourceFilePath: String,
     ){
-        val indexListMap = ListIndexForEditAdapter.indexListMap
+        val indexListMap = ListIndexAdapter.indexListMap
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
                 indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.listIndexTypeKey
             )
         val sourceFilePathObj = File(sourceFilePath)
         val srcParentDirPath = sourceFilePathObj.parent
@@ -94,12 +94,12 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         sourceFilePathList: List<String>,
     ){
-        val indexListMap = ListIndexForEditAdapter.indexListMap
+        val indexListMap = ListIndexAdapter.indexListMap
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
                 indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.listIndexTypeKey
             )
         sourceFilePathList.forEach {
             sourceFilePath ->
@@ -124,12 +124,12 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         sourceFilePathList: List<String>,
     ){
-        val indexListMap = ListIndexForEditAdapter.indexListMap
+        val indexListMap = ListIndexAdapter.indexListMap
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
                 indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.listIndexTypeKey
             )
         sourceFilePathList.forEach {
                 sourceFilePath ->
@@ -157,7 +157,7 @@ object ExecAddForListIndexAdapter {
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
+                ListIndexAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
             )  ?: String()
         if(
@@ -196,11 +196,11 @@ object ExecAddForListIndexAdapter {
     ){
         val context = editFragment.context
         val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
+                ListIndexAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
             )  ?: String()
 //        FileSystems.writeFile(
@@ -238,7 +238,7 @@ object ExecAddForListIndexAdapter {
         }
         val sortType = ListSettingsForListIndex.getSortType(
             editFragment,
-            ListIndexForEditAdapter.indexListMap
+            ListIndexAdapter.indexListMap
         )
         val insertIndex = getInsertIndex(
             sortType,
@@ -279,7 +279,7 @@ object ExecAddForListIndexAdapter {
     ){
         val sortType = ListSettingsForListIndex.getSortType(
             editFragment,
-            ListIndexForEditAdapter.indexListMap
+            ListIndexAdapter.indexListMap
         )
         when(sortType){
             ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
@@ -287,8 +287,8 @@ object ExecAddForListIndexAdapter {
                     editFragment,
                     ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                         editFragment,
-                        ListIndexForEditAdapter.indexListMap,
-                        ListIndexForEditAdapter.listIndexTypeKey
+                        ListIndexAdapter.indexListMap,
+                        ListIndexAdapter.listIndexTypeKey
                     )
                 )
             ListSettingsForListIndex.SortByKey.SORT,
@@ -305,12 +305,12 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertFilePath: String,
     ){
-        val indexListMap = ListIndexForEditAdapter.indexListMap
+        val indexListMap = ListIndexAdapter.indexListMap
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
                 editFragment,
                 indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                ListIndexAdapter.listIndexTypeKey
             )
         val filterPrefix = FilePrefixGetter.get(
             editFragment,
@@ -339,10 +339,10 @@ object ExecAddForListIndexAdapter {
             fileNameElement.isNullOrEmpty()
         ) return
         val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
         val sortType = ListSettingsForListIndex.getSortType(
             editFragment,
-            ListIndexForEditAdapter.indexListMap
+            ListIndexAdapter.indexListMap
         )
         val insertIndex = getInsertIndex(
             sortType,

@@ -6,9 +6,10 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsFannelInstaller(
-    terminalFragment: TerminalFragment
+    terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
     @JavascriptInterface
@@ -21,7 +22,7 @@ class JsFannelInstaller(
         if(
             !selectedFannelPathObj.isFile
         ) return
-        val recentAppDirPath = FileSystems.getRecentAppDirPath()
+        val recentAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val installFannelPathObj =  File("${recentAppDirPath}/${selectedFannel}")
         val compMessage = when(installFannelPathObj.isFile) {
             false -> "install ok: ${selectedFannel}"

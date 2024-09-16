@@ -14,18 +14,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 class DebugJsAlert(
-    terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val context = terminalFragment.context
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var alertDialogObj: Dialog? = null
 
     fun create(
         title: String,
         body: String,
     ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+        val context = terminalFragment.context
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalViewModel.onDialog = true
         runBlocking {
             withContext(Dispatchers.Main) {
@@ -54,6 +57,9 @@ class DebugJsAlert(
         title: String,
         body: String,
     ) {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
         if(
             context == null
         ) {
@@ -107,8 +113,11 @@ class DebugJsAlert(
     }
 
     private fun dismissProcess(){
+        terminalFragmentRef.get()?.let {
+            val terminalViewModel: TerminalViewModel by it.activityViewModels()
+            terminalViewModel.onDialog = false
+        }
         alertDialogObj?.dismiss()
         alertDialogObj = null
-        terminalViewModel.onDialog = false
     }
 }

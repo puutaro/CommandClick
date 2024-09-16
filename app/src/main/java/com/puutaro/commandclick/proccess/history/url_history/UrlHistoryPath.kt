@@ -1,29 +1,34 @@
 package com.puutaro.commandclick.proccess.history.url_history
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.url.WebUrlVariables
 import java.io.File
 
 
 object UrlHistoryPath {
 
     const val lastModifyExtend = ".lastModified"
+    const val partPngDirName = "partPng"
+    val toolbarUrlImageDirPath = File(UsePath.cmdclickFannelSystemDirPath, "toolbarButtonImage").absolutePath
+    val selectionTextBarImageDirPath = File(UsePath.cmdclickFannelSystemDirPath, "selectionTextBarImage").absolutePath
 
     fun makePathNameFromUrl(
         url: String
     ): String {
-        return url.replace(
-            Regex("[^a-zA-Z0-9_%-]+"),
-            ""
-        ).takeLast(20)
+        val originalUrl = url.trim().let {
+            CcPathTool.toValidPathWord(it.hashCode().toString())
+        }
+        return originalUrl.take(20)
     }
 
     fun getCapturePngPathsByUrl(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String,
     ): List<String>? {
         val capturePartsPngDirPath = getCapturePartsPngDirPath(
-            currentAppDirPath,
+//            currentAppDirPath,
             url
         )
         if(
@@ -37,67 +42,67 @@ object UrlHistoryPath {
     }
 
     fun makeCaptureHistoryDirPath(
-        currentAppDirPath: String
+//        currentAppDirPath: String
     ): String {
         return File(
-            File(currentAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
+            File(UsePath.cmdclickDefaultAppDirPath, UsePath.cmdclickUrlSystemDirRelativePath).absolutePath,
             "capture"
         ).absolutePath
     }
 
     fun makeCaptureHistoryLastModifiedFilePath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String,
     ): String {
         return File(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(url),
         ).absolutePath + lastModifyExtend
     }
 
     fun getCaptureUniqueDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         url: String
     ): String {
         return File(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(url),
         ).absolutePath
     }
 
 
     fun getCapturePartsPngDirPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentUrl: String,
     ): String {
         return listOf(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
-            "partPng"
+            partPngDirName
         ).joinToString("/").replace(
             Regex("[/]+"), "/"
         )
     }
 
-    fun getCaptureGifTextPath(
-        currentAppDirPath: String,
-        currentUrl: String,
-    ): String {
-        return listOf(
-            makeCaptureHistoryDirPath(currentAppDirPath),
-            makePathNameFromUrl(currentUrl),
-            "gif.txt"
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
-    }
+//    fun getCaptureGifTextPath(
+////        currentAppDirPath: String,
+//        currentUrl: String,
+//    ): String {
+//        return listOf(
+//            makeCaptureHistoryDirPath(),
+//            makePathNameFromUrl(currentUrl),
+//            "gif.txt"
+//        ).joinToString("/").replace(
+//            Regex("[/]+"), "/"
+//        )
+//    }
 
     fun getCaptureGifPath(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentUrl: String,
     ): String {
         return listOf(
-            makeCaptureHistoryDirPath(currentAppDirPath),
+            makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
             "gif.gif"
         ).joinToString("/").replace(

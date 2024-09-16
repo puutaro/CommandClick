@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.text.Spannable
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 object SppannableAdapterTool {
 
     fun setSpannableView(
-        fragment: Fragment,
+        activity: Activity?,
         spannableView: TextView?,
         imagePath: String,
         textImagePngBitMap: Bitmap,
@@ -24,7 +25,8 @@ object SppannableAdapterTool {
             pdfImagePngBitMap,
             textImagePngBitMap,
         ) as Bitmap
-        val baseWidth = (ScreenSizeCalculator.dpWidth(fragment) * 50) / 100
+        val baseWidth =
+            activity?.let { (ScreenSizeCalculator.dpWidth(it) * 50) / 100 } ?: 0f
         val resizeScale: Double =
             (baseWidth / beforeResizeBitMap.width).toDouble()
         val bitMap = Bitmap.createScaledBitmap(

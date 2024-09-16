@@ -7,11 +7,11 @@ import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
-import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
@@ -21,7 +21,6 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.str.QuoteTool
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 object MultiFileSelectGridViewProducer {
@@ -31,17 +30,17 @@ object MultiFileSelectGridViewProducer {
     private var alertDialog: AlertDialog? = null
 
     fun make (
+        fragment: Fragment,
         insertEditText: EditText,
         editParameters: EditParameters,
         currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val editFragment = editParameters.currentFragment as EditFragment
-        val context = editParameters.context
+        val context = fragment.context
         val currentId = editParameters.currentId
-        val linearParamsForGrid = LinearLayout.LayoutParams(
+        val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
             0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
         )
         linearParamsForGrid.weight = weight
         val fcbMap = FileSelectSpinnerViewProducer.getFcbMap(
@@ -50,7 +49,7 @@ object MultiFileSelectGridViewProducer {
         )
         val filterDir = getSelectDirPath(
             fcbMap,
-            editParameters,
+//            editParameters,
         )
         val filterPrefixListCon = getFilterPrefix(
             fcbMap,
@@ -107,7 +106,7 @@ object MultiFileSelectGridViewProducer {
             val linearLayoutForTotal = LinearLayoutForTotal.make(
                 context
             )
-            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment)
+            val searchTextWeight = SearchTextLinearWeight.calculate(fragment.activity)
             val listWeight = 1F - searchTextWeight
             val linearLayoutForListView = NestLinearLayout.make(
                 context,
@@ -122,7 +121,7 @@ object MultiFileSelectGridViewProducer {
             linearLayoutForTotal.addView(linearLayoutForSearch)
 
             setGridViewItemClickListener(
-                editFragment,
+                fragment,
                 gridView,
             )
 
@@ -254,19 +253,20 @@ object MultiFileSelectGridViewProducer {
 
     private fun getSelectDirPath(
         fcbMap: Map<String, String>?,
-        editParameters: EditParameters,
+//        editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            editParameters.fannelInfoMap
-        )
+        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            editParameters.fannelInfoMap
+//        )
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
         )?.let {
             if (
                 it.isEmpty()
-            ) return@let currentAppDirPath
+            ) return@let cmdclickDefaultAppDirPath
             it
-        } ?: currentAppDirPath
+        } ?: cmdclickDefaultAppDirPath
     }
 
     private fun getFilterPrefix(

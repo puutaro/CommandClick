@@ -114,7 +114,7 @@ object SetVariableTyper {
 
     fun makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentShellFileName: String,
         setReplaceVariableMap: Map<String, String>?
     ): List<String>? {
@@ -142,7 +142,7 @@ object SetVariableTyper {
                 )
             ) return@map setTargetVariableValueSource
             makeSetVariableValueFromConfigFile(
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentShellFileName,
                 setReplaceVariableMap
             )
@@ -156,7 +156,7 @@ object SetVariableTyper {
     }
 
     private fun makeSetVariableValueFromConfigFile(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentShellFileName: String,
         setReplaceVariableMap: Map<String, String>?
     ): String {
@@ -164,7 +164,7 @@ object SetVariableTyper {
             setVariableTypesConfigPathSrc.removePrefix(
                 filePrefix
             ),
-            currentAppDirPath,
+//            currentAppDirPath,
             currentShellFileName,
             setReplaceVariableMap,
         )
@@ -172,18 +172,18 @@ object SetVariableTyper {
 
     private fun makeSetVariableValueFromFilePath(
         configFilePath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentShellFileName: String,
         setReplaceVariableMap: Map<String, String>?
     ): String {
         val setVariableTypesConfigPath =
             ScriptPreWordReplacer.replace(
                 configFilePath,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentShellFileName,
             )
         return SettingFile.read(
-            File(currentAppDirPath, currentShellFileName).absolutePath,
+            File(UsePath.cmdclickDefaultAppDirPath, currentShellFileName).absolutePath,
             setVariableTypesConfigPath,
             setReplaceVariableMap,
         )
@@ -354,7 +354,7 @@ private object AlterToolForSetValType {
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             alterValue,
             replaceVariableMap,
-            String(),
+//            String(),
             String()
         ).let {
             CmdClickMap.createMap(

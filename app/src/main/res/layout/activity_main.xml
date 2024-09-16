@@ -15,21 +15,21 @@
             type="com.puutaro.commandclick.view_model.activity.TerminalViewModel"/>
         <import type="android.view.View"/>
     </data>
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/root_container"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.puutaro.commandclick.activity.MainActivity"
         >
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/main_container"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

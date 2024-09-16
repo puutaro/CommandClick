@@ -5,8 +5,8 @@ import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -69,27 +69,34 @@ object JsActionTool {
 
     object ExcludeSettingVariable {
 
-        private val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
-        private val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-        ) as String
-        private val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-        ) as String
-        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
+//        private val languageTypeToSectionHolderMap =
+//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+        private val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
+        private val labelingSectionEnd =  CommandClickScriptVariable.LABELING_SEC_END
+        private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+        private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-        private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-        ) as String
+        private val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+        private val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
+//        private val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+//        ) as String
+//        private val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+//        ) as String
+//        private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+//        ) as String
+//        private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+//        ) as String
+
+//        private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+//        ) as String
+//        private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+//            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+//        ) as String
         fun exclude(
             jsList: List<String>,
         ): List<String> {
@@ -810,7 +817,7 @@ object JsActionTool {
         val jsConOnlyReplace = SetReplaceVariabler.execReplaceByReplaceVariables(
             jsConBeforeJsImport,
             setReplaceVariableMap,
-            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
+//            FannelInfoTool.getCurrentAppDirPath(fannelInfoMap),
             FannelInfoTool.getCurrentFannelName(fannelInfoMap),
         )
         return jsCon to jsConOnlyReplace
@@ -851,9 +858,9 @@ private object KeyToSubKeyMapListMaker {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<List<Pair<String, Map<String, String>>>, List<Pair<String, String>>> {
-        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-            fannelInfoMap
-        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -879,7 +886,7 @@ private object KeyToSubKeyMapListMaker {
                 ) return@map listOf(keyToSubKeyPair)
                 val putKeyToSubKeyConToErrType =
                     ActionImportPutter.put(
-                        currentAppDirPath,
+//                        currentAppDirPath,
                         currentFannelName,
                         setReplaceVariableMap,
                         keyToSubKeyPair
@@ -1094,7 +1101,7 @@ private object ActionImportPutter {
         }.joinToString("\n") + "\n"
     }
     fun put(
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyPair: Pair<String, String>,
@@ -1151,7 +1158,7 @@ private object ActionImportPutter {
                 val importConListToErrType = makeImportConSrcToErrType(
                     actionImportMap,
                     importPath,
-                    currentAppDirPath,
+//                    currentAppDirPath,
                     currentFannelName,
                     setReplaceVariableMap,
                 )
@@ -1179,7 +1186,7 @@ private object ActionImportPutter {
             ListSettingVariableListMaker.execRemoveMultipleNewLinesAndReplace(
                 it,
                 setReplaceVariableMap,
-                currentAppDirPath,
+//                currentAppDirPath,
                 currentFannelName,
             ) to errType
         }
@@ -1188,13 +1195,13 @@ private object ActionImportPutter {
     private fun makeImportConSrcToErrType(
         actionImportMap: Map<String, String>,
         importPath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<List<String>, ErrSignal> {
         val importSrcConBeforeReplace = makeActionImportSrcCon(
             importPath,
-            currentAppDirPath,
+//            currentAppDirPath,
             currentFannelName,
             setReplaceVariableMap,
         )
@@ -1582,7 +1589,7 @@ private object ActionImportPutter {
 
     private fun makeActionImportSrcCon(
         importPath: String,
-        currentAppDirPath: String,
+//        currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
@@ -1601,7 +1608,7 @@ private object ActionImportPutter {
 //        )
         val actionImportSrcCon = SettingFile.read(
             importPath,
-            File(currentAppDirPath, currentFannelName).absolutePath,
+            File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
         )
         beforeActionImportMap.put(
@@ -3148,7 +3155,7 @@ private fun makeReplaceVariableTsv(
 //        )
         JavaScriptLoadUrl.makeReplaceVariableTableTsv(
             setReplaceVariableMap,
-            mainCurrentAppDirPath,
+//            mainCurrentAppDirPath,
             mainFannelName,
         )
     }

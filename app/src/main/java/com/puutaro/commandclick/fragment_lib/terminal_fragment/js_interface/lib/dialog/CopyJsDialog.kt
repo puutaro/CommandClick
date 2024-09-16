@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
+import java.lang.ref.WeakReference
 
 
 object CopyJsDialog {
@@ -101,7 +102,7 @@ object CopyJsDialog {
         val max = Math.max(0, Math.max(selStart, selEnd))
         val selectedText = descriptionTextView.text.subSequence(min, max).toString()
         if(selectedText.isEmpty()) return
-        JsUtil(terminalFragment).copyToClipboard(selectedText, 12)
+        JsUtil(WeakReference(terminalFragment)).copyToClipboard(selectedText, 12)
         ToastUtils.showShort("copy: ${selectedText}")
     }
 

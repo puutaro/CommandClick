@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLoadUrlExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
@@ -10,7 +11,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorBroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewUrlLoader
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewLancher
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object BroadcastHandlerForTerm {
     fun handle(
@@ -67,11 +69,33 @@ object BroadcastHandlerForTerm {
                 terminalFragment,
                 intent
             )
-            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL
+            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LAUNCH
             -> {
-                PocketWebViewUrlLoader.load(
+                PocketWebViewLancher.launch(
                     terminalFragment,
-                    intent.getStringExtra(PocketWebviewExtra.url.schema),
+                    intent.getStringExtra(PocketWebviewLaunchExtra.url.schema),
+                )
+            }
+            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL
+            -> PocketWebViewLancher.loadUrl(
+                terminalFragment,
+                intent.getStringExtra(PocketWebviewLoadUrlExtra.url.schema),
+            )
+//            BroadCastIntentSchemeTerm.POCKET_WEBVIEW_PRELOAD_URL
+//            -> PocketWebViewLancher.preLoadUrl(
+//                terminalFragment,
+//                intent.getStringExtra(PocketWebviewPreLoadUrlExtra.url.schema),
+//            )
+            BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE
+            -> {
+                val cmdindexSelectionSearchButton = TargetFragmentInstance.getCmdIndexFragmentFromFrag(
+                    terminalFragment.activity
+                )?.binding?.cmdindexSelectionSearchButton
+                PinFannelBarManager.update(
+                    terminalFragment.context,
+                    terminalFragment.tag,
+                    terminalFragment.binding.fannelPinRecyclerView,
+                    cmdindexSelectionSearchButton,
                 )
             }
         }

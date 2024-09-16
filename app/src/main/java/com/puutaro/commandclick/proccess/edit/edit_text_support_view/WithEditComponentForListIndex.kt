@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
@@ -19,15 +20,15 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.Variabl
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 
-class WithEditComponentForListIndex {
+object WithEditComponentForListIndex {
     private val textAndLabelList = TypeVariable.textAndLabelList
     private val noIndexTypeList = TypeVariable.noIndexTypeList
 
     fun insert(
+        editFragment: EditFragment,
         insertTextView: TextView,
         editParameters: EditParameters,
     ): LinearLayout {
-        val context = editParameters.context
         val textLabelIndex = culcSetVariableTypeMarkIndex(
             editParameters,
             textAndLabelList,
@@ -80,10 +81,12 @@ class WithEditComponentForListIndex {
             variableTypeList,
         )
         val insertEditText = EditTextSetter.set(
+            editFragment,
             editParameters,
             editTextPropertyMap,
             editTextWeight
         )
+        val context = editFragment.context
         val horizontalLinearLayout = makeHorizontalLayout(context)
         horizontalLinearLayout.addView(insertEditText)
 //        hideSettingVariableWhenSettingEdit(
@@ -99,6 +102,7 @@ class WithEditComponentForListIndex {
             when(variableTypeList[it]){
                 EditTextSupportViewName.CHECK_BOX.str -> {
                     val insertSpinner = SpinnerViewProducer.make(
+                        context,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -108,6 +112,7 @@ class WithEditComponentForListIndex {
                 }
                 EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
                     val insertSpinner = EditableSpinnerViewProducer.make(
+                        editFragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -117,6 +122,7 @@ class WithEditComponentForListIndex {
                 }
                 EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
                     val editableFileSelectSpinner = FileSelectSpinnerViewProducer.make(
+                        editFragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -126,6 +132,7 @@ class WithEditComponentForListIndex {
                 }
                 EditTextSupportViewName.LIST_CONTENTS_SELECT_BOX.str -> {
                     val insertListConSpinner = ListContentsSelectSpinnerViewProducer.make(
+                        editFragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -135,6 +142,7 @@ class WithEditComponentForListIndex {
                 }
                 EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
                     val insertListConSpinner = EditableListContentsSelectSpinnerViewProducer.make(
+                        editFragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -144,6 +152,7 @@ class WithEditComponentForListIndex {
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
                     val incButton = InDeCrementerViewProducer.make(
+                        editFragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,
@@ -152,6 +161,7 @@ class WithEditComponentForListIndex {
                     )
                     horizontalLinearLayout.addView(incButton)
                     val decButton = InDeCrementerViewProducer.make(
+                        editFragment,
                         insertEditText,
                         editParameters,
                         currentComponentIndex,

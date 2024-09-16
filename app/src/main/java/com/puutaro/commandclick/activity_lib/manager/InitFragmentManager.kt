@@ -8,12 +8,9 @@ import android.os.Bundle
 import android.provider.Browser
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewExtra
+import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
-import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -30,15 +27,19 @@ import kotlinx.coroutines.withContext
 
 
 private const val innerUrlIntentFlag = "innerUrlIntent"
-class InitFragmentManager(
-    private val activity: MainActivity
-) {
-    private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
-    private val startUpPref = FannelInfoTool.getSharePref(activity)
-    private val intent = activity.intent
+object InitFragmentManager{
+
+//    private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
+//    private val startUpPref = FannelInfoTool.getSharePref(activity)
+//    private val intent = activity.intent
     private val fragmentLaunchDelayTime = 300L
 
-    fun intentHandler(): Boolean {
+    fun intentHandler(
+        activity: MainActivity
+    ): Boolean {
+        val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
+        val startUpPref = FannelInfoTool.getSharePref(activity)
+        val intent = activity.intent
         val isQueryIntent = QueryIntentHandler.handle(
             activity,
             activityManager
@@ -101,7 +102,7 @@ class InitFragmentManager(
                 }
             }
         }
-        return execShortcutIntent()
+        return execShortcutIntent(activity)
     }
 
     private object QueryIntentHandler {
@@ -125,6 +126,11 @@ class InitFragmentManager(
             val isQueryWebSearch =
                 acIntent.action == Intent.ACTION_WEB_SEARCH
                         && !query.isNullOrEmpty()
+            val plainText =
+                acIntent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
+            val isPlainTextWebSearch =
+                acIntent.action == Intent.ACTION_PROCESS_TEXT
+                        && !plainText.isNullOrEmpty()
 //            ToastUtils.showLong(
 //                "${acIntent.extras.toString()}|${acIntent.action}|${acIntent.data}|${acIntent.categories}"
 //            )
@@ -207,13 +213,15 @@ class InitFragmentManager(
 
 
     fun startFragment(
+        activity: MainActivity,
         savedInstanceState: Bundle?,
     ) {
-        val preferenceAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-            startUpPref,
-            FannelInfoSetting.current_app_dir
-        )
-        val preferenceScriptFileName = FannelInfoTool.getStringFromFannelInfo(
+        val startUpPref = FannelInfoTool.getSharePref(activity)
+//        val preferenceAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//            startUpPref,
+//            FannelInfoSetting.current_app_dir
+//        )
+        val fannelName = FannelInfoTool.getStringFromFannelInfo(
             startUpPref,
             FannelInfoSetting.current_fannel_name
         )
@@ -226,17 +234,14 @@ class InitFragmentManager(
             FannelInfoSetting.current_fannel_state
         )
 
-        val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
-
         if (
-            preferenceScriptFileName.isEmpty()
-            || preferenceScriptFileName == emptyShellFileName
-            || preferenceAppDirPath == UsePath.cmdclickAppDirAdminPath
-            || preferenceAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
-            || allowJudgeSystemFannelIntent(
-                preferenceAppDirPath,
-                preferenceScriptFileName
-            )
+            FannelInfoTool.isEmptyFannelName(fannelName)
+//            || preferenceAppDirPath == UsePath.cmdclickAppDirAdminPath
+//            || preferenceAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
+//            || allowJudgeSystemFannelIntent(
+//                preferenceAppDirPath,
+//                fannelName
+//            )
             || onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -255,17 +260,17 @@ class InitFragmentManager(
             return
         }
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            preferenceAppDirPath,
-            preferenceScriptFileName,
+//            preferenceAppDirPath,
+            fannelName,
             fannelState,
         )
         val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
-            preferenceAppDirPath,
-            preferenceScriptFileName,
+//            preferenceAppDirPath,
+            fannelName,
             onShortcut,
             fannelState
         )
-        val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
+        val cmdVariableEditFragment = TargetFragmentInstance.getFromActivity<EditFragment>(
             activity,
             cmdVariableEditFragmentTag
         )
@@ -289,44 +294,48 @@ class InitFragmentManager(
         }
     }
 
-    private fun execUrlIntent() {
-        val execIntent = Intent(activity, activity::class.java)
-        execIntent.setAction(Intent.ACTION_VIEW).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        setDataString(intent)?.let {
-            execIntent.data = it
-        }
-        FannelInfoTool.putAllFannelInfo(
-            startUpPref,
-            currentAppDirPath = null,
-            currentFannelName = FannelInfoSetting.current_fannel_name.defalutStr,
-            onShortcutValue = FannelInfoSetting.on_shortcut.defalutStr,
-            currentFannelState = FannelInfoSetting.current_fannel_state.defalutStr
+//    private fun execUrlIntent() {
+//        val execIntent = Intent(activity, activity::class.java)
+//        execIntent.setAction(Intent.ACTION_VIEW).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//        setDataString(intent)?.let {
+//            execIntent.data = it
+//        }
+//        FannelInfoTool.putAllFannelInfo(
+//            startUpPref,
+////            currentAppDirPath = null,
+//            currentFannelName = FannelInfoSetting.current_fannel_name.defalutStr,
+//            onShortcutValue = FannelInfoSetting.on_shortcut.defalutStr,
+//            currentFannelState = FannelInfoSetting.current_fannel_state.defalutStr
+//
+//        )
+//        execRestartIntent(
+//            activity,
+//            execIntent
+//        )
+//    }
 
-        )
-        execRestartIntent(
-            activity,
-            execIntent
-        )
-    }
 
-
-    private fun execShortcutIntent(): Boolean {
-        val recieveAppDirPath = intent.getStringExtra(
-            FannelInfoSetting.current_app_dir.name
-        )
+    private fun execShortcutIntent(
+        activity: MainActivity
+    ): Boolean {
+        val startUpPref = FannelInfoTool.getSharePref(activity)
+        val intent = activity.intent
+//        val recieveAppDirPath = intent.getStringExtra(
+//            FannelInfoSetting.current_app_dir.name
+//        )
         val fannelState = intent.getStringExtra(
             FannelInfoSetting.current_fannel_state.name
         ) ?: FannelInfoSetting.current_fannel_state.defalutStr
-        if (
-            recieveAppDirPath.isNullOrEmpty()
-        ) return false
+//        if (
+//            recieveAppDirPath.isNullOrEmpty()
+//        ) return false
 
         val currentShellFileName = intent.getStringExtra(
             FannelInfoSetting.current_fannel_name.name
         ) ?: FannelInfoSetting.current_fannel_name.defalutStr
         FannelInfoTool.putAllFannelInfo(
             startUpPref,
-            recieveAppDirPath,
+//            recieveAppDirPath,
             currentShellFileName,
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
             fannelState
@@ -340,37 +349,37 @@ class InitFragmentManager(
         return true
     }
 
-    private fun removeTask(
-        mngr: ActivityManager?
-    ) {
-        if (mngr == null) return
-        mngr.appTasks.forEach {
-            it.finishAndRemoveTask()
-        }
-    }
+//    private fun removeTask(
+//        mngr: ActivityManager?
+//    ) {
+//        if (mngr == null) return
+//        mngr.appTasks.forEach {
+//            it.finishAndRemoveTask()
+//        }
+//    }
 
-    private fun allowJudgeSystemFannelIntent(
-        preferenceAppDirPath: String,
-        preferenceScriptFileName: String,
-    ): Boolean {
-        if(
-            preferenceAppDirPath != UsePath.cmdclickSystemAppDirPath
-        ) return false
-        return !SystemFannel.allowIntentSystemFannelList.contains(
-            preferenceScriptFileName
-        )
+//    private fun allowJudgeSystemFannelIntent(
+////        preferenceAppDirPath: String,
+//        fannelName: String,
+//    ): Boolean {
+////        if(
+////            preferenceAppDirPath != UsePath.cmdclickSystemAppDirPath
+////        ) return false
+//        return !SystemFannel.allowIntentSystemFannelList.contains(
+//            fannelName
+//        )
+//
+//    }
 
-    }
-
-    private fun setDataString(
-        intent: Intent?,
-    ): Uri? {
-        intent?.dataString?.let {
-           val urlStr = UrlOrQuery.convert(it)
-           return Uri.parse(urlStr)
-        }
-        return setQueryOrUrlIntent(intent)
-    }
+//    private fun setDataString(
+//        intent: Intent?,
+//    ): Uri? {
+//        intent?.dataString?.let {
+//           val urlStr = UrlOrQuery.convert(it)
+//           return Uri.parse(urlStr)
+//        }
+//        return setQueryOrUrlIntent(intent)
+//    }
 }
 
 private fun execMainActivityUrlIntent(
@@ -391,13 +400,13 @@ private fun execMainActivityUrlIntent(
 //                android.app.SearchManager.QUERY,
 //                UrlOrQuery.convert(query)
 //            )
-    val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-        startUpPref,
-        FannelInfoSetting.current_app_dir
-    )
+//    val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//        startUpPref,
+//        FannelInfoSetting.current_app_dir
+//    )
     FannelInfoTool.putAllFannelInfo(
         startUpPref,
-        currentAppDirPath = currentAppDirPath,
+//        currentAppDirPath = currentAppDirPath,
         currentFannelName = FannelInfoSetting.current_fannel_name.defalutStr,
         onShortcutValue = FannelInfoSetting.on_shortcut.defalutStr,
         currentFannelState = FannelInfoSetting.current_fannel_state.defalutStr
@@ -432,7 +441,7 @@ private fun launchUrlByPocketWebView(
 //                ToastUtils.showShort("${i}")
                 val terminalFragment =
                     withContext(Dispatchers.Main) {
-                        TargetFragmentInstance().getCurrentTerminalFragment(
+                        TargetFragmentInstance.getCurrentTerminalFragment(
                             activity
                         )
                     }
@@ -449,9 +458,9 @@ private fun launchUrlByPocketWebView(
         withContext(Dispatchers.IO) {
             BroadcastSender.normalSend(
                 activity,
-                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
+                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LAUNCH.action,
                 listOf(
-                    PocketWebviewExtra.url.schema to urlStr,
+                    PocketWebviewLaunchExtra.url.schema to urlStr,
                 )
             )
         }
@@ -470,17 +479,17 @@ private fun execRestartIntent(
     activity.startActivity(sendIntent)
 }
 
-private fun setQueryOrUrlIntent(
-    intent: Intent?
-): Uri? {
-    return intent
-        ?.extras
-        ?.getString(android.app.SearchManager.QUERY)
-        ?.let {
-            val urlStr = UrlOrQuery.convert(it)
-            Uri.parse(urlStr)
-        }
-}
+//private fun setQueryOrUrlIntent(
+//    intent: Intent?
+//): Uri? {
+//    return intent
+//        ?.extras
+//        ?.getString(android.app.SearchManager.QUERY)
+//        ?.let {
+//            val urlStr = UrlOrQuery.convert(it)
+//            Uri.parse(urlStr)
+//        }
+//}
 
 private fun isTwoOverActivity(
     mngr: ActivityManager?

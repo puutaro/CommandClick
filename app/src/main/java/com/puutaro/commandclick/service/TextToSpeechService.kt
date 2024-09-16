@@ -16,6 +16,7 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.broadcast.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.variant.Translate
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -506,12 +507,16 @@ class TextToSpeechService:
                 }
             }
             withContext(Dispatchers.IO){
-                textToSpeech?.stop()
-                notificationBuilder?.build()?.let {
-                    notificationManager?.notify(channelNum, it)
-                }
-                stopForeground(Service.STOP_FOREGROUND_DETACH)
-                notificationManager?.cancel(channelNum)
+//                textToSpeech?.stop()
+//                notificationBuilder?.build()?.let {
+//                    notificationManager?.notify(channelNum, it)
+//                }
+//                stopForeground(Service.STOP_FOREGROUND_DETACH)
+//                notificationManager?.cancel(channelNum)
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeTextToSpeech.STOP_TEXT_TO_SPEECH.action
+                )
 
 //                FileSystems.writeFile(
 //                    listFilePathParentDir,

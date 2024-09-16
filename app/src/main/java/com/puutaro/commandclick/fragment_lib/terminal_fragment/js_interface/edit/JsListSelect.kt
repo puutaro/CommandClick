@@ -7,9 +7,10 @@ import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
+import java.lang.ref.WeakReference
 
 class JsListSelect(
-    private val terminalFragment: TerminalFragment
+    private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
     private val escapeCharHyphen = "-"
 
@@ -145,7 +146,7 @@ class JsListSelect(
             targetListFilePath
         ).textToList().firstOrNull() ?: String()
 
-        val jsScript = JsScript(terminalFragment)
+        val jsScript = JsScript(terminalFragmentRef)
         val scriptContents = ReadText(
             currentScriptPath
         ).readText()
@@ -167,7 +168,7 @@ class JsListSelect(
             currentScriptPath,
             replacedScriptContents
         )
-        val jsEdit = JsEdit(terminalFragment)
+        val jsEdit = JsEdit(terminalFragmentRef)
         if(
             defaultVariable.isNotEmpty()
         ) jsEdit.updateEditText(

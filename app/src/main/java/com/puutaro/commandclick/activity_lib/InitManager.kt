@@ -3,10 +3,10 @@ package com.puutaro.commandclick.activity_lib
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 
-class InitManager(
-    private val activity: MainActivity,
-) {
-    fun invoke() {
+object InitManager {
+    fun invoke(
+        activity: MainActivity
+    ) {
         StorageAccessSetter.storageAccessProcess(
             activity
         )
