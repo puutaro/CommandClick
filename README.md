@@ -81,7 +81,7 @@ CommandClick
 
 <img src="https://github.com/user-attachments/assets/fd98401d-88e1-495a-9790-45d3b665efd6" width="400">
 
-## Exist browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you.    
+## Exist browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you by graphical UI, ubuntu, etc..    
 
 <img src="https://github.com/user-attachments/assets/f85523e6-17a2-486f-8a27-de68b5152789" width="400">
 
