@@ -204,20 +204,6 @@ class FannelManageAdapter(
                     else -> CcPathTool.trimAllExtend(fannelName)
                 }
                 holder.fannelNameTextView.text = displayFannelName
-//                when(
-//                    settingMap?.get(
-//                        FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
-//                    ) == switchOn
-//                            || fannelName == homeFannel
-//                ) {
-//                    true -> holder.fannelNameTextView.setText(
-//                        underlineSpannableFannelName(displayFannelName),
-//                        TextView.BufferType.SPANNABLE
-//                    )
-//                    else -> holder.fannelNameTextView.text = displayFannelName
-//                }
-
-//                holder.appDirNameTextView.isVisible = false
             }
             withContext(Dispatchers.Main) {
                 when(fannelName == homeFannel){
@@ -272,17 +258,12 @@ class FannelManageAdapter(
                     holder.pinImageView.isEnabled = true
                     holder.pinImageCaption.alpha = ordinaryAlpha
                     holder.pinImageCaption.setFillColor(textFillColor)
-//                        context?.getColorStateList(buttonOrdinalyColor)
                     return@withContext
                 }
                 holder.pinImageView.alpha = ordinaryAlpha
                 holder.pinImageView.isEnabled = true
                 holder.pinImageCaption.alpha = ordinaryAlpha
                 holder.pinImageCaption.setFillColor(pinExistColor)
-//                holder.pinFrameButtonView.background =
-//                    AppCompatResources.getDrawable(context as Context, pinExistColor)
-//                holder.pinImageView.imageTintList =
-//                    context?.getColorStateList(pinExistColor)
             }
             withContext(Dispatchers.Main){
                 if(
@@ -291,10 +272,6 @@ class FannelManageAdapter(
                     ) != switchOn
                     || !isIndex
                 ) {
-//                    holder.longPressImageCaption.setTextColor(buttonGrayOutColor)
-//                    holder.longPressFrameButtonView.background =
-//                        AppCompatResources.getDrawable(context as Context, buttonGrayOutColor)
-//                        context?.getColorStateList(buttonGrayOutColor)
                     holder.longPressImageView.alpha = disableAlpha
                     holder.longPressImageView.isEnabled = false
                     holder.longPressImageCaption.alpha = disableAlpha
@@ -305,10 +282,6 @@ class FannelManageAdapter(
                 holder.longPressImageView.isEnabled = true
                 holder.longPressImageCaption.alpha = ordinaryAlpha
                 holder.longPressImageCaption.setFillColor(textFillColor)
-//                holder.longPressFrameButtonView.background =
-//                    AppCompatResources.getDrawable(context as Context, buttonOrdinalyColor)
-////                    context?.getColorStateList(buttonOrdinalyColor)
-//                holder.longPressFrameButtonView.isEnabled = true
             }
             withContext(Dispatchers.Main){
                 if(fannelName != homeFannel) return@withContext
@@ -328,21 +301,12 @@ class FannelManageAdapter(
                     holder.editImageView.isEnabled = false
                     holder.editImageCaption.alpha = disableAlpha
                     holder.editImageCaption.setFillColor(buttonGrayOutColor)
-//                    holder.editFrameButtonView.isEnabled = false
-//                    holder.editFrameButtonView.background =
-//                        AppCompatResources.getDrawable(context as Context, buttonGrayOutColor)
-//                        context?.getColorStateList(buttonGrayOutColor)
                     return@withContext
                 }
                 holder.editImageView.alpha = ordinaryAlpha
                 holder.editImageView.isEnabled = true
                 holder.editImageCaption.alpha = ordinaryAlpha
                 holder.editImageCaption.setFillColor(textFillColor)
-//                holder.editFrameButtonView.isEnabled = true
-//                holder.editFrameButtonView.background =
-//                    AppCompatResources.getDrawable(context as Context, buttonOrdinalyColor)
-//                holder.editImageView.imageTintList =
-//                    context?.getColorStateList(buttonOrdinalyColor)
             }
             withContext(Dispatchers.IO){
                 val logoPngPath = listOf(
@@ -354,15 +318,6 @@ class FannelManageAdapter(
                     )
                 }
                 withContext(Dispatchers.Main) setImage@{
-//                    val isEditExecute = settingMap?.get(
-//                        FannelSettingMap.FannelHistorySettingKey.ENABLE_EDIT_EXECUTE.key
-//                    ) == switchOn
-//                            || fannelName == homeFannel
-//                    setLogoBackground(
-//                        holder.shareImageFrameButtonView,
-//                        holder.shareImageView,
-//                        isEditExecute,
-//                    )
                     if(
                         fannelName == homeFannel
                     ){
@@ -410,28 +365,13 @@ class FannelManageAdapter(
             setCaptureImage(
                 holder,
                 FannelHistoryPath.getCaptureGifPath(
-//                    File(UsePath.cmdclickAppDirPath, appDirName).absolutePath,
                     fannelName,
                 ),
             )
             withContext(Dispatchers.IO){
-//                val currentAppDirPath = File(
-//                    FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
-//                ).name
-//                if(
-//                    appDirName != currentAppDirPath
-//                ) return@withContext
                 val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "gFannelLit.txt").absolutePath,
-//                    listOf(
-//                        "currentFannelName: ${currentFannelName}",
-//                        "fannelName: ${fannelName}",
-//                    ).joinToString("\n\n") + "\n------\n"
-//                )
                 val isAppDir =
                     fannelName == homeFannel
-//                    FannelInfoTool.isEmptyFannelName(fannelName)
                 val isCurentAppDir =
                     FannelInfoTool.isEmptyFannelName(currentFannelName)
                 if(
@@ -466,16 +406,6 @@ class FannelManageAdapter(
         fun onItemClick(holder: FannelManageViewHolder)
     }
 
-//    var itemLongClickListener: OnItemLongClickListener? = null
-//    interface OnItemLongClickListener {
-//        fun onItemLongClick(itemView: View, holder: FannelHistoryViewHolder)
-//    }
-
-//    var deleteItemClickListener: OnDeleteItemClickListener? = null
-//    interface OnDeleteItemClickListener {
-//        fun onItemClick(holder: FannelManageViewHolder)
-//    }
-
     var shareItemClickListener: OnShareItemClickListener? = null
     interface OnShareItemClickListener {
         fun onItemClick(holder: FannelManageViewHolder)
@@ -504,17 +434,6 @@ class FannelManageAdapter(
             val hitFannelColor = R.color.web_icon_color
             holder.fannelHistoryAdapterConstraintLayout.backgroundTintList =
                 context?.getColorStateList(hitFannelColor)
-//            holder.fannelHistoryAdapterBottomLinearInner.backgroundTintList =
-//                context?.getColorStateList(hitFannelColor)
-//            holder.shareImageView.backgroundTintList = null
-////                context?.getColorStateList(hitFannelColor)
-//            holder.pinImageView.backgroundTintList =
-//                context?.getColorStateList(hitFannelColor)
-//            holder.editImageView.backgroundTintList =
-//                context?.getColorStateList(hitFannelColor)
-//            holder.longPressImageView.backgroundTintList =
-//                context?.getColorStateList(hitFannelColor)
-
         }
     }
 
