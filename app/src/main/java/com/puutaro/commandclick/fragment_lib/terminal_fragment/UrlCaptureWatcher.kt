@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.View
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.url.EnableUrlPrefix
@@ -108,9 +107,6 @@ object UrlCaptureWatcher {
 //                    withContext(Dispatchers.Main){
 //                        ToastUtils.showShort("shot")
 //                    }
-                    val title = withContext(Dispatchers.Main){
-                        terminalWebView.title
-                    }
                     val saveOk = CaptureSaver.save(
                         captureView,
                         url,

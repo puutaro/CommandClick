@@ -19,53 +19,26 @@ object UrlCaptureHistoryTool {
         capture: Bitmap?,
         pxWidth: Int
     ){
-//        val start = LocalDateTime.now()
         if(
             currentUrl.isNullOrEmpty()
             ||  currentUrl.contains("/maps/")
             || capture == null
         ) {
-//            CoroutineScope(Dispatchers.Main).launch{
-//                ToastUtils.showShort("exit ${currentUrl}")
-//            }
             return
         }
         val isNotHttp = !EnableUrlPrefix.isHttpPrefix(currentUrl)
         if(
             isNotHttp
         ) {
-//            CoroutineScope(Dispatchers.Main).launch{
-//                ToastUtils.showShort("exit isNotHttp: ${currentUrl}")
-//            }
             return
         }
         val curHash = BitmapTool.hash(capture)
         val curRawSize = BitmapTool.convertBitmapToByteArray(capture).size
-//            val curSize = curRawSize - curRawSize % 10000
         val saveDiffThreshold = (baseThresholdDiff * pxWidth) / baseResolutionWidth
         if(
             Math.abs(curRawSize - prevSize) < saveDiffThreshold
         ) return
         prevSize = curRawSize
-//        val capDirPath = File(UsePath.cmdclickDefaultAppDirPath, "cap").absolutePath
-//        FileSystems.createDirs(
-//            capDirPath
-//        )
-//        BitmapTool.convertBitmapToByteArray(capture).let {
-//            FileSystems.writeFromByteArray(
-//                File(capDirPath, "${LocalDateTime.now().toString().replace(Regex("[^a-zA-Z0-9_-]"), "")}_${prevSize}_${title?.take(20)}.png").absolutePath,
-//                it,
-//            )
-//        }
-//        if(
-//            curHash == beforeHash
-//        ) {
-////            CoroutineScope(Dispatchers.Main).launch {
-////                ToastUtils.showShort("cannot save curHash")
-////            }
-//            return
-//        }
-//        beforeHash = curHash
         val smallBitmap = BitmapTool.resizeByMaxHeight(capture, 700.0)
         val byteArray = BitmapTool.convertBitmapToByteArray(smallBitmap, 100)
 //        FileSystems.writeFile(
@@ -77,32 +50,17 @@ object UrlCaptureHistoryTool {
 //            ).joinToString("\n")
 //        )
         val captureUniqueDirPath = UrlHistoryPath.getCaptureUniqueDirPath(
-//            currentAppDirPath,
             currentUrl
         )
         FileSystems.createDirs(captureUniqueDirPath)
         val partsPngDirPath = UrlHistoryPath.getCapturePartsPngDirPath(
-//            currentAppDirPath,
             currentUrl,
         )
-//        val isPartsPng = FileSystems.sortedFiles(
-//            partsPngDirPath
-//        ).isNotEmpty()
         execTrimFiles(partsPngDirPath)
         val partPngName = "${curHash}.png"
-//        CoroutineScope(Dispatchers.Main).launch {
-//            ToastUtils.showShort("save ${File(partsPngDirPath, partPngName).absolutePath}")
-//        }
         FileSystems.writeFromByteArray(
             File(partsPngDirPath, partPngName).absolutePath,
             byteArray,
-        )
-//        val gifTxtPath = UrlHistoryPath.getCaptureGifTextPath(
-////            currentAppDirPath,
-//            currentUrl,
-//        )
-        val gifPath = UrlHistoryPath.getCaptureGifPath(
-            currentUrl,
         )
         FileSystems.writeFile(
             UrlHistoryPath.makeCaptureHistoryLastModifiedFilePath(
@@ -110,17 +68,14 @@ object UrlCaptureHistoryTool {
             ),
             String()
         )
+        val gifPath = UrlHistoryPath.getCaptureGifPath(
+            currentUrl,
+        )
         if(!File(gifPath).isFile){
-//            FileSystems.writeFromByteArray(
-//                gifPath,
-//                BitmapTool.convertBitmapToByteArray(smallBitmap)
-//            )
-//            BitmapTool.Base64Tool.encode(smallBitmap)?.let {
                 FileSystems.writeFromByteArray(
                     gifPath,
                     BitmapTool.convertBitmapToByteArray(smallBitmap),
                 )
-//            }
             return
         }
     }
