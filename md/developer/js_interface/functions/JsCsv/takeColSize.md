@@ -24,7 +24,7 @@ var=tagName
 
 ## Src
 
--> [jsCsv.takeColSize](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCsv.kt#L32)
+-> [jsCsv.takeColSize](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCsv.kt#L34)
 
 ## Detail
 

@@ -23,7 +23,7 @@ var=runStop
 
 ## Src
 
--> [jsPulseAudioReceiver.stop](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPulseAudioReceiver.kt#L43)
+-> [jsPulseAudioReceiver.stop](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsPulseAudioReceiver.kt#L45)
 
 ## Detail
 

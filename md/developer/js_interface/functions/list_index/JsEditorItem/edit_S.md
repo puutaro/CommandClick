@@ -56,6 +56,6 @@ var=runSimpleEdit
 
 ## Src
 
--> [jsEditorItem.edit_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsEditorItem.kt#L27)
+-> [jsEditorItem.edit_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/list_index/JsEditorItem.kt#L16)
 
 

@@ -81,6 +81,6 @@ echo "${TARGET_CON}"             | ${b} grep "${youtube_name}"             | gre
 
 ## Src
 
--> [jsAddFromUrlHistory.add_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsAddFromUrlHistory.kt#L30)
+-> [jsAddFromUrlHistory.add_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsAddFromUrlHistory.kt#L20)
 
 

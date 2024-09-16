@@ -6,9 +6,7 @@
 function jsDialog.webView_S(
 	${urlStrString},
 	${currentFannelPathString},
-	${menuMapStrListStrString},
-	${longPressMenuMapListStrString},
-	${extraMapConString},
+	${webViewConfigMapConString},
 ) -> runWebView_S
 ```
 
@@ -21,9 +19,7 @@ var=runWebView_S
 	?args=
 		&urlStr=${String}
 		&currentFannelPath=${String}
-		&menuMapStrListStr=${String}
-		&longPressMenuMapListStr=${String}
-		&extraMapCon=${String}
+		&webViewConfigMapCon=${String}
 ```
 
 - [js action](#) is annotation-oriented language based on javascript in `CommandClick`
@@ -32,7 +28,7 @@ var=runWebView_S
 
 ## Src
 
--> [jsDialog.webView_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L348)
+-> [jsDialog.webView_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L351)
 
 ## Detail
 

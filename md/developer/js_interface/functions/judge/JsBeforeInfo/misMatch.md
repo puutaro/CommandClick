@@ -26,6 +26,6 @@ var=isEqual
 
 ## Src
 
--> [jsBeforeInfo.misMatch](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/judge/JsBeforeInfo.kt#L29)
+-> [jsBeforeInfo.misMatch](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/judge/JsBeforeInfo.kt#L30)
 
 

@@ -28,7 +28,7 @@ var=runUpdateByVariable
 
 ## Src
 
--> [jsEdit.updateByVariable](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsEdit.kt#L25)
+-> [jsEdit.updateByVariable](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsEdit.kt#L24)
 
 ## Detail
 

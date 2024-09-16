@@ -29,6 +29,6 @@ Remove blank line
 
 ## Src
 
--> [jsText.trimNewLine](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L11)
+-> [jsText.trimNewLine](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsText.kt#L25)
 
 

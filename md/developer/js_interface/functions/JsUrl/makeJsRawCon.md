@@ -22,11 +22,13 @@ var=jsRawCon
 
 ## Description
 
+## Description
+
 Make raw js contents before load
        
 
 ## Src
 
--> [jsUrl.makeJsRawCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L40)
+-> [jsUrl.makeJsRawCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L45)
 
 

@@ -5,14 +5,14 @@
 ```js.js
 function jsUtil.convertDateTimeToMiliTime(
 	${datetimeString},
-) -> miliTimeCon
+) -> DateTimeConverter
 ```
 
 
 ## Definition by js action
 
 ```js.js
-var=miliTimeCon
+var=DateTimeConverter
 	?func=jsUtil.convertDateTimeToMiliTime
 	?args=
 		&datetime=${String}
@@ -24,6 +24,6 @@ var=miliTimeCon
 
 ## Src
 
--> [jsUtil.convertDateTimeToMiliTime](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUtil.kt#L46)
+-> [jsUtil.convertDateTimeToMiliTime](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUtil.kt#L57)
 
 

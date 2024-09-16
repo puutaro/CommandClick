@@ -23,6 +23,6 @@ var=runStop
 
 ## Src
 
--> [jsMusic.stop](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsMusic.kt#L36)
+-> [jsMusic.stop](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsMusic.kt#L52)
 
 

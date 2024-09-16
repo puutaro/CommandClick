@@ -171,6 +171,6 @@ ${b} diff           "${src_file_path}"           "${dest_file_path}"           2
 
 ## Src
 
--> [jsToListMap.map](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsToListMap.kt#L28)
+-> [jsToListMap.map](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsToListMap.kt#L30)
 
 

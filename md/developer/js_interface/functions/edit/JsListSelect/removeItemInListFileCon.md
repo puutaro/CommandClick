@@ -26,7 +26,7 @@ var=runRemoveItemInListFileCon
 
 ## Src
 
--> [jsListSelect.removeItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsListSelect.kt#L52)
+-> [jsListSelect.removeItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsListSelect.kt#L53)
 
 ## Detail
 

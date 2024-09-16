@@ -24,6 +24,6 @@ var=runRemoveDir
 
 ## Src
 
--> [jsFileSystem.removeDir](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsFileSystem.kt#L235)
+-> [jsFileSystem.removeDir](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsFileSystem.kt#L253)
 
 

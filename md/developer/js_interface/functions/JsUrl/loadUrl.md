@@ -22,13 +22,15 @@ var=runLoadUrl
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Load Url
 This is one of the most used js interface.
 
 
 ## Src
 
--> [jsUrl.loadUrl](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L135)
+-> [jsUrl.loadUrl](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L161)
 
 ## Detail
 

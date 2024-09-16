@@ -26,7 +26,7 @@ var=output
 
 ## Src
 
--> [jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L35)
+-> [jsUbuntu.execScript](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L39)
 
 ## Detail
 

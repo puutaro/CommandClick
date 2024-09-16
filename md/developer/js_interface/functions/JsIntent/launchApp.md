@@ -34,7 +34,7 @@ var=runLaunchApp
 
 ## Src
 
--> [jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L49)
+-> [jsIntent.launchApp](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsIntent.kt#L58)
 
 ## Detail
 
