@@ -14,10 +14,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
 
 object GifCreateMonitor {
 
     private var gifCreateJob: Job? = null
+    private var previousPngList: List<String> = emptyList()
 
     fun exit(){
         gifCreateJob?.cancel()
@@ -37,7 +39,6 @@ object GifCreateMonitor {
         gifCreateJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
-                    var previousPngList: List<String> = emptyList()
                     while (true) {
                         delay(3_000)
 //                        if(gitCreteTimes == 0) {
@@ -74,12 +75,21 @@ object GifCreateMonitor {
                             FileSystems.sortedFiles(capturePartsPngDirPath).map {
                                 File(capturePartsPngDirPath, it).absolutePath
                             }
+                        val isDuplicate = curPngPathList.size == 1
+                                || curPngPathList == previousPngList
+//                        FileSystems.writeFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "urlHIsgif.txt").absolutePath,
+//                            listOf(
+//                                "${LocalDateTime.now()}}",
+//                                "isDuplicate ${isDuplicate}",
+//                                "capturePartsPngDirPath ${capturePartsPngDirPath}",
+//                                "curPngPathList ${curPngPathList}",
+//                                "previousPngList ${previousPngList}",
+//                            ).joinToString("\n")
+//                        )
                         if (
-                            previousPngList.isEmpty()
-                        ) previousPngList = curPngPathList
-                        if (
-                            curPngPathList.size == 1
-                            || curPngPathList == previousPngList
+                            previousPngList.isNotEmpty()
+                            && isDuplicate
                         ) continue
                         previousPngList = curPngPathList
 
