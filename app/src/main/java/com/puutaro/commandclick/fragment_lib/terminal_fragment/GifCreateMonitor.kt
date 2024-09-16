@@ -19,7 +19,6 @@ import java.time.LocalDateTime
 object GifCreateMonitor {
 
     private var gifCreateJob: Job? = null
-    private var previousPngList: List<String> = emptyList()
 
     fun exit(){
         gifCreateJob?.cancel()
@@ -28,6 +27,7 @@ object GifCreateMonitor {
     fun watch(
         terminalFragment: TerminalFragment,
     ) {
+        var previousPngList: List<String> = emptyList()
         val lastModifyExtend = UrlHistoryPath.lastModifyExtend
 //        val currentAppDirPath = terminalFragment.currentAppDirPath
         val captureHistoryDirPath =
@@ -52,7 +52,18 @@ object GifCreateMonitor {
                             "on"
                         ).firstOrNull()
                             ?.removeSuffix(lastModifyExtend)
-                            ?: continue
+                        if(
+                            firstUpdateDirName.isNullOrEmpty()
+                        ) {
+                            FileSystems.writeFile(
+                                File(UsePath.cmdclickDefaultAppDirPath, "urlHIsgif.txt").absolutePath,
+                                listOf(
+                                    "${LocalDateTime.now()}}",
+                                    "firstUpdateDirName ${firstUpdateDirName}",
+                                ).joinToString("\n")
+                            )
+                            continue
+                        }
 //                        val captureUniqueDirPath = getCaptureUniqueDirPath(
 //                            currentAppDirPath,
 //                            firstUpdateDirName
@@ -77,19 +88,24 @@ object GifCreateMonitor {
                             }
                         val isDuplicate = curPngPathList.size == 1
                                 || curPngPathList == previousPngList
-//                        FileSystems.writeFile(
-//                            File(UsePath.cmdclickDefaultAppDirPath, "urlHIsgif.txt").absolutePath,
-//                            listOf(
-//                                "${LocalDateTime.now()}}",
-//                                "isDuplicate ${isDuplicate}",
-//                                "capturePartsPngDirPath ${capturePartsPngDirPath}",
-//                                "curPngPathList ${curPngPathList}",
-//                                "previousPngList ${previousPngList}",
-//                            ).joinToString("\n")
-//                        )
+                        FileSystems.writeFile(
+                            File(UsePath.cmdclickDefaultAppDirPath, "urlHIsgif.txt").absolutePath,
+                            listOf(
+                                "${LocalDateTime.now()}",
+                                "isDuplicate ${isDuplicate}",
+                                "capturePartsPngDirPath ${capturePartsPngDirPath}",
+                                "curPngPathList ${curPngPathList}",
+                                "previousPngList ${previousPngList}",
+                            ).joinToString("\n")
+                        )
+                        if(
+                            previousPngList.isEmpty()
+                        ){
+                            previousPngList = curPngPathList
+                            continue
+                        }
                         if (
-                            previousPngList.isNotEmpty()
-                            && isDuplicate
+                            isDuplicate
                         ) continue
                         previousPngList = curPngPathList
 
