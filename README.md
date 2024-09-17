@@ -67,11 +67,11 @@ CommandClick
 
 
 
-## Existing browsers do not have a rich URL history. But `CommmandClick` increase your resolution to URL history.
+## Existing browsers don't have a rich URL history. But `CommmandClick` increase your resolution to URL history.
 
 <img src="https://github.com/user-attachments/assets/f51e234f-1c7f-417e-ac81-96c1021aa4fa" width="400">  
 
-## Existing browsers UI is similar, But `CommmandClick`'s UI is another and functional, using previous site capture.  
+## Existing browsers UI is not transparent, But `CommmandClick`'s UI is transparent to get more wide panorama.  
 
 <img src="https://github.com/user-attachments/assets/108234cc-77fb-4cd5-bd2e-e2acb401dc07" width="49%">
 <img src="https://github.com/user-attachments/assets/cf780064-afa9-493f-ac22-a68782ad17e0" width="49%">
@@ -81,7 +81,7 @@ CommandClick
 
 <img src="https://github.com/user-attachments/assets/fd98401d-88e1-495a-9790-45d3b665efd6" width="400">
 
-## Exist browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you by graphical UI, ubuntu, etc..    
+## Existing browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you by graphical UI, ubuntu, etc..    
 
 <img src="https://github.com/user-attachments/assets/f85523e6-17a2-486f-8a27-de68b5152789" width="400">
 
