@@ -59,3 +59,4 @@
 | `update` | <img src="https://github.com/puutaro/CommandClick/assets/55217593/938406d0-360b-41c5-bb4c-84e00b0c5e65" width="40"> |
 | `wheel` | ● |
 | `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |
+| `| `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |` | ` |
