@@ -71,9 +71,9 @@ CommandClick
 
 ## Existing browsers UI is not transparent, But `CommmandClick`'s UI is transparent to get more wide panorama.  
 
-<img src="https://github.com/user-attachments/assets/aac0c05f-0232-4c49-b56e-c8c124b2dfd9" width="33%">
-<img src="https://github.com/user-attachments/assets/9aba1f3e-daf6-45a8-ba62-313b5d440501" width="33%">
-<img src="https://github.com/user-attachments/assets/4a309506-ada6-4628-b735-7f06269aa4b1" width="33%">
+<img src="https://github.com/user-attachments/assets/aac0c05f-0232-4c49-b56e-c8c124b2dfd9" width="31%">
+<img src="https://github.com/user-attachments/assets/9aba1f3e-daf6-45a8-ba62-313b5d440501" width="31%">
+<img src="https://github.com/user-attachments/assets/4a309506-ada6-4628-b735-7f06269aa4b1" width="31%">
 
 
 ## Existing browsers lack a masterpiece of human technology, but 'CommandClick' has today's great backend, **Ubuntu**.  
