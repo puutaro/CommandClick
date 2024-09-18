@@ -77,7 +77,7 @@ CommandClick
 
 ## Existing browsers lack a masterpiece of human technology, but 'CommandClick' has today's great backend, **Ubuntu**.  
 
-<img src="https://github.com/user-attachments/assets/6c24d52f-9beb-48ab-be28-ea41ad0c8bf4" width="400">
+<img src="https://github.com/user-attachments/assets/6c24d52f-9beb-48ab-be28-ea41ad0c8bf4" width="500">
 
 ## Existing browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you by graphical UI, ubuntu, etc..    
 
