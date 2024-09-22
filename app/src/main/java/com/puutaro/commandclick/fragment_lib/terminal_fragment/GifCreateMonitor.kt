@@ -8,6 +8,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -36,8 +37,9 @@ object GifCreateMonitor {
             )
         //: 0 create 1: no_create
 //        var gitCreteTimes = 0
-        gifCreateJob = terminalFragment.lifecycleScope.launch {
-            terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        gifCreateJob = CoroutineScope(Dispatchers.IO).launch {
+//            terminalFragment.lifecycleScope.launch {
+//            terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
                     while (true) {
                         delay(3_000)
@@ -117,7 +119,7 @@ object GifCreateMonitor {
 
                     }
                 }
-            }
+//            }
         }
     }
 

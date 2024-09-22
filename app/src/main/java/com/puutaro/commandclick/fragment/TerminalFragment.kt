@@ -238,7 +238,6 @@ class TerminalFragment:
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
         FannelHistoryGifCreator.watch(this)
-        GifCreateMonitor.watch(this)
         ButtonImageCreator.create(this)
 
     }
@@ -248,6 +247,7 @@ class TerminalFragment:
         ExecBackstackHandle.initPrevBackTime()
         TerminalOnHandlerForEdit.handle(this)
         JsDebugger.stockLogSender(this)
+        GifCreateMonitor.watch(this)
     }
 
 
@@ -273,6 +273,7 @@ class TerminalFragment:
         onPocketWebHistoryUpdaterJob?.cancel()
         displayUpdateCoroutineJob?.cancel()
         UrlCaptureWatcher.exit()
+        GifCreateMonitor.exit()
 //        FannelHistoryGifCreator.exit()
 //        GifCreateMonitor.exit()
 //        ButtonImageCreator.exit()
