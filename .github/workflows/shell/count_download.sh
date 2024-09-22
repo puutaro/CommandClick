@@ -128,4 +128,4 @@ echo "${update_csv_con}" \
 echo "${CC_DOWNLOAD_COUNT_CSV_PATH}"
 cat "${CC_DOWNLOAD_COUNT_CSV_PATH}" \
 | column -t -s ',' \
-|  sed -r '1s/(.*)/\x1b[1;38;5;20m\1\x1b[0m/'
+|  sed -r '1s/(.*)/\x1b[1;38;5;14m\1\x1b[0m/'
