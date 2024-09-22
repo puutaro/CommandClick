@@ -20,6 +20,9 @@ jobs:
       - name: update color md
         run: |
           bash ".github/workflows/shell/gen_color_icon_md.sh"
+      - name: Count download
+        run: |
+          bash ".github/workflows/shell/count_download.sh"
       - name: Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
 
