@@ -67,7 +67,7 @@ CommandClick
 
 ## Existing browsers don't have a rich URL history. But `CommmandClick` increase your resolution to URL history.
 
-<img src="https://github.com/user-attachments/assets/8d6bf3c8-9d30-4bc7-9c82-17bd2da7e825" width="500">  
+<img src="https://github.com/user-attachments/assets/5aa4be3d-bb2e-44f6-8ed6-dc6e38aa22b8" width="500">  
 
 ## Existing browsers UI is not transparent, But `CommmandClick`'s UI is transparent to get more wide panorama.  
 
