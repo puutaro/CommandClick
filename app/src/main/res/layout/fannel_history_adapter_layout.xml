@@ -23,6 +23,7 @@
             app:layout_constraintDimensionRatio="h, 1:1.9"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
+            android:alpha="0.9"
             />
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"

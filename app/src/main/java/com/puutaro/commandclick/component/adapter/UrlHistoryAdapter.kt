@@ -324,7 +324,8 @@ class UrlHistoryAdapter(
         }
         withContext(Dispatchers.Main) {
             holder.urlTitleTextView.text = title
-            holder.urlTitleTextView.setFillColor(R.color.file_dark_green_color)
+            holder.urlTitleTextView.setFillColor(R.color.ao)
+            holder.urlTitleTextView.outlineWidthSrc = 5
         }
     }
 }

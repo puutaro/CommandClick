@@ -10,7 +10,7 @@
     android:layout_marginTop="1dp"
     android:layout_width="match_parent"
     android:paddingTop="10dp"
-    android:background="@color/file_dark_green_color"
+    android:background="@color/ao"
     >
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/url_history_adapter_capture"
@@ -23,6 +23,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="h, 1:1.74"
             android:adjustViewBounds="true"
+            android:backgroundTint="@color/white"
+            android:alpha="0.9"
             />
         <com.puutaro.commandclick.custom_view.OutlineTextView
             android:id="@+id/url_history_adapter_title"
