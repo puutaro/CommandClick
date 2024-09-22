@@ -24,11 +24,13 @@ var=runGet
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Get fannel from other smart phone by p2p
 
 
 ## Src
 
--> [jsDirect.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsDirect.kt#L44)
+-> [jsDirect.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsDirect.kt#L51)
 
 

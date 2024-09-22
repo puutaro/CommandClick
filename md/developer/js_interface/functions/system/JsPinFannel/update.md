@@ -1,19 +1,19 @@
-# jsAppDirAdder.add_S
+# jsPinFannel.update
 
 ## Definition
 
 ```js.js
-function jsAppDirAdder.add_S(
+function jsPinFannel.update(
 
-) -> runAdd_S
+) -> runUpdate
 ```
 
 - The `run` prefix annotation is a process annotation
 ## Definition by js action
 
 ```js.js
-var=runAdd_S
-	?func=jsAppDirAdder.add_S
+var=runUpdate
+	?func=jsPinFannel.update
 
 ```
 
@@ -23,6 +23,6 @@ var=runAdd_S
 
 ## Src
 
--> [jsAppDirAdder.add_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/system/JsAppDirAdder.kt#L41)
+-> [jsPinFannel.update](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/system/JsPinFannel.kt#L15)
 
 

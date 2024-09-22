@@ -26,7 +26,7 @@ Get IPV4 ADDRESS
 
 ## Src
 
--> [jsNetTool.getIpv4](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsNetTool.kt#L13)
+-> [jsNetTool.getIpv4](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsNetTool.kt#L17)
 
 ## Detail
 

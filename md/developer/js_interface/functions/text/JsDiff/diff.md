@@ -28,6 +28,6 @@ var=diffCon
 
 ## Src
 
--> [jsDiff.diff](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsDiff.kt#L9)
+-> [jsDiff.diff](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsDiff.kt#L12)
 
 

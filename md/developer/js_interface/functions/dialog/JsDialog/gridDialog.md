@@ -28,7 +28,7 @@ var=gridJsDialog
 
 ## Src
 
--> [jsDialog.gridDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L216)
+-> [jsDialog.gridDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L219)
 
 ## Detail
 

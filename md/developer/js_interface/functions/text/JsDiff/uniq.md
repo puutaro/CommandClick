@@ -28,6 +28,6 @@ var=uniqCon
 
 ## Src
 
--> [jsDiff.uniq](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsDiff.kt#L29)
+-> [jsDiff.uniq](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/text/JsDiff.kt#L32)
 
 

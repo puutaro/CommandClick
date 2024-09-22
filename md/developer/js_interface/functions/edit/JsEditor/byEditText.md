@@ -27,6 +27,6 @@ Edit file by edit text
 
 ## Src
 
--> [jsEditor.byEditText](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsEditor.kt#L40)
+-> [jsEditor.byEditText](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsEditor.kt#L43)
 
 

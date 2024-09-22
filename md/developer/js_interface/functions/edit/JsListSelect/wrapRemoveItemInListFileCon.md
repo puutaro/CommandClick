@@ -50,7 +50,7 @@ Set blank value to here variable name's edit text
 
 ## Src
 
--> [jsListSelect.wrapRemoveItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsListSelect.kt#L90)
+-> [jsListSelect.wrapRemoveItemInListFileCon](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsListSelect.kt#L91)
 
 ## Detail
 

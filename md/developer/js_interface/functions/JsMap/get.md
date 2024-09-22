@@ -28,6 +28,6 @@ var=keyCon
 
 ## Src
 
--> [jsMap.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsMap.kt#L26)
+-> [jsMap.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsMap.kt#L27)
 
 

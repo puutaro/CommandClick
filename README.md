@@ -65,25 +65,24 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
+## Existing browsers don't have a rich URL history. But `CommmandClick` increase your resolution to URL history.
 
+<img src="https://github.com/user-attachments/assets/8d6bf3c8-9d30-4bc7-9c82-17bd2da7e825" width="500">  
 
-## Existing browsers do not have a rich URL history. But `CommmandClick` increase your resolution to URL history.
+## Existing browsers UI is not transparent, But `CommmandClick`'s UI is transparent to get more wide panorama.  
 
-<img src="https://github.com/user-attachments/assets/f51e234f-1c7f-417e-ac81-96c1021aa4fa" width="400">  
-
-## Existing browsers UI is similar, But `CommmandClick`'s UI is another and functional, using previous site capture.  
-
-<img src="https://github.com/user-attachments/assets/108234cc-77fb-4cd5-bd2e-e2acb401dc07" width="49%">
-<img src="https://github.com/user-attachments/assets/cf780064-afa9-493f-ac22-a68782ad17e0" width="49%">
+<img src="https://github.com/user-attachments/assets/aac0c05f-0232-4c49-b56e-c8c124b2dfd9" width="31%">
+<img src="https://github.com/user-attachments/assets/9aba1f3e-daf6-45a8-ba62-313b5d440501" width="31%">
+<img src="https://github.com/user-attachments/assets/4a309506-ada6-4628-b735-7f06269aa4b1" width="31%">
 
 
 ## Existing browsers lack a masterpiece of human technology, but 'CommandClick' has today's great backend, **Ubuntu**.  
 
-<img src="https://github.com/user-attachments/assets/fd98401d-88e1-495a-9790-45d3b665efd6" width="400">
+<img src="https://github.com/user-attachments/assets/6c24d52f-9beb-48ab-be28-ea41ad0c8bf4" width="500">
 
-## Exist browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you by graphical UI, ubuntu, etc..    
+## Existing browsers addon is poorly. But, `CommmandClick` addon has the potential to grow for you by graphical UI, ubuntu, etc..    
 
-<img src="https://github.com/user-attachments/assets/f85523e6-17a2-486f-8a27-de68b5152789" width="400">
+<img src="https://github.com/user-attachments/assets/a3d4a324-a25d-47d7-ada9-fc54fd2b2f68" width="500">
 
 App installation
 -----  

@@ -26,6 +26,6 @@ This function is used to dismiss [pocket webview](https://github.com/puutaro/Com
 
 ## Src
 
--> [jsDialog.webViewDismiss_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L365)
+-> [jsDialog.webViewDismiss_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L372)
 
 

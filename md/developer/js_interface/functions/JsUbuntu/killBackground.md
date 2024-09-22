@@ -24,6 +24,6 @@ var=runKillBackground
 
 ## Src
 
--> [jsUbuntu.killBackground](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L98)
+-> [jsUbuntu.killBackground](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L113)
 
 

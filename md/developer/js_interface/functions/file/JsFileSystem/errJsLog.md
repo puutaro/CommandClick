@@ -24,6 +24,6 @@ var=runErrJsLog
 
 ## Src
 
--> [jsFileSystem.errJsLog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsFileSystem.kt#L134)
+-> [jsFileSystem.errJsLog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/file/JsFileSystem.kt#L142)
 
 

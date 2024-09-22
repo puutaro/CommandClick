@@ -4,7 +4,6 @@
 
 ```js.js
 function jsProcessKiller.kill_S(
-	${currentAppDirPathString},
 	${fannelNameString},
 ) -> runKill_S
 ```
@@ -16,7 +15,6 @@ function jsProcessKiller.kill_S(
 var=runKill_S
 	?func=jsProcessKiller.kill_S
 	?args=
-		&currentAppDirPath=${String}
 		&fannelName=${String}
 ```
 
@@ -36,6 +34,6 @@ Kill process by dialog
 
 ## Src
 
--> [jsProcessKiller.kill_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsProcessKiller.kt#L12)
+-> [jsProcessKiller.kill_S](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/toolbar/JsProcessKiller.kt#L16)
 
 

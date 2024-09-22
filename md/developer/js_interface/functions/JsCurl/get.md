@@ -30,7 +30,7 @@ var=con
 
 ## Src
 
--> [jsCurl.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCurl.kt#L23)
+-> [jsCurl.get](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCurl.kt#L27)
 
 ## Detail
 

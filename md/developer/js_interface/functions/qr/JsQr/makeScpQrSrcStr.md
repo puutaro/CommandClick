@@ -24,6 +24,6 @@ var=scpQrSrcStr
 
 ## Src
 
--> [jsQr.makeScpQrSrcStr](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/qr/JsQr.kt#L214)
+-> [jsQr.makeScpQrSrcStr](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/qr/JsQr.kt#L223)
 
 

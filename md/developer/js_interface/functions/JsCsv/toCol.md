@@ -30,7 +30,7 @@ var=String
 
 ## Src
 
--> [jsCsv.toCol](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCsv.kt#L259)
+-> [jsCsv.toCol](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsCsv.kt#L285)
 
 ## Detail
 

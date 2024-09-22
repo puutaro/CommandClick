@@ -24,7 +24,7 @@ var=runShort
 
 ## Src
 
--> [jsToast.short](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsToast.kt#L18)
+-> [jsToast.short](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsToast.kt#L23)
 
 ## Detail
 

@@ -30,6 +30,6 @@ var=Shell2Http
 
 ## Src
 
--> [jsUbuntu.execScriptF](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L58)
+-> [jsUbuntu.execScriptF](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUbuntu.kt#L66)
 
 

@@ -24,6 +24,8 @@ var=runLoadJsPath
 
 - The `run` prefix definition on `var` is a process annotation, not a variable definition## Description
 
+## Description
+
 Load js path
 
 ### replaceMapCon arg
@@ -33,6 +35,6 @@ Load js path
 
 ## Src
 
--> [jsUrl.loadJsPath](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L64)
+-> [jsUrl.loadJsPath](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/JsUrl.kt#L73)
 
 

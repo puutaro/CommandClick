@@ -26,7 +26,7 @@ var=targetFormValue
 
 ## Src
 
--> [jsDialog.getFormValue](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L180)
+-> [jsDialog.getFormValue](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L183)
 
 ## Detail
 

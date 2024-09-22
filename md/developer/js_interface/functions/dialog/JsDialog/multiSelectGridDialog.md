@@ -28,7 +28,7 @@ var=selectedLine
 
 ## Src
 
--> [jsDialog.multiSelectGridDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L266)
+-> [jsDialog.multiSelectGridDialog](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/dialog/JsDialog.kt#L269)
 
 ## Detail
 

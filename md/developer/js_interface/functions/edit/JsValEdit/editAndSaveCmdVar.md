@@ -30,7 +30,7 @@ var=isOk
 
 ## Src
 
--> [jsValEdit.editAndSaveCmdVar](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsValEdit.kt#L23)
+-> [jsValEdit.editAndSaveCmdVar](https://github.com/puutaro/CommandClick/blob/master/app/src/main/java/com/puutaro/commandclick/fragment_lib/terminal_fragment/js_interface/edit/JsValEdit.kt#L24)
 
 ## Detail
 
