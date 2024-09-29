@@ -23,6 +23,9 @@ jobs:
       - name: Count download
         run: |
           bash ".github/workflows/shell/count_download.sh"
+      - name: Update thanks image
+        run: |
+          bash ".github/workflows/shell/gen_thanks_images.sh"
       - name: Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
 
