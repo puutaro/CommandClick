@@ -66,3 +66,5 @@
 | `| `| `| `| `| `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |` | ` |` | ` |` | ` |` | ` |` | ` |
 | `| `| `| `| `| `| `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |
 | `| `| `| `| `| `| `| `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |
+| `| `| `| `| `| `| `| `| `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |
+| `| `| `| `| `| `| `| `| `| `| `| GOOGLE2(`google2` | <img src="" width="40"> |` | <img src="" width="40"> |` | GOOGLE2(`google2` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |` | ` |
