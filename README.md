@@ -150,13 +150,11 @@ Acknowledge
 Thanks to awesome [UserLand](https://github.com/CypherpunkArmory/UserLAnd) and [PRoot](https://github.com/proot-me/proot), which make this project possible.
 
 Thanks for watching by end
-
-Thanks for watching by end
 --------
 
 
-<img src="https://github.com/user-attachments/assets/ffba7d64-9f61-4615-ba61-5142cfb12b12" width="45%">
-<img src="https://github.com/user-attachments/assets/edd63806-5a4f-4d52-9033-16efc9ac6568" width="45%">
-<img src="https://github.com/user-attachments/assets/43aa950d-818b-48ba-8941-96714c8339dd" width="45%">
-<img src="https://github.com/user-attachments/assets/540d5143-d63e-4881-9310-1f3d573b392e" width="45%">
+<img src="https://github.com/user-attachments/assets/49df240b-9ec1-4de4-880f-03e4d6cb2f13" width="45%">
+<img src="https://github.com/user-attachments/assets/aa93a8e7-394b-4c6d-b778-1c4a17ae1db9" width="45%">
+<img src="https://github.com/user-attachments/assets/395092ce-7e51-4171-96e3-2af099a941bc" width="45%">
+<img src="https://github.com/user-attachments/assets/83064351-94a7-4f65-b342-2bc90e4c2874" width="45%">
 
