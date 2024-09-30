@@ -143,6 +143,15 @@ class FannelManageAdapter(
         context,
         AssetsFileManager.intrudeGifPath
     )
+    private val ccDesignGifByteArray = AssetsFileManager.assetsByteArray(
+        context,
+        AssetsFileManager.ccDesignGifPath
+    )
+    private val cRexGifByteArray = AssetsFileManager.assetsByteArray(
+        context,
+        AssetsFileManager.cRexGifPath
+    )
+
 
     private val isIndex = FannelInfoTool.isEmptyFannelName(
         FannelInfoTool.getCurrentFannelName(fannelInfoMap)

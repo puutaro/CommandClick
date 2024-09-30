@@ -27,6 +27,8 @@ object AssetsFileManager {
     const val intrudeGifPath = "${resGifDirPath}/intrude.gif"
     const val ccRoboGifPath = "${resGifDirPath}/cc_robo.gif"
     const val foldaGifPath = "${resGifDirPath}/folda.gif"
+    const val ccDesignGifPath = "${resGifDirPath}/ccDesign.gif"
+    const val cRexGifPath = "${resGifDirPath}/c_rex.gif"
     private const val assetsBookmarkDirPath = "$assetsFannelsDirName/bookmark"
     const val assetsClipToHistoryForBookmark = "$assetsBookmarkDirPath/clipToHistory.js"
     private const val assetsDialogWebViewDirPath = "$assetsFannelsDirName/dialog_webview"
