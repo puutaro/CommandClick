@@ -150,8 +150,6 @@ Acknowledge
 Thanks to awesome [UserLand](https://github.com/CypherpunkArmory/UserLAnd) and [PRoot](https://github.com/proot-me/proot), which make this project possible.
 
 Thanks for watching by end
-
-Thanks for watching by end
 --------
 
 
