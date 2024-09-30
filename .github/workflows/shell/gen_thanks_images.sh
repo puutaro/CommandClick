@@ -31,7 +31,7 @@ readonly thanks_image_urls=$(\
 )
 readonly readme_without_thanks_src=$(\
     cat "${README_PATH}" \
-    | sed "/${THANKS_MESSAGE}/q"\
+    | sed "/${THANKS_MESSAGE}/,\$d"\
 )
 readonly readme_without_thanks="$(\
     awk \
