@@ -8,7 +8,6 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFi
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
@@ -22,22 +21,26 @@ object ExecSimpleEditItem {
         selectedItem: String,
         listIndexPosition: Int,
     ){
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
+        writeFileInTsvLine(
+            editFragment,
+            listIndexPosition
         )
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> writeFile(
-                editFragment,
-                selectedItem,
-            )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> writeFileInTsvLine(
-                editFragment,
-                listIndexPosition
-            )
-        }
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> writeFile(
+//                editFragment,
+//                selectedItem,
+//            )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> writeFileInTsvLine(
+//                editFragment,
+//                listIndexPosition
+//            )
+//        }
 
     }
 
@@ -45,25 +48,25 @@ object ExecSimpleEditItem {
         editFragment: EditFragment,
         selectedItem: String,
     ){
-        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
+//        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
         if(
             NoFileChecker.isNoFile(
-                parentDirPath,
+//                parentDirPath,
                 selectedItem,
             )
         ) return
         val listIndexUpdateIntent = Intent()
         listIndexUpdateIntent.action = BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-        execEdit(
-            editFragment,
-            parentDirPath,
-            selectedItem,
-            listIndexUpdateIntent
-        )
+//        execEdit(
+//            editFragment,
+////            parentDirPath,
+//            selectedItem,
+//            listIndexUpdateIntent
+//        )
     }
 
     private fun writeFileInTsvLine(
@@ -100,32 +103,32 @@ object ExecSimpleEditItem {
         val fileName = filePathOrConObj.name
         val listIndexUpdateIntent = Intent()
         listIndexUpdateIntent.action = BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-        execEdit(
-            editFragment,
-            parentDirPath,
-            fileName,
-            null
-        )
+//        execEdit(
+//            editFragment,
+//            parentDirPath,
+//            fileName,
+//            null
+//        )
     }
 
-    private fun execEdit(
-        editFragment: EditFragment,
-        parentDirPath: String,
-        selectedItem: String,
-        listIndexUpdateIntent: Intent?
-    ){
-        val firstCon = ReadText(
-            File(
-                parentDirPath,
-                selectedItem
-            ).absolutePath
-        ).readText()
-        EditorByEditText.byEditText(
-            editFragment,
-            parentDirPath,
-            selectedItem,
-            firstCon,
-            listIndexUpdateIntent
-        )
-    }
+//    private fun execEdit(
+//        editFragment: EditFragment,
+////        parentDirPath: String,
+//        selectedItem: String,
+//        listIndexUpdateIntent: Intent?
+//    ){
+//        val firstCon = ReadText(
+//            File(
+//                parentDirPath,
+//                selectedItem
+//            ).absolutePath
+//        ).readText()
+//        EditorByEditText.byEditText(
+//            editFragment,
+////            parentDirPath,
+//            selectedItem,
+//            firstCon,
+//            listIndexUpdateIntent
+//        )
+//    }
 }

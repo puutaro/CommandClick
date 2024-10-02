@@ -13,7 +13,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
@@ -28,36 +27,37 @@ object ExecItemDelete {
 
     fun execItemDelete(
         editFragment: EditFragment,
-        parentDirPath: String,
+//        parentDirPath: String,
         selectedItem: String,
         listIndexPosition: Int,
     ){
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> return
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> {}
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            if (
-                NoFileChecker.isNoFile(
-                    parentDirPath,
-                    selectedItem,
-                )
-            ) return@launch
-            withContext(Dispatchers.Main) {
-                DeleteAfterConfirm.execDeleteByDialog(
-                    editFragment,
-                    parentDirPath,
-                    selectedItem,
-                    listIndexPosition,
-                )
-            }
-        }
+        return
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> {}
+//        }
+//        CoroutineScope(Dispatchers.Main).launch {
+//            if (
+//                NoFileChecker.isNoFile(
+//                    parentDirPath,
+//                    selectedItem,
+//                )
+//            ) return@launch
+//            withContext(Dispatchers.Main) {
+//                DeleteAfterConfirm.execDeleteByDialog(
+//                    editFragment,
+//                    parentDirPath,
+//                    selectedItem,
+//                    listIndexPosition,
+//                )
+//            }
+//        }
     }
 
     object DeleteAfterConfirm{
@@ -185,7 +185,7 @@ object ExecItemDelete {
                         ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                             editFragment,
                             ListIndexAdapter.indexListMap,
-                            ListIndexAdapter.listIndexTypeKey
+//                            ListIndexAdapter.listIndexTypeKey
                         )
                     )
                 }

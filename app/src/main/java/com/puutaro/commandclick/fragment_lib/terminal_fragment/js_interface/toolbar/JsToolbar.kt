@@ -10,7 +10,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -82,9 +81,9 @@ class JsToolbar(
             currentFannelName,
             currentFannelState
         ) ?: return
-        val listIndexType = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
+//        val listIndexType = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
         val extraMap = makeSaveDirPathAndCompSuffixMap(
             urlConSaveParentDirPathSrc,
             compSuffix,
@@ -129,7 +128,7 @@ class JsToolbar(
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 addAndSort(
-                    listIndexType,
+//                    listIndexType,
                     listIndexPath,
                     compFileName,
                 )
@@ -219,41 +218,41 @@ class JsToolbar(
             )
     }
 
-    private fun makeUrlConSaveParentDirPath(
-        extraMap: Map<String, String>,
-        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
-        listIndexPath: String
-    ): String? {
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return null
-        val activity = terminalFragment.activity
-        val fannelInfoMap = terminalFragment.fannelInfoMap
-        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
-        val currentFannelState = FannelInfoTool.getCurrentStateName(
-            fannelInfoMap
-        )
-        TargetFragmentInstance.getCurrentEditFragmentFromFragment(
-            activity,
-//        currentAppDirPath,
-            currentFannelName,
-            currentFannelState
-        ) ?: return null
-        return when(listIndexType){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> EditSettingExtraArgsTool.getParentDirPath(
-                    extraMap,
-//                    currentAppDirPath,
-                )
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> listIndexPath
-        }
-    }
+//    private fun makeUrlConSaveParentDirPath(
+//        extraMap: Map<String, String>,
+//        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
+//        listIndexPath: String
+//    ): String? {
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return null
+//        val activity = terminalFragment.activity
+//        val fannelInfoMap = terminalFragment.fannelInfoMap
+//        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+//            fannelInfoMap
+//        )
+//        val currentFannelState = FannelInfoTool.getCurrentStateName(
+//            fannelInfoMap
+//        )
+//        TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+//            activity,
+////        currentAppDirPath,
+//            currentFannelName,
+//            currentFannelState
+//        ) ?: return null
+//        return when(listIndexType){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> EditSettingExtraArgsTool.getParentDirPath(
+//                    extraMap,
+////                    currentAppDirPath,
+//                )
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> listIndexPath
+//        }
+//    }
 
     private fun addAndSort(
-        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
+//        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
         listIndexPath: String,
 //        urlConSaveParentDirPath: String,
         fileName: String,
@@ -274,24 +273,32 @@ class JsToolbar(
             currentFannelName,
             currentFannelState
         ) ?: return
-        when(listIndexType){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> {
-                val insertLine = listOf(
-                    fileName,
-                    File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
-                ).joinToString("\t")
-                ExecAddForListIndexAdapter.execAddForTsv(
-                    editFragment,
-                    insertLine
-                )
-            }
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> ExecAddForListIndexAdapter.sortInAddFile(
-                editFragment,
-                File(listIndexPath, fileName).absolutePath
-            )
-        }
+        val insertLine = listOf(
+            fileName,
+            File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
+        ).joinToString("\t")
+        ExecAddForListIndexAdapter.execAddForTsv(
+            editFragment,
+            insertLine
+        )
+//        when(listIndexType){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> {
+//                val insertLine = listOf(
+//                    fileName,
+//                    File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
+//                ).joinToString("\t")
+//                ExecAddForListIndexAdapter.execAddForTsv(
+//                    editFragment,
+//                    insertLine
+//                )
+//            }
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> ExecAddForListIndexAdapter.sortInAddFile(
+//                editFragment,
+//                File(listIndexPath, fileName).absolutePath
+//            )
+//        }
     }
 }

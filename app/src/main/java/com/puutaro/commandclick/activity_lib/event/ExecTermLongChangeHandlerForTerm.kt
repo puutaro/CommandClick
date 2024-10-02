@@ -16,10 +16,10 @@ object ExecTermLongChangeHandlerForTerm {
                 ExecUrlLoadFragmentProccess.execUrlLoadCmdIndexFragment(
                     activity,
                 )
-            is EditFragment ->
-                ExecUrlLoadFragmentProccess.execUrlLoadCmdVriableEditFragment(
-                    activity,
-                )
+            is EditFragment -> {}
+//                ExecUrlLoadFragmentProccess.execUrlLoadCmdVriableEditFragment(
+//                    activity,
+//                )
             else -> {}
         }
     }

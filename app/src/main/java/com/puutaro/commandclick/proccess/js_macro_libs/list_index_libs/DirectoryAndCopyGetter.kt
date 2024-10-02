@@ -98,19 +98,19 @@ class DirectoryAndCopyGetter(
             File(sourceScriptFilePath),
             File(targetScriptFilePath),
         )
-        ExecAddForListIndexAdapter.sortInAddFile(
-            editFragment,
-            insertFilePath,
-        )
-        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-            editFragment,
-            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                editFragment,
-                ListIndexAdapter.indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        )
-        ToastUtils.showLong("copy file ok")
+//        ExecAddForListIndexAdapter.sortInAddFile(
+//            editFragment,
+//            insertFilePath,
+//        )
+//        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+//            editFragment,
+//            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+//                editFragment,
+//                ListIndexAdapter.indexListMap,
+//                ListIndexAdapter.listIndexTypeKey
+//            )
+//        )
+//        ToastUtils.showLong("copy file ok")
     }
 
 }

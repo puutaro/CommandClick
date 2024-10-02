@@ -14,9 +14,9 @@ object ListIndexSizingToKeyboard {
         editFragment: EditFragment,
         isOpen: Boolean
     ){
-        if(
-            !editFragment.existIndexList
-        ) return
+//        if(
+//            !editFragment.existIndexList
+//        ) return
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
         val listIndexForEditAdapter = editListRecyclerView.adapter
@@ -25,7 +25,7 @@ object ListIndexSizingToKeyboard {
             isOpen,
             binding,
         )
-        binding.editListInnerTopLinearLayout.isVisible = !isOpen
+//        binding.editListInnerTopLinearLayout.isVisible = !isOpen
         CoroutineScope(Dispatchers.Main).launch {
             delay(300)
             editListRecyclerView.scrollToPosition(
@@ -43,18 +43,18 @@ object ListIndexSizingToKeyboard {
         if(
             !editListSearchEditText.isVisible
         ) return
-        val editListLinearLayout =
-            binding.editListLinearLayout
-        val layoutParams =
-            editListLinearLayout.layoutParams
-                    as RelativeLayout.LayoutParams
-        when(isOpen) {
-            true -> layoutParams.addRule(
-                RelativeLayout.ALIGN_PARENT_BOTTOM
-            )
-            else -> layoutParams.removeRule(
-                RelativeLayout.ALIGN_PARENT_BOTTOM
-            )
-        }
+//        val editListLinearLayout =
+//            binding.editListLinearLayout
+//        val layoutParams =
+//            editListLinearLayout.layoutParams
+//                    as RelativeLayout.LayoutParams
+//        when(isOpen) {
+//            true -> layoutParams.addRule(
+//                RelativeLayout.ALIGN_PARENT_BOTTOM
+//            )
+//            else -> layoutParams.removeRule(
+//                RelativeLayout.ALIGN_PARENT_BOTTOM
+//            )
+//        }
     }
 }

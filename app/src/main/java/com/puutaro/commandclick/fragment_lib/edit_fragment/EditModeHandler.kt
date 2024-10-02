@@ -15,25 +15,26 @@ object EditModeHandler{
     const val settingSectionEnd = CommandClickScriptVariable.SETTING_SEC_END
 
     fun execByHowFullEdit(editFragment: EditFragment){
-        when(
-            IsCmdEdit.judge(editFragment)
-        ) {
-            false -> editSettingVariable(editFragment)
-            else -> editCommandVariable(editFragment)
-        }
+        editCommandVariable(editFragment)
+//        when(
+//            IsCmdEdit.judge(editFragment)
+//        ) {
+//            false -> editSettingVariable(editFragment)
+//            else -> editCommandVariable(editFragment)
+//        }
     }
 
     private fun editCommandVariable(
         editFragment: EditFragment
     ) {
-        val recordNumToMapNameValueInCommandHolder =
-            editFragment.recordNumToMapNameValueInCommandHolder
-        if(
-            recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
-        ) {
-            backToCmdIndex(editFragment)
-            return
-        }
+//        val recordNumToMapNameValueInCommandHolder =
+//            editFragment.recordNumToMapNameValueInCommandHolder
+//        if(
+//            recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
+//        ) {
+//            backToCmdIndex(editFragment)
+//            return
+//        }
         CoroutineScope(Dispatchers.Main).launch {
             EditTextProducerForEdit.adds(
                 editFragment,
@@ -84,7 +85,7 @@ object EditModeHandler{
         CoroutineScope(Dispatchers.Main).launch {
             EditTextProducerForEdit.adds(
                 editFragment,
-                true
+//                true
             )
         }
 //        if(editFragment.isToolbarBtnCustomInSettingSelects) {

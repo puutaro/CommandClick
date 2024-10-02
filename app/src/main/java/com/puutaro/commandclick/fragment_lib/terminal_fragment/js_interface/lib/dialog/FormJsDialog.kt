@@ -12,14 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-//import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -138,27 +135,27 @@ class FormJsDialog(
             String(),
         )
 
-        val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
-            recordNumToMapNameValueInSettingHolder,
-            String(),
+//        val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
+//            recordNumToMapNameValueInSettingHolder,
 //            String(),
-            null
-        )?.joinToString("\n")?.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-//                String(),
-                String()
-            )
-        }?.split("\n")
+////            String(),
+//            null
+//        )?.joinToString("\n")?.let {
+//            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                it,
+//                setReplaceVariableMap,
+////                String(),
+//                String()
+//            )
+//        }?.split("\n")
 
-        val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
-            terminalFragment,
-            setVariableTypeList,
-            recordNumToMapNameValueInCommandHolder,
-            setReplaceVariableMap,
-            terminalFragment.busyboxExecutor,
-        )
+//        val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
+//            terminalFragment,
+//            setVariableTypeList,
+//            recordNumToMapNameValueInCommandHolder,
+//            setReplaceVariableMap,
+//            terminalFragment.busyboxExecutor,
+//        )
 
         formDialog = Dialog(
             context
@@ -196,7 +193,7 @@ class FormJsDialog(
         execFormPartsAdd(
             terminalFragment,
             editParameters,
-            recordNumToSetVariableMaps,
+//            recordNumToSetVariableMaps,
             exitTextStartId,
             linearLayout
         )
@@ -221,26 +218,26 @@ class FormJsDialog(
         confirmOkButton?.setOnClickListener {
             formDialog?.dismiss()
             formDialog = null
-            val updateVirtualJsContentsList = if(
-                recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
-            ) virtualJsContentsList
-            else {
-                ScriptContentsLister.update(
-                    listOf(linearLayout),
-                    recordNumToMapNameValueInCommandHolder,
-                    virtualJsContentsList,
-                    exitTextStartId
-                )
-            }
-            val dialogReturnStringListSource = CommandClickVariables.extractValListFromHolder(
-                updateVirtualJsContentsList,
-                commandSectionStart,
-                commandSectionEnd
-            )
-            returnValue =
-                dialogReturnStringListSource?.slice(
-                    1 until dialogReturnStringListSource.size-1
-                )?.joinToString("\n") ?: String()
+//            val updateVirtualJsContentsList = if(
+//                recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
+//            ) virtualJsContentsList
+//            else {
+//                ScriptContentsLister.update(
+//                    listOf(linearLayout),
+//                    recordNumToMapNameValueInCommandHolder,
+//                    virtualJsContentsList,
+//                    exitTextStartId
+//                )
+//            }
+//            val dialogReturnStringListSource = CommandClickVariables.extractValListFromHolder(
+//                updateVirtualJsContentsList,
+//                commandSectionStart,
+//                commandSectionEnd
+//            )
+//            returnValue =
+//                dialogReturnStringListSource?.slice(
+//                    1 until dialogReturnStringListSource.size-1
+//                )?.joinToString("\n") ?: String()
             terminalViewModel.onDialog = false
         }
 
@@ -289,7 +286,7 @@ class FormJsDialog(
     private fun execFormPartsAdd(
         fragment: Fragment,
         editParameters: EditParameters,
-        recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
+//        recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
         editTextStartId: Int,
         linearLayout: LinearLayoutCompat
     ){
@@ -330,32 +327,32 @@ class FormJsDialog(
             insertEditText.setSelectAllOnFocus(true)
             val currentRecordNum =
                 currentRecordNumToMapNameValueInHolder.key
-            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
-                currentRecordNum
-            )
+//            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
+//                currentRecordNum
+//            )
             editParameters.currentId = currentId
             editParameters.currentVariableName = currentVariableName
             editParameters.currentVariableValue = currentVariableValue
-            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
-                currentRecordNum
-            )
-            val variableTypeList = editParameters.setVariableMap?.get(
-                SetVariableTypeColumn.VARIABLE_TYPE.name
-            )?.split(":")?.filter {
-                val isContain = variableTypeDefineListForMiniEdit.contains(it)
-                if (
-                    isContain
-                ) return@filter isContain
-                LogSystems.stdWarn("Irregular option: ${it}")
-                false
-            } ?: emptyList()
-            editParameters.variableTypeList = variableTypeList
-            val horizontalLinearLayout = WithEditComponentForFormJsDialog.insert(
-                fragment,
-                insertTextView,
-                editParameters
-            )
-            linearLayout.addView(horizontalLinearLayout)
+//            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
+//                currentRecordNum
+//            )
+//            val variableTypeList = editParameters.setVariableMap?.get(
+//                SetVariableTypeColumn.VARIABLE_TYPE.name
+//            )?.split(":")?.filter {
+//                val isContain = variableTypeDefineListForMiniEdit.contains(it)
+//                if (
+//                    isContain
+//                ) return@filter isContain
+//                LogSystems.stdWarn("Irregular option: ${it}")
+//                false
+//            } ?: emptyList()
+//            editParameters.variableTypeList = variableTypeList
+//            val horizontalLinearLayout = WithEditComponentForFormJsDialog.insert(
+//                fragment,
+//                insertTextView,
+//                editParameters
+//            )
+//            linearLayout.addView(horizontalLinearLayout)
         }
     }
 }

@@ -103,99 +103,99 @@ class JsQrEdit(
                     }
                 }
             else -> {
-                editAndSaveByFormDialog(
-                    qrConFilePath,
-                    qrConWithNewLine,
-                    qrMap
-                )
+//                editAndSaveByFormDialog(
+//                    qrConFilePath,
+//                    qrConWithNewLine,
+//                    qrMap
+//                )
                 context?.sendBroadcast(broadcastIntent)
             }
         }
     }
 
 
-    private fun editAndSaveByFormDialog(
-        qrConFilePath: String,
-        qrConWithNewLine: String,
-        qrMap: Map<String, String>
-    ) {
-        val fannelDirPath = CcPathTool.getMainFannelDirPath(
-            qrConFilePath
-        )
-        val listSaveDirPath = "${fannelDirPath}/cmdclickQrList"
-        val resultKeyValueCon = makeResultKeyValueCon(
-            qrConFilePath,
-            qrMap,
-            listSaveDirPath,
-        )
-        if(
-            resultKeyValueCon.isEmpty()
-        ) return
-        val updateQrMap = CmdClickMap.createMap(
-            resultKeyValueCon,
-            '\n'
-        ).toMap()
-        val jsListSelect = JsListSelect(terminalFragmentRef)
-        updateQrMap.keys.forEach {
-            val listPath = "${listSaveDirPath}/${it}List.txt"
-            val value = updateQrMap.get(it) ?: return@forEach
-            jsListSelect.updateListFileCon(
-                listPath,
-                value
-            )
-        }
-        val updateQrCon = QrContents.makeFromMap(
-            qrConWithNewLine,
-            updateQrMap
-        )
-        if(
-            updateQrCon.isEmpty()
-        ) return
-        FileSystems.writeFile(
-            qrConFilePath,
-            updateQrCon
-        )
-    }
+//    private fun editAndSaveByFormDialog(
+//        qrConFilePath: String,
+//        qrConWithNewLine: String,
+//        qrMap: Map<String, String>
+//    ) {
+//        val fannelDirPath = CcPathTool.getMainFannelDirPath(
+//            qrConFilePath
+//        )
+//        val listSaveDirPath = "${fannelDirPath}/cmdclickQrList"
+//        val resultKeyValueCon = makeResultKeyValueCon(
+//            qrConFilePath,
+//            qrMap,
+//            listSaveDirPath,
+//        )
+//        if(
+//            resultKeyValueCon.isEmpty()
+//        ) return
+//        val updateQrMap = CmdClickMap.createMap(
+//            resultKeyValueCon,
+//            '\n'
+//        ).toMap()
+//        val jsListSelect = JsListSelect(terminalFragmentRef)
+//        updateQrMap.keys.forEach {
+//            val listPath = "${listSaveDirPath}/${it}List.txt"
+//            val value = updateQrMap.get(it) ?: return@forEach
+//            jsListSelect.updateListFileCon(
+//                listPath,
+//                value
+//            )
+//        }
+//        val updateQrCon = QrContents.makeFromMap(
+//            qrConWithNewLine,
+//            updateQrMap
+//        )
+//        if(
+//            updateQrCon.isEmpty()
+//        ) return
+//        FileSystems.writeFile(
+//            qrConFilePath,
+//            updateQrCon
+//        )
+//    }
 
-    private fun makeResultKeyValueCon(
-        qrConFilePath: String,
-        qrMap: Map<String, String>,
-        listSaveDirPath: String,
-    ): String {
-        val qrConFileName = File(qrConFilePath).name
-        val valLabelMacro = EditTextSupportViewName.VARIABLE_LABEL.str
-        val txtEmphasisMacro = EditTextSupportViewName.EDIT_TEXT_EMPHASIS.str
-        val listConSBMacro = EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str
-        val listConListPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-        val listConLimitNumKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
-        val listConInitMark = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.initMark.name
-        val setVariableTypes = qrMap.keys.map {
-            val listPath = "${listSaveDirPath}/${it}List.txt"
-            val valNameAndMacro = listOf(
-                it,
-                valLabelMacro,
-                txtEmphasisMacro,
-                listConSBMacro
-            ).joinToString(":")
-            val valValueListStr = listOf(
-                "label=this",
-                "${listConListPathKey}=${listPath}?${listConLimitNumKey}=20?${listConInitMark}=DELETE"
-            ).joinToString("|")
-            "${valNameAndMacro}=${valValueListStr}"
-        }.joinToString("\t")
-        val targetVariables = qrMap.keys.map {
-            val variableValue = getFromQrMapForForm(
-                qrMap,
-                it,
-            )
-            "${it}=${variableValue}"
-        }.joinToString("\n")
-        return JsDialog(terminalFragmentRef).formDialog(
-            "Edit: ${qrConFileName}",
-            setVariableTypes,
-            targetVariables,
-        )
-    }
+//    private fun makeResultKeyValueCon(
+//        qrConFilePath: String,
+//        qrMap: Map<String, String>,
+//        listSaveDirPath: String,
+//    ): String {
+//        val qrConFileName = File(qrConFilePath).name
+//        val valLabelMacro = EditTextSupportViewName.VARIABLE_LABEL.str
+//        val txtEmphasisMacro = EditTextSupportViewName.EDIT_TEXT_EMPHASIS.str
+//        val listConSBMacro = EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str
+//        val listConListPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+//        val listConLimitNumKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
+//        val listConInitMark = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.initMark.name
+//        val setVariableTypes = qrMap.keys.map {
+//            val listPath = "${listSaveDirPath}/${it}List.txt"
+//            val valNameAndMacro = listOf(
+//                it,
+//                valLabelMacro,
+//                txtEmphasisMacro,
+//                listConSBMacro
+//            ).joinToString(":")
+//            val valValueListStr = listOf(
+//                "label=this",
+//                "${listConListPathKey}=${listPath}?${listConLimitNumKey}=20?${listConInitMark}=DELETE"
+//            ).joinToString("|")
+//            "${valNameAndMacro}=${valValueListStr}"
+//        }.joinToString("\t")
+//        val targetVariables = qrMap.keys.map {
+//            val variableValue = getFromQrMapForForm(
+//                qrMap,
+//                it,
+//            )
+//            "${it}=${variableValue}"
+//        }.joinToString("\n")
+//        return JsDialog(terminalFragmentRef).formDialog(
+//            "Edit: ${qrConFileName}",
+//            setVariableTypes,
+//            targetVariables,
+//        )
+//    }
 
     fun getFromQrMapForForm(
         qrMap: Map<String, String>,

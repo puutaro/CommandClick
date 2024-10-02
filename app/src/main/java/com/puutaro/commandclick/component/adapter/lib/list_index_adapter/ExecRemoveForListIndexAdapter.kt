@@ -5,7 +5,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
@@ -32,16 +31,16 @@ object ExecRemoveForListIndexAdapter {
 
     fun removeCon(
         editFragment: EditFragment,
-        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
+//        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
         removeItemLine: String,
     ){
-        when(listIndexType) {
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> return
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> {}
-        }
+//        when(listIndexType) {
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> {}
+//        }
         val onDeleteConFile = DeleteSettingsForListIndex.howOnDeleteConFileValue(
             ListIndexAdapter.deleteConfigMap
         )

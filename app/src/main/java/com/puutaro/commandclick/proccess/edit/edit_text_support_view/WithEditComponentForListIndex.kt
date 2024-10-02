@@ -12,178 +12,175 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.InDeCrementerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.VariableLabelAdder
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
-import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 
 object WithEditComponentForListIndex {
     private val textAndLabelList = TypeVariable.textAndLabelList
     private val noIndexTypeList = TypeVariable.noIndexTypeList
 
-    fun insert(
-        editFragment: EditFragment,
-        insertTextView: TextView,
-        editParameters: EditParameters,
-    ): LinearLayout {
-        val textLabelIndex = culcSetVariableTypeMarkIndex(
-            editParameters,
-            textAndLabelList,
-            EditTextSupportViewName.VARIABLE_LABEL.str
-        )
-        VariableLabelAdder.add(
-            insertTextView,
-            editParameters,
-            textLabelIndex
-        )
-        editParameters.variableTypeList = updateVariableTypeListByExcludeSupportView(
-            editParameters,
-            textLabelIndex,
-            EditTextSupportViewName.VARIABLE_LABEL.str
-        )
-        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
-            editParameters,
-            textLabelIndex,
-        )
-
-
-        val editTextPropertyIndex = culcSetVariableTypeMarkIndex(
-            editParameters,
-            textAndLabelList,
-            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
-        )
-        val setVariableValueForEditText = SetVariableTypeValue.makeByReplace(
-            editParameters
-        )
-        val editTextPropertyMap = SetVariableTyper.getCertainSetValIndexMap(
-            setVariableValueForEditText,
-            editTextPropertyIndex
-        )
-        val variableTypeList = updateVariableTypeListByExcludeSupportView(
-            editParameters,
-            editTextPropertyIndex,
-            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
-        )
-        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
-            editParameters,
-            editTextPropertyIndex,
-        )
-
-
-        val editTextWeight = decideTextEditWeight(
-            variableTypeList,
-        )
-        val otherComponentWeight = decideOtherComponentWeight(
-            editTextWeight,
-            variableTypeList,
-        )
-        val insertEditText = EditTextSetter.set(
-            editFragment,
-            editParameters,
-            editTextPropertyMap,
-            editTextWeight
-        )
-        val context = editFragment.context
-        val horizontalLinearLayout = makeHorizontalLayout(context)
-        horizontalLinearLayout.addView(insertEditText)
-//        hideSettingVariableWhenSettingEdit(
+//    fun insert(
+//        editFragment: EditFragment,
+//        insertTextView: TextView,
+//        editParameters: EditParameters,
+//    ): LinearLayout {
+//        val textLabelIndex = culcSetVariableTypeMarkIndex(
 //            editParameters,
-//            insertTextView,
-//            horizontalLinearLayout,
+//            textAndLabelList,
+//            EditTextSupportViewName.VARIABLE_LABEL.str
 //        )
-        (variableTypeList.indices).forEach {
-            val variableTypeListUntilCurrent =  variableTypeList.take(it + 1)
-            val currentComponentIndex = variableTypeListUntilCurrent.filter {
-                !noIndexTypeList.contains(it)
-            }.size - 1
-            when(variableTypeList[it]){
-                EditTextSupportViewName.CHECK_BOX.str -> {
-                    val insertSpinner = SpinnerViewProducer.make(
-                        context,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                    )
-                    horizontalLinearLayout.addView(insertSpinner)
-                }
-                EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
-                    val insertSpinner = EditableSpinnerViewProducer.make(
-                        editFragment,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                    )
-                    horizontalLinearLayout.addView(insertSpinner)
-                }
-                EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
-                    val editableFileSelectSpinner = FileSelectSpinnerViewProducer.make(
-                        editFragment,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                    )
-                    horizontalLinearLayout.addView(editableFileSelectSpinner)
-                }
-                EditTextSupportViewName.LIST_CONTENTS_SELECT_BOX.str -> {
-                    val insertListConSpinner = ListContentsSelectSpinnerViewProducer.make(
-                        editFragment,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                    )
-                    horizontalLinearLayout.addView(insertListConSpinner)
-                }
-                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
-                    val insertListConSpinner = EditableListContentsSelectSpinnerViewProducer.make(
-                        editFragment,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                    )
-                    horizontalLinearLayout.addView(insertListConSpinner)
-                }
-                EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
-                    val incButton = InDeCrementerViewProducer.make(
-                        editFragment,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                        true,
-                    )
-                    horizontalLinearLayout.addView(incButton)
-                    val decButton = InDeCrementerViewProducer.make(
-                        editFragment,
-                        insertEditText,
-                        editParameters,
-                        currentComponentIndex,
-                        otherComponentWeight,
-                        false
-                    )
-                    horizontalLinearLayout.addView(decButton)
-                }
-                EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
-                    insertEditText.isEnabled = false
-                }
-                EditTextSupportViewName.PASSWORD.str -> {
-                    insertEditText.inputType = (
-                            InputType.TYPE_CLASS_TEXT or
-                                    InputType.TYPE_TEXT_VARIATION_PASSWORD
-                            )
-                }
-                else -> {}
-            }
-        }
-        return horizontalLinearLayout
-    }
+//        VariableLabelAdder.add(
+//            insertTextView,
+//            editParameters,
+//            textLabelIndex
+//        )
+//        editParameters.variableTypeList = updateVariableTypeListByExcludeSupportView(
+//            editParameters,
+//            textLabelIndex,
+//            EditTextSupportViewName.VARIABLE_LABEL.str
+//        )
+//        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
+//            editParameters,
+//            textLabelIndex,
+//        )
+//
+//
+//        val editTextPropertyIndex = culcSetVariableTypeMarkIndex(
+//            editParameters,
+//            textAndLabelList,
+//            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
+//        )
+//        val setVariableValueForEditText = SetVariableTypeValue.makeByReplace(
+//            editParameters
+//        )
+//        val editTextPropertyMap = SetVariableTyper.getCertainSetValIndexMap(
+//            setVariableValueForEditText,
+//            editTextPropertyIndex
+//        )
+//        val variableTypeList = updateVariableTypeListByExcludeSupportView(
+//            editParameters,
+//            editTextPropertyIndex,
+//            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
+//        )
+//        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
+//            editParameters,
+//            editTextPropertyIndex,
+//        )
+//
+//
+//        val editTextWeight = decideTextEditWeight(
+//            variableTypeList,
+//        )
+//        val otherComponentWeight = decideOtherComponentWeight(
+//            editTextWeight,
+//            variableTypeList,
+//        )
+//        val insertEditText = EditTextSetter.set(
+//            editFragment,
+//            editParameters,
+//            editTextPropertyMap,
+//            editTextWeight
+//        )
+//        val context = editFragment.context
+//        val horizontalLinearLayout = makeHorizontalLayout(context)
+//        horizontalLinearLayout.addView(insertEditText)
+////        hideSettingVariableWhenSettingEdit(
+////            editParameters,
+////            insertTextView,
+////            horizontalLinearLayout,
+////        )
+//        (variableTypeList.indices).forEach {
+//            val variableTypeListUntilCurrent =  variableTypeList.take(it + 1)
+//            val currentComponentIndex = variableTypeListUntilCurrent.filter {
+//                !noIndexTypeList.contains(it)
+//            }.size - 1
+//            when(variableTypeList[it]){
+//                EditTextSupportViewName.CHECK_BOX.str -> {
+//                    val insertSpinner = SpinnerViewProducer.make(
+//                        context,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                    )
+//                    horizontalLinearLayout.addView(insertSpinner)
+//                }
+//                EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
+//                    val insertSpinner = EditableSpinnerViewProducer.make(
+//                        editFragment,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                    )
+//                    horizontalLinearLayout.addView(insertSpinner)
+//                }
+//                EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
+//                    val editableFileSelectSpinner = FileSelectSpinnerViewProducer.make(
+//                        editFragment,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                    )
+//                    horizontalLinearLayout.addView(editableFileSelectSpinner)
+//                }
+//                EditTextSupportViewName.LIST_CONTENTS_SELECT_BOX.str -> {
+//                    val insertListConSpinner = ListContentsSelectSpinnerViewProducer.make(
+//                        editFragment,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                    )
+//                    horizontalLinearLayout.addView(insertListConSpinner)
+//                }
+//                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
+//                    val insertListConSpinner = EditableListContentsSelectSpinnerViewProducer.make(
+//                        editFragment,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                    )
+//                    horizontalLinearLayout.addView(insertListConSpinner)
+//                }
+//                EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
+//                    val incButton = InDeCrementerViewProducer.make(
+//                        editFragment,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                        true,
+//                    )
+//                    horizontalLinearLayout.addView(incButton)
+//                    val decButton = InDeCrementerViewProducer.make(
+//                        editFragment,
+//                        insertEditText,
+//                        editParameters,
+//                        currentComponentIndex,
+//                        otherComponentWeight,
+//                        false
+//                    )
+//                    horizontalLinearLayout.addView(decButton)
+//                }
+//                EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
+//                    insertEditText.isEnabled = false
+//                }
+//                EditTextSupportViewName.PASSWORD.str -> {
+//                    insertEditText.inputType = (
+//                            InputType.TYPE_CLASS_TEXT or
+//                                    InputType.TYPE_TEXT_VARIATION_PASSWORD
+//                            )
+//                }
+//                else -> {}
+//            }
+//        }
+//        return horizontalLinearLayout
+//    }
 
     private  fun makeHorizontalLayout(
         context: Context?

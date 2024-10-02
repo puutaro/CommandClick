@@ -14,11 +14,9 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
@@ -70,13 +68,13 @@ object ButtonViewProducer {
         val context = editFragment.context
         val currentId = editParameters.currentId
 
-        val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
-            editParameters
-        )
+//        val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
+//            editParameters
+//        )
 
         val buttonMap = getButtonMap(
             editFragment,
-            currentSetVariableValue,
+//            currentSetVariableValue,
             currentComponentIndex
         )
         val linearParamsForButton = LinearLayoutCompat.LayoutParams(
@@ -105,7 +103,7 @@ object ButtonViewProducer {
             currentVariableName,
             editParameters,
             buttonMap,
-            currentSetVariableValue
+//            currentSetVariableValue
         )
         when(getIsConsec(buttonMap)) {
             true -> buttonTouchListener(buttonEventArgs)
@@ -181,7 +179,7 @@ object ButtonViewProducer {
             ButtonEditKey.tag.name
         )
 
-        ScriptFileSaver.save(editFragment)
+//        ScriptFileSaver.save(editFragment)
         ListContentsSaverByTag.save(
             editFragment,
             listOf(currentButtonTag)
@@ -295,12 +293,13 @@ object ButtonViewProducer {
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
             )
-            ButtonCmdType.jsCode
-            -> jsConExecutor(
-                editFragment,
-                buttonEventArgs,
-                innerExecCmd,
-            )
+            else -> {}
+//            ButtonCmdType.jsCode
+//            -> jsConExecutor(
+//                editFragment,
+//                buttonEventArgs,
+//                innerExecCmd,
+//            )
 //                execShellHandler(
 //                editFragment,
 //                execCmdAfterTrimButtonEditExecVariant,
@@ -550,10 +549,11 @@ object ButtonViewProducer {
             ?: return
         when(settingArg){
             SettingCmdArgs.ListAdd.name -> {
-                val listConSlSpiOptionsStr = getFromSetVariableValueByIndex(
-                    buttonEventArgs.currentSetVariableValue,
-                    0
-                )
+                val listConSlSpiOptionsStr = String()
+//                getFromSetVariableValueByIndex(
+//                    buttonEventArgs.currentSetVariableValue,
+//                    0
+//                )
                 execListAddForSetting(
                     buttonEventArgs.editFragment,
                     buttonEventArgs.currentVariableName,
@@ -812,24 +812,24 @@ object ButtonViewProducer {
         ) Keyboard.hiddenKeyboardForFragment(editFragment)
     }
 
-    private fun jsConExecutor(
-        editFragment: EditFragment,
-        buttonEventArgs: ButtonEventArgs,
-        jsConSrc: String,
-    ){
-        val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
-        val currentVariableName = buttonEventArgs.currentVariableName
-        val currentEditTextCon = currentVariableName?.let {
-            EditVariableName.getText(editFragment, it)
-        } ?: String()
-        ExecJsScriptInEdit.execJsConForEdit(
-            editFragment,
-            jsConSrc.replace(
-                currentEditTextConMark,
-                currentEditTextCon
-            )
-        )
-    }
+//    private fun jsConExecutor(
+//        editFragment: EditFragment,
+//        buttonEventArgs: ButtonEventArgs,
+//        jsConSrc: String,
+//    ){
+//        val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
+//        val currentVariableName = buttonEventArgs.currentVariableName
+//        val currentEditTextCon = currentVariableName?.let {
+//            EditVariableName.getText(editFragment, it)
+//        } ?: String()
+//        ExecJsScriptInEdit.execJsConForEdit(
+//            editFragment,
+//            jsConSrc.replace(
+//                currentEditTextConMark,
+//                currentEditTextCon
+//            )
+//        )
+//    }
 
     private fun makeArgs(
         execCmdReplaceBlankList: List<String>,
@@ -893,7 +893,7 @@ object ButtonViewProducer {
 
     private fun getButtonMap(
         editFragment: EditFragment,
-        currentSetVariableValue: String?,
+//        currentSetVariableValue: String?,
         currentComponentIndex: Int
     ): Map<String, String> {
         val fannelInfoMap = editFragment.fannelInfoMap
@@ -903,32 +903,33 @@ object ButtonViewProducer {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
-        return currentSetVariableValue?.let {
-            if(
-                it.contains(
-                    setVariableSetSeparator
-                )
-            ) return@let QuoteTool.splitBySurroundedIgnore(
-                it,
-                setVariableSetSeparator
-            )
-                .getOrNull(currentComponentIndex).let {
-                QuoteTool.trimBothEdgeQuote(it)
-            }
-            QuoteTool.trimBothEdgeQuote(it)
-        }?.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                editFragment.setReplaceVariableMap,
-//                currentAppDirPath,
-                currentFannelName
-            )
-        }.let {
-            CmdClickMap.createMap(
-                it,
-                '?'
-            ).toMap()
-        }
+        return emptyMap()
+//        return currentSetVariableValue?.let {
+//            if(
+//                it.contains(
+//                    setVariableSetSeparator
+//                )
+//            ) return@let QuoteTool.splitBySurroundedIgnore(
+//                it,
+//                setVariableSetSeparator
+//            )
+//                .getOrNull(currentComponentIndex).let {
+//                QuoteTool.trimBothEdgeQuote(it)
+//            }
+//            QuoteTool.trimBothEdgeQuote(it)
+//        }?.let {
+//            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                it,
+//                editFragment.setReplaceVariableMap,
+////                currentAppDirPath,
+//                currentFannelName
+//            )
+//        }.let {
+//            CmdClickMap.createMap(
+//                it,
+//                '?'
+//            ).toMap()
+//        }
     }
 
     private fun getSetFOptionMap(
@@ -999,7 +1000,7 @@ object ButtonViewProducer {
         val currentVariableName: String?,
         val editParameters: EditParameters,
         val buttonMap: Map<String, String>?,
-        val currentSetVariableValue: String?
+//        val currentSetVariableValue: String?
         )
 
     private enum class ButtonCmdType(

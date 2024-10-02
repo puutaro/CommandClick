@@ -353,7 +353,7 @@ object ExecSetToolbarButtonImage {
         CoroutineScope(Dispatchers.IO).launch {
             ToolbarButtonBariantForEdit.values().forEach {
                 val frameLayout = withContext(Dispatchers.Main) {
-                    editFragment.binding.editToolbarLinearLayout.findViewWithTag<FrameLayout>(
+                    editFragment.binding.editToolBarLinearLayout.findViewWithTag<FrameLayout>(
                         it.str
                     )
                 } ?: return@forEach

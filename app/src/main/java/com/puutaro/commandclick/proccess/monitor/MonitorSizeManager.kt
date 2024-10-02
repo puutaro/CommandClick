@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.proccess.monitor
 
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -11,7 +9,6 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
@@ -94,10 +91,10 @@ object MonitorSizeManager {
         val linearLayoutParam =
             editFragment.binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
         val isShow = linearLayoutParam.weight != ReadLines.LONGTH
-        EditLayoutViewHideShow.exec(
-            editFragment,
-            isShow
-        )
+//        EditLayoutViewHideShow.exec(
+//            editFragment,
+//            isShow
+//        )
         val listener =
             context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
         listener?.onToolbarMenuCategoriesForEdit(

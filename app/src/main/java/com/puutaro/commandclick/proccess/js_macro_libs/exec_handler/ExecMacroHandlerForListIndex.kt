@@ -40,17 +40,17 @@ object ExecMacroHandlerForListIndex {
         } ?: return
         when(macro){
             JsPathMacroForListIndex.DELETE -> {
-                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    editFragment,
-                    ListIndexAdapter.indexListMap,
-                    ListIndexAdapter.listIndexTypeKey
-                )
-                ExecItemDelete.execItemDelete(
-                    editFragment,
-                    filterDir,
-                    selectedItem,
-                    listIndexPosition,
-                )
+//                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                    editFragment,
+//                    ListIndexAdapter.indexListMap,
+//                    ListIndexAdapter.listIndexTypeKey
+//                )
+//                ExecItemDelete.execItemDelete(
+//                    editFragment,
+////                    filterDir,
+//                    selectedItem,
+//                    listIndexPosition,
+//                )
             }
             JsPathMacroForListIndex.SIMPLE_DELETE -> {
                 val binding = editFragment.binding

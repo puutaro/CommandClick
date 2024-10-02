@@ -7,7 +7,6 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAdd
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import java.io.File
 
 object ExecCopyFileHere {
@@ -16,24 +15,28 @@ object ExecCopyFileHere {
         selectedItem: String,
         listIndexPosition: Int,
     ){
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+        execCopyHereForTsv(
+            editFragment,
+            listIndexPosition,
         )
         ToastUtils.showShort("Copy ok")
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> {}
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> execCopyHereForNormal(
-                editFragment,
-                selectedItem,
-            )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> execCopyHereForTsv(
-                editFragment,
-                listIndexPosition,
-            )
-        }
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> execCopyHereForNormal(
+//                editFragment,
+//                selectedItem,
+//            )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> execCopyHereForTsv(
+//                editFragment,
+//                listIndexPosition,
+//            )
+//        }
     }
 
     private fun execCopyHereForTsv(
@@ -60,20 +63,20 @@ object ExecCopyFileHere {
         )
     }
 
-    private fun execCopyHereForNormal(
-        editFragment: EditFragment,
-        selectedItem: String,
-    ){
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                ListIndexAdapter.indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        val srcFilePath = File(parentDirPath, selectedItem).absolutePath
-        ExecAddForListIndexAdapter.execAddByCopyFileHere(
-            editFragment,
-            srcFilePath,
-        )
-    }
+//    private fun execCopyHereForNormal(
+//        editFragment: EditFragment,
+//        selectedItem: String,
+//    ){
+//        val parentDirPath =
+//            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                editFragment,
+//                ListIndexAdapter.indexListMap,
+//                ListIndexAdapter.listIndexTypeKey
+//            )
+//        val srcFilePath = File(parentDirPath, selectedItem).absolutePath
+//        ExecAddForListIndexAdapter.execAddByCopyFileHere(
+//            editFragment,
+//            srcFilePath,
+//        )
+//    }
 }

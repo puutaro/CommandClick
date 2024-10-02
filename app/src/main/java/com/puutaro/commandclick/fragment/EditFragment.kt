@@ -40,7 +40,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.CurrentFannelConListMaker
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.DirectoryAndCopyGetter
@@ -87,14 +86,14 @@ class EditFragment: Fragment() {
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var setReplaceVariableMap: Map<String, String>? = null
     var settingFannelPath: String = String()
-    var setVariableTypeList: List<String>? = null
+//    var setVariableTypeList: List<String>? = null
     var hideSettingVariableList: List<String> = emptyList()
     var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
     var currentFannelConList = emptyList<String>()
     var settingFannelConList: List<String>? = null
-    var existIndexList: Boolean = false
+//    var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
     var listIndexConfigMap: Map<String, String>? = null
@@ -142,9 +141,9 @@ class EditFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
-        binding.webSearch.webSearchToolbar.isVisible = false
-        binding.editListLinearLayout.isVisible = false
+//        binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
+//        binding.webSearch.webSearchToolbar.isVisible = false
+//        binding.editToolBarLinearLayout.isVisible = false
         directoryAndCopyGetter = DirectoryAndCopyGetter(this)
         val sharePref = FannelInfoTool.getSharePref(context)
         fannelInfoMap =
@@ -236,15 +235,15 @@ class EditFragment: Fragment() {
                 ).absolutePath,
             )
 //            val pageSearchToolbarManagerForEdit =
-//                PageSearchToolbarManagerForEdit(this)
-            PageSearchToolbarManagerForEdit.cancleButtonClickListener(this)
-            PageSearchToolbarManagerForEdit.onKeyListner(this)
-            PageSearchToolbarManagerForEdit.pageSearchTextChangeListner(this)
-            PageSearchToolbarManagerForEdit.searchTopClickLisnter(this)
-            PageSearchToolbarManagerForEdit.searchDownClickLisnter(this)
-            WebSearchToolbarManagerForEdit.setKeyListener(this)
-            WebSearchToolbarManagerForEdit.setCancelListener(this)
-            WebSearchToolbarManagerForEdit.setGoogleSuggest(this)
+////                PageSearchToolbarManagerForEdit(this)
+//            PageSearchToolbarManagerForEdit.cancleButtonClickListener(this)
+//            PageSearchToolbarManagerForEdit.onKeyListner(this)
+//            PageSearchToolbarManagerForEdit.pageSearchTextChangeListner(this)
+//            PageSearchToolbarManagerForEdit.searchTopClickLisnter(this)
+//            PageSearchToolbarManagerForEdit.searchDownClickLisnter(this)
+//            WebSearchToolbarManagerForEdit.setKeyListener(this)
+//            WebSearchToolbarManagerForEdit.setCancelListener(this)
+//            WebSearchToolbarManagerForEdit.setGoogleSuggest(this)
         }
 
         val window = activity?.window
@@ -288,47 +287,47 @@ class EditFragment: Fragment() {
                     if(
                         !this.isVisible
                     ) return@KeyboardVisibilityEventListener
-                    if(
-                        disableKeyboardFragmentChange
-                    ) return@KeyboardVisibilityEventListener
-//            if(terminalViewModel.onDialog) return@setEventListener
-                    binding.editTitleLinearlayout.isVisible = !isOpen
-                    val linearLayoutParam =
-                        binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
-                    val editFragmentWeight = linearLayoutParam.weight
-                    if(
-                        editFragmentWeight != ReadLines.LONGTH
-                    ) {
-                        KeyboardWhenTermLongForEdit.handle(
-                            this,
-                            isOpen
-                        )
-                        return@KeyboardVisibilityEventListener
-                    }
-                    ListIndexSizingToKeyboard.handle(
-                        this,
-                        isOpen
-                    )
-                    binding.editToolBarLinearLayout.isVisible =
-                        when(isOpen) {
-                            true -> {
-                                val isNotSearchTextWhenIndexList =
-                                    (existIndexList && !binding.editListSearchEditText.isVisible)
-                                !existIndexList
-                                        || isNotSearchTextWhenIndexList
-                            }
-                            else -> true
-                        }
-                    val isOpenKeyboard =
-                        when(isOpen) {
-                            true -> onTermVisibleWhenKeyboard !=
-                                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-                            else -> isOpen
-                        }
-                    listener?.onKeyBoardVisibleChangeForEditFragment(
-                        isOpenKeyboard,
-                        this.isVisible
-                    )
+//                    if(
+//                        disableKeyboardFragmentChange
+//                    ) return@KeyboardVisibilityEventListener
+////            if(terminalViewModel.onDialog) return@setEventListener
+//                    binding.editToolBarLinearLayout.isVisible = !isOpen
+//                    val linearLayoutParam =
+//                        binding.editFragment.layoutParams as LinearLayoutCompat.LayoutParams
+//                    val editFragmentWeight = linearLayoutParam.weight
+//                    if(
+//                        editFragmentWeight != ReadLines.LONGTH
+//                    ) {
+//                        KeyboardWhenTermLongForEdit.handle(
+//                            this,
+//                            isOpen
+//                        )
+//                        return@KeyboardVisibilityEventListener
+//                    }
+//                    ListIndexSizingToKeyboard.handle(
+//                        this,
+//                        isOpen
+//                    )
+//                    binding.editToolBarLinearLayout.isVisible =
+//                        when(isOpen) {
+//                            true -> {
+//                                val isNotSearchTextWhenIndexList =
+//                                    (existIndexList && !binding.editListSearchEditText.isVisible)
+//                                !existIndexList
+//                                        || isNotSearchTextWhenIndexList
+//                            }
+//                            else -> true
+//                        }
+//                    val isOpenKeyboard =
+//                        when(isOpen) {
+//                            true -> onTermVisibleWhenKeyboard !=
+//                                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+//                            else -> isOpen
+//                        }
+//                    listener?.onKeyBoardVisibleChangeForEditFragment(
+//                        isOpenKeyboard,
+//                        this.isVisible
+//                    )
                 }
             )
         }
@@ -362,9 +361,9 @@ class EditFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if(
-            !existIndexList
-        ) return
+//        if(
+//            !existIndexList
+//        ) return
         if(!firstUpdate){
             firstUpdate = true
             return
@@ -376,7 +375,7 @@ class EditFragment: Fragment() {
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     this@EditFragment,
                     ListIndexAdapter.indexListMap,
-                    ListIndexAdapter.listIndexTypeKey
+//                    ListIndexAdapter.listIndexTypeKey
                 )
             )
         }
@@ -393,11 +392,11 @@ class EditFragment: Fragment() {
 
     private fun destroyViews(){
         exitDialog(binding.editListRecyclerView)
-        binding.editLinearLayout.removeAllViews()
-        binding.editListInnerTopLinearLayout.removeAllViews()
-        binding.editListInnerBottomLinearLayout.removeAllViews()
-        binding.editListLinearLayout.removeAllViews()
         binding.editToolBarLinearLayout.removeAllViews()
+//        binding.editListInnerTopLinearLayout.removeAllViews()
+//        binding.editListInnerBottomLinearLayout.removeAllViews()
+//        binding.editListLinearLayout.removeAllViews()
+//        binding.editToolBarLinearLayout.removeAllViews()
     }
 
     interface OnToolBarButtonClickListenerForEditFragment {
@@ -464,14 +463,14 @@ class EditFragment: Fragment() {
         )
     }
 
-    interface OnLongPressPlayOrEditButtonListener {
-        fun onLongPressPlayOrEditButton(
-            editLongPressType: EditLongPressType,
-            tag: String?,
-            searchText: String,
-            pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant? = null,
-        )
-    }
+//    interface OnLongPressPlayOrEditButtonListener {
+//        fun onLongPressPlayOrEditButton(
+//            editLongPressType: EditLongPressType,
+//            tag: String?,
+//            searchText: String,
+//            pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant? = null,
+//        )
+//    }
 
     interface OnLongTermKeyBoardOpenAjustListenerForEdit {
         fun onLongTermKeyBoardOpenAjustForEdit(

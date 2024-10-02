@@ -24,9 +24,10 @@ object ExecQr {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            editFragment.fannelInfoMap
 //        )
-        val parentDirPath = ActionToolForQr.getParentDirPath(
-            editFragment
-        )
+        val parentDirPath = String()
+//        ActionToolForQr.getParentDirPath(
+//            editFragment
+//        )
         val contents = ActionToolForQr.getContents(
             editFragment.context,
             parentDirPath,

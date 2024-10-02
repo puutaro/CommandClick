@@ -6,8 +6,6 @@ import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
@@ -16,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 object ExecAddForListIndexAdapter {
 
@@ -58,97 +55,97 @@ object ExecAddForListIndexAdapter {
         }
     }
 
-    fun execAddByCopyFileHere(
-        editFragment: EditFragment,
-        sourceFilePath: String,
-    ){
-        val indexListMap = ListIndexAdapter.indexListMap
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        val sourceFilePathObj = File(sourceFilePath)
-        val srcParentDirPath = sourceFilePathObj.parent
-            ?: return
-        val srcFileName = sourceFilePathObj.name
-        if(
-            NoFileChecker.isNoFile(
-                srcParentDirPath,
-                srcFileName,
-            )
-        ) return
-        val destiFilePath = "${parentDirPath}/${srcFileName}"
-        val insertFilePath = FileSystems.execCopyFileWithDir(
-            File(sourceFilePath),
-            File(destiFilePath),
-        )
-        sortInAddFile(
-            editFragment,
-            insertFilePath,
-        )
-    }
+//    fun execAddByCopyFileHere(
+//        editFragment: EditFragment,
+//        sourceFilePath: String,
+//    ){
+//        val indexListMap = ListIndexAdapter.indexListMap
+////        val parentDirPath =
+////            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+////                editFragment,
+////                indexListMap,
+////                ListIndexAdapter.listIndexTypeKey
+////            )
+//        val sourceFilePathObj = File(sourceFilePath)
+//        val srcParentDirPath = sourceFilePathObj.parent
+//            ?: return
+//        val srcFileName = sourceFilePathObj.name
+//        if(
+//            NoFileChecker.isNoFile(
+//                srcParentDirPath,
+//                srcFileName,
+//            )
+//        ) return
+//        val destiFilePath = "${parentDirPath}/${srcFileName}"
+//        val insertFilePath = FileSystems.execCopyFileWithDir(
+//            File(sourceFilePath),
+//            File(destiFilePath),
+//        )
+//        sortInAddFile(
+//            editFragment,
+//            insertFilePath,
+//        )
+//    }
 
-    fun execAddByCopyFileListHere(
-        editFragment: EditFragment,
-        sourceFilePathList: List<String>,
-    ){
-        val indexListMap = ListIndexAdapter.indexListMap
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        sourceFilePathList.forEach {
-            sourceFilePath ->
-            val sourceFilePathObj = File(sourceFilePath)
-            if(
-                !sourceFilePathObj.isFile
-            ) return@forEach
-            val srcFileName = sourceFilePathObj.name
-            val destiFilePath = "${parentDirPath}/${srcFileName}"
-            FileSystems.execCopyFileWithDir(
-                File(sourceFilePath),
-                File(destiFilePath),
-            )
-        }
-        BroadcastSender.normalSend(
-            editFragment.context,
-            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-        )
-    }
+//    fun execAddByCopyFileListHere(
+//        editFragment: EditFragment,
+//        sourceFilePathList: List<String>,
+//    ){
+//        val indexListMap = ListIndexAdapter.indexListMap
+////        val parentDirPath =
+////            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+////                editFragment,
+////                indexListMap,
+////                ListIndexAdapter.listIndexTypeKey
+////            )
+//        sourceFilePathList.forEach {
+//            sourceFilePath ->
+//            val sourceFilePathObj = File(sourceFilePath)
+//            if(
+//                !sourceFilePathObj.isFile
+//            ) return@forEach
+//            val srcFileName = sourceFilePathObj.name
+//            val destiFilePath = "${parentDirPath}/${srcFileName}"
+//            FileSystems.execCopyFileWithDir(
+//                File(sourceFilePath),
+//                File(destiFilePath),
+//            )
+//        }
+//        BroadcastSender.normalSend(
+//            editFragment.context,
+//            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+//        )
+//    }
 
-    fun execAddByCopyDirListHere(
-        editFragment: EditFragment,
-        sourceFilePathList: List<String>,
-    ){
-        val indexListMap = ListIndexAdapter.indexListMap
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        sourceFilePathList.forEach {
-                sourceFilePath ->
-            val sourceFilePathObj = File(sourceFilePath)
-            if(
-                !sourceFilePathObj.isDirectory
-            ) return@forEach
-            val srcDirName = sourceFilePathObj.name
-            val destiDirPath = "${parentDirPath}/${srcDirName}"
-            FileSystems.copyDirectory(
-                sourceFilePath,
-                destiDirPath,
-            )
-        }
-        BroadcastSender.normalSend(
-            editFragment.context,
-            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-        )
-    }
+//    fun execAddByCopyDirListHere(
+//        editFragment: EditFragment,
+//        sourceFilePathList: List<String>,
+//    ){
+//        val indexListMap = ListIndexAdapter.indexListMap
+//        val parentDirPath =
+//            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                editFragment,
+//                indexListMap,
+//                ListIndexAdapter.listIndexTypeKey
+//            )
+//        sourceFilePathList.forEach {
+//                sourceFilePath ->
+//            val sourceFilePathObj = File(sourceFilePath)
+//            if(
+//                !sourceFilePathObj.isDirectory
+//            ) return@forEach
+//            val srcDirName = sourceFilePathObj.name
+//            val destiDirPath = "${parentDirPath}/${srcDirName}"
+//            FileSystems.copyDirectory(
+//                sourceFilePath,
+//                destiDirPath,
+//            )
+//        }
+//        BroadcastSender.normalSend(
+//            editFragment.context,
+//            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+//        )
+//    }
 
     fun execAddListForTsv(
         editFragment: EditFragment,
@@ -273,86 +270,86 @@ object ExecAddForListIndexAdapter {
         }
     }
 
-    fun sortInAddFile(
-        editFragment: EditFragment,
-        insertFilePath: String,
-    ){
-        val sortType = ListSettingsForListIndex.getSortType(
-            editFragment,
-            ListIndexAdapter.indexListMap
-        )
-        when(sortType){
-            ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
-                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                    editFragment,
-                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                        editFragment,
-                        ListIndexAdapter.indexListMap,
-                        ListIndexAdapter.listIndexTypeKey
-                    )
-                )
-            ListSettingsForListIndex.SortByKey.SORT,
-            ListSettingsForListIndex.SortByKey.REVERSE -> {
-                addFileNameLineForSort(
-                    editFragment,
-                    insertFilePath,
-                )
-            }
-        }
-    }
+//    fun sortInAddFile(
+//        editFragment: EditFragment,
+//        insertFilePath: String,
+//    ){
+//        val sortType = ListSettingsForListIndex.getSortType(
+//            editFragment,
+//            ListIndexAdapter.indexListMap
+//        )
+//        when(sortType){
+//            ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
+//                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+//                    editFragment,
+//                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+//                        editFragment,
+//                        ListIndexAdapter.indexListMap,
+//                        ListIndexAdapter.listIndexTypeKey
+//                    )
+//                )
+//            ListSettingsForListIndex.SortByKey.SORT,
+//            ListSettingsForListIndex.SortByKey.REVERSE -> {
+//                addFileNameLineForSort(
+//                    editFragment,
+//                    insertFilePath,
+//                )
+//            }
+//        }
+//    }
 
-    private fun addFileNameLineForSort(
-        editFragment: EditFragment,
-        insertFilePath: String,
-    ){
-        val indexListMap = ListIndexAdapter.indexListMap
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        val filterPrefix = FilePrefixGetter.get(
-            editFragment,
-            indexListMap,
-            ListSettingsForListIndex.ListSettingKey.PREFIX.key
-        ) ?: String()
-        val filterSuffix = FilePrefixGetter.get(
-            editFragment,
-            indexListMap,
-            ListSettingsForListIndex.ListSettingKey.SUFFIX.key
-        ) ?: String()
-        val filterShellCon = ListSettingsForListIndex.ListIndexListMaker.getFilterShellCon(
-            editFragment,
-            indexListMap,
-        )
-        val insertFileName = File(insertFilePath)
-        val fileNameElement = ListSettingsForListIndex.ListIndexListMaker.makeFileListElement(
-            listOf(insertFileName.name),
-            editFragment.busyboxExecutor,
-            parentDirPath,
-            filterPrefix,
-            filterSuffix,
-            filterShellCon,
-        ).firstOrNull()
-        if(
-            fileNameElement.isNullOrEmpty()
-        ) return
-        val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
-        val sortType = ListSettingsForListIndex.getSortType(
-            editFragment,
-            ListIndexAdapter.indexListMap
-        )
-        val insertIndex = getInsertIndex(
-            sortType,
-            listIndexForEditAdapter,
-            fileNameElement,
-        )
-        listUpdateByInsertItem(
-            editFragment,
-            fileNameElement,
-            insertIndex
-        )
-    }
+//    private fun addFileNameLineForSort(
+//        editFragment: EditFragment,
+//        insertFilePath: String,
+//    ){
+//        val indexListMap = ListIndexAdapter.indexListMap
+//        val parentDirPath =
+//            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                editFragment,
+//                indexListMap,
+//                ListIndexAdapter.listIndexTypeKey
+//            )
+//        val filterPrefix = FilePrefixGetter.get(
+//            editFragment,
+//            indexListMap,
+//            ListSettingsForListIndex.ListSettingKey.PREFIX.key
+//        ) ?: String()
+//        val filterSuffix = FilePrefixGetter.get(
+//            editFragment,
+//            indexListMap,
+//            ListSettingsForListIndex.ListSettingKey.SUFFIX.key
+//        ) ?: String()
+//        val filterShellCon = ListSettingsForListIndex.ListIndexListMaker.getFilterShellCon(
+//            editFragment,
+//            indexListMap,
+//        )
+//        val insertFileName = File(insertFilePath)
+//        val fileNameElement = ListSettingsForListIndex.ListIndexListMaker.makeFileListElement(
+//            listOf(insertFileName.name),
+//            editFragment.busyboxExecutor,
+//            parentDirPath,
+//            filterPrefix,
+//            filterSuffix,
+//            filterShellCon,
+//        ).firstOrNull()
+//        if(
+//            fileNameElement.isNullOrEmpty()
+//        ) return
+//        val listIndexForEditAdapter =
+//            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
+//        val sortType = ListSettingsForListIndex.getSortType(
+//            editFragment,
+//            ListIndexAdapter.indexListMap
+//        )
+//        val insertIndex = getInsertIndex(
+//            sortType,
+//            listIndexForEditAdapter,
+//            fileNameElement,
+//        )
+//        listUpdateByInsertItem(
+//            editFragment,
+//            fileNameElement,
+//            insertIndex
+//        )
+//    }
 }

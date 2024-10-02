@@ -9,15 +9,15 @@ import java.io.File
 
 object ActionToolForQr {
 
-    fun getParentDirPath(
-        editFragment: EditFragment
-    ): String {
-        return ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
-    }
+//    fun getParentDirPath(
+//        editFragment: EditFragment
+//    ): String {
+//        return ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
+//    }
 
     fun getContents(
         context: Context?,

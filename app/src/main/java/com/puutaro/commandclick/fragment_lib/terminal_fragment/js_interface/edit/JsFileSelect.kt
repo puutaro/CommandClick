@@ -11,7 +11,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -26,7 +25,8 @@ import java.lang.ref.WeakReference
 class JsFileSelect(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
-    private val noSuffixMacroWord = FileSelectSpinnerViewProducer.noExtend
+    private val noSuffixMacroWord = String()
+    //FileSelectSpinnerViewProducer.noExtend
     private val totalExtendRegex = Regex("\\.[a-zA-Z0-9]*$")
     private var confirmDialog: Dialog? = null
 
@@ -231,10 +231,10 @@ class JsFileSelect(
                 scriptFileName,
                 "${targetVariable}=\"${recentLogFile}\""
             )
-            JsEdit(terminalFragmentRef).updateEditText(
-                targetVariable,
-                recentLogFile
-            )
+//            JsEdit(terminalFragmentRef).updateEditText(
+//                targetVariable,
+//                recentLogFile
+//            )
 
         }
     }
@@ -275,10 +275,10 @@ class JsFileSelect(
             scriptFileName,
             "${targetVariable}=\"${renameFileNameOkForDialog}\""
         )
-        JsEdit(terminalFragmentRef).updateEditText(
-            targetVariable,
-            renameFileNameOkForDialog
-        )
+//        JsEdit(terminalFragmentRef).updateEditText(
+//            targetVariable,
+//            renameFileNameOkForDialog
+//        )
     }
 
     private fun updateScriptFile(

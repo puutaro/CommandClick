@@ -20,33 +20,33 @@ class JsValEdit(
 //    private val fannelInfoMap = terminalFragment.fannelInfoMap
 
 
-    @JavascriptInterface
-    fun editAndSaveCmdVar(
-        title: String,
-        fannelPath: String,
-        setVariableTypes: String,
-        targetVariables: String,
-    ): String {
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return String()
-        val context = terminalFragment.context
-        val isOk = try {
-            execEditAndSaveCmdVar(
-                title,
-                fannelPath,
-                setVariableTypes,
-                targetVariables,
-            )
-        } catch (e: Exception){
-            ToastUtils.showShort(e.toString())
-            LogSystems.stdErr(
-                context,
-                "$e"
-            )
-            cancelReturnCode
-        }
-        return isOk
-    }
+//    @JavascriptInterface
+//    fun editAndSaveCmdVar(
+//        title: String,
+//        fannelPath: String,
+//        setVariableTypes: String,
+//        targetVariables: String,
+//    ): String {
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return String()
+//        val context = terminalFragment.context
+//        val isOk = try {
+//            execEditAndSaveCmdVar(
+//                title,
+//                fannelPath,
+//                setVariableTypes,
+//                targetVariables,
+//            )
+//        } catch (e: Exception){
+//            ToastUtils.showShort(e.toString())
+//            LogSystems.stdErr(
+//                context,
+//                "$e"
+//            )
+//            cancelReturnCode
+//        }
+//        return isOk
+//    }
 
     @JavascriptInterface
     fun registerFannelConChange(
@@ -65,52 +65,52 @@ class JsValEdit(
         )
     }
 
-    private fun execEditAndSaveCmdVar(
-        title: String,
-        fannelPath: String,
-        setVariableTypes: String,
-        targetVariables: String,
-    ): String {
-        val resultKeyValueCon = JsDialog(terminalFragmentRef).formDialog(
-            title,
-            setVariableTypes,
-            targetVariables,
-        )
-        if(
-            resultKeyValueCon.isEmpty()
-        ) return cancelReturnCode
-
-        val variableMap = CmdClickMap.createMap(
-            resultKeyValueCon,
-            '\n'
-        )
-        val jsEdit = JsEdit(terminalFragmentRef)
-        variableMap.forEach {
-            val varName = it.first
-            val varValue = it.second
-            jsEdit.updateEditText(
-                varName,
-                varValue
-            )
-        }
-        val jsScript = JsScript(terminalFragmentRef)
-        val fcon = ReadText(
-            fannelPath
-        ).readText()
-        val replacedCon =  jsScript.replaceCommandVariable(
-            fcon,
-            resultKeyValueCon
-        )
-        registerFannelConChange(
-            replacedCon
-        )
-        if(
-            replacedCon.isEmpty()
-        ) return okReturnCode
-        FileSystems.writeFile(
-            fannelPath,
-            replacedCon
-        )
-        return okReturnCode
-    }
+//    private fun execEditAndSaveCmdVar(
+//        title: String,
+//        fannelPath: String,
+//        setVariableTypes: String,
+//        targetVariables: String,
+//    ): String {
+//        val resultKeyValueCon = JsDialog(terminalFragmentRef).formDialog(
+//            title,
+//            setVariableTypes,
+//            targetVariables,
+//        )
+//        if(
+//            resultKeyValueCon.isEmpty()
+//        ) return cancelReturnCode
+//
+//        val variableMap = CmdClickMap.createMap(
+//            resultKeyValueCon,
+//            '\n'
+//        )
+//        val jsEdit = JsEdit(terminalFragmentRef)
+//        variableMap.forEach {
+//            val varName = it.first
+//            val varValue = it.second
+//            jsEdit.updateEditText(
+//                varName,
+//                varValue
+//            )
+//        }
+//        val jsScript = JsScript(terminalFragmentRef)
+//        val fcon = ReadText(
+//            fannelPath
+//        ).readText()
+//        val replacedCon =  jsScript.replaceCommandVariable(
+//            fcon,
+//            resultKeyValueCon
+//        )
+//        registerFannelConChange(
+//            replacedCon
+//        )
+//        if(
+//            replacedCon.isEmpty()
+//        ) return okReturnCode
+//        FileSystems.writeFile(
+//            fannelPath,
+//            replacedCon
+//        )
+//        return okReturnCode
+//    }
 }

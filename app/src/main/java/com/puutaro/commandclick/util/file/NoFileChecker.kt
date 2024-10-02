@@ -9,13 +9,13 @@ object NoFileChecker {
     private val blankListMark = "Let's press sync button at right bellow"
 
     fun isNoFile(
-        parentDirPath: String,
+//        parentDirPath: String,
         selectedItem: String,
         message: String = "No file"
     ): Boolean {
         val isNoFile = selectedItem == throughMark
                 || selectedItem.trim() == blankListMark
-                || !File(parentDirPath, selectedItem).isFile
+//                || !File(parentDirPath, selectedItem).isFile
         if(isNoFile){
             noFileToast(message)
         }

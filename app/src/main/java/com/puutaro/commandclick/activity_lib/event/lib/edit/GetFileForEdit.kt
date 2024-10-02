@@ -11,7 +11,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
@@ -158,15 +157,15 @@ class GetFileForEdit(
         }
     }
 
-    private fun execGetForNormal(
-        editFragment: EditFragment,
-        sourceFilePath: String,
-    ){
-        ExecAddForListIndexAdapter.execAddByCopyFileHere(
-            editFragment,
-            sourceFilePath,
-        )
-    }
+//    private fun execGetForNormal(
+//        editFragment: EditFragment,
+//        sourceFilePath: String,
+//    ){
+//        ExecAddForListIndexAdapter.execAddByCopyFileHere(
+//            editFragment,
+//            sourceFilePath,
+//        )
+//    }
 
     private fun execGetForTsv(
         editFragment: EditFragment,
@@ -210,25 +209,29 @@ class GetFileForEdit(
     ){
         val editFragment = getEditFragment()
             ?: return
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+        execGetForTsv(
+            editFragment,
+            sourceFileOrDirPath,
         )
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> {}
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> {
-                if(onDirectoryPick) return
-                execGetForNormal(
-                    editFragment,
-                    sourceFileOrDirPath,
-                )
-            }
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> execGetForTsv(
-                editFragment,
-                sourceFileOrDirPath,
-            )
-        }
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> {
+//                if(onDirectoryPick) return
+//                execGetForNormal(
+//                    editFragment,
+//                    sourceFileOrDirPath,
+//                )
+//            }
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> execGetForTsv(
+//                editFragment,
+//                sourceFileOrDirPath,
+//            )
+//        }
     }
 }

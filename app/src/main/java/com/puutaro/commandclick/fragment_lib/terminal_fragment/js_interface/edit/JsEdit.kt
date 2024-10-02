@@ -27,10 +27,10 @@ class JsEdit(
         updateVariableValue: String,
     ){
         val jsScript = JsScript(terminalFragmentRef)
-        updateEditText(
-            targetVariableName,
-            updateVariableValue
-        )
+//        updateEditText(
+//            targetVariableName,
+//            updateVariableValue
+//        )
         val jsContents = ReadText(
             fannelScriptPath
         ).readText()
@@ -44,72 +44,72 @@ class JsEdit(
         )
     }
 
-    @JavascriptInterface
-    fun updateEditText(
-        updateVariableName: String,
-        updateVariableValue: String
-    ){
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return
-        val context = terminalFragment.context
-        val listener = context as? TerminalFragment.OnEditTextUpdateListenerForTermFragment
-        val editViewModel: EditViewModel by terminalFragment.activityViewModels()
-        val editTextId = editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
-        listener?.onEditTextUpdateForTermFragment(
-            editTextId,
-            updateVariableValue
-        )
-    }
+//    @JavascriptInterface
+//    fun updateEditText(
+//        updateVariableName: String,
+//        updateVariableValue: String
+//    ){
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return
+//        val context = terminalFragment.context
+//        val listener = context as? TerminalFragment.OnEditTextUpdateListenerForTermFragment
+//        val editViewModel: EditViewModel by terminalFragment.activityViewModels()
+//        val editTextId = editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
+//        listener?.onEditTextUpdateForTermFragment(
+//            editTextId,
+//            updateVariableValue
+//        )
+//    }
 
-    @JavascriptInterface
-    fun getFromEditText(
-        targetVariableName: String,
-    ): String {
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return String()
-        val fannelInfoMap =
-            terminalFragment.fannelInfoMap
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//    @JavascriptInterface
+//    fun getFromEditText(
+//        targetVariableName: String,
+//    ): String {
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return String()
+//        val fannelInfoMap =
+//            terminalFragment.fannelInfoMap
+////        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////            fannelInfoMap
+////        )
+//
+//        val currentFannelName = FannelInfoTool.getCurrentFannelName(
 //            fannelInfoMap
 //        )
+//        val fannelState = FannelInfoTool.getCurrentStateName(
+//            fannelInfoMap
+//        )
+//        val activity = terminalFragment.activity
+//        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+//            activity,
+////            currentAppDirPath,
+//            currentFannelName,
+//            fannelState
+//        ) ?: return String()
+//        val targetEditTextCon = EditVariableName.getText(
+//            editFragment,
+//            targetVariableName
+//        )
+//        return targetEditTextCon
+//    }
 
-        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
-        val fannelState = FannelInfoTool.getCurrentStateName(
-            fannelInfoMap
-        )
-        val activity = terminalFragment.activity
-        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
-            activity,
-//            currentAppDirPath,
-            currentFannelName,
-            fannelState
-        ) ?: return String()
-        val targetEditTextCon = EditVariableName.getText(
-            editFragment,
-            targetVariableName
-        )
-        return targetEditTextCon
-    }
-
-    @JavascriptInterface
-    fun updateSpinner(
-        updateVariableName: String,
-        updateVariableValue: String
-    ){
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return
-        val context = terminalFragment.context
-        val listener = context as? TerminalFragment.OnSpinnerUpdateListenerForTermFragment
-        val editViewModel: EditViewModel by terminalFragment.activityViewModels()
-        val editTextId =
-            editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
-                ?:return
-        val currentSpinnerId = editTextId + EditTextSupportViewId.SPINNER.id
-        listener?.onSpinnerUpdateForTermFragment(
-            currentSpinnerId,
-            updateVariableValue
-        )
-    }
+//    @JavascriptInterface
+//    fun updateSpinner(
+//        updateVariableName: String,
+//        updateVariableValue: String
+//    ){
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return
+//        val context = terminalFragment.context
+//        val listener = context as? TerminalFragment.OnSpinnerUpdateListenerForTermFragment
+//        val editViewModel: EditViewModel by terminalFragment.activityViewModels()
+//        val editTextId =
+//            editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
+//                ?:return
+//        val currentSpinnerId = editTextId + EditTextSupportViewId.SPINNER.id
+//        listener?.onSpinnerUpdateForTermFragment(
+//            currentSpinnerId,
+//            updateVariableValue
+//        )
+//    }
 }

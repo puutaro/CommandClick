@@ -18,7 +18,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -133,15 +132,15 @@ object ListIndexEditConfig {
             ?.get(buttonClickMapKey)
     }
 
-    fun getListIndexType(
-        editFragment: EditFragment,
-    ): TypeSettingsForListIndex.ListIndexTypeKey {
-        val listIndexTypeStr = editFragment.listIndexConfigMap
-            ?.get(ListIndexConfigKey.TYPE.key)
-        return TypeSettingsForListIndex.ListIndexTypeKey.values().firstOrNull {
-            it.key == listIndexTypeStr
-        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-    }
+//    fun getListIndexType(
+//        editFragment: EditFragment,
+//    ): TypeSettingsForListIndex.ListIndexTypeKey {
+//        val listIndexTypeStr = editFragment.listIndexConfigMap
+//            ?.get(ListIndexConfigKey.TYPE.key)
+//        return TypeSettingsForListIndex.ListIndexTypeKey.values().firstOrNull {
+//            it.key == listIndexTypeStr
+//        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//    }
 
     fun setCheckToMaterialCardView(
         materialCardView: MaterialCardView,
@@ -193,7 +192,7 @@ object ListIndexEditConfig {
     }
 
     fun makeFileNameText(
-        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+//        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameTextView: AppCompatTextView?,
         fileName: String,
         listIndexConfigMap: Map<String, String>?,
@@ -213,7 +212,7 @@ object ListIndexEditConfig {
             return null
         }
         val fileNameBeforeCut = makeFileName(
-            listIndexTypeKey,
+//            listIndexTypeKey,
             fileName,
             fileNameConfigMap,
             busyboxExecutor
@@ -231,30 +230,36 @@ object ListIndexEditConfig {
     }
 
     private fun makeFileName(
-        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+//        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameSrc: String,
         fileNameConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
     ): String {
-        return when(listIndexTypeKey){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> fileNameSrc
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> {
-                makeFannelName(
-                    fileNameSrc.split("\t").firstOrNull()
-                        ?: String(),
-                    fileNameConfigMap,
-                    busyboxExecutor,
-                )
-            }
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> makeFannelName(
-                fileNameSrc,
-                fileNameConfigMap,
-                busyboxExecutor,
-            )
-        }
+        return makeFannelName(
+            fileNameSrc.split("\t").firstOrNull()
+                ?: String(),
+            fileNameConfigMap,
+            busyboxExecutor,
+        )
+//        return when(listIndexTypeKey){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> fileNameSrc
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> {
+//                makeFannelName(
+//                    fileNameSrc.split("\t").firstOrNull()
+//                        ?: String(),
+//                    fileNameConfigMap,
+//                    busyboxExecutor,
+//                )
+//            }
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> makeFannelName(
+//                fileNameSrc,
+//                fileNameConfigMap,
+//                busyboxExecutor,
+//            )
+//        }
     }
 
     private fun makeFannelName(
@@ -308,7 +313,7 @@ object ListIndexEditConfig {
     }
 
     class MakeFileDescArgsMaker(
-        val parentDirPath: String,
+//        val parentDirPath: String,
         val fileNameOrInstallFannelLine: String,
         val fileCon: String,
         val listIndexConfigMap: Map<String, String>?,
@@ -317,27 +322,34 @@ object ListIndexEditConfig {
     fun makeFileDesc(
         makeFileDescArgsMaker: MakeFileDescArgsMaker
     ): String? {
-        return when(ListIndexAdapter.listIndexTypeKey){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
-//                FannelListVariable.getDesc(
-//                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
+        return  makeDescCon(
+            makeFileDescArgsMaker,
+            makeFileDescArgsMaker
+                .fileNameOrInstallFannelLine
+                .split("\t")
+                .lastOrNull() ?: String()
+        )
+//        return when(ListIndexAdapter.listIndexTypeKey){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
+////                FannelListVariable.getDesc(
+////                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
+////                )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
+//                makeDescCon(
+//                    makeFileDescArgsMaker,
+//                    makeFileDescArgsMaker
+//                        .fileNameOrInstallFannelLine
+//                        .split("\t")
+//                        .lastOrNull() ?: String()
 //                )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
-                makeDescCon(
-                    makeFileDescArgsMaker,
-                    makeFileDescArgsMaker
-                        .fileNameOrInstallFannelLine
-                        .split("\t")
-                        .lastOrNull() ?: String()
-                )
-            }
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
-                makeDescCon(
-                    makeFileDescArgsMaker,
-                    makeFileDescArgsMaker.fileCon
-                )
-            }
-        }
+//            }
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
+//                makeDescCon(
+//                    makeFileDescArgsMaker,
+//                    makeFileDescArgsMaker.fileCon
+//                )
+//            }
+//        }
     }
 
     private fun makeDescCon(

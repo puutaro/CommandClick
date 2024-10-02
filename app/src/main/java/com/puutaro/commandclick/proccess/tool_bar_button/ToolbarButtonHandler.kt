@@ -4,7 +4,6 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSaverByTag
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
@@ -120,8 +119,8 @@ private object ScriptSaver{
                     ) return@let ClickSettingsForToolbarButton.OnScriptSave.OFF.name
                     onScriptStr
                 } == ClickSettingsForToolbarButton.OnScriptSave.ON.name
-        if (!isScriptSave) return
-        ScriptFileSaver.save(editFragment)
+//        if (!isScriptSave) return
+//        ScriptFileSaver.save(editFragment)
     }
 }
 

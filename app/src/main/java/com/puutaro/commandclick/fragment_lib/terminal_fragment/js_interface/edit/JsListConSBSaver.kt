@@ -34,9 +34,9 @@ class JsListConSBSaver(
             currentFannelName,
             currentFannelState
         ) ?: return
-        ListContentsSelectBoxTool.saveListContents(
-            editFragment,
-            buttonTag
-        )
+//        ListContentsSelectBoxTool.saveListContents(
+//            editFragment,
+//            buttonTag
+//        )
     }
 }

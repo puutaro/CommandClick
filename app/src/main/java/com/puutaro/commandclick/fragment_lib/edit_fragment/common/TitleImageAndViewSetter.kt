@@ -47,7 +47,7 @@ object TitleImageAndViewSetter {
            val onTitleSwitch =
                it != switchOff
            if (onTitleSwitch) return@let
-           editFragment.binding.editTitleLinearlayout.isVisible = false
+//           editFragment.binding.editTitleLinearlayout.isVisible = false
            return
        }
         setTitleText(

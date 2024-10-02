@@ -11,7 +11,6 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRem
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -64,7 +63,7 @@ object ExecSimpleDelete {
             withContext(Dispatchers.IO) {
                 ExecRemoveForListIndexAdapter.removeCon(
                     editFragment,
-                    ListIndexAdapter.listIndexTypeKey,
+//                    ListIndexAdapter.listIndexTypeKey,
                     removeItemLine,
                 )
             }
@@ -85,26 +84,30 @@ object ExecSimpleDelete {
         removeItemLine: String,
         listIndexPosition: Int,
     ){
-        when(ListIndexAdapter.listIndexTypeKey){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
-                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    editFragment,
-                    ListIndexAdapter.indexListMap,
-                    ListIndexAdapter.listIndexTypeKey
-                )
-                ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
-                    editFragment,
-                    filterDir,
-                    selectedItem,
-                )
-            }
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                ExecRemoveForListIndexAdapter.updateTsv(
-                    editFragment,
-                    listOf(removeItemLine),
-                )
-        }
+        ExecRemoveForListIndexAdapter.updateTsv(
+            editFragment,
+            listOf(removeItemLine),
+        )
+//        when(ListIndexAdapter.listIndexTypeKey){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
+//                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                    editFragment,
+//                    ListIndexAdapter.indexListMap,
+//                    ListIndexAdapter.listIndexTypeKey
+//                )
+//                ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
+//                    editFragment,
+//                    filterDir,
+//                    selectedItem,
+//                )
+//            }
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
+//                ExecRemoveForListIndexAdapter.updateTsv(
+//                    editFragment,
+//                    listOf(removeItemLine),
+//                )
+//        }
 
         DeleteSettingsForListIndex.doWithJsAction(
             editFragment,

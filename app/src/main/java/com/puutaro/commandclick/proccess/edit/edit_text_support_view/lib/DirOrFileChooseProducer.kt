@@ -14,83 +14,83 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 
 object DirOrFileChooseProducer {
 
-    fun make(
-        editFragment: EditFragment,
-        editParameters: EditParameters,
-        onDirectoryPick: Boolean,
-        insertEditText: EditText,
-        currentComponentIndex: Int,
-        weight: Float,
-    ): Button {
-        val context = editFragment.context
-        val chooseButtonStr = when(onDirectoryPick) {
-            true -> "dir"
-            else -> "file"
-        }
-        val insertButtonView = Button(context)
-        insertButtonView.text = chooseButtonStr
-        ButtonSetter.set(
-            context,
-            insertButtonView,
-            mapOf()
-        )
-        val chooserMap = getChooserMap(
-            editParameters,
-            currentComponentIndex
-        )
-        val fannelName = FannelInfoTool.getCurrentFannelName(
-            editFragment.fannelInfoMap
-        )
-        val currentVariableName =
-            editParameters.currentVariableName
-                ?: String()
-        insertButtonView.setOnClickListener { view ->
-            val listener = context as? EditFragment.OnFileChooserListenerForEdit
-            listener?.onFileChooserListenerForEdit(
-                onDirectoryPick,
-                insertEditText,
-                chooserMap,
-                fannelName,
-                currentVariableName
-            )
-        }
-        val insertButtonViewParam = LinearLayoutCompat.LayoutParams(
-            0,
-            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-        )
-        insertButtonViewParam.weight = weight
-        insertButtonView.layoutParams = insertButtonViewParam
-        return insertButtonView
-    }
+//    fun make(
+//        editFragment: EditFragment,
+//        editParameters: EditParameters,
+//        onDirectoryPick: Boolean,
+//        insertEditText: EditText,
+//        currentComponentIndex: Int,
+//        weight: Float,
+//    ): Button {
+//        val context = editFragment.context
+//        val chooseButtonStr = when(onDirectoryPick) {
+//            true -> "dir"
+//            else -> "file"
+//        }
+//        val insertButtonView = Button(context)
+//        insertButtonView.text = chooseButtonStr
+//        ButtonSetter.set(
+//            context,
+//            insertButtonView,
+//            mapOf()
+//        )
+//        val chooserMap = getChooserMap(
+//            editParameters,
+//            currentComponentIndex
+//        )
+//        val fannelName = FannelInfoTool.getCurrentFannelName(
+//            editFragment.fannelInfoMap
+//        )
+//        val currentVariableName =
+//            editParameters.currentVariableName
+//                ?: String()
+//        insertButtonView.setOnClickListener { view ->
+//            val listener = context as? EditFragment.OnFileChooserListenerForEdit
+//            listener?.onFileChooserListenerForEdit(
+//                onDirectoryPick,
+//                insertEditText,
+//                chooserMap,
+//                fannelName,
+//                currentVariableName
+//            )
+//        }
+//        val insertButtonViewParam = LinearLayoutCompat.LayoutParams(
+//            0,
+//            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//        )
+//        insertButtonViewParam.weight = weight
+//        insertButtonView.layoutParams = insertButtonViewParam
+//        return insertButtonView
+//    }
 
-    private fun getChooserMap(
-        editParameters: EditParameters,
-        currentComponentIndex: Int
-    ): Map<String, String>? {
-        val currentSetVariableMap = editParameters.setVariableMap
-        val fannelInfoMap = editParameters.fannelInfoMap
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//    private fun getChooserMap(
+//        editParameters: EditParameters,
+//        currentComponentIndex: Int
+//    ): Map<String, String>? {
+//        val currentSetVariableMap = editParameters.setVariableMap
+//        val fannelInfoMap = editParameters.fannelInfoMap
+////        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////            fannelInfoMap
+////        )
+//        val currentScriptName = FannelInfoTool.getCurrentFannelName(
 //            fannelInfoMap
 //        )
-        val currentScriptName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
-        return currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.split('|')
-            ?.getOrNull(currentComponentIndex)
-            ?.let {
-                SetReplaceVariabler.execReplaceByReplaceVariables(
-                    it,
-                    editParameters.setReplaceVariableMap,
-//                    currentAppDirPath,
-                    currentScriptName,
-                )
-            }?.let {
-                CmdClickMap.createMap(
-                    it,
-                    '?'
-                )
-            }?.toMap()
-    }
+//        return currentSetVariableMap?.get(
+//            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+//        )?.split('|')
+//            ?.getOrNull(currentComponentIndex)
+//            ?.let {
+//                SetReplaceVariabler.execReplaceByReplaceVariables(
+//                    it,
+//                    editParameters.setReplaceVariableMap,
+////                    currentAppDirPath,
+//                    currentScriptName,
+//                )
+//            }?.let {
+//                CmdClickMap.createMap(
+//                    it,
+//                    '?'
+//                )
+//            }?.toMap()
+//    }
 }

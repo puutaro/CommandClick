@@ -6,7 +6,6 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFi
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
@@ -19,48 +18,52 @@ object ExecWriteItem {
         selectedItem: String,
         listIndexPosition: Int,
     ){
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> writeFile(
-                editFragment,
-                selectedItem,
-            )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> writeFileInTsvLine(
-                editFragment,
-                listIndexPosition,
-            )
-        }
-
-    }
-
-    private fun writeFile(
-        editFragment: EditFragment,
-        selectedItem: String,
-    ){
-        val context = editFragment.context
-        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+        writeFileInTsvLine(
             editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
+            listIndexPosition,
         )
-        if(
-            NoFileChecker.isNoFile(
-                parentDirPath,
-                selectedItem,
-            )
-        ) return
-        val editorByIntent = EditorByIntent(
-//            parentDirPath,
-            selectedItem,
-            context
-        )
-        editorByIntent.byIntent()
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> writeFile(
+//                editFragment,
+//                selectedItem,
+//            )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> writeFileInTsvLine(
+//                editFragment,
+//                listIndexPosition,
+//            )
+//        }
+
     }
+
+//    private fun writeFile(
+//        editFragment: EditFragment,
+//        selectedItem: String,
+//    ){
+//        val context = editFragment.context
+//        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
+//        if(
+//            NoFileChecker.isNoFile(
+//                parentDirPath,
+//                selectedItem,
+//            )
+//        ) return
+//        val editorByIntent = EditorByIntent(
+////            parentDirPath,
+//            selectedItem,
+//            context
+//        )
+//        editorByIntent.byIntent()
+//    }
 
     private fun writeFileInTsvLine(
         editFragment: EditFragment,

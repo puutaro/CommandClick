@@ -60,12 +60,12 @@ object WithIndexListView{
         val binding = editFragment.binding
         val editListSearchEditText = binding.editListSearchEditText
 
-        binding.editListLinearLayout.isVisible = true
-        binding.editTextScroll.isVisible = false
+//        binding.editListLinearLayout.isVisible = true
+//        binding.editTextScroll.isVisible = false
         val listIndexConfigMap = editFragment.listIndexConfigMap
-        val listIndexTypeKey = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
+//        val listIndexTypeKey = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
         val indexListMap = ListIndexEditConfig.getConfigKeyMap(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.LIST.key
@@ -82,7 +82,7 @@ object WithIndexListView{
         val fileList = ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
             editFragment,
             indexListMap,
-            listIndexTypeKey
+//            listIndexTypeKey
         )
 
         val editListRecyclerView =
@@ -232,7 +232,7 @@ object WithIndexListView{
                 val filteredUrlHistoryList = ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     editFragment,
                     ListIndexAdapter.indexListMap,
-                    ListIndexAdapter.listIndexTypeKey
+//                    ListIndexAdapter.listIndexTypeKey
                 ).filter {
                     Regex(
                         searchText.text.toString()

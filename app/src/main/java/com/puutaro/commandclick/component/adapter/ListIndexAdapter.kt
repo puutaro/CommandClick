@@ -21,7 +21,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.PerformSettingForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrModeSettingKeysForQrDialog
@@ -56,9 +55,9 @@ class ListIndexAdapter(
     private val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
         listIndexConfigMap
     )
-    private val layoutType = LayoutSettingsForListIndex.decideLayoutType(
-        layoutConfigMap
-    )
+//    private val layoutType = LayoutSettingsForListIndex.decideLayoutType(
+//        layoutConfigMap
+//    )
     private var performMap: Map<String, String> = mapOf()
 
     val checkItemConfigMap = CmdClickMap.createMap(
@@ -87,7 +86,7 @@ class ListIndexAdapter(
             iconConfigMap,
         )
     private var recentAppDirPath = String()
-    private var filterDir = String()
+//    private var filterDir = String()
     private var filterPrefix = String()
     private var filterSuffix = String()
 
@@ -100,7 +99,7 @@ class ListIndexAdapter(
     companion object {
         var indexListMap: Map<String, String> = mapOf()
         var deleteConfigMap: Map<String, String> = mapOf()
-        var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//        var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
     }
     class ListIndexListViewHolder(
 //        val activity: FragmentActivity?,
@@ -191,7 +190,7 @@ class ListIndexAdapter(
             )
             val fileNameText = withContext(Dispatchers.Main) {
                 ListIndexEditConfig.makeFileNameText(
-                    listIndexTypeKey,
+//                    listIndexTypeKey,
                     holder.fileNameTextView,
                     holder.fileName,
                     listIndexConfigMap,
@@ -199,31 +198,39 @@ class ListIndexAdapter(
                 )
             }
             val fileConList = makeFileConList(holder.fileName)
-            when(layoutType){
-                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR -> {
-                    withContext(Dispatchers.Main){
-                        if(
-                            fileNameText.isNullOrEmpty()
-                        ) return@withContext
-                        holder.fileNameTextView?.text = fileNameText
-                    }
-                    setDescView(
-                        holder.fileDescTextView,
-                        fileNameOrInstallFannelLine,
-                        fileConList.joinToString("\n"),
-                    )
-                }
-                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID -> {
-                    withContext(Dispatchers.Main){
-                        holder.rightLinearlayout.isVisible = false
-                        if(
-                            fileNameText.isNullOrEmpty()
-                        ) return@withContext
-                        holder.qrLogoImageCaptionTextView.isVisible = true
-                        holder.qrLogoImageCaptionTextView.text = fileNameText
-                    }
-                }
+            withContext(Dispatchers.Main){
+                holder.rightLinearlayout.isVisible = false
+                if(
+                    fileNameText.isNullOrEmpty()
+                ) return@withContext
+                holder.qrLogoImageCaptionTextView.isVisible = true
+                holder.qrLogoImageCaptionTextView.text = fileNameText
             }
+//            when(layoutType){
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR -> {
+//                    withContext(Dispatchers.Main){
+//                        if(
+//                            fileNameText.isNullOrEmpty()
+//                        ) return@withContext
+//                        holder.fileNameTextView?.text = fileNameText
+//                    }
+//                    setDescView(
+//                        holder.fileDescTextView,
+//                        fileNameOrInstallFannelLine,
+//                        fileConList.joinToString("\n"),
+//                    )
+//                }
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID -> {
+//                    withContext(Dispatchers.Main){
+//                        holder.rightLinearlayout.isVisible = false
+//                        if(
+//                            fileNameText.isNullOrEmpty()
+//                        ) return@withContext
+//                        holder.qrLogoImageCaptionTextView.isVisible = true
+//                        holder.qrLogoImageCaptionTextView.text = fileNameText
+//                    }
+//                }
+//            }
             val fileConBackGroundColorInt = withContext(Dispatchers.IO) {
                 val editExecuteValueForInstallFannel = String()
 //                    when(
@@ -255,7 +262,7 @@ class ListIndexAdapter(
                     holder.materialCardView,
                     holder.fileContentsQrLogoLinearLayout,
                     qrLogoConfigMap,
-                    layoutType
+//                    layoutType
                 )
             }
             withContext(Dispatchers.Main) {
@@ -348,13 +355,14 @@ class ListIndexAdapter(
         if (
             listIndexConfigMap.isNullOrEmpty()
         ) return emptyList()
-        if(
-            PerformSettingForListIndex.howFastMode(performMap)
-            || listIndexTypeKey == TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-        ) return emptyList()
-        return ReadText(
-            File(filterDir, fileName).absolutePath,
-        ).textToList().take(maxTakeSize)
+        return emptyList()
+//        if(
+//            PerformSettingForListIndex.howFastMode(performMap)
+////            || listIndexTypeKey == TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//        ) return emptyList()
+//        return ReadText(
+//            File(filterDir, fileName).absolutePath,
+//        ).textToList().take(maxTakeSize)
     }
 
     private suspend fun setDescView(
@@ -363,7 +371,7 @@ class ListIndexAdapter(
         fileCon: String,
     ){
         val makeFileDescArgsMaker = ListIndexEditConfig.MakeFileDescArgsMaker(
-            filterDir,
+//            filterDir,
             fileNameOrInstallFannelLine,
             fileCon,
             listIndexConfigMap,
@@ -428,8 +436,8 @@ class ListIndexAdapter(
         val itemName = holder.fileName.split("\t").lastOrNull() ?: String()
         val okSetIcon = QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.set(
             context,
-            filterDir,
-            listIndexTypeKey,
+//            filterDir,
+//            listIndexTypeKey,
             itemName,
             holder.fileContentsQrLogoView,
             holder.fileContentsQrLogoLinearLayout,
@@ -449,7 +457,7 @@ class ListIndexAdapter(
 //                        editFragmentRef.get(),
                         recentAppDirPath,
                         qrLogoConfigMap,
-                        filterDir,
+//                        filterDir,
                         holder.fileName,
                         holder.fileContentsQrLogoView,
                     )
@@ -493,18 +501,18 @@ class ListIndexAdapter(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.DELETE.key
         )
-        listIndexTypeKey = editFragmentRef.get()?.let {
-            ListIndexEditConfig.getListIndexType(
-                it
-            )
-        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-        filterDir = editFragmentRef.get()?.let {
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                it,
-                indexListMap,
-                listIndexTypeKey
-            )
-        } ?: String()
+//        listIndexTypeKey = editFragmentRef.get()?.let {
+//            ListIndexEditConfig.getListIndexType(
+//                it
+//            )
+//        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//        filterDir = editFragmentRef.get()?.let {
+//            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                it,
+//                indexListMap,
+////                listIndexTypeKey
+//            )
+//        } ?: String()
         filterPrefix = editFragmentRef.get()?.let {
             FilePrefixGetter.get(
                 it,

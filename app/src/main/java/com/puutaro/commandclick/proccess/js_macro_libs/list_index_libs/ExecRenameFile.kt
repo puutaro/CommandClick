@@ -6,7 +6,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.filer.FileRenamer
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -21,49 +20,53 @@ object ExecRenameFile {
         selectedItem: String,
         listIndexPosition: Int,
     ){
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
         CoroutineScope(Dispatchers.Main).launch {
-            when (type) {
-//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-                -> execFileRename(
-                    editFragment,
-                    selectedItem,
-                )
-
-                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-                -> execTsvLineFileRename(
-                    editFragment,
-                    listIndexPosition,
-                )
-            }
+            execTsvLineFileRename(
+                editFragment,
+                listIndexPosition,
+            )
+//            when (type) {
+////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//                -> execFileRename(
+//                    editFragment,
+//                    selectedItem,
+//                )
+//
+//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//                -> execTsvLineFileRename(
+//                    editFragment,
+//                    listIndexPosition,
+//                )
+//            }
         }
     }
 
-    private fun execFileRename(
-        editFragment: EditFragment,
-        selectedItem: String,
-    ){
-        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
-
-        if(
-            NoFileChecker.isNoFile(
-                parentDirPath,
-                selectedItem,
-            )
-        ) return
-        FileRenamer.rename(
-            editFragment,
-//            parentDirPath,
-            selectedItem
-        )
-    }
+//    private fun execFileRename(
+//        editFragment: EditFragment,
+//        selectedItem: String,
+//    ){
+////        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+////            editFragment,
+////            ListIndexAdapter.indexListMap,
+////            ListIndexAdapter.listIndexTypeKey
+////        )
+//
+//        if(
+//            NoFileChecker.isNoFile(
+////                parentDirPath,
+//                selectedItem,
+//            )
+//        ) return
+//        FileRenamer.rename(
+//            editFragment,
+////            parentDirPath,
+//            selectedItem
+//        )
+//    }
 
     private fun execTsvLineFileRename(
         editFragment: EditFragment,

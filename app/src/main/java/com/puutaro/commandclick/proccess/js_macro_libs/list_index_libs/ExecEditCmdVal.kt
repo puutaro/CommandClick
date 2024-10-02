@@ -11,23 +11,23 @@ object ExecEditCmdVal {
         editFragment: EditFragment,
         selectedItem: String,
     ){
-        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
+//        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
         if(
             NoFileChecker.isNoFile(
-                parentDirPath,
+//                parentDirPath,
                 selectedItem,
             )
         ) return
-        FormDialogForListIndexOrButton.create(
-            editFragment,
-            "edit command variable",
-            parentDirPath,
-            selectedItem,
-            String()
-        )
+//        FormDialogForListIndexOrButton.create(
+//            editFragment,
+//            "edit command variable",
+////            parentDirPath,
+//            selectedItem,
+//            String()
+//        )
     }
 }

@@ -14,7 +14,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSe
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddFileForEdit
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -106,79 +105,85 @@ class JsFileAdder(
         if(
             fileName.isEmpty()
         ) return
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> return
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                execAddForTsv(
-                    editFragment,
-                    fileName,
-                    compFileNameMapCon,
-                    separator,
-                )
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> execAddForNormal(
-                editFragment,
-                fileName,
-                compFileNameMapCon,
-                separator,
-            )
-        }
-    }
-
-    private fun execAddForNormal(
-        editFragment: EditFragment,
-        fileName: String,
-        compFileNameMapCon: String,
-        separator: String,
-    ){
-        val context = editFragment.context
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                ListIndexAdapter.indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        val compFileNameMap = CmdClickMap.createMap(
-            compFileNameMapCon,
-            separator.firstOrNull() ?: '|',
-        ).toMap()
-        val compFileName = EditSettingExtraArgsTool.makeCompFileName(
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+        execAddForTsv(
             editFragment,
             fileName,
-            compFileNameMap,
+            compFileNameMapCon,
+            separator,
         )
-        ListIndexDuplicate.isFileDetect(
-//            parentDirPath,
-            compFileName,
-        ).let {
-            isDetect ->
-            if(
-                isDetect
-            ) return
-        }
-        FileSystems.writeFile(
-            File(
-                parentDirPath,
-                compFileName
-            ).absolutePath,
-            String()
-        )
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO){
-                delay(200)
-            }
-            withContext(Dispatchers.IO) {
-                BroadcastSender.normalSend(
-                    context,
-                    BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-                )
-            }
-        }
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
+//                execAddForTsv(
+//                    editFragment,
+//                    fileName,
+//                    compFileNameMapCon,
+//                    separator,
+//                )
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> execAddForNormal(
+//                editFragment,
+//                fileName,
+//                compFileNameMapCon,
+//                separator,
+//            )
+//        }
     }
+
+//    private fun execAddForNormal(
+//        editFragment: EditFragment,
+//        fileName: String,
+//        compFileNameMapCon: String,
+//        separator: String,
+//    ){
+//        val context = editFragment.context
+////        val parentDirPath =
+////            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+////                editFragment,
+////                ListIndexAdapter.indexListMap,
+////                ListIndexAdapter.listIndexTypeKey
+////            )
+//        val compFileNameMap = CmdClickMap.createMap(
+//            compFileNameMapCon,
+//            separator.firstOrNull() ?: '|',
+//        ).toMap()
+//        val compFileName = EditSettingExtraArgsTool.makeCompFileName(
+//            editFragment,
+//            fileName,
+//            compFileNameMap,
+//        )
+//        ListIndexDuplicate.isFileDetect(
+////            parentDirPath,
+//            compFileName,
+//        ).let {
+//            isDetect ->
+//            if(
+//                isDetect
+//            ) return
+//        }
+//        FileSystems.writeFile(
+//            File(
+//                parentDirPath,
+//                compFileName
+//            ).absolutePath,
+//            String()
+//        )
+//        CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.IO){
+//                delay(200)
+//            }
+//            withContext(Dispatchers.IO) {
+//                BroadcastSender.normalSend(
+//                    context,
+//                    BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+//                )
+//            }
+//        }
+//    }
 
     private fun execAddForTsv(
         editFragment: EditFragment,

@@ -29,144 +29,144 @@ object MultiFileSelectGridViewProducer {
 
     private var alertDialog: AlertDialog? = null
 
-    fun make (
-        fragment: Fragment,
-        insertEditText: EditText,
-        editParameters: EditParameters,
-        currentComponentIndex: Int,
-        weight: Float,
-    ): Button {
-        val context = fragment.context
-        val currentId = editParameters.currentId
-        val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
-            0,
-            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-        )
-        linearParamsForGrid.weight = weight
-        val fcbMap = FileSelectSpinnerViewProducer.getFcbMap(
-            editParameters,
-            currentComponentIndex
-        )
-        val filterDir = getSelectDirPath(
-            fcbMap,
+//    fun make (
+//        fragment: Fragment,
+//        insertEditText: EditText,
+//        editParameters: EditParameters,
+//        currentComponentIndex: Int,
+//        weight: Float,
+//    ): Button {
+//        val context = fragment.context
+//        val currentId = editParameters.currentId
+//        val linearParamsForGrid = LinearLayoutCompat.LayoutParams(
+//            0,
+//            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//        )
+//        linearParamsForGrid.weight = weight
+//        val fcbMap = FileSelectSpinnerViewProducer.getFcbMap(
 //            editParameters,
-        )
-        val filterPrefixListCon = getFilterPrefix(
-            fcbMap,
-        )
-        val filterSuffixListCon = getFilterSuffix(
-            fcbMap,
-        )
-        val filterType = FileSelectSpinnerViewProducer.getFilterType(
-            fcbMap,
-        )
-
-        val gridButtonView = Button(context)
-        gridButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
-        gridButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
-        gridButtonView.text = gridButtonLabel
-        ButtonSetter.set(
-            context,
-            gridButtonView,
-            mapOf()
-        )
-
-        gridButtonView.setOnClickListener {
-                buttonView ->
-            val buttonContext = buttonView.context
-            val currentGridList = makeGridList(
-                filterDir,
-                filterPrefixListCon,
-                filterSuffixListCon,
-                filterType
-            )
-
-            val gridView =
-                GridView(buttonContext)
-            gridView.numColumns = 2
-            gridView.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-            val multiSelectImageAdapter = MultiSelectImageAdapter(
-                buttonContext,
-            )
-            multiSelectImageAdapter.addAll(
-                currentGridList.toMutableList()
-            )
-            gridView.adapter = multiSelectImageAdapter
-            val editTextSelectedList = insertEditText.text.split(",")
-            val editTextSelectedListByFullPath = currentGridList.filter {
-                editTextSelectedList.contains(
-                    File(it).name
-                )
-            }
-            multiSelectImageAdapter
-                .selectedItemList
-                .addAll(editTextSelectedListByFullPath)
-            multiSelectImageAdapter.notifyDataSetChanged()
-
-            val linearLayoutForTotal = LinearLayoutForTotal.make(
-                context
-            )
-            val searchTextWeight = SearchTextLinearWeight.calculate(fragment.activity)
-            val listWeight = 1F - searchTextWeight
-            val linearLayoutForListView = NestLinearLayout.make(
-                context,
-                listWeight
-            )
-            val linearLayoutForSearch = NestLinearLayout.make(
-                context,
-                searchTextWeight
-            )
-            linearLayoutForListView.addView(gridView)
-            linearLayoutForTotal.addView(linearLayoutForListView)
-            linearLayoutForTotal.addView(linearLayoutForSearch)
-
-            setGridViewItemClickListener(
-                fragment,
-                gridView,
-            )
-
-            alertDialog = AlertDialog.Builder(
-                buttonContext
-            )
-                .setView(linearLayoutForTotal)
-                .setNegativeButton("NO", DialogInterface.OnClickListener{
-                        dialog, which ->
-                    alertDialog?.dismiss()
-                    alertDialog = null
-                })
-                .setPositiveButton("OK", DialogInterface.OnClickListener{
-                        dialog, which ->
-                    alertDialog?.dismiss()
-                    alertDialog = null
-                    val selectedItems = multiSelectImageAdapter.selectedItemList.map {
-                        File(it).name
-                    }.joinToString(",")
-                    insertEditText.setText(selectedItems)
-                })
-                .show()
-            alertDialog?.window?.setGravity(Gravity.BOTTOM)
-
-            alertDialog?.setOnCancelListener(
-                object : DialogInterface.OnCancelListener {
-                    override fun onCancel(dialog: DialogInterface?) {
-                        alertDialog?.dismiss()
-                        alertDialog = null
-                    }
-                })
-            alertDialog?.getButton(
-                DialogInterface.BUTTON_POSITIVE
-            )?.setTextColor(
-                context?.getColor(android.R.color.black) as Int
-            )
-            alertDialog?.getButton(
-                DialogInterface.BUTTON_NEGATIVE
-            )?.setTextColor(
-                context?.getColor(android.R.color.black) as Int
-            )
-        }
-        gridButtonView.layoutParams = linearParamsForGrid
-        return gridButtonView
-    }
+//            currentComponentIndex
+//        )
+//        val filterDir = getSelectDirPath(
+//            fcbMap,
+////            editParameters,
+//        )
+//        val filterPrefixListCon = getFilterPrefix(
+//            fcbMap,
+//        )
+//        val filterSuffixListCon = getFilterSuffix(
+//            fcbMap,
+//        )
+//        val filterType = FileSelectSpinnerViewProducer.getFilterType(
+//            fcbMap,
+//        )
+//
+//        val gridButtonView = Button(context)
+//        gridButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
+//        gridButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
+//        gridButtonView.text = gridButtonLabel
+//        ButtonSetter.set(
+//            context,
+//            gridButtonView,
+//            mapOf()
+//        )
+//
+//        gridButtonView.setOnClickListener {
+//                buttonView ->
+//            val buttonContext = buttonView.context
+//            val currentGridList = makeGridList(
+//                filterDir,
+//                filterPrefixListCon,
+//                filterSuffixListCon,
+//                filterType
+//            )
+//
+//            val gridView =
+//                GridView(buttonContext)
+//            gridView.numColumns = 2
+//            gridView.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+//            val multiSelectImageAdapter = MultiSelectImageAdapter(
+//                buttonContext,
+//            )
+//            multiSelectImageAdapter.addAll(
+//                currentGridList.toMutableList()
+//            )
+//            gridView.adapter = multiSelectImageAdapter
+//            val editTextSelectedList = insertEditText.text.split(",")
+//            val editTextSelectedListByFullPath = currentGridList.filter {
+//                editTextSelectedList.contains(
+//                    File(it).name
+//                )
+//            }
+//            multiSelectImageAdapter
+//                .selectedItemList
+//                .addAll(editTextSelectedListByFullPath)
+//            multiSelectImageAdapter.notifyDataSetChanged()
+//
+//            val linearLayoutForTotal = LinearLayoutForTotal.make(
+//                context
+//            )
+//            val searchTextWeight = SearchTextLinearWeight.calculate(fragment.activity)
+//            val listWeight = 1F - searchTextWeight
+//            val linearLayoutForListView = NestLinearLayout.make(
+//                context,
+//                listWeight
+//            )
+//            val linearLayoutForSearch = NestLinearLayout.make(
+//                context,
+//                searchTextWeight
+//            )
+//            linearLayoutForListView.addView(gridView)
+//            linearLayoutForTotal.addView(linearLayoutForListView)
+//            linearLayoutForTotal.addView(linearLayoutForSearch)
+//
+//            setGridViewItemClickListener(
+//                fragment,
+//                gridView,
+//            )
+//
+//            alertDialog = AlertDialog.Builder(
+//                buttonContext
+//            )
+//                .setView(linearLayoutForTotal)
+//                .setNegativeButton("NO", DialogInterface.OnClickListener{
+//                        dialog, which ->
+//                    alertDialog?.dismiss()
+//                    alertDialog = null
+//                })
+//                .setPositiveButton("OK", DialogInterface.OnClickListener{
+//                        dialog, which ->
+//                    alertDialog?.dismiss()
+//                    alertDialog = null
+//                    val selectedItems = multiSelectImageAdapter.selectedItemList.map {
+//                        File(it).name
+//                    }.joinToString(",")
+//                    insertEditText.setText(selectedItems)
+//                })
+//                .show()
+//            alertDialog?.window?.setGravity(Gravity.BOTTOM)
+//
+//            alertDialog?.setOnCancelListener(
+//                object : DialogInterface.OnCancelListener {
+//                    override fun onCancel(dialog: DialogInterface?) {
+//                        alertDialog?.dismiss()
+//                        alertDialog = null
+//                    }
+//                })
+//            alertDialog?.getButton(
+//                DialogInterface.BUTTON_POSITIVE
+//            )?.setTextColor(
+//                context?.getColor(android.R.color.black) as Int
+//            )
+//            alertDialog?.getButton(
+//                DialogInterface.BUTTON_NEGATIVE
+//            )?.setTextColor(
+//                context?.getColor(android.R.color.black) as Int
+//            )
+//        }
+//        gridButtonView.layoutParams = linearParamsForGrid
+//        return gridButtonView
+//    }
 
     private fun setGridViewItemClickListener(
         editFragment: Fragment,

@@ -23,25 +23,25 @@ class JsIconSelectBox(
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val context = terminalFragment.context
-        val jsEdit = JsEdit(terminalFragmentRef)
-        val currentItem = jsEdit.getFromEditText(valName)
-        val listSrc = readListPath(listPath)
-        val sortedListSrc = sortByCurrentItem(
-            currentItem,
-            listSrc,
-        )
-        val selectItem = ListJsDialog(terminalFragmentRef).create(
-            "",
-            "",
-            sortedListSrc,
-        )
-        if(
-            selectItem.trim().isEmpty()
-        ) return
-        jsEdit.updateEditText(
-            valName,
-            selectItem
-        )
+//        val jsEdit = JsEdit(terminalFragmentRef)
+//        val currentItem = jsEdit.getFromEditText(valName)
+//        val listSrc = readListPath(listPath)
+//        val sortedListSrc = sortByCurrentItem(
+//            currentItem,
+//            listSrc,
+//        )
+//        val selectItem = ListJsDialog(terminalFragmentRef).create(
+//            "",
+//            "",
+//            sortedListSrc,
+//        )
+//        if(
+//            selectItem.trim().isEmpty()
+//        ) return
+//        jsEdit.updateEditText(
+//            valName,
+//            selectItem
+//        )
     }
 
     private fun sortByCurrentItem(

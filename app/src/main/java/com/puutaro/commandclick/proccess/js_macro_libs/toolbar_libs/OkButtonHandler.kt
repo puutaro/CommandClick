@@ -4,7 +4,6 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
@@ -33,7 +32,7 @@ object OkButtonHandler {
             editFragment.passCmdVariableEdit ==
                     CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
         val buttonTag = SaveTagForListContents.OK.tag
-        ScriptFileSaver.save(editFragment)
+//        ScriptFileSaver.save(editFragment)
         val isCmdEditExecute = enableCmdEdit
                 && editFragment.enableEditExecute
                 && !onPassCmdVariableEdit
@@ -49,10 +48,10 @@ object OkButtonHandler {
                 Keyboard.hiddenKeyboardForFragment(
                     editFragment
                 )
-                ListContentsSelectBoxTool.saveListContents(
-                    editFragment,
-                    buttonTag
-                )
+//                ListContentsSelectBoxTool.saveListContents(
+//                    editFragment,
+//                    buttonTag
+//                )
                 TerminalShowByTerminalDo.show(
                     editFragment,
                 )
@@ -84,9 +83,9 @@ object OkButtonHandler {
     ){
         val context = editFragment.context
         CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.Main) {
-                ScriptFileSaver.save(editFragment)
-            }
+//            withContext(Dispatchers.Main) {
+//                ScriptFileSaver.save(editFragment)
+//            }
             withContext(Dispatchers.Main) {
                 val listener =
                     context as? EditFragment.OnToolBarButtonClickListenerForEditFragment

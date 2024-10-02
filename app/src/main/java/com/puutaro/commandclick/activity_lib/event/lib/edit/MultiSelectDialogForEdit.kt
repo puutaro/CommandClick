@@ -70,13 +70,13 @@ object MultiSelectDialogForEdit {
                     } else editFragmentSource
                     if(editFragment == null) return
                     val editBinding = editFragment.binding
-                    val editLinearLayout = editBinding.editLinearLayout
-                    val editTextInEditFragment = editLinearLayout.findViewById<EditText>(editTextId)
+//                    val editLinearLayout = editBinding.editLinearLayout
+//                    val editTextInEditFragment = editLinearLayout.findViewById<EditText>(editTextId)
 
                     val selectString = selectedIds.map {
                         updatedMultiModelArray[it].name
                     }.joinToString(",")
-                    editTextInEditFragment.setText(selectString)
+//                    editTextInEditFragment.setText(selectString)
                 }
 
                 override fun onCancel() {}

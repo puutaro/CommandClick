@@ -107,11 +107,11 @@ class JsQrGetter(
             contentsName,
             ".txt",
         )
-        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
+//        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
         ListIndexDuplicate.isFileDetect(
 //            parentDirPath,
             fileName
@@ -126,11 +126,11 @@ class JsQrGetter(
             EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key to compPrefix,
             EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key to compSuffix,
         )
-        QrScanner.saveFromCamera(
-            editFragment,
-            parentDirPath,
-            stockDirAndCompMap,
-            fileName
-        )
+//        QrScanner.saveFromCamera(
+//            editFragment,
+////            parentDirPath,
+//            stockDirAndCompMap,
+//            fileName
+//        )
     }
 }

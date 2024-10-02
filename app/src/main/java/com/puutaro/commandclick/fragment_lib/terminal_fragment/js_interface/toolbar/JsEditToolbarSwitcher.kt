@@ -35,13 +35,13 @@ class JsEditToolbarSwitcher(
             currentFannelName,
             currentFannelState
         ) ?: return
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.Main){
-                EditToolbarSwitcher.switch(
-                    editFragment,
-                    switchMacro,
-                )
-            }
-        }
+//        CoroutineScope(Dispatchers.Main).launch {
+//            withContext(Dispatchers.Main){
+//                EditToolbarSwitcher.switch(
+//                    editFragment,
+//                    switchMacro,
+//                )
+//            }
+//        }
     }
 }

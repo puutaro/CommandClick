@@ -64,7 +64,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.service.FannelRepoDownloadService
@@ -90,8 +89,8 @@ class MainActivity:
     TerminalFragment.OnPageLoadPageSearchDisableListener,
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
-    TerminalFragment.OnEditTextUpdateListenerForTermFragment,
-    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
+//    TerminalFragment.OnEditTextUpdateListenerForTermFragment,
+//    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
     TerminalFragment.OnTermSizeMinimumListenerForTerm,
@@ -102,7 +101,7 @@ class MainActivity:
     TerminalFragment.OnMonitorSizeChangingForTerm,
     TerminalFragment.OnPopStackImmediateListenerForTerm,
     TerminalFragment.OnCmdValSaveAndBackListenerForTerm,
-    TerminalFragment.OnGetFileListenerForTerm,
+//    TerminalFragment.OnGetFileListenerForTerm,
     TerminalFragment.OnGetFileListListenerForTerm,
     TerminalFragment.GetSdcardDirListenerForTerm,
     TerminalFragment.OnRestartListenerForTerm,
@@ -141,7 +140,7 @@ class MainActivity:
     EditFragment.OnFileChooserListenerForEdit,
     EditFragment.OnTermSizeLongListenerForEdit,
     EditFragment.OnMultiSelectListenerForEdit,
-    EditFragment.OnLongPressPlayOrEditButtonListener,
+//    EditFragment.OnLongPressPlayOrEditButtonListener,
     EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit,
     EditFragment.OnUpdateNoSaveUrlPathsListenerForEdit,
     EditFragment.OnGetPermissionListenerForEdit,
@@ -547,11 +546,11 @@ class MainActivity:
         activeMatchOrdinal: Int,
         numberOfMatches: Int
     ) {
-        ExecPageSearchResult.reflect(
-            this,
-            activeMatchOrdinal,
-            numberOfMatches
-        )
+//        ExecPageSearchResult.reflect(
+//            this,
+//            activeMatchOrdinal,
+//            numberOfMatches
+//        )
     }
 
     override fun onFileCoose(
@@ -600,16 +599,16 @@ class MainActivity:
         )
     }
 
-    override fun onEditTextUpdateForTermFragment(
-        editTextId: Int?,
-        variableValue: String
-    ) {
-        EditTextUpdaterForTerminalFragment.update(
-            this,
-            editTextId,
-            variableValue
-        )
-    }
+//    override fun onEditTextUpdateForTermFragment(
+//        editTextId: Int?,
+//        variableValue: String
+//    ) {
+//        EditTextUpdaterForTerminalFragment.update(
+//            this,
+//            editTextId,
+//            variableValue
+//        )
+//    }
 
     override fun onEditableSpinnerUpdateForTermFragment(spinnerId: Int?, variableValue: String) {
         EditableSpinnerUpdaterForTerminalFragment.update(
@@ -619,13 +618,13 @@ class MainActivity:
         )
     }
 
-    override fun onSpinnerUpdateForTermFragment(spinnerId: Int?, variableValue: String) {
-        SpinnerUpdaterForTerminalFragment.update(
-            this,
-            spinnerId,
-            variableValue
-        )
-    }
+//    override fun onSpinnerUpdateForTermFragment(spinnerId: Int?, variableValue: String) {
+//        SpinnerUpdaterForTerminalFragment.update(
+//            this,
+//            spinnerId,
+//            variableValue
+//        )
+//    }
 
     override fun onMultiSelectForEdit(
         variableName: String,
@@ -655,20 +654,20 @@ class MainActivity:
         )
     }
 
-    override fun onLongPressPlayOrEditButton(
-        editLongPressType: EditLongPressType,
-        tag: String?,
-        searchText: String,
-        pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant?
-    ) {
-        ExecOnLongPressPlayOrEditButton.handle(
-            this,
-            editLongPressType,
-            tag,
-            searchText,
-            pageSearchToolbarButtonVariant
-        )
-    }
+//    override fun onLongPressPlayOrEditButton(
+//        editLongPressType: EditLongPressType,
+//        tag: String?,
+//        searchText: String,
+//        pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant?
+//    ) {
+//        ExecOnLongPressPlayOrEditButton.handle(
+//            this,
+//            editLongPressType,
+//            tag,
+//            searchText,
+//            pageSearchToolbarButtonVariant
+//        )
+//    }
 
     override fun onLongTermKeyBoardOpenAjustForEdit(
         weight: Float
@@ -782,29 +781,29 @@ class MainActivity:
         ExecSettingOkButton.handle(this)
     }
 
-    override fun onGetFileForTerm(
-        parentDirPathSrc: String,
-        onDirectoryPickSrc: Boolean,
-        filterPrefixListCon: String,
-        filterSuffixListCon: String,
-        filterShellCon: String,
-        initialPath: String,
-        pickerMacro: FilePickerTool.PickerMacro?,
-        currentFannelName: String,
-        tag: String,
-    ) {
-        getFileForEdit.get(
-            parentDirPathSrc,
-            filterPrefixListCon,
-            filterSuffixListCon,
-            filterShellCon,
-            initialPath,
-            onDirectoryPickSrc,
-            pickerMacro,
-            currentFannelName,
-            tag,
-        )
-    }
+//    override fun onGetFileForTerm(
+//        parentDirPathSrc: String,
+//        onDirectoryPickSrc: Boolean,
+//        filterPrefixListCon: String,
+//        filterSuffixListCon: String,
+//        filterShellCon: String,
+//        initialPath: String,
+//        pickerMacro: FilePickerTool.PickerMacro?,
+//        currentFannelName: String,
+//        tag: String,
+//    ) {
+//        getFileForEdit.get(
+//            parentDirPathSrc,
+//            filterPrefixListCon,
+//            filterSuffixListCon,
+//            filterShellCon,
+//            initialPath,
+//            onDirectoryPickSrc,
+//            pickerMacro,
+//            currentFannelName,
+//            tag,
+//        )
+//    }
 
     override fun onGetFileListForTerm(
         onDirectoryPickSrc: Boolean,

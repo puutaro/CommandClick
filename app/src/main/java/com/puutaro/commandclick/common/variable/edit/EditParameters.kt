@@ -17,8 +17,8 @@ data class EditParameters(
     var currentId: Int = 0
     var currentVariableName: String? = null
     var currentVariableValue: String? = null
-    var setVariableMap:  Map<String, String>? = null
-    var variableTypeList: List<String> = emptyList()
+//    var setVariableMap:  Map<String, String>? = null
+//    var variableTypeList: List<String> = emptyList()
     var onDirectoryPick: Boolean = false
     var isReturnOnlyFileName: Boolean = false
 }

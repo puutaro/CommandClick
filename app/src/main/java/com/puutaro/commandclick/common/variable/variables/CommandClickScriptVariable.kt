@@ -260,10 +260,10 @@ object CommandClickScriptVariable {
         ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.dirPath.name
 //    private val buttonSetfListAddHowFull =
 //        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
-    private val listPathForListConSlSpi =
-        ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-    private val limitNumForListConSlSpi =
-        ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
+//    private val listPathForListConSlSpi =
+//        ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+//    private val limitNumForListConSlSpi =
+//        ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
 //    private val setVaraibleValueForHomeScriptUrlsPath =
 //        "$listPathForListConSlSpi=" +
 //                "$macroStrForDragSortGetListPathFromVar:${homeScriptUrlsFilePath}" +
@@ -294,82 +294,82 @@ object CommandClickScriptVariable {
         UsePath.imageLongPressMenuFilePath
     private val noScrollSaveUrlsFilePath =
         UsePath.noScrollSaveUrlsFilePath
-    private val setVariableValueForSrcImageAnchorLongPressMenuFilePath =
-        "$listPathForListConSlSpi=" +
-                "$macroStrForDragSortGetListPathFromVar:$srcImageAnchorLongPressMenuFilePath" +
-                    "?$limitNumForListConSlSpi=20" +
-                "|$buttonCmd=" +
-                listOf(
-                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
-                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
-                    "$buttonSetfListAddSourceDirPath=\${01}" +
-                            "?$buttonLabel=ADD"
-                ).joinToString(" ")
-    private val setVariableValueForSrcAnchorLongPressMenuFilePath =
-        "$listPathForListConSlSpi=" +
-                "$macroStrForDragSortGetListPathFromVar:$srcAnchorLongPressMenuFilePath" +
-                    "?$limitNumForListConSlSpi=20" +
-                "|$buttonCmd=" +
-                listOf(
-                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
-                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
-                    "$buttonSetfListAddSourceDirPath=\${01}" +
-                            "?$buttonLabel=ADD"
-                ).joinToString(" ")
-    private val setVariableValueForImageLongPressMenuFilePath =
-        "$listPathForListConSlSpi=" +
-                "$macroStrForDragSortGetListPathFromVar:$imageLongPressMenuFilePath" +
-                    "?$limitNumForListConSlSpi=20" +
-                "|$buttonCmd=" +
-                listOf(
-                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
-                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
-                    "$buttonSetfListAddSourceDirPath=\${01}" +
-                            "?$buttonLabel=ADD"
-                ).joinToString(" ")
+//    private val setVariableValueForSrcImageAnchorLongPressMenuFilePath =
+//        "$listPathForListConSlSpi=" +
+//                "$macroStrForDragSortGetListPathFromVar:$srcImageAnchorLongPressMenuFilePath" +
+//                    "?$limitNumForListConSlSpi=20" +
+//                "|$buttonCmd=" +
+//                listOf(
+//                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+//                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+//                    "$buttonSetfListAddSourceDirPath=\${01}" +
+//                            "?$buttonLabel=ADD"
+//                ).joinToString(" ")
+//    private val setVariableValueForSrcAnchorLongPressMenuFilePath =
+//        "$listPathForListConSlSpi=" +
+//                "$macroStrForDragSortGetListPathFromVar:$srcAnchorLongPressMenuFilePath" +
+//                    "?$limitNumForListConSlSpi=20" +
+//                "|$buttonCmd=" +
+//                listOf(
+//                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+//                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+//                    "$buttonSetfListAddSourceDirPath=\${01}" +
+//                            "?$buttonLabel=ADD"
+//                ).joinToString(" ")
+//    private val setVariableValueForImageLongPressMenuFilePath =
+//        "$listPathForListConSlSpi=" +
+//                "$macroStrForDragSortGetListPathFromVar:$imageLongPressMenuFilePath" +
+//                    "?$limitNumForListConSlSpi=20" +
+//                "|$buttonCmd=" +
+//                listOf(
+//                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+//                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+//                    "$buttonSetfListAddSourceDirPath=\${01}" +
+//                            "?$buttonLabel=ADD"
+//                ).joinToString(" ")
 //    val buttonIconSeparator = JsPathForEditButton.buttonIconSeparator
 //    val buttonIconNameIdSeparator = JsPathForEditButton.buttonIconNameIdSeparator
 //    val buttonIconNameIdPairListStr = CmdClickIcons.values().reversed().map {
 //        "${it.str}${buttonIconNameIdSeparator}${it.str}"
 //    }.joinToString(buttonIconSeparator)
 
-    private val setVariableValueForNoScrollSaveUrlsFilePath =
-        "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
-    val setVariableForSettingHolder: List<String> = listOf(
-        "$SHELL_EXEC_ENV:CB=$shellExecEnvUbuntu?$shellExecEnvTermux",
-        "$UBUNTU_EXEC_MODE:CB=$ubuntuExecModeSelectsBackground?$ubuntuExecModeSelectsForeground",
-        "$UBUNTU_OUTPUT_FILE:CB=${UsePath.cmdClickMonitorFileName_1}?${UsePath.cmdClickMonitorFileName_2}?${UsePath.cmdClickMonitorFileName_3}?${UsePath.cmdClickMonitorFileName_4}",
-        "$TERMINAL_DO:CB=$terminalOn?$terminalTermux?$terminalOff",
-        "$EDIT_EXECUTE:CB=$editExecuteNo?$editExecuteAlways",
-//        "$TERMINAL_SIZE_TYPE:CB=$terminalSizeTypeOff?$terminalSizeTypeShort?$terminalSizeTypeLong",
-        "$TERMINAL_OUTPUT_MODE:CB=$terminalOutPutModeNormal?$terminalOutPutModeReflash?$terminalOutPutModeReflashAndFirstRow?$terminalOutPutModeDebug?$terminalOutPutModeNo",
-        "$ON_UPDATE_LAST_MODIFY:CB=$onUpdateLastModifyOn?$onUpdateLastModifyOff",
-        "$CMDCLICK_ON_AUTO_EXEC:CB=$autoExecSelectsOn?$autoExecSelectsOff",
-        "$CMDCLICK_HISTORY_SWITCH:CB=$historySwitchOff?$historySwitchOn?$historySwitchInherit",
-        "$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC:CB=$urlHistoryOrButtonExecUrlHistory?$urlHistoryOrButtonExecUrlButtonExec?$urlHistoryOrButtonExecUrlInherit",
-        "$ON_URL_LAUNCH_MACRO:TXT:ECB=$onUrlLaunchMacroOff?$onUrlLaunchMacroRecent?$onUrlLaunchMacroFrequency",
-        "$ON_ADBLOCK:CB=$onAdBlockInherit?$onAdBlockOff?$onAdBlockOn",
-        "${ON_LAUNCH_URL_HISTORY_BY_BACKSTACK}:CB=${onLaunchUrlHistoryByBackstackOff}?${onLaunchUrlHistoryByBackstackOn}",
-        "$ON_TERM_BACKEND_WHEN_START:CB=$onTermBackendWhenStartSelectsInherit?$onTermBackendWhenStartSelectsOff?$onTermBackendWhenStartSelectsOn",
-        "$ON_TERM_VISIBLE_WHEN_KEYBOARD:CB=$onTermVisibleWhenKeyboardSelectsInherit?$onTermVisibleWhenKeyboardSelectsOn?$onTermVisibleWhenKeyboardSelectsOff",
-        "$ON_TERM_SHORT_WHEN_LOAD:CB=$onTermShortWhenLoadSelectsInherit?$onTermShortWhenLoadSelectsOn?$onTermShortWhenLoadSelectsOff",
-        "$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT:CB=$disableShowToolbarWhenHighlightOn?$disableShowToolbarWhenHighlightOff",
-        "$ON_URL_HISTORY_REGISTER:CB=$onUrlHistoryRegisterOn?$onUrlHistoryRegisterOff",
-        "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}?${UsePath.cmdClickMonitorFileName_2}?${UsePath.cmdClickMonitorFileName_3}?${UsePath.cmdClickMonitorFileName_4}",
-        "${ON_ROOTFS_SDCARD_SAVE}:CB=${onRootfsSdcardSaveOn}?${onRootfsSdcardSaveOff}",
-        "${UBUNTU_AUTO_SETUP}:CB=${ubuntuAutoSetupOff}?${ubuntuAutoSetupSetup}?${ubuntuAutoSetupRestore}",
-        "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000?1",
-        "$TERMINAL_COLOR:TXT:CLR=",
-        "$TERMINAL_FONT_COLOR:TXT:CLR=",
-        "$EXEC_JS_OR_HTML_PATH:TXT:FL=",
-//        "$HOME_SCRIPT_URLS_PATH:DSL:BTN=$setVaraibleValueForHomeScriptUrlsPath",
-//        "$CMDCLICK_HOME_FANNELS_PATH:DSL:BTN=$setVariableValueForHomeFannelsPath",
-        "$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcImageAnchorLongPressMenuFilePath",
-        "$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcAnchorLongPressMenuFilePath",
-        "$IMAGE_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForImageLongPressMenuFilePath",
-        "$NO_SCROLL_SAVE_URLS:DSL=$setVariableValueForNoScrollSaveUrlsFilePath",
-        "$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF:TXT:NUM=0..60?10"
-    )
+//    private val setVariableValueForNoScrollSaveUrlsFilePath =
+//        "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
+//    val setVariableForSettingHolder: List<String> = listOf(
+//        "$SHELL_EXEC_ENV:CB=$shellExecEnvUbuntu?$shellExecEnvTermux",
+//        "$UBUNTU_EXEC_MODE:CB=$ubuntuExecModeSelectsBackground?$ubuntuExecModeSelectsForeground",
+//        "$UBUNTU_OUTPUT_FILE:CB=${UsePath.cmdClickMonitorFileName_1}?${UsePath.cmdClickMonitorFileName_2}?${UsePath.cmdClickMonitorFileName_3}?${UsePath.cmdClickMonitorFileName_4}",
+//        "$TERMINAL_DO:CB=$terminalOn?$terminalTermux?$terminalOff",
+//        "$EDIT_EXECUTE:CB=$editExecuteNo?$editExecuteAlways",
+////        "$TERMINAL_SIZE_TYPE:CB=$terminalSizeTypeOff?$terminalSizeTypeShort?$terminalSizeTypeLong",
+//        "$TERMINAL_OUTPUT_MODE:CB=$terminalOutPutModeNormal?$terminalOutPutModeReflash?$terminalOutPutModeReflashAndFirstRow?$terminalOutPutModeDebug?$terminalOutPutModeNo",
+//        "$ON_UPDATE_LAST_MODIFY:CB=$onUpdateLastModifyOn?$onUpdateLastModifyOff",
+//        "$CMDCLICK_ON_AUTO_EXEC:CB=$autoExecSelectsOn?$autoExecSelectsOff",
+//        "$CMDCLICK_HISTORY_SWITCH:CB=$historySwitchOff?$historySwitchOn?$historySwitchInherit",
+//        "$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC:CB=$urlHistoryOrButtonExecUrlHistory?$urlHistoryOrButtonExecUrlButtonExec?$urlHistoryOrButtonExecUrlInherit",
+//        "$ON_URL_LAUNCH_MACRO:TXT:ECB=$onUrlLaunchMacroOff?$onUrlLaunchMacroRecent?$onUrlLaunchMacroFrequency",
+//        "$ON_ADBLOCK:CB=$onAdBlockInherit?$onAdBlockOff?$onAdBlockOn",
+//        "${ON_LAUNCH_URL_HISTORY_BY_BACKSTACK}:CB=${onLaunchUrlHistoryByBackstackOff}?${onLaunchUrlHistoryByBackstackOn}",
+//        "$ON_TERM_BACKEND_WHEN_START:CB=$onTermBackendWhenStartSelectsInherit?$onTermBackendWhenStartSelectsOff?$onTermBackendWhenStartSelectsOn",
+//        "$ON_TERM_VISIBLE_WHEN_KEYBOARD:CB=$onTermVisibleWhenKeyboardSelectsInherit?$onTermVisibleWhenKeyboardSelectsOn?$onTermVisibleWhenKeyboardSelectsOff",
+//        "$ON_TERM_SHORT_WHEN_LOAD:CB=$onTermShortWhenLoadSelectsInherit?$onTermShortWhenLoadSelectsOn?$onTermShortWhenLoadSelectsOff",
+//        "$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT:CB=$disableShowToolbarWhenHighlightOn?$disableShowToolbarWhenHighlightOff",
+//        "$ON_URL_HISTORY_REGISTER:CB=$onUrlHistoryRegisterOn?$onUrlHistoryRegisterOff",
+//        "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}?${UsePath.cmdClickMonitorFileName_2}?${UsePath.cmdClickMonitorFileName_3}?${UsePath.cmdClickMonitorFileName_4}",
+//        "${ON_ROOTFS_SDCARD_SAVE}:CB=${onRootfsSdcardSaveOn}?${onRootfsSdcardSaveOff}",
+//        "${UBUNTU_AUTO_SETUP}:CB=${ubuntuAutoSetupOff}?${ubuntuAutoSetupSetup}?${ubuntuAutoSetupRestore}",
+//        "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000?1",
+//        "$TERMINAL_COLOR:TXT:CLR=",
+//        "$TERMINAL_FONT_COLOR:TXT:CLR=",
+//        "$EXEC_JS_OR_HTML_PATH:TXT:FL=",
+////        "$HOME_SCRIPT_URLS_PATH:DSL:BTN=$setVaraibleValueForHomeScriptUrlsPath",
+////        "$CMDCLICK_HOME_FANNELS_PATH:DSL:BTN=$setVariableValueForHomeFannelsPath",
+//        "$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcImageAnchorLongPressMenuFilePath",
+//        "$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcAnchorLongPressMenuFilePath",
+//        "$IMAGE_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForImageLongPressMenuFilePath",
+//        "$NO_SCROLL_SAVE_URLS:DSL=$setVariableValueForNoScrollSaveUrlsFilePath",
+//        "$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF:TXT:NUM=0..60?10"
+//    )
 
     fun makeShellScriptName(
 //        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT

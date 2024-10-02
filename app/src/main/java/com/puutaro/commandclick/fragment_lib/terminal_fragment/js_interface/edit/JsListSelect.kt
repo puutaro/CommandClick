@@ -168,18 +168,18 @@ class JsListSelect(
             currentScriptPath,
             replacedScriptContents
         )
-        val jsEdit = JsEdit(terminalFragmentRef)
-        if(
+//        val jsEdit = JsEdit(terminalFragmentRef)
+//        if(
             defaultVariable.isNotEmpty()
-        ) jsEdit.updateEditText(
-            defaultVariable,
-            String(),
-        )
-        if(
-            replaceTargetVariable.isNotEmpty()
-        ) jsEdit.updateEditText(
-            replaceTargetVariable,
-            recentItem,
-        )
+//        ) jsEdit.updateEditText(
+//            defaultVariable,
+//            String(),
+//        )
+//        if(
+//            replaceTargetVariable.isNotEmpty()
+//        ) jsEdit.updateEditText(
+//            replaceTargetVariable,
+//            recentItem,
+//        )
     }
 }

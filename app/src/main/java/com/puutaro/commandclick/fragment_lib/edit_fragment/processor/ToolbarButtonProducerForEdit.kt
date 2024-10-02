@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -24,27 +22,11 @@ import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 
 object ToolbarButtonProducerForEdit {
 
-//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-//    var languageTypeToSectionHolderMap =
-//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//            languageType
-//        )
-//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//    ) as String
-//
-//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//    ) as String
-
     fun make(
         editFragment: EditFragment,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     ) {
         val context = editFragment.context
-//        val toolbarButtonHandler = ToolbarButtonHandler(
-//            editFragment,
-//        )
         if(
             !howSetButton(
                 editFragment,
@@ -71,11 +53,6 @@ object ToolbarButtonProducerForEdit {
                 iconIdToCaption
             )
         }
-//        val imageView = makeImageView(
-//            editFragment,
-//            toolbarButtonBariantForEdit,
-//            iconIdToCaption
-//        )
         buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)?.let {
             captionTextView ->
             setCaption(
@@ -83,50 +60,12 @@ object ToolbarButtonProducerForEdit {
                 iconIdToCaption,
             )
         }
-//        val textView = makeTextView(
-//            context,
-//            iconIdToCaption
-//        )
-//        buttonLayout.addView(imageButtonView)
-//        buttonLayout.addView(captionTextView)
-
-
-
-
-//        insertImageButtonParam.weight = editFragment.buttonWeight
-//        val makeButtonView = ImageButton(context)
-//        ButtonColorSettingForToolbarButton.set(
-//            editFragment,
-//            toolbarButtonBariantForEdit,
-//            makeButtonView
-//        )
-////        makeButtonView.imageTintList =
-////            context?.getColorStateList(R.color.terminal_color)
-//        makeButtonView.setBackgroundResource(android.R.drawable.list_selector_background)
-//        makeButtonView.setImageResource(
-//            editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit]
-//                ?: R.drawable.icons8_ok
-//        )
-//        makeButtonView.backgroundTintList =
-//            context?.getColorStateList(R.color.white)
-////        it.getColorStateList(R.color.terminal_color)
-//
-//        ButtonStatusSettingsForToolbarButton.set(
-//            editFragment,
-//            toolbarButtonBariantForEdit,
-//            makeButtonView
-//        )
-//        makeButtonView.layoutParams = insertImageButtonParam
-//        makeButtonView.tag = toolbarButtonBariantForEdit.str
         buttonLayout.setOnLongClickListener {
                 buttonInnerView ->
             onLongClickHandler(
                 editFragment,
                 buttonLayout,
-//                makeButtonView,
                 toolbarButtonBariantForEdit,
-//                recordNumToMapNameValueInCommandHolder,
-//                recordNumToMapNameValueInSettingHolder,
             )
             true
         }
@@ -135,29 +74,6 @@ object ToolbarButtonProducerForEdit {
             when (toolbarButtonBariantForEdit) {
                 ToolbarButtonBariantForEdit.HISTORY -> {
                     FannelHistoryButtonEvent.invoke(editFragment)
-//                    val editExecuteTerminalFragment = TargetFragmentInstance()
-//                        .getFromFragment<TerminalFragment>(
-//                            editFragment.activity,
-//                            context.getString(R.string.edit_terminal_fragment)
-//                        )
-//                    if(
-//                        editExecuteTerminalFragment != null
-//                    ){
-//                        val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
-//                        listener?.onKeyBoardVisibleChangeForEditFragment(
-//                            false,
-//                            true
-//                        )
-//                    }
-//                    HistoryButtonSwitcher.switch(
-//                        editFragment,
-//                        editFragment.context?.getString(
-//                            R.string.edit_terminal_fragment
-//                        ),
-//                        editFragment.historySwitch,
-//                        urlHistoryButtonEvent,
-//                        CLICLTYPE.SHORT
-//                    )
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.SETTING,
@@ -176,7 +92,7 @@ object ToolbarButtonProducerForEdit {
                 ToolbarButtonBariantForEdit.CANCEL -> {}
             }
         }
-        editFragment.binding.editToolbarLinearLayout.addView(
+        editFragment.binding.editToolBarLinearLayout.addView(
             buttonLayout
 //            makeButtonView
         )
@@ -192,13 +108,7 @@ object ToolbarButtonProducerForEdit {
             R.layout.icon_caption_layout,
             null
         ) as FrameLayout
-//        val buttonLayout = FrameLayout(context as Context)
         buttonLayout.tag = toolbarButtonBariantForEdit.str
-//        val outValue = TypedValue()
-//        context.theme
-//            .resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
-//        buttonLayout.setBackgroundResource(outValue.resourceId)
-//        buttonLayout.setBackgroundResource(android.R.drawable.list_selector_background)
         val param = LinearLayoutCompat.LayoutParams(
             0,
             LinearLayoutCompat.LayoutParams.MATCH_PARENT,
@@ -212,7 +122,6 @@ object ToolbarButtonProducerForEdit {
         param.gravity = Gravity.CENTER
         param.weight = editFragment.buttonWeight
         buttonLayout.layoutParams = param
-//        buttonLayout.orientation = LinearLayoutCompat.VERTICAL
         return buttonLayout
     }
 
@@ -230,50 +139,17 @@ object ToolbarButtonProducerForEdit {
         captionTextView.setFillColor(R.color.fill_gray)
     }
 
-//    private fun makeTextView(
-//        context: Context,
-//        iconIdToCaption: Pair<Int, String>
-//    ): AppCompatTextView {
-//        val textView = AppCompatTextView(context)
-//        val paramForTextView = LinearLayoutCompat.LayoutParams(
-//            ViewGroup.LayoutParams.MATCH_PARENT,
-//            ViewGroup.LayoutParams.MATCH_PARENT,
-//        )
-//        val horizonMargin = ScreenSizeCalculator.toDp(context, 4)
-//        paramForTextView.marginStart = horizonMargin
-//        paramForTextView.marginEnd = horizonMargin
-//        paramForTextView.gravity = Gravity.CENTER
-//        textView.layoutParams = paramForTextView
-//        textView.gravity = Gravity.CENTER
-//        textView.text = iconIdToCaption.second.ifEmpty {
-//            val iconId = iconIdToCaption.first
-//            CmdClickIcons.values().firstOrNull {
-//                it.id == iconId
-//            }?.str ?: String()
-//        }
-//        textView.textSize = 12f
-//        textView.inputType = InputType.TYPE_CLASS_TEXT
-//        textView.maxLines = 1
-//        textView.setTypeface(null, Typeface.BOLD)
-//        textView.ellipsize = TextUtils.TruncateAt.END
-//        return textView
-//    }
-
     private fun setImageView(
         editFragment: EditFragment,
         imageView: AppCompatImageView,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         iconIdToCaption: Pair<Int, String>
     ): AppCompatImageView{
-//        val dpSize = ScreenSizeCalculator.toDp(context, 40)
         val imageViewContext = imageView.context
         val iconId = iconIdToCaption.first
         imageView.tag = CmdClickIcons.values().firstOrNull {
             it.id == iconId
         }?.str ?: toolbarButtonBariantForEdit.str
-//        imageView.imageTintList = null
-//        imageView.backgroundTintList = imageViewContext.getColorStateList(R.color.white)
-//        imageView.scaleType = ImageView.ScaleType.FIT_CENTER
         val icon = CmdClickIcons.values().firstOrNull {
             it.id == iconId
         }

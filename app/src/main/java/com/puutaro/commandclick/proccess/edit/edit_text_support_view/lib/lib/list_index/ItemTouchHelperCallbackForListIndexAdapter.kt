@@ -7,7 +7,6 @@ import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecSwitcherForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.list.ListTool
@@ -106,33 +105,37 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         fromViewHolder: ListIndexAdapter.ListIndexListViewHolder,
         toViewHolder: ListIndexAdapter.ListIndexListViewHolder
     ){
-        val listIndexTypeKey = ListIndexAdapter.listIndexTypeKey
-        when(listIndexTypeKey){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
-                val fromFileName = fromViewHolder.fileName
-                val toFileName = toViewHolder.fileName
-                val fromMaterialCardView = fromViewHolder.materialCardView
-                val toMaterialCardView = toViewHolder.materialCardView
-                val fromChecked = fromMaterialCardView.isChecked
-                val toChecked = toMaterialCardView.isChecked
-                fromMaterialCardView.isChecked = toChecked
-                toMaterialCardView.isChecked = fromChecked
-                val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    editFragment,
-                    ListIndexAdapter.indexListMap,
-                    ListIndexAdapter.listIndexTypeKey
-                )
-                FileSystems.switchLastModify(
-                    File(parentDirPath, fromFileName),
-                    File(parentDirPath, toFileName)
-                )
-            }
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                ExecSwitcherForListIndexAdapter.updateTsv(
-                    editFragment,
-                    listIndexForEditAdapter.listIndexList
-                )
-        }
+        ExecSwitcherForListIndexAdapter.updateTsv(
+            editFragment,
+            listIndexForEditAdapter.listIndexList
+        )
+//        val listIndexTypeKey = ListIndexAdapter.listIndexTypeKey
+//        when(listIndexTypeKey){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
+//                val fromFileName = fromViewHolder.fileName
+//                val toFileName = toViewHolder.fileName
+//                val fromMaterialCardView = fromViewHolder.materialCardView
+//                val toMaterialCardView = toViewHolder.materialCardView
+//                val fromChecked = fromMaterialCardView.isChecked
+//                val toChecked = toMaterialCardView.isChecked
+//                fromMaterialCardView.isChecked = toChecked
+//                toMaterialCardView.isChecked = fromChecked
+//                val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                    editFragment,
+//                    ListIndexAdapter.indexListMap,
+//                    ListIndexAdapter.listIndexTypeKey
+//                )
+//                FileSystems.switchLastModify(
+//                    File(parentDirPath, fromFileName),
+//                    File(parentDirPath, toFileName)
+//                )
+//            }
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
+//                ExecSwitcherForListIndexAdapter.updateTsv(
+//                    editFragment,
+//                    listIndexForEditAdapter.listIndexList
+//                )
+//        }
     }
 }

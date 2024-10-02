@@ -15,10 +15,8 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.CcPathTool
@@ -203,28 +201,34 @@ object QrLogoSettingsForQrDialog {
             materialCardView: MaterialCardView?,
             fileContentsQrLogoLinearLayout: RelativeLayout?,
             qrLogoConfigMap: Map<String, String>,
-            layoutType: LayoutSettingsForListIndex.LayoutTypeValueStr,
+//            layoutType: LayoutSettingsForListIndex.LayoutTypeValueStr,
         ){
-            when(layoutType) {
-                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR
-                -> {}
-                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID
-                -> {
-//                    val layoutParams =
-//                        baseLinearLayoutCompat?.layoutParams as ViewGroup.MarginLayoutParams
-//                    layoutParams.setMargins(0, 0, 0, 0)
-//                    baseLinearLayoutCompat.requestLayout()
-                }
-            }
-            val oneSideLength = when(layoutType) {
-                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
-                culc(
-                    fragment?.context,
-                    qrLogoConfigMap
-                )
-                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-            }
+            val layoutParams =
+                baseLinearLayoutCompat?.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.setMargins(0, 0, 0, 0)
+            baseLinearLayoutCompat.requestLayout()
+//            when(layoutType) {
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR
+//                -> {}
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID
+//                -> {
+////                    val layoutParams =
+////                        baseLinearLayoutCompat?.layoutParams as ViewGroup.MarginLayoutParams
+////                    layoutParams.setMargins(0, 0, 0, 0)
+////                    baseLinearLayoutCompat.requestLayout()
+//                }
+//            }
+            RelativeLayout.LayoutParams.MATCH_PARENT
+            val oneSideLength =  RelativeLayout.LayoutParams.MATCH_PARENT
+//            when(layoutType) {
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
+//                culc(
+//                    fragment?.context,
+//                    qrLogoConfigMap
+//                )
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
+//                    RelativeLayout.LayoutParams.MATCH_PARENT
+//            }
             val linearLayoutParam = LinearLayoutCompat.LayoutParams(
                 oneSideLength,
                 oneSideLength
@@ -236,29 +240,38 @@ object QrLogoSettingsForQrDialog {
 //                "oneSideLength: ${oneSideLength}",
 //            ).joinToString("\n\n")
 //        )
-            when(layoutType) {
-                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
-                    linearLayoutParam.setMargins(10, 10, 0, 10)
-                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
-                    linearLayoutParam.apply {
-                        setMargins(0, 0, 0, 0)
-                    }
+            linearLayoutParam.apply {
+                setMargins(0, 0, 0, 0)
             }
+//            when(layoutType) {
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
+//                    linearLayoutParam.setMargins(10, 10, 0, 10)
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
+//                    linearLayoutParam.apply {
+//                        setMargins(0, 0, 0, 0)
+//                    }
+//            }
             linearLayoutParam.gravity = Gravity.CENTER
             fileContentsQrLogoLinearLayout?.layoutParams = linearLayoutParam
-            when(layoutType) {
-                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR
-                -> {}
-                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID
-                -> {
-                    val cardViewLayoutParams = materialCardView?.layoutParams as ViewGroup.MarginLayoutParams
-                    cardViewLayoutParams.setMargins(1, 1, 1, 1)
-                    materialCardView.requestLayout()
-                    fileContentsQrLogoLinearLayout?.setPadding(
-                        0, 0, 0, 0
-                    )
-                }
-            }
+            val cardViewLayoutParams = materialCardView?.layoutParams as ViewGroup.MarginLayoutParams
+            cardViewLayoutParams.setMargins(1, 1, 1, 1)
+            materialCardView.requestLayout()
+            fileContentsQrLogoLinearLayout?.setPadding(
+                0, 0, 0, 0
+            )
+//            when(layoutType) {
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR
+//                -> {}
+//                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID
+//                -> {
+//                    val cardViewLayoutParams = materialCardView?.layoutParams as ViewGroup.MarginLayoutParams
+//                    cardViewLayoutParams.setMargins(1, 1, 1, 1)
+//                    materialCardView.requestLayout()
+//                    fileContentsQrLogoLinearLayout?.setPadding(
+//                        0, 0, 0, 0
+//                    )
+//                }
+//            }
         }
     }
 
@@ -281,8 +294,8 @@ object QrLogoSettingsForQrDialog {
 
         fun set(
             context: Context?,
-            filterDir: String,
-            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+//            filterDir: String,
+//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
             itemName: String,
             fannelContentsQrLogoView: AppCompatImageView?,
             fileContentsQrLogoLinearLayout: RelativeLayout?,
@@ -324,9 +337,9 @@ object QrLogoSettingsForQrDialog {
                     context,
                     fannelContentsQrLogoView,
                     fileContentsQrLogoLinearLayout,
-                    listIndexTypeKey,
+//                    listIndexTypeKey,
                     qrLogoConfigMap,
-                    filterDir,
+//                    filterDir,
                     itemName,
                     textImagePngBitMap,
                     iconNameColorConfigMap,
@@ -346,21 +359,22 @@ object QrLogoSettingsForQrDialog {
             context: Context,
             fannelContentsQrLogoView: AppCompatImageView?,
             fileContentsQrLogoLinearLayout: RelativeLayout?,
-            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
             qrLogoConfigMap: Map<String, String>,
-            filterDir: String,
+//            filterDir: String,
             itemName: String,
             textImagePngBitMap: Bitmap,
             iconNameColorConfigMap: Map<String, String>?
         ) {
-            val itemPath = when(listIndexTypeKey){
-//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//                -> return
-                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-                -> itemName
-                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-                -> File(filterDir, itemName).absolutePath
-            }
+            val itemPath = itemName
+//            when(listIndexTypeKey){
+////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////                -> return
+//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//                -> itemName
+//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//                -> File(filterDir, itemName).absolutePath
+//            }
 //            fannelContentsQrLogoView?.load(
 //                itemPath
 //            )

@@ -50,12 +50,12 @@ object ConfigFromScriptFileSetter {
         )
         editFragment.settingFannelConList = settingVariableList
 
-        editFragment.setVariableTypeList =
-            SetVariableTypesSetterForEdit.set(
-                editFragment,
-                fannelInfoMap,
-                settingVariableList,
-            )
+//        editFragment.setVariableTypeList =
+//            SetVariableTypesSetterForEdit.set(
+//                editFragment,
+//                fannelInfoMap,
+//                settingVariableList,
+//            )
         editFragment.hideSettingVariableList =
             ListSettingVariableListMaker.makeFromSettingVariableList(
                 CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
@@ -70,10 +70,10 @@ object ConfigFromScriptFileSetter {
                 editFragment,
                 mainFannelConList
             )
-        editFragment.existIndexList =
-            judgeExistListIndex(
-                editFragment,
-            )
+//        editFragment.existIndexList =
+//            judgeExistListIndex(
+//                editFragment,
+//            )
 
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
@@ -324,32 +324,32 @@ object ConfigFromScriptFileSetter {
                 )
     }
 
-    private fun judgeExistListIndex(
-        editFragment: EditFragment,
-    ): Boolean {
-        val isSetting = !IsCmdEdit.judge(editFragment)
-
-        if(
-            isSetting
-        ) return false
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "setVal.txt").absolutePath,
-//           listOf(
-//               "recordNumToMapNameValueInSettingHolder: ${editFragment.recordNumToMapNameValueInSettingHolder}",
-//               "setVariableTypeList: ${editFragment.setVariableTypeList?.joinToString("\n")}"
-//           ).joinToString("\n\n")
+//    private fun judgeExistListIndex(
+//        editFragment: EditFragment,
+//    ): Boolean {
+//        val isSetting = !IsCmdEdit.judge(editFragment)
+//
+//        if(
+//            isSetting
+//        ) return false
+////        FileSystems.writeFile(
+////            File(UsePath.cmdclickDefaultAppDirPath, "setVal.txt").absolutePath,
+////           listOf(
+////               "recordNumToMapNameValueInSettingHolder: ${editFragment.recordNumToMapNameValueInSettingHolder}",
+////               "setVariableTypeList: ${editFragment.setVariableTypeList?.joinToString("\n")}"
+////           ).joinToString("\n\n")
+////        )
+//
+////        val setVariableTypeList =
+////            editFragment.setVariableTypeList
+////                ?: return false
+////        val setVariableTypeListCon =
+////            "\n" + setVariableTypeList.joinToString("\n")
+//        val listIndexNewlineRegex = Regex(
+//            "\n[a-zA-Z0-9]{1,}:${EditTextSupportViewName.LIST_INDEX.str}="
 //        )
-
-        val setVariableTypeList =
-            editFragment.setVariableTypeList
-                ?: return false
-        val setVariableTypeListCon =
-            "\n" + setVariableTypeList.joinToString("\n")
-        val listIndexNewlineRegex = Regex(
-            "\n[a-zA-Z0-9]{1,}:${EditTextSupportViewName.LIST_INDEX.str}="
-        )
-        return listIndexNewlineRegex.containsMatchIn(setVariableTypeListCon)
-    }
+//        return listIndexNewlineRegex.containsMatchIn(setVariableTypeListCon)
+//    }
 
     private fun setButtonVisible(
         editFragment: EditFragment,

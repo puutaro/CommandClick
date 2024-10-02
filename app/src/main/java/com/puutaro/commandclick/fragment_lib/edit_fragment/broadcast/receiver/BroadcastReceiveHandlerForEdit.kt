@@ -28,7 +28,7 @@ object BroadcastReceiveHandlerForEdit {
                     ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                         editFragment,
                         ListIndexAdapter.indexListMap,
-                        ListIndexAdapter.listIndexTypeKey
+//                        ListIndexAdapter.listIndexTypeKey
                     )
                 )
             }

@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.lang.ref.WeakReference
@@ -32,6 +31,6 @@ class JsFannelConSaver(
             currentFannelName,
             currentFannelState
         ) ?: return
-        ScriptFileSaver.save(editFragment)
+//        ScriptFileSaver.save(editFragment)
     }
 }

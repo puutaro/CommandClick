@@ -11,74 +11,74 @@ object ListContentsSelectBoxTool {
     private const val escapeCharHyphen = "-"
     private const val buttonTagSeparator = "&"
 
-    fun saveListContents(
-        editFragment: EditFragment,
-        currentButtonTag: String?
-    ){
-        /*
-        Save [list contents select box]() on click button with tag
-        */
-        val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
-        if(
-            currentButtonTag.isNullOrEmpty()
-        ) return
-        val saveTagsKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTags.name
-        val listContentsMap = editFragment.listConSelectBoxMapList.firstOrNull {
-            if(
-                it.isNullOrEmpty()
-            ) return@firstOrNull false
-            val saveTagKeyList = it.get(saveTagsKey)?.split(buttonTagSeparator)
-            if(
-                saveTagKeyList.isNullOrEmpty()
-            ) return@firstOrNull false
-            saveTagKeyList.contains(currentButtonTag)
-        }
-        if(
-            listContentsMap.isNullOrEmpty()
-        ) return
-        val saveTargetListFilePath =
-            listContentsMap.get(
-                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-            )
-        if(
-            saveTargetListFilePath.isNullOrEmpty()
-        ) return
-        val saveValName =
-            listContentsMap.get(
-                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveValName.name
-            )
-        if(
-            saveValName.isNullOrEmpty()
-        ) return
-        val saveFilterShellPath =
-            listContentsMap.get(
-                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveFilterShellPath.name
-            )
-        val saveValue = EditVariableName.getText(
-            editFragment,
-            saveValName
-        )
-        val filterSaveValue = when(saveFilterShellPath.isNullOrEmpty()) {
-            true -> return
-            else -> {
-                editFragment.busyboxExecutor?.getCmdOutput(
-                    ReadText(
-                        saveFilterShellPath
-                    ).readText().replace(
-                        saveTextCon,
-                        saveValue
-                    )
-                )
-            }
-        }
-        if(
-            filterSaveValue.isNullOrEmpty()
-        ) return
-        updateListFileCon(
-            saveTargetListFilePath,
-            filterSaveValue
-        )
-    }
+//    fun saveListContents(
+//        editFragment: EditFragment,
+//        currentButtonTag: String?
+//    ){
+//        /*
+//        Save [list contents select box]() on click button with tag
+//        */
+//        val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
+//        if(
+//            currentButtonTag.isNullOrEmpty()
+//        ) return
+//        val saveTagsKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTags.name
+//        val listContentsMap = editFragment.listConSelectBoxMapList.firstOrNull {
+//            if(
+//                it.isNullOrEmpty()
+//            ) return@firstOrNull false
+//            val saveTagKeyList = it.get(saveTagsKey)?.split(buttonTagSeparator)
+//            if(
+//                saveTagKeyList.isNullOrEmpty()
+//            ) return@firstOrNull false
+//            saveTagKeyList.contains(currentButtonTag)
+//        }
+//        if(
+//            listContentsMap.isNullOrEmpty()
+//        ) return
+//        val saveTargetListFilePath =
+//            listContentsMap.get(
+//                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+//            )
+//        if(
+//            saveTargetListFilePath.isNullOrEmpty()
+//        ) return
+//        val saveValName =
+//            listContentsMap.get(
+//                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveValName.name
+//            )
+//        if(
+//            saveValName.isNullOrEmpty()
+//        ) return
+//        val saveFilterShellPath =
+//            listContentsMap.get(
+//                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveFilterShellPath.name
+//            )
+//        val saveValue = EditVariableName.getText(
+//            editFragment,
+//            saveValName
+//        )
+//        val filterSaveValue = when(saveFilterShellPath.isNullOrEmpty()) {
+//            true -> return
+//            else -> {
+//                editFragment.busyboxExecutor?.getCmdOutput(
+//                    ReadText(
+//                        saveFilterShellPath
+//                    ).readText().replace(
+//                        saveTextCon,
+//                        saveValue
+//                    )
+//                )
+//            }
+//        }
+//        if(
+//            filterSaveValue.isNullOrEmpty()
+//        ) return
+//        updateListFileCon(
+//            saveTargetListFilePath,
+//            filterSaveValue
+//        )
+//    }
 
     fun updateListFileCon(
         targetListFilePath: String,

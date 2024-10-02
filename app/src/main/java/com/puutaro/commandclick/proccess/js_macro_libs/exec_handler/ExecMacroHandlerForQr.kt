@@ -24,9 +24,10 @@ object ExecMacroHandlerForQr {
 
             JsMacroForQr.DESC
             -> {
-                val parentDirPath = ActionToolForQr.getParentDirPath(
-                    editFragment
-                )
+                val parentDirPath = String()
+//                ActionToolForQr.getParentDirPath(
+//                    editFragment
+//                )
                 val contents = ActionToolForQr.getContents(
                     editFragment.context,
                     parentDirPath,
@@ -56,9 +57,10 @@ object ExecMacroHandlerForQr {
 
             JsMacroForQr.FILE_CONTENTS
             -> {
-                val parentDirPath = ActionToolForQr.getParentDirPath(
-                    editFragment
-                )
+                val parentDirPath = String()
+//                ActionToolForQr.getParentDirPath(
+//                    editFragment
+//                )
                 val contents = ActionToolForQr.getContents(
                     editFragment.context,
                     parentDirPath,

@@ -310,7 +310,7 @@ object QrDialogMethod {
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
                                 ListIndexAdapter.indexListMap,
-                                ListIndexAdapter.listIndexTypeKey
+//                                ListIndexAdapter.listIndexTypeKey
                             )
                         )
                     }
@@ -390,7 +390,7 @@ object QrDialogMethod {
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
                                 ListIndexAdapter.indexListMap,
-                                ListIndexAdapter.listIndexTypeKey
+//                                ListIndexAdapter.listIndexTypeKey
                             )
                         )
                     }

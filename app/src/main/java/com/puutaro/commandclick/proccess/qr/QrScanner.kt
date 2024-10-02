@@ -36,7 +36,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -376,48 +375,74 @@ object QrScanner{
         if(
             fragment !is EditFragment
         ) return
-        val type = ListIndexEditConfig.getListIndexType(
-            fragment
-        )
-        when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> return
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> addFile(
-                fragment,
-                currentAppDirPath,
-                fileName,
-                decodeText
-            )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
-                if(
-                    stockDirAndCompMap == null
-                ) return
-                val parentDirPath = EditSettingExtraArgsTool.getParentDirPath(
-                    stockDirAndCompMap,
+//        val type = ListIndexEditConfig.getListIndexType(
+//            fragment
+//        )
+        if(
+            stockDirAndCompMap == null
+        ) return
+        val parentDirPath = EditSettingExtraArgsTool.getParentDirPath(
+            stockDirAndCompMap,
 //                    currentAppDirPath,
-                )
-                val compFileName = EditSettingExtraArgsTool.makeCompFileName(
-                    fragment,
-                    fileName,
-                    stockDirAndCompMap
-                )
-                FileSystems.writeFile(
-                    File(
-                        parentDirPath,
-                        compFileName
-                    ).absolutePath,
-                    decodeText,
-                )
-                val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
-                withContext(Dispatchers.Main) {
-                    ExecAddForListIndexAdapter.execAddForTsv(
-                        fragment,
-                        insertLine
-                    )
-                }
-            }
+        )
+        val compFileName = EditSettingExtraArgsTool.makeCompFileName(
+            fragment,
+            fileName,
+            stockDirAndCompMap
+        )
+        FileSystems.writeFile(
+            File(
+                parentDirPath,
+                compFileName
+            ).absolutePath,
+            decodeText,
+        )
+        val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
+        withContext(Dispatchers.Main) {
+            ExecAddForListIndexAdapter.execAddForTsv(
+                fragment,
+                insertLine
+            )
         }
+//        when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> return
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> addFile(
+//                fragment,
+//                currentAppDirPath,
+//                fileName,
+//                decodeText
+//            )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
+//                if(
+//                    stockDirAndCompMap == null
+//                ) return
+//                val parentDirPath = EditSettingExtraArgsTool.getParentDirPath(
+//                    stockDirAndCompMap,
+////                    currentAppDirPath,
+//                )
+//                val compFileName = EditSettingExtraArgsTool.makeCompFileName(
+//                    fragment,
+//                    fileName,
+//                    stockDirAndCompMap
+//                )
+//                FileSystems.writeFile(
+//                    File(
+//                        parentDirPath,
+//                        compFileName
+//                    ).absolutePath,
+//                    decodeText,
+//                )
+//                val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
+//                withContext(Dispatchers.Main) {
+//                    ExecAddForListIndexAdapter.execAddForTsv(
+//                        fragment,
+//                        insertLine
+//                    )
+//                }
+//            }
+//        }
     }
 
     private fun addFile(

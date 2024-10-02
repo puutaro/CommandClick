@@ -35,103 +35,103 @@ object DragSortListViewProducer {
     val macroStrForDragSortGetListPathFromVar =
         ProducerMacro.macroStrForDragSortGetListPathFromVar
 
-    fun make(
-        editFragment: EditFragment,
-        editParameters: EditParameters,
-        currentComponentIndex: Int,
-        weight: Float,
-    ): Button {
-
-        val context = editFragment.context
-        val currentId = editParameters.currentId
-        val linearParamsForDragSortListView = LinearLayoutCompat.LayoutParams(
-            0,
-            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-        )
-        linearParamsForDragSortListView.weight = weight
-        val elsbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
-            editParameters,
-            currentComponentIndex
-        )
-        val currentVariableName = editParameters.currentVariableName
-        val listContentsFilePath = ListPathGetterForDragSort.get(
-            elsbMap,
-            editFragment,
-            currentVariableName ?: String(),
-        )
-
-        val fileObj = File(listContentsFilePath)
-        val parentDir = fileObj.parent ?: String()
-        FileSystems.createDirs(parentDir)
-
-        val dragSortListViewButtonView = Button(context)
-        dragSortListViewButtonView.layoutParams = linearParamsForDragSortListView
-        dragSortListViewButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
-        dragSortListViewButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
-        dragSortListViewButtonView.text = dragSortButtonLabel
-        ButtonSetter.set(
-            context,
-            dragSortListViewButtonView,
-            mapOf()
-        )
-        dragSortListViewButtonView.setOnClickListener {
-                buttonView ->
-            val buttonContext = buttonView.context
-            dragSortDialogObj = Dialog(
-                buttonContext
-            )
-            dragSortDialogObj?.setContentView(
-                R.layout.drag_sort_dialog_layout
-            )
-            val titleTextView =
-                dragSortDialogObj?.findViewById<AppCompatTextView>(
-                    R.id.drag_sort_dialog_title
-                )
-            titleTextView?.text = "Sort by drag, or remove by swipe"
-            setDragSortRecyclerView(
-                editFragment,
-                listContentsFilePath,
-            )
-            dragSortDialogObj?.setOnCancelListener {
-                dragSortDialogObj?.dismiss()
-                dragSortDialogObj = null
-            }
-            val cancelButton =
-                dragSortDialogObj?.findViewById<AppCompatImageButton>(
-                    R.id.drag_sort_dialog_cancel
-                )
-            cancelButton?.setOnClickListener {
-                dragSortDialogObj?.dismiss()
-                dragSortDialogObj = null
-            }
-            val okButton =
-                dragSortDialogObj?.findViewById<AppCompatImageButton>(
-                    R.id.drag_sort_dialog_ok
-                )
-            okButton?.setOnClickListener {
-                val dragSortRecyclerView = dragSortDialogObj?.findViewById<RecyclerView>(
-                    R.id.drag_sort_dialog_recycler_view
-                )
-                val dragSortAdapter =
-                    dragSortRecyclerView?.adapter as? DragSortRecyclerAdapter
-                dragSortDialogObj?.dismiss()
-                dragSortDialogObj = null
-                dragSortAdapter?.let {
-                    FileSystems.writeFile(
-                        listContentsFilePath,
-                        dragSortAdapter.dratSortList.joinToString("\n")
-                    )
-                }
-            }
-            dragSortDialogObj?.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            dragSortDialogObj?.window?.setGravity(Gravity.BOTTOM)
-            dragSortDialogObj?.show()
-        }
-        return dragSortListViewButtonView
-    }
+//    fun make(
+//        editFragment: EditFragment,
+//        editParameters: EditParameters,
+//        currentComponentIndex: Int,
+//        weight: Float,
+//    ): Button {
+//
+//        val context = editFragment.context
+//        val currentId = editParameters.currentId
+//        val linearParamsForDragSortListView = LinearLayoutCompat.LayoutParams(
+//            0,
+//            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//        )
+//        linearParamsForDragSortListView.weight = weight
+//        val elsbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
+//            editParameters,
+//            currentComponentIndex
+//        )
+//        val currentVariableName = editParameters.currentVariableName
+//        val listContentsFilePath = ListPathGetterForDragSort.get(
+//            elsbMap,
+//            editFragment,
+//            currentVariableName ?: String(),
+//        )
+//
+//        val fileObj = File(listContentsFilePath)
+//        val parentDir = fileObj.parent ?: String()
+//        FileSystems.createDirs(parentDir)
+//
+//        val dragSortListViewButtonView = Button(context)
+//        dragSortListViewButtonView.layoutParams = linearParamsForDragSortListView
+//        dragSortListViewButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
+//        dragSortListViewButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
+//        dragSortListViewButtonView.text = dragSortButtonLabel
+//        ButtonSetter.set(
+//            context,
+//            dragSortListViewButtonView,
+//            mapOf()
+//        )
+//        dragSortListViewButtonView.setOnClickListener {
+//                buttonView ->
+//            val buttonContext = buttonView.context
+//            dragSortDialogObj = Dialog(
+//                buttonContext
+//            )
+//            dragSortDialogObj?.setContentView(
+//                R.layout.drag_sort_dialog_layout
+//            )
+//            val titleTextView =
+//                dragSortDialogObj?.findViewById<AppCompatTextView>(
+//                    R.id.drag_sort_dialog_title
+//                )
+//            titleTextView?.text = "Sort by drag, or remove by swipe"
+//            setDragSortRecyclerView(
+//                editFragment,
+//                listContentsFilePath,
+//            )
+//            dragSortDialogObj?.setOnCancelListener {
+//                dragSortDialogObj?.dismiss()
+//                dragSortDialogObj = null
+//            }
+//            val cancelButton =
+//                dragSortDialogObj?.findViewById<AppCompatImageButton>(
+//                    R.id.drag_sort_dialog_cancel
+//                )
+//            cancelButton?.setOnClickListener {
+//                dragSortDialogObj?.dismiss()
+//                dragSortDialogObj = null
+//            }
+//            val okButton =
+//                dragSortDialogObj?.findViewById<AppCompatImageButton>(
+//                    R.id.drag_sort_dialog_ok
+//                )
+//            okButton?.setOnClickListener {
+//                val dragSortRecyclerView = dragSortDialogObj?.findViewById<RecyclerView>(
+//                    R.id.drag_sort_dialog_recycler_view
+//                )
+//                val dragSortAdapter =
+//                    dragSortRecyclerView?.adapter as? DragSortRecyclerAdapter
+//                dragSortDialogObj?.dismiss()
+//                dragSortDialogObj = null
+//                dragSortAdapter?.let {
+//                    FileSystems.writeFile(
+//                        listContentsFilePath,
+//                        dragSortAdapter.dratSortList.joinToString("\n")
+//                    )
+//                }
+//            }
+//            dragSortDialogObj?.window?.setLayout(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            dragSortDialogObj?.window?.setGravity(Gravity.BOTTOM)
+//            dragSortDialogObj?.show()
+//        }
+//        return dragSortListViewButtonView
+//    }
 
     private fun setDragSortRecyclerView(
         currentFragment: Fragment,

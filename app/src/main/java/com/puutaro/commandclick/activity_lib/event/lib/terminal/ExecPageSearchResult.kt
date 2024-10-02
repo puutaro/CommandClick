@@ -9,74 +9,74 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
 
-object ExecPageSearchResult {
-    fun reflect(
-        activity: MainActivity,
-        activeMatchOrdinal: Int,
-        numberOfMatches: Int
-    ) {
-        val cmdIndexFragment = try {
-            activity.supportFragmentManager.findFragmentByTag(
-                activity.getString(R.string.command_index_fragment)
-            ) as CommandIndexFragment
-        } catch (e: Exception) {
-            null
-        }
-        val sharePref = FannelInfoTool.getSharePref(activity)
-//        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+//object ExecPageSearchResult {
+//    fun reflect(
+//        activity: MainActivity,
+//        activeMatchOrdinal: Int,
+//        numberOfMatches: Int
+//    ) {
+//        val cmdIndexFragment = try {
+//            activity.supportFragmentManager.findFragmentByTag(
+//                activity.getString(R.string.command_index_fragment)
+//            ) as CommandIndexFragment
+//        } catch (e: Exception) {
+//            null
+//        }
+//        val sharePref = FannelInfoTool.getSharePref(activity)
+////        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
+////            sharePref,
+////            FannelInfoSetting.current_app_dir
+////        )
+//        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
 //            sharePref,
-//            FannelInfoSetting.current_app_dir
+//            FannelInfoSetting.current_fannel_name
 //        )
-        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_fannel_name
-        )
-        val currentFannelState = FannelInfoTool.getStringFromFannelInfo(
-            sharePref,
-            FannelInfoSetting.current_fannel_state
-        )
-        val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-//            currentAppDirPath,
-            currentFannelName,
-            currentFannelState
-        )
-        val cmdEditFragment = try {
-            activity.supportFragmentManager.findFragmentByTag(
-                cmdEditFragmentTag
-            ) as EditFragment
-        } catch (e: Exception) {
-            null
-        }
-        val isVisibleCommandIndexFragment = cmdIndexFragment?.isVisible == true
-        val isVisibleCmdEditFragment = cmdEditFragment?.isVisible == true
-        if(
-            isVisibleCommandIndexFragment
-            && isVisibleCmdEditFragment
-        ) return
-        if(
-            isVisibleCommandIndexFragment
-            && cmdIndexFragment != null
-        ){
-            execReflectForCmdIndex(
-                activity,
-                activeMatchOrdinal,
-                numberOfMatches,
-                cmdIndexFragment,
-            )
-            return
-        }
-        if(
-            cmdEditFragment == null
-        ) return
-        execReflectForCmdEdit(
-            activity,
-            activeMatchOrdinal,
-            numberOfMatches,
-            cmdEditFragment,
-        )
-
-    }
-}
+//        val currentFannelState = FannelInfoTool.getStringFromFannelInfo(
+//            sharePref,
+//            FannelInfoSetting.current_fannel_state
+//        )
+//        val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
+////            currentAppDirPath,
+//            currentFannelName,
+//            currentFannelState
+//        )
+//        val cmdEditFragment = try {
+//            activity.supportFragmentManager.findFragmentByTag(
+//                cmdEditFragmentTag
+//            ) as EditFragment
+//        } catch (e: Exception) {
+//            null
+//        }
+//        val isVisibleCommandIndexFragment = cmdIndexFragment?.isVisible == true
+//        val isVisibleCmdEditFragment = cmdEditFragment?.isVisible == true
+//        if(
+//            isVisibleCommandIndexFragment
+//            && isVisibleCmdEditFragment
+//        ) return
+//        if(
+//            isVisibleCommandIndexFragment
+//            && cmdIndexFragment != null
+//        ){
+//            execReflectForCmdIndex(
+//                activity,
+//                activeMatchOrdinal,
+//                numberOfMatches,
+//                cmdIndexFragment,
+//            )
+//            return
+//        }
+//        if(
+//            cmdEditFragment == null
+//        ) return
+////        execReflectForCmdEdit(
+////            activity,
+////            activeMatchOrdinal,
+////            numberOfMatches,
+////            cmdEditFragment,
+////        )
+//
+//    }
+//}
 
 private fun execReflectForCmdIndex(
     activity: MainActivity,
@@ -100,24 +100,24 @@ private fun execReflectForCmdIndex(
     }
 }
 
-private fun execReflectForCmdEdit(
-    activity: MainActivity,
-    activeMatchOrdinal: Int,
-    numberOfMatches: Int,
-    cmdEditFragment: EditFragment,
-){
-    val binding = cmdEditFragment.binding
-    val pageSearch = binding.pageSearch
-    val cmdEditSearchTotal = pageSearch.cmdindexSearchTotal
-    val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"
-    cmdEditSearchTotal.setText(displayActivePerTotal)
-    if (numberOfMatches == 0) {
-        cmdEditSearchTotal.setTextColor(
-            activity.getColor(com.termux.shared.R.color.dark_red)
-        )
-    } else {
-        cmdEditSearchTotal.setTextColor(
-            activity.getColor(R.color.fill_gray)
-        )
-    }
-}
+//private fun execReflectForCmdEdit(
+//    activity: MainActivity,
+//    activeMatchOrdinal: Int,
+//    numberOfMatches: Int,
+//    cmdEditFragment: EditFragment,
+//){
+//    val binding = cmdEditFragment.binding
+//    val pageSearch = binding.pageSearch
+//    val cmdEditSearchTotal = pageSearch.cmdindexSearchTotal
+//    val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"
+//    cmdEditSearchTotal.setText(displayActivePerTotal)
+//    if (numberOfMatches == 0) {
+//        cmdEditSearchTotal.setTextColor(
+//            activity.getColor(com.termux.shared.R.color.dark_red)
+//        )
+//    } else {
+//        cmdEditSearchTotal.setTextColor(
+//            activity.getColor(R.color.fill_gray)
+//        )
+//    }
+//}

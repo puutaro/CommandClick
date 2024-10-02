@@ -6,7 +6,6 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFi
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import java.io.File
@@ -18,22 +17,26 @@ object ItemPathMaker {
         selectedItem: String,
         listIndexPosition: Int,
     ): String? {
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        val extractedPath = when(type) {
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> getCatPathForNormal(
-                editFragment,
-                selectedItem
-            )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> getCatPathForTsv(
-                editFragment,
-                listIndexPosition
-            )
-        }?.trim()
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+        val extractedPath = getCatPathForTsv(
+            editFragment,
+            listIndexPosition
+        )?.trim()
+//            when(type) {
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> getCatPathForNormal(
+//                editFragment,
+//                selectedItem
+//            )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> getCatPathForTsv(
+//                editFragment,
+//                listIndexPosition
+//            )
+//        }?.trim()
         if(
             extractedPath.isNullOrEmpty()
         ) {
@@ -49,18 +52,18 @@ object ItemPathMaker {
         return extractedPath
     }
 
-    private fun getCatPathForNormal(
-        editFragment: EditFragment,
-        selectedItem: String
-    ): String {
-        val parentDirPath =
-            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                ListIndexAdapter.indexListMap,
-                ListIndexAdapter.listIndexTypeKey
-            )
-        return File(parentDirPath, selectedItem).absolutePath
-    }
+//    private fun getCatPathForNormal(
+//        editFragment: EditFragment,
+//        selectedItem: String
+//    ): String {
+//        val parentDirPath =
+//            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                editFragment,
+//                ListIndexAdapter.indexListMap,
+//                ListIndexAdapter.listIndexTypeKey
+//            )
+//        return File(parentDirPath, selectedItem).absolutePath
+//    }
 
     private fun getCatPathForTsv(
         editFragment: EditFragment,

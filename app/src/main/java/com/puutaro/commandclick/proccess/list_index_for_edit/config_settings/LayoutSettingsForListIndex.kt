@@ -11,16 +11,16 @@ object LayoutSettingsForListIndex {
     enum class LayoutSettingKey(
         val key: String
     ) {
-        TYPE("type"),
+//        TYPE("type"),
         COL("col"),
     }
 
-    enum class LayoutTypeValueStr(
-        val valueStr: String
-    ){
-        LINEAR("linear"),
-        GRID("grid"),
-    }
+//    enum class LayoutTypeValueStr(
+//        val valueStr: String
+//    ){
+//        LINEAR("linear"),
+//        GRID("grid"),
+//    }
 
     fun getLayoutConfigMap(
         listIndexConfigMap: Map<String, String>?,
@@ -33,17 +33,17 @@ object LayoutSettingsForListIndex {
 
 
 
-    fun decideLayoutType(
-        layoutConfigMap: Map<String, String>
-    ): LayoutTypeValueStr {
-        val defaultLayoutType =
-            LayoutTypeValueStr.LINEAR
-        val layoutTypeStr =
-            layoutConfigMap.get(LayoutSettingKey.TYPE.key)
-        return LayoutTypeValueStr.values().firstOrNull {
-            it.valueStr == layoutTypeStr
-        } ?: defaultLayoutType
-    }
+//    fun decideLayoutType(
+//        layoutConfigMap: Map<String, String>
+//    ): LayoutTypeValueStr {
+//        val defaultLayoutType =
+//            LayoutTypeValueStr.LINEAR
+//        val layoutTypeStr =
+//            layoutConfigMap.get(LayoutSettingKey.TYPE.key)
+//        return LayoutTypeValueStr.values().firstOrNull {
+//            it.valueStr == layoutTypeStr
+//        } ?: defaultLayoutType
+//    }
 
     fun setLayout(
         context: Context?,
@@ -51,20 +51,25 @@ object LayoutSettingsForListIndex {
         editListRecyclerView: RecyclerView,
         isReverseLayout: Boolean,
     ){
-        val layoutType = decideLayoutType(layoutConfigMap)
-        when(layoutType){
-            LayoutTypeValueStr.LINEAR ->
-                editListRecyclerView.layoutManager = PreLoadLayoutManager(
-                    context,
-                    isReverseLayout,
-                )
-            LayoutTypeValueStr.GRID ->
-                editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
-                    context,
-                    decideColNum(layoutConfigMap),
-                    isReverseLayout
-                )
-        }
+        editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
+            context,
+            decideColNum(layoutConfigMap),
+            isReverseLayout
+        )
+//        val layoutType = decideLayoutType(layoutConfigMap)
+//        when(layoutType){
+//            LayoutTypeValueStr.LINEAR ->
+//                editListRecyclerView.layoutManager = PreLoadLayoutManager(
+//                    context,
+//                    isReverseLayout,
+//                )
+//            LayoutTypeValueStr.GRID ->
+//                editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
+//                    context,
+//                    decideColNum(layoutConfigMap),
+//                    isReverseLayout
+//                )
+//        }
     }
 
     private fun decideColNum(

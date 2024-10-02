@@ -203,10 +203,10 @@ class JsDirSelect(
                 scriptFileName,
                 "${targetVariable}=\"${recentDirName}\""
             )
-            JsEdit(terminalFragmentRef).updateEditText(
-                targetVariable,
-                recentDirName
-            )
+//            JsEdit(terminalFragmentRef).updateEditText(
+//                targetVariable,
+//                recentDirName
+//            )
             terminalViewModel.onDialog = false
         }
     }
@@ -241,10 +241,10 @@ class JsDirSelect(
             scriptFileName,
             "${targetVariable}=\"${renameDirNameForDialog}\""
         )
-        JsEdit(terminalFragmentRef).updateEditText(
-            targetVariable,
-            renameDirNameForDialog
-        )
+//        JsEdit(terminalFragmentRef).updateEditText(
+//            targetVariable,
+//            renameDirNameForDialog
+//        )
     }
 
     private fun updateScriptFile(

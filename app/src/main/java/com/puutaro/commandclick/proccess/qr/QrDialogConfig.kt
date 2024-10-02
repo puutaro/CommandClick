@@ -27,7 +27,7 @@ object QrDialogConfig {
 //        val fragment: Fragment,
         val recentAppDirPath: String,
         val qrLogoConfigMap: Map<String, String>,
-        val parentDirPath: String,
+//        val parentDirPath: String,
         val fileName: String,
         val fannelContentsQrLogoView: AppCompatImageView?,
 //        val fileContentsQrLogoLinearLayout: LinearLayoutCompat?

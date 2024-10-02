@@ -72,12 +72,13 @@ class JsDeleteItem(
             binding.editListRecyclerView.adapter as ListIndexAdapter
         val listIndexPosition =
             listIndexForEditAdapter.listIndexList.indexOf(selectedItem)
-        ExecItemDelete.execItemDelete(
-            editFragment,
-            parentDirPath,
-            selectedItem,
-            listIndexPosition,
-        )
+
+//        ExecItemDelete.execItemDelete(
+//            editFragment,
+//            parentDirPath,
+//            selectedItem,
+//            listIndexPosition,
+//        )
     }
 
     @JavascriptInterface

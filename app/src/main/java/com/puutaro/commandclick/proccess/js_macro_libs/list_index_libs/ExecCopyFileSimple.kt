@@ -17,7 +17,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -157,24 +156,25 @@ object ExecSimpleCopy {
         editFragment: EditFragment,
         selectedItem: String,
     ): String? {
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        return when(type){
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-//            -> null
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> selectedItem
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> {
-                val listDirPath = FilePrefixGetter.get(
-                    editFragment,
-                    ListIndexAdapter.indexListMap,
-                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-                )
-                File(listDirPath, selectedItem).absolutePath
-            }
-        }
+        return selectedItem
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+//        return when(type){
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+////            -> null
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> selectedItem
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> {
+//                val listDirPath = FilePrefixGetter.get(
+//                    editFragment,
+//                    ListIndexAdapter.indexListMap,
+//                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+//                )
+//                File(listDirPath, selectedItem).absolutePath
+//            }
+//        }
     }
     private fun makeCopyDirOrTsvList(
         editFragment: EditFragment,
@@ -227,17 +227,18 @@ object ExecSimpleCopy {
     private fun makeDefaultDirOrTsvType(
         editFragment: EditFragment
     ): String {
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        return when(type){
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> DirOrTsvType.DIR.type
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> DirOrTsvType.TSV.type
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> String()
-        }
+//        val type = ListIndexEditConfig.getListIndexType(
+//            editFragment
+//        )
+        return DirOrTsvType.TSV.type
+//        return when(type){
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> DirOrTsvType.DIR.type
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> DirOrTsvType.TSV.type
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> String()
+//        }
     }
 }
 object CopyListDialog {

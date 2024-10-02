@@ -21,21 +21,23 @@ object ListIndexReplacer {
                 .split("\t")
                 .firstOrNull()
                 ?: String()
-        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
+//        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
         return jsOrAcCon?.replace(
             "\${ITEM_TITLE}",
             selectedTitle,
         )?.replace(
             "\${ITEM_NAME}",
             selectedFileNameOrPath,
-        )?.replace(
-            "\${INDEX_LIST_DIR_PATH}",
-            filterDir,
-        )?.replace(
+        )
+//            ?.replace(
+//            "\${INDEX_LIST_DIR_PATH}",
+//            filterDir,
+//        )
+            ?.replace(
             "\${POSITION}",
             listIndexListPosition.toString()
         )

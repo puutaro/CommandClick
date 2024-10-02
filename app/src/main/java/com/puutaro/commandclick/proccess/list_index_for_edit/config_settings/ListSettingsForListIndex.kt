@@ -150,7 +150,7 @@ object ListSettingsForListIndex  {
         fun makeFileListHandler(
             editFragment: EditFragment,
             indexListMap: Map<String, String>,
-            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
+//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
         ): MutableList<String> {
             val busyboxExecutor = editFragment.busyboxExecutor
 //            FileSystems.writeFile(
@@ -162,54 +162,60 @@ object ListSettingsForListIndex  {
 //                    "listIndexTypeKey: ${listIndexTypeKey.key}",
 //                ).joinToString("\n\n")
 //            )
-            return when(listIndexTypeKey) {
-//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//                -> makeFannelListForListView().toMutableList()
-                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                    makeTsvConList(
-                        editFragment,
-                        indexListMap,
-                        busyboxExecutor,
-                    )
-                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-                -> makeFileList(
-                    editFragment,
-                    indexListMap,
-                    listIndexTypeKey,
-                )
-            }
+            return makeTsvConList(
+                editFragment,
+                indexListMap,
+                busyboxExecutor,
+            )
+//            return when(listIndexTypeKey) {
+////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////                -> makeFannelListForListView().toMutableList()
+//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
+//                    makeTsvConList(
+//                        editFragment,
+//                        indexListMap,
+//                        busyboxExecutor,
+//                    )
+//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//                -> makeFileList(
+//                    editFragment,
+//                    indexListMap,
+//                    listIndexTypeKey,
+//                )
+//            }
         }
 
-        fun getFilterDir(
-            editFragment: EditFragment,
-            indexListMap: Map<String, String>?,
-            listIndexType : TypeSettingsForListIndex.ListIndexTypeKey,
-        ): String {
-            return when(listIndexType){
-//                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//                -> UsePath.cmdclickFannelItselfDirPath
-                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-                -> String()
-                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL ->
-                    FilePrefixGetter.get(
-                        editFragment,
-                        indexListMap,
-                        ListSettingKey.LIST_DIR.key,
-                    ) ?: String()
-            }
-        }
+//        fun getFilterDir(
+//            editFragment: EditFragment,
+//            indexListMap: Map<String, String>?,
+//            listIndexType : TypeSettingsForListIndex.ListIndexTypeKey,
+//        ): String {
+//            return when(listIndexType){
+////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////                -> UsePath.cmdclickFannelItselfDirPath
+//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//                -> String()
+//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL ->
+//                    FilePrefixGetter.get(
+//                        editFragment,
+//                        indexListMap,
+//                        ListSettingKey.LIST_DIR.key,
+//                    ) ?: String()
+//            }
+//        }
 
         private fun makeFileList(
             editFragment: EditFragment,
             indexListMap: Map<String, String>,
-            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
+//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
         ): MutableList<String> {
             val busyboxExecutor = editFragment.busyboxExecutor
-            val filterDir = getFilterDir(
-                editFragment,
-                indexListMap,
-                listIndexTypeKey
-            )
+            val filterDir = String()
+//            getFilterDir(
+//                editFragment,
+//                indexListMap,
+//                listIndexTypeKey
+//            )
             FileSystems.createDirs(filterDir)
             val filterPrefixListCon = FilePrefixGetter.get(
                 editFragment,

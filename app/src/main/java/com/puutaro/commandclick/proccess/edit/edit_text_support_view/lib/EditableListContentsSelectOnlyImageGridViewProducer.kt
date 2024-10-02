@@ -29,173 +29,173 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
     private val defaultListLimit = 100
     private val gridButtonLabel = "IGS"
 
-    fun make (
-        editFragment: EditFragment,
-        insertEditText: EditText,
-        editParameters: EditParameters,
-        currentComponentIndex: Int,
-        weight: Float,
-    ): Button {
-        val context = editFragment.context
-        val linearParamsForGridButton = LinearLayoutCompat.LayoutParams(
-            0,
-            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-        )
-        linearParamsForGridButton.weight = weight
+//    fun make (
+//        editFragment: EditFragment,
+//        insertEditText: EditText,
+//        editParameters: EditParameters,
+//        currentComponentIndex: Int,
+//        weight: Float,
+//    ): Button {
+//        val context = editFragment.context
+//        val linearParamsForGridButton = LinearLayoutCompat.LayoutParams(
+//            0,
+//            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//        )
+//        linearParamsForGridButton.weight = weight
+//
+//        val elcbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
+//            editParameters,
+//            currentComponentIndex
+//        )
+//        val listContentsFilePath = elcbMap?.get(
+//            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+//        ) ?: String()
+//
+//        val fileObj = File(listContentsFilePath)
+//        val parentDir = fileObj.parent ?: String()
+//        FileSystems.createDirs(parentDir)
+//        val gridButtonView = Button(context)
+//        gridButtonView.text = gridButtonLabel
+//        ButtonSetter.set(
+//            context,
+//            gridButtonView,
+//            mapOf()
+//        )
+//        gridButtonView.setOnClickListener {
+//                buttonView ->
+//            val buttonContext = buttonView.context
+//            val editableSpinnerList = ReadText(
+//                listContentsFilePath
+//            ).textToList().filter {
+//                it.trim().isNotEmpty()
+//            }
+//
+//            val gridView =
+//                GridView(buttonContext)
+//
+//            gridView.numColumns = 2
+//            val adapter = OnlyImageAdapter(
+//                buttonContext,
+//            )
+//
+//            val linearLayoutForTotal = LinearLayoutForTotal.make(
+//                context
+//            )
+//            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment.activity)
+//            val listWeight = 1F - searchTextWeight
+//            val linearLayoutForListView = NestLinearLayout.make(
+//                context,
+//                listWeight
+//            )
+//            val linearLayoutForSearch = NestLinearLayout.make(
+//                context,
+//                searchTextWeight
+//            )
+//            linearLayoutForListView.addView(gridView)
+//            linearLayoutForTotal.addView(linearLayoutForListView)
+//            linearLayoutForTotal.addView(linearLayoutForSearch)
+//
+//
+//            adapter.addAll(editableSpinnerList.toMutableList())
+//            gridView.adapter = adapter
+//            setGridViewItemClickListener(
+//                editFragment,
+//                editParameters,
+//                insertEditText,
+//                gridView,
+//                adapter,
+//                elcbMap,
+//            )
+//
+//            alertDialog = AlertDialog.Builder(
+//                buttonContext
+//            )
+//                .setView(linearLayoutForTotal)
+//                .create()
+//            alertDialog?.window?.setGravity(Gravity.BOTTOM)
+//            alertDialog?.show()
+//
+//            alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
+//                override fun onCancel(dialog: DialogInterface?) {
+//                    alertDialog?.dismiss()
+//                    alertDialog = null
+//                }
+//            })
+//        }
+//
+//
+//        gridButtonView.layoutParams = linearParamsForGridButton
+//        return gridButtonView
+//    }
 
-        val elcbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
-            editParameters,
-            currentComponentIndex
-        )
-        val listContentsFilePath = elcbMap?.get(
-            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-        ) ?: String()
-
-        val fileObj = File(listContentsFilePath)
-        val parentDir = fileObj.parent ?: String()
-        FileSystems.createDirs(parentDir)
-        val gridButtonView = Button(context)
-        gridButtonView.text = gridButtonLabel
-        ButtonSetter.set(
-            context,
-            gridButtonView,
-            mapOf()
-        )
-        gridButtonView.setOnClickListener {
-                buttonView ->
-            val buttonContext = buttonView.context
-            val editableSpinnerList = ReadText(
-                listContentsFilePath
-            ).textToList().filter {
-                it.trim().isNotEmpty()
-            }
-
-            val gridView =
-                GridView(buttonContext)
-
-            gridView.numColumns = 2
-            val adapter = OnlyImageAdapter(
-                buttonContext,
-            )
-
-            val linearLayoutForTotal = LinearLayoutForTotal.make(
-                context
-            )
-            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment.activity)
-            val listWeight = 1F - searchTextWeight
-            val linearLayoutForListView = NestLinearLayout.make(
-                context,
-                listWeight
-            )
-            val linearLayoutForSearch = NestLinearLayout.make(
-                context,
-                searchTextWeight
-            )
-            linearLayoutForListView.addView(gridView)
-            linearLayoutForTotal.addView(linearLayoutForListView)
-            linearLayoutForTotal.addView(linearLayoutForSearch)
-
-
-            adapter.addAll(editableSpinnerList.toMutableList())
-            gridView.adapter = adapter
-            setGridViewItemClickListener(
-                editFragment,
-                editParameters,
-                insertEditText,
-                gridView,
-                adapter,
-                elcbMap,
-            )
-
-            alertDialog = AlertDialog.Builder(
-                buttonContext
-            )
-                .setView(linearLayoutForTotal)
-                .create()
-            alertDialog?.window?.setGravity(Gravity.BOTTOM)
-            alertDialog?.show()
-
-            alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    alertDialog?.dismiss()
-                    alertDialog = null
-                }
-            })
-        }
-
-
-        gridButtonView.layoutParams = linearParamsForGridButton
-        return gridButtonView
-    }
-
-    private fun setGridViewItemClickListener(
-        currentFragment: Fragment,
-        editParameters: EditParameters,
-        insertEditText: EditText,
-        gridView: GridView,
-        adapter: OnlyImageAdapter,
-        elcbMap: Map<String, String>?,
-    ){
-        val fannelInfoMap = editParameters.fannelInfoMap
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//    private fun setGridViewItemClickListener(
+//        currentFragment: Fragment,
+//        editParameters: EditParameters,
+//        insertEditText: EditText,
+//        gridView: GridView,
+//        adapter: OnlyImageAdapter,
+//        elcbMap: Map<String, String>?,
+//    ){
+//        val fannelInfoMap = editParameters.fannelInfoMap
+////        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////            fannelInfoMap
+////        )
+//        val scriptName = FannelInfoTool.getCurrentFannelName(
 //            fannelInfoMap
 //        )
-        val scriptName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
-        val listContentsFilePath = elcbMap?.get(
-            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-        ) ?: String()
-        val listLimit = ListContentsSelectSpinnerViewProducer.getLimitNum(
-            elcbMap,
-            defaultListLimit,
-        )
-
-        val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
-            elcbMap,
-//            currentAppDirPath,
-            scriptName,
-        )
-
-        gridView.setOnItemClickListener {
-                parent, View, pos, id
-            ->
-            Keyboard.hiddenKeyboardForFragment(
-                currentFragment
-            )
-            alertDialog?.dismiss()
-            alertDialog = null
-            val currentGridList = ReadText(
-                listContentsFilePath
-            ).textToList()
-            val selectedItem = currentGridList.get(pos)
-
-            val updateListContents =
-                listOf(selectedItem) +
-                        currentGridList.filter {
-                            it != selectedItem
-                        }
-            FileSystems.writeFile(
-                listContentsFilePath,
-                updateListContents
-                    .take(listLimit)
-                    .joinToString("\n")
-            )
-            val selectUpdatedGridList = listOf(
-                selectedItem,
-            ) + currentGridList.filter {
-                it != selectedItem
-            }
-            adapter.clear()
-            adapter.addAll(selectUpdatedGridList.toMutableList())
-            adapter.notifyDataSetChanged()
-            gridView.setSelection(0)
-            insertEditText.setText(selectedItem)
-            SelectJsExecutor.exec(
-                currentFragment,
-                selectJsPath,
-                selectedItem
-            )
-        }
-    }
+//        val listContentsFilePath = elcbMap?.get(
+//            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+//        ) ?: String()
+//        val listLimit = ListContentsSelectSpinnerViewProducer.getLimitNum(
+//            elcbMap,
+//            defaultListLimit,
+//        )
+//
+//        val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
+//            elcbMap,
+////            currentAppDirPath,
+//            scriptName,
+//        )
+//
+//        gridView.setOnItemClickListener {
+//                parent, View, pos, id
+//            ->
+//            Keyboard.hiddenKeyboardForFragment(
+//                currentFragment
+//            )
+//            alertDialog?.dismiss()
+//            alertDialog = null
+//            val currentGridList = ReadText(
+//                listContentsFilePath
+//            ).textToList()
+//            val selectedItem = currentGridList.get(pos)
+//
+//            val updateListContents =
+//                listOf(selectedItem) +
+//                        currentGridList.filter {
+//                            it != selectedItem
+//                        }
+//            FileSystems.writeFile(
+//                listContentsFilePath,
+//                updateListContents
+//                    .take(listLimit)
+//                    .joinToString("\n")
+//            )
+//            val selectUpdatedGridList = listOf(
+//                selectedItem,
+//            ) + currentGridList.filter {
+//                it != selectedItem
+//            }
+//            adapter.clear()
+//            adapter.addAll(selectUpdatedGridList.toMutableList())
+//            adapter.notifyDataSetChanged()
+//            gridView.setSelection(0)
+//            insertEditText.setText(selectedItem)
+//            SelectJsExecutor.exec(
+//                currentFragment,
+//                selectJsPath,
+//                selectedItem
+//            )
+//        }
+//    }
 }

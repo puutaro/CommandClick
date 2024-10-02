@@ -6,7 +6,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -26,20 +25,24 @@ object ExecClickUpdate {
                 clickConfigMap
             )
         if(!enableClickUpdate) return
-        when(ListIndexAdapter.listIndexTypeKey) {
-//            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//            -> {}
-            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> updateForNormal(
-                editFragment,
-                listIndexListViewHolder.fileName,
-            )
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-            -> updateForTsv(
-                editFragment,
-                listIndexListViewHolder
-            )
-        }
+        updateForTsv(
+            editFragment,
+            listIndexListViewHolder
+        )
+//        when(ListIndexAdapter.listIndexTypeKey) {
+////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+////            -> {}
+//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+//            -> updateForNormal(
+//                editFragment,
+//                listIndexListViewHolder.fileName,
+//            )
+//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+//            -> updateForTsv(
+//                editFragment,
+//                listIndexListViewHolder
+//            )
+//        }
 
     }
 
@@ -80,24 +83,24 @@ object ExecClickUpdate {
         )
     }
 
-    private fun updateForNormal(
-        editFragment: EditFragment,
-        selectedItem: String,
-    ){
-        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListIndexAdapter.listIndexTypeKey
-        )
-        FileSystems.updateLastModified(
-            File(
-                filterDir,
-                selectedItem
-            ).absolutePath
-        )
-        BroadcastSender.normalSend(
-            editFragment.context,
-            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-        )
-    }
+//    private fun updateForNormal(
+//        editFragment: EditFragment,
+//        selectedItem: String,
+//    ){
+//        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
+//        FileSystems.updateLastModified(
+//            File(
+//                filterDir,
+//                selectedItem
+//            ).absolutePath
+//        )
+//        BroadcastSender.normalSend(
+//            editFragment.context,
+//            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+//        )
+//    }
 }

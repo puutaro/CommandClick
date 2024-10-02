@@ -373,19 +373,19 @@ class TerminalFragment:
         )
     }
 
-    interface OnEditTextUpdateListenerForTermFragment {
-        fun onEditTextUpdateForTermFragment(
-            editTextId: Int?,
-            variableValue: String
-        )
-    }
+//    interface OnEditTextUpdateListenerForTermFragment {
+//        fun onEditTextUpdateForTermFragment(
+//            editTextId: Int?,
+//            variableValue: String
+//        )
+//    }
 
-    interface OnSpinnerUpdateListenerForTermFragment {
-        fun onSpinnerUpdateForTermFragment(
-            spinnerId: Int?,
-            variableValue: String
-        )
-    }
+//    interface OnSpinnerUpdateListenerForTermFragment {
+//        fun onSpinnerUpdateForTermFragment(
+//            spinnerId: Int?,
+//            variableValue: String
+//        )
+//    }
 
     interface OnEditableSpinnerUpdateListenerForTermFragment {
         fun onEditableSpinnerUpdateForTermFragment(
@@ -486,7 +486,7 @@ class TerminalFragment:
 
     interface OnGetFileListenerForTerm {
         fun onGetFileForTerm(
-            parentDirPathSrc: String,
+//            parentDirPathSrc: String,
             onDirectoryPickSrc: Boolean = false,
             filterPrefixListCon: String,
             filterSuffixListCon: String,

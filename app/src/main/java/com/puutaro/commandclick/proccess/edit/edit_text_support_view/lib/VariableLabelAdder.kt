@@ -2,40 +2,38 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
-import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 
 object VariableLabelAdder {
 
-    fun add(
-        insertTextView: TextView,
-        editParameters: EditParameters,
-        textLabelIndex: Int,
-    ){
-        if(
-            textLabelIndex < 0
-        ) return
-        val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
-            editParameters
-        )
-
-        val textViewMap = SetVariableTyper.getCertainSetValIndexMap(
-            currentSetVariableValue,
-            textLabelIndex
-        )
-        val addLabel = textViewMap?.get(
-            TextVeiwLabelType.label.name
-        ) ?: return
-        if(
-            addLabel.isEmpty()
-        ) return
-        insertTextView.text =
-            when (addLabel) {
-            "this" -> editParameters.currentVariableName?.camelToLowerBlankNoRegex()
-            "THIS" -> editParameters.currentVariableName?.upperToLower()
-            else -> addLabel
-        }
-    }
+//    fun add(
+//        insertTextView: TextView,
+//        editParameters: EditParameters,
+//        textLabelIndex: Int,
+//    ){
+//        if(
+//            textLabelIndex < 0
+//        ) return
+//        val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
+//            editParameters
+//        )
+//
+//        val textViewMap = SetVariableTyper.getCertainSetValIndexMap(
+//            currentSetVariableValue,
+//            textLabelIndex
+//        )
+//        val addLabel = textViewMap?.get(
+//            TextVeiwLabelType.label.name
+//        ) ?: return
+//        if(
+//            addLabel.isEmpty()
+//        ) return
+//        insertTextView.text =
+//            when (addLabel) {
+//            "this" -> editParameters.currentVariableName?.camelToLowerBlankNoRegex()
+//            "THIS" -> editParameters.currentVariableName?.upperToLower()
+//            else -> addLabel
+//        }
+//    }
 
     enum class TextVeiwLabelType {
         label

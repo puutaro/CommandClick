@@ -91,17 +91,21 @@ class JsFileOrDirGetter(
             currentFannelName,
             currentFannelState
         ) ?: return
-        val parentDirPath =
-            when (
-                editFragment.existIndexList
-            ) {
-                true -> ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    editFragment,
-                    ListIndexAdapter.indexListMap,
-                    ListIndexAdapter.listIndexTypeKey
-                )
-                else -> UsePath.cmdclickDefaultAppDirPath
-            }
+//        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexAdapter.indexListMap,
+//            ListIndexAdapter.listIndexTypeKey
+//        )
+//            when (
+//                editFragment.existIndexList
+//            ) {
+//                true -> ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                    editFragment,
+//                    ListIndexAdapter.indexListMap,
+//                    ListIndexAdapter.listIndexTypeKey
+//                )
+//                else -> UsePath.cmdclickDefaultAppDirPath
+//            }
         val filterMap = CmdClickMap.createMap(
             filterMapCon,
             filterMapSeparator,
@@ -135,7 +139,7 @@ class JsFileOrDirGetter(
             context as? TerminalFragment.OnGetFileListenerForTerm
                 ?: return
         listener.onGetFileForTerm(
-            parentDirPath,
+//            parentDirPath,
             onDirectoryPick,
             filterFilterPrefixListCon,
             filterFilterSuffixListCon,

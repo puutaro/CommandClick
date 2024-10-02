@@ -41,7 +41,8 @@ object EditableSpinnerUpdaterForTerminalFragment {
             fannelState
         )
         val binding = editExecuteFragment?.binding ?: return
-        val editLinearLayout = binding.editLinearLayout
+        val editLinearLayout = binding.editFragment
+//            binding.editLinearLayout
         try {
             val spinnerInEditFragment = editLinearLayout.findViewById<Spinner>(spinnerId)
             val adapter = spinnerInEditFragment.adapter as ArrayAdapter<String>

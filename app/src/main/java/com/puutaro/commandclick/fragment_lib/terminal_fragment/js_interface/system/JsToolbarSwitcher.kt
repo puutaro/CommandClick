@@ -55,21 +55,21 @@ class JsToolbarSwitcher(
         val currentFannelState = FannelInfoTool.getCurrentStateName(
             fannelInfoMap
         )
-        CoroutineScope(Dispatchers.Main).launch {
-            val editFragment = withContext(Dispatchers.Main) {
-                TargetFragmentInstance.getCurrentEditFragmentFromFragment(
-                    activity,
-//                    currentAppDirPath,
-                    currentFannelName,
-                    currentFannelState,
-                )
-            } ?: return@launch
-            withContext(Dispatchers.Main) {
-                EditToolbarSwitcher.switch(
-                    editFragment,
-                    execPlayBtnLongPress
-                )
-            }
-        }
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val editFragment = withContext(Dispatchers.Main) {
+//                TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+//                    activity,
+////                    currentAppDirPath,
+//                    currentFannelName,
+//                    currentFannelState,
+//                )
+//            } ?: return@launch
+//            withContext(Dispatchers.Main) {
+//                EditToolbarSwitcher.switch(
+//                    editFragment,
+//                    execPlayBtnLongPress
+//                )
+//            }
+//        }
     }
 }
