@@ -275,334 +275,334 @@ object QrLogoSettingsForQrDialog {
         }
     }
 
-    object QrIconSettingKeysForQrDialog {
-
-        enum class QrIcon(val key: String){
-            NAME("name"),
-            NAME_CONFIG_PATH("nameConfigPath"),
-            COLOR("color"),
-            BACKGROUND_COLOR("bkColor"),
-            DISABLE("disable"),
-        }
-        private val disableOn = "ON"
-        enum class ImageMacro(
-            val str: String,
-            val id: Int,
-        ) {
-            IMAGE_PATH("imagePath", -10)
-        }
-
-        fun set(
-            context: Context?,
-//            filterDir: String,
-//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
-            itemName: String,
-            fannelContentsQrLogoView: AppCompatImageView?,
-            fileContentsQrLogoLinearLayout: RelativeLayout?,
-            qrLogoConfigMap: Map<String, String>,
-            iconConfigMap: Map<String, String>,
-            itemNameToNameColorConfigMap: Map<String, String>?,
-            textImagePngBitMap: Bitmap,
-        ): Boolean {
-            if(
-                context == null
-                || fannelContentsQrLogoView == null
-                || qrLogoConfigMap.isEmpty()
-                || iconConfigMap.isEmpty()
-                || itemNameToNameColorConfigMap.isNullOrEmpty()
-            ) return false
-            if(
-                isDisable(iconConfigMap)
-            ) return false
-            val iconNameColorConfigMap = makeIconNameColorConfigMap(
-                itemName,
-                itemNameToNameColorConfigMap,
-            )
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "logo_icon.txt").absolutePath,
-//                listOf(
-//                    "iconConfigMap: ${iconConfigMap}",
-//                    "iconNameConfigMap: ${itemNameToNameColorConfigMap}",
-//                    "iconNameColorConfigMap: ${iconNameColorConfigMap}",
-//                    "iconId: ${getIconId(
-//                        iconNameColorConfigMap
-//                    )}",
-//                ).joinToString("\n\n\n")
+//    object QrIconSettingKeysForQrDialog {
+//
+//        enum class QrIcon(val key: String){
+//            NAME("name"),
+//            NAME_CONFIG_PATH("nameConfigPath"),
+//            COLOR("color"),
+//            BACKGROUND_COLOR("bkColor"),
+//            DISABLE("disable"),
+//        }
+//        private val disableOn = "ON"
+//        enum class ImageMacro(
+//            val str: String,
+//            val id: Int,
+//        ) {
+//            IMAGE_PATH("imagePath", -10)
+//        }
+//
+//        fun set(
+//            context: Context?,
+////            filterDir: String,
+////            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+//            itemName: String,
+//            fannelContentsQrLogoView: AppCompatImageView?,
+//            fileContentsQrLogoLinearLayout: RelativeLayout?,
+//            qrLogoConfigMap: Map<String, String>,
+//            iconConfigMap: Map<String, String>,
+//            itemNameToNameColorConfigMap: Map<String, String>?,
+//            textImagePngBitMap: Bitmap,
+//        ): Boolean {
+//            if(
+//                context == null
+//                || fannelContentsQrLogoView == null
+//                || qrLogoConfigMap.isEmpty()
+//                || iconConfigMap.isEmpty()
+//                || itemNameToNameColorConfigMap.isNullOrEmpty()
+//            ) return false
+//            if(
+//                isDisable(iconConfigMap)
+//            ) return false
+//            val iconNameColorConfigMap = makeIconNameColorConfigMap(
+//                itemName,
+//                itemNameToNameColorConfigMap,
 //            )
-            val iconId =
-                getIconId(iconNameColorConfigMap)
-                    ?: return false
-            when(iconId){
-                ImageMacro.IMAGE_PATH.id -> setImagePath(
-                    context,
-                    fannelContentsQrLogoView,
-                    fileContentsQrLogoLinearLayout,
-//                    listIndexTypeKey,
-                    qrLogoConfigMap,
-//                    filterDir,
-                    itemName,
-                    textImagePngBitMap,
-                    iconNameColorConfigMap,
-                )
-                else -> setIconOrQr(
-                    context,
-                    fannelContentsQrLogoView,
-                    fileContentsQrLogoLinearLayout,
-                    iconNameColorConfigMap,
-                    iconId,
-                )
-            }
-            return true
-        }
-
-        private fun setImagePath(
-            context: Context,
-            fannelContentsQrLogoView: AppCompatImageView?,
-            fileContentsQrLogoLinearLayout: RelativeLayout?,
-//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
-            qrLogoConfigMap: Map<String, String>,
-//            filterDir: String,
-            itemName: String,
-            textImagePngBitMap: Bitmap,
-            iconNameColorConfigMap: Map<String, String>?
-        ) {
-            val itemPath = itemName
-//            when(listIndexTypeKey){
-////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-////                -> return
-//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-//                -> itemName
-//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-//                -> File(filterDir, itemName).absolutePath
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "logo_icon.txt").absolutePath,
+////                listOf(
+////                    "iconConfigMap: ${iconConfigMap}",
+////                    "iconNameConfigMap: ${itemNameToNameColorConfigMap}",
+////                    "iconNameColorConfigMap: ${iconNameColorConfigMap}",
+////                    "iconId: ${getIconId(
+////                        iconNameColorConfigMap
+////                    )}",
+////                ).joinToString("\n\n\n")
+////            )
+//            val iconId =
+//                getIconId(iconNameColorConfigMap)
+//                    ?: return false
+//            when(iconId){
+//                ImageMacro.IMAGE_PATH.id -> setImagePath(
+//                    context,
+//                    fannelContentsQrLogoView,
+//                    fileContentsQrLogoLinearLayout,
+////                    listIndexTypeKey,
+//                    qrLogoConfigMap,
+////                    filterDir,
+//                    itemName,
+//                    textImagePngBitMap,
+//                    iconNameColorConfigMap,
+//                )
+//                else -> setIconOrQr(
+//                    context,
+//                    fannelContentsQrLogoView,
+//                    fileContentsQrLogoLinearLayout,
+//                    iconNameColorConfigMap,
+//                    iconId,
+//                )
 //            }
-//            fannelContentsQrLogoView?.load(
-//                itemPath
+//            return true
+//        }
+//
+//        private fun setImagePath(
+//            context: Context,
+//            fannelContentsQrLogoView: AppCompatImageView?,
+//            fileContentsQrLogoLinearLayout: RelativeLayout?,
+////            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+//            qrLogoConfigMap: Map<String, String>,
+////            filterDir: String,
+//            itemName: String,
+//            textImagePngBitMap: Bitmap,
+//            iconNameColorConfigMap: Map<String, String>?
+//        ) {
+//            val itemPath = itemName
+////            when(listIndexTypeKey){
+//////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//////                -> return
+////                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+////                -> itemName
+////                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+////                -> File(filterDir, itemName).absolutePath
+////            }
+////            fannelContentsQrLogoView?.load(
+////                itemPath
+////            )
+//            val maxHeight = culc(
+//                context,
+//                qrLogoConfigMap
 //            )
-            val maxHeight = culc(
-                context,
-                qrLogoConfigMap
-            )
-            val myBitmap = makeBitMap(
-                itemPath,
-                maxHeight,
-                textImagePngBitMap
-            )
+//            val myBitmap = makeBitMap(
+//                itemPath,
+//                maxHeight,
+//                textImagePngBitMap
+//            )
+//
+//            fannelContentsQrLogoView?.setImageBitmap(myBitmap)
+////            getIconColor(iconNameColorConfigMap).let {
+////                fannelContentsQrLogoView?.imageTintList =
+////                    context.getColorStateList(it)
+////            }
+//            getBkColor(
+//                iconNameColorConfigMap
+//            ).let {
+//                fileContentsQrLogoLinearLayout?.backgroundTintList =
+//                    context.getColorStateList(it)
+//            }
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "logo.txt").absolutePath,
+////                listOf(
+////                    "qrLogoConfigMap: ${qrLogoConfigMap}",
+////                    "macheigt: ${maxHeight}",
+////                    "listIndexTypeKey: ${listIndexTypeKey.key}",
+////                    "filterDir: ${filterDir}",
+////                    "itemName: ${itemName}",
+////                    "itemPath: ${itemPath}",
+////                    "itemPath.isFile: ${File(itemPath).isFile}",
+////                ).joinToString("\n\n")
+////            )
+//            return
+//        }
 
-            fannelContentsQrLogoView?.setImageBitmap(myBitmap)
+//        private fun makeBitMap(
+//            itemPath: String,
+//            maxHeight: Int,
+//            textImagePngBitMap: Bitmap,
+//        ): Bitmap {
+//            val myBitmap: Bitmap = try {
+//                BitmapFactory.decodeFile(itemPath)
+//            } catch (e: Exception){
+//                textImagePngBitMap
+//            }
+//            if(
+//                myBitmap.height <= maxHeight
+//            ) return myBitmap
+//            val resizeBitmap = BitmapTool.resizeByMaxHeight(
+//                myBitmap,
+//                maxHeight.toDouble(),
+//            )
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "log_bitmap.txt").absolutePath,
+////                listOf(
+////                    "resizeBitmap: ${resizeBitmap.height}"
+////                ).joinToString("\n\n")
+////            )
+//            return resizeBitmap
+//        }
+
+//        private fun setIconOrQr(
+//            context: Context,
+//            fannelContentsQrLogoView: AppCompatImageView?,
+//            fileContentsQrLogoLinearLayout: RelativeLayout?,
+//            iconNameColorConfigMap: Map<String, String>?,
+//            iconId: Int,
+//        ){
+//            fannelContentsQrLogoView?.load(
+//                AppCompatResources.getDrawable(context, iconId)
+//            )
 //            getIconColor(iconNameColorConfigMap).let {
 //                fannelContentsQrLogoView?.imageTintList =
 //                    context.getColorStateList(it)
 //            }
-            getBkColor(
-                iconNameColorConfigMap
-            ).let {
-                fileContentsQrLogoLinearLayout?.backgroundTintList =
-                    context.getColorStateList(it)
-            }
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "logo.txt").absolutePath,
-//                listOf(
-//                    "qrLogoConfigMap: ${qrLogoConfigMap}",
-//                    "macheigt: ${maxHeight}",
-//                    "listIndexTypeKey: ${listIndexTypeKey.key}",
-//                    "filterDir: ${filterDir}",
-//                    "itemName: ${itemName}",
-//                    "itemPath: ${itemPath}",
-//                    "itemPath.isFile: ${File(itemPath).isFile}",
-//                ).joinToString("\n\n")
+//            getBkColor(
+//                iconNameColorConfigMap
+//            ).let {
+//                fileContentsQrLogoLinearLayout?.backgroundTintList =
+//                    context.getColorStateList(it)
+//            }
+//        }
+
+
+//        private fun isDisable(
+//            iconConfigMap: Map<String, String>
+//        ): Boolean {
+//            val disableKey = QrIcon.DISABLE.key
+//            if(
+//                iconConfigMap.isEmpty()
+//            ) return false
+//            return iconConfigMap.get(disableKey) == disableOn
+//        }
+
+//        private fun makeIconNameColorConfigMap(
+//            itemName: String,
+//            itemNameToIconConfigMap: Map<String, String>?,
+//        ): Map<String, String>? {
+//            if(
+//                itemNameToIconConfigMap.isNullOrEmpty()
+//            ) return null
+//            val mapSrc =
+//                itemNameToIconConfigMap.get(itemName)
+//                    ?: itemNameToIconConfigMap.get(IconNameConfigKey.DEFAULT.key)
+//            if(
+//                mapSrc.isNullOrEmpty()
+//            ) return null
+//            return CmdClickMap.createMap(
+//                mapSrc,
+//                ','
+//            ).toMap()
+//        }
+//        private fun getIconId(
+//            iconNameColorConfigMap: Map<String, String>?,
+//        ): Int? {
+//            if(
+//                iconNameColorConfigMap.isNullOrEmpty()
+//            ) return null
+//            val nameKey = QrIcon.NAME.key
+//            val iconName =
+//                iconNameColorConfigMap.get(nameKey)
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "logo_get_iconId").absolutePath,
+////                listOf(
+////                    "itemname: ${iconNameColorConfigMap.get(nameKey)}",
+////                    "default: ${iconNameColorConfigMap.get(IconNameConfigKey.DEFAULT.key)}",
+////                    "iconName: ${iconName}",
+////                ).joinToString("\n\n\n")
+////            )
+//            if(
+//                iconName.isNullOrEmpty()
+//            ) return null
+//            val imageStrToIdList = CmdClickIcons.values().map {
+//                it.str to it.id
+//            } + ImageMacro.values().map {
+//                it.str to it.id
+//            }
+//            return imageStrToIdList.firstOrNull {
+//                val imageMacroStr = it.first
+//                imageMacroStr == iconName
+//            }?.second
+//        }
+
+//        private fun getIconColor(
+//            iconNameColorConfigMap: Map<String, String>?,
+//        ): Int {
+//            val defaultColor = CmdClickColor.LIGHT_GREEN.id
+//            if(
+//                iconNameColorConfigMap.isNullOrEmpty()
+//            ) return defaultColor
+//            val colorKey = QrIcon.COLOR.key
+//            val colorName =
+//                iconNameColorConfigMap.get(colorKey)
+//            return CmdClickColor.values().firstOrNull {
+//                it.str == colorName
+//            }?.id ?: defaultColor
+//        }
+
+//        private fun getBkColor(
+//            iconNameColorConfigMap: Map<String, String>?,
+//        ): Int {
+//            val defaultColor = CmdClickColor.LIGHT_GREEN.id
+//            if(
+//                iconNameColorConfigMap.isNullOrEmpty()
+//            ) return defaultColor
+//            val bkColorKey = QrIcon.BACKGROUND_COLOR.key
+//            val colorName =
+//                iconNameColorConfigMap.get(bkColorKey)
+//            return CmdClickColor.values().firstOrNull {
+//                it.str == colorName
+//            }?.id ?: defaultColor
+//        }
+
+
+//        fun makeIconConfigMap(
+//            qrLogoConfigMap: Map<String, String>,
+//        ): Map<String, String> {
+//            val iconKeyName = QrLogoSettingKey.ICON.key
+//            return CmdClickMap.createMap(
+//                qrLogoConfigMap.get(iconKeyName),
+//                '?'
+//            ).toMap()
+//        }
+
+//        fun makeIconNameConfigMap(
+//            setReplaceVariableMap: Map<String, String>?,
+//            fannelInfoMap: Map<String, String>?,
+//            iconConfigMap: Map<String, String>,
+//        ): Map<String, String> {
+//            val nameConfigPathKey = QrIcon.NAME_CONFIG_PATH.key
+//            val iconNameConfigPath = iconConfigMap.get(nameConfigPathKey)
+//            if(
+//                !iconNameConfigPath.isNullOrEmpty()
+//            ) {
+////                val fannelInfoMap = editFragment.fannelInfoMap
+////                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
+//                val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+//                val iconNameMapTsvCon =
+//                    SetReplaceVariabler.execReplaceByReplaceVariables(
+//                        ReadText(iconNameConfigPath).readText(),
+//                        setReplaceVariableMap,
+////                        currentAppDirPath,
+//                        currentFannelName,
+//                    )
+//                return CmdClickMap.createMapFromTsv(
+//                    iconNameMapTsvCon,
+//                    '\n'
+//                ).toMap()
+//            }
+//            val iconConfigMapStr = iconConfigMap.map {
+//                    "${it.key}=${it.value}"
+//            }.joinToString(",")
+//            return mapOf(
+//                    IconNameConfigKey.DEFAULT.key to iconConfigMapStr
 //            )
-            return
-        }
+//
+//        }
 
-        private fun makeBitMap(
-            itemPath: String,
-            maxHeight: Int,
-            textImagePngBitMap: Bitmap,
-        ): Bitmap {
-            val myBitmap: Bitmap = try {
-                BitmapFactory.decodeFile(itemPath)
-            } catch (e: Exception){
-                textImagePngBitMap
-            }
-            if(
-                myBitmap.height <= maxHeight
-            ) return myBitmap
-            val resizeBitmap = BitmapTool.resizeByMaxHeight(
-                myBitmap,
-                maxHeight.toDouble(),
-            )
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "log_bitmap.txt").absolutePath,
-//                listOf(
-//                    "resizeBitmap: ${resizeBitmap.height}"
-//                ).joinToString("\n\n")
-//            )
-            return resizeBitmap
-        }
-
-        private fun setIconOrQr(
-            context: Context,
-            fannelContentsQrLogoView: AppCompatImageView?,
-            fileContentsQrLogoLinearLayout: RelativeLayout?,
-            iconNameColorConfigMap: Map<String, String>?,
-            iconId: Int,
-        ){
-            fannelContentsQrLogoView?.load(
-                AppCompatResources.getDrawable(context, iconId)
-            )
-            getIconColor(iconNameColorConfigMap).let {
-                fannelContentsQrLogoView?.imageTintList =
-                    context.getColorStateList(it)
-            }
-            getBkColor(
-                iconNameColorConfigMap
-            ).let {
-                fileContentsQrLogoLinearLayout?.backgroundTintList =
-                    context.getColorStateList(it)
-            }
-        }
-
-
-        private fun isDisable(
-            iconConfigMap: Map<String, String>
-        ): Boolean {
-            val disableKey = QrIcon.DISABLE.key
-            if(
-                iconConfigMap.isEmpty()
-            ) return false
-            return iconConfigMap.get(disableKey) == disableOn
-        }
-
-        private fun makeIconNameColorConfigMap(
-            itemName: String,
-            itemNameToIconConfigMap: Map<String, String>?,
-        ): Map<String, String>? {
-            if(
-                itemNameToIconConfigMap.isNullOrEmpty()
-            ) return null
-            val mapSrc =
-                itemNameToIconConfigMap.get(itemName)
-                    ?: itemNameToIconConfigMap.get(IconNameConfigKey.DEFAULT.key)
-            if(
-                mapSrc.isNullOrEmpty()
-            ) return null
-            return CmdClickMap.createMap(
-                mapSrc,
-                ','
-            ).toMap()
-        }
-        private fun getIconId(
-            iconNameColorConfigMap: Map<String, String>?,
-        ): Int? {
-            if(
-                iconNameColorConfigMap.isNullOrEmpty()
-            ) return null
-            val nameKey = QrIcon.NAME.key
-            val iconName =
-                iconNameColorConfigMap.get(nameKey)
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "logo_get_iconId").absolutePath,
-//                listOf(
-//                    "itemname: ${iconNameColorConfigMap.get(nameKey)}",
-//                    "default: ${iconNameColorConfigMap.get(IconNameConfigKey.DEFAULT.key)}",
-//                    "iconName: ${iconName}",
-//                ).joinToString("\n\n\n")
-//            )
-            if(
-                iconName.isNullOrEmpty()
-            ) return null
-            val imageStrToIdList = CmdClickIcons.values().map {
-                it.str to it.id
-            } + ImageMacro.values().map {
-                it.str to it.id
-            }
-            return imageStrToIdList.firstOrNull {
-                val imageMacroStr = it.first
-                imageMacroStr == iconName
-            }?.second
-        }
-
-        private fun getIconColor(
-            iconNameColorConfigMap: Map<String, String>?,
-        ): Int {
-            val defaultColor = CmdClickColor.LIGHT_GREEN.id
-            if(
-                iconNameColorConfigMap.isNullOrEmpty()
-            ) return defaultColor
-            val colorKey = QrIcon.COLOR.key
-            val colorName =
-                iconNameColorConfigMap.get(colorKey)
-            return CmdClickColor.values().firstOrNull {
-                it.str == colorName
-            }?.id ?: defaultColor
-        }
-
-        private fun getBkColor(
-            iconNameColorConfigMap: Map<String, String>?,
-        ): Int {
-            val defaultColor = CmdClickColor.LIGHT_GREEN.id
-            if(
-                iconNameColorConfigMap.isNullOrEmpty()
-            ) return defaultColor
-            val bkColorKey = QrIcon.BACKGROUND_COLOR.key
-            val colorName =
-                iconNameColorConfigMap.get(bkColorKey)
-            return CmdClickColor.values().firstOrNull {
-                it.str == colorName
-            }?.id ?: defaultColor
-        }
-
-
-        fun makeIconConfigMap(
-            qrLogoConfigMap: Map<String, String>,
-        ): Map<String, String> {
-            val iconKeyName = QrLogoSettingKey.ICON.key
-            return CmdClickMap.createMap(
-                qrLogoConfigMap.get(iconKeyName),
-                '?'
-            ).toMap()
-        }
-
-        fun makeIconNameConfigMap(
-            setReplaceVariableMap: Map<String, String>?,
-            fannelInfoMap: Map<String, String>?,
-            iconConfigMap: Map<String, String>,
-        ): Map<String, String> {
-            val nameConfigPathKey = QrIcon.NAME_CONFIG_PATH.key
-            val iconNameConfigPath = iconConfigMap.get(nameConfigPathKey)
-            if(
-                !iconNameConfigPath.isNullOrEmpty()
-            ) {
-//                val fannelInfoMap = editFragment.fannelInfoMap
-//                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(fannelInfoMap)
-                val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
-                val iconNameMapTsvCon =
-                    SetReplaceVariabler.execReplaceByReplaceVariables(
-                        ReadText(iconNameConfigPath).readText(),
-                        setReplaceVariableMap,
-//                        currentAppDirPath,
-                        currentFannelName,
-                    )
-                return CmdClickMap.createMapFromTsv(
-                    iconNameMapTsvCon,
-                    '\n'
-                ).toMap()
-            }
-            val iconConfigMapStr = iconConfigMap.map {
-                    "${it.key}=${it.value}"
-            }.joinToString(",")
-            return mapOf(
-                    IconNameConfigKey.DEFAULT.key to iconConfigMapStr
-            )
-
-        }
-
-        enum class IconNameConfigKey(
-            val key: String
-        ){
-            DEFAULT("default"),
-        }
-    }
+//        enum class IconNameConfigKey(
+//            val key: String
+//        ){
+//            DEFAULT("default"),
+//        }
+//    }
 
     private fun culc(
         context: Context?,

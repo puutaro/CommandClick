@@ -10,11 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
@@ -22,9 +19,7 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -32,10 +27,6 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.broadcast.receiver.BroadcastReceiveHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ListIndexSizingToKeyboard
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.PageSearchToolbarManagerForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
@@ -53,7 +44,6 @@ import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -88,16 +78,16 @@ class EditFragment: Fragment() {
     var settingFannelPath: String = String()
 //    var setVariableTypeList: List<String>? = null
     var hideSettingVariableList: List<String> = emptyList()
-    var enableCmdEdit = false
+//    var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
     var currentFannelConList = emptyList<String>()
     var settingFannelConList: List<String>? = null
 //    var existIndexList: Boolean = false
-    var passCmdVariableEdit = String()
+//    var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
     var listIndexConfigMap: Map<String, String>? = null
-    var qrDialogConfig: Map<String, String>? = null
+//    var qrDialogConfig: Map<String, String>? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap: MutableMap<ToolbarButtonBariantForEdit, Pair<Int, String>> = ToolbarButtonToolForEdit.createInitButtonIconMap()
@@ -164,9 +154,9 @@ class EditFragment: Fragment() {
         )
 
         editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
-        enableCmdEdit =
-            editTypeSettingKey ==
-                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+//        enableCmdEdit =
+//            editTypeSettingKey ==
+//                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
         Keyboard.hiddenKeyboardForFragment(
             this
         )
@@ -269,8 +259,6 @@ class EditFragment: Fragment() {
 //            ).joinToString("\n\n")
 //        )
         EditModeHandler.execByHowFullEdit(this)
-        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-        cmdIndexViewModel.onFocusSearchText = false
         context?.let {
             busyboxExecutor = BusyboxExecutor(
                 it,
@@ -370,11 +358,14 @@ class EditFragment: Fragment() {
         }
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
+            val editComponentListAdapter = binding.editListRecyclerView.adapter as EditComponentListAdapter
             ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                 this@EditFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                    this@EditFragment,
-                    ListIndexAdapter.indexListMap,
+                    this@EditFragment.fannelInfoMap,
+                    this@EditFragment.setReplaceVariableMap,
+                    editComponentListAdapter.indexListMap,
+                    this@EditFragment.busyboxExecutor,
 //                    ListIndexAdapter.listIndexTypeKey
                 )
             )

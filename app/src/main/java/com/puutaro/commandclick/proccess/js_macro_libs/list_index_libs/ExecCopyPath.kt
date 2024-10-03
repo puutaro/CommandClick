@@ -11,14 +11,12 @@ import java.io.File
 object ExecCopyPath {
     fun copyPath(
         editFragment: EditFragment,
-        selectedItem: String,
         listIndexPosition: Int,
     ){
         val context = editFragment.context
             ?: return
         val copyPath = ItemPathMaker.make(
             editFragment,
-            selectedItem,
             listIndexPosition,
         ) ?: return
         if(

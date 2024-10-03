@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
@@ -22,25 +22,25 @@ object ExecSimpleDelete {
     fun removeController(
         editFragment: EditFragment,
         recyclerView: RecyclerView,
-        listIndexForEditAdapter: ListIndexAdapter,
-        selectedItem: String,
+        listIndexForEditAdapter: EditComponentListAdapter,
+        selectedItemMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         val enableDeleteConfirm = !DeleteSettingsForListIndex.howDisableDeleteConfirm(
-            ListIndexAdapter.deleteConfigMap
+            EditComponentListAdapter.deleteConfigMap
         )
         when(enableDeleteConfirm){
             false -> removeItem(
                 editFragment,
                 listIndexForEditAdapter,
-                selectedItem,
+                selectedItemMap,
                 listIndexPosition,
             )
             else -> DeleteConfirmDialog.launch(
                 editFragment,
                 recyclerView,
                 listIndexPosition,
-                selectedItem,
+                selectedItemMap,
                 listIndexForEditAdapter,
             )
         }
@@ -48,30 +48,30 @@ object ExecSimpleDelete {
 
     private fun removeItem(
         editFragment: EditFragment,
-        listIndexForEditAdapter: ListIndexAdapter,
-        selectedItem: String,
+        listIndexForEditAdapter: EditComponentListAdapter,
+        selectedItemMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 listIndexForEditAdapter.notifyItemRemoved(listIndexPosition)
             }
-            val removeItemLine = withContext(Dispatchers.IO) {
-                listIndexForEditAdapter.listIndexList[listIndexPosition]
+            val removeItemLineMap = withContext(Dispatchers.IO) {
+                listIndexForEditAdapter.lineMapList[listIndexPosition]
             }
-            listIndexForEditAdapter.listIndexList.removeAt(listIndexPosition)
+            listIndexForEditAdapter.lineMapList.removeAt(listIndexPosition)
             withContext(Dispatchers.IO) {
                 ExecRemoveForListIndexAdapter.removeCon(
                     editFragment,
 //                    ListIndexAdapter.listIndexTypeKey,
-                    removeItemLine,
+                    removeItemLineMap,
                 )
             }
             withContext(Dispatchers.IO) {
                 execRemoveItemHandler(
                     editFragment,
-                    selectedItem,
-                    removeItemLine,
+                    selectedItemMap,
+                    removeItemLineMap,
                     listIndexPosition,
                 )
             }
@@ -80,13 +80,13 @@ object ExecSimpleDelete {
 
     private fun execRemoveItemHandler(
         editFragment: EditFragment,
-        selectedItem: String,
-        removeItemLine: String,
+        selectedItemMap: Map<String, String>,
+        removeItemLineMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         ExecRemoveForListIndexAdapter.updateTsv(
             editFragment,
-            listOf(removeItemLine),
+            listOf(removeItemLineMap),
         )
 //        when(ListIndexAdapter.listIndexTypeKey){
 ////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
@@ -111,7 +111,7 @@ object ExecSimpleDelete {
 
         DeleteSettingsForListIndex.doWithJsAction(
             editFragment,
-            selectedItem,
+            selectedItemMap,
             listIndexPosition,
         )
     }
@@ -124,8 +124,8 @@ object ExecSimpleDelete {
             editFragment: EditFragment,
             recyclerView: RecyclerView,
             listIndexPosition: Int,
-            selectedItem: String,
-            listIndexForEditAdapter: ListIndexAdapter
+            selectedItemMap: Map<String, String>,
+            listIndexForEditAdapter: EditComponentListAdapter
         ){
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
@@ -133,7 +133,7 @@ object ExecSimpleDelete {
                         editFragment,
                         recyclerView,
                         listIndexPosition,
-                        selectedItem,
+                        selectedItemMap,
                         listIndexForEditAdapter
                     )
                 }
@@ -143,8 +143,8 @@ object ExecSimpleDelete {
             editFragment: EditFragment,
             recyclerView: RecyclerView,
             listIndexPosition: Int,
-            selectedItem: String,
-            listIndexForEditAdapter: ListIndexAdapter
+            selectedItemMap: Map<String, String>,
+            listIndexForEditAdapter: EditComponentListAdapter
         ){
             val context = editFragment.context
                 ?: return
@@ -163,7 +163,9 @@ object ExecSimpleDelete {
                 delteConfirmDialog?.findViewById<AppCompatTextView>(
                     com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
                 )
-            confirmContentTextView?.text = selectedItem
+            confirmContentTextView?.text = selectedItemMap.get(
+                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            )
             val confirmCancelButton =
                 delteConfirmDialog?.findViewById<AppCompatImageButton>(
                     com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
@@ -194,7 +196,7 @@ object ExecSimpleDelete {
                 removeItem(
                     editFragment,
                     listIndexForEditAdapter,
-                    selectedItem,
+                    selectedItemMap,
                     listIndexPosition,
                 )
             }

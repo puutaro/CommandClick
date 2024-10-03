@@ -28,27 +28,27 @@ object EditTextSetter {
     ): EditText {
         val editViewModel: EditViewModel by fragment.activityViewModels()
         val context = fragment.context
-        val currentId = editParameters.currentId
-        val currentVariableValue = editParameters.currentVariableValue
-        val currentVariableName = editParameters.currentVariableName
+//        val currentId = editParameters.currentId
+//        val currentVariableValue = editParameters.currentVariableValue
+//        val currentVariableName = editParameters.currentVariableName
 
         val insertEditText = EditText(context)
         insertEditText.clearFocus()
-        insertEditText.tag = currentVariableName
-        insertEditText.id = currentId
+//        insertEditText.tag = currentVariableName
+//        insertEditText.id = currentId
         insertEditText.backgroundTintList = context?.getColorStateList(R.color.gray_out)
-        editViewModel.variableNameToEditTextIdMap.put(
-            currentVariableName as String,
-            currentId
-        )
+//        editViewModel.variableNameToEditTextIdMap.put(
+//            currentVariableName as String,
+//            currentId
+//        )
 
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
-        val editTextCon = EditTextMaker.make(
-            fragment,
-            editTextPropertyMap,
-            currentVariableValue,
-        )
-        insertEditText.setText(editTextCon)
+//        val editTextCon = EditTextMaker.make(
+//            fragment,
+//            editTextPropertyMap,
+//            currentVariableValue,
+//        )
+//        insertEditText.setText(editTextCon)
 
         editTextPropertyMap?.get(
             EditTextPropertySettingKey.SIZE.key

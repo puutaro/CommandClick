@@ -13,7 +13,6 @@ class JsRenameItem(
 
     @JavascriptInterface
     fun rename_S(
-        selectedItem: String,
         listIndexPosition: Int
     ){
         /*
@@ -63,7 +62,6 @@ class JsRenameItem(
         ) ?: return
         ExecRenameFile.rename(
             editFragment,
-            selectedItem,
             listIndexPosition,
         )
     }

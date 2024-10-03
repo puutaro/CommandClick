@@ -27,10 +27,11 @@ object JsActionCompleterForQr {
             editFragment.setReplaceVariableMap,
             mainFannelPath
         )
-        val defaultMacroStr = when(isLongClick){
-            true -> JsMacroForQr.EDIT_LOGO.name
-            else -> JsMacroForQr.FILE_CONTENTS.name
-        }
+        val defaultMacroStr = JsMacroForQr.FILE_CONTENTS.name
+//        when(isLongClick){
+//            true -> JsMacroForQr.EDIT_LOGO.name
+//            else -> JsMacroForQr.FILE_CONTENTS.name
+//        }
         return JsActionTool.compJsActionMacro(
             jsActionMap,
             defaultMacroStr,

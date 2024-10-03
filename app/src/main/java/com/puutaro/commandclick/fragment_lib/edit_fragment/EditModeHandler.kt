@@ -64,43 +64,6 @@ object EditModeHandler{
         )
     }
 
-    private fun editSettingVariable(
-        editFragment: EditFragment
-    ) {
-        val recordNumToMapNameValueInCommandHolder =
-            editFragment.recordNumToMapNameValueInCommandHolder
-        val recordNumToMapNameValueInSettingHolder =
-            editFragment.recordNumToMapNameValueInSettingHolder
-        if(
-            recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
-            && recordNumToMapNameValueInSettingHolder.isNullOrEmpty()
-        ) {
-            backToCmdIndex(editFragment)
-            return
-        }
-        buttonCreate(
-            editFragment,
-            ToolbarButtonBariantForEdit.OK,
-        )
-        CoroutineScope(Dispatchers.Main).launch {
-            EditTextProducerForEdit.adds(
-                editFragment,
-//                true
-            )
-        }
-//        if(editFragment.isToolbarBtnCustomInSettingSelects) {
-//            buttonCreate(
-//                ToolbarButtonBariantForEdit.EDIT,
-//            )
-//            buttonCreate(
-//                ToolbarButtonBariantForEdit.SETTING,
-//            )
-//            buttonCreate(
-//                ToolbarButtonBariantForEdit.EXTRA,
-//            )
-//        }
-    }
-
     private fun buttonCreate(
         editFragment: EditFragment,
         toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
@@ -111,19 +74,56 @@ object EditModeHandler{
         )
     }
 
-    private fun backToCmdIndex(editFragment: EditFragment){
-        val context = editFragment.context
-        editFragment.popBackStackToIndexImmediateJob?.cancel()
-        editFragment.popBackStackToIndexImmediateJob = CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO){
-                delay(200)
-            }
-            withContext(Dispatchers.Main){
-                ToastUtils.showLong("No editable variable therefore, go back")
-                val listener = context
-                        as? EditFragment.OnInitEditFragmentListener
-                listener?.onInitEditFragment()
-            }
-        }
-    }
+//    private fun editSettingVariable(
+//        editFragment: EditFragment
+//    ) {
+//        val recordNumToMapNameValueInCommandHolder =
+//            editFragment.recordNumToMapNameValueInCommandHolder
+//        val recordNumToMapNameValueInSettingHolder =
+//            editFragment.recordNumToMapNameValueInSettingHolder
+//        if(
+//            recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
+//            && recordNumToMapNameValueInSettingHolder.isNullOrEmpty()
+//        ) {
+//            backToCmdIndex(editFragment)
+//            return
+//        }
+//        buttonCreate(
+//            editFragment,
+//            ToolbarButtonBariantForEdit.OK,
+//        )
+//        CoroutineScope(Dispatchers.Main).launch {
+//            EditTextProducerForEdit.adds(
+//                editFragment,
+////                true
+//            )
+//        }
+////        if(editFragment.isToolbarBtnCustomInSettingSelects) {
+////            buttonCreate(
+////                ToolbarButtonBariantForEdit.EDIT,
+////            )
+////            buttonCreate(
+////                ToolbarButtonBariantForEdit.SETTING,
+////            )
+////            buttonCreate(
+////                ToolbarButtonBariantForEdit.EXTRA,
+////            )
+////        }
+//    }
+
+//    private fun backToCmdIndex(editFragment: EditFragment){
+//        val context = editFragment.context
+//        editFragment.popBackStackToIndexImmediateJob?.cancel()
+//        editFragment.popBackStackToIndexImmediateJob = CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.IO){
+//                delay(200)
+//            }
+//            withContext(Dispatchers.Main){
+//                ToastUtils.showLong("No editable variable therefore, go back")
+//                val listener = context
+//                        as? EditFragment.OnInitEditFragmentListener
+//                listener?.onInitEditFragment()
+//            }
+//        }
+//    }
 }

@@ -3,7 +3,7 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,21 +18,21 @@ object ListViewToolForListIndexAdapter {
 
     fun listIndexListUpdateFileList(
         editFragment: EditFragment,
-        updateList: List<String>,
+        updateLineMapList: List<Map<String, String>>,
     ){
         val editListRecyclerView = editFragment.binding.editListRecyclerView
         if(
             !editListRecyclerView.isVisible
         ) return
         val listIndexForEditAdapter =
-            editListRecyclerView.adapter as? ListIndexAdapter
+            editListRecyclerView.adapter as? EditComponentListAdapter
                 ?: return
         if(
-            listIndexForEditAdapter.listIndexList ==
-            updateList
+            listIndexForEditAdapter.lineMapList ==
+            updateLineMapList
         ) return
-        listIndexForEditAdapter.listIndexList.clear()
-        listIndexForEditAdapter.listIndexList.addAll(updateList)
+        listIndexForEditAdapter.lineMapList.clear()
+        listIndexForEditAdapter.lineMapList.addAll(updateLineMapList)
         listIndexForEditAdapter.notifyDataSetChanged()
         scrollToBottom(
             editListRecyclerView,
@@ -42,13 +42,13 @@ object ListViewToolForListIndexAdapter {
 
     fun scrollToBottom(
         editListRecyclerView: RecyclerView,
-        listIndexForEditAdapter: ListIndexAdapter,
+        editComponentListAdapter: EditComponentListAdapter,
     ){
         listIndexScrollToBottomJob?.cancel()
         listIndexScrollToBottomJob = CoroutineScope(Dispatchers.Main).launch {
             val layoutManager =
                 editListRecyclerView.layoutManager as? LinearLayoutManager
-            val scrollToPosi = listIndexForEditAdapter.itemCount - 1
+            val scrollToPosi = editComponentListAdapter.itemCount - 1
             withContext(Dispatchers.Main){
                 for(i in 1..30){
                     val prePosi = layoutManager?.findLastCompletelyVisibleItemPosition()

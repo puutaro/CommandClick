@@ -1,8 +1,9 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
@@ -11,24 +12,28 @@ object ExecSwitcherForListIndexAdapter {
 
     fun updateTsv(
         editFragment: EditFragment,
-        listIndexList: List<String>,
+        lineMapList: List<Map<String, String>>,
     ){
+        val editComponentListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath = FilePrefixGetter.get(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.indexListMap,
+            ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         )
         if(
             tsvPath.isNullOrEmpty()
         ) return
         val sortType = ListSettingsForListIndex.getSortType(
-            editFragment,
-            ListIndexAdapter.indexListMap
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.indexListMap
         )
         val sortListIndexListForTsvSave =
             ListSettingsForListIndex.ListIndexListMaker.sortListForTsvSave(
                 sortType,
-                listIndexList
+                lineMapList
             )
         val curTsvConList = ReadText(
             tsvPath
@@ -38,9 +43,10 @@ object ExecSwitcherForListIndexAdapter {
         if(
             curTsvConList.size != sortListIndexListForTsvSave.size
         ) return
-        TsvTool.updateTsv(
+        MapListFileTool.update(
             tsvPath,
             sortListIndexListForTsvSave,
+            ListSettingsForListIndex.MapListPathManager.mapListSeparator
         )
     }
 }

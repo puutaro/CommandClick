@@ -9,12 +9,10 @@ import java.io.File
 object ExecShowDescription {
     fun desc(
         editFragment: EditFragment,
-        selectedItem: String,
         listIndexPosition: Int,
     ){
         val showFilePath = ItemPathMaker.make(
             editFragment,
-            selectedItem,
             listIndexPosition,
         ) ?: return
         val showFilePathObj = File(showFilePath)

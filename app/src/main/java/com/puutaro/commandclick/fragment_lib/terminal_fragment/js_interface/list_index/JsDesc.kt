@@ -65,7 +65,6 @@ class JsDesc(
         ) ?: return
         ExecShowDescription.desc(
             editFragment,
-            selectedItem,
             listIndexPosition
         )
     }

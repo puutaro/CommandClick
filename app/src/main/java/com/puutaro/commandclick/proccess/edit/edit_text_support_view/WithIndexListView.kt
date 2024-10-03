@@ -3,23 +3,28 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForListIndexAdapter
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
-import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 import java.lang.ref.WeakReference
 
 
@@ -80,81 +85,95 @@ object WithIndexListView{
 //            ).joinToString("\n\n")
 //        )
         val fileList = ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-            editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
             indexListMap,
+            editFragment.busyboxExecutor,
 //            listIndexTypeKey
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lfileList.txt").absolutePath,
+//            listOf(
+//                "indexListMap: ${indexListMap}",
+//                "fileList: ${fileList}",
+//            ).joinToString("\n\n")
+//        )
 
         val editListRecyclerView =
             binding.editListRecyclerView
-        val listIndexForEditAdapter = ListIndexAdapter(
+//        val constraintLayoutParam = editListRecyclerView.layoutParams as ConstraintLayout.LayoutParams
+        val editComponentListAdapter = EditComponentListAdapter(
             WeakReference(editFragment),
+            indexListMap,
             fileList,
         )
         ItemTouchHelperCallbackForListIndexAdapter.set(
             editFragment,
             editListRecyclerView,
-            listIndexForEditAdapter,
+            editComponentListAdapter,
         )
 
-        editListRecyclerView.adapter = listIndexForEditAdapter
+        editListRecyclerView.adapter = editComponentListAdapter
 
 
         val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
-            editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
             indexListMap
         )
         LayoutSettingsForListIndex.setLayout(
             context,
-            listIndexForEditAdapter.getLayoutConfigMap(),
+            editComponentListAdapter.getLayoutConfigMap(),
             editListRecyclerView,
             isReverseLayout,
         )
         ListViewToolForListIndexAdapter.scrollToBottom(
             editListRecyclerView,
-            listIndexForEditAdapter,
+            editComponentListAdapter,
         )
         invokeItemSetClickListenerForFileList(
             editFragment,
             binding.editListRecyclerView
         )
-        invokeQrLogoSetClickListenerForFileList(
-            editFragment,
-            binding.editListRecyclerView,
-        )
-        invokeQrLogoSetLongClickListenerForFileList(editFragment)
-        invokeItemSetLongTimeClickListenerForIndexList(
-            editFragment,
-            editListRecyclerView,
-        )
+//        invokeQrLogoSetClickListenerForFileList(
+//            editFragment,
+//            binding.editListRecyclerView,
+//        )
+//        invokeQrLogoSetLongClickListenerForFileList(editFragment)
+//        invokeItemSetLongTimeClickListenerForIndexList(
+//            editFragment,
+//            editListRecyclerView,
+//        )
         makeSearchEditText(
             editFragment,
+            editComponentListAdapter,
             editListSearchEditText,
             listIndexConfigMap
         )
     }
 
-        private fun invokeItemSetClickListenerForFileList(
-            editFragment: EditFragment,
-            editListRecyclerView: RecyclerView
-        ) {
+    private fun invokeItemSetClickListenerForFileList(
+        editFragment: EditFragment,
+        editListRecyclerView: RecyclerView
+    ) {
         val listIndexForEditAdapter =
-            editListRecyclerView.adapter as ListIndexAdapter
+            editListRecyclerView.adapter as EditComponentListAdapter
         listIndexForEditAdapter.fileNameClickListener =
-            object: ListIndexAdapter.OnFileNameItemClickListener {
+            object: EditComponentListAdapter.OnFileNameItemClickListener {
                 override fun onFileNameClick(
                     itemView: View,
-                    holder: ListIndexAdapter.ListIndexListViewHolder,
+                    holder: EditComponentListAdapter.ListIndexListViewHolder,
                     listIndexPosition: Int,
                 ) {
                     keyboardHide(
                         editFragment,
                     )
-                    val selectedItem = holder.fileName
+                    val selectedItemLineMap = listIndexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
+//                    holder.fileName
                     ListIndexEditConfig.handle(
                         editFragment,
                         false,
-                        selectedItem,
+                        selectedItemLineMap,
                         holder,
                         listIndexPosition
                     )
@@ -162,39 +181,41 @@ object WithIndexListView{
         }
     }
 
-    private fun invokeQrLogoSetClickListenerForFileList(
-        editFragment: EditFragment,
-        editListRecyclerView: RecyclerView,
-    ) {
-        val listIndexForEditAdapter =
-            editListRecyclerView.adapter as ListIndexAdapter
-        listIndexForEditAdapter.fileQrLogoClickListener = object: ListIndexAdapter.OnFileQrLogoItemClickListener {
-            override fun onFileQrLogoClick(
-                itemView: View,
-                holder: ListIndexAdapter.ListIndexListViewHolder,
-                listIndexPosition: Int,
-            ) {
-                keyboardHide(editFragment)
-                QrDialogClickHandler.handle(
-                    false,
-                    editFragment,
-                    holder.fileName,
-                    holder.bindingAdapterPosition,
-                )
-            }
-        }
-    }
+//    private fun invokeQrLogoSetClickListenerForFileList(
+//        editFragment: EditFragment,
+//        editListRecyclerView: RecyclerView,
+//    ) {
+//        val listIndexForEditAdapter =
+//            editListRecyclerView.adapter as EditComponentListAdapter
+//        listIndexForEditAdapter.fileQrLogoClickListener = object: EditComponentListAdapter.OnFileQrLogoItemClickListener {
+//            override fun onFileQrLogoClick(
+//                itemView: View,
+//                holder: EditComponentListAdapter.ListIndexListViewHolder,
+//                listIndexPosition: Int,
+//            ) {
+//                keyboardHide(editFragment)
+//                val selectedItemLineMap = listIndexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
+//                QrDialogClickHandler.handle(
+//                    false,
+//                    editFragment,
+//                    selectedItemLineMap,
+//                    holder.bindingAdapterPosition,
+//                )
+//            }
+//        }
+//    }
 
-    private fun invokeQrLogoSetLongClickListenerForFileList(
-        editFragment: EditFragment,
-    ) {
-        FannelLogoLongClickDoForListIndex.invoke(
-            editFragment,
-        )
-    }
+//    private fun invokeQrLogoSetLongClickListenerForFileList(
+//        editFragment: EditFragment,
+//    ) {
+//        FannelLogoLongClickDoForListIndex.invoke(
+//            editFragment,
+//        )
+//    }
 
     private fun makeSearchEditText(
         editFragment: EditFragment,
+        editComponentListAdapter: EditComponentListAdapter,
         searchText: AppCompatEditText,
         listIndexConfigMap: Map<String, String>?
     ) {
@@ -230,16 +251,22 @@ object WithIndexListView{
             override fun afterTextChanged(s: Editable?) {
                 if(!searchText.hasFocus()) return
                 val filteredUrlHistoryList = ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                    editFragment,
-                    ListIndexAdapter.indexListMap,
+                    editFragment.fannelInfoMap,
+                    editFragment.setReplaceVariableMap,
+                    editComponentListAdapter.indexListMap,
+                    editFragment.busyboxExecutor,
 //                    ListIndexAdapter.listIndexTypeKey
                 ).filter {
+                    lineMap ->
+                    val title = lineMap.get(
+                        ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                    ) ?: String()
                     Regex(
                         searchText.text.toString()
                             .lowercase()
                             .replace("\n", "")
                     ).containsMatchIn(
-                        it.lowercase()
+                        title.lowercase()
                     )
                 }
                 ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
@@ -250,27 +277,28 @@ object WithIndexListView{
         })
     }
 
-    private fun invokeItemSetLongTimeClickListenerForIndexList(
-        editFragment: EditFragment,
-        editListRecyclerView: RecyclerView,
-    ){
-        val indexForEditAdapter = editListRecyclerView.adapter as ListIndexAdapter
-        indexForEditAdapter.itemLongClickListener = object : ListIndexAdapter.OnItemLongClickListener {
-            override fun onItemLongClick(
-                itemView: View,
-                holder: ListIndexAdapter.ListIndexListViewHolder,
-                listIndexPosition: Int
-            ) {
-                val selectedItem = holder.fileName
-                ListIndexEditConfig.handle(
-                    editFragment,
-                    true,
-                    selectedItem,
-                    holder,
-                    listIndexPosition,
-                )
-            }
-        }
-    }
+//    private fun invokeItemSetLongTimeClickListenerForIndexList(
+//        editFragment: EditFragment,
+//        editListRecyclerView: RecyclerView,
+//    ){
+//        val indexForEditAdapter = editListRecyclerView.adapter as EditComponentListAdapter
+//        indexForEditAdapter.itemLongClickListener = object : EditComponentListAdapter.OnItemLongClickListener {
+//            override fun onItemLongClick(
+//                itemView: View,
+//                holder: EditComponentListAdapter.ListIndexListViewHolder,
+//                listIndexPosition: Int
+//            ) {
+//                val selectedItemLineMap = indexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
+////                    holder.fileName
+//                ListIndexEditConfig.handle(
+//                    editFragment,
+//                    true,
+//                    selectedItemLineMap,
+//                    holder,
+//                    listIndexPosition,
+//                )
+//            }
+//        }
+//    }
 }
 

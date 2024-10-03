@@ -35,12 +35,12 @@ object TerminalOnHandlerForEdit {
                     delay(100)
                 }
             }
-            val isSettingValEdit =
-                withContext(Dispatchers.IO) {
-                    terminalFragment.editType ==
-                            EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
-                }
-            if(isSettingValEdit) return@launch
+//            val isSettingValEdit =
+//                withContext(Dispatchers.IO) {
+//                    terminalFragment.editType ==
+//                            EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
+//                }
+//            if(isSettingValEdit) return@launch
             val disableShortcut = withContext(Dispatchers.IO) {
                 FannelInfoTool.getOnShortcut(
                     terminalFragment.fannelInfoMap

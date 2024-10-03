@@ -8,6 +8,7 @@ object QuoteTool {
     private val cmdClickBackspaceQuote = "cmdClickBackspaceQuote"
     private val backSlachDoubleQuote = "\\\""
     private val repSeparatorString = "CMDCLICK_SEPARATOR"
+    private val layoutSeparator = '廳'
     fun trimBothEdgeQuote(
         targetStr: String?,
     ): String {
@@ -183,6 +184,20 @@ object QuoteTool {
         }
     }
 
+
+    fun layoutSplitBySurroundedIgnore(
+        targetCon: String,
+    ): List<String> {
+        val layoutSeparatorStr = layoutSeparator.toString()
+        return surroundLayoutSeparatorReplace(
+            targetCon,
+        ).replace(Regex("[${layoutSeparator}]+"), layoutSeparator.toString()).split(
+            layoutSeparatorStr,
+        ).filter {
+            it.isNotEmpty()
+        }
+    }
+
     private fun surroundSeparatorReplace(
         targetString: String,
         targetSeparator: Char,
@@ -216,6 +231,49 @@ object QuoteTool {
                 && char == targetSeparator
             ){
                 return@mapIndexed repSeparatorString
+            }
+            char
+        }.joinToString("")
+    }
+
+    private fun surroundLayoutSeparatorReplace(
+        targetString: String,
+    ): String {
+        val targetSeparator = '-'
+        var quoteType: Char? = null
+        return targetString.toList().mapIndexed {
+                index, char ->
+
+            val isHitSurroundQuote = char.equals('`')
+                    || char.equals('\"')
+            val beforeChar = targetString.getOrNull(index - 1)
+            if(
+                quoteType == null
+                && beforeChar != '\\'
+                && isHitSurroundQuote
+            ) {
+                quoteType = char
+                return@mapIndexed char
+            }
+            if(
+                quoteType != null
+                && beforeChar != '\\'
+                && char == quoteType
+            ) {
+                quoteType = null
+                return@mapIndexed char
+            }
+//            if(
+//                quoteType != null
+//                && char == targetSeparator
+//            ){
+//                return@mapIndexed char
+//            }
+            if(
+                quoteType == null
+                && char == targetSeparator
+            ){
+                return@mapIndexed layoutSeparator
             }
             char
         }.joinToString("")

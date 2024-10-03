@@ -219,7 +219,7 @@ object ShellMacroHandler {
         private enum class JudgeTsvKey(
             val str: String
         ){
-            LIST_DIR(ListSettingsForListIndex.ListSettingKey.LIST_DIR.key)
+            LIST_DIR(ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key)
         }
 
         fun getStrByListDirValue(

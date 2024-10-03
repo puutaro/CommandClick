@@ -3,27 +3,26 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.li
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecSwitcherForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.list.ListTool
-import java.io.File
 
 object ItemTouchHelperCallbackForListIndexAdapter {
 
     fun set(
         editFragment: EditFragment,
         recyclerView: RecyclerView,
-        listIndexForEditAdapter: ListIndexAdapter,
+        editComponentListAdapter: EditComponentListAdapter,
     ){
         val editByDragMap = ListSettingsForListIndex.makeEditByDragMap(
             editFragment.listIndexConfigMap,
         )
         val enableEditByDrag = !ListSettingsForListIndex.howDisableEditByDrag(
-            editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
             editByDragMap
         )
         if(!enableEditByDrag) return
@@ -38,22 +37,22 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                     viewHolder: RecyclerView.ViewHolder,
                     target: RecyclerView.ViewHolder
                 ): Boolean {
-                    val adapter = recyclerView.adapter as ListIndexAdapter
+                    val adapter = recyclerView.adapter as EditComponentListAdapter
                     val fromViewHolder = viewHolder as
-                            ListIndexAdapter.ListIndexListViewHolder
+                            EditComponentListAdapter.ListIndexListViewHolder
                     val toViewHolder = target as
-                            ListIndexAdapter.ListIndexListViewHolder
+                            EditComponentListAdapter.ListIndexListViewHolder
                     val from = fromViewHolder.bindingAdapterPosition
                     val to = toViewHolder.bindingAdapterPosition
                     adapter.notifyItemMoved(from, to)
-                    ListTool.switchList(
-                        listIndexForEditAdapter.listIndexList,
+                    ListTool.switchMapList(
+                        editComponentListAdapter.lineMapList,
                         from,
                         to,
                     )
                     switchHandler(
                         editFragment,
-                        listIndexForEditAdapter,
+                        editComponentListAdapter,
                         fromViewHolder,
                         toViewHolder
                     )
@@ -68,12 +67,12 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                         direction != ItemTouchHelper.LEFT
                     ) return
                     val listIndexViewHolder =
-                        viewHolder as ListIndexAdapter.ListIndexListViewHolder
+                        viewHolder as EditComponentListAdapter.ListIndexListViewHolder
                     ExecSimpleDelete.removeController(
                         editFragment,
                         recyclerView,
-                        listIndexForEditAdapter,
-                        listIndexViewHolder.fileName,
+                        editComponentListAdapter,
+                        editComponentListAdapter.lineMapList[listIndexViewHolder.bindingAdapterPosition],
                         listIndexViewHolder.bindingAdapterPosition,
                     )
                 }
@@ -101,13 +100,13 @@ object ItemTouchHelperCallbackForListIndexAdapter {
 
     private fun switchHandler(
         editFragment: EditFragment,
-        listIndexForEditAdapter: ListIndexAdapter,
-        fromViewHolder: ListIndexAdapter.ListIndexListViewHolder,
-        toViewHolder: ListIndexAdapter.ListIndexListViewHolder
+        listIndexForEditAdapter: EditComponentListAdapter,
+        fromViewHolder: EditComponentListAdapter.ListIndexListViewHolder,
+        toViewHolder: EditComponentListAdapter.ListIndexListViewHolder
     ){
         ExecSwitcherForListIndexAdapter.updateTsv(
             editFragment,
-            listIndexForEditAdapter.listIndexList
+            listIndexForEditAdapter.lineMapList
         )
 //        val listIndexTypeKey = ListIndexAdapter.listIndexTypeKey
 //        when(listIndexTypeKey){

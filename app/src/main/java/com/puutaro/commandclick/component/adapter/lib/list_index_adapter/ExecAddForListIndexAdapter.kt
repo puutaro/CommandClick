@@ -2,11 +2,12 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
@@ -19,14 +20,20 @@ object ExecAddForListIndexAdapter {
 
     private fun getInsertIndex(
         sortType: ListSettingsForListIndex.SortByKey,
-        listIndexForEditAdapter: ListIndexAdapter,
+        listIndexForEditAdapter: EditComponentListAdapter,
         addLine: String,
     ): Int {
-        val virtualListIndexList = listIndexForEditAdapter.listIndexList + listOf(addLine)
+        val addLineMap = CmdClickMap.createMap(
+            addLine,
+            ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        ).toMap()
+        val virtualListIndexList =
+            listIndexForEditAdapter.lineMapList +
+                    listOf(addLineMap)
         return ListSettingsForListIndex.ListIndexListMaker.sortList(
             sortType,
             virtualListIndexList,
-        ).indexOf(addLine)
+        ).indexOf(addLineMap)
     }
 
     private fun listUpdateByInsertItem(
@@ -36,12 +43,16 @@ object ExecAddForListIndexAdapter {
     ){
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
-        val listIndexAdapter =
-            binding.editListRecyclerView.adapter as ListIndexAdapter
-        listIndexAdapter.listIndexList.add(insertIndex, addLine)
+        val editComponentListAdapter =
+            binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val addLineMap = CmdClickMap.createMap(
+            addLine,
+            ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        ).toMap()
+        editComponentListAdapter.lineMapList.add(insertIndex, addLineMap)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
-                listIndexAdapter.notifyItemInserted(insertIndex)
+                editComponentListAdapter.notifyItemInserted(insertIndex)
             }
             withContext(Dispatchers.IO) {
                 val listInsertWaitTime = 200L
@@ -151,11 +162,14 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertLineListSrc: List<String>
     ){
+        val editComponentAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath =
             FilePrefixGetter.get(
-                editFragment,
-                ListIndexAdapter.indexListMap,
-                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+                editFragment.fannelInfoMap,
+                editFragment.setReplaceVariableMap,
+                editComponentAdapter.indexListMap,
+                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
         if(
             tsvPath.trim().isEmpty()
@@ -193,12 +207,13 @@ object ExecAddForListIndexAdapter {
     ){
         val context = editFragment.context
         val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath =
             FilePrefixGetter.get(
-                editFragment,
-                ListIndexAdapter.indexListMap,
-                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+                editFragment.fannelInfoMap,
+                editFragment.setReplaceVariableMap,
+                listIndexForEditAdapter.indexListMap,
+                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "getFile.txt").absolutePath,
@@ -233,9 +248,12 @@ object ExecAddForListIndexAdapter {
                 isDetect
             ) return
         }
+        val editComponentAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val sortType = ListSettingsForListIndex.getSortType(
-            editFragment,
-            ListIndexAdapter.indexListMap
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editComponentAdapter.indexListMap
         )
         val insertIndex = getInsertIndex(
             sortType,
@@ -260,7 +278,7 @@ object ExecAddForListIndexAdapter {
                         )
                     }
                 }
-            ListSettingsForListIndex.SortByKey.SORT,
+            ListSettingsForListIndex.SortByKey.SORT_TYPE,
             ListSettingsForListIndex.SortByKey.REVERSE ->
                 listUpdateByInsertItem(
                     editFragment,

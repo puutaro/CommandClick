@@ -2,10 +2,11 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lis
 
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.lang.ref.WeakReference
@@ -69,9 +70,9 @@ class JsDeleteItem(
         ) ?: return
         val binding = editFragment.binding
         val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as ListIndexAdapter
-        val listIndexPosition =
-            listIndexForEditAdapter.listIndexList.indexOf(selectedItem)
+            binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val listIndexPosition =
+//            listIndexForEditAdapter.lineMapList.indexOf(selectedItem)
 
 //        ExecItemDelete.execItemDelete(
 //            editFragment,
@@ -83,7 +84,7 @@ class JsDeleteItem(
 
     @JavascriptInterface
     fun simpleDelete_S(
-        selectedItem: String,
+        selectedItemMapCon: String,
         listIndexListPosition: Int,
     ){
         /*
@@ -133,8 +134,8 @@ class JsDeleteItem(
         ) ?: return
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
-        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexAdapter
-        val listIndexListLastIndex = listIndexForEditAdapter.listIndexList.lastIndex
+        val listIndexForEditAdapter = editListRecyclerView.adapter as EditComponentListAdapter
+        val listIndexListLastIndex = listIndexForEditAdapter.lineMapList.lastIndex
         val isInValidIndex = listIndexListPosition < 0
                 && listIndexListPosition > listIndexListLastIndex
         if(
@@ -145,11 +146,15 @@ class JsDeleteItem(
             )
             return
         }
+        val selectedItemMap = CmdClickMap.createMap(
+            selectedItemMapCon,
+            ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        ).toMap()
         ExecSimpleDelete.removeController(
             editFragment,
             editListRecyclerView,
             listIndexForEditAdapter,
-            selectedItem,
+            selectedItemMap,
             listIndexListPosition,
         )
     }

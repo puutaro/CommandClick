@@ -1,9 +1,12 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
 import android.content.Context
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.custom_manager.PreLoadGridLayoutManager
-import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 
 object LayoutSettingsForListIndex {
@@ -13,7 +16,10 @@ object LayoutSettingsForListIndex {
     ) {
 //        TYPE("type"),
         COL("col"),
+        TO_TOP("toTop")
     }
+
+    private val switchOn = "ON"
 
 //    enum class LayoutTypeValueStr(
 //        val valueStr: String
@@ -51,6 +57,25 @@ object LayoutSettingsForListIndex {
         editListRecyclerView: RecyclerView,
         isReverseLayout: Boolean,
     ){
+        val isToTop = howToTop(layoutConfigMap)
+        val height = when(isToTop){
+            true -> 0
+            else -> ViewGroup.LayoutParams.WRAP_CONTENT
+        }
+        val constraintLayoutParam = ConstraintLayout.LayoutParams(
+            0,
+            height
+        )
+        if(
+            isToTop
+        ) {
+            constraintLayoutParam.topToBottom = R.id.editTextView
+        }
+        constraintLayoutParam.startToStart = ConstraintSet.PARENT_ID
+        constraintLayoutParam.endToEnd = ConstraintSet.PARENT_ID
+        constraintLayoutParam.bottomToTop = R.id.edit_list_search_edit_text
+        editListRecyclerView.layoutParams = constraintLayoutParam
+
         editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
             context,
             decideColNum(layoutConfigMap),
@@ -72,10 +97,18 @@ object LayoutSettingsForListIndex {
 //        }
     }
 
+    private fun howToTop(
+        layoutConfigMap: Map<String, String>?,
+    ): Boolean {
+        return layoutConfigMap?.get(
+            LayoutSettingKey.TO_TOP.key
+        ) == switchOn
+    }
+
     private fun decideColNum(
         layoutConfigMap: Map<String, String>?,
     ): Int {
-        val defaultColNum = 2
+        val defaultColNum = 1
         val colNum = layoutConfigMap?.get(
             LayoutSettingKey.COL.key
         ) ?: return defaultColNum

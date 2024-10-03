@@ -66,7 +66,7 @@ object ButtonViewProducer {
         currentComponentIndex: Int,
     ): Button {
         val context = editFragment.context
-        val currentId = editParameters.currentId
+//        val currentId = editParameters.currentId
 
 //        val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
 //            editParameters
@@ -83,8 +83,8 @@ object ButtonViewProducer {
         )
         linearParamsForButton.weight = weight
         val insertButton = Button(context)
-        insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
-        insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
+//        insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
+//        insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
         insertButton.layoutParams = linearParamsForButton
         insertButton.text = makeButtonLabel(
             getButtonLabel(buttonMap),
@@ -95,12 +95,12 @@ object ButtonViewProducer {
             insertButton,
             buttonMap,
         )
-        val currentVariableName = editParameters.currentVariableName
+//        val currentVariableName = editParameters.currentVariableName
         val buttonEventArgs = ButtonEventArgs(
             insertButton,
             editFragment,
             insertEditText,
-            currentVariableName,
+//            currentVariableName,
             editParameters,
             buttonMap,
 //            currentSetVariableValue
@@ -272,11 +272,11 @@ object ButtonViewProducer {
                 execCmdReplaceBlankList,
                 buttonMap
             )
-            ButtonCmdType.settingFrag
-            -> execSettingCmd(
-                buttonEventArgs,
-                execCmdReplaceBlankList,
-            )
+//            ButtonCmdType.settingFrag
+//            -> execSettingCmd(
+//                buttonEventArgs,
+//                execCmdReplaceBlankList,
+//            )
             ButtonCmdType.basht
             -> execShellScriptByTermux(
                 editFragment,
@@ -538,32 +538,32 @@ object ButtonViewProducer {
         }.joinToString("")
     }
 
-    private fun execSettingCmd(
-        buttonEventArgs: ButtonEventArgs,
-        execCmdReplaceBlankList: List<String>,
-    ){
-        val setFOptionMap = getSetFOptionMap(
-            execCmdReplaceBlankList
-        ) ?: return
-        val settingArg = setFOptionMap.get(SET_F_OPTION_MAP_KEY.type)
-            ?: return
-        when(settingArg){
-            SettingCmdArgs.ListAdd.name -> {
-                val listConSlSpiOptionsStr = String()
-//                getFromSetVariableValueByIndex(
-//                    buttonEventArgs.currentSetVariableValue,
-//                    0
+//    private fun execSettingCmd(
+//        buttonEventArgs: ButtonEventArgs,
+//        execCmdReplaceBlankList: List<String>,
+//    ){
+//        val setFOptionMap = getSetFOptionMap(
+//            execCmdReplaceBlankList
+//        ) ?: return
+//        val settingArg = setFOptionMap.get(SET_F_OPTION_MAP_KEY.type)
+//            ?: return
+//        when(settingArg){
+//            SettingCmdArgs.ListAdd.name -> {
+//                val listConSlSpiOptionsStr = String()
+////                getFromSetVariableValueByIndex(
+////                    buttonEventArgs.currentSetVariableValue,
+////                    0
+////                )
+//                execListAddForSetting(
+//                    buttonEventArgs.editFragment,
+////                    buttonEventArgs.currentVariableName,
+//                    listConSlSpiOptionsStr,
+//                    setFOptionMap
 //                )
-                execListAddForSetting(
-                    buttonEventArgs.editFragment,
-                    buttonEventArgs.currentVariableName,
-                    listConSlSpiOptionsStr,
-                    setFOptionMap
-                )
-            }
-            else -> {}
-        }
-    }
+//            }
+//            else -> {}
+//        }
+//    }
 
     private fun execListAddForSetting(
         editFragment: EditFragment,
@@ -997,7 +997,7 @@ object ButtonViewProducer {
         val insertButton: Button,
         val editFragment: EditFragment,
         val insertEditText: EditText,
-        val currentVariableName: String?,
+//        val currentVariableName: String?,
         val editParameters: EditParameters,
         val buttonMap: Map<String, String>?,
 //        val currentSetVariableValue: String?
@@ -1010,8 +1010,9 @@ object ButtonViewProducer {
         jsActionFrag("jsa"),
         jsActionConFrag("jsac"),
         jsCode("jsCode"),
-        settingFrag("setf"),
-        basht("basht"),
+//        settingFrag("setf"),
+        basht(
+    "basht"),
         bashf("bashf"),
         bashb("bashb"),
     }

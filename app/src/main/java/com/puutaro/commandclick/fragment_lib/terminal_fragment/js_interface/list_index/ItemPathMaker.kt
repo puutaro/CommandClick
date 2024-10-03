@@ -1,12 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import java.io.File
 
@@ -14,7 +14,6 @@ object ItemPathMaker {
 
     fun make(
         editFragment: EditFragment,
-        selectedItem: String,
         listIndexPosition: Int,
     ): String? {
 //        val type = ListIndexEditConfig.getListIndexType(
@@ -71,27 +70,39 @@ object ItemPathMaker {
     ): String? {
         val binding = editFragment.binding
         val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as ListIndexAdapter
-        val selectedTsvLine =
-            listIndexForEditAdapter.listIndexList.getOrNull(
+            binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val selectedLineMap =
+            listIndexForEditAdapter.lineMapList.getOrNull(
                 listIndexPosition
             ) ?: return null
-        val tsvPath = FilePrefixGetter.get(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+        val editComponentListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val mapListPath = FilePrefixGetter.get(
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.indexListMap,
+            ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return null
+        val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
         val isExist = ReadText(
-            tsvPath
-        ).textToList().contains(selectedTsvLine)
+            mapListPath
+        ).textToList().map {
+            CmdClickMap.createMap(
+                it,
+                mapListSeparator
+            ).toMap()
+        }.contains(selectedLineMap)
         if(!isExist){
             ToastUtils.showShort("No exist tsv path")
             return null
         }
-        val titleFileNameAndPathConPair =
-            TitleFileNameAndPathConPairForListIndexAdapter.get(selectedTsvLine)
-                ?: return null
-        val filePathOrCon = titleFileNameAndPathConPair.second
+//        val titleFileNameAndPathConPair =
+//            TitleFileNameAndPathConPairForListIndexAdapter.get(selectedLineMap)
+//                ?: return null
+        val filePathOrCon = selectedLineMap.get(
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+        )
+//            titleFileNameAndPathConPair.second
         return filePathOrCon
     }
 }

@@ -68,7 +68,6 @@ class JsCopyItem(
         ) ?: return
         ExecCopyPath.copyPath(
             editFragment,
-            selectedItem,
             listIndexPosition
         )
     }
@@ -138,7 +137,6 @@ class JsCopyItem(
         )
         ExecCopyFile.copyFile(
             editFragment,
-            selectedItem,
             listIndexPosition,
             filterMap,
         )
@@ -200,7 +198,6 @@ class JsCopyItem(
         ) ?: return
         ExecCopyFileHere.copyFileHere(
             editFragment,
-            selectedItem,
             listIndexPosition
         )
     }

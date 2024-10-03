@@ -22,7 +22,7 @@ object ListIndexSubMenuDialog {
     fun launch(
         editFragment: EditFragment,
         jsActionMap: Map<String,String>?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         parentMenuName: String,
         position: Int,
     ){
@@ -38,7 +38,7 @@ object ListIndexSubMenuDialog {
         listIndexSubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
         )
-        val title = "${selectedItem}:${parentMenuName}"
+        val title = "${selectedItemLineMap}:${parentMenuName}"
         listIndexSubMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
         )?.text = title
@@ -52,7 +52,7 @@ object ListIndexSubMenuDialog {
             editFragment,
             jsActionMap,
             parentMenuName,
-            selectedItem,
+            selectedItemLineMap,
             position,
         )
         setCancelListener()
@@ -87,7 +87,7 @@ object ListIndexSubMenuDialog {
         editFragment: EditFragment,
         jsActionMap: Map<String, String>,
         parentMenuName: String,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         position: Int,
     ) {
         val context = editFragment.context
@@ -112,7 +112,7 @@ object ListIndexSubMenuDialog {
             editFragment,
             jsActionMap,
             subMenuListView,
-            selectedItem,
+            selectedItemLineMap,
             position,
         )
     }
@@ -121,7 +121,7 @@ object ListIndexSubMenuDialog {
         editFragment: EditFragment,
         jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         subMenuListView?.setOnItemClickListener {
@@ -149,7 +149,7 @@ object ListIndexSubMenuDialog {
             JsPathHandlerForQrAndListIndex.handle(
                 editFragment,
                 updateJsActionMap,
-                selectedItem,
+                selectedItemLineMap,
                 listIndexPosition,
             )
         }

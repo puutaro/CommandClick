@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.broadcast.receiver
 import android.content.Intent
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -23,11 +23,14 @@ object BroadcastReceiveHandlerForEdit {
                 if(editListSearchEditText.isVisible) {
                     editListSearchEditText.setText(String())
                 }
+                val editComponentListAdapter = editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
                 ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                     editFragment,
                     ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                        editFragment,
-                        ListIndexAdapter.indexListMap,
+                        editFragment.fannelInfoMap,
+                        editFragment.setReplaceVariableMap,
+                        editComponentListAdapter.indexListMap,
+                        editFragment.busyboxExecutor,
 //                        ListIndexAdapter.listIndexTypeKey
                     )
                 )

@@ -14,7 +14,6 @@ class JsEditorItem(
 
     @JavascriptInterface
     fun edit_S(
-        selectedItem: String,
         listIndexPosition: Int,
     ){
 
@@ -67,14 +66,12 @@ class JsEditorItem(
         ) ?: return
         ExecSimpleEditItem.edit(
             editFragment,
-            selectedItem,
             listIndexPosition,
         )
     }
 
     @JavascriptInterface
     fun write_S(
-        selectedItem: String,
         listIndexPosition: Int,
     ){
         /*
@@ -126,7 +123,6 @@ class JsEditorItem(
         ) ?: return
         ExecWriteItem.write(
             editFragment,
-            selectedItem,
             listIndexPosition
         )
     }

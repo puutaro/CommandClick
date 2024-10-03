@@ -2,17 +2,14 @@ package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import java.io.File
 
 object ExecCopyFileHere {
     fun copyFileHere(
         editFragment: EditFragment,
-        selectedItem: String,
         listIndexPosition: Int,
     ){
 //        val type = ListIndexEditConfig.getListIndexType(
@@ -44,14 +41,20 @@ object ExecCopyFileHere {
         listIndexPosition: Int,
     ){
         val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as ListIndexAdapter
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val addLine =
-            listIndexForEditAdapter.listIndexList[listIndexPosition].let {
-                val titleConList = it.split("\t")
-                val title = titleConList.firstOrNull()?.let {
+            listIndexForEditAdapter.lineMapList[listIndexPosition].let {
+                lineMap ->
+//                val titleConList = it.split("\t")
+
+                val title = lineMap.get(
+                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                )?.let {
                     "${it}_${CommandClickScriptVariable.makeRndPrefix()}"
                 }
-                val con = titleConList.lastOrNull()
+                val con = lineMap.get(
+                    ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+                )
                 listOf(
                     title,
                     con,

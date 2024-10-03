@@ -35,34 +35,34 @@ object ExecToolBarButtonClickForEdit {
                     enableCmdEdit
                 )
             ToolbarButtonBariantForEdit.EDIT -> {
-                val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
-//                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//                val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
+////                val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+////                    fannelInfoMap
+////                )
+//
+//                val currentFannelName = FannelInfoTool.getCurrentFannelName(
 //                    fannelInfoMap
 //                )
-
-                val currentFannelName = FannelInfoTool.getCurrentFannelName(
-                    fannelInfoMap
-                )
-
-                val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
-//                    currentAppDirPath,
-                    currentFannelName,
-                )
-                val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
-//                    currentAppDirPath,
-                    currentFannelName,
-                    onShortcutOff,
-                    FannelInfoSetting.current_fannel_state.defalutStr,
-                )
-                ExecCommandEdit.execCommandEdit(
-                    activity,
-                    settingEditFragmentTag,
-                    EditFragmentArgs(
-                        fannelInfoMapForNext,
-                        EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT,
-                    ),
-                    activity.getString(R.string.edit_terminal_fragment)
-                )
+//
+//                val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
+////                    currentAppDirPath,
+//                    currentFannelName,
+//                )
+//                val fannelInfoMapForNext = EditFragmentArgs.createFannelInfoMap(
+////                    currentAppDirPath,
+//                    currentFannelName,
+//                    onShortcutOff,
+//                    FannelInfoSetting.current_fannel_state.defalutStr,
+//                )
+//                ExecCommandEdit.execCommandEdit(
+//                    activity,
+//                    settingEditFragmentTag,
+//                    EditFragmentArgs(
+//                        fannelInfoMapForNext,
+//                        EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT,
+//                    ),
+//                    activity.getString(R.string.edit_terminal_fragment)
+//                )
             }
             ToolbarButtonBariantForEdit.CANCEL -> {
                 activity.supportFragmentManager.popBackStackImmediate()

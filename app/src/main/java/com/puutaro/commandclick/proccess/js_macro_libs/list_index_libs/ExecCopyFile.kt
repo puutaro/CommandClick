@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 object ExecCopyFile {
     fun copyFile(
         editFragment: EditFragment,
-        selectedItem: String,
         listIndexPosition: Int,
         filterMap: Map<String, String>,
     ){
@@ -46,7 +45,6 @@ object ExecCopyFile {
         )
         CoroutineScope(Dispatchers.Main).launch {
             editFragment.directoryAndCopyGetter?.get(
-                selectedItem,
                 listIndexPosition,
                 initialPath,
                 pickerMacro,

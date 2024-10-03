@@ -1,30 +1,33 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
 object ExecRemoveForListIndexAdapter {
 
     fun updateTsv(
         editFragment: EditFragment,
-        removeItemLineList: List<String>,
+        removeItemLineList: List<Map<String, String>>,
     ){
-        val tsvPath = FilePrefixGetter.get(
-            editFragment,
-            ListIndexAdapter.indexListMap,
-            ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+        val editComponentListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val mapListPath = FilePrefixGetter.get(
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.indexListMap,
+            ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         )
         if(
-            tsvPath.isNullOrEmpty()
+            mapListPath.isNullOrEmpty()
         ) return
-        TsvTool.updateTsvByRemove(
-            tsvPath,
+        MapListFileTool.updateMapListFileByRemove(
+            mapListPath,
             removeItemLineList,
         )
     }
@@ -32,7 +35,7 @@ object ExecRemoveForListIndexAdapter {
     fun removeCon(
         editFragment: EditFragment,
 //        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
-        removeItemLine: String,
+        removeItemLineMap: Map<String, String>,
     ){
 //        when(listIndexType) {
 ////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
@@ -42,16 +45,19 @@ object ExecRemoveForListIndexAdapter {
 //            -> {}
 //        }
         val onDeleteConFile = DeleteSettingsForListIndex.howOnDeleteConFileValue(
-            ListIndexAdapter.deleteConfigMap
+            EditComponentListAdapter.deleteConfigMap
         )
         if(
             !onDeleteConFile
         ) return
-        val removeTitleConList = removeItemLine.split("\t")
-        if(
-            removeTitleConList.size != 2
-        ) return
-        val filePath = removeTitleConList.last()
+//        val removeTitleConList = removeItemLineMap.split("\t")
+//        if(
+//            removeTitleConList.size != 2
+//        ) return
+        val filePath = removeItemLineMap.get(
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+        ) ?: String()
+//            removeTitleConList.last()
         val filePathObj = File(filePath)
         val fileName = filePathObj.name
         val parentDirPath = filePathObj.parent

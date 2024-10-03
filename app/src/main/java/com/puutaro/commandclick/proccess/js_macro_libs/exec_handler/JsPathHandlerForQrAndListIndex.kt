@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.exec_handler
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexReplacer
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.MacroHandlerForQrAndListIndex
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -12,7 +13,7 @@ object JsPathHandlerForQrAndListIndex {
     fun handle(
         editFragment: EditFragment,
         jsActionMap: Map<String, String>?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         listIndexPosition: Int
     ){
         if(
@@ -31,14 +32,14 @@ object JsPathHandlerForQrAndListIndex {
             -> MacroHandlerForQrAndListIndex.handle(
                 editFragment,
                 jsActionMap,
-                selectedItem,
+                selectedItemLineMap,
                 listIndexPosition,
             )
             JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON
             -> execJs(
                 editFragment,
                 jsActionMap,
-                selectedItem,
+                selectedItemLineMap,
                 listIndexPosition
             )
         }
@@ -48,7 +49,7 @@ object JsPathHandlerForQrAndListIndex {
     private fun execJs(
         editFragment: EditFragment,
         jsActionMap: Map<String, String>?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         listIndexListPosition: Int,
     ){
         if(
@@ -60,7 +61,7 @@ object JsPathHandlerForQrAndListIndex {
         val jsConSrc = ListIndexReplacer.replace(
             editFragment,
             jsConSrcBeforeReplace,
-            selectedItem,
+            selectedItemLineMap,
             listIndexListPosition,
         ) ?: return
         val jsCon = jsConSrc

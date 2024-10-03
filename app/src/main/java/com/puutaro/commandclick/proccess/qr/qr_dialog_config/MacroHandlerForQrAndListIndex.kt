@@ -12,7 +12,7 @@ object MacroHandlerForQrAndListIndex {
     fun handle(
         editFragment: EditFragment,
         jsActionMap: Map<String, String>?,
-        clickFileName: String,
+        selectecdLineMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         if(
@@ -31,7 +31,7 @@ object MacroHandlerForQrAndListIndex {
             ExecMacroHandlerForQr.handle(
                 editFragment,
                 macroForQr,
-                clickFileName,
+                selectecdLineMap,
             )
             return
         }
@@ -44,7 +44,7 @@ object MacroHandlerForQrAndListIndex {
             ExecMacroHandlerForListIndex.handle(
                 editFragment,
                 jsActionMap,
-                clickFileName,
+                selectecdLineMap,
                 listIndexPosition,
             )
             return

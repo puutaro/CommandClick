@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
 
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -34,14 +35,14 @@ object OnEditExecuteEvent {
             shortcutOnMark,
             fannelState,
         )
-        val cmdValEditPrefix = FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
-        val cmdValEdit =
-            when(
-                editFragmentTag.startsWith(cmdValEditPrefix)
-            ) {
-                false -> EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
-                else -> EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-            }
+//        val cmdValEditPrefix = FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
+        val cmdValEdit = EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+//            when(
+//                editFragmentTag.startsWith(cmdValEditPrefix)
+//            ) {
+//                false -> EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
+//                else -> EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+//            }
         when(fragment){
             is CommandIndexFragment -> {
                 val listener = context

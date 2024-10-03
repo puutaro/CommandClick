@@ -11,13 +11,16 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
 import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
+import java.io.File
 
 
 object ToolbarButtonProducerForEdit {
@@ -27,6 +30,18 @@ object ToolbarButtonProducerForEdit {
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     ) {
         val context = editFragment.context
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "toolbar.txt").absolutePath,
+//            listOf(
+//                "toolbarButtonBariantForEdit: ${toolbarButtonBariantForEdit.str}",
+//                "howSetButton: ${howSetButton(
+//                    editFragment,
+//                    toolbarButtonBariantForEdit
+//                )}",
+//                "toolBarButtonVisibleMap: ${editFragment.toolBarButtonVisibleMap}",
+//                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
+//            ).joinToString("\n")
+//        )
         if(
             !howSetButton(
                 editFragment,

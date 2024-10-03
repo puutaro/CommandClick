@@ -10,19 +10,18 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 object FilePrefixGetter {
 
     fun get(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         configMap: Map<String, String>?,
         keyName: String,
     ): String? {
         val filePrefix = EditSettings.filePrefix
-        val fannelInfoMap = editFragment.fannelInfoMap
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
-        val setReplaceVariableMap = editFragment.setReplaceVariableMap
         val listDirGetValue = configMap?.get(keyName)
         if(
             listDirGetValue.isNullOrEmpty()
@@ -38,7 +37,8 @@ object FilePrefixGetter {
         return when(isFileSpecify){
             false -> replaceListDirValue
             else -> execGetByFilePrefix(
-                editFragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
                 replaceListDirValue,
                 keyName,
             )
@@ -46,11 +46,11 @@ object FilePrefixGetter {
     }
 
     private fun execGetByFilePrefix(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         replaceListDirValue: String,
         keyName: String,
     ): String? {
-        val fannelInfoMap = editFragment.fannelInfoMap
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )
@@ -61,7 +61,7 @@ object FilePrefixGetter {
         return ReadText(listDirFilePath).readText().let {
             val listSettingKeyMapCon = SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
-                editFragment.setReplaceVariableMap,
+                setReplaceVariableMap,
 //                currentAppDirPath,
                 currentFannelName,
             ).replace(

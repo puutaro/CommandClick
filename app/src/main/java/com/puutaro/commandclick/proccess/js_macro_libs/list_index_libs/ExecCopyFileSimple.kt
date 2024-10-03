@@ -11,17 +11,13 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -101,10 +97,11 @@ object ExecSimpleCopy {
         selectedItem: String,
         onWithFile: Boolean,
     ) {
-        val srcItem = getCurrentItem(
-            editFragment,
-            selectedItem,
-        ) ?: return
+        val srcItem = selectedItem
+//        getCurrentItem(
+//            editFragment,
+//            selectedItem,
+//        ) ?: return
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "copy_execCopy.txt").absolutePath,
 //            listOf(

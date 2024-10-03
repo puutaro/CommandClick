@@ -87,7 +87,7 @@ object CommandClickScriptVariable {
     val CMDCLICK_SHIBAN_DEFAULT_VALUE = "#!/bin/bash"
     val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
 //    val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
-    val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
+//    val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
@@ -231,7 +231,7 @@ object CommandClickScriptVariable {
     val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
     val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
-    val PASS_CMDVARIABLE_EDIT_ON_VALUE = "ON"
+//    val PASS_CMDVARIABLE_EDIT_ON_VALUE = "ON"
     val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
     val ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE = onTermShortWhenLoadSelectsOff
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100

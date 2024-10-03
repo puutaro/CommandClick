@@ -3,20 +3,38 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 
 object EditComponent {
         object Template {
 
-                enum class LayoutKey(val key: String){
-                        FOOTER("footer"),
-                        FRAME("frame"),
+                const val sectionSeparator = ','
+                const val typeSeparator = '|'
+                const val keySeparator = '?'
+                const val valueSeparator = '&'
+
+                enum class SrcReplaceHolders(val key: String){
+                        SRC_LABEL("\${SRC_LABEL}"),
+                        SRC_CON("\${SRC_CON}"),
                 }
+
+                enum class LayoutKey(val key: String){
+                        FRAME("frame"),
+                        FOOTER("footer"),
+                        LINEAR("linear"),
+                }
+
+//                val blockLayoutKeyList = listOf(
+//                        LayoutKey.FRAME.key,
+//                        LayoutKey.FOOTER.key,
+//                )
 
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
                         LABEL("label"),
+                        SRC_CON("srcCon"),
+                        SRC_LABEL("srcLabel"),
                         IMAGE_PATH("imagePath"),
                         SET_IMAGE_TO_TAGS("setImageToTags"),
                         SET_TEXT_TO_TAGS("setTextToTags"),
@@ -25,8 +43,7 @@ object EditComponent {
                         SET_IMAGE_TO_BTN_TAGS("setImageToBtnTags"),
                         SET_TEXT_TO_BTN_TAGS("setTextToBtnTags"),
                         SET_SUGGEST_TO_BTN_TAGS("setSuggestToBtnTags"),
-                        DSABLE_SELECT("dsableSelect"),
-                        CLICK("click"),
+                        DISABLE_TEXT_SELECT("disableTextSelect"),
                         TEXT_PREFIXS("textPrefixs"),
                         TEXT_SUFFIXS("textSuffixs"),
                         IS_CONSEC("isConsec"),
@@ -35,6 +52,65 @@ object EditComponent {
                         TEXT_COLOR("textColor"),
                         HEIGHT("height"),
                         ALPHA("alpha"),
+                }
+
+                object LabelManager {
+                        enum class LabelKey(val key: String) {
+//                                PREFIX("prefix"),
+//                                SUFFIX("suffix"),
+//                                FILTER_SHELL_PATH("filterShellPath"),
+                                SRC("src"),
+                        }
+
+
+                        fun createLabelMap(
+                                labelMapCon: String?
+                        ): Map<String,String> {
+                                return CmdClickMap.createMap(
+                                        labelMapCon,
+                                        keySeparator
+                                ).toMap()
+                        }
+
+                        fun makeLabel(
+                                labelMap: Map<String, String>?,
+                                srcTitle: String,
+                                srcCon: String,
+//                                busyboxExecutor: BusyboxExecutor?,
+                        ): String {
+                                if(
+                                        labelMap.isNullOrEmpty()
+                                ) return String()
+                                return labelMap.get(
+                                        LabelKey.SRC.key
+                                )?.replace(
+                                        SrcReplaceHolders.SRC_LABEL.key,
+                                        srcTitle
+                                )?.replace(
+                                        SrcReplaceHolders.SRC_CON.key,
+                                        srcCon
+                                ) ?: String()
+//                                val filterPrefixListCon = labelMap.get(
+//                                        LabelKey.PREFIX.key
+//                                )?.split(valueSeparator)
+//
+//                                val filterSuffixListCon = labelMap.get(
+//                                        LabelKey.SUFFIX.key
+//                                )?.split(valueSeparator)
+//
+//                                val filterShellCon = labelMap.get(
+//                                        LabelKey.FILTER_SHELL_PATH.key
+//                                )?.split(valueSeparator)
+//
+//                                val fileListSource = makeFileListElement(
+//                                        currentFileList,
+//                                        busyboxExecutor,
+//                                        filterDir,
+//                                        filterPrefixListCon,
+//                                        filterSuffixListCon,
+//                                        filterShellCon,
+//                                )
+                        }
                 }
         }
 

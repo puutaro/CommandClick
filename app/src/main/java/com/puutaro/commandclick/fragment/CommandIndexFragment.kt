@@ -1,8 +1,5 @@
 package com.puutaro.commandclick.fragment
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
@@ -15,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
@@ -23,7 +19,6 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
-import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
@@ -52,19 +47,6 @@ class CommandIndexFragment: Fragment() {
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
-    var savedEditTextContents = String()
-//    var extraMapBitmapList: List<Bitmap?> = emptyList()
-//    var homeFannelHistoryNameList: List<String>? = null
-//    var bottomScriptUrlList = emptyList<String>()
-
-    private var broadcastReceiverForCmdIndex: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-//            BroadcastReceiveHandlerForCmdIndex.handle(
-//                this@CommandIndexFragment,
-//                intent,
-//            )
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,8 +68,6 @@ class CommandIndexFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.onDialog = false
-        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-        cmdIndexViewModel.onFocusSearchText = false
         val startUpPref = FannelInfoTool.getSharePref(context)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         val defaultSystemPath =
@@ -146,14 +126,9 @@ class CommandIndexFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
-//        exitDialog(
-////            binding.cmdList
-//        )
         ExtraMenuGifCreator.exit()
         UrlImageDownloader.exit()
         PreInstallFannel.exit()
-        cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
         IndexInitHandler.exit()
         _binding = null
@@ -166,10 +141,6 @@ class CommandIndexFragment: Fragment() {
         showTerminalJobWhenReuse?.cancel()
 //        ExtraMenuGifCreator.exit()
 //        PreInstallFannel.exit()
-        BroadcastRegister.unregisterBroadcastReceiver(
-            this,
-            broadcastReceiverForCmdIndex,
-        )
         super.onPause()
     }
 
@@ -178,13 +149,6 @@ class CommandIndexFragment: Fragment() {
         TerminalShower.show(this)
 //        EditTextWhenReuse.focus(this)
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
-        BroadcastRegister.registerBroadcastReceiverMultiActions(
-            this,
-            broadcastReceiverForCmdIndex,
-            listOf(
-                BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action,
-            )
-        )
 //        PreInstallFannel.install(this)
 //        ExtraMenuGifCreator.create(this)
     }

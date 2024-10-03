@@ -27,24 +27,26 @@ object OkButtonHandler {
         val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
-        val enableCmdEdit = editFragment.enableCmdEdit
-        val onPassCmdVariableEdit =
-            editFragment.passCmdVariableEdit ==
-                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-        val buttonTag = SaveTagForListContents.OK.tag
+//        val enableCmdEdit = editFragment.enableCmdEdit
+//        val onPassCmdVariableEdit =
+//            editFragment.passCmdVariableEdit ==
+//                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
+//        val buttonTag = SaveTagForListContents.OK.tag
 //        ScriptFileSaver.save(editFragment)
-        val isCmdEditExecute = enableCmdEdit
-                && editFragment.enableEditExecute
-                && !onPassCmdVariableEdit
-        val isSettingEditByPass = enableCmdEdit
-                && editFragment.enableEditExecute
-                && onPassCmdVariableEdit
-        val isSettingEdit = !enableCmdEdit
+        val isCmdEditExecute = editFragment.enableEditExecute
+//        enableCmdEdit
+//                && editFragment.enableEditExecute
+//                && !onPassCmdVariableEdit
+//        val isSettingEditByPass = editFragment.enableEditExecute
+//        enableCmdEdit
+//                && editFragment.enableEditExecute
+//                && onPassCmdVariableEdit
+//        val isSettingEdit = !enableCmdEdit
 
-        val isOnlyCmdEditNoFdialog = enableCmdEdit
-                && !editFragment.enableEditExecute
-        when (true) {
-            isCmdEditExecute -> {
+//        val isOnlyCmdEditNoFdialog = enableCmdEdit
+//                && !editFragment.enableEditExecute
+        when (isCmdEditExecute) {
+            true -> {
                 Keyboard.hiddenKeyboardForFragment(
                     editFragment
                 )
@@ -61,10 +63,10 @@ object OkButtonHandler {
                     currentScriptFileName,
                 )
             }
-            isSettingEditByPass,
-            isOnlyCmdEditNoFdialog,
-            isSettingEdit,
-            -> {
+//            isSettingEditByPass,
+//            isOnlyCmdEditNoFdialog,
+//            isSettingEdit,
+            else -> {
                 val listener =
                     context as? EditFragment.OnToolBarButtonClickListenerForEditFragment
                 listener?.onToolBarButtonClickForEditFragment(
@@ -74,7 +76,6 @@ object OkButtonHandler {
                     false
                 )
             }
-            else -> {}
         }
     }
 

@@ -7,7 +7,7 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexAdapter
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ClickScriptSaver
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
@@ -33,8 +33,8 @@ object ListIndexEditConfig {
     fun handle(
         editFragment: EditFragment,
         isLongClick: Boolean,
-        selectedItem: String,
-        holder: ListIndexAdapter.ListIndexListViewHolder,
+        selectedItemLineMap: Map<String, String>,
+        holder: EditComponentListAdapter.ListIndexListViewHolder,
         listIndexPosition: Int
     ){
         val clickConfigListCon = makeClickConfigListStr(
@@ -97,7 +97,7 @@ object ListIndexEditConfig {
         JsPathHandlerForQrAndListIndex.handle(
             editFragment,
             jsActionMap,
-            selectedItem,
+            selectedItemLineMap,
             listIndexPosition,
         )
     }

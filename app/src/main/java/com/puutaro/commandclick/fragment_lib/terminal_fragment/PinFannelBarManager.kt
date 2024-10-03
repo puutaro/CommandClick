@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -142,9 +143,11 @@ object PinFannelBarManager {
                     FactFannel.creatingToast()
                     return
                 }
-                FileSystems.updateLastModified(
-                    File(cmdclickDefaultAppDirPath, fannelName).absolutePath
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    FileSystems.updateLastModified(
+                        File(cmdclickDefaultAppDirPath, fannelName).absolutePath
+                    )
+                }
                 EditExecuteOrElse.handle(
                     terminalFragment,
                     fannelName,

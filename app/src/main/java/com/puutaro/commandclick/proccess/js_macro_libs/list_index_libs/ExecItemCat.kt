@@ -13,14 +13,12 @@ object ExecItemCat {
 
     fun cat(
         editFragment: EditFragment,
-        selectedItem: String,
         listIndexPosition: Int,
     ){
         val context = editFragment.context
             ?: return
         val catPath = ItemPathMaker.make(
             editFragment,
-            selectedItem,
             listIndexPosition,
         ) ?: return
         val scriptContents = ReadText(

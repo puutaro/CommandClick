@@ -110,76 +110,83 @@ object EditTextProducerForEdit {
         val binding = editFragment.binding
 //        val existIndexList = editFragment.existIndexList
         val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
-        (1..recordNumToNameToValueInHolderSize).forEach {
-                seedNum ->
-            val currentOrder = seedNum - 1
-            val currentRecordNumToMapNameValueInHolder =
-                recordNumToMapNameValueInHolder.entries.elementAt(
-                    currentOrder
-                )
-            val currentRecordNumToNameToValueInHolder =
-                currentRecordNumToMapNameValueInHolder.value
-//            val insertTextView = TextView(context)
-            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            )
-            if (
-                currentVariableName.isNullOrEmpty()
-            ) return
-//            insertTextView.text = currentVariableName
-//            binding.editLinearLayout.addView(insertTextView)
-            val currentVariableValue = currentRecordNumToNameToValueInHolder.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-            )
-            val currentId = editTextStartId + currentOrder
-            val currentRecordNum =
-                currentRecordNumToMapNameValueInHolder.key
-            editParameters.currentId = currentId
-            editParameters.currentVariableName = currentVariableName
-            editParameters.currentVariableValue = currentVariableValue
-//            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
-//                currentRecordNum
-//            )
-//            val editTextSupportViewNameList = EditTextSupportViewName.values().map {
-//                it.str
-//            }
-//            val variableTypeList = editParameters.setVariableMap?.get(
-//                SetVariableTypeColumn.VARIABLE_TYPE.name
-//            )?.split(":")?.filter {
-//                val isContain = editTextSupportViewNameList.contains(it)
-//                if (
-//                    isContain
-//                ) return@filter isContain
-//                LogSystems.stdWarn("Irregular option: ${it}")
-//                false
-//            } ?: emptyList()
-//            editParameters.variableTypeList = variableTypeList
-            setListIndexLayoutComponent(
-                editFragment,
-                editParameters,
+        setListIndexLayoutComponent(
+            editFragment,
+            editParameters,
 //                recordNumToSetVariableMaps,
 //                currentRecordNum,
 //                insertTextView,
-            )
-//            if(existIndexList){
-//                setListIndexLayoutComponent(
-//                    editFragment,
-//                    editParameters,
-//                    recordNumToSetVariableMaps,
-//                    currentRecordNum,
-//                    insertTextView,
+        )
+//        (1..recordNumToNameToValueInHolderSize).forEach {
+//                seedNum ->
+//            val currentOrder = seedNum - 1
+//            val currentRecordNumToMapNameValueInHolder =
+//                recordNumToMapNameValueInHolder.entries.elementAt(
+//                    currentOrder
 //                )
-//                return@forEach
-//            }
-//            if(editFragment.existIndexList) return@forEach
-//            WithEditComponent.insert(
+//            val currentRecordNumToNameToValueInHolder =
+//                currentRecordNumToMapNameValueInHolder.value
+////            val insertTextView = TextView(context)
+//            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
+//            )
+//            if (
+//                currentVariableName.isNullOrEmpty()
+//            ) return
+////            insertTextView.text = currentVariableName
+////            binding.editLinearLayout.addView(insertTextView)
+//            val currentVariableValue = currentRecordNumToNameToValueInHolder.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
+//            )
+//            val currentId = editTextStartId + currentOrder
+//            val currentRecordNum =
+//                currentRecordNumToMapNameValueInHolder.key
+////            editParameters.currentId = currentId
+////            editParameters.currentVariableName = currentVariableName
+////            editParameters.currentVariableValue = currentVariableValue
+////            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
+////                currentRecordNum
+////            )
+////            val editTextSupportViewNameList = EditTextSupportViewName.values().map {
+////                it.str
+////            }
+////            val variableTypeList = editParameters.setVariableMap?.get(
+////                SetVariableTypeColumn.VARIABLE_TYPE.name
+////            )?.split(":")?.filter {
+////                val isContain = editTextSupportViewNameList.contains(it)
+////                if (
+////                    isContain
+////                ) return@filter isContain
+////                LogSystems.stdWarn("Irregular option: ${it}")
+////                false
+////            } ?: emptyList()
+////            editParameters.variableTypeList = variableTypeList
+//            setListIndexLayoutComponent(
 //                editFragment,
-//                insertTextView,
 //                editParameters,
-//            ).let {
-//                binding.editLinearLayout.addView(it)
-//            }
-        }
+////                recordNumToSetVariableMaps,
+////                currentRecordNum,
+////                insertTextView,
+//            )
+////            if(existIndexList){
+////                setListIndexLayoutComponent(
+////                    editFragment,
+////                    editParameters,
+////                    recordNumToSetVariableMaps,
+////                    currentRecordNum,
+////                    insertTextView,
+////                )
+////                return@forEach
+////            }
+////            if(editFragment.existIndexList) return@forEach
+////            WithEditComponent.insert(
+////                editFragment,
+////                insertTextView,
+////                editParameters,
+////            ).let {
+////                binding.editLinearLayout.addView(it)
+////            }
+//        }
     }
 
     private fun setListIndexLayoutComponent(

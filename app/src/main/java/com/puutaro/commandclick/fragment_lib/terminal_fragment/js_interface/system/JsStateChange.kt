@@ -93,7 +93,7 @@ class JsStateChange(
                 listDirValueKey,
             ) ?: return
             val listDirKey =
-                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key
+                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key
             TsvTool.updateTsvByKey(
                 listDirTsvPath,
                 listOf("${listDirKey}\t${listDirValue}")
@@ -164,7 +164,7 @@ class JsStateChange(
                     listDirTsvPathKey
                 ) ?: return null
             val listDirKey =
-                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key
+                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key
             val saveListDirPath = TsvTool.getKeyValue(
                 listDirTsvPath,
                 listDirKey,

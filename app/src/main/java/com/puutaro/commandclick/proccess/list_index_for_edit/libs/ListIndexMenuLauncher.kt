@@ -14,6 +14,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 
 
 object ListIndexMenuLauncher {
@@ -23,13 +24,13 @@ object ListIndexMenuLauncher {
     fun launch(
         editFragment: EditFragment,
         jsActionMap: Map<String, String>?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         position: Int,
     ){
         createMenuDialogForListIndex(
             editFragment,
             jsActionMap,
-            selectedItem,
+            selectedItemLineMap,
             position,
         )
     }
@@ -37,7 +38,7 @@ object ListIndexMenuLauncher {
     private fun createMenuDialogForListIndex(
         editFragment: EditFragment,
         jsActionMap: Map<String, String>?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         position: Int,
     ) {
         if(
@@ -54,12 +55,14 @@ object ListIndexMenuLauncher {
         setListView(
             editFragment,
             jsActionMap,
-            selectedItem,
+            selectedItemLineMap,
             position,
         )
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
-        )?.text = selectedItem
+        )?.text = selectedItemLineMap.get(
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+        )
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_message
         )?.isVisible = false
@@ -80,7 +83,7 @@ object ListIndexMenuLauncher {
     private fun setListView(
         editFragment: EditFragment,
         jsActionMap: Map<String, String>,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         position: Int,
     ) {
         val context = editFragment.context
@@ -104,7 +107,7 @@ object ListIndexMenuLauncher {
             editFragment,
             jsActionMap,
             subMenuListView,
-            selectedItem,
+            selectedItemLineMap,
             position,
         )
     }
@@ -129,7 +132,7 @@ object ListIndexMenuLauncher {
         editFragment: EditFragment,
         jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         subMenuListView?.setOnItemClickListener {
@@ -143,7 +146,7 @@ object ListIndexMenuLauncher {
                 editFragment,
                 clickedMenuName,
                 jsActionMap,
-                selectedItem,
+                selectedItemLineMap,
                 listIndexPosition,
             )
         }
@@ -154,7 +157,7 @@ object ListIndexMenuLauncher {
         editFragment: EditFragment,
         clickedMenuName: String,
         jsActionMap: Map<String, String>,
-        selectedItem: String,
+        selectedItemLineMap: Map<String, String>,
         listIndexPosition: Int,
     ) {
         val settingButtonMenuPairList =
@@ -171,7 +174,7 @@ object ListIndexMenuLauncher {
                 ListIndexSubMenuDialog.launch(
                     editFragment,
                     jsActionMap,
-                    selectedItem,
+                    selectedItemLineMap,
                     clickedMenuName,
                     listIndexPosition,
                 )
@@ -192,7 +195,7 @@ object ListIndexMenuLauncher {
                 JsPathHandlerForQrAndListIndex.handle(
                     editFragment,
                     updateJsActionMap,
-                    selectedItem,
+                    selectedItemLineMap,
                     listIndexPosition,
                 )
             }

@@ -2,33 +2,190 @@ package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
-import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.proccess.edit.lib.LayoutSettingFile
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.tsv.TsvTool
+import com.puutaro.commandclick.util.str.QuoteTool
 import java.io.File
 
 object ListSettingsForListIndex  {
+
+    private val sectionSeparator = EditComponent.Template.sectionSeparator
+    private val typeSeparator = EditComponent.Template.typeSeparator
+    private val keySeparator = EditComponent.Template.keySeparator
+    private val valueSeparator = EditComponent.Template.valueSeparator
+
     enum class ListSettingKey(
         val key: String
     ) {
-        LIST_DIR("listDir"),
+        MAP_LIST_PATH("mapListPath"),
+        VIEW_LAYOUT_PATH("viewLayoutPath"),
         PREFIX("prefix"),
         SUFFIX("suffix"),
         FILTER_SHELL_PATH("filterShellPath"),
         EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
-        COMP_PATH("compPath"),
+        COMP_TSV_PATH("compTsvPath"),
         ON_REVERSE_LAYOUT("onReverseLayout"),
+        DEFAULT_VIEW_LAYOUT("defaultViewLayout"),
         ON_ONLY_EXIST_PATH("onOnlyExistPath"),
+    }
+
+
+    object ViewLayoutPathManager{
+        fun parse(
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            indexListMap: Map<String, String>
+        ): Pair<
+                Map<String,List<Pair<String, String>> >,
+                Map<String, List<List<Pair<String, String>>> >
+                >?
+        {
+            var curFrameTag = String()
+            val framePairList: MutableList< Pair<String, List<Pair<String, String>> > > = mutableListOf()
+            val linearPairList: MutableList< Pair<String, List<List<Pair<String, String>>> > > = mutableListOf()
+            val viewLayoutPath = FilePrefixGetter.get(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                indexListMap,
+                ListSettingKey.VIEW_LAYOUT_PATH.key,
+            ) ?: String()
+            val viewLayoutPathObj = File(viewLayoutPath)
+            if(
+                !viewLayoutPathObj.isFile
+            ) return null
+            val fannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
+            )
+            val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
+            val viewLayoutListSrc = LayoutSettingFile.read(
+                viewLayoutPathObj.absolutePath,
+                fannelPath,
+                setReplaceVariableMap,
+            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
+//                listOf(
+//                    "indexListMap: ${indexListMap}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "File(viewLayoutPath).isFile: ${File(viewLayoutPath).isFile}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "viewLayoutListSrc: ${viewLayoutListSrc}",
+//                ).joinToString("\n\n")
+//            )
+            val typeSeparator = EditComponent.Template.typeSeparator
+            val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
+            val liearTypeName = EditComponent.Template.LayoutKey.LINEAR.key
+            val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+            viewLayoutListSrc.forEachIndexed {
+                    index,
+                    smallLayoutMapCon ->
+                val smallLayoutMapConList = smallLayoutMapCon.split("=")
+                val layoutKey =
+                    smallLayoutMapConList.firstOrNull()
+                        ?: return@forEachIndexed
+                val layoutTypePairList =
+                    smallLayoutMapConList
+                        .filterIndexed { innerIndex, _ ->  innerIndex > 0 }
+                        .joinToString("=")
+                        .let {
+                            val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
+                            val sectionConList = QuoteTool.splitBySurroundedIgnore(
+                                trimSectionCon,
+                                sectionSeparator
+                            )
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop.txt").absolutePath,
+//                                listOf(
+//                                    "layoutKey: ${layoutKey}",
+//                                    "trimSectionCon: ${trimSectionCon}",
+//                                    "sectionConList: ${sectionConList}",
+//                                    "sectionConList0: ${sectionConList.firstOrNull()}",
+//                                ).joinToString("\n") + "\n----\n"
+//                            )
+                            sectionConList.map {
+                                sectionCon ->
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop2.txt").absolutePath,
+//                                    listOf(
+//                                        "layoutKey: ${layoutKey}",
+//                                        "trimSectionCon: ${trimSectionCon}",
+//                                        "sectionConList: ${sectionConList}",
+//                                        "sectionConList0: ${sectionConList.firstOrNull()}",
+//                                    ).joinToString("\n") + "\n----\n"
+//                                )
+                                CmdClickMap.createMap(
+                                    sectionCon,
+                                    typeSeparator
+                                ).filter {
+                                    it.first.isNotEmpty()
+                                }
+                            }
+                        }
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse.txt").absolutePath,
+                    listOf(
+                        "layoutKey: ${layoutKey}",
+                        "layoutTypePairList: ${layoutTypePairList}",
+                    ).joinToString("\n") + "\n----\n"
+                )
+                when(true) {
+                    (layoutKey == frameTypeName) -> {
+                        val frameLayoutKeyPairList =
+                            layoutTypePairList.firstOrNull()
+                                ?: emptyList()
+                        val tag =
+                            frameLayoutKeyPairList.firstOrNull {
+                                val key = it.first
+                                key == tagKey
+                            }?.second.let {
+                                QuoteTool.trimBothEdgeQuote(it)
+                            }
+                        curFrameTag = tag
+                        val frameTagToCon = Pair(
+                            curFrameTag,
+                            frameLayoutKeyPairList
+                        )
+                        framePairList.add(frameTagToCon)
+                    }
+                    (layoutKey == liearTypeName) -> {
+//                        val linearLayoutKeyPairList =
+//                            layoutTypePairList.firstOrNull()
+                        val frameTagToLinearKeyPairList = Pair(
+                            curFrameTag,
+                            layoutTypePairList
+                        )
+                        linearPairList.add(frameTagToLinearKeyPairList)
+                    }
+                    else -> {}
+                }
+            }
+            return Pair(
+                framePairList.toMap(),
+                linearPairList.toMap()
+            )
+        }
+    }
+
+    object MapListPathManager {
+
+        val mapListSeparator = ','
+
+        enum class Key(val key: String) {
+            SRC_TITLE("srcTitle"),
+            SRC_CON("srcCon"),
+            VIEW_LAYOUT_TAG("viewLayoutTag"),
+        }
     }
 
     enum class stackFromBottomValue {
@@ -53,60 +210,71 @@ object ListSettingsForListIndex  {
         val key: String
     ) {
         LAST_UPDATE("lastUpdate"),
-        SORT("sort"),
+        SORT_TYPE("sortType"),
         REVERSE("reverse"),
     }
 
     fun howExistPathForTsv(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>,
-        tsvConList: List<String>
-    ): List<String> {
+        mapList: List<Map<String, String>>
+    ): List<Map<String, String>> {
         val isOnlyExistPath = FilePrefixGetter.get(
-            editFragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
             indexListMap,
             ListSettingKey.ON_ONLY_EXIST_PATH.key
         ) == OnOnlyExistPath.ON.name
         if(
             !isOnlyExistPath
-        ) return tsvConList
-        return tsvConList.filter {
-            val titleAndPathList = it.split("\t")
-            val path = titleAndPathList.lastOrNull()
-                ?: return@filter false
-            val pathObj = File(path)
+        ) return mapList
+        return mapList.filter {
+            map ->
+            val pathEntry = map.get(
+                MapListPathManager.Key.SRC_CON.key
+            ) ?: return@filter false
+            val pathObj = File(pathEntry)
             pathObj.isFile
                     || pathObj.isDirectory
         }
     }
     fun howDisableEditByDrag(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+//        editFragment: EditFragment,
         editByDragMap: Map<String, String>
     ): Boolean {
         return FilePrefixGetter.get(
-            editFragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+//            editFragment,
             editByDragMap,
             EditByDragKey.EDIT_BY_DRAG_DISABLE.key
         ) == DisableValue.ON.name
     }
 
     fun howReverseLayout(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>?,
     ): Boolean {
         return FilePrefixGetter.get(
-            editFragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
             indexListMap,
             ListSettingKey.ON_REVERSE_LAYOUT.key
         ) == stackFromBottomValue.ON.name
     }
 
     fun getSortType(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>?,
     ): SortByKey {
         val sortByKeyStr = FilePrefixGetter.get(
-            editFragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
             indexListMap,
             ListSettingKey.SORT_TYPE.key
         )
@@ -148,11 +316,12 @@ object ListSettingsForListIndex  {
         private const val itemNameMark = "\${ITEM_NAME}"
 
         fun makeFileListHandler(
-            editFragment: EditFragment,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>,
+            busyboxExecutor: BusyboxExecutor?
 //            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
-        ): MutableList<String> {
-            val busyboxExecutor = editFragment.busyboxExecutor
+        ): MutableList<Map<String, String>> {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "list.txt").absolutePath,
 //                listOf(
@@ -163,7 +332,8 @@ object ListSettingsForListIndex  {
 //                ).joinToString("\n\n")
 //            )
             return makeTsvConList(
-                editFragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
                 indexListMap,
                 busyboxExecutor,
             )
@@ -204,205 +374,461 @@ object ListSettingsForListIndex  {
 //            }
 //        }
 
-        private fun makeFileList(
-            editFragment: EditFragment,
-            indexListMap: Map<String, String>,
-//            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
-        ): MutableList<String> {
-            val busyboxExecutor = editFragment.busyboxExecutor
-            val filterDir = String()
-//            getFilterDir(
+//        private fun makeFileList(
+//            editFragment: EditFragment,
+//            indexListMap: Map<String, String>,
+////            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
+//        ): MutableList<String> {
+//            val busyboxExecutor = editFragment.busyboxExecutor
+//            val filterDir = String()
+////            getFilterDir(
+////                editFragment,
+////                indexListMap,
+////                listIndexTypeKey
+////            )
+//            FileSystems.createDirs(filterDir)
+//            val filterPrefixListCon = FilePrefixGetter.get(
 //                editFragment,
 //                indexListMap,
-//                listIndexTypeKey
+//                ListSettingKey.PREFIX.key
+//            ) ?: String()
+//            val filterSuffixListCon = FilePrefixGetter.get(
+//                editFragment,
+//                indexListMap,
+//                ListSettingKey.SUFFIX.key
+//            ) ?: String()
+//            val currentFileList = FileSystems.sortedFiles(
+//                filterDir,
+//                "on"
+//            ).let {
+//                CompPathManager.concatByCompConWhenNormal(
+//                    editFragment,
+//                    indexListMap,
+//                    filterDir,
+//                    it
+//                )
+//            }
+//            val filterShellCon = getFilterShellCon(
+//                editFragment,
+//                indexListMap,
 //            )
-            FileSystems.createDirs(filterDir)
-            val filterPrefixListCon = FilePrefixGetter.get(
-                editFragment,
-                indexListMap,
-                ListSettingKey.PREFIX.key
-            ) ?: String()
-            val filterSuffixListCon = FilePrefixGetter.get(
-                editFragment,
-                indexListMap,
-                ListSettingKey.SUFFIX.key
-            ) ?: String()
-            val currentFileList = FileSystems.sortedFiles(
-                filterDir,
-                "on"
-            ).let {
-                CompPathManager.concatByCompConWhenNormal(
-                    editFragment,
-                    indexListMap,
-                    filterDir,
-                    it
-                )
-            }
-            val filterShellCon = getFilterShellCon(
-                editFragment,
-                indexListMap,
-            )
-            val fileListSource = makeFileListElement(
-                currentFileList,
-                busyboxExecutor,
-                filterDir,
-                filterPrefixListCon,
-                filterSuffixListCon,
-                filterShellCon,
-            )
-            if(
-                fileListSource.isEmpty()
-            ) return mutableListOf(throughMark)
-            val sortType = getSortType(
-                editFragment,
-                indexListMap
-            )
-            return sortList(
-                sortType,
-                fileListSource,
-            )
-        }
+//            val fileListSource = makeFileListElement(
+//                currentFileList,
+//                busyboxExecutor,
+//                filterDir,
+//                filterPrefixListCon,
+//                filterSuffixListCon,
+//                filterShellCon,
+//            )
+//            if(
+//                fileListSource.isEmpty()
+//            ) return mutableListOf(throughMark)
+//            val sortType = getSortType(
+//                editFragment,
+//                indexListMap
+//            )
+//            return sortList(
+//                sortType,
+//                fileListSource,
+//            )
+//        }
 
-        fun makeFileListElement(
-            fileList: List<String>,
-            busyboxExecutor: BusyboxExecutor?,
-            filterDir: String,
-            filterPrefixListCon: String,
-            filterSuffixListCon: String,
-            filterShellCon: String,
-        ): List<String> {
-            return fileList.filter {
-                FilterPathTool.isFilterByFile(
-                    it,
-                    filterDir,
-                    filterPrefixListCon,
-                    filterSuffixListCon,
-                    false,
-                    "&"
-                )
-            }.map {
-                makeFilterShellCon(
-                    it,
-                    busyboxExecutor,
-                    filterShellCon,
-                )
-            }.filter {
-                it.isNotEmpty()
-            }
-        }
+//        fun makeFileListElement(
+//            fileList: List<String>,
+//            busyboxExecutor: BusyboxExecutor?,
+//            filterDir: String,
+//            filterPrefixListCon: String,
+//            filterSuffixListCon: String,
+//            filterShellCon: String,
+//        ): List<String> {
+//            return fileList.filter {
+//                FilterPathTool.isFilterByFile(
+//                    it,
+//                    filterDir,
+//                    filterPrefixListCon,
+//                    filterSuffixListCon,
+//                    false,
+//                    "&"
+//                )
+//            }.map {
+//                makeFilterShellCon(
+//                    it,
+//                    busyboxExecutor,
+//                    filterShellCon,
+//                )
+//            }.filter {
+//                it.isNotEmpty()
+//            }
+//        }
 
         private fun makeTsvConList(
-            editFragment: EditFragment,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>,
             busyboxExecutor: BusyboxExecutor?,
-        ): MutableList<String> {
+        ): MutableList<Map<String, String>> {
             val filterShellCon = getFilterShellCon(
-                editFragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
                 indexListMap,
             )
-            val tsvFilePath = FilePrefixGetter.get(
-                editFragment,
+            val mapListPath = FilePrefixGetter.get(
+                fannelInfoMap,
+                setReplaceVariableMap,
                 indexListMap,
-                ListSettingKey.LIST_DIR.key,
+                ListSettingKey.MAP_LIST_PATH.key,
             ) ?: String()
-            val tsvFilePathObj = File(tsvFilePath)
-            val tsvConListSrc = ReadText(
-                tsvFilePath
-            ).textToList().let {
-                TsvTool.filterByColumnNum(
+            val fannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
+            )
+            val tsvFilePathObj = File(mapListPath)
+            val lineMapListSrc = ReadText(
+                mapListPath
+            ).readText().let {
+                SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
-                    2
+                    setReplaceVariableMap,
+                    fannelName
                 )
-            }.map {
-                val titleAndConList = it.split("\t")
-                val con = titleAndConList.last()
-                val title = titleAndConList.first().let {
-                    makeFilterShellCon(
-                        it,
-                        busyboxExecutor,
-                        filterShellCon,
-                    )
-                }
-                "${title}\t${con}"
-            }.let {
-                howExistPathForTsv(
-                    editFragment,
-                    indexListMap,
+            }.split("\n").map {
+                CmdClickMap.createMap(
                     it,
+                    MapListPathManager.mapListSeparator
+                ).toMap()
+            }.let {
+                mapList ->
+                FileSystems.writeFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "lmapList.txt").absolutePath,
+                    listOf(
+                        "indexListMap: ${indexListMap}",
+                        "mapListPath: ${mapListPath}",
+                        "mapList: ${mapList}",
+                    ).joinToString("\n\n")
+                )
+                howExistPathForTsv(
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    indexListMap,
+                    mapList,
                 )
             }
-            val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
-                editFragment,
+            val lineMapList = CompPathManager.concatByCompConWhenTsvEdit(
+                fannelInfoMap,
+                setReplaceVariableMap,
                 indexListMap,
-                tsvConListSrc
+                lineMapListSrc
             )
             val sortType = getSortType(
-                editFragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
                 indexListMap
             )
-            val sortedTsvConList = sortList(
+            val sortedLineMapList = sortList(
                 sortType,
-                tsvConList,
+                lineMapList,
             )
-            updateTsv(
+            updateMapListFile(
                 sortType,
                 tsvFilePathObj,
-                sortedTsvConList,
+                sortedLineMapList,
             )
-            return sortedTsvConList
+            return sortedLineMapList.toMutableList()
         }
+
+
+//        private fun makeTsvConList2(
+//            fannelInfoMap: Map<String, String>,
+//            setReplaceVariableMap: Map<String, String>?,
+//            indexListMap: Map<String, String>,
+//            busyboxExecutor: BusyboxExecutor?,
+//        ):  List<List<Pair<String, List<List<Pair<String, String>>>>>>
+////                List<
+////                List<
+////                        Pair<
+////                                String,
+////                                List<List<List<Pair<String, String>>>>
+////                                >
+////                        >
+////                >
+//        {
+////            val filterShellCon = getFilterShellCon(
+////                fannelInfoMap,
+////                setReplaceVariableMap,
+////                indexListMap,
+////            )
+//            val tsvFilePath = FilePrefixGetter.get(
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                indexListMap,
+//                ListSettingKey.TSV_PATH.key,
+//            ) ?: String()
+//            val fannelName = FannelInfoTool.getCurrentFannelName(
+//                fannelInfoMap
+//            )
+//            val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
+//            val tsvFilePathObj = File(tsvFilePath)
+//            val blockLayoutKeyList = EditComponent.Template.blockLayoutKeyList
+//            val tsvConListSrc = LayoutSettingFile.read(
+//                tsvFilePathObj.absolutePath,
+//                fannelPath,
+//                setReplaceVariableMap,
+//            )
+//            val layoutList = mutableListOf<List< Pair<String, List< List<Pair<String, String>> >> >>()
+//            val smallLayoutList = mutableListOf< Pair<String, List< List<Pair<String, String>> >> >()
+//            val tsvConListSrcLastIndex = tsvConListSrc.lastIndex
+//            tsvConListSrc.forEachIndexed {
+//                    index,
+//                    smallLayoutMapCon ->
+//                val smallLayoutMapConList = smallLayoutMapCon.split("=")
+//                val layoutKey =
+//                    smallLayoutMapConList.firstOrNull()
+//                        ?: return@forEachIndexed
+//                val layoutTypePairList =
+//                    smallLayoutMapConList
+//                        .filterIndexed { innerIndex, _ ->  innerIndex > 0 }
+//                        .joinToString(String())
+//                        .let {
+//                            val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
+//                            val sectionConList = QuoteTool.splitBySurroundedIgnore(
+//                                trimSectionCon,
+//                                sectionSeparator
+//                            )
+//                            sectionConList.map {
+//                                CmdClickMap.createMap(
+//                                    trimSectionCon,
+//                                    typeSeparator
+//                                )
+//                            }
+//                        }
+//                val isBlockLayoutKey = blockLayoutKeyList.contains(layoutKey)
+//                when(true) {
+//                    isBlockLayoutKey -> {
+//                        if(
+//                            smallLayoutList.isNotEmpty()
+//                        ) {
+//                            layoutList.add(smallLayoutList)
+//                            smallLayoutList.clear()
+//                        }
+//                        smallLayoutList.add(
+//                            Pair(
+//                                layoutKey,
+//                                layoutTypePairList
+//                            )
+//                        )
+//                    }
+//                    else -> {
+//                        smallLayoutList.add(
+//                            Pair(
+//                                layoutKey,
+//                                layoutTypePairList
+//                            )
+//                        )
+//                        if(
+//                            index != tsvConListSrcLastIndex
+//                        ) return@forEachIndexed
+//                        layoutList.add(smallLayoutList)
+//                        smallLayoutList.clear()
+//                    }
+//                }
+//            }
+////            return layoutList
+////            val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
+////                fannelInfoMap,
+////                setReplaceVariableMap,
+////                indexListMap,
+////                tsvConListSrc
+////            )
+//            val sortType = getSortType(
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                indexListMap
+//            )
+////            val sortTag = getSortTag(
+////                fannelInfoMap,
+////                setReplaceVariableMap,
+////                indexListMap,
+////            )
+//            val sortedTsvConList = sortList(
+//                sortType,
+//                layoutList,
+//            )
+//            updateTsv(
+//                sortType,
+//                tsvFilePathObj,
+//                sortedTsvConList,
+//            )
+//            return sortedTsvConList
+//        }
+
+//        private fun makeTsvConList2(
+//            fannelInfoMap: Map<String, String>,
+//            setReplaceVariableMap: Map<String, String>?,
+//            indexListMap: Map<String, String>,
+//            busyboxExecutor: BusyboxExecutor?,
+//        ): MutableList<String> {
+//            val filterShellCon = getFilterShellCon(
+//                fannelInfoMap: Map<String, String>,
+//            setReplaceVariableMap: Map<String, String>?,,
+//                indexListMap,
+//            )
+//            val tsvFilePath = FilePrefixGetter.get(
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                indexListMap,
+//                ListSettingKey.LIST_DIR.key,
+//            ) ?: String()
+//            val tsvFilePathObj = File(tsvFilePath)
+//            val tsvConListSrc = ReadText(
+//                tsvFilePath
+//            ).textToList().let {
+//                TsvTool.filterByColumnNum(
+//                    it,
+//                    2
+//                )
+//            }.map {
+//                val titleAndConList = it.split("\t")
+//                val con = titleAndConList.last()
+//                val title = titleAndConList.first().let {
+//                    makeFilterShellCon(
+//                        it,
+//                        busyboxExecutor,
+//                        filterShellCon,
+//                    )
+//                }
+//                "${title}\t${con}"
+//            }.let {
+//                howExistPathForTsv(
+//                    editFragment,
+//                    indexListMap,
+//                    it,
+//                )
+//            }
+//            val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
+//                editFragment,
+//                indexListMap,
+//                tsvConListSrc
+//            )
+//            val sortType = getSortType(
+//                editFragment,
+//                indexListMap
+//            )
+//            val sortedTsvConList = sortList(
+//                sortType,
+//                tsvConList,
+//            )
+//            updateTsv(
+//                sortType,
+//                tsvFilePathObj,
+//                sortedTsvConList,
+//            )
+//            return sortedTsvConList
+//        }
 
         fun sortList(
             sortType: SortByKey,
-            tsvConList: List<String>,
-        ): MutableList<String> {
+            lineMapList: List<Map<String, String>>,
+        ): List<Map<String, String>> {
             return when(sortType){
                 SortByKey.LAST_UPDATE -> {
-                    tsvConList
+                    lineMapList
                         .reversed()
                         .toMutableList()
                 }
-                SortByKey.SORT -> {
-                    tsvConList.sorted().reversed()
-                        .toMutableList()
+                SortByKey.SORT_TYPE -> {
+                        lineMapList
+                            .sortedWith(
+                                compareBy {
+                                        map ->
+                                    map.get(MapListPathManager.Key.SRC_TITLE.key)
+                                }
+                            ).reversed()
+                            .toMutableList()
                 }
                 SortByKey.REVERSE -> {
-                    tsvConList.sorted()
-                        .toMutableList()
+                    lineMapList.sortedWith(
+                        compareBy {
+                                map ->
+                            map.get(MapListPathManager.Key.SRC_TITLE.key)
+                        }
+                    ).toMutableList()
                 }
             }
         }
 
-        private fun updateTsv(
+       private fun extractLabelByTag(
+           layoutBundleList: List<Pair<String, List<List<Pair<String, String>>>>>
+       ): String? {
+           val tagTypeName = EditComponent.Template.EditComponentKey.TAG.key
+           val labelTypeName = EditComponent.Template.EditComponentKey.LABEL.key
+           layoutBundleList.forEach {
+                   layoutPairList ->
+                   val typePairBundleList = layoutPairList.second.firstOrNull tagTypeNameExtract@ {
+                           typeKeyValuePairList ->
+                       val label = typeKeyValuePairList.firstOrNull execTagTypeNameExtract@ {
+                               typeKeyValuePair ->
+                           val typeName = typeKeyValuePair.first
+                           if (
+                               typeName != tagTypeName
+                           ) return@execTagTypeNameExtract false
+                           true
+                       }
+                       label != null
+                   } ?: return String()
+               typePairBundleList.forEach labelExtract@ {
+                       typeKeyValuePair ->
+                   val typeName = typeKeyValuePair.first
+                   if (
+                       typeName != labelTypeName
+                   ) return@labelExtract
+                   return QuoteTool.trimBothEdgeQuote(
+                       typeKeyValuePair.second
+                   )
+               }
+           }
+           return null
+       }
+
+        private fun updateMapListFile(
             sortType: SortByKey,
             tsvFilePathObj: File,
-            sortedTsvConList: List<String>,
+            sortedLineMapList: List<Map<String, String>>,
         ){
             val saveSortedTsvConList = sortListForTsvSave(
                 sortType,
-                sortedTsvConList,
+                sortedLineMapList,
             )
-            TsvTool.updateTsv(
+            MapListFileTool.update(
                 tsvFilePathObj.absolutePath,
-                saveSortedTsvConList
+                saveSortedTsvConList,
+                MapListPathManager.mapListSeparator
             )
         }
         fun sortListForTsvSave(
             sortType: SortByKey,
-            tsvConList: List<String>,
-        ): MutableList<String> {
+            sortedLineMapList: List<Map<String, String>>,
+        ): MutableList<Map<String, String>> {
             return when(sortType){
                 SortByKey.LAST_UPDATE -> {
-                    tsvConList
+                    sortedLineMapList
                         .reversed()
                         .toMutableList()
                 }
-                SortByKey.SORT -> {
-                    tsvConList.sorted()
+                SortByKey.SORT_TYPE -> {
+                    sortedLineMapList.sortedWith(
+                        compareBy {
+                                map ->
+                            map.get(MapListPathManager.Key.SRC_TITLE.key)
+                        }
+                    )
                         .toMutableList()
                 }
                 SortByKey.REVERSE -> {
-                    tsvConList.sorted().reversed()
+                    sortedLineMapList.sortedWith(
+                        compareBy {
+                                map ->
+                            map.get(MapListPathManager.Key.SRC_TITLE.key)
+                        }
+                    ).reversed()
                         .toMutableList()
                 }
             }
@@ -455,28 +881,31 @@ object ListSettingsForListIndex  {
         }
 
         fun getFilterShellCon(
-            editFragment: EditFragment,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>?,
         ): String {
             val shellPath = FilePrefixGetter.get(
-                editFragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
                 indexListMap,
                 ListSettingKey.FILTER_SHELL_PATH.key,
             ) ?: String()
             return execGetFilterShellCon(
-                editFragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
                 shellPath,
             )
         }
 
         private fun execGetFilterShellCon(
-            editFragment: EditFragment,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
             filterShellPath: String,
         ): String {
             if(
                 filterShellPath.isEmpty()
             ) return String()
-            val fannelInfoMap = editFragment.fannelInfoMap
 //            val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //                fannelInfoMap
 //            )
@@ -488,7 +917,7 @@ object ListSettingsForListIndex  {
             ).readText().let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
-                    editFragment.setReplaceVariableMap,
+                    setReplaceVariableMap,
 //                    currentAppDirPath,
                     currentFannelName
                 )
@@ -501,119 +930,125 @@ object ListSettingsForListIndex  {
 
 private object CompPathManager {
 
-    fun concatByCompConWhenNormal(
-        editFragment: EditFragment,
-        indexListMap: Map<String, String>,
-        parentDirPath: String,
-        fileList: List<String>
-    ): List<String> {
-        val initFilePath = FilePrefixGetter.get(
-            editFragment,
-            indexListMap,
-            ListSettingsForListIndex.ListSettingKey.COMP_PATH.key
-        )
-        if(
-            initFilePath.isNullOrEmpty()
-        ) return fileList
-        val initFilePathObj = File(initFilePath)
-        val initConList = when(true){
-            initFilePathObj.isFile ->
-                makeInitConFromFile(
-                    editFragment,
-                    initFilePathObj,
-                )
-            initFilePathObj.isDirectory -> {
-                val initFileConSrcDir = initFilePathObj.absolutePath
-                FileSystems.sortedFiles(
-                    initFileConSrcDir,
-                    "on"
-                )
-            }
-            else -> return fileList
-        }.let {
-            TsvTool.filterByColumnNum(
-                it,
-                1
-            )
-        }
-        return concatInitConAndConList(
-            fileList,
-            initConList,
-            parentDirPath,
-        )
-    }
+//    fun concatByCompConWhenNormal(
+//        fannelInfoMap: Map<String, String>,
+//        setReplaceVariableMap: Map<String, String>?,
+//        indexListMap: Map<String, String>,
+//        parentDirPath: String,
+//        fileList: List<String>
+//    ): List<String> {
+//        val initFilePath = FilePrefixGetter.get(
+//            fannelInfoMap,
+//            setReplaceVariableMap,
+//            indexListMap,
+//            ListSettingsForListIndex.ListSettingKey.COMP_TSV_PATH.key
+//        )
+//        if(
+//            initFilePath.isNullOrEmpty()
+//        ) return fileList
+//        val initFilePathObj = File(initFilePath)
+//        val initConList = when(true){
+//            initFilePathObj.isFile ->
+//                makeInitConFromFile(
+//                    fannelInfoMap,
+//                    setReplaceVariableMap,
+//                    initFilePathObj,
+//                )
+//            initFilePathObj.isDirectory -> {
+//                val initFileConSrcDir = initFilePathObj.absolutePath
+//                FileSystems.sortedFiles(
+//                    initFileConSrcDir,
+//                    "on"
+//                )
+//            }
+//            else -> return fileList
+//        }
+//        return concatInitConAndConList(
+//            fileList,
+//            initConList,
+//            parentDirPath,
+//        )
+//    }
     fun concatByCompConWhenTsvEdit(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>,
-        tsvConList: List<String>
-    ): List<String> {
+        lineMapListSrc: List<Map<String, String>>
+    ): List<Map<String, String>> {
 //        if(
 //            tsvConList.isNotEmpty()
 //        ) return tsvConList
         val initTsvPath = FilePrefixGetter.get(
-            editFragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
             indexListMap,
-            ListSettingsForListIndex.ListSettingKey.COMP_PATH.key
+            ListSettingsForListIndex.ListSettingKey.COMP_TSV_PATH.key
         )
         if(
             initTsvPath.isNullOrEmpty()
-        ) return tsvConList
-        val initTsvPathObj = File(initTsvPath)
-        val initTsvConList = when(true){
-            initTsvPathObj.isFile ->
+        ) return lineMapListSrc
+        val initMapListPathObj = File(initTsvPath)
+        val initMapList = when(true){
+            initMapListPathObj.isFile ->
                 makeInitConFromFile(
-                    editFragment,
-                    initTsvPathObj,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    initMapListPathObj,
                 )
-            initTsvPathObj.isDirectory -> {
-                val initTsvConSrcDir = initTsvPathObj.absolutePath
+            initMapListPathObj.isDirectory -> {
+                val initTsvConSrcDir = initMapListPathObj.absolutePath
                 FileSystems.sortedFiles(
                     initTsvConSrcDir
                 ).map {
-                    "${it}\t${File(initTsvConSrcDir, it).absolutePath}"
+                    val fileObj = File(initTsvConSrcDir, it)
+                    mapOf(
+                        ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to fileObj.name,
+                        ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to fileObj.absolutePath
+                    )
                 }
             }
-            else -> return tsvConList
-        }.let {
-            TsvTool.filterByColumnNum(
-                it,
-                2
-            )
+            else -> return lineMapListSrc
         }
         return concatInitConAndConList(
-            tsvConList,
-            initTsvConList,
+            lineMapListSrc,
+            initMapList,
         )
     }
 
     private fun makeInitConFromFile(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         initTsvPathObj: File,
-    ): List<String> {
-        val fannelInfoMap = editFragment.fannelInfoMap
+    ): List<Map<String, String>> {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
+        val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
         return ReadText(
             initTsvPathObj.absolutePath
         ).readText().let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
-                editFragment.setReplaceVariableMap,
+                setReplaceVariableMap,
 //                currentAppDirPath,
                 currentFannelName,
-            ).split("\n")
+            )
+        }.split("\n").map {
+            CmdClickMap.createMap(
+                it,
+                mapListSeparator
+            ).toMap()
         }
     }
 
     private fun concatInitConAndConList(
-        conList: List<String>,
-        initConList: List<String>,
+        conList: List<Map<String, String>>,
+        initConList: List<Map<String, String>>,
         parentDirPath: String,
-    ): List<String> {
+    ): List<Map<String, String>> {
         val concatConList = concatInitConAndConList(
             conList,
             initConList,
@@ -622,9 +1057,13 @@ private object CompPathManager {
             !conList.contains(it)
         }
         insertInitConList.forEach {
+            map ->
+            val srcFileName = map.get(
+                ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+            )  ?: return@forEach
             val insertFilePath = File(
                 parentDirPath,
-                it
+                srcFileName
             ).absolutePath
             FileSystems.writeFile(
                 insertFilePath,
@@ -635,13 +1074,13 @@ private object CompPathManager {
     }
 
     private fun concatInitConAndConList(
-        conList: List<String>,
-        initConList: List<String>,
-    ): List<String> {
+        conList: List<Map<String, String>>,
+        initMapList: List<Map<String, String>>,
+    ): List<Map<String, String>> {
         if(
-            initConList.isEmpty()
+            initMapList.isEmpty()
         ) return conList
-        val insertInitTsvConList = initConList.filter {
+        val insertInitTsvConList = initMapList.filter {
             !conList.contains(it)
         }
         if(

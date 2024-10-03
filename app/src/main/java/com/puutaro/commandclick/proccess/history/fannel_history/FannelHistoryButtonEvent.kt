@@ -284,9 +284,11 @@ object FannelHistoryButtonEvent {
                     FactFannel.creatingToast()
                     return
                 }
-                FileSystems.updateLastModified(
-                    File(cmdclickDefaultAppDirPath, fannelName).absolutePath
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    FileSystems.updateLastModified(
+                        File(cmdclickDefaultAppDirPath, fannelName).absolutePath
+                    )
+                }
                 EditExecuteOrElse.handle(
                     fragment,
                     fannelName

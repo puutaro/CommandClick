@@ -13,7 +13,6 @@ class JsShowItemCon(
 
     @JavascriptInterface
     fun show_S(
-        selectedItem: String,
         listIndexPosition: Int,
     ){
 
@@ -66,7 +65,6 @@ class JsShowItemCon(
         ) ?: return
         ExecItemCat.cat(
             editFragment,
-            selectedItem,
             listIndexPosition
         )
     }

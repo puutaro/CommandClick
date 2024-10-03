@@ -330,9 +330,9 @@ class FormJsDialog(
 //            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
 //                currentRecordNum
 //            )
-            editParameters.currentId = currentId
-            editParameters.currentVariableName = currentVariableName
-            editParameters.currentVariableValue = currentVariableValue
+//            editParameters.currentId = currentId
+//            editParameters.currentVariableName = currentVariableName
+//            editParameters.currentVariableValue = currentVariableValue
 //            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
 //                currentRecordNum
 //            )
