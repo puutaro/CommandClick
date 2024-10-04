@@ -2,6 +2,7 @@ package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -263,11 +264,23 @@ class EditComponentListAdapter(
                         if(
                             !isJsAc
                             && frameFrameLayout.tag != null
-                        ) return@let
+                        ) {
+                            frameFrameLayout.setBackgroundResource(0)
+                            frameFrameLayout.isClickable = false
+                            return@let
+                        }
                         holder.keyPairListConMap.put(
                             frameTag,
                             frameKeyPairsCon
                         )
+                        val outValue = TypedValue()
+                        context.theme.resolveAttribute(
+                            android.R.attr.selectableItemBackground,
+                            outValue,
+                            true
+                        )
+                        frameFrameLayout.setBackgroundResource(outValue.resourceId)
+                        frameFrameLayout.isClickable = true
                         when(isConsec) {
                             true -> with (frameFrameLayout) {
                                 setOnTouchListener(android.view.View.OnTouchListener { v, event ->
@@ -370,11 +383,23 @@ class EditComponentListAdapter(
                                 if(
                                     !isJsAc
                                     && linearFrameLayout.tag != null
-                                ) return@let
+                                ) {
+                                    linearFrameLayout.setBackgroundResource(0)
+                                    linearFrameLayout.isClickable = false
+                                    return@let
+                                }
                                 holder.keyPairListConMap.put(
                                     linearFrameTag,
                                     linearFrameKeyPairsListCon
                                 )
+                                val outValue = TypedValue()
+                                context.theme.resolveAttribute(
+                                    android.R.attr.selectableItemBackground,
+                                    outValue,
+                                    true
+                                )
+                                linearFrameLayout.setBackgroundResource(outValue.resourceId)
+                                linearFrameLayout.isClickable = true
                                 when(isConsec) {
                                     true ->
                                             with (linearFrameLayout) {
