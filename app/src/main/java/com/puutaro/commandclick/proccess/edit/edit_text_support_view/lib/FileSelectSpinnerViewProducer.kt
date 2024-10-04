@@ -1,25 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
-import android.content.Context
-import android.view.View
-import android.widget.*
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
-import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.str.QuoteTool
-import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
-import java.io.File
-
 
 //object FileSelectSpinnerViewProducer {
 //

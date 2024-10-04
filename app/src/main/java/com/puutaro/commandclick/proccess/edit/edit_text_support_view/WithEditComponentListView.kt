@@ -3,15 +3,9 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
@@ -23,12 +17,15 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lay
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
-import java.lang.ref.WeakReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-object WithIndexListView{
+object WithEditComponentListView{
 
     fun keyboardHide(
         editFragment: EditFragment,
@@ -42,24 +39,11 @@ object WithIndexListView{
         Keyboard.hiddenKeyboardForFragment(editFragment)
     }
 
-//    var languageType = LanguageTypeSelects.JAVA_SCRIPT
-//    var languageTypeToSectionHolderMap =
-//        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
-//            languageType
-//        )
-//    var settingSectionStart = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//    ) as String
-//
-//    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-//        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//    ) as String
     val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
     val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
     fun create(
         editFragment: EditFragment,
-        editParameters: EditParameters,
     ) {
         val context = editFragment.context ?: return
         val binding = editFragment.binding
@@ -103,7 +87,11 @@ object WithIndexListView{
             binding.editListRecyclerView
 //        val constraintLayoutParam = editListRecyclerView.layoutParams as ConstraintLayout.LayoutParams
         val editComponentListAdapter = EditComponentListAdapter(
-            WeakReference(editFragment),
+            editFragment.context,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editFragment.listIndexConfigMap,
+            editFragment.busyboxExecutor,
             indexListMap,
             fileList,
         )
@@ -135,6 +123,10 @@ object WithIndexListView{
             editFragment,
             binding.editListRecyclerView
         )
+        invokeItemSetTouchListenerForFileList(
+            editFragment,
+            binding.editListRecyclerView
+        )
 //        invokeQrLogoSetClickListenerForFileList(
 //            editFragment,
 //            binding.editListRecyclerView,
@@ -158,28 +150,133 @@ object WithIndexListView{
     ) {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as EditComponentListAdapter
-        listIndexForEditAdapter.fileNameClickListener =
-            object: EditComponentListAdapter.OnFileNameItemClickListener {
-                override fun onFileNameClick(
+        listIndexForEditAdapter.editAdapterClickListener =
+            object: EditComponentListAdapter.OnEditAdapterClickListener {
+                override fun onEditAdapterClick(
                     itemView: View,
                     holder: EditComponentListAdapter.ListIndexListViewHolder,
                     listIndexPosition: Int,
                 ) {
+                    val tag = itemView.tag as String?
+                        ?: return
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lclcik.txt").absolutePath,
+//                        listOf(
+//                            "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
+//                            "lineMapList: ${listIndexForEditAdapter.lineMapList}",
+//                        ).joinToString("\n")
+//                    )
+                    val selectedItemLineMap =
+                        listIndexForEditAdapter.lineMapList.getOrNull(holder.bindingAdapterPosition)
+                            ?: return
                     keyboardHide(
                         editFragment,
                     )
-                    val selectedItemLineMap = listIndexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
-//                    holder.fileName
+                    val jsAcCon = holder.keyPairListConMap.get(tag)
+                        ?: return
                     ListIndexEditConfig.handle(
                         editFragment,
                         false,
                         selectedItemLineMap,
-                        holder,
+                        jsAcCon,
                         listIndexPosition
                     )
                 }
-        }
+            }
     }
+
+
+    private fun invokeItemSetTouchListenerForFileList(
+        editFragment: EditFragment,
+        editListRecyclerView: RecyclerView
+    ) {
+        var execTouchJob: Job? = null
+        var consecutiveJob: Job? = null
+        val listIndexForEditAdapter =
+            editListRecyclerView.adapter as EditComponentListAdapter
+        listIndexForEditAdapter.editAdapterTouchUpListener = object: EditComponentListAdapter.OnEditAdapterTouchUpListener {
+            override fun onEditAdapterTouchUp(
+                itemView: View,
+                holder: EditComponentListAdapter.ListIndexListViewHolder,
+                listIndexPosition: Int
+            ) {
+                execTouchJob?.cancel()
+                consecutiveJob?.cancel()
+                return
+            }
+        }
+
+        listIndexForEditAdapter.editAdapterTouchDownListener = object: EditComponentListAdapter.OnEditAdapterTouchDownListener {
+            override fun onEditAdapterTouchDown(
+                itemView: View,
+                holder: EditComponentListAdapter.ListIndexListViewHolder,
+                listIndexPosition: Int
+            ) {
+                val tag = itemView.tag as String?
+                    ?: return
+                val selectedItemLineMap =
+                    listIndexForEditAdapter.lineMapList.getOrNull(holder.bindingAdapterPosition)
+                        ?: return
+                val jsAcCon = holder.keyPairListConMap.get(tag)
+                    ?: return
+                consecutiveJob?.cancel()
+                consecutiveJob = CoroutineScope(Dispatchers.IO).launch {
+                    var roopTimes = 0
+                    while (true) {
+                        execTouchJob = CoroutineScope(Dispatchers.Main).launch touch@ {
+                            withContext(Dispatchers.Main) {
+                                ListIndexEditConfig.handle(
+                                    editFragment,
+                                    true,
+                                    selectedItemLineMap,
+                                    jsAcCon,
+                                    listIndexPosition
+                                )
+                            }
+                        }
+                        withContext(Dispatchers.IO){
+                            if(
+                                roopTimes == 0
+                            ) delay(300)
+                            else delay(60)
+                        }
+                        roopTimes++
+                    }
+                }
+                return
+            }
+        }
+
+    }
+
+//    private fun invokeItemSetClickListenerForFileList(
+//        editFragment: EditFragment,
+//        editListRecyclerView: RecyclerView
+//    ) {
+//        val listIndexForEditAdapter =
+//            editListRecyclerView.adapter as EditComponentListAdapter
+//        listIndexForEditAdapter.editAdapterClickListener =
+//            object: EditComponentListAdapter.OnEditAdapterClickListener {
+//                override fun onEditAdapterClick(
+//                    itemView: View,
+//                    holder: EditComponentListAdapter.ListIndexListViewHolder,
+//                    listIndexPosition: Int,
+//                ) {
+//                    keyboardHide(
+//                        editFragment,
+//                    )
+//                    val selectedItemLineMap = listIndexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
+////                    holder.fileName
+//                    ListIndexEditConfig.handle(
+//                        editFragment,
+//                        false,
+//                        selectedItemLineMap,
+//                        holder,
+//                        listIndexPosition
+//                    )
+//                }
+//        }
+//    }
 
 //    private fun invokeQrLogoSetClickListenerForFileList(
 //        editFragment: EditFragment,

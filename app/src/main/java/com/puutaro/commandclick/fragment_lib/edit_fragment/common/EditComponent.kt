@@ -14,6 +14,8 @@ object EditComponent {
                 const val keySeparator = '?'
                 const val valueSeparator = '&'
 
+                val switchOn = "ON"
+
                 enum class SrcReplaceHolders(val key: String){
                         SRC_LABEL("\${SRC_LABEL}"),
                         SRC_CON("\${SRC_CON}"),
@@ -32,6 +34,8 @@ object EditComponent {
 
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
+                        LABEL_TAG("labelTag"),
+                        IMAGE_TAG("imageTag"),
                         LABEL("label"),
                         SRC_CON("srcCon"),
                         SRC_LABEL("srcLabel"),
@@ -50,15 +54,18 @@ object EditComponent {
                         TEXT_SIZE("textSize"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
                         TEXT_COLOR("textColor"),
+                        STROKE_COLOR("strokeColor"),
+                        STROKE_WIDTH("strokeWidth"),
                         HEIGHT("height"),
-                        ALPHA("alpha"),
+                        TEXT_ALPHA("textAlpha"),
+                        IMAGE_ALPHA("imageAlpha"),
                 }
 
                 object LabelManager {
                         enum class LabelKey(val key: String) {
-//                                PREFIX("prefix"),
-//                                SUFFIX("suffix"),
-//                                FILTER_SHELL_PATH("filterShellPath"),
+                                PREFIX("prefix"),
+                                SUFFIX("suffix"),
+                                FILTER_SHELL_PATH("filterShellPath"),
                                 SRC("src"),
                         }
 

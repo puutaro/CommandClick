@@ -1,27 +1,14 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.app.AlertDialog
-import android.content.DialogInterface
-import android.view.Gravity
-import android.widget.AbsListView
-import android.widget.Button
-import android.widget.EditText
 import android.widget.GridView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
-import com.puutaro.commandclick.proccess.lib.NestLinearLayout
-import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.str.QuoteTool
-import java.io.File
 
 object MultiFileSelectGridViewProducer {
     private val noExtend = "NoExtend"
@@ -218,7 +205,7 @@ object MultiFileSelectGridViewProducer {
         return when(isFile){
             true -> {
                 sortedList.filter {
-                    FilterPathTool.isFilterByFile(
+                    CcFilterTool.isFilterByFile(
                         it,
                         filterDir,
                         filterPrefixListCon,
@@ -234,7 +221,7 @@ object MultiFileSelectGridViewProducer {
                 }
             }
             false -> sortedList.filter {
-                FilterPathTool.isFilterByDir(
+                CcFilterTool.isFilterByDir(
                     it,
                     filterDir,
                     filterPrefixListCon,

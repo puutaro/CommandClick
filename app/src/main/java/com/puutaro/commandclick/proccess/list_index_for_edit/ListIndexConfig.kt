@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.list_index_for_edit
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -24,6 +25,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
+import java.time.LocalDateTime
 
 
 object ListIndexEditConfig {
@@ -34,13 +36,13 @@ object ListIndexEditConfig {
         editFragment: EditFragment,
         isLongClick: Boolean,
         selectedItemLineMap: Map<String, String>,
-        holder: EditComponentListAdapter.ListIndexListViewHolder,
+        jsAcCon: String,
         listIndexPosition: Int
     ){
-        val clickConfigListCon = makeClickConfigListStr(
-            editFragment,
-            isLongClick,
-        )
+//        val clickConfigListCon = makeClickConfigListStr(
+//            editFragment,
+//            isLongClick,
+//        )
 //        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
 //            editFragment,
 //            ListIndexForEditAdapter.indexListMap,
@@ -70,12 +72,12 @@ object ListIndexEditConfig {
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
             fannelInfoMap,
-            clickConfigListCon,
+            jsAcCon,
             editFragment.setReplaceVariableMap,
             mainFannelPath
         )
         val clickConfigPairList = CmdClickMap.createMap(
-            clickConfigListCon,
+            jsAcCon,
             '|'
         )
         val listIndexArgsMaker = ListIndexArgsMaker(
@@ -91,9 +93,8 @@ object ListIndexEditConfig {
         ExecClickUpdate.update(
             editFragment,
             listIndexArgsMaker,
-            holder,
+            listIndexPosition,
         )
-
         JsPathHandlerForQrAndListIndex.handle(
             editFragment,
             jsActionMap,

@@ -16,7 +16,7 @@ object LayoutSettingsForListIndex {
     ) {
 //        TYPE("type"),
         COL("col"),
-        TO_TOP("toTop")
+//        TO_TOP("toTop")
     }
 
     private val switchOn = "ON"
@@ -57,24 +57,24 @@ object LayoutSettingsForListIndex {
         editListRecyclerView: RecyclerView,
         isReverseLayout: Boolean,
     ){
-        val isToTop = howToTop(layoutConfigMap)
-        val height = when(isToTop){
-            true -> 0
-            else -> ViewGroup.LayoutParams.WRAP_CONTENT
-        }
-        val constraintLayoutParam = ConstraintLayout.LayoutParams(
-            0,
-            height
-        )
-        if(
-            isToTop
-        ) {
-            constraintLayoutParam.topToBottom = R.id.editTextView
-        }
-        constraintLayoutParam.startToStart = ConstraintSet.PARENT_ID
-        constraintLayoutParam.endToEnd = ConstraintSet.PARENT_ID
-        constraintLayoutParam.bottomToTop = R.id.edit_list_search_edit_text
-        editListRecyclerView.layoutParams = constraintLayoutParam
+//        val isToTop = howToTop(layoutConfigMap)
+//        val height = when(isToTop){
+//            true -> 0
+//            else -> ViewGroup.LayoutParams.WRAP_CONTENT
+//        }
+//        val constraintLayoutParam = ConstraintLayout.LayoutParams(
+//            0,
+//            0
+//        )
+////        if(
+////            isToTop
+////        ) {
+//            constraintLayoutParam.topToBottom = R.id.editTextView
+////        }
+//        constraintLayoutParam.startToStart = ConstraintSet.PARENT_ID
+//        constraintLayoutParam.endToEnd = ConstraintSet.PARENT_ID
+//        constraintLayoutParam.bottomToTop = R.id.edit_list_search_edit_text
+//        editListRecyclerView.layoutParams = constraintLayoutParam
 
         editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
             context,
@@ -97,13 +97,13 @@ object LayoutSettingsForListIndex {
 //        }
     }
 
-    private fun howToTop(
-        layoutConfigMap: Map<String, String>?,
-    ): Boolean {
-        return layoutConfigMap?.get(
-            LayoutSettingKey.TO_TOP.key
-        ) == switchOn
-    }
+//    private fun howToTop(
+//        layoutConfigMap: Map<String, String>?,
+//    ): Boolean {
+//        return layoutConfigMap?.get(
+//            LayoutSettingKey.TO_TOP.key
+//        ) == switchOn
+//    }
 
     private fun decideColNum(
         layoutConfigMap: Map<String, String>?,

@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.edit.lib.LayoutSettingFile
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -42,18 +43,27 @@ object ListSettingsForListIndex  {
 
 
     object ViewLayoutPathManager{
+
         fun parse(
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>
-        ): Pair<
-                Map<String,List<Pair<String, String>> >,
-                Map<String, List<List<Pair<String, String>>> >
+        ):  Pair<
+                Map<String, String >,
+                Map<String, List< List<String> > >,
                 >?
+//                Triple<
+//                Map<String,List<Pair<String, String>> >,
+//                Map<String, List< List<String> > >,
+//                Map<String, List< List<List<Pair<String, String>>> > >,
+//                >?
         {
             var curFrameTag = String()
-            val framePairList: MutableList< Pair<String, List<Pair<String, String>> > > = mutableListOf()
-            val linearPairList: MutableList< Pair<String, List<List<Pair<String, String>>> > > = mutableListOf()
+//            val framePairList: MutableList< Pair<String, List<Pair<String, String>> > > = mutableListOf()
+            val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
+            val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
+//            val linearPairList: MutableList< Pair<String, List<List<Pair<String, String>>> > > = mutableListOf()
+
             val viewLayoutPath = FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
@@ -87,65 +97,43 @@ object ListSettingsForListIndex  {
             val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
             val liearTypeName = EditComponent.Template.LayoutKey.LINEAR.key
             val tagKey = EditComponent.Template.EditComponentKey.TAG.key
-            viewLayoutListSrc.forEachIndexed {
-                    index,
-                    smallLayoutMapCon ->
+            viewLayoutListSrc.forEachIndexed { index,
+                                               smallLayoutMapCon ->
                 val smallLayoutMapConList = smallLayoutMapCon.split("=")
                 val layoutKey =
                     smallLayoutMapConList.firstOrNull()
                         ?: return@forEachIndexed
-                val layoutTypePairList =
+                val layoutTypePairConList =
                     smallLayoutMapConList
-                        .filterIndexed { innerIndex, _ ->  innerIndex > 0 }
+                        .filterIndexed { innerIndex, _ -> innerIndex > 0 }
                         .joinToString("=")
                         .let {
                             val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
-                            val sectionConList = QuoteTool.splitBySurroundedIgnore(
+                            QuoteTool.splitBySurroundedIgnore(
                                 trimSectionCon,
                                 sectionSeparator
-                            )
-//                            FileSystems.updateFile(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop.txt").absolutePath,
-//                                listOf(
-//                                    "layoutKey: ${layoutKey}",
-//                                    "trimSectionCon: ${trimSectionCon}",
-//                                    "sectionConList: ${sectionConList}",
-//                                    "sectionConList0: ${sectionConList.firstOrNull()}",
-//                                ).joinToString("\n") + "\n----\n"
-//                            )
-                            sectionConList.map {
-                                sectionCon ->
-//                                FileSystems.updateFile(
-//                                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop2.txt").absolutePath,
-//                                    listOf(
-//                                        "layoutKey: ${layoutKey}",
-//                                        "trimSectionCon: ${trimSectionCon}",
-//                                        "sectionConList: ${sectionConList}",
-//                                        "sectionConList0: ${sectionConList.firstOrNull()}",
-//                                    ).joinToString("\n") + "\n----\n"
-//                                )
-                                CmdClickMap.createMap(
-                                    sectionCon,
-                                    typeSeparator
-                                ).filter {
-                                    it.first.isNotEmpty()
-                                }
+                            ).filter {
+                                it.isNotEmpty()
                             }
                         }
                 FileSystems.updateFile(
                     File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse.txt").absolutePath,
                     listOf(
                         "layoutKey: ${layoutKey}",
-                        "layoutTypePairList: ${layoutTypePairList}",
+                        "framePairsConList: ${framePairsConList}",
+                        "linearPairConList: ${linearPairConList}",
                     ).joinToString("\n") + "\n----\n"
                 )
-                when(true) {
+                when (true) {
                     (layoutKey == frameTypeName) -> {
-                        val frameLayoutKeyPairList =
-                            layoutTypePairList.firstOrNull()
-                                ?: emptyList()
+                        val frameLayoutKeyPairListCon =
+                            layoutTypePairConList.firstOrNull()
+                                ?: String()
                         val tag =
-                            frameLayoutKeyPairList.firstOrNull {
+                            CmdClickMap.createMap(
+                                frameLayoutKeyPairListCon,
+                                typeSeparator
+                            ).firstOrNull {
                                 val key = it.first
                                 key == tagKey
                             }?.second.let {
@@ -154,25 +142,146 @@ object ListSettingsForListIndex  {
                         curFrameTag = tag
                         val frameTagToCon = Pair(
                             curFrameTag,
-                            frameLayoutKeyPairList
+                            frameLayoutKeyPairListCon
                         )
-                        framePairList.add(frameTagToCon)
+                        if (
+                            frameTagToCon.first.isEmpty()
+                        ) return@forEachIndexed
+                        framePairsConList.add(frameTagToCon)
                     }
+
                     (layoutKey == liearTypeName) -> {
-//                        val linearLayoutKeyPairList =
-//                            layoutTypePairList.firstOrNull()
-                        val frameTagToLinearKeyPairList = Pair(
+                        val frameTagToLinearKeyPairCon = Pair(
                             curFrameTag,
-                            layoutTypePairList
+                            layoutTypePairConList
                         )
-                        linearPairList.add(frameTagToLinearKeyPairList)
+                        if (
+                            frameTagToLinearKeyPairCon.first.isEmpty()
+                        ) return@forEachIndexed
+                        linearPairConList.add(frameTagToLinearKeyPairCon)
                     }
+
                     else -> {}
                 }
             }
+//                val layoutTypePairList =
+//                    smallLayoutMapConList
+//                        .filterIndexed { innerIndex, _ ->  innerIndex > 0 }
+//                        .joinToString("=")
+//                        .let {
+//                            val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
+//                            val sectionConList = QuoteTool.splitBySurroundedIgnore(
+//                                trimSectionCon,
+//                                sectionSeparator
+//                            ).filter {
+//                                it.isNotEmpty()
+//                            }
+////                            FileSystems.updateFile(
+////                                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop.txt").absolutePath,
+////                                listOf(
+////                                    "layoutKey: ${layoutKey}",
+////                                    "trimSectionCon: ${trimSectionCon}",
+////                                    "sectionConList: ${sectionConList}",
+////                                    "sectionConList0: ${sectionConList.firstOrNull()}",
+////                                ).joinToString("\n") + "\n----\n"
+////                            )
+//                            sectionConList.map {
+//                                sectionCon ->
+////                                FileSystems.updateFile(
+////                                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop2.txt").absolutePath,
+////                                    listOf(
+////                                        "layoutKey: ${layoutKey}",
+////                                        "trimSectionCon: ${trimSectionCon}",
+////                                        "sectionConList: ${sectionConList}",
+////                                        "sectionConList0: ${sectionConList.firstOrNull()}",
+////                                    ).joinToString("\n") + "\n----\n"
+////                                )
+//                                CmdClickMap.createMap(
+//                                    sectionCon,
+//                                    typeSeparator
+//                                ).filter {
+//                                    it.first.isNotEmpty()
+//                                }
+//                            }
+//                        }
+
+
+//                when(true) {
+//                    (layoutKey == frameTypeName) -> {
+//                        val frameLayoutKeyPairList =
+//                            layoutTypePairList.firstOrNull()
+//                                ?: emptyList()
+//                        val tag =
+//                            frameLayoutKeyPairList.firstOrNull {
+//                                val key = it.first
+//                                key == tagKey
+//                            }?.second.let {
+//                                QuoteTool.trimBothEdgeQuote(it)
+//                            }
+//                        curFrameTag = tag
+//                        val frameTagToCon = Pair(
+//                            curFrameTag,
+//                            frameLayoutKeyPairList
+//                        )
+//                        if(
+//                            frameTagToCon.first.isEmpty()
+//                        ) return@forEachIndexed
+//                        framePairList.add(frameTagToCon)
+//                    }
+//                    (layoutKey == liearTypeName) -> {
+//                        val frameTagToLinearKeyPairList = Pair(
+//                            curFrameTag,
+//                            layoutTypePairList
+//                        )
+//                        if(
+//                            frameTagToLinearKeyPairList.first.isEmpty()
+//                        ) return@forEachIndexed
+//                        linearPairList.add(frameTagToLinearKeyPairList)
+//                    }
+//                    else -> {}
+//                }
+//            }
+            val frameTagList = mutableListOf<String>()
+            linearPairConList.forEach {
+                val frameTag = it.first
+                if(
+                    frameTag.isNotEmpty()
+                    && !frameTagList.contains(frameTag)
+                ) frameTagList.add(frameTag)
+            }
+            val frameTagToLinearPairConListMap = frameTagList.map {
+                    frameTag ->
+                frameTag to linearPairConList.filter {
+                    it.first == frameTag
+                }.map {
+                    it.second
+                }
+            }.toMap()
+//            val frameTagToLinearKeysListMap = frameTagList.map {
+//                frameTag ->
+//                frameTag to linearPairList.filter {
+//                    it.first == frameTag
+//                }.map {
+//                    it.second
+//                }
+//            }.toMap()
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
+                listOf(
+//                    "layoutKey: ${layoutKey}",
+                    "framePairsConList: ${framePairsConList}",
+                    "linearPairConList: ${linearPairConList}",
+                    "\npair: ${Pair(
+                        framePairsConList.toMap(),
+                        frameTagToLinearPairConListMap,
+//                frameTagToLinearKeysListMap
+                    )}"
+                ).joinToString("\n") + "\n----\n"
+            )
             return Pair(
-                framePairList.toMap(),
-                linearPairList.toMap()
+                framePairsConList.toMap(),
+                frameTagToLinearPairConListMap,
+//                frameTagToLinearKeysListMap
             )
         }
     }
@@ -433,33 +542,42 @@ object ListSettingsForListIndex  {
 //            )
 //        }
 
-//        fun makeFileListElement(
-//            fileList: List<String>,
-//            busyboxExecutor: BusyboxExecutor?,
-//            filterDir: String,
-//            filterPrefixListCon: String,
-//            filterSuffixListCon: String,
-//            filterShellCon: String,
-//        ): List<String> {
-//            return fileList.filter {
-//                FilterPathTool.isFilterByFile(
-//                    it,
-//                    filterDir,
-//                    filterPrefixListCon,
-//                    filterSuffixListCon,
-//                    false,
-//                    "&"
-//                )
-//            }.map {
-//                makeFilterShellCon(
-//                    it,
-//                    busyboxExecutor,
-//                    filterShellCon,
-//                )
-//            }.filter {
-//                it.isNotEmpty()
-//            }
-//        }
+        private fun filterMapList(
+            lineMapList: List<Map<String, String>>,
+            busyboxExecutor: BusyboxExecutor?,
+            filterPrefixListCon: String,
+            filterSuffixListCon: String,
+            filterShellCon: String,
+        ): List<Map<String, String>> {
+            val srcTitleKey = MapListPathManager.Key.SRC_TITLE.key
+            val valueSeparatorStr = valueSeparator.toString()
+            return lineMapList.filter {
+                val srcTitle = it.get(
+                    srcTitleKey
+                ) ?: return@filter false
+                CcFilterTool.isFilterByStr(
+                    srcTitle,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    false,
+                    valueSeparatorStr
+                )
+            }.map {
+                val srcTitle = it.get(
+                    MapListPathManager.Key.SRC_TITLE.key
+                ) ?: return@map it
+                val filterTitle = makeFilterShellCon(
+                    srcTitle,
+                    busyboxExecutor,
+                    filterShellCon,
+                )
+                it + mapOf(
+                    srcTitleKey to filterTitle
+                )
+            }.filter {
+                it.isNotEmpty()
+            }
+        }
 
         private fun makeTsvConList(
             fannelInfoMap: Map<String, String>,
@@ -467,11 +585,6 @@ object ListSettingsForListIndex  {
             indexListMap: Map<String, String>,
             busyboxExecutor: BusyboxExecutor?,
         ): MutableList<Map<String, String>> {
-            val filterShellCon = getFilterShellCon(
-                fannelInfoMap,
-                setReplaceVariableMap,
-                indexListMap,
-            )
             val mapListPath = FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
@@ -512,13 +625,37 @@ object ListSettingsForListIndex  {
                     mapList,
                 )
             }
-            val lineMapList = CompPathManager.concatByCompConWhenTsvEdit(
+            val lineMapListBeforeFilter = CompPathManager.concatByCompConWhenTsvEdit(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 indexListMap,
                 lineMapListSrc
             )
+
+            val filterPrefixListCon = indexListMap.get(
+                ListSettingKey.PREFIX.key
+            ) ?: String()
+            val filterSuffixListCon = indexListMap.get(
+                ListSettingKey.SUFFIX.key
+            ) ?: String()
+
+            val filterShellCon = indexListMap.get(
+                ListSettingKey.FILTER_SHELL_PATH.key
+            ) ?: String()
+
+            val lineMapList = filterMapList(
+                    lineMapListBeforeFilter,
+                    busyboxExecutor,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    filterShellCon,
+            )
             val sortType = getSortType(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                indexListMap
+            )
+            val isReverseLayout = howReverseLayout(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 indexListMap
@@ -526,6 +663,7 @@ object ListSettingsForListIndex  {
             val sortedLineMapList = sortList(
                 sortType,
                 lineMapList,
+                isReverseLayout
             )
             updateMapListFile(
                 sortType,
@@ -727,30 +865,40 @@ object ListSettingsForListIndex  {
         fun sortList(
             sortType: SortByKey,
             lineMapList: List<Map<String, String>>,
+            isReverseLayout: Boolean
         ): List<Map<String, String>> {
             return when(sortType){
                 SortByKey.LAST_UPDATE -> {
+//                    val sortedLineMapList =
+//                        if(isReverseLayout) lineMapList.reversed()
+//                        else lineMapList
                     lineMapList
-                        .reversed()
                         .toMutableList()
                 }
                 SortByKey.SORT_TYPE -> {
-                        lineMapList
+                        val sortedLineMapListSrc = lineMapList
                             .sortedWith(
                                 compareBy {
                                         map ->
                                     map.get(MapListPathManager.Key.SRC_TITLE.key)
                                 }
-                            ).reversed()
-                            .toMutableList()
+                            )
+//                    val sortedLineMapList =
+//                        if(isReverseLayout) sortedLineMapListSrc.reversed()
+//                        else sortedLineMapListSrc
+                    sortedLineMapListSrc.toMutableList()
                 }
                 SortByKey.REVERSE -> {
-                    lineMapList.sortedWith(
+                    val sortedLineMapListSrc = lineMapList.sortedWith(
                         compareBy {
                                 map ->
                             map.get(MapListPathManager.Key.SRC_TITLE.key)
                         }
-                    ).toMutableList()
+                    )
+//                    val sortedLineMapList =
+//                        if(isReverseLayout) sortedLineMapListSrc.reversed()
+//                        else sortedLineMapListSrc
+                    sortedLineMapListSrc.toMutableList()
                 }
             }
         }
@@ -810,7 +958,7 @@ object ListSettingsForListIndex  {
             return when(sortType){
                 SortByKey.LAST_UPDATE -> {
                     sortedLineMapList
-                        .reversed()
+//                        .reversed()
                         .toMutableList()
                 }
                 SortByKey.SORT_TYPE -> {
@@ -828,7 +976,8 @@ object ListSettingsForListIndex  {
                                 map ->
                             map.get(MapListPathManager.Key.SRC_TITLE.key)
                         }
-                    ).reversed()
+                    )
+//                        .reversed()
                         .toMutableList()
                 }
             }

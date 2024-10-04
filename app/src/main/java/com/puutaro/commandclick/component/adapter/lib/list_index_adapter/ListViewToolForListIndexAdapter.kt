@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -34,6 +35,12 @@ object ListViewToolForListIndexAdapter {
         listIndexForEditAdapter.lineMapList.clear()
         listIndexForEditAdapter.lineMapList.addAll(updateLineMapList)
         listIndexForEditAdapter.notifyDataSetChanged()
+        val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
+            listIndexForEditAdapter.fannelInfoMap,
+            listIndexForEditAdapter.setReplaceVariablesMap,
+            listIndexForEditAdapter.indexListMap
+        )
+        if(!isReverseLayout) return
         scrollToBottom(
             editListRecyclerView,
             listIndexForEditAdapter,

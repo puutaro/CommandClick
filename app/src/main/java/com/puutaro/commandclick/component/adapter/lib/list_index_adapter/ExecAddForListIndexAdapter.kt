@@ -30,9 +30,15 @@ object ExecAddForListIndexAdapter {
         val virtualListIndexList =
             listIndexForEditAdapter.lineMapList +
                     listOf(addLineMap)
+        val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
+            listIndexForEditAdapter.fannelInfoMap,
+            listIndexForEditAdapter.setReplaceVariablesMap,
+            listIndexForEditAdapter.indexListMap
+        )
         return ListSettingsForListIndex.ListIndexListMaker.sortList(
             sortType,
             virtualListIndexList,
+            isReverseLayout
         ).indexOf(addLineMap)
     }
 

@@ -3,9 +3,43 @@ package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 import com.blankj.utilcode.util.ToastUtils
 import java.io.File
 
-object FilterPathTool {
+object CcFilterTool {
 
     private const val noExtend = "NoExtend"
+
+    fun isFilterByStr(
+        targetFileNameOrPath: String,
+        filterPrefixListCon: String,
+        filterSuffixListCon: String,
+        onFilterToast: Boolean,
+        separator: String,
+    ): Boolean {
+        val okPrefix = judgeByPrefix(
+            targetFileNameOrPath,
+            filterPrefixListCon,
+            separator
+        )
+        val targetFileName = File(targetFileNameOrPath).name
+        prefixFilterToast(
+            okPrefix,
+            onFilterToast,
+            filterPrefixListCon,
+            targetFileName,
+        )
+        val okSuffix = judgeBySuffix(
+            targetFileNameOrPath,
+            filterSuffixListCon,
+            separator
+        )
+        suffixFilterToast(
+            okSuffix,
+            onFilterToast,
+            filterSuffixListCon,
+            targetFileName,
+        )
+        return okPrefix
+                && okSuffix
+    }
 
     fun isFilterByFile(
         targetFileNameOrPath: String,

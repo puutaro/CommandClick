@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.core.view.setMargins
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -18,49 +20,53 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.custom_view.OutlineTextView
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.PerformSettingForListIndex
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.lang.ref.WeakReference
 
 
 class EditComponentListAdapter(
-    private val editFragmentRef: WeakReference<EditFragment>,
+    val context: Context?,
+    val fannelInfoMap: Map<String, String>,
+    val setReplaceVariablesMap: Map<String, String>?,
+    val listIndexConfigMap: Map<String, String>?,
+    val busyboxExecutor: BusyboxExecutor?,
     val indexListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
 ): RecyclerView.Adapter<EditComponentListAdapter.ListIndexListViewHolder>()
 {
-    private val fannelInfoMap = editFragmentRef.get()?.fannelInfoMap ?: emptyMap()
-    private val context = editFragmentRef.get()?.context
+//    private val fannelInfoMap = editFragmentRef.get()?.fannelInfoMap ?: emptyMap()
+//    private val context = editFragmentRef.get()?.context
 //    private val activity = editFragment.activity
     private val maxTakeSize = 150
     private val listLimitSize = 300
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
+//    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
 
-    private val listIndexConfigMap =
-        editFragmentRef.get()?.listIndexConfigMap
-            ?: emptyMap()
+//    private val listIndexConfigMap =
+//        editFragmentRef.get()?.listIndexConfigMap
+//            ?: emptyMap()
     private val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
         listIndexConfigMap
     )
@@ -77,11 +83,11 @@ class EditComponentListAdapter(
 //    ).toMap()
     private val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
         fannelInfoMap,
-        editFragmentRef.get()?.setReplaceVariableMap,
+        setReplaceVariablesMap,
         indexListMap
     )
     private val frameMap = frameMapListToLinearMapList?.first ?: emptyMap()
-    private val linearMapList = frameMapListToLinearMapList?.second ?: emptyMap()
+    private val frameTagToLinearKeysListMap = frameMapListToLinearMapList?.second ?: emptyMap()
 //    private val qrDialogConfigMap =
 //        editFragmentRef.get()?.qrDialogConfig ?: mapOf()
 //    private val textImagePngBitMap = ImageAdapterTool.makeFileMarkBitMap(
@@ -123,12 +129,13 @@ class EditComponentListAdapter(
     ): RecyclerView.ViewHolder(view) {
         val materialCardView =
             view.findViewById<MaterialCardView>(
-                com.puutaro.commandclick.R.id.list_index_edit_adapter_mterial_card_view
+                com.puutaro.commandclick.R.id.edit_component_adapter_mterial_card_view
             )
-        val baseLinearLayout =
-            view.findViewById<LinearLayoutCompat>(
-                com.puutaro.commandclick.R.id.list_index_edit_adapter_horizontal_linearlayout
-            )
+        var keyPairListConMap: MutableMap<String, String?> = mutableMapOf()
+//        val editComponentLinearLayout =
+//            view.findViewById<LinearLayoutCompat>(
+//                com.puutaro.commandclick.R.id.edit_component_adapter_linearlayout
+//            )
 //        val fileContentsQrLogoLinearLayout =
 //            view.findViewById<RelativeLayout>(
 //                com.puutaro.commandclick.R.id.list_index_edit_adapter_logo_linearlayout
@@ -162,7 +169,6 @@ class EditComponentListAdapter(
         return super.getItemId(position)
     }
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -180,11 +186,17 @@ class EditComponentListAdapter(
     }
 
     override fun getItemCount(): Int = lineMapList.size
+    private val typeSeparator = EditComponent.Template.typeSeparator
 
+    private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+    private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
     override fun onBindViewHolder(
         holder: ListIndexListViewHolder,
         listIndexPosition: Int
     ) {
+        if(
+            context == null
+        ) return
         if(
             listIndexPosition > listLimitSize
         ) return
@@ -200,29 +212,212 @@ class EditComponentListAdapter(
             ListSettingsForListIndex.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
         ) ?: return
         CoroutineScope(Dispatchers.IO).launch {
-            val frameKeyMap = withContext(Dispatchers.IO) {
+            val frameKeyPairsCon = withContext(Dispatchers.IO) {
                 frameMap.get(frameTag)
+            }
+            val frameKeyPairsList = withContext(Dispatchers.IO) {
+                CmdClickMap.createMap(
+                    frameKeyPairsCon,
+                    typeSeparator
+                )
             }
             FileSystems.writeFile(
                 File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
                 listOf(
                     "indexListMap: ${indexListMap}",
                     "frameMap: ${frameMap}",
-                    "frameKeyMap: ${frameKeyMap}",
-//                    "labelMap: ${labelMap}",
-//                    "label: ${label}",
-//                    "imagePath: ${imagePath}",
-//                    "tag: ${tag}",
+                    "frameKeyMap: ${frameKeyPairsList}",
+                    "linearMapList: ${frameTagToLinearKeysListMap}",
                 ).joinToString("\n\n")
             )
+            val materialCardView = holder.materialCardView
             withContext(Dispatchers.Main) {
-                val buttonFrame = FrameMaker.make(
-                    editFragmentRef.get(),
-                    frameKeyMap,
+                val frameFrameLayout = FrameMaker.make(
+                    context,
+                    frameKeyPairsList,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    null,
+                    frameTag,
                     srcTitle,
                     srcCon,
                 )
-                holder.materialCardView.addView(buttonFrame)
+                val frameKeyList = JsActionKeyManager.JsActionsKey.values().map{
+                    it.key
+                }
+                withContext(Dispatchers.IO) setClickOrTouch@ {
+                    if(
+                        frameFrameLayout == null
+                    ) return@setClickOrTouch
+                    val isConsec =
+                        PairListTool.getValue(
+                            frameKeyPairsList,
+                            isConsecKey,
+                        ) == EditComponent.Template.switchOn
+                    frameKeyList.any {
+                        !PairListTool.getValue(
+                            frameKeyPairsList,
+                            it,
+                        ).isNullOrEmpty()
+                    }.let {
+                            isJsAc ->
+                        if(
+                            !isJsAc
+                            && frameFrameLayout.tag != null
+                        ) return@let
+                        holder.keyPairListConMap.put(
+                            frameTag,
+                            frameKeyPairsCon
+                        )
+                        when(isConsec) {
+                            true -> with (frameFrameLayout) {
+                                setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                                    when (event.action) {
+                                        android.view.MotionEvent.ACTION_DOWN -> {
+                                            editAdapterTouchDownListener?.onEditAdapterTouchDown(
+                                                frameFrameLayout,
+                                                holder,
+                                                listIndexPosition
+                                            )
+                                        }
+                                        android.view.MotionEvent.ACTION_UP,
+                                        android.view.MotionEvent.ACTION_CANCEL,
+                                        -> {
+                                            editAdapterTouchUpListener?.onEditAdapterTouchUp(
+                                                frameFrameLayout,
+                                                holder,
+                                                listIndexPosition
+                                            )
+                                            v.performClick()
+                                        }
+                                    }
+                                    true
+                                })
+                            }
+                            else -> frameFrameLayout.setOnClickListener {
+                                editAdapterClickListener?.onEditAdapterClick(
+                                    frameFrameLayout,
+                                    holder,
+                                    listIndexPosition,
+                                )
+                            }
+                        }
+                    }
+                }
+                materialCardView.addView(frameFrameLayout)
+            }
+            withContext(Dispatchers.Main) {
+                val baseLinearParam = LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(ScreenSizeCalculator.toDp(context,10))
+                }
+                val baseLinearLayout = LinearLayoutCompat(context).apply {
+                    layoutParams = baseLinearParam
+                    orientation = LinearLayoutCompat.VERTICAL
+                }
+                frameTagToLinearKeysListMap.get(frameTag)?.forEach {
+                        linearKeys ->
+                    val linearParam = LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    )
+                    val weightSumFloat = 1f
+                    val linearLayout = LinearLayoutCompat(context).apply {
+                        layoutParams = linearParam
+                        weightSum = weightSumFloat
+                        orientation = LinearLayoutCompat.HORIZONTAL
+                    }
+                    val layoutWeight = weightSumFloat / linearKeys.size
+                    linearKeys.forEach setFrame@ { linearFrameKeyPairsListCon ->
+                        val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
+                            CmdClickMap.createMap(
+                                linearFrameKeyPairsListCon,
+                                typeSeparator
+                            )
+                        }
+                        val linearFrameTag = withContext(Dispatchers.IO) {
+                            PairListTool.getValue(
+                                linearFrameKeyPairsList,
+                                tagKey,
+                            ) ?: String()
+                        }
+                        val linearFrameLayout = FrameMaker.make(
+                            context,
+                            linearFrameKeyPairsList,
+                            0,
+                            layoutWeight,
+                            linearFrameTag,
+                            srcTitle,
+                            srcCon,
+                        ) ?: return@setFrame
+                        val linearKeyList = JsActionKeyManager.JsActionsKey.values().map{
+                            it.key
+                        }
+                        withContext(Dispatchers.IO) {
+                            val isConsec =
+                                PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    isConsecKey,
+                                ) == EditComponent.Template.switchOn
+                            linearKeyList.any {
+                                !PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    it,
+                                ).isNullOrEmpty()
+                            }.let {
+                                isJsAc ->
+                                if(
+                                    !isJsAc
+                                    && linearFrameLayout.tag != null
+                                ) return@let
+                                holder.keyPairListConMap.put(
+                                    linearFrameTag,
+                                    linearFrameKeyPairsListCon
+                                )
+                                when(isConsec) {
+                                    true ->
+                                            with (linearFrameLayout) {
+                                                setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                                                    when (event.action) {
+                                                        android.view.MotionEvent.ACTION_DOWN -> {
+                                                            editAdapterTouchDownListener?.onEditAdapterTouchDown(
+                                                                linearFrameLayout,
+                                                                holder,
+                                                                listIndexPosition
+                                                            )
+                                                        }
+                                                        android.view.MotionEvent.ACTION_UP,
+                                                        android.view.MotionEvent.ACTION_CANCEL,
+                                                        -> {
+                                                            editAdapterTouchUpListener?.onEditAdapterTouchUp(
+                                                                linearFrameLayout,
+                                                                holder,
+                                                                listIndexPosition
+                                                            )
+                                                            v.performClick()
+                                                        }
+                                                    }
+                                                    true
+                                                })
+                                            }
+                                    else -> linearFrameLayout.setOnClickListener {
+                                            editAdapterClickListener?.onEditAdapterClick(
+                                                linearFrameLayout,
+                                                holder,
+                                                listIndexPosition,
+                                            )
+                                        }
+                                }
+
+                            }
+                        }
+                        linearLayout.addView(linearFrameLayout)
+                    }
+                    baseLinearLayout.addView(linearLayout)
+                }
+                materialCardView.addView(baseLinearLayout)
+
             }
 
 //            withContext(Dispatchers.Main) {
@@ -339,7 +534,7 @@ class EditComponentListAdapter(
 //                    true
 //                }
                 itemView.setOnClickListener {
-                    fileNameClickListener?.onFileNameClick(
+                    editAdapterClickListener?.onEditAdapterClick(
                         itemView,
                         holder,
                         listIndexPosition,
@@ -365,10 +560,28 @@ class EditComponentListAdapter(
         }
     }
 
-    var fileNameClickListener: OnFileNameItemClickListener? = null
+    var editAdapterClickListener: OnEditAdapterClickListener? = null
 //    var qrLongClickListener: OnQrLogoLongClickListener? = null
-    interface OnFileNameItemClickListener {
-        fun onFileNameClick(
+    interface OnEditAdapterClickListener {
+        fun onEditAdapterClick(
+            itemView: View,
+            holder: ListIndexListViewHolder,
+            listIndexPosition: Int,
+        )
+    }
+
+    var editAdapterTouchDownListener: OnEditAdapterTouchDownListener? = null
+    interface OnEditAdapterTouchDownListener {
+        fun onEditAdapterTouchDown(
+            itemView: View,
+            holder: ListIndexListViewHolder,
+            listIndexPosition: Int,
+        )
+    }
+
+    var editAdapterTouchUpListener: OnEditAdapterTouchUpListener? = null
+    interface OnEditAdapterTouchUpListener {
+        fun onEditAdapterTouchUp(
             itemView: View,
             holder: ListIndexListViewHolder,
             listIndexPosition: Int,
@@ -535,7 +748,7 @@ class EditComponentListAdapter(
             listOf(
                 "frameMapListToLinearMapList: ${frameMapListToLinearMapList}",
                 "frameMap: ${frameMap}",
-                "linearMapList: ${linearMapList}",
+                "linearMapList: ${frameTagToLinearKeysListMap}",
             ).joinToString("\n\n")
         )
         setListProperty()
@@ -573,22 +786,20 @@ class EditComponentListAdapter(
 ////                listIndexTypeKey
 //            )
 //        } ?: String()
-        filterPrefix = editFragmentRef.get()?.let {
+        filterPrefix =
             FilePrefixGetter.get(
-                it.fannelInfoMap,
-                it.setReplaceVariableMap,
+                fannelInfoMap,
+                setReplaceVariablesMap,
                 indexListMap,
                 ListSettingsForListIndex.ListSettingKey.PREFIX.key
-            )
-        } ?: String()
-        filterSuffix = editFragmentRef.get()?.let {
+            ) ?: String()
+        filterSuffix =
             FilePrefixGetter.get(
-                it.fannelInfoMap,
-                it.setReplaceVariableMap,
+                fannelInfoMap,
+                setReplaceVariablesMap,
                 indexListMap,
                 ListSettingsForListIndex.ListSettingKey.SUFFIX.key
-            )
-        }  ?: String()
+            ) ?: String()
     }
     fun getLayoutConfigMap(): Map<String, String> {
         return layoutConfigMap
@@ -598,55 +809,58 @@ class EditComponentListAdapter(
     private object FrameMaker {
 
         private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+        private val labelTagKey = EditComponent.Template.EditComponentKey.LABEL_TAG.key
+        private val imageTagKey = EditComponent.Template.EditComponentKey.IMAGE_TAG.key
         private val labelKey = EditComponent.Template.EditComponentKey.LABEL.key
         private val imagePathKey = EditComponent.Template.EditComponentKey.IMAGE_PATH.key
         private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
         private val textSizeKey = EditComponent.Template.EditComponentKey.TEXT_SIZE.key
+        private val textColorKey = EditComponent.Template.EditComponentKey.TEXT_COLOR.key
+        private val strokeColorKey = EditComponent.Template.EditComponentKey.STROKE_COLOR.key
+        private val strokeWidthKey = EditComponent.Template.EditComponentKey.STROKE_WIDTH.key
+        private val textAlphaKey = EditComponent.Template.EditComponentKey.TEXT_ALPHA.key
+        private val imageAlphaKey = EditComponent.Template.EditComponentKey.IMAGE_ALPHA.key
+
         suspend fun make(
-            editFragment: EditFragment?,
-            frameKeyMap: List<Pair<String, String>>?,
+            context: Context?,
+            frameKeyPairList: List<Pair<String, String>>?,
+            width: Int,
+            weight: Float?,
+            tag: String?,
             srcTitle: String,
             srcCon: String,
-//            tag: String?,
-//            label: String?,
-//            imagePath: String?,
-//            height: Int,
-//            textSize: Float?,
         ): FrameLayout? {
-            val context = editFragment?.context
-                ?: return null
+            if(
+                context == null
+            ) return null
             val inflater = LayoutInflater.from(context)
             val buttonLayout = inflater.inflate(
                 R.layout.icon_caption_layout,
                 null
             ) as FrameLayout
-            val tag = withContext(Dispatchers.IO) {
-                frameKeyMap?.firstOrNull {
-                    it.first == tagKey
-                }?.second?.let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                }
-            }
             val height = withContext(Dispatchers.IO) {
-                frameKeyMap?.firstOrNull {
-                    it.first == heightKey
-                }?.second?.let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                }?.let {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    heightKey,
+                )?.let {
                     try {
                         ScreenSizeCalculator.toDp(context, it.toInt())
                     } catch(e: Exception){
                         null
                     }
-                } ?: ScreenSizeCalculator.toDp(context, 50)
+                } ?: ViewGroup.LayoutParams.MATCH_PARENT
+//                ,ScreenSizeCalculator.toDp(context, 50)
             }
             tag?.let {
                 buttonLayout.tag = it
             }
             val param = LinearLayoutCompat.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+                width,
                 height,
             )
+            weight?.let {
+                param.weight = it
+            }
             val marginDp = ScreenSizeCalculator.toDp(
                 context,
                 context?.resources?.getDimension(R.dimen.toolbar_button_horizon_margin) ?: 0
@@ -654,41 +868,101 @@ class EditComponentListAdapter(
             param.marginStart = marginDp
             param.marginEnd = marginDp
             param.gravity = Gravity.CENTER
-            param.weight = editFragment.buttonWeight
             buttonLayout.layoutParams = param
+            buttonLayout.foregroundGravity = Gravity.CENTER
 
             buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)?.let {
                     imageButtonView ->
+                val imageTag = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        imageTagKey,
+                    )
+                }
                 val imagePath = withContext(Dispatchers.IO) {
-                    frameKeyMap?.firstOrNull {
-                        it.first == imagePathKey
-                    }?.second?.let {
-                        QuoteTool.trimBothEdgeQuote(it)
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        imagePathKey,
+                    )
+                }
+                val imageAlpha = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        imageAlphaKey,
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
                     }
                 }
                 setImageView(
                     imageButtonView,
+                    imageTag,
                     imagePath,
+                    imageAlpha,
                 )
             }
             buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)?.let {
                     captionTextView ->
+                val labelTag = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        labelTagKey,
+                    )
+                }
                 val labelMap = withContext(Dispatchers.IO) {
-                    frameKeyMap?.firstOrNull {
-                        val key = it.first
-                        key == labelKey
-                    }?.let {
+                    PairListTool.getPair(
+                        frameKeyPairList,
+                        labelKey,
+                    )?.let {
                         EditComponent.Template.LabelManager.createLabelMap(
                             it.second
                         )
                     }
                 }
                 val textSize = withContext(Dispatchers.IO) {
-                    frameKeyMap?.firstOrNull {
-                        it.first == textSizeKey
-                    }?.second?.let {
-                        QuoteTool.trimBothEdgeQuote(it)
-                    }?.let {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        textSizeKey,
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    }
+                }
+                val textColorStr = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        textColorKey,
+                    )
+                }
+                val strokeColorStr = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        strokeColorKey,
+                    )
+                }
+                val strokeWidth = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        strokeWidthKey,
+                    )?.let {
+                        try {
+                            it.toInt()
+                        } catch(e: Exception){
+                            null
+                        }
+                    }
+                }
+                val textAlpha = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        textAlphaKey,
+                    )?.let {
                         try {
                             it.toFloat()
                         } catch(e: Exception){
@@ -698,10 +972,15 @@ class EditComponentListAdapter(
                 }
                 setCaption(
                     captionTextView,
+                    labelTag,
                     labelMap,
                     textSize,
                     srcTitle,
                     srcCon,
+                    textColorStr,
+                    strokeColorStr,
+                    strokeWidth,
+                    textAlpha,
                 )
             }
             return buttonLayout
@@ -709,11 +988,28 @@ class EditComponentListAdapter(
 
         private suspend fun setImageView(
             imageView: AppCompatImageView,
+            imageTag: String?,
             imagePath: String?,
+            imageAlpha: Float?,
         ) {
+            imageView.isVisible = !imagePath.isNullOrEmpty()
             if(
                 imagePath.isNullOrEmpty()
-            ) return
+            ) {
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "licon0.txt").absolutePath,
+                    listOf(
+                        "imageTag: ${imageTag}",
+                    ).joinToString("\n")
+                )
+                return
+            }
+            imageTag?.let {
+                imageView.tag = imageTag
+            }
+            imageAlpha?.let {
+                imageView.alpha = imageAlpha
+            }
             val imageViewContext = imageView.context
 
             val requestBuilder: RequestBuilder<Drawable> =
@@ -723,7 +1019,7 @@ class EditComponentListAdapter(
             val icon = CmdClickIcons.values().firstOrNull {
                 it.str == imagePath
             }
-            FileSystems.writeFile(
+            FileSystems.updateFile(
                 File(UsePath.cmdclickDefaultAppDirPath, "licon.txt").absolutePath,
                 listOf(
                     "imagePath: ${imagePath}",
@@ -752,34 +1048,73 @@ class EditComponentListAdapter(
                         imageView,
                         icon
                     )
-                else -> Glide.with(imageViewContext)
-                    .load(iconId)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .thumbnail(requestBuilder)
-                    .into(imageView)
+                else -> {
+                    imageView.isVisible = false
+                    FileSystems.updateFile(
+                        File(UsePath.cmdclickDefaultAppDirPath, "licon1.txt").absolutePath,
+                        listOf(
+                            "imageTag: ${imageTag}",
+                            "imagePath: ${imagePath}",
+                        ).joinToString("\n")
+                    )
+                }
+//                Glide.with(imageViewContext)
+//                    .load(iconId)
+//                    .skipMemoryCache(true)
+//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                    .thumbnail(requestBuilder)
+//                    .into(imageView)
             }
         }
 
         private suspend fun setCaption(
             captionTextView: OutlineTextView,
+            labelTag: String?,
             labelMap: Map<String, String>?,
             textSize: Float?,
             srcTitle: String,
             srcCon: String,
+            textColorStr: String?,
+            strokeColorStr: String?,
+            strokeWidth: Int?,
+            textAlpha: Float?,
         ) {
             val label = withContext(Dispatchers.IO) {
                 EditComponent.Template.LabelManager.makeLabel(
                     labelMap,
                     srcTitle,
                     srcCon
+
                 )
             }
+            labelTag?.let {
+                captionTextView.tag = labelTag
+            }
             captionTextView.text = label
-            captionTextView.setStrokeColor(R.color.white)
-            captionTextView.setFillColor(R.color.fill_gray)
+            CmdClickColor.values().firstOrNull {
+                it.str == textColorStr
+            }?.let {
+                captionTextView.setFillColor(it.id)
+            } ?: let {
+                captionTextView.setFillColor(R.color.fill_gray)
+            }
+            CmdClickColor.values().firstOrNull {
+                it.str == strokeColorStr
+            }?.let {
+                captionTextView.setStrokeColor(it.id)
+            } ?: let {
+                captionTextView.setStrokeColor(R.color.white)
+            }
+            strokeWidth?.let {
+                captionTextView.outlineWidthSrc = it
+            } ?: let {
+                captionTextView.outlineWidthSrc = 2
+            }
             textSize?.let {
                 captionTextView.textSize = textSize
+            }
+            textAlpha?.let {
+                captionTextView.alpha = textAlpha
             }
         }
     }

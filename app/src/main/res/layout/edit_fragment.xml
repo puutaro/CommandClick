@@ -55,6 +55,7 @@
             app:layout_constraintBottom_toTopOf="@+id/edit_list_search_edit_text"
             android:textIsSelectable="true"
             android:scrollbars="vertical"
+            android:background="@color/ligthBlue"
             android:fadeScrollbars="false"
             />
 <!--         app:layout_constraintTop_toBottomOf="@+id/editTextView"-->

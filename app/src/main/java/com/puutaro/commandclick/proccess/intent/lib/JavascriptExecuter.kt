@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.intent.lib
 
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -29,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
 
 object JavascriptExecuter {
     fun exec(

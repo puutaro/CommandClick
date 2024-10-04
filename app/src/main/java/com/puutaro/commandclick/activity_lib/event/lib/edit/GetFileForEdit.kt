@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
-import android.content.Context
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
@@ -9,8 +8,7 @@ import com.puutaro.commandclick.common.variable.variant.RequestCode
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
@@ -81,7 +79,7 @@ class GetFileForEdit(
                 requestCode, folder ->
             val absolutePath = folder.getAbsolutePath(activity)
                 .split("\n").filter {
-                    FilterPathTool.isFilterByDir(
+                    CcFilterTool.isFilterByDir(
                         it,
                         parentDirPath,
                         filterPrefixListCon,
@@ -133,7 +131,7 @@ class GetFileForEdit(
                 requestCode, file ->
             file.getOrNull(0)
                 ?.getAbsolutePath(activity)?.split("\n")?.filter{
-                    FilterPathTool.isFilterByFile(
+                    CcFilterTool.isFilterByFile(
                         it,
                         parentDirPath,
                         filterPrefixListCon,

@@ -9,7 +9,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variant.RequestCode
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 
 object ExecFileChooser {
 
@@ -129,7 +129,7 @@ object ExecFileChooser {
         ){
             val absolutePath = file.getOrNull(0)
                 ?.getAbsolutePath(activity)?.split("\n")?.filter{
-                    FilterPathTool.isFilterByFile(
+                    CcFilterTool.isFilterByFile(
                         it,
                         String(),
                         filterPrefixListCon,
@@ -200,7 +200,7 @@ object ExecFileChooser {
         ){
             val absolutePath = folder.getAbsolutePath(activity)
                 .split("\n").firstOrNull {
-                    FilterPathTool.isFilterByDir(
+                    CcFilterTool.isFilterByDir(
                         it,
                         String(),
                         filterPrefixListCon,

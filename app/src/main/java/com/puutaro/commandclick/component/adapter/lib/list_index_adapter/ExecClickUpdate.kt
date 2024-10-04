@@ -15,7 +15,7 @@ object ExecClickUpdate {
     fun update(
         editFragment: EditFragment,
         listIndexArgsMaker: ListIndexArgsMaker,
-        listIndexListViewHolder: EditComponentListAdapter.ListIndexListViewHolder,
+        bindingAdapterPosition: Int,
     ){
         val clickConfigMap = listIndexArgsMaker.clickConfigPairList
         val enableClickUpdate =
@@ -25,7 +25,7 @@ object ExecClickUpdate {
         if(!enableClickUpdate) return
         updateForTsv(
             editFragment,
-            listIndexListViewHolder
+            bindingAdapterPosition
         )
 //        when(ListIndexAdapter.listIndexTypeKey) {
 ////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
@@ -46,7 +46,7 @@ object ExecClickUpdate {
 
     private fun updateForTsv(
         editFragment: EditFragment,
-        listIndexListViewHolder: EditComponentListAdapter.ListIndexListViewHolder,
+        bindingAdapterPosition: Int,
     ){
         val editComponentAdapter =
             editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
@@ -65,9 +65,9 @@ object ExecClickUpdate {
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
         val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
-        val LineMap =
+        val lineMap =
             editComponentListAdapter.lineMapList.getOrNull(
-                listIndexListViewHolder.bindingAdapterPosition
+                bindingAdapterPosition
             ) ?: return
         val mapListPath = FilePrefixGetter.get(
             editFragment.fannelInfoMap,
@@ -77,7 +77,7 @@ object ExecClickUpdate {
         )
         MapListFileTool.insertMapFileInFirst(
             mapListPath,
-            LineMap
+            lineMap
         )
         BroadcastSender.normalSend(
             editFragment.context,

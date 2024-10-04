@@ -204,9 +204,9 @@ object EditTextProducerForEdit {
 //                EditTextSupportViewName.LIST_INDEX.str
 //            ) ?: false
 //        }?.keys?.firstOrNull() ?: 0
-        WithIndexListView.create(
+        WithEditComponentListView.create(
             editFragment,
-            editParameters
+//            editParameters
         )
 //        when(true){
 //            (currentRecordNum < listIndexOrder) ->

@@ -21,6 +21,7 @@
         app:tint="@color/file_dark_green_color"
         android:scaleType="fitCenter"
         android:layout_gravity="center"
+        android:gravity="center"
         android:padding="0dp"
         />
     <com.puutaro.commandclick.custom_view.OutlineTextView

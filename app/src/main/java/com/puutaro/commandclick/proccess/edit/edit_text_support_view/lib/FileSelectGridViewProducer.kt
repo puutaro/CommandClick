@@ -1,30 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.app.Dialog
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.GridView
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.component.adapter.ImageAdapter
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 //import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFcbMap
 //import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFilterType
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
-import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
-import com.puutaro.commandclick.util.str.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.Keyboard
-import java.io.File
 
 object FileSelectGridViewProducer {
 //    private const val noExtend = "NoExtend"
