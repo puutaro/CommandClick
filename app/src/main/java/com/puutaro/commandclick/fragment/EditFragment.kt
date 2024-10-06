@@ -17,7 +17,6 @@ import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
@@ -59,16 +58,16 @@ class EditFragment: Fragment() {
     private var _binding: EditFragmentBinding? = null
     val binding get() = _binding!!
     var busyboxExecutor: BusyboxExecutor? = null
-    var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
+//    var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
-    var urlHistoryOrButtonExec =
-        CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
+//    var urlHistoryOrButtonExec =
+//        CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
-    var popBackStackToIndexImmediateJob: Job? = null
+//    var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
     var fannelInfoMap: Map<String, String> = mapOf()
     var srcFannelInfoMap: Map<String, String>? = null
@@ -94,7 +93,7 @@ class EditFragment: Fragment() {
     var editBoxTitleConfig: Map<String, String> = emptyMap()
     var filterDir = String()
     var buttonWeight = 0.25f
-    var onNoUrlSaveMenu = false
+//    var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
     var disableKeyboardFragmentChange = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()

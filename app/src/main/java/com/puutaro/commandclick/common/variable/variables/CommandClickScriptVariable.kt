@@ -1,28 +1,15 @@
 package com.puutaro.commandclick.common.variable.variables
 
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-//import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
-import com.puutaro.commandclick.proccess.edit.lib.ProducerMacro
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 
 object CommandClickScriptVariable {
-//    enum class HolderTypeName {
-//        LABELING_SEC_START,
-//        LABELING_SEC_END,
-//        SETTING_SEC_START,
-//        SETTING_SEC_END,
-//        CMD_SEC_START,
-//        CMD_SEC_END,
-//        SCRIPT_START
-//    }
+
     val EMPTY_STRING = "COMMAND_CLICK_EMPTY_STRING"
     const val LABELING_SEC_START = "/// LABELING_SECTION_START"
     const val LABELING_SEC_END = "/// LABELING_SECTION_END"
@@ -31,27 +18,7 @@ object CommandClickScriptVariable {
     const val CMD_SEC_START = "/// CMD_VARIABLE_SECTION_START"
     const val CMD_SEC_END = "/// CMD_VARIABLE_SECTION_END"
     const val SCRIPT_START = "/// Please write bellow with javascript"
-//    val LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP = mapOf(
-//        LanguageTypeSelects.SHELL_SCRIPT to mapOf(
-//            HolderTypeName.LABELING_SEC_START to "### $labelingSectionStartSentence",
-//            HolderTypeName.LABELING_SEC_END to "### $labelingSectionEndSentence",
-//            HolderTypeName.SETTING_SEC_START to "### $settingSectionStartSentence",
-//            HolderTypeName.SETTING_SEC_END to "### $settingSectionEndSentence",
-//            HolderTypeName.CMD_SEC_START to "### $commandSectionStartSentence",
-//            HolderTypeName.CMD_SEC_END to "### $commandSectionEndSentence",
-//            HolderTypeName.SCRIPT_START to "### Please write bellow with shell script",
-//
-//        ),
-//        LanguageTypeSelects.JAVA_SCRIPT to mapOf(
-//            HolderTypeName.LABELING_SEC_START to "/// $labelingSectionStartSentence",
-//            HolderTypeName.LABELING_SEC_END to "/// $labelingSectionEndSentence",
-//            HolderTypeName.SETTING_SEC_START to "/// $settingSectionStartSentence",
-//            HolderTypeName.SETTING_SEC_END to "/// $settingSectionEndSentence",
-//            HolderTypeName.CMD_SEC_START to "/// $commandSectionStartSentence",
-//            HolderTypeName.CMD_SEC_END to "/// $commandSectionEndSentence",
-//            HolderTypeName.SCRIPT_START to "/// Please write bellow with javascript",
-//        )
-//    )
+
     val SHELL_EXEC_ENV = "shellExecEnv"
     val UBUNTU_EXEC_MODE = "ubuntuExecMode"
     val UBUNTU_OUTPUT_FILE = "ubuntuOutputFile"
@@ -72,8 +39,8 @@ object CommandClickScriptVariable {
     val ON_TERM_BACKEND_WHEN_START = "onTermBackendWhenStart"
     val ON_TERM_VISIBLE_WHEN_KEYBOARD = "onTermVisibleWhenKeyboard"
     val ON_TERM_SHORT_WHEN_LOAD = "onTermShortWhenLoad"
-    val CMDCLICK_HISTORY_SWITCH = "historySwitch"
-    val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC = "urlHistoryOrButtonExec"
+//    val CMDCLICK_HISTORY_SWITCH = "historySwitch"
+//    val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC = "urlHistoryOrButtonExec"
     val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
     val IGNORE_HISTORY_PATHS = "ignoreHistoryPaths"
     val ON_ADBLOCK = "onAdBlock"
@@ -85,7 +52,7 @@ object CommandClickScriptVariable {
     val TERMINAL_FONT_COLOR = "terminalFontColor"
 //    val HOME_SCRIPT_URLS_PATH = "homeScriptUrlsPath"
     val CMDCLICK_SHIBAN_DEFAULT_VALUE = "#!/bin/bash"
-    val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
+//    val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
 //    val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
 //    val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
@@ -93,9 +60,9 @@ object CommandClickScriptVariable {
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
     val EXTRA_BUTTON_CONFIG = "extraButtonConfig"
     val LIST_INDEX_CONFIG = "listIndexConfig"
-    val QR_DIALOG_CONFIG = "qrDialogConfig"
+//    val QR_DIALOG_CONFIG = "qrDialogConfig"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
-    val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
+//    val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
     val DISABLE_SETTING_VALS_EDIT = "disableSettingValsEdit"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
     val SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcAnchorLongPressMenuFilePath"
@@ -125,14 +92,14 @@ object CommandClickScriptVariable {
         TERMINAL_OUTPUT_MODE,
         SET_VARIABLE_TYPE,
         SET_REPLACE_VARIABLE,
-        CMDCLICK_HISTORY_SWITCH,
+//        CMDCLICK_HISTORY_SWITCH,
         CMDCLICK_ON_AUTO_EXEC,
         AUTO_EXEC_PATH,
         NO_ARG_JS_PATH,
         ON_UPDATE_LAST_MODIFY,
         TERMINAL_COLOR,
         TERMINAL_FONT_COLOR,
-        CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
+//        CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
         ON_ADBLOCK,
         ON_TERM_BACKEND_WHEN_START,
         ON_TERM_VISIBLE_WHEN_KEYBOARD,
@@ -157,8 +124,8 @@ object CommandClickScriptVariable {
         EXTRA_BUTTON_CONFIG,
         SETTING_BUTTON_CONFIG,
         LIST_INDEX_CONFIG,
-        QR_DIALOG_CONFIG,
-        NO_SCROLL_SAVE_URLS,
+//        QR_DIALOG_CONFIG,
+//        NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         IMAGE_LONG_PRESS_MENU_FILE_PATH,
@@ -166,7 +133,7 @@ object CommandClickScriptVariable {
         FANNEL_STATE_CONFIG,
     )
     private val terminalOn = SettingVariableSelects.TerminalDoSelects.ON.name
-    private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name
+//    private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name
     private val terminalOff = SettingVariableSelects.TerminalDoSelects.OFF.name
     private val editExecuteNo = SettingVariableSelects.EditExecuteSelects.NO.name
 //    private val editExecuteOnce = SettingVariableSelects.EditExecuteSelects.ONCE.name
@@ -180,12 +147,12 @@ object CommandClickScriptVariable {
     private val terminalOutPutModeReflashAndFirstRow = SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
     private val terminalOutPutModeDebug = SettingVariableSelects.TerminalOutPutModeSelects.DEBUG.name
     private val terminalOutPutModeNo = SettingVariableSelects.TerminalOutPutModeSelects.NO.name
-    private val historySwitchOff = SettingVariableSelects.HistorySwitchSelects.OFF.name
-    private val historySwitchOn = SettingVariableSelects.HistorySwitchSelects.ON.name
-    private val historySwitchInherit = SettingVariableSelects.HistorySwitchSelects.INHERIT.name
-    private val urlHistoryOrButtonExecUrlHistory = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
-    private val urlHistoryOrButtonExecUrlButtonExec = SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name
-    private val urlHistoryOrButtonExecUrlInherit = SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name
+//    private val historySwitchOff = SettingVariableSelects.HistorySwitchSelects.OFF.name
+//    private val historySwitchOn = SettingVariableSelects.HistorySwitchSelects.ON.name
+//    private val historySwitchInherit = SettingVariableSelects.HistorySwitchSelects.INHERIT.name
+//    private val urlHistoryOrButtonExecUrlHistory = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
+//    private val urlHistoryOrButtonExecUrlButtonExec = SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name
+//    private val urlHistoryOrButtonExecUrlInherit = SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name
     private val onUpdateLastModifyOn = SettingVariableSelects.OnUpdateLastModifySelects.ON.name
     private val onUpdateLastModifyOff = SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
     private val onUrlLaunchMacroRecent = SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name
@@ -225,7 +192,7 @@ object CommandClickScriptVariable {
     val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
 
     val TERMINAL_OUTPUT_MODE_DEFAULT_VALUE = terminalOutPutModeNormal
-    val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
+//    val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
     val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
     val TERMINAL_COLOR_DEFAULT_VALUE = "#043d02"
     val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
@@ -235,7 +202,7 @@ object CommandClickScriptVariable {
     val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
     val ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE = onTermShortWhenLoadSelectsOff
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
-    val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
+//    val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
     val ON_LAUNCH_URL_HISTORY_BY_BACKSTACK_DEFAULT_VALUE = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
@@ -248,16 +215,16 @@ object CommandClickScriptVariable {
 //    private val homeScriptUrlsFilePath = UsePath.homeScriptUrlsFilePath
 //    private val homeFannelsFilePath =
 //        UsePath.homeFannelsFilePath
-    private val macroStrForDragSortGetListPathFromVar =
-        ProducerMacro.macroStrForDragSortGetListPathFromVar
-    private val buttonCmd = ButtonViewProducer.ButtonEditKey.cmd.name
-    private val buttonLabel = ButtonViewProducer.ButtonEditKey.label.name
-    private val buttonSetfType =
-        ButtonViewProducer.SET_F_OPTION_MAP_KEY.type
-    private val buttonSetfListAddSuffix =
-        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.suffix.name
-    private val buttonSetfListAddSourceDirPath =
-        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.dirPath.name
+//    private val macroStrForDragSortGetListPathFromVar =
+//        ProducerMacro.macroStrForDragSortGetListPathFromVar
+//    private val buttonCmd = ButtonViewProducer.ButtonEditKey.cmd.name
+//    private val buttonLabel = ButtonViewProducer.ButtonEditKey.label.name
+//    private val buttonSetfType =
+//        ButtonViewProducer.SET_F_OPTION_MAP_KEY.type
+//    private val buttonSetfListAddSuffix =
+//        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.suffix.name
+//    private val buttonSetfListAddSourceDirPath =
+//        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.dirPath.name
 //    private val buttonSetfListAddHowFull =
 //        ButtonViewProducer.SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
 //    private val listPathForListConSlSpi =
@@ -286,14 +253,14 @@ object CommandClickScriptVariable {
 //                    "$buttonSetfListAddSourceDirPath=${UsePath.cmdclickAppHistoryDirAdminPath}" +
 //                            "?$buttonLabel=ADD"
 //                ).joinToString(" ")
-    private val srcImageAnchorLongPressMenuFilePath =
-        UsePath.srcImageAnchorLongPressMenuFilePath
-    private val srcAnchorLongPressMenuFilePath =
-        UsePath.srcAnchorLongPressMenuFilePath
-    private val imageLongPressMenuFilePath =
-        UsePath.imageLongPressMenuFilePath
-    private val noScrollSaveUrlsFilePath =
-        UsePath.noScrollSaveUrlsFilePath
+//    private val srcImageAnchorLongPressMenuFilePath =
+//        UsePath.srcImageAnchorLongPressMenuFilePath
+//    private val srcAnchorLongPressMenuFilePath =
+//        UsePath.srcAnchorLongPressMenuFilePath
+//    private val imageLongPressMenuFilePath =
+//        UsePath.imageLongPressMenuFilePath
+//    private val noScrollSaveUrlsFilePath =
+//        UsePath.noScrollSaveUrlsFilePath
 //    private val setVariableValueForSrcImageAnchorLongPressMenuFilePath =
 //        "$listPathForListConSlSpi=" +
 //                "$macroStrForDragSortGetListPathFromVar:$srcImageAnchorLongPressMenuFilePath" +
@@ -390,6 +357,28 @@ object CommandClickScriptVariable {
     private val mdDash = "-------"
     private val mdDescription = "description"
 
+//     |#  * [$CMDCLICK_HISTORY_SWITCH](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
+//    |#  * [$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC](#${
+//            replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
+//    |# ### $CMDCLICK_HISTORY_SWITCH
+//            |# Switch app history with url history
+//            |
+//            |# | switch | $mdDescription |
+//            |# | $mdDash | $mdDash |
+//            |# | `$historySwitchOn` | switch |
+//            |# | `$historySwitchOff` | no switch |
+//            |# | `$historySwitchInherit` | inherit config setting (default) |
+//            |
+//    |# ### $CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC
+//            |# Switch url history or button script exec
+//            |
+//            |# | switch | description |
+//            |# | $mdDash | $mdDash |
+//            |# | `$urlHistoryOrButtonExecUrlInherit` | inherit config setting |
+//            |# | `$urlHistoryOrButtonExecUrlHistory` | switch url history |
+//            |# | `$urlHistoryOrButtonExecUrlButtonExec` | switch url button script exec |
+//            |
+
     fun makeDescription(): String {
         return """# Table of Contents
             |# $mdDash
@@ -401,7 +390,6 @@ object CommandClickScriptVariable {
             |#  * [$CMDCLICK_ON_AUTO_EXEC](#${replaceLowerAdnBlankDash(CMDCLICK_ON_AUTO_EXEC)})
             |#  * [$ON_UPDATE_LAST_MODIFY](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
             |#  * [$IGNORE_HISTORY_PATHS](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
-            |#  * [$CMDCLICK_HISTORY_SWITCH](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
             |#  * [$EDIT_BOX_TITLE_CONFIG](#${replaceLowerAdnBlankDash(EDIT_BOX_TITLE_CONFIG)})
             |#  * [$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
             replaceLowerAdnBlankDash(
@@ -410,8 +398,6 @@ object CommandClickScriptVariable {
             replaceLowerAdnBlankDash(SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
             |#  * [$IMAGE_LONG_PRESS_MENU_FILE_PATH](#${
             replaceLowerAdnBlankDash(IMAGE_LONG_PRESS_MENU_FILE_PATH)})
-            |#  * [$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC](#${
-            replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
             |#  * [$ON_ADBLOCK](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
             |#  * [$ON_TERM_BACKEND_WHEN_START](#${
             replaceLowerAdnBlankDash(ON_TERM_BACKEND_WHEN_START)})
@@ -490,15 +476,6 @@ object CommandClickScriptVariable {
             |# ### $IGNORE_HISTORY_PATHS
             |# Ignore history path like grep -v
             |
-            |# ### $CMDCLICK_HISTORY_SWITCH
-            |# Switch app history with url history
-            |
-            |# | switch | $mdDescription |
-            |# | $mdDash | $mdDash |
-            |# | `$historySwitchOn` | switch |
-            |# | `$historySwitchOff` | no switch |
-            |# | `$historySwitchInherit` | inherit config setting (default) |
-            |
             |# ### $EDIT_BOX_TITLE_CONFIG
             |# Edit box title
             |
@@ -530,15 +507,6 @@ object CommandClickScriptVariable {
             |# | $mdDash | $mdDash |
             |# | DSL button | Drag and sort home url script List |
             |# | ADD button | Add fannel to home url script list |
-            |
-            |# ### $CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC
-            |# Switch url history or button script exec
-            |
-            |# | switch | description | 
-            |# | $mdDash | $mdDash |
-            |# | `$urlHistoryOrButtonExecUrlInherit` | inherit config setting |
-            |# | `$urlHistoryOrButtonExecUrlHistory` | switch url history |
-            |# | `$urlHistoryOrButtonExecUrlButtonExec` | switch url button script exec |
             |
             |# ### $ON_ADBLOCK
             |# Adblock switch
@@ -648,6 +616,10 @@ object CommandClickScriptVariable {
             .replace(" ", "-")
     }
 
+//    //        |$NO_SCROLL_SAVE_URLS=""
+//    |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
+//    |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
+
     fun makeScriptContents(
         onUpdateLastModifyValue: String,
 //        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
@@ -670,8 +642,6 @@ object CommandClickScriptVariable {
         |$EDIT_EXECUTE="$EDIT_EXECUTE_DEFAULT_VALUE"
         |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
         |$ON_UPDATE_LAST_MODIFY="${onUpdateLastModifyValue}"
-        |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
-        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
         |$ON_ADBLOCK="$onAdBlockInherit"
         |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
         |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
@@ -679,7 +649,6 @@ object CommandClickScriptVariable {
         |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$IMAGE_LONG_PRESS_MENU_FILE_PATH=""
-        |$NO_SCROLL_SAVE_URLS=""
         |$ON_URL_HISTORY_REGISTER="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
         |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
         |$IGNORE_HISTORY_PATHS=""

@@ -198,29 +198,29 @@ object ConfigFromScriptFileSetter {
             ),
         )
 
-        editFragment.historySwitch = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
-            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
-            SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
-            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.HistorySwitchSelects.OFF.name,
-                SettingVariableSelects.HistorySwitchSelects.ON.name
-            ),
-        )
-
-        editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
-            SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
-            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
-                SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
-            ),
-        )
+//        editFragment.historySwitch = SettingVariableReader.getCbValue(
+//            settingVariableList,
+//            CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
+//            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
+//            SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
+//            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
+//            listOf(
+//                SettingVariableSelects.HistorySwitchSelects.OFF.name,
+//                SettingVariableSelects.HistorySwitchSelects.ON.name
+//            ),
+//        )
+//
+//        editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
+//            settingVariableList,
+//            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
+//            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
+//            SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
+//            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
+//            listOf(
+//                SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
+//                SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
+//            ),
+//        )
         
 
         editFragment.terminalColor = SettingVariableReader.getStrValue(
@@ -322,11 +322,11 @@ object ConfigFromScriptFileSetter {
 
         )
 
-        editFragment.onNoUrlSaveMenu = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS,
-            String()
-        ).isNotEmpty()
+//        editFragment.onNoUrlSaveMenu = SettingVariableReader.getStrValue(
+//            settingVariableList,
+//            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS,
+//            String()
+//        ).isNotEmpty()
 
         editFragment.onUpdateLastModify = !(
                 SettingVariableReader.getStrValue(

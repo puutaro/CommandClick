@@ -44,7 +44,7 @@ object TerminalShowByTerminalDo {
         )
         val onTerminalDoOffAndTermux = (
                 terminalDo == SettingVariableSelects.TerminalDoSelects.OFF.name
-                        || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
+//                        || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
                 )
         if(
             onTerminalDoOffAndTermux

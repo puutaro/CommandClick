@@ -4,7 +4,7 @@ object SettingVariableSelects {
     enum class TerminalDoSelects {
         ON,
         OFF,
-        TERMUX
+//        TERMUX
     }
 
     enum class EditExecuteSelects {
@@ -26,17 +26,17 @@ object SettingVariableSelects {
         NO,
     }
 
-    enum class HistorySwitchSelects {
-        OFF,
-        ON,
-        INHERIT
-    }
+//    enum class HistorySwitchSelects {
+//        OFF,
+//        ON,
+//        INHERIT
+//    }
 
-    enum class UrlHistoryOrButtonExecSelects {
-        URL_HISTORY,
-        BUTTON_EXEC,
-        INHERIT
-    }
+//    enum class UrlHistoryOrButtonExecSelects {
+//        URL_HISTORY,
+//        BUTTON_EXEC,
+//        INHERIT
+//    }
 
     enum class OnUpdateLastModifySelects {
         ON,

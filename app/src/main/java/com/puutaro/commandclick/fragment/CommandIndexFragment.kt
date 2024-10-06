@@ -38,10 +38,10 @@ class CommandIndexFragment: Fragment() {
     private var _binding: CommandIndexFragmentBinding? = null
     val binding get() = _binding!!
     var WebSearchSwitch = WebSearchSwich.ON.bool
-    var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
+//    var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
-    var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
+//    var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var fannelInfoMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var jsExecuteJob: Job? = null

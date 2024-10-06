@@ -88,14 +88,14 @@ object WaitQuizPair {
             "How to specify ${CommandClickScriptVariable.LIST_INDEX_CONFIG}?",
             "-> Use ${CommandClickScriptVariable.LIST_INDEX_CONFIG} in setting vars",
         ),
-        Pair(
-            "What's ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",
-            "-> Logo config in ${CommandClickScriptVariable.LIST_INDEX_CONFIG}",
-        ),
-        Pair(
-            "How to specify ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",
-            "-> Use ${CommandClickScriptVariable.QR_DIALOG_CONFIG} in setting vars",
-        ),
+//        Pair(
+//            "What's ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",
+//            "-> Logo config in ${CommandClickScriptVariable.LIST_INDEX_CONFIG}",
+//        ),
+//        Pair(
+//            "How to specify ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",
+//            "-> Use ${CommandClickScriptVariable.QR_DIALOG_CONFIG} in setting vars",
+//        ),
         Pair(
             "What's ${CommandClickScriptVariable.PLAY_BUTTON_CONFIG}?",
             "-> Play button config in fannel",

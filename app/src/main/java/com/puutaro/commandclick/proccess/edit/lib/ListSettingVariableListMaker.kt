@@ -268,8 +268,8 @@ object ListSettingVariableListMaker {
             -> UsePath.listIndexForEditConfigPath
             CommandClickScriptVariable.FANNEL_STATE_CONFIG
             -> UsePath.fannelStateConfigPath
-            CommandClickScriptVariable.QR_DIALOG_CONFIG
-            -> UsePath.qrDialogConfigPath
+//            CommandClickScriptVariable.QR_DIALOG_CONFIG
+//            -> UsePath.qrDialogConfigPath
             CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG
             -> UsePath.editTitleConfigPath
             CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST

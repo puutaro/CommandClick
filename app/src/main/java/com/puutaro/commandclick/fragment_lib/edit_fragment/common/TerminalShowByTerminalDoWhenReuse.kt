@@ -37,7 +37,7 @@ object TerminalShowByTerminalDoWhenReuse {
         )
         val onTerminalDoOffAndTermux = (
                 terminalDo == SettingVariableSelects.TerminalDoSelects.OFF.name
-                        || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
+//                        || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
                 )
         if(
 //            editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT

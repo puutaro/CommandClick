@@ -67,7 +67,7 @@ object MakeExecCmdForTermux {
         val execCmdSource = if(
             terminalDo == SettingVariableSelects.TerminalDoSelects.OFF.name
             || terminalOutputMode == SettingVariableSelects.TerminalOutPutModeSelects.NO.name
-            || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
+//            || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
             || !terminalViewModel.launchUrl.isNullOrEmpty()
         ) {
             "${beforeCommandSource};" +
