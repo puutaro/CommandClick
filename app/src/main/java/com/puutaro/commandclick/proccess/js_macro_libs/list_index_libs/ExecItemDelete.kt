@@ -2,15 +2,9 @@ package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.app.Dialog
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 object ExecItemDelete {
