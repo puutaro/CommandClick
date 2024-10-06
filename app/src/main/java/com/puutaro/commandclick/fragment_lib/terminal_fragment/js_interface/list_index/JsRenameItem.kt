@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
 import android.webkit.JavascriptInterface
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecRenameFile
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -62,6 +63,7 @@ class JsRenameItem(
         ) ?: return
         ExecRenameFile.rename(
             editFragment,
+            editFragment.binding.editListRecyclerView,
             listIndexPosition,
         )
     }

@@ -400,7 +400,10 @@ object QrScanner{
         val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
         withContext(Dispatchers.Main) {
             ExecAddForListIndexAdapter.execAddForTsv(
-                fragment,
+                fragment.context,
+                fragment.fannelInfoMap,
+                fragment.setReplaceVariableMap,
+                fragment.binding.editListRecyclerView,
                 insertLine
             )
         }

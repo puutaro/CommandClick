@@ -180,7 +180,10 @@ object UrlHistoryAddToTsv {
                 it.startsWith(selectedTitle)
             } ?: return@setOnItemClickListener
             ExecAddForListIndexAdapter.execAddForTsv(
-                editFragment,
+                editFragment.context,
+                editFragment.fannelInfoMap,
+                editFragment.setReplaceVariableMap,
+                editFragment.binding.editListRecyclerView,
                 selectedUrlHistoryLine
             )
             urlHistoryToTsvDialog?.dismiss()

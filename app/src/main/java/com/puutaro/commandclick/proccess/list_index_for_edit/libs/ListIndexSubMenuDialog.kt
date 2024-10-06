@@ -8,19 +8,25 @@ import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 
 object ListIndexSubMenuDialog {
 
     private var listIndexSubMenuDialog: Dialog? = null
 
     fun launch(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String,String>?,
         selectedItemLineMap: Map<String, String>,
         parentMenuName: String,
@@ -29,7 +35,7 @@ object ListIndexSubMenuDialog {
         if(
             jsActionMap.isNullOrEmpty()
         ) return
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         listIndexSubMenuDialog = Dialog(
             context
@@ -49,7 +55,11 @@ object ListIndexSubMenuDialog {
             R.id.list_dialog_search_edit_text
         )?.isVisible = false
         setListView(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListRecyclerView,
             jsActionMap,
             parentMenuName,
             selectedItemLineMap,
@@ -84,13 +94,17 @@ object ListIndexSubMenuDialog {
     }
 
     private fun setListView(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>,
         parentMenuName: String,
         selectedItemLineMap: Map<String, String>,
         position: Int,
     ) {
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         val subMenuListView =
             listIndexSubMenuDialog?.findViewById<ListView>(
@@ -98,7 +112,7 @@ object ListIndexSubMenuDialog {
             )
         val subMenuPairList = MenuSettingTool.createSubMenuListMap(
             ListIndexArgsMaker.makeListIndexClickMenuPairList(
-                editFragment,
+                fragment,
                 jsActionMap
             ),
             parentMenuName,
@@ -109,7 +123,11 @@ object ListIndexSubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListRecyclerView,
             jsActionMap,
             subMenuListView,
             selectedItemLineMap,
@@ -118,7 +136,11 @@ object ListIndexSubMenuDialog {
     }
 
     private fun subMenuItemClickListener(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
         selectedItemLineMap: Map<String, String>,
@@ -131,23 +153,27 @@ object ListIndexSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-            val fannelInfoMap =
-                editFragment.fannelInfoMap
+//            val fannelInfoMap =
+//                fragment.fannelInfoMap
             val updateJsActionMap = JsActionTool.makeJsActionMap(
-                editFragment,
+                fragment,
                 fannelInfoMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ListIndexArgsMaker.makeListIndexClickMenuPairList(
-                        editFragment,
+                        fragment,
                         jsActionMap
                     ),
                     clickedSubMenuName
                 ),
-                editFragment.setReplaceVariableMap,
+                setReplaceVariableMap,
                 String()
             )
             JsPathHandlerForQrAndListIndex.handle(
-                editFragment,
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editListRecyclerView,
                 updateJsActionMap,
                 selectedItemLineMap,
                 listIndexPosition,

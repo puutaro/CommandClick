@@ -206,6 +206,13 @@ object EditTextProducerForEdit {
 //        }?.keys?.firstOrNull() ?: 0
         WithEditComponentListView.create(
             editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editFragment.busyboxExecutor,
+            editFragment.listIndexConfigMap,
+            binding.editListRecyclerView,
+            binding.editListBkFrame,
+            binding.editListSearchEditText,
 //            editParameters
         )
 //        when(true){

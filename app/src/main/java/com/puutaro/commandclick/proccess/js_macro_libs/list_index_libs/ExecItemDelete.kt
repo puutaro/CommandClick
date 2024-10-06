@@ -1,19 +1,12 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.app.Dialog
-import android.view.Gravity
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,7 +127,7 @@ object ExecItemDelete {
 //        }
 
         fun execDeleteAfterConfirm(
-            editFragment: EditFragment,
+            editComponentListAdapter: EditComponentListAdapter,
             parentDirPath: String,
             selectedItem: String,
         ){
@@ -145,7 +138,7 @@ object ExecItemDelete {
             when(true){
                 removeTargetPathPbj.isFile
                 -> deleteFile(
-                    editFragment,
+                    editComponentListAdapter,
                     parentDirPath,
                     selectedItem,
                 )
@@ -158,7 +151,7 @@ object ExecItemDelete {
         }
 
         private fun deleteFile(
-            editFragment: EditFragment,
+            editComponentListAdapter: EditComponentListAdapter,
             parentDirPath: String,
             selectedItem: String,
         ){
@@ -175,22 +168,20 @@ object ExecItemDelete {
             FileSystems.removeDir(
                 "${parentDirPath}/${deleteFannelDir}"
             )
-            CoroutineScope(Dispatchers.Main).launch {
-                withContext(Dispatchers.Main) {
-                    val editComponentListAdapter =
-                        editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
-                    ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                        editFragment,
-                        ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                            editFragment.fannelInfoMap,
-                            editFragment.setReplaceVariableMap,
-                            editComponentListAdapter.indexListMap,
-                            editFragment.busyboxExecutor
-//                           ListIndexAdapter.listIndexTypeKey
-                        )
-                    )
-                }
-            }
+//            CoroutineScope(Dispatchers.Main).launch {
+//                withContext(Dispatchers.Main) {
+//                    ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+//                        editComponentListAdapter,
+//                        ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+//                            editComponentListAdapter.fannelInfoMap,
+//                            editComponentListAdapter.setReplaceVariableMap,
+//                            editComponentListAdapter.indexListMap,
+//                            editComponentListAdapter.busyboxExecutor
+////                           ListIndexAdapter.listIndexTypeKey
+//                        )
+//                    )
+//                }
+//            }
         }
     }
 }

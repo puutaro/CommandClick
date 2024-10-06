@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
@@ -9,14 +11,21 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 
 object ExecCopyFileHere {
     fun copyFileHere(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
+//        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
 //        val type = ListIndexEditConfig.getListIndexType(
 //            editFragment
 //        )
         execCopyHereForTsv(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editListRecyclerView,
             listIndexPosition,
         )
         ToastUtils.showShort("Copy ok")
@@ -37,18 +46,22 @@ object ExecCopyFileHere {
     }
 
     private fun execCopyHereForTsv(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
+//        listIndexForEditAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
         val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView.adapter as EditComponentListAdapter
         val addLine =
             listIndexForEditAdapter.lineMapList[listIndexPosition].let {
                 lineMap ->
 //                val titleConList = it.split("\t")
 
                 val title = lineMap.get(
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                    ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
                 )?.let {
                     "${it}_${CommandClickScriptVariable.makeRndPrefix()}"
                 }
@@ -61,7 +74,10 @@ object ExecCopyFileHere {
                 ).joinToString("\t")
             }
         ExecAddForListIndexAdapter.execAddForTsv(
-            editFragment,
+            fragment.context,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editListRecyclerView,
             addLine
         )
     }

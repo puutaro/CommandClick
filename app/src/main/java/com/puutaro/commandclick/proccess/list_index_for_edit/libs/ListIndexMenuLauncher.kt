@@ -8,13 +8,15 @@ import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 
 
 object ListIndexMenuLauncher {
@@ -22,13 +24,21 @@ object ListIndexMenuLauncher {
     private var listIndexMenuDialog: Dialog? = null
 
     fun launch(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>?,
         selectedItemLineMap: Map<String, String>,
         position: Int,
     ){
         createMenuDialogForListIndex(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListRecyclerView,
             jsActionMap,
             selectedItemLineMap,
             position,
@@ -36,7 +46,11 @@ object ListIndexMenuLauncher {
     }
 
     private fun createMenuDialogForListIndex(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>?,
         selectedItemLineMap: Map<String, String>,
         position: Int,
@@ -44,7 +58,7 @@ object ListIndexMenuLauncher {
         if(
             jsActionMap.isNullOrEmpty()
         ) return
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         listIndexMenuDialog = Dialog(
             context
@@ -53,7 +67,11 @@ object ListIndexMenuLauncher {
             R.layout.list_dialog_layout
         )
         setListView(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListRecyclerView,
             jsActionMap,
             selectedItemLineMap,
             position,
@@ -61,7 +79,7 @@ object ListIndexMenuLauncher {
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
         )?.text = selectedItemLineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
         )
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_message
@@ -81,12 +99,16 @@ object ListIndexMenuLauncher {
     }
 
     private fun setListView(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>,
         selectedItemLineMap: Map<String, String>,
         position: Int,
     ) {
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         val subMenuListView =
             listIndexMenuDialog?.findViewById<ListView>(
@@ -94,7 +116,7 @@ object ListIndexMenuLauncher {
             )
         val menuPairList = MenuSettingTool.createListMenuListMap(
             ListIndexArgsMaker.makeListIndexClickMenuPairList(
-                editFragment,
+                fragment,
                 jsActionMap
             ),
         )
@@ -104,7 +126,11 @@ object ListIndexMenuLauncher {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListRecyclerView,
             jsActionMap,
             subMenuListView,
             selectedItemLineMap,
@@ -129,7 +155,11 @@ object ListIndexMenuLauncher {
     }
 
     private fun subMenuItemClickListener(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
         selectedItemLineMap: Map<String, String>,
@@ -143,7 +173,11 @@ object ListIndexMenuLauncher {
             val clickedMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             jsPathOrSubMenuHandlerForListIndex(
-                editFragment,
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editListRecyclerView,
                 clickedMenuName,
                 jsActionMap,
                 selectedItemLineMap,
@@ -154,7 +188,11 @@ object ListIndexMenuLauncher {
 
 
     private fun jsPathOrSubMenuHandlerForListIndex(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         clickedMenuName: String,
         jsActionMap: Map<String, String>,
         selectedItemLineMap: Map<String, String>,
@@ -162,7 +200,7 @@ object ListIndexMenuLauncher {
     ) {
         val settingButtonMenuPairList =
             ListIndexArgsMaker.makeListIndexClickMenuPairList(
-                editFragment,
+                fragment,
                 jsActionMap,
             )
         val hitMenuItemPairList = !MenuSettingTool.firstOrNullByParentMenuName(
@@ -172,7 +210,11 @@ object ListIndexMenuLauncher {
         when (hitMenuItemPairList) {
             true ->
                 ListIndexSubMenuDialog.launch(
-                    editFragment,
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    editListRecyclerView,
                     jsActionMap,
                     selectedItemLineMap,
                     clickedMenuName,
@@ -180,20 +222,24 @@ object ListIndexMenuLauncher {
                 )
 
             else -> {
-                val fannelInfoMap =
-                    editFragment.fannelInfoMap
+//                val fannelInfoMap =
+//                    fragment.fannelInfoMap
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
-                    editFragment,
+                    fragment,
                     fannelInfoMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName
                     ),
-                    editFragment.setReplaceVariableMap,
+                    setReplaceVariableMap,
                     String()
                 )
                 JsPathHandlerForQrAndListIndex.handle(
-                    editFragment,
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    editListRecyclerView,
                     updateJsActionMap,
                     selectedItemLineMap,
                     listIndexPosition,

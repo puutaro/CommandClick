@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,12 +10,13 @@ import kotlinx.coroutines.withContext
 
 object ExecReWriteForListIndexAdapter {
     fun replaceListElementForTsv(
-        editFragment: EditFragment,
+//        fragment: Fragment,
+        editListRecyclerView: RecyclerView,
         srcAndRepLineMapPairList: List<Pair<Map<String, String>, Map<String, String>>>,
     ){
-        val binding = editFragment.binding
+//        val binding = fragment.binding
         val editComponentListAdapter =
-            binding.editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView.adapter as EditComponentListAdapter
         val srcAndRepLinePairListSize = srcAndRepLineMapPairList.size
         CoroutineScope(Dispatchers.IO).launch {
             srcAndRepLineMapPairList.forEach {
@@ -30,7 +32,7 @@ object ExecReWriteForListIndexAdapter {
                     editComponentListAdapter.notifyItemChanged(replaceItemIndex)
                 }
                 if (srcAndRepLinePairListSize != 1) return@forEach
-                val editListRecyclerView = binding.editListRecyclerView
+//                val editListRecyclerView = binding.editListRecyclerView
                 withContext(Dispatchers.Main) {
                     editListRecyclerView.layoutManager?.scrollToPosition(replaceItemIndex)
                 }

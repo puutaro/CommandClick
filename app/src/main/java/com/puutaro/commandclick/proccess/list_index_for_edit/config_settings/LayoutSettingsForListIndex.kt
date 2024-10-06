@@ -1,13 +1,11 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
 import android.content.Context
-import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.custom_manager.PreLoadGridLayoutManager
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 
 object LayoutSettingsForListIndex {
 
@@ -16,10 +14,20 @@ object LayoutSettingsForListIndex {
     ) {
 //        TYPE("type"),
         COL("col"),
+        ON_REVERSE_LAYOUT("onReverseLayout"),
+        EDIT_BY_DRAG("editByDrag"),
+        MARGIN("margin"),
+        ELEVATION("elevation"),
 //        TO_TOP("toTop")
     }
 
     private val switchOn = "ON"
+
+    enum class EditByDragKey(
+        val key: String,
+    ){
+        EDIT_BY_DRAG_DISABLE("editByDragDisable"),
+    }
 
 //    enum class LayoutTypeValueStr(
 //        val valueStr: String
@@ -36,6 +44,49 @@ object LayoutSettingsForListIndex {
             ListIndexEditConfig.ListIndexConfigKey.LAYOUT.key
         )
     }
+
+    fun howReverseLayout(
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        layoutMap: Map<String, String>?,
+    ): Boolean {
+        return FilePrefixGetter.get(
+            fannelInfoMap,
+            setReplaceVariableMap,
+            layoutMap,
+            LayoutSettingKey.ON_REVERSE_LAYOUT.key
+        ) == switchOn
+    }
+
+    fun makeEditByDragMap(
+        layoutMap: Map<String, String>?,
+    ): Map<String, String> {
+
+        return layoutMap?.get(
+            LayoutSettingKey.EDIT_BY_DRAG.key
+        ).let{
+            CmdClickMap.createMap(
+                it,
+                '?'
+            )
+        }.toMap()
+    }
+
+    fun howDisableEditByDrag(
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+//        editFragment: EditFragment,
+        editByDragMap: Map<String, String>
+    ): Boolean {
+        return FilePrefixGetter.get(
+            fannelInfoMap,
+            setReplaceVariableMap,
+//            editFragment,
+            editByDragMap,
+            EditByDragKey.EDIT_BY_DRAG_DISABLE.key
+        ) == switchOn
+    }
+
 
 
 

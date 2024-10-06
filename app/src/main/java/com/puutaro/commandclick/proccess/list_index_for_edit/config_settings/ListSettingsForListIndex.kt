@@ -7,7 +7,6 @@ import com.puutaro.commandclick.proccess.edit.lib.LayoutSettingFile
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.MapListFileTool
@@ -30,14 +29,12 @@ object ListSettingsForListIndex  {
     ) {
         MAP_LIST_PATH("mapListPath"),
         VIEW_LAYOUT_PATH("viewLayoutPath"),
+        DEFAULT_FRAME_TAG("defaultFrameTag"),
         PREFIX("prefix"),
         SUFFIX("suffix"),
         FILTER_SHELL_PATH("filterShellPath"),
-        EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
-        COMP_TSV_PATH("compTsvPath"),
-        ON_REVERSE_LAYOUT("onReverseLayout"),
-        DEFAULT_VIEW_LAYOUT("defaultViewLayout"),
+        COMP_MAP_LIST_PATH("compMapListPath"),
         ON_ONLY_EXIST_PATH("onOnlyExistPath"),
     }
 
@@ -291,24 +288,10 @@ object ListSettingsForListIndex  {
         val mapListSeparator = ','
 
         enum class Key(val key: String) {
-            SRC_TITLE("srcTitle"),
+            SRC_LABEL("srcLabel"),
             SRC_CON("srcCon"),
             VIEW_LAYOUT_TAG("viewLayoutTag"),
         }
-    }
-
-    enum class stackFromBottomValue {
-        ON
-    }
-
-    enum class EditByDragKey(
-        val key: String,
-    ){
-        EDIT_BY_DRAG_DISABLE("editByDragDisable"),
-    }
-
-    enum class DisableValue {
-        ON
     }
 
     enum class OnOnlyExistPath {
@@ -348,33 +331,6 @@ object ListSettingsForListIndex  {
                     || pathObj.isDirectory
         }
     }
-    fun howDisableEditByDrag(
-        fannelInfoMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
-//        editFragment: EditFragment,
-        editByDragMap: Map<String, String>
-    ): Boolean {
-        return FilePrefixGetter.get(
-            fannelInfoMap,
-            setReplaceVariableMap,
-//            editFragment,
-            editByDragMap,
-            EditByDragKey.EDIT_BY_DRAG_DISABLE.key
-        ) == DisableValue.ON.name
-    }
-
-    fun howReverseLayout(
-        fannelInfoMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
-        indexListMap: Map<String, String>?,
-    ): Boolean {
-        return FilePrefixGetter.get(
-            fannelInfoMap,
-            setReplaceVariableMap,
-            indexListMap,
-            ListSettingKey.ON_REVERSE_LAYOUT.key
-        ) == stackFromBottomValue.ON.name
-    }
 
     fun getSortType(
         fannelInfoMap: Map<String, String>,
@@ -392,39 +348,12 @@ object ListSettingsForListIndex  {
         }  ?: SortByKey.LAST_UPDATE
     }
 
-    fun makeEditByDragMap(
-        listIndexConfigMap: Map<String, String>?,
-    ): Map<String, String> {
-        val listConfigMap = ListIndexEditConfig.getConfigKeyMap(
-            listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.LIST.key
-        )
-        return execMakeEditByDragMap(
-            listConfigMap,
-        )
-    }
-
-    private fun execMakeEditByDragMap(
-        listConfigMap: Map<String, String>?,
-    ): Map<String, String> {
-
-        return listConfigMap?.get(
-            ListSettingKey.EDIT_BY_DRAG.key
-        ).let{
-            CmdClickMap.createMap(
-                it,
-                '?'
-            )
-        }.toMap()
-    }
-
     object ListIndexListMaker {
 
-        private const val throughMark = "-"
         private const val blankListMark = "Let's press sync button at right bellow"
         private const val itemNameMark = "\${ITEM_NAME}"
 
-        fun makeFileListHandler(
+        fun makeLineMapListHandler(
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>,
@@ -440,7 +369,7 @@ object ListSettingsForListIndex  {
 //                    "listIndexTypeKey: ${listIndexTypeKey.key}",
 //                ).joinToString("\n\n")
 //            )
-            return makeTsvConList(
+            return makeLineMapList(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 indexListMap,
@@ -549,12 +478,16 @@ object ListSettingsForListIndex  {
             filterSuffixListCon: String,
             filterShellCon: String,
         ): List<Map<String, String>> {
-            val srcTitleKey = MapListPathManager.Key.SRC_TITLE.key
+            val srcLabelKey = MapListPathManager.Key.SRC_LABEL.key
             val valueSeparatorStr = valueSeparator.toString()
             return lineMapList.filter {
-                val srcTitle = it.get(
-                    srcTitleKey
-                ) ?: return@filter false
+                lineMap ->
+                val srcTitle = lineMap.get(
+                    srcLabelKey
+                )
+                if(
+                    srcTitle.isNullOrEmpty()
+                ) return@filter false
                 CcFilterTool.isFilterByStr(
                     srcTitle,
                     filterPrefixListCon,
@@ -563,23 +496,28 @@ object ListSettingsForListIndex  {
                     valueSeparatorStr
                 )
             }.map {
-                val srcTitle = it.get(
-                    MapListPathManager.Key.SRC_TITLE.key
-                ) ?: return@map it
+                    lineMap ->
+                val srcTitle = lineMap.get(
+                    srcLabelKey
+                ) ?: return@map lineMap
                 val filterTitle = makeFilterShellCon(
                     srcTitle,
                     busyboxExecutor,
                     filterShellCon,
                 )
-                it + mapOf(
-                    srcTitleKey to filterTitle
+                lineMap + mapOf(
+                    srcLabelKey to filterTitle
                 )
             }.filter {
-                it.isNotEmpty()
+                    lineMap ->
+                val srcTitle = lineMap.get(
+                    srcLabelKey
+                ) ?: return@filter false
+                srcTitle.isNotEmpty()
             }
         }
 
-        private fun makeTsvConList(
+        private fun makeLineMapList(
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>,
@@ -655,15 +593,15 @@ object ListSettingsForListIndex  {
                 setReplaceVariableMap,
                 indexListMap
             )
-            val isReverseLayout = howReverseLayout(
-                fannelInfoMap,
-                setReplaceVariableMap,
-                indexListMap
-            )
+//            val isReverseLayout = howReverseLayout(
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                indexListMap
+//            )
             val sortedLineMapList = sortList(
                 sortType,
                 lineMapList,
-                isReverseLayout
+//                isReverseLayout
             )
             updateMapListFile(
                 sortType,
@@ -865,7 +803,7 @@ object ListSettingsForListIndex  {
         fun sortList(
             sortType: SortByKey,
             lineMapList: List<Map<String, String>>,
-            isReverseLayout: Boolean
+//            isReverseLayout: Boolean
         ): List<Map<String, String>> {
             return when(sortType){
                 SortByKey.LAST_UPDATE -> {
@@ -880,7 +818,7 @@ object ListSettingsForListIndex  {
                             .sortedWith(
                                 compareBy {
                                         map ->
-                                    map.get(MapListPathManager.Key.SRC_TITLE.key)
+                                    map.get(MapListPathManager.Key.SRC_LABEL.key)
                                 }
                             )
 //                    val sortedLineMapList =
@@ -892,7 +830,7 @@ object ListSettingsForListIndex  {
                     val sortedLineMapListSrc = lineMapList.sortedWith(
                         compareBy {
                                 map ->
-                            map.get(MapListPathManager.Key.SRC_TITLE.key)
+                            map.get(MapListPathManager.Key.SRC_LABEL.key)
                         }
                     )
 //                    val sortedLineMapList =
@@ -902,39 +840,6 @@ object ListSettingsForListIndex  {
                 }
             }
         }
-
-       private fun extractLabelByTag(
-           layoutBundleList: List<Pair<String, List<List<Pair<String, String>>>>>
-       ): String? {
-           val tagTypeName = EditComponent.Template.EditComponentKey.TAG.key
-           val labelTypeName = EditComponent.Template.EditComponentKey.LABEL.key
-           layoutBundleList.forEach {
-                   layoutPairList ->
-                   val typePairBundleList = layoutPairList.second.firstOrNull tagTypeNameExtract@ {
-                           typeKeyValuePairList ->
-                       val label = typeKeyValuePairList.firstOrNull execTagTypeNameExtract@ {
-                               typeKeyValuePair ->
-                           val typeName = typeKeyValuePair.first
-                           if (
-                               typeName != tagTypeName
-                           ) return@execTagTypeNameExtract false
-                           true
-                       }
-                       label != null
-                   } ?: return String()
-               typePairBundleList.forEach labelExtract@ {
-                       typeKeyValuePair ->
-                   val typeName = typeKeyValuePair.first
-                   if (
-                       typeName != labelTypeName
-                   ) return@labelExtract
-                   return QuoteTool.trimBothEdgeQuote(
-                       typeKeyValuePair.second
-                   )
-               }
-           }
-           return null
-       }
 
         private fun updateMapListFile(
             sortType: SortByKey,
@@ -965,7 +870,7 @@ object ListSettingsForListIndex  {
                     sortedLineMapList.sortedWith(
                         compareBy {
                                 map ->
-                            map.get(MapListPathManager.Key.SRC_TITLE.key)
+                            map.get(MapListPathManager.Key.SRC_LABEL.key)
                         }
                     )
                         .toMutableList()
@@ -974,7 +879,7 @@ object ListSettingsForListIndex  {
                     sortedLineMapList.sortedWith(
                         compareBy {
                                 map ->
-                            map.get(MapListPathManager.Key.SRC_TITLE.key)
+                            map.get(MapListPathManager.Key.SRC_LABEL.key)
                         }
                     )
 //                        .reversed()
@@ -1127,16 +1032,26 @@ private object CompPathManager {
 //        if(
 //            tsvConList.isNotEmpty()
 //        ) return tsvConList
-        val initTsvPath = FilePrefixGetter.get(
+        val compMapListPath = FilePrefixGetter.get(
             fannelInfoMap,
             setReplaceVariableMap,
             indexListMap,
-            ListSettingsForListIndex.ListSettingKey.COMP_TSV_PATH.key
+            ListSettingsForListIndex.ListSettingKey.COMP_MAP_LIST_PATH.key
+        )
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "lComp.txt").absolutePath,
+            listOf(
+                "indexListMap: ${indexListMap}",
+                "COMP_MAP_LIST_PATH: ${indexListMap.get(
+                    ListSettingsForListIndex.ListSettingKey.COMP_MAP_LIST_PATH.key
+                )}",
+                "compMapListPath: ${compMapListPath}",
+            ).joinToString("\n")
         )
         if(
-            initTsvPath.isNullOrEmpty()
+            compMapListPath.isNullOrEmpty()
         ) return lineMapListSrc
-        val initMapListPathObj = File(initTsvPath)
+        val initMapListPathObj = File(compMapListPath)
         val initMapList = when(true){
             initMapListPathObj.isFile ->
                 makeInitConFromFile(
@@ -1146,12 +1061,27 @@ private object CompPathManager {
                 )
             initMapListPathObj.isDirectory -> {
                 val initTsvConSrcDir = initMapListPathObj.absolutePath
+                FileSystems.writeFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "linitTsvConSrcDir.txt").absolutePath,
+                    listOf(
+                        "initTsvConSrcDir: ${initTsvConSrcDir}",
+                        "list: ${FileSystems.sortedFiles(
+                            initTsvConSrcDir
+                        ).map {
+                            val fileObj = File(initTsvConSrcDir, it)
+                            mapOf(
+                                ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key to fileObj.name,
+                                ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to fileObj.absolutePath
+                            )
+                        }}",
+                    ).joinToString("\n")
+                )
                 FileSystems.sortedFiles(
                     initTsvConSrcDir
                 ).map {
                     val fileObj = File(initTsvConSrcDir, it)
                     mapOf(
-                        ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to fileObj.name,
+                        ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key to fileObj.name,
                         ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to fileObj.absolutePath
                     )
                 }

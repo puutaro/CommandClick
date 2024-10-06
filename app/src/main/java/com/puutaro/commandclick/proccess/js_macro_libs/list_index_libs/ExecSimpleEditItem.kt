@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.content.Intent
+import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
@@ -15,11 +16,11 @@ import java.io.File
 object ExecSimpleEditItem {
 
     fun edit(
-        editFragment: EditFragment,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
         writeFileInTsvLine(
-            editFragment,
+            editComponentListAdapter,
             listIndexPosition
         )
 //        val type = ListIndexEditConfig.getListIndexType(
@@ -67,21 +68,22 @@ object ExecSimpleEditItem {
     }
 
     private fun writeFileInTsvLine(
-        editFragment: EditFragment,
+//        fragment: Fragment,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
-        val binding = editFragment.binding
-        val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val binding = fragment.binding
+//        val editComponentListAdapter =
+//            binding.editListRecyclerView.adapter as EditComponentListAdapter
         val selectedLineMap =
-            listIndexForEditAdapter.lineMapList.getOrNull(
+            editComponentListAdapter.lineMapList.getOrNull(
                 listIndexPosition
             ) ?: return
-        val editComponentListAdapter =
-            binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val editComponentListAdapter =
+//            binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath = FilePrefixGetter.get(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.fannelInfoMap,
+            editComponentListAdapter.setReplaceVariableMap,
             editComponentListAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return
@@ -102,7 +104,7 @@ object ExecSimpleEditItem {
 //            TitleFileNameAndPathConPairForListIndexAdapter.get(selectedLineMap)
 //                ?: return
         val filePathOrCon = selectedLineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
         ) ?: String()
         val filePathOrConObj = File(filePathOrCon)
         val isWithFileRename = filePathOrConObj.isFile

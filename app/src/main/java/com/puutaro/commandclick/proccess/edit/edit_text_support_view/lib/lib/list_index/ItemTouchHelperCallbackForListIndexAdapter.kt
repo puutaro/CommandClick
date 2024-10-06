@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index
 
+import android.text.Layout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.RecyclerView
@@ -8,21 +10,26 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecSwi
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.util.list.ListTool
 
 object ItemTouchHelperCallbackForListIndexAdapter {
 
     fun set(
-        editFragment: EditFragment,
+//        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         recyclerView: RecyclerView,
         editComponentListAdapter: EditComponentListAdapter,
+        layoutConfigMap: Map<String, String>
     ){
-        val editByDragMap = ListSettingsForListIndex.makeEditByDragMap(
-            editFragment.listIndexConfigMap,
+        val editByDragMap = LayoutSettingsForListIndex.makeEditByDragMap(
+            layoutConfigMap,
         )
-        val enableEditByDrag = !ListSettingsForListIndex.howDisableEditByDrag(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+        val enableEditByDrag = !LayoutSettingsForListIndex.howDisableEditByDrag(
+            fannelInfoMap,
+            setReplaceVariableMap,
             editByDragMap
         )
         if(!enableEditByDrag) return
@@ -51,7 +58,8 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                         to,
                     )
                     switchHandler(
-                        editFragment,
+                        fannelInfoMap,
+                        setReplaceVariableMap,
                         editComponentListAdapter,
                         fromViewHolder,
                         toViewHolder
@@ -69,7 +77,7 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                     val listIndexViewHolder =
                         viewHolder as EditComponentListAdapter.ListIndexListViewHolder
                     ExecSimpleDelete.removeController(
-                        editFragment,
+                        fragment,
                         recyclerView,
                         editComponentListAdapter,
                         editComponentListAdapter.lineMapList[listIndexViewHolder.bindingAdapterPosition],
@@ -99,14 +107,17 @@ object ItemTouchHelperCallbackForListIndexAdapter {
     }
 
     private fun switchHandler(
-        editFragment: EditFragment,
-        listIndexForEditAdapter: EditComponentListAdapter,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editComponentListAdapter: EditComponentListAdapter,
         fromViewHolder: EditComponentListAdapter.ListIndexListViewHolder,
         toViewHolder: EditComponentListAdapter.ListIndexListViewHolder
     ){
         ExecSwitcherForListIndexAdapter.updateTsv(
-            editFragment,
-            listIndexForEditAdapter.lineMapList
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editComponentListAdapter,
+            editComponentListAdapter.lineMapList
         )
 //        val listIndexTypeKey = ListIndexAdapter.listIndexTypeKey
 //        when(listIndexTypeKey){

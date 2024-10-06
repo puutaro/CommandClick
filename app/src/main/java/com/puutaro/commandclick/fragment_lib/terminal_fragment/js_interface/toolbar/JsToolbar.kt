@@ -176,8 +176,10 @@ class JsToolbar(
                     currentFannelName,
                     currentFannelState
                 ) ?: return@withContext
+                val editListRecyclerView =
+                    editFragment.binding.editListRecyclerView
                 val editComponentListAdapter =
-                    editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+                    editListRecyclerView.adapter as EditComponentListAdapter
                 val tsvPath =
                     FilePrefixGetter.get(
                         editFragment.fannelInfoMap,
@@ -196,8 +198,12 @@ class JsToolbar(
                     ) return@withContext
                 }
                 try {
+                    val editContext = editFragment.context ?: return@withContext
                     ExecAddForListIndexAdapter.execAddForTsv(
-                        editFragment,
+                        editContext,
+                        editFragment.fannelInfoMap,
+                        editFragment.setReplaceVariableMap,
+                        editListRecyclerView,
                         insertLine
                     )
                 } catch(e: Exception){
@@ -277,12 +283,16 @@ class JsToolbar(
             currentFannelName,
             currentFannelState
         ) ?: return
+        val editContext = editFragment.context ?: return
         val insertLine = listOf(
             fileName,
             File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
         ).joinToString("\t")
         ExecAddForListIndexAdapter.execAddForTsv(
-            editFragment,
+            editContext,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editFragment.binding.editListRecyclerView,
             insertLine
         )
 //        when(listIndexType){

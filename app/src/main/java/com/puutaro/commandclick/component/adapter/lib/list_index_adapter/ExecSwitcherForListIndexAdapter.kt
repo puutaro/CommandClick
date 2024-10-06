@@ -11,14 +11,16 @@ import com.puutaro.commandclick.util.tsv.TsvTool
 object ExecSwitcherForListIndexAdapter {
 
     fun updateTsv(
-        editFragment: EditFragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editComponentListAdapter: EditComponentListAdapter,
         lineMapList: List<Map<String, String>>,
     ){
-        val editComponentListAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val editComponentListAdapter =
+//            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath = FilePrefixGetter.get(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+            fannelInfoMap,
+            setReplaceVariableMap,
             editComponentListAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         )
@@ -26,8 +28,8 @@ object ExecSwitcherForListIndexAdapter {
             tsvPath.isNullOrEmpty()
         ) return
         val sortType = ListSettingsForListIndex.getSortType(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+            fannelInfoMap,
+            setReplaceVariableMap,
             editComponentListAdapter.indexListMap
         )
         val sortListIndexListForTsvSave =

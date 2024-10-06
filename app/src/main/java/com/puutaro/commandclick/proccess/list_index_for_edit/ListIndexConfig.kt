@@ -3,7 +3,8 @@ package com.puutaro.commandclick.proccess.list_index_for_edit
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ToastUtils
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -11,7 +12,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ClickScriptSaver
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
@@ -25,7 +25,6 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
-import java.time.LocalDateTime
 
 
 object ListIndexEditConfig {
@@ -33,8 +32,11 @@ object ListIndexEditConfig {
     private const val editTargetContents = "\${EDIT_TARGET_CONTENTS}"
 
     fun handle(
-        editFragment: EditFragment,
-        isLongClick: Boolean,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         selectedItemLineMap: Map<String, String>,
         jsAcCon: String,
         listIndexPosition: Int
@@ -48,8 +50,8 @@ object ListIndexEditConfig {
 //            ListIndexForEditAdapter.indexListMap,
 //            ListIndexForEditAdapter.listIndexTypeKey
 //        )
-        val fannelInfoMap =
-            editFragment.fannelInfoMap
+//        val fannelInfoMap =
+//            fragment.fannelInfoMap
 //        val extraRepValMap = mapOf(
 //            "ITEM_NAME" to selectedItem,
 //            "INDEX_LIST_DIR_PATH" to filterDir,
@@ -70,10 +72,10 @@ object ListIndexEditConfig {
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
         val jsActionMap = JsActionTool.makeJsActionMap(
-            editFragment,
+            fragment,
             fannelInfoMap,
             jsAcCon,
-            editFragment.setReplaceVariableMap,
+            setReplaceVariableMap,
             mainFannelPath
         )
         val clickConfigPairList = CmdClickMap.createMap(
@@ -81,22 +83,29 @@ object ListIndexEditConfig {
             '|'
         )
         val listIndexArgsMaker = ListIndexArgsMaker(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+            fannelInfoMap,
+            setReplaceVariableMap,
             clickConfigPairList,
         )
 
         ClickScriptSaver.save(
-            editFragment,
             listIndexArgsMaker
         )
+        val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
         ExecClickUpdate.update(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editComponentListAdapter,
             listIndexArgsMaker,
             listIndexPosition,
         )
         JsPathHandlerForQrAndListIndex.handle(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListRecyclerView,
             jsActionMap,
             selectedItemLineMap,
             listIndexPosition,
@@ -108,6 +117,17 @@ object ListIndexEditConfig {
         configKey: String,
     ): Map<String, String> {
 
+        return getConfigKeyConList(
+            listIndexConfigMap,
+            configKey,
+        ).toMap()
+    }
+
+    fun getConfigKeyConList(
+        listIndexConfigMap: Map<String, String>?,
+        configKey: String,
+    ): List<Pair<String, String>> {
+
         return listIndexConfigMap?.get(
             configKey
         ).let{
@@ -115,23 +135,23 @@ object ListIndexEditConfig {
                 it,
                 '|'
             )
-        }.toMap()
-    }
-
-    private fun makeClickConfigListStr(
-        editFragment: EditFragment,
-        isLongClick: Boolean,
-    ): String? {
-        val buttonClickMapKey = when(
-            isLongClick
-        ){
-            true -> ListIndexConfigKey.LONG_CLICK.key
-            else -> ListIndexConfigKey.CLICK.key
-
         }
-        return editFragment.listIndexConfigMap
-            ?.get(buttonClickMapKey)
     }
+
+//    private fun makeClickConfigListStr(
+//        editFragment: EditFragment,
+//        isLongClick: Boolean,
+//    ): String? {
+//        val buttonClickMapKey = when(
+//            isLongClick
+//        ){
+//            true -> ListIndexConfigKey.LONG_CLICK.key
+//            else -> ListIndexConfigKey.CLICK.key
+//
+//        }
+//        return editFragment.listIndexConfigMap
+//            ?.get(buttonClickMapKey)
+//    }
 
 //    fun getListIndexType(
 //        editFragment: EditFragment,
@@ -409,12 +429,13 @@ object ListIndexEditConfig {
         LAYOUT("layout"),
         NAME("name"),
         DESC("desc"),
+        BK("bk"),
         CHECK_ITEM("checkItem"),
-        CLICK("click"),
-        LONG_CLICK("longClick"),
+//        CLICK("click"),
+//        LONG_CLICK("longClick"),
         LIST("list"),
         SEARCH_BOX("searchBox"),
-        PERFORM("perform"),
+//        PERFORM("perform"),
         DELETE("delete"),
     }
 }

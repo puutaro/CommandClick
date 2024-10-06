@@ -128,24 +128,24 @@ private object EditTextMaker {
 
     private const val argsSeparator = '&'
 
-    fun make(
-        fragment: Fragment,
-        editTextPropertyMap: Map<String, String>?,
-        currentVariableValue: String?,
-    ): String {
-        val shellConText = makeByShellCon(
-            fragment,
-            editTextPropertyMap,
-            currentVariableValue,
-        )
-        return when(shellConText.isNullOrEmpty()) {
-            false -> shellConText
-            else -> SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
-                fragment,
-                currentVariableValue
-            )
-        }
-    }
+//    fun make(
+//        fragment: Fragment,
+//        editTextPropertyMap: Map<String, String>?,
+//        currentVariableValue: String?,
+//    ): String {
+//        val shellConText = makeByShellCon(
+//            fragment,
+//            editTextPropertyMap,
+//            currentVariableValue,
+//        )
+//        return when(shellConText.isNullOrEmpty()) {
+//            false -> shellConText
+//            else -> SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
+//                fragment,
+//                currentVariableValue
+//            )
+//        }
+//    }
     private fun makeByShellCon(
         fragment: Fragment,
         editTextPropertyMap: Map<String, String>?,

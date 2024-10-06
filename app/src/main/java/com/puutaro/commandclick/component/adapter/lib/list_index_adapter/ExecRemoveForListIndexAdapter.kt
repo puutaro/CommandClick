@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -12,14 +11,12 @@ import java.io.File
 object ExecRemoveForListIndexAdapter {
 
     fun updateTsv(
-        editFragment: EditFragment,
+        editComponentListAdapter: EditComponentListAdapter,
         removeItemLineList: List<Map<String, String>>,
     ){
-        val editComponentListAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val mapListPath = FilePrefixGetter.get(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.fannelInfoMap,
+            editComponentListAdapter.setReplaceVariableMap,
             editComponentListAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         )
@@ -33,7 +30,7 @@ object ExecRemoveForListIndexAdapter {
     }
 
     fun removeCon(
-        editFragment: EditFragment,
+        editComponentListAdapter: EditComponentListAdapter,
 //        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
         removeItemLineMap: Map<String, String>,
     ){
@@ -45,7 +42,7 @@ object ExecRemoveForListIndexAdapter {
 //            -> {}
 //        }
         val onDeleteConFile = DeleteSettingsForListIndex.howOnDeleteConFileValue(
-            EditComponentListAdapter.deleteConfigMap
+            editComponentListAdapter.deleteConfigMap
         )
         if(
             !onDeleteConFile
@@ -63,7 +60,7 @@ object ExecRemoveForListIndexAdapter {
         val parentDirPath = filePathObj.parent
             ?: return
         ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
-            editFragment,
+            editComponentListAdapter,
             parentDirPath,
             fileName,
         )

@@ -1,16 +1,22 @@
 package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 
-import com.puutaro.commandclick.fragment.EditFragment
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.ExecMacroHandlerForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.ExecMacroHandlerForQr
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsMacroForQr
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 
 object MacroHandlerForQrAndListIndex {
 
     fun handle(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
         jsActionMap: Map<String, String>?,
         selectecdLineMap: Map<String, String>,
         listIndexPosition: Int,
@@ -29,7 +35,7 @@ object MacroHandlerForQrAndListIndex {
             macroForQr != null
         ){
             ExecMacroHandlerForQr.handle(
-                editFragment,
+                fragment,
                 macroForQr,
                 selectecdLineMap,
             )
@@ -42,7 +48,11 @@ object MacroHandlerForQrAndListIndex {
             macroForListIndex != null
         ){
             ExecMacroHandlerForListIndex.handle(
-                editFragment,
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editListRecyclerView,
                 jsActionMap,
                 selectecdLineMap,
                 listIndexPosition,

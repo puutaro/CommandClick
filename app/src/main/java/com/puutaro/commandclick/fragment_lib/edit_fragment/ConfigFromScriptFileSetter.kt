@@ -92,8 +92,16 @@ object ConfigFromScriptFileSetter {
                 setReplaceVariableMap
             )
         }
+        val binding = editFragment.binding
+        val editTextView = binding.editTextView
         TitleImageAndViewSetter.set(
-            editFragment
+            editFragment,
+            editTextView,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editFragment.busyboxExecutor,
+            binding.editTitleImage,
+            editFragment.editBoxTitleConfig
         )
 
 //        val isSettingEdit = !editFragment.enableCmdEdit
@@ -540,20 +548,20 @@ object ConfigFromScriptFileSetter {
                     )
                 }
             )
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "toolbarInInitMap.txt").absolutePath,
-            listOf(
-                "settingVariableList ${settingVariableList}",
-                "${CommandClickScriptVariable.SETTING_BUTTON_CONFIG}: ${execMakeToolbarButtonConfigMap(
-                    editFragment,
-                    settingVariableList,
-                    CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
-                    String(),
-                    onShortcut,
-                )}",
-                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
-            ).joinToString("\n")
-        )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "toolbarInInitMap.txt").absolutePath,
+//            listOf(
+//                "settingVariableList ${settingVariableList}",
+//                "${CommandClickScriptVariable.SETTING_BUTTON_CONFIG}: ${execMakeToolbarButtonConfigMap(
+//                    editFragment,
+//                    settingVariableList,
+//                    CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
+//                    String(),
+//                    onShortcut,
+//                )}",
+//                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
+//            ).joinToString("\n")
+//        )
     }
 
     private fun setEditToolBarButtonIcon(

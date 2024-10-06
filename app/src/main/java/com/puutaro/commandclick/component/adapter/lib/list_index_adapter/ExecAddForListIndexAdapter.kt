@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
+import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
@@ -30,27 +32,29 @@ object ExecAddForListIndexAdapter {
         val virtualListIndexList =
             listIndexForEditAdapter.lineMapList +
                     listOf(addLineMap)
-        val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
-            listIndexForEditAdapter.fannelInfoMap,
-            listIndexForEditAdapter.setReplaceVariablesMap,
-            listIndexForEditAdapter.indexListMap
-        )
+//        val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
+//            listIndexForEditAdapter.fannelInfoMap,
+//            listIndexForEditAdapter.setReplaceVariablesMap,
+//            listIndexForEditAdapter.indexListMap
+//        )
         return ListSettingsForListIndex.ListIndexListMaker.sortList(
             sortType,
             virtualListIndexList,
-            isReverseLayout
+//            isReverseLayout
         ).indexOf(addLineMap)
     }
 
     private fun listUpdateByInsertItem(
-        editFragment: EditFragment,
+//        editFragment: EditFragment,
+        editListRecyclerView: RecyclerView,
+//        editComponentListAdapter: EditComponentListAdapter,
         addLine: String,
         insertIndex: Int,
     ){
-        val binding = editFragment.binding
-        val editListRecyclerView = binding.editListRecyclerView
+//        val binding = editFragment.binding
+//        val editListRecyclerView = binding.editListRecyclerView
         val editComponentListAdapter =
-            binding.editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView.adapter as EditComponentListAdapter
         val addLineMap = CmdClickMap.createMap(
             addLine,
             ListSettingsForListIndex.MapListPathManager.mapListSeparator
@@ -208,17 +212,21 @@ object ExecAddForListIndexAdapter {
 
 
     fun execAddForTsv(
-        editFragment: EditFragment,
+        context: Context?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
+//        editComponentListAdapter: EditComponentListAdapter,
         insertLine: String,
     ){
-        val context = editFragment.context
-        val listIndexForEditAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val context = editFragment.context
+        val editComponentListAdapter =
+            editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath =
             FilePrefixGetter.get(
-                editFragment.fannelInfoMap,
-                editFragment.setReplaceVariableMap,
-                listIndexForEditAdapter.indexListMap,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editComponentListAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
 //        FileSystems.writeFile(
@@ -254,16 +262,16 @@ object ExecAddForListIndexAdapter {
                 isDetect
             ) return
         }
-        val editComponentAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val editComponentAdapter =
+//            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val sortType = ListSettingsForListIndex.getSortType(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
-            editComponentAdapter.indexListMap
+            editComponentListAdapter.fannelInfoMap,
+            editComponentListAdapter.setReplaceVariableMap,
+            editComponentListAdapter.indexListMap
         )
         val insertIndex = getInsertIndex(
             sortType,
-            listIndexForEditAdapter,
+            editComponentListAdapter,
             insertLine,
         )
 
@@ -287,7 +295,8 @@ object ExecAddForListIndexAdapter {
             ListSettingsForListIndex.SortByKey.SORT_TYPE,
             ListSettingsForListIndex.SortByKey.REVERSE ->
                 listUpdateByInsertItem(
-                    editFragment,
+//                    editFragment,
+                    editListRecyclerView,
                     insertLine,
                     insertIndex
                 )

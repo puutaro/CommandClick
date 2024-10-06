@@ -23,6 +23,7 @@ object SearchBoxSettingsForListIndex {
 
     fun makeCurrentVariableValueInEditText(
         fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
         currentVariableValue: String?
     ): String {
         if(
@@ -31,7 +32,7 @@ object SearchBoxSettingsForListIndex {
         if(
             fragment !is EditFragment
         ) return currentVariableValue
-        val fannelInfoMap = fragment.fannelInfoMap
+//        val fannelInfoMap = fragment.fannelInfoMap
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
 //        )

@@ -307,8 +307,8 @@ object QrDialogMethod {
                     is EditFragment -> {
                         val editComponentListAdapter = fragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
                         ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                            fragment,
-                            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                            editComponentListAdapter,
+                            ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
                                 editComponentListAdapter.indexListMap,
@@ -391,8 +391,8 @@ object QrDialogMethod {
                         val editComponentListAdapter =
                             fragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
                         ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                            fragment,
-                            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                            editComponentListAdapter,
+                            ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
                                 editComponentListAdapter.indexListMap,

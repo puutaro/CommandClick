@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
 import android.webkit.JavascriptInterface
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleEditItem
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecWriteItem
@@ -64,8 +65,10 @@ class JsEditorItem(
             currentFannelName,
             currentFannelState
         ) ?: return
+        val editComponentListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         ExecSimpleEditItem.edit(
-            editFragment,
+            editComponentListAdapter,
             listIndexPosition,
         )
     }
@@ -121,8 +124,12 @@ class JsEditorItem(
             currentFannelName,
             currentFannelState
         ) ?: return
+        val editComponentListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val editContext = editFragment.context ?: return
         ExecWriteItem.write(
-            editFragment,
+            editContext,
+            editComponentListAdapter,
             listIndexPosition
         )
     }

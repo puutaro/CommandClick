@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexReplacer
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 
@@ -11,12 +11,12 @@ object DeleteSettingsForListIndex {
         val key: String
     ){
         DISABLE_DELETE_CONFIRM("disableDeleteConfirm"),
-        ON_DELETE_CON_FILE("onDeleteConFile"),
+        ON_DELETE_FILE("onDeleteFile"),
         WITH_JS_ACTION("withJsAction"),
     }
 
     enum class OnDeleteConFileValue {
-        OFF
+        ON
     }
 
 
@@ -36,20 +36,20 @@ object DeleteSettingsForListIndex {
         deleteConfigMap: Map<String, String>?,
     ): Boolean {
         return deleteConfigMap?.get(
-            DeleteKey.ON_DELETE_CON_FILE.key
-        ) != OnDeleteConFileValue.OFF.name
+            DeleteKey.ON_DELETE_FILE.key
+        ) == OnDeleteConFileValue.ON.name
     }
 
     fun doWithJsAction(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        editComponentListAdapter: EditComponentListAdapter,
         selectedItemMap: Map<String, String>,
         listIndexListPosition: Int,
     ){
-        val jsActionConSrcBeforeReplace = EditComponentListAdapter.deleteConfigMap.get(
+        val jsActionConSrcBeforeReplace = editComponentListAdapter.deleteConfigMap.get(
             DeleteKey.WITH_JS_ACTION.key
         )
         val jsActionCon = ListIndexReplacer.replace(
-            editFragment,
             jsActionConSrcBeforeReplace,
             selectedItemMap,
             listIndexListPosition,
@@ -58,10 +58,10 @@ object DeleteSettingsForListIndex {
             jsActionCon.isNullOrEmpty()
         ) return
         JsActionHandler.handle(
-            editFragment,
-            editFragment.fannelInfoMap,
+            fragment,
+            editComponentListAdapter.fannelInfoMap,
             String(),
-            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.setReplaceVariableMap,
             jsActionCon
         )
     }

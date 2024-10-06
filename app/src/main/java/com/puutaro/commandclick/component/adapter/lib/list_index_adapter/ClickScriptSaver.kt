@@ -6,7 +6,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 
 object ClickScriptSaver {
     fun save(
-        editFragment: EditFragment,
         listIndexArgsMaker: ListIndexArgsMaker,
     ){
         val clickConfigMap = listIndexArgsMaker.clickConfigPairList

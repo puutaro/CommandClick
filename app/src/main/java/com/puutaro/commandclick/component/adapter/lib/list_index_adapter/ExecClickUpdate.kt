@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
@@ -13,7 +14,10 @@ import com.puutaro.commandclick.util.map.FilePrefixGetter
 object ExecClickUpdate {
 
     fun update(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexArgsMaker: ListIndexArgsMaker,
         bindingAdapterPosition: Int,
     ){
@@ -24,7 +28,10 @@ object ExecClickUpdate {
             )
         if(!enableClickUpdate) return
         updateForTsv(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editComponentListAdapter,
             bindingAdapterPosition
         )
 //        when(ListIndexAdapter.listIndexTypeKey) {
@@ -45,15 +52,18 @@ object ExecClickUpdate {
     }
 
     private fun updateForTsv(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editComponentListAdapter: EditComponentListAdapter,
         bindingAdapterPosition: Int,
     ){
-        val editComponentAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val editComponentAdapter =
+//            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val sortType = ListSettingsForListIndex.getSortType(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
-            editComponentAdapter.indexListMap
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editComponentListAdapter.indexListMap
         )
         when(sortType){
             ListSettingsForListIndex.SortByKey.SORT_TYPE,
@@ -62,17 +72,17 @@ object ExecClickUpdate {
             ListSettingsForListIndex.SortByKey.LAST_UPDATE,
             -> {}
         }
-        val binding = editFragment.binding
-        val editListRecyclerView = binding.editListRecyclerView
-        val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
+//        val binding = editFragment.binding
+//        val editListRecyclerView = binding.editListRecyclerView
+//        val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
         val lineMap =
             editComponentListAdapter.lineMapList.getOrNull(
                 bindingAdapterPosition
             ) ?: return
         val mapListPath = FilePrefixGetter.get(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
-            editComponentAdapter.indexListMap,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editComponentListAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         )
         MapListFileTool.insertMapFileInFirst(
@@ -80,7 +90,7 @@ object ExecClickUpdate {
             lineMap
         )
         BroadcastSender.normalSend(
-            editFragment.context,
+            fragment.context,
             BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
         )
     }

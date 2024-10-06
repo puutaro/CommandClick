@@ -4,19 +4,21 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.ItemPathMaker
 import java.io.File
 
 object ExecCopyPath {
     fun copyPath(
-        editFragment: EditFragment,
+        context: Context,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
-        val context = editFragment.context
-            ?: return
+//        val context = editFragment.context
+//            ?: return
         val copyPath = ItemPathMaker.make(
-            editFragment,
+            editComponentListAdapter,
             listIndexPosition,
         ) ?: return
         if(

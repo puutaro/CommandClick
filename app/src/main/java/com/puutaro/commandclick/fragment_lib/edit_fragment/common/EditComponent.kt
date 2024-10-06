@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.util.LogSystems
@@ -16,9 +17,27 @@ object EditComponent {
 
                 val switchOn = "ON"
 
-                enum class SrcReplaceHolders(val key: String){
-                        SRC_LABEL("\${SRC_LABEL}"),
-                        SRC_CON("\${SRC_CON}"),
+                object ReplaceHolder {
+                        fun replaceHolder(
+                                con: String?,
+                                srcLabel: String,
+                                srcCon: String,
+                        ): String? {
+                                if(con == null) return null
+                                return con.replace(
+                                        SrcReplaceHolders.SRC_LABEL.key,
+                                        srcLabel
+                                ).replace(
+                                        SrcReplaceHolders.SRC_CON.key,
+                                        srcCon
+                                )
+
+                        }
+
+                        enum class SrcReplaceHolders(val key: String){
+                                SRC_LABEL("\${SRC_LABEL}"),
+                                SRC_CON("\${SRC_CON}"),
+                        }
                 }
 
                 enum class LayoutKey(val key: String){
@@ -59,13 +78,24 @@ object EditComponent {
                         HEIGHT("height"),
                         TEXT_ALPHA("textAlpha"),
                         IMAGE_ALPHA("imageAlpha"),
+                        IMAGE_SCALE("imageScale")
+                }
+
+
+                enum class ImageScale(
+                        val str: String,
+                        val scale:  ImageView.ScaleType
+                ){
+                        FIT_CENTER("fitCenter", ImageView.ScaleType.FIT_CENTER),
+                        FIT_XY("fitXy", ImageView.ScaleType.FIT_XY),
+                        CENTER_CROP("centerCrop", ImageView.ScaleType.CENTER_CROP),
                 }
 
                 object LabelManager {
                         enum class LabelKey(val key: String) {
-                                PREFIX("prefix"),
-                                SUFFIX("suffix"),
-                                FILTER_SHELL_PATH("filterShellPath"),
+//                                PREFIX("prefix"),
+//                                SUFFIX("suffix"),
+//                                FILTER_SHELL_PATH("filterShellPath"),
                                 SRC("src"),
                         }
 
@@ -81,22 +111,14 @@ object EditComponent {
 
                         fun makeLabel(
                                 labelMap: Map<String, String>?,
-                                srcTitle: String,
-                                srcCon: String,
 //                                busyboxExecutor: BusyboxExecutor?,
-                        ): String {
+                        ): String? {
                                 if(
                                         labelMap.isNullOrEmpty()
                                 ) return String()
                                 return labelMap.get(
                                         LabelKey.SRC.key
-                                )?.replace(
-                                        SrcReplaceHolders.SRC_LABEL.key,
-                                        srcTitle
-                                )?.replace(
-                                        SrcReplaceHolders.SRC_CON.key,
-                                        srcCon
-                                ) ?: String()
+                                )
 //                                val filterPrefixListCon = labelMap.get(
 //                                        LabelKey.PREFIX.key
 //                                )?.split(valueSeparator)

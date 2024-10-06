@@ -1,23 +1,24 @@
 package com.puutaro.commandclick.util.file
 
 import android.app.Dialog
+import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecReWriteForListIndexAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -26,14 +27,16 @@ object MapListFileRenamer {
     private var renamePromptDialog: Dialog? = null
 
     fun rename(
-        editFragment: EditFragment,
+        context: Context?,
+        editListRecyclerView: RecyclerView,
         mapListPath: String,
         lineMap: Map<String, String>,
     ){
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 execRename(
-                    editFragment,
+                    context,
+                    editListRecyclerView,
                     mapListPath,
                     lineMap,
                 )
@@ -42,13 +45,17 @@ object MapListFileRenamer {
     }
 
     private fun execRename(
-        editFragment: EditFragment,
+        context: Context?,
+        editListRecyclerView: RecyclerView,
         mapListPath: String,
         lineMap: Map<String, String>,
     ){
-        editFragment.disableKeyboardFragmentChange = true
-        val context = editFragment.context
-            ?: return
+        if(
+            context == null
+        ) return
+//        fragment.disableKeyboardFragmentChange = true
+//        val context = fragment.context
+//            ?: return
 
         renamePromptDialog = Dialog(
             context
@@ -74,7 +81,7 @@ object MapListFileRenamer {
 //            TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                ?: return
         val fileNameOrSRCTitle = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
         )
 //            titleFileNameAndPathConPair.first
 
@@ -86,7 +93,9 @@ object MapListFileRenamer {
                 R.id.prompt_dialog_cancel
             )
         promptCancelButton?.setOnClickListener {
-            dismissProcess(editFragment)
+            dismissProcess(
+//                fragment
+            )
         }
         val promptOkButtonView =
             renamePromptDialog?.findViewById<AppCompatImageButton>(
@@ -96,19 +105,23 @@ object MapListFileRenamer {
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
                     ExecRenameProcess.rename(
-                        editFragment,
+                        editListRecyclerView,
                         mapListPath,
                         lineMap,
                         promptEditText,
                     )
                 }
                 withContext(Dispatchers.Main) {
-                    dismissProcess(editFragment)
+                    dismissProcess(
+//                        fragment
+                    )
                 }
             }
         }
         renamePromptDialog?.setOnCancelListener {
-            dismissProcess(editFragment)
+            dismissProcess(
+//                fragment
+            )
         }
         renamePromptDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -122,7 +135,7 @@ object MapListFileRenamer {
 
     private object ExecRenameProcess {
         fun rename(
-            editFragment: EditFragment,
+            editListRecyclerView: RecyclerView,
             mapListPath: String,
             lineMap: Map<String, String>,
             promptEditText: AutoCompleteTextView?,
@@ -138,7 +151,7 @@ object MapListFileRenamer {
 //            val titleFileNameAndPathConPair =
 //                TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                    ?: return
-            val SRCTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            val SRCTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
             val fileNameOrTitle = lineMap.get(
                 SRCTitleKey
             ) ?: String()
@@ -196,7 +209,8 @@ object MapListFileRenamer {
                 )
             }
             ExecReWriteForListIndexAdapter.replaceListElementForTsv(
-                editFragment,
+//                fragment,
+                editListRecyclerView,
                 srcAndRepLinePairMapList
             )
         }
@@ -219,15 +233,15 @@ object MapListFileRenamer {
     }
 
     private fun dismissProcess(
-        editFragment: EditFragment
+//        editFragment: EditFragment
     ){
         renamePromptDialog?.dismiss()
         renamePromptDialog = null
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO) {
-                delay(200)
-                editFragment.disableKeyboardFragmentChange = false
-            }
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.IO) {
+//                delay(200)
+//                editFragment.disableKeyboardFragmentChange = false
+//            }
+//        }
     }
 }

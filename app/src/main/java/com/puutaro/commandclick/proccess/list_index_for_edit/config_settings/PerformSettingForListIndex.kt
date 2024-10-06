@@ -14,20 +14,20 @@ object PerformSettingForListIndex {
         ON
     }
 
-    fun makePerformMap(
-        listIndexConfigMap: Map<String, String>?,
-    ): Map<String, String> {
-        return ListIndexEditConfig.getConfigKeyMap(
-            listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.PERFORM.key
-        )
-    }
+//    fun makePerformMap(
+//        listIndexConfigMap: Map<String, String>?,
+//    ): Map<String, String> {
+//        return ListIndexEditConfig.getConfigKeyMap(
+//            listIndexConfigMap,
+//            ListIndexEditConfig.ListIndexConfigKey.PERFORM.key
+//        )
+//    }
 
-    fun howFastMode(
-        performMap: Map<String, String>?,
-    ): Boolean {
-        return performMap?.get(
-            PerformSettingKey.FAST.key
-        ) == FastModeKey.ON.name
-    }
+//    fun howFastMode(
+//        performMap: Map<String, String>?,
+//    ): Boolean {
+//        return performMap?.get(
+//            PerformSettingKey.FAST.key
+//        ) == FastModeKey.ON.name
+//    }
 }

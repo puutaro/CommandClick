@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
@@ -20,6 +22,10 @@ class GetFileForEdit(
     private var prefixSuffixSeparator = "&"
 
     fun get(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
         parentDirPath: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
@@ -32,6 +38,10 @@ class GetFileForEdit(
     ){
         when (onDirectoryPick) {
             true -> execGetDir(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editListRecyclerView,
                 parentDirPath,
                 filterPrefixListCon,
                 filterSuffixListCon,
@@ -42,6 +52,10 @@ class GetFileForEdit(
                 tag,
             )
             else -> execGetFile(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editListRecyclerView,
                 parentDirPath,
                 filterPrefixListCon,
                 filterSuffixListCon,
@@ -55,6 +69,10 @@ class GetFileForEdit(
     }
 
     private fun execGetDir(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
         parentDirPath: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
@@ -95,6 +113,10 @@ class GetFileForEdit(
                 absolutePath,
             )
             registerFileHandler(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editListRecyclerView,
                 absolutePath,
                 true,
             )
@@ -102,6 +124,10 @@ class GetFileForEdit(
     }
 
     private fun execGetFile(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
         parentDirPath: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
@@ -147,6 +173,10 @@ class GetFileForEdit(
                         it,
                     )
                     registerFileHandler(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        editListRecyclerView,
                         it,
                         false,
                     )
@@ -166,14 +196,20 @@ class GetFileForEdit(
 //    }
 
     private fun execGetForTsv(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
         sourceFilePath: String,
     ){
         val sourceScriptFilePathObj = File(sourceFilePath)
         val sourceScriptName = sourceScriptFilePathObj.name
         val insertLine = "${sourceScriptName}\t${sourceFilePath}"
         ExecAddForListIndexAdapter.execAddForTsv(
-            editFragment,
+            fragment.context,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editListRecyclerView,
             insertLine
         )
     }
@@ -202,6 +238,10 @@ class GetFileForEdit(
     }
 
     private fun registerFileHandler(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView,
         sourceFileOrDirPath: String,
         onDirectoryPick: Boolean,
     ){
@@ -211,7 +251,10 @@ class GetFileForEdit(
 //            editFragment
 //        )
         execGetForTsv(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editListRecyclerView,
             sourceFileOrDirPath,
         )
 //        when(type){

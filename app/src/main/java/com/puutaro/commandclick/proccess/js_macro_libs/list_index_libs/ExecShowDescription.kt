@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import com.puutaro.commandclick.fragment.EditFragment
+import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.ItemPathMaker
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.util.file.ReadText
@@ -8,11 +9,12 @@ import java.io.File
 
 object ExecShowDescription {
     fun desc(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
         val showFilePath = ItemPathMaker.make(
-            editFragment,
+            editComponentListAdapter,
             listIndexPosition,
         ) ?: return
         val showFilePathObj = File(showFilePath)
@@ -20,7 +22,7 @@ object ExecShowDescription {
 //            ?: return
         val showFileName = showFilePathObj.name
         ScriptFileDescription.show(
-            editFragment,
+            fragment,
             ReadText(
                 File(
                     showFilePath

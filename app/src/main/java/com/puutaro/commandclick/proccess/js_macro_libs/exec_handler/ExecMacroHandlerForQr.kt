@@ -1,8 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.exec_handler
 
-import com.puutaro.commandclick.fragment.EditFragment
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
-import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrLogoEditDialogLauncher
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsMacroForQr
 import com.puutaro.commandclick.proccess.js_macro_libs.qr_libs.ExecQr
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -10,11 +9,11 @@ import com.puutaro.commandclick.util.dialog.DialogObject
 
 object ExecMacroHandlerForQr {
     fun handle(
-        editFragment: EditFragment,
+        fragment: Fragment,
         macroForQr: JsMacroForQr,
         selectedLineMap: Map<String, String>,
     ){
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         val clickFileName =  selectedLineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
@@ -22,7 +21,7 @@ object ExecMacroHandlerForQr {
         when(macroForQr) {
             JsMacroForQr.EXEC_QR
             -> ExecQr.exec(
-                editFragment,
+                fragment,
                 clickFileName,
             )
 
@@ -33,12 +32,12 @@ object ExecMacroHandlerForQr {
 //                    editFragment
 //                )
                 val contents = ActionToolForQr.getContents(
-                    editFragment.context,
+                    fragment.context,
                     parentDirPath,
                     clickFileName
                 ) ?: return
                 ScriptFileDescription.show(
-                    editFragment,
+                    fragment,
                     contents.split("\n"),
 //                    parentDirPath,
                     clickFileName
@@ -66,7 +65,7 @@ object ExecMacroHandlerForQr {
 //                    editFragment
 //                )
                 val contents = ActionToolForQr.getContents(
-                    editFragment.context,
+                    fragment.context,
                     parentDirPath,
                     clickFileName
                 ) ?: return

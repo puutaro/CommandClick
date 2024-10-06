@@ -8,6 +8,7 @@ import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -30,7 +31,7 @@ object ExecCopyFileSimple {
     const val extraMapSeparator = '|'
 
     fun copy(
-        editFragment: EditFragment,
+        fragment: Fragment,
         selectedItem: String,
         jsActionMap: Map<String, String>?,
     ){
@@ -46,7 +47,7 @@ object ExecCopyFileSimple {
         ).toMap()
         val onWithFile = WithCpFile.howWithFile(extraMap)
         ExecSimpleCopy.execCopy(
-            editFragment,
+            fragment,
             copyDirOrTsvPathToTypeCon,
             selectedItem,
             onWithFile,
@@ -92,7 +93,7 @@ object ExecSimpleCopy {
     )
 
     fun execCopy(
-        editFragment: EditFragment,
+        fragment: Fragment,
         copyDirOrTsvPathToTypeCon: String,
         selectedItem: String,
         onWithFile: Boolean,
@@ -111,7 +112,7 @@ object ExecSimpleCopy {
 //            ).joinToString("\n\n\n")
 //        )
         val copyDirOrTsvList = makeCopyDirOrTsvList(
-            editFragment,
+//            fragment,
             copyDirOrTsvPathToTypeCon,
         )
         if (
@@ -131,7 +132,7 @@ object ExecSimpleCopy {
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 CopyListDialog.launch(
-                    editFragment,
+                    fragment,
                     copyDirOrTsvList,
                     srcItem,
                     onWithFile,
@@ -174,11 +175,13 @@ object ExecSimpleCopy {
 //        }
     }
     private fun makeCopyDirOrTsvList(
-        editFragment: EditFragment,
+//        fragment: Fragment,
         copyDirOrTsvPathToTypeCon: String,
     ): List<Pair<String, Int>> {
         val defaultDirOrTsvType =
-            makeDefaultDirOrTsvType(editFragment)
+            makeDefaultDirOrTsvType(
+//                fragment
+            )
         return copyDirOrTsvPathToTypeCon.split("\n").map {
             val dirOrTsvPathAndTypeList = it.split("\t")
             val dirOrTsvPath = dirOrTsvPathAndTypeList.firstOrNull()
@@ -222,7 +225,7 @@ object ExecSimpleCopy {
     }
 
     private fun makeDefaultDirOrTsvType(
-        editFragment: EditFragment
+//        editFragment: EditFragment
     ): String {
 //        val type = ListIndexEditConfig.getListIndexType(
 //            editFragment
@@ -243,12 +246,12 @@ object CopyListDialog {
     private var copyListDialog: Dialog? = null
 
     fun launch(
-        editFragment: EditFragment,
+        fragment: Fragment,
         copyDirOrTsvList: List<Pair<String, Int>>,
         srcItem: String,
         onWithFile: Boolean,
     ) {
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         copyListDialog = Dialog(
             context
@@ -267,7 +270,7 @@ object CopyListDialog {
             R.id.list_dialog_search_edit_text
         )?.isVisible = false
         setListView(
-            editFragment,
+            fragment,
             copyDirOrTsvList,
             srcItem,
             onWithFile,
@@ -301,12 +304,12 @@ object CopyListDialog {
     }
 
     private fun setListView(
-        editFragment: EditFragment,
+        fragment: Fragment,
         copyDirOrTsvList: List<Pair<String, Int>>,
         srcItem: String,
         onWithFile: Boolean,
     ) {
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         val copyListView =
             copyListDialog?.findViewById<ListView>(

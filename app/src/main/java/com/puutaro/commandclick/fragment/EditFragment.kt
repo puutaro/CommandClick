@@ -360,8 +360,8 @@ class EditFragment: Fragment() {
             delay(100)
             val editComponentListAdapter = binding.editListRecyclerView.adapter as EditComponentListAdapter
             ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                this@EditFragment,
-                ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                editComponentListAdapter,
+                ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                     this@EditFragment.fannelInfoMap,
                     this@EditFragment.setReplaceVariableMap,
                     editComponentListAdapter.indexListMap,

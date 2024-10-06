@@ -1,9 +1,10 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
+import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,10 +12,14 @@ import kotlinx.coroutines.launch
 
 object ExecCopyFile {
     fun copyFile(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
         listIndexPosition: Int,
         filterMap: Map<String, String>,
     ){
+        if(
+            fragment !is EditFragment
+        ) return
 //        val type = ListIndexEditConfig.getListIndexType(
 //            editFragment
 //        )
@@ -35,7 +40,7 @@ object ExecCopyFile {
             it.name == pickerMacroStr
         }
         val fannelName = FannelInfoTool.getCurrentFannelName(
-            editFragment.fannelInfoMap
+            fannelInfoMap
         )
         val initialPath = FilePickerTool.makeInitialDirPath(
             filterMap,
@@ -44,7 +49,7 @@ object ExecCopyFile {
             tag,
         )
         CoroutineScope(Dispatchers.Main).launch {
-            editFragment.directoryAndCopyGetter?.get(
+            fragment.directoryAndCopyGetter?.get(
                 listIndexPosition,
                 initialPath,
                 pickerMacro,

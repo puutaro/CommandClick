@@ -5,7 +5,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 
 object ListIndexReplacer {
     fun replace(
-        editFragment: EditFragment,
         jsOrAcCon: String?,
         selectedItemMap: Map<String, String>,
         listIndexListPosition: Int,
@@ -17,7 +16,7 @@ object ListIndexReplacer {
 //                ?: String()
         val selectedSRCTitle =
             selectedItemMap.get(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
             ) ?: String()
 //                .split("\t")
 //                .firstOrNull()
@@ -28,7 +27,7 @@ object ListIndexReplacer {
 //            ListIndexAdapter.listIndexTypeKey
 //        )
         val selectedFileNameOrPath = selectedItemMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
         ) ?: String()
         return jsOrAcCon?.replace(
             "\${ITEM_TITLE}",

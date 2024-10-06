@@ -17,6 +17,7 @@ object BroadcastReceiveHandlerForEdit {
             !editFragment.isVisible
         ) return
         val action = intent.action
+        val editComponentListAdapter = editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         when(action){
             BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action -> {
                 val editListSearchEditText = editFragment.binding.editListSearchEditText
@@ -25,8 +26,8 @@ object BroadcastReceiveHandlerForEdit {
                 }
                 val editComponentListAdapter = editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
                 ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-                    editFragment,
-                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                    editComponentListAdapter,
+                    ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                         editFragment.fannelInfoMap,
                         editFragment.setReplaceVariableMap,
                         editComponentListAdapter.indexListMap,

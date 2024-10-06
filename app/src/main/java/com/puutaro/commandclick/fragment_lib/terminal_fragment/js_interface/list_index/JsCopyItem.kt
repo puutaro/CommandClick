@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
 import android.webkit.JavascriptInterface
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFile
@@ -66,8 +67,12 @@ class JsCopyItem(
             currentFannelName,
             currentFannelState
         ) ?: return
+        val editComponentListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val editContext = editFragment.context ?: return
         ExecCopyPath.copyPath(
-            editFragment,
+            editContext,
+            editComponentListAdapter,
             listIndexPosition
         )
     }
@@ -137,6 +142,7 @@ class JsCopyItem(
         )
         ExecCopyFile.copyFile(
             editFragment,
+            editFragment.fannelInfoMap,
             listIndexPosition,
             filterMap,
         )
@@ -198,6 +204,9 @@ class JsCopyItem(
         ) ?: return
         ExecCopyFileHere.copyFileHere(
             editFragment,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editFragment.binding.editListRecyclerView,
             listIndexPosition
         )
     }

@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import com.puutaro.commandclick.fragment.EditFragment
+import android.content.Context
+import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.ItemPathMaker
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.dialog.DialogObject
@@ -12,13 +14,15 @@ import kotlinx.coroutines.withContext
 object ExecItemCat {
 
     fun cat(
-        editFragment: EditFragment,
+        context: Context?,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
-        val context = editFragment.context
-            ?: return
+        if(
+            context == null
+        ) return
         val catPath = ItemPathMaker.make(
-            editFragment,
+            editComponentListAdapter,
             listIndexPosition,
         ) ?: return
         val scriptContents = ReadText(

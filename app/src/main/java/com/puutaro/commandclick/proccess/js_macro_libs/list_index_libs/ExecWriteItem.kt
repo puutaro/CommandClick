@@ -1,8 +1,9 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
+import android.content.Context
+import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.editor.EditorByIntent
@@ -13,14 +14,16 @@ import java.io.File
 
 object ExecWriteItem {
     fun write(
-        editFragment: EditFragment,
+        context: Context?,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
 //        val type = ListIndexEditConfig.getListIndexType(
 //            editFragment
 //        )
         writeFileInTsvLine(
-            editFragment,
+            context,
+            editComponentListAdapter,
             listIndexPosition,
         )
 //        when(type){
@@ -64,22 +67,26 @@ object ExecWriteItem {
 //    }
 
     private fun writeFileInTsvLine(
-        editFragment: EditFragment,
+        context: Context?,
+        editComponentListAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
-        val context = editFragment.context ?: return
-        val binding = editFragment.binding
-        val listIndexForEditAdapter =
-            binding.editListRecyclerView.adapter as EditComponentListAdapter
+        if(
+            context == null
+        ) return
+//        val context = fragment.context ?: return
+//        val binding = fragment.binding
+//        val listIndexForEditAdapter =
+//            binding.editListRecyclerView.adapter as EditComponentListAdapter
         val selectedLineMap =
-            listIndexForEditAdapter.lineMapList.getOrNull(
+            editComponentListAdapter.lineMapList.getOrNull(
                 listIndexPosition
             ) ?: return
-        val editComponentListAdapter =
-            binding.editListRecyclerView.adapter as EditComponentListAdapter
+//        val editComponentListAdapter =
+//            binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath = FilePrefixGetter.get(
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
+            editComponentListAdapter.fannelInfoMap,
+            editComponentListAdapter.setReplaceVariableMap,
             editComponentListAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return

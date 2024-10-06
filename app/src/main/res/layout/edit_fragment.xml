@@ -26,7 +26,7 @@
             android:adjustViewBounds="true"
             android:src="@mipmap/ic_cmdclick_launcher"
             />
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editTextView"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -45,19 +45,50 @@
             android:ellipsize="end"
             android:autofillHints="test"
             />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/edit_list_recycler_view"
+        <FrameLayout
+            android:id="@+id/edit_list_frame_layout_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/editTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/edit_list_search_edit_text"
-            android:textIsSelectable="true"
-            android:scrollbars="vertical"
-            android:background="@color/ligthBlue"
-            android:fadeScrollbars="false"
-            />
+            android:foregroundGravity="center"
+            >
+            <FrameLayout
+                android:id="@+id/edit_list_bk_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foregroundGravity="center"
+                android:background="@color/ligthBlue"
+                >
+            </FrameLayout>
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/edit_list_bk_image"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:src="@null"-->
+<!--                android:backgroundTint="@null"-->
+<!--                app:tint="@null"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:gravity="center"-->
+<!--                />-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/edit_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textIsSelectable="true"
+                android:scrollbars="vertical"
+                android:background="@null"
+                android:fadeScrollbars="false"
+                android:layout_gravity="center"
+                />
+<!--             app:layout_constraintTop_toBottomOf="@+id/editTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/edit_list_search_edit_text"-->
+        </FrameLayout>
 <!--         app:layout_constraintTop_toBottomOf="@+id/editTextView"-->
 <!--            android:stackFromBottom="true"-->
         <androidx.appcompat.widget.AppCompatEditText

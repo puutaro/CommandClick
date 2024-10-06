@@ -230,8 +230,12 @@ class JsFileAdder(
 //                "insertLine: ${insertLine}",
 //            ).joinToString("\n\n\n")
 //        )
+        val editContext = editFragment.context ?: return
         ExecAddForListIndexAdapter.execAddForTsv(
-            editFragment,
+            editContext,
+            editFragment.fannelInfoMap,
+            editFragment.setReplaceVariableMap,
+            editFragment.binding.editListRecyclerView,
             insertLine,
         )
     }

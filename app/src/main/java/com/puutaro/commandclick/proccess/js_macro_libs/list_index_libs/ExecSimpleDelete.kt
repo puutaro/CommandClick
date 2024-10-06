@@ -5,10 +5,10 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import kotlinx.coroutines.CoroutineScope
@@ -20,56 +20,62 @@ import kotlinx.coroutines.withContext
 object ExecSimpleDelete {
 
     fun removeController(
-        editFragment: EditFragment,
+        fragment: Fragment,
         recyclerView: RecyclerView,
-        listIndexForEditAdapter: EditComponentListAdapter,
+        editComponentListAdapter: EditComponentListAdapter,
         selectedItemMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         val enableDeleteConfirm = !DeleteSettingsForListIndex.howDisableDeleteConfirm(
-            EditComponentListAdapter.deleteConfigMap
+            editComponentListAdapter.deleteConfigMap
         )
         when(enableDeleteConfirm){
             false -> removeItem(
-                editFragment,
-                listIndexForEditAdapter,
+                fragment,
+                editComponentListAdapter,
                 selectedItemMap,
                 listIndexPosition,
             )
             else -> DeleteConfirmDialog.launch(
-                editFragment,
+                fragment,
                 recyclerView,
                 listIndexPosition,
                 selectedItemMap,
-                listIndexForEditAdapter,
+                editComponentListAdapter,
             )
         }
     }
 
     private fun removeItem(
-        editFragment: EditFragment,
-        listIndexForEditAdapter: EditComponentListAdapter,
+        fragment: Fragment,
+        editComponentListAdapter: EditComponentListAdapter,
         selectedItemMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                listIndexForEditAdapter.notifyItemRemoved(listIndexPosition)
-            }
+//            withContext(Dispatchers.Main) {
+//                editComponentListAdapter.notifyItemRemoved(listIndexPosition)
+//            }
             val removeItemLineMap = withContext(Dispatchers.IO) {
-                listIndexForEditAdapter.lineMapList[listIndexPosition]
+                editComponentListAdapter.lineMapList[listIndexPosition]
             }
-            listIndexForEditAdapter.lineMapList.removeAt(listIndexPosition)
+            withContext(Dispatchers.IO) {
+                editComponentListAdapter.lineMapList.removeAt(listIndexPosition)
+            }
+            withContext(Dispatchers.Main) {
+                editComponentListAdapter.notifyItemRemoved(listIndexPosition)
+            }
             withContext(Dispatchers.IO) {
                 ExecRemoveForListIndexAdapter.removeCon(
-                    editFragment,
+                    editComponentListAdapter,
 //                    ListIndexAdapter.listIndexTypeKey,
                     removeItemLineMap,
                 )
             }
             withContext(Dispatchers.IO) {
                 execRemoveItemHandler(
-                    editFragment,
+                    fragment,
+                    editComponentListAdapter,
                     selectedItemMap,
                     removeItemLineMap,
                     listIndexPosition,
@@ -79,13 +85,14 @@ object ExecSimpleDelete {
     }
 
     private fun execRemoveItemHandler(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        editComponentListAdapter: EditComponentListAdapter,
         selectedItemMap: Map<String, String>,
         removeItemLineMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         ExecRemoveForListIndexAdapter.updateTsv(
-            editFragment,
+            editComponentListAdapter,
             listOf(removeItemLineMap),
         )
 //        when(ListIndexAdapter.listIndexTypeKey){
@@ -110,7 +117,8 @@ object ExecSimpleDelete {
 //        }
 
         DeleteSettingsForListIndex.doWithJsAction(
-            editFragment,
+            fragment,
+            editComponentListAdapter,
             selectedItemMap,
             listIndexPosition,
         )
@@ -121,32 +129,32 @@ object ExecSimpleDelete {
         private var delteConfirmDialog: Dialog? = null
 
         fun launch(
-            editFragment: EditFragment,
+            fragment: Fragment,
             recyclerView: RecyclerView,
             listIndexPosition: Int,
             selectedItemMap: Map<String, String>,
-            listIndexForEditAdapter: EditComponentListAdapter
+            editComponentListAdapter: EditComponentListAdapter
         ){
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
                     execLaunch(
-                        editFragment,
+                        fragment,
                         recyclerView,
                         listIndexPosition,
                         selectedItemMap,
-                        listIndexForEditAdapter
+                        editComponentListAdapter
                     )
                 }
             }
         }
         private fun execLaunch(
-            editFragment: EditFragment,
+            fragment: Fragment,
             recyclerView: RecyclerView,
             listIndexPosition: Int,
             selectedItemMap: Map<String, String>,
-            listIndexForEditAdapter: EditComponentListAdapter
+            editComponentListAdapter: EditComponentListAdapter
         ){
-            val context = editFragment.context
+            val context = fragment.context
                 ?: return
             delteConfirmDialog = Dialog(
                 context
@@ -164,7 +172,7 @@ object ExecSimpleDelete {
                     com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
                 )
             confirmContentTextView?.text = selectedItemMap.get(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
             )
             val confirmCancelButton =
                 delteConfirmDialog?.findViewById<AppCompatImageButton>(
@@ -194,8 +202,8 @@ object ExecSimpleDelete {
                 delteConfirmDialog?.dismiss()
                 delteConfirmDialog = null
                 removeItem(
-                    editFragment,
-                    listIndexForEditAdapter,
+                    fragment,
+                    editComponentListAdapter,
                     selectedItemMap,
                     listIndexPosition,
                 )

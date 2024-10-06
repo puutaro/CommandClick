@@ -2,16 +2,16 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.isVisible
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -23,9 +23,15 @@ object TitleImageAndViewSetter {
     private const val backstackCountSeparator = " "
     private const val switchOff = "OFF"
     fun set(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        editTextView: AppCompatTextView,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editTitleImageView: AppCompatImageView,
+        editBoxTitleConfig: Map<String, String>,
     ) {
-        val titleTextMap = editFragment.editBoxTitleConfig.get(
+        val titleTextMap = editBoxTitleConfig.get(
             EditBoxTitleKey.TEXT.key
         ).let {
             CmdClickMap.createMap(
@@ -33,7 +39,7 @@ object TitleImageAndViewSetter {
                '|'
             )
         }.toMap()
-        val titleImageMap = editFragment.editBoxTitleConfig.get(
+        val titleImageMap = editBoxTitleConfig.get(
             EditBoxTitleKey.IMAGE.key
         ).let {
             CmdClickMap.createMap(
@@ -51,34 +57,48 @@ object TitleImageAndViewSetter {
            return
        }
         setTitleText(
-            editFragment,
+            fragment,
+            editTextView,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
             titleTextMap
         )
         setTitleImage(
-            editFragment,
-            titleImageMap
+            fragment,
+            editTitleImageView,
+            fannelInfoMap,
+            titleImageMap,
         )
     }
 
     private fun setTitleText(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        editTextView: AppCompatTextView,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         titleTextMap: Map<String, String>?
     ){
-        val binding = editFragment.binding
-        val editTextView = binding.editTextView
+//        val binding = editFragment.binding
+//        val editTextView = binding.editTextView
 
         editTextView.text = EditTextMaker.make(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
             titleTextMap
         )
 //            editFragment.editBoxTitleConfig
     }
 
     fun makeDefaultTitle(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
     ): String {
-        val fannelInfoMap =
-            editFragment.fannelInfoMap
+//        val fannelInfoMap =
+//            fragment.fannelInfoMap
 
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
@@ -87,7 +107,7 @@ object TitleImageAndViewSetter {
             fannelInfoMap
         )
         val backstackOrder = makeBackstackCount(
-            editFragment
+            fragment
         )
         return listOf(
             "(${backstackOrder})",
@@ -116,15 +136,17 @@ object TitleImageAndViewSetter {
     }
 
     private fun setTitleImage(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        editTitleImageView: AppCompatImageView,
+        fannelInfoMap: Map<String, String>,
         titleImageMap: Map<String, String>,
     ){
         val isNotSet = titleImageMap.get(
             TitleImageSettingKey.VISIBLE.key
         ) == switchOff
         if(isNotSet) return
-        val fannelInfoMap =
-            editFragment.fannelInfoMap
+//        val fannelInfoMap =
+//            fragment.fannelInfoMap
 
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
@@ -132,10 +154,10 @@ object TitleImageAndViewSetter {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
-        val binding = editFragment.binding
-        val editTitleImageView = binding.editTitleImage
+//        val binding = fragment.binding
+//        val editTitleImageView = binding.editTitleImage
         FannelLogoSetter.setTitleFannelLogo(
-            editFragment,
+            fragment,
             editTitleImageView,
 //        currentAppDirPath: String,
             currentFannelName,
@@ -150,12 +172,12 @@ object TitleImageAndViewSetter {
 
 private object FannelLogoSetter {
     fun setTitleFannelLogo(
-        editFragment: EditFragment,
+        fragment: Fragment,
         titleImageView: AppCompatImageView?,
 //        currentAppDirPath: String,
         selectedScriptName: String,
     ){
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         if(
             titleImageView == null
@@ -198,41 +220,53 @@ private object FannelLogoSetter {
 private object EditTextMaker {
 
     fun make(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         titleTextMap: Map<String, String>?,
     ): String {
         val defaultEditBoxTitle = TitleImageAndViewSetter.makeDefaultTitle(
-            editFragment,
+            fragment,
+            fannelInfoMap,
         )
         val shellConText = makeByShellCon(
-            editFragment,
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
             titleTextMap,
+            busyboxExecutor,
             defaultEditBoxTitle,
         )
         return when(shellConText.isNullOrEmpty()) {
             false -> shellConText
             else -> SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
-                editFragment,
+                fragment,
+                fannelInfoMap,
                 defaultEditBoxTitle
             )
         }
     }
     private fun makeByShellCon(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         editTextPropertyMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         currentVariableValue: String?,
     ): String? {
         if(
             editTextPropertyMap.isNullOrEmpty()
+            || busyboxExecutor == null
         ) return null
-        val busyboxExecutor =
-            editFragment.busyboxExecutor
-                ?: return null
-        val setReplaceVariableMap =
-            editFragment.setReplaceVariableMap
-
-        val fannelInfoMap =
-            editFragment.fannelInfoMap
+//        val busyboxExecutor =
+//            editFragment.busyboxExecutor
+//                ?: return null
+//        val setReplaceVariableMap =
+//            editFragment.setReplaceVariableMap
+//
+//        val fannelInfoMap =
+//            editFragment.fannelInfoMap
 
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
@@ -254,7 +288,9 @@ private object EditTextMaker {
         if(
             !shellConSrc.isNullOrEmpty()
         ) return getOutputByShellCon(
-            editFragment,
+            fragment,
+            setReplaceVariableMap,
+            busyboxExecutor,
             repValMap,
             shellConSrc,
 //            currentAppDirPath,
@@ -265,12 +301,12 @@ private object EditTextMaker {
             SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText
         val backstackCountMap = mapOf(
             backstackCountKey to execMakeBackstackCount(
-                editFragment
+                fragment
             ).toString()
         )
         val updateRepValMap = repValMap + backstackCountMap
         return ShellMacroHandler.handle(
-            editFragment.context,
+            fragment.context,
             busyboxExecutor,
             editTextPropertyMap.get(
                 TitleTextSettingKey.SHELL_PATH.key
@@ -282,7 +318,9 @@ private object EditTextMaker {
     }
 
     private fun getOutputByShellCon(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         repValMap: Map<String, String>?,
         shellConSrc: String,
 //        currentAppDirPath: String,
@@ -291,7 +329,7 @@ private object EditTextMaker {
     ): String? {
         val shellCon = SetReplaceVariabler.execReplaceByReplaceVariables(
             shellConSrc,
-            editFragment.setReplaceVariableMap,
+            setReplaceVariableMap,
 //            currentAppDirPath,
             currentFannelName
         ).replace(
@@ -299,14 +337,14 @@ private object EditTextMaker {
             currentVariableValue ?: String(),
         ).let {
             SearchBoxSettingsForListIndex.backStackMarkReplace(
-                editFragment,
+                fragment,
                 it
             )
         }
         if(
             shellCon.isEmpty()
         ) return null
-        return editFragment.busyboxExecutor?.getCmdOutput(
+        return busyboxExecutor?.getCmdOutput(
             shellCon,
             repValMap
         )

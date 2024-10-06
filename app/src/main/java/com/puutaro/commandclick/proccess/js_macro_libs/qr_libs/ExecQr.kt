@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.qr_libs
 
 import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -17,10 +18,10 @@ import kotlinx.coroutines.withContext
 
 object ExecQr {
     fun exec(
-        editFragment: EditFragment,
+        fragment: Fragment,
         clickFileName: String
     ){
-        val context = editFragment.context
+        val context = fragment.context
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            editFragment.fannelInfoMap
 //        )
@@ -29,7 +30,7 @@ object ExecQr {
 //            editFragment
 //        )
         val contents = ActionToolForQr.getContents(
-            editFragment.context,
+            context,
             parentDirPath,
             clickFileName
         ) ?: return
@@ -39,7 +40,7 @@ object ExecQr {
             withContext(Dispatchers.Main) {
                 for (i in 1..10) {
                     terminalFragment =
-                        TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
+                        TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
                     if (terminalFragment != null) break
                     delay(100)
                 }
@@ -57,7 +58,7 @@ object ExecQr {
 //                }
             withContext(Dispatchers.Main) {
                 QrConfirmDialog.launch(
-                    editFragment,
+                    fragment,
                     null,
 //                    useAppDirPath,
                     QrDecodedTitle.makeTitle(
