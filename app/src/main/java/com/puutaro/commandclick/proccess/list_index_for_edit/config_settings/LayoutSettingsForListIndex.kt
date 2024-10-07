@@ -18,6 +18,7 @@ object LayoutSettingsForListIndex {
         EDIT_BY_DRAG("editByDrag"),
         MARGIN("margin"),
         ELEVATION("elevation"),
+        ON_CLICK_UPDATE("onClickUpdate"),
 //        TO_TOP("toTop")
     }
 
@@ -55,6 +56,19 @@ object LayoutSettingsForListIndex {
             setReplaceVariableMap,
             layoutMap,
             LayoutSettingKey.ON_REVERSE_LAYOUT.key
+        ) == switchOn
+    }
+
+    fun howClickUpdate(
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        layoutMap: Map<String, String>?,
+    ): Boolean {
+        return FilePrefixGetter.get(
+            fannelInfoMap,
+            setReplaceVariableMap,
+            layoutMap,
+            LayoutSettingKey.ON_CLICK_UPDATE.key
         ) == switchOn
     }
 

@@ -4,8 +4,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.widget.LinearLayoutCompat
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.QuoteTool
+import java.io.File
 
 object EditComponent {
         object Template {
@@ -37,6 +43,7 @@ object EditComponent {
                         enum class SrcReplaceHolders(val key: String){
                                 SRC_LABEL("\${SRC_LABEL}"),
                                 SRC_CON("\${SRC_CON}"),
+                                SETTING_VALUE("\${SETTING_VALUE}"),
                         }
                 }
 
@@ -69,6 +76,7 @@ object EditComponent {
                         DISABLE_TEXT_SELECT("disableTextSelect"),
                         TEXT_PREFIXS("textPrefixs"),
                         TEXT_SUFFIXS("textSuffixs"),
+                        ON_SAVE("onSave"),
                         IS_CONSEC("isConsec"),
                         TEXT_SIZE("textSize"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
@@ -79,6 +87,35 @@ object EditComponent {
                         TEXT_ALPHA("textAlpha"),
                         IMAGE_ALPHA("imageAlpha"),
                         IMAGE_SCALE("imageScale")
+                }
+
+                object OnSaveManager {
+//                        fun makeClickConfigMap(
+//                                listIndexConfigMap: Map<String, String>?
+//                        ): Map<String, String> {
+//                                return CmdClickMap.createMap(
+//                                        listIndexConfigMap?.get(ListIndexEditConfig.ListIndexConfigKey.LIST.key),
+//                                        '|'
+//                                ).toMap()
+//                        }
+
+
+//                        fun howEnableClickUpdate(
+//                                clickConfigMap: Map<String, String>?
+//                        ): Boolean {
+//                                return clickConfigMap?.get(ClickSettingsForListIndex.ClickSettingKey.ENABLE_UPDATE.key)?.let {
+//                                        QuoteTool.trimBothEdgeQuote(it)
+//                                } == ClickSettingsForListIndex.OnDisableUpdateValue.ON.name
+//                        }
+//
+//                        fun howEnableClickSave(
+//                                clickConfigMap: Map<String, String>?
+//                        ): Boolean {
+//                                return clickConfigMap?.get(ClickSettingsForListIndex.ClickSettingKey.ON_SCRIPT_SAVE.key)
+//                                        ?.let {
+//                                                QuoteTool.trimBothEdgeQuote(it)
+//                                        } == ClickSettingsForListIndex.OnScriptSave.ON.name
+//                        }
                 }
 
 
@@ -97,27 +134,47 @@ object EditComponent {
 //                                SUFFIX("suffix"),
 //                                FILTER_SHELL_PATH("filterShellPath"),
                                 SRC("src"),
+                                SETTING_VALUE("settingValue"),
                         }
 
 
                         fun createLabelMap(
-                                labelMapCon: String?
+                                labelMapCon: String?,
+                                settingValue: String?,
                         ): Map<String,String> {
-                                return CmdClickMap.createMap(
+                                val labelMapSrc = CmdClickMap.createMap(
                                         labelMapCon,
                                         keySeparator
                                 ).toMap()
+                                return when(settingValue.isNullOrEmpty()){
+                                        true -> labelMapSrc
+                                        else -> labelMapSrc + mapOf(
+                                                LabelKey.SETTING_VALUE.key to settingValue
+                                        )
+                                }
                         }
 
                         fun makeLabel(
                                 labelMap: Map<String, String>?,
+                                settingValue: String?,
 //                                busyboxExecutor: BusyboxExecutor?,
                         ): String? {
+//                                FileSystems.updateFile(
+//                                        File(UsePath.cmdclickDefaultAppDirPath, "label.txt").absolutePath,
+//                                        listOf(
+//                                               "labelMap: ${labelMap}",
+//                                                "---settingValue: ${settingValue}\n",
+//                                        ).joinToString("\n")
+//
+//                                )
                                 if(
                                         labelMap.isNullOrEmpty()
                                 ) return String()
                                 return labelMap.get(
                                         LabelKey.SRC.key
+                                )?.replace(
+                                        ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
+                                        settingValue ?: String()
                                 )
 //                                val filterPrefixListCon = labelMap.get(
 //                                        LabelKey.PREFIX.key

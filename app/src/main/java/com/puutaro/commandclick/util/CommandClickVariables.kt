@@ -274,22 +274,22 @@ object CommandClickVariables {
     }
 
     fun replaceVariableInHolder(
-        scriptContents: String,
+        scriptContentsList: List<String>,
         replaceNewlineSepaCon: String,
         startHolder: String?,
         endHolder: String?,
-    ): String {
+    ): List<String> {
         var countStartHolder = 0
         var countEndHolder = 0
         if(
             startHolder.isNullOrEmpty()
-        ) return scriptContents
+        ) return scriptContentsList
         if(
             endHolder.isNullOrEmpty()
-        ) return scriptContents
+        ) return scriptContentsList
         if(
             replaceNewlineSepaCon.isEmpty()
-        ) return scriptContents
+        ) return scriptContentsList
         val replaceMap = replaceNewlineSepaCon.split("\n").map {
             val keyValueList = it.split("=")
             val keyValueListSize = keyValueList.size
@@ -304,8 +304,8 @@ object CommandClickVariables {
         }.toMap().filterKeys { it.isNotEmpty() }
         if(
             replaceMap.isEmpty()
-        ) return scriptContents
-        return scriptContents.split('\n').map {
+        ) return scriptContentsList
+        return scriptContentsList.map {
             if(
                 it.startsWith(startHolder)
                 && it.endsWith(startHolder)
@@ -321,13 +321,24 @@ object CommandClickVariables {
             val keyValueList = it.split("=")
             val keyValueListSize = keyValueList.size
             val key = keyValueList.first()
+            val compQuoteTemplate = keyValueList.filterIndexed { innerIndex, _ ->
+                innerIndex > 0
+            }.joinToString("=").let {
+                valueLine ->
+                QuoteTool.extractBothQuote(valueLine)
+            }.let {
+                compQuote ->
+                "${compQuote}%s${compQuote}"
+            }
+
             val replaceValue = replaceMap.get(key)?.let{
                 QuoteTool.trimBothEdgeQuote(it)
             } ?: return@map it
             if(
                 keyValueListSize < 2
             ) return@map it
-            "${key}=\"${replaceValue}\""
-        }.joinToString("\n")
+
+            "${key}=${compQuoteTemplate.format(replaceValue)}"
+        }
     }
 }

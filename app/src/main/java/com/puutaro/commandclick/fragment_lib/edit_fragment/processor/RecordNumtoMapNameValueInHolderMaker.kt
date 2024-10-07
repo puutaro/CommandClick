@@ -13,89 +13,89 @@ object RecordNumToMapNameValueInHolderMaker {
     private const val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
     private const val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
 
-    fun makeForSetting(
-        editFragment: EditFragment,
-    ): Map<Int, Map<String, String>?>? {
-        val settingFannelConList = SettingFannelConHandlerForEdit.handle(
-            editFragment
-        )
-        val recordNumToMapNameValueInSettingHolderSrc =
-            RecordNumToMapNameValueInHolder.parse(
-                settingFannelConList,
-                settingSectionStart,
-                settingSectionEnd,
-                true,
-            )
-        return filterRecordNumToMapNameValueInHolderByHideVariable(
-            editFragment,
-            recordNumToMapNameValueInSettingHolderSrc
-        )
-//        return when(
-//            IsCmdEdit.judge(editFragment)
-//        ) {
-//            false -> {
-////                editSettingVariable()
-//                filterRecordNumToMapNameValueInHolderByHideVariable(
-//                    editFragment,
-//                    recordNumToMapNameValueInSettingHolderSrc
-//                )
-//            }
-//            else -> {
-////                editCommandVariable()
-//                recordNumToMapNameValueInSettingHolderSrc
-//            }
-//        }
-    }
+//    fun makeForSetting(
+//        editFragment: EditFragment,
+//    ): Map<String, String>? {
+//        val settingFannelConList = SettingFannelConHandlerForEdit.handle(
+//            editFragment
+//        )
+//        val recordNumToMapNameValueInSettingHolderSrc =
+//            RecordNumToMapNameValueInHolder.parse(
+//                settingFannelConList,
+//                settingSectionStart,
+//                settingSectionEnd,
+//            )
+//        return recordNumToMapNameValueInSettingHolderSrc
+////        filterRecordNumToMapNameValueInHolderByHideVariable(
+////            editFragment,
+////            recordNumToMapNameValueInSettingHolderSrc
+////        )
+////        return when(
+////            IsCmdEdit.judge(editFragment)
+////        ) {
+////            false -> {
+//////                editSettingVariable()
+////                filterRecordNumToMapNameValueInHolderByHideVariable(
+////                    editFragment,
+////                    recordNumToMapNameValueInSettingHolderSrc
+////                )
+////            }
+////            else -> {
+//////                editCommandVariable()
+////                recordNumToMapNameValueInSettingHolderSrc
+////            }
+////        }
+//    }
+//
+//    fun makeForCmdHolder(
+//        mainFannelSettingConList: List<String>,
+//    ):  Map<String, String>? {
+//        val recordNumToMapNameValueInCommandHolderSrc =
+//            RecordNumToMapNameValueInHolder.parse(
+//                mainFannelSettingConList,
+//                commandSectionStart,
+//                commandSectionEnd
+//            )
+//        return recordNumToMapNameValueInCommandHolderSrc
+////        filterRecordNumToMapNameValueInHolderByHideVariable(
+////            editFragment,
+////            recordNumToMapNameValueInCommandHolderSrc
+////        )
+////        return when(
+////            IsCmdEdit.judge(editFragment)
+////        ) {
+////            false -> {
+//////                editSettingVariable()
+////                recordNumToMapNameValueInCommandHolderSrc
+////            }
+////            else -> {
+//////                editCommandVariable()
+////                filterRecordNumToMapNameValueInHolderByHideVariable(
+////                    editFragment,
+////                    recordNumToMapNameValueInCommandHolderSrc
+////                )
+////            }
+////        }
+//    }
 
-    fun makeForCmdHolder(
-        editFragment: EditFragment,
-        mainFannelSettingConList: List<String>,
-    ):  Map<Int, Map<String, String>?>? {
-        val recordNumToMapNameValueInCommandHolderSrc =
-            RecordNumToMapNameValueInHolder.parse(
-                mainFannelSettingConList,
-                commandSectionStart,
-                commandSectionEnd
-            )
-        return filterRecordNumToMapNameValueInHolderByHideVariable(
-            editFragment,
-            recordNumToMapNameValueInCommandHolderSrc
-        )
-//        return when(
-//            IsCmdEdit.judge(editFragment)
-//        ) {
-//            false -> {
-////                editSettingVariable()
-//                recordNumToMapNameValueInCommandHolderSrc
-//            }
-//            else -> {
-////                editCommandVariable()
-//                filterRecordNumToMapNameValueInHolderByHideVariable(
-//                    editFragment,
-//                    recordNumToMapNameValueInCommandHolderSrc
-//                )
-//            }
+//    private fun filterRecordNumToMapNameValueInHolderByHideVariable(
+//        editFragment: EditFragment,
+//        recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
+//    ): Map<Int, Map<String, String>?>? {
+////        val hideSettingVariableList = editFragment.hideSettingVariableList
+//        return recordNumToMapNameValueInHolder?.filter {
+//                currentRecordNumToMapNameValueInHolder ->
+//            val currentRecordNumToNameToValueInHolder =
+//                currentRecordNumToMapNameValueInHolder.value
+//            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
+//            )
+//            if (
+//                currentVariableName.isNullOrEmpty()
+//            ) return@filter false
+//            !hideSettingVariableList.contains(
+//                currentVariableName
+//            )
 //        }
-    }
-
-    private fun filterRecordNumToMapNameValueInHolderByHideVariable(
-        editFragment: EditFragment,
-        recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
-    ): Map<Int, Map<String, String>?>? {
-        val hideSettingVariableList = editFragment.hideSettingVariableList
-        return recordNumToMapNameValueInHolder?.filter {
-                currentRecordNumToMapNameValueInHolder ->
-            val currentRecordNumToNameToValueInHolder =
-                currentRecordNumToMapNameValueInHolder.value
-            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            )
-            if (
-                currentVariableName.isNullOrEmpty()
-            ) return@filter false
-            !hideSettingVariableList.contains(
-                currentVariableName
-            )
-        }
-    }
+//    }
 }

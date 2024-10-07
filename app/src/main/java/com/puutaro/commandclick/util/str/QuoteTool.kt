@@ -34,6 +34,24 @@ object QuoteTool {
         }
     }
 
+    fun extractBothQuote(
+        targetStr: String?,
+    ): Char {
+        if(
+            targetStr.isNullOrEmpty()
+        ) return '"'
+        val quoteList = listOf('\'', '"', '`',)
+        quoteList.forEach {
+            if (
+                isBothChar(
+                    targetStr,
+                    it
+                )
+            ) return it
+        }
+        return '"'
+    }
+
     fun compBothQuote(
         targetStr: String?,
         primaryQuote: String = "`"

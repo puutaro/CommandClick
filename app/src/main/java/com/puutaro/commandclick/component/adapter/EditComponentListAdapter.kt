@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.component.adapter
 
-import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,16 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setMargins
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.list_index_for_edit.EditFrameMaker
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -23,11 +25,14 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lay
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,26 +42,43 @@ import java.io.File
 
 
 class EditComponentListAdapter(
-    val context: Context?,
+    private val fragment: Fragment?,
     val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     val listIndexConfigMap: Map<String, String>?,
     val busyboxExecutor: BusyboxExecutor?,
     val indexListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
+    private var fannelContentsList: List<String>?,
 ): RecyclerView.Adapter<EditComponentListAdapter.ListIndexListViewHolder>()
 {
 //    private val fannelInfoMap = editFragmentRef.get()?.fannelInfoMap ?: emptyMap()
 //    private val context = editFragmentRef.get()?.context
 //    private val activity = editFragment.activity
+    private val context = fragment?.context
     private val maxTakeSize = 150
     private val listLimitSize = 300
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+    val initSettingValMap = RecordNumToMapNameValueInHolder.parse(
+        fannelContentsList,
+        CommandClickScriptVariable.SETTING_SEC_START,
+        CommandClickScriptVariable.SETTING_SEC_END,
+    )
+    val initCmdValMap = RecordNumToMapNameValueInHolder.parse(
+        fannelContentsList,
+        CommandClickScriptVariable.CMD_SEC_START,
+        CommandClickScriptVariable.CMD_SEC_END,
+    )
+    val totalSettingValMap =
+        (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
 //    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
 
 //    private val listIndexConfigMap =
 //        editFragmentRef.get()?.listIndexConfigMap
 //            ?: emptyMap()
+//    private val clickConfigMap = ClickSettingsForListIndex.makeClickConfigMap(
+//        listIndexConfigMap
+//    )
     private val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
         listIndexConfigMap
     )
@@ -258,15 +280,21 @@ class EditComponentListAdapter(
                     "linearMapList: ${frameTagToLinearKeysListMap}",
                 ).joinToString("\n\n")
             )
-            val materialCardView = holder.materialCardView.apply {
-                layoutElevation?.let {
-                    elevation = it
+            val materialCardView = withContext(Dispatchers.Main) {
+                holder.materialCardView.apply {
+                    removeAllViews()
+                    layoutElevation?.let {
+                        elevation = it
+                    }
                 }
             }
 //            GridLayoutManager
-            val cardLinearParams = materialCardView.layoutParams as GridLayoutManager.LayoutParams
-            layoutMargin?.let {
-                cardLinearParams.setMargins(it)
+            withContext(Dispatchers.Main) {
+                val cardLinearParams =
+                    materialCardView.layoutParams as GridLayoutManager.LayoutParams
+                layoutMargin?.let {
+                    cardLinearParams.setMargins(it)
+                }
             }
             withContext(Dispatchers.Main) {
                 val frameFrameLayout = EditFrameMaker.make(
@@ -275,7 +303,9 @@ class EditComponentListAdapter(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     null,
                     frameTag,
-                    false
+                    false,
+                    totalSettingValMap,
+
                 )
                 val frameKeyList = JsActionKeyManager.JsActionsKey.values().map{
                     it.key
@@ -403,7 +433,8 @@ class EditComponentListAdapter(
                             0,
                             layoutWeight,
                             linearFrameTag,
-                            false
+                            false,
+                            totalSettingValMap
                         ) ?: return@setFrame
                         val linearKeyList = JsActionKeyManager.JsActionsKey.values().map{
                             it.key
@@ -654,31 +685,227 @@ class EditComponentListAdapter(
         )
     }
 
-//    interface OnQrLogoLongClickListener {
-//        fun onQrLongClick(
-//            imageView: AppCompatImageView,
-//            holder: ListIndexListViewHolder,
-//            listIndexPosition: Int
-//        )
-//    }
+    fun handleClickEvent(
+        editListRecyclerView: RecyclerView,
+        tag: String,
+        settingValue: String?,
+        indexListPosition: Int,
+        frameOrLinearCon: String,
+    ){
+        updateAndSaveMainFannel(
+            tag,
+            settingValue,
+            frameOrLinearCon,
+        )
+        MapListUpdater.updateLineMapList(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editListRecyclerView,
+            indexListMap,
+            layoutConfigMap,
+            lineMapList,
+            indexListPosition,
+        )
+    }
 
-//    var fileQrLogoClickListener: OnFileQrLogoItemClickListener? = null
-//    interface OnFileQrLogoItemClickListener {
-//        fun onFileQrLogoClick(
-//            itemView: View,
-//            holder: ListIndexListViewHolder,
-//            listIndexPosition: Int,
-//        )
-//    }
+    private object MapListUpdater {
+        fun updateLineMapList(
+            fragment: Fragment?,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            editListRecyclerView: RecyclerView,
+            indexListMap: Map<String, String>,
+            layoutConfigMap: Map<String, String>,
+            lineMapList: List<Map<String, String>>,
+            indexListPosition: Int,
+        ) {
+            if (
+                fragment == null
+            ) return
+            val enableClickUpdate =
+                LayoutSettingsForListIndex.howClickUpdate(
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    layoutConfigMap
+                )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lclickUpdateEnable.txt").absolutePath,
+//                listOf(
+//                    "layoutConfigMap: ${layoutConfigMap}",
+//                    "indexListMap: ${indexListMap}",
+//                    "enableClickUpdate: ${enableClickUpdate}",
+//                ).joinToString("\n")
+//            )
+            if (
+                !enableClickUpdate
+            ) return
+            execUpdateLineMapList(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editListRecyclerView,
+                indexListMap,
+                lineMapList,
+                indexListPosition
+            )
+        }
 
-//    var itemLongClickListener: OnItemLongClickListener? = null
-//    interface OnItemLongClickListener {
-//        fun onItemLongClick(
-//            itemView: View,
-//            holder: ListIndexListViewHolder,
-//            listIndexPosition: Int
-//        )
-//    }
+        private fun execUpdateLineMapList(
+            fragment: Fragment?,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            editRecyclerView: RecyclerView,
+            indexListMap: Map<String, String>,
+            lineMapList: List<Map<String, String>>,
+            bindingAdapterPosition: Int,
+        ) {
+            val sortType = ListSettingsForListIndex.getSortType(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                indexListMap
+            )
+            when (sortType) {
+                ListSettingsForListIndex.SortByKey.SORT,
+                ListSettingsForListIndex.SortByKey.REVERSE
+                -> return
+
+                ListSettingsForListIndex.SortByKey.LAST_UPDATE,
+                -> {
+                }
+            }
+            val lineMap =
+                lineMapList.getOrNull(
+                    bindingAdapterPosition
+                ) ?: return
+            val mapListPath = FilePrefixGetter.get(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                indexListMap,
+                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
+            )
+            MapListFileTool.insertMapFileInFirst(
+                mapListPath,
+                lineMap
+            )
+            val editComponentListAdapter = editRecyclerView.adapter as EditComponentListAdapter
+//            val lineMap = editComponentList.lineMapList.get(bindingAdapterPosition)
+            editComponentListAdapter.lineMapList.removeAt(bindingAdapterPosition)
+            editComponentListAdapter.notifyItemRemoved(bindingAdapterPosition)
+            editComponentListAdapter.lineMapList.add(0, lineMap)
+            editComponentListAdapter.notifyItemInserted(0)
+            BroadcastSender.normalSend(
+                fragment?.context,
+                BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+            )
+        }
+    }
+
+    private fun updateAndSaveMainFannel(
+        tag: String,
+        settingValue: String?,
+        frameOrLinearCon: String,
+    ){
+        val updateSettingValsCon = settingValue?.let {
+            listOf(
+                "${tag}=${settingValue}"
+            ).joinToString("\n")
+        } ?: String()
+        initSettingValMap?.contains(tag)?.let{
+            if(!it) return@let
+//            initSettingValMap.put(tag, settingValue)
+            MainFannelUpdater.makeUpdateMainFannelList(
+                fannelContentsList,
+                updateSettingValsCon,
+                CommandClickScriptVariable.SETTING_SEC_START,
+                CommandClickScriptVariable.SETTING_SEC_END,
+            ).let updateFannel@ {
+                    updateFannelList ->
+                if(
+                    updateFannelList.isNullOrEmpty()
+                ) return@updateFannel
+                fannelContentsList = updateFannelList
+            }
+        }
+        initCmdValMap?.contains(tag)?.let{
+            if(!it) return@let
+//            initCmdValMap.put(tag, settingValue)
+            MainFannelUpdater.makeUpdateMainFannelList(
+                fannelContentsList,
+                updateSettingValsCon,
+                CommandClickScriptVariable.CMD_SEC_START,
+                CommandClickScriptVariable.CMD_SEC_END,
+            ).let updateFannel@ {
+                    updateFannelList ->
+                if(
+                    updateFannelList.isNullOrEmpty()
+                ) return@updateFannel
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lclickUpdate.txt").absolutePath,
+//                    listOf(
+//                        "tag: ${tag}",
+//                        "settingValue: ${settingValue}\n",
+//                        "frameOrLinearCon: ${frameOrLinearCon}\n",
+//                        "updateFannelList: ${updateFannelList}\n",
+//                        "fannelContentsList: ${fannelContentsList}",
+//                    ).joinToString("\n")
+//                )
+                fannelContentsList = updateFannelList
+            }
+        }
+
+        MainFannelUpdater.saveFannelCon(
+            fannelContentsList,
+            fannelInfoMap,
+            frameOrLinearCon,
+        )
+    }
+
+
+    private object MainFannelUpdater {
+
+        fun saveFannelCon(
+            saveFannelConList: List<String>?,
+            fannelInfoMap: Map<String, String>,
+            frameOrLinearCon: String,
+        ) {
+            if (
+                saveFannelConList.isNullOrEmpty()
+            ) return
+            val isSave = PairListTool.getValue(
+                CmdClickMap.createMap(
+                    frameOrLinearCon,
+                    EditComponent.Template.typeSeparator
+                ),
+                EditComponent.Template.EditComponentKey.ON_SAVE.key,
+            ) == EditComponent.Template.switchOn
+            if (!isSave) return
+            val fannelPath = FannelInfoTool.getCurrentFannelName(fannelInfoMap).let {
+                File(UsePath.cmdclickDefaultAppDirPath, it)
+            }
+            FileSystems.writeFile(
+                fannelPath.absolutePath,
+                saveFannelConList.joinToString("\n")
+            )
+        }
+        fun makeUpdateMainFannelList(
+            fannelContentsListSrc: List<String>?,
+            updateSettingValsCon: String?,
+            startHolder: String,
+            endHolder: String,
+        ): List<String>? {
+            if (
+                updateSettingValsCon.isNullOrEmpty()
+                || fannelContentsListSrc.isNullOrEmpty()
+            ) return null
+            return CommandClickVariables.replaceVariableInHolder(
+                fannelContentsListSrc,
+                updateSettingValsCon,
+                startHolder,
+                endHolder,
+            )
+        }
+    }
 
     private fun makeFileConList(
         fileName: String,

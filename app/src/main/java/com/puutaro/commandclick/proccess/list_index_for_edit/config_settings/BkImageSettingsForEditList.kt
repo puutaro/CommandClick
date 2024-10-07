@@ -44,7 +44,8 @@ object BkImageSettingsForEditList {
             ViewGroup.LayoutParams.MATCH_PARENT,
             null,
             tag,
-            true
+            true,
+        null
         )
     }
 

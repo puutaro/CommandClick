@@ -3,7 +3,6 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -13,43 +12,43 @@ import com.puutaro.commandclick.util.map.FilePrefixGetter
 
 object ExecClickUpdate {
 
-    fun update(
-        fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
-        editComponentListAdapter: EditComponentListAdapter,
-        listIndexArgsMaker: ListIndexArgsMaker,
-        bindingAdapterPosition: Int,
-    ){
-        val clickConfigMap = listIndexArgsMaker.clickConfigPairList
-        val enableClickUpdate =
-            ClickSettingsForListIndex.howEnableClickUpdate(
-                clickConfigMap
-            )
-        if(!enableClickUpdate) return
-        updateForTsv(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            editComponentListAdapter,
-            bindingAdapterPosition
-        )
-//        when(ListIndexAdapter.listIndexTypeKey) {
-////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-////            -> {}
-//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-//            -> updateForNormal(
-//                editFragment,
-//                listIndexListViewHolder.fileName,
+//    fun update(
+//        fragment: Fragment,
+//        fannelInfoMap: Map<String, String>,
+//        setReplaceVariableMap: Map<String, String>?,
+//        editComponentListAdapter: EditComponentListAdapter,
+//        listIndexArgsMaker: ListIndexArgsMaker,
+//        bindingAdapterPosition: Int,
+//    ){
+//        val clickConfigMap = listIndexArgsMaker.clickConfigPairList
+//        val enableClickUpdate =
+//            ClickSettingsForListIndex.howEnableClickUpdate(
+//                clickConfigMap
 //            )
-//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-//            -> updateForTsv(
-//                editFragment,
-//                listIndexListViewHolder
-//            )
-//        }
-
-    }
+//        if(!enableClickUpdate) return
+//        updateForTsv(
+//            fragment,
+//            fannelInfoMap,
+//            setReplaceVariableMap,
+//            editComponentListAdapter,
+//            bindingAdapterPosition
+//        )
+////        when(ListIndexAdapter.listIndexTypeKey) {
+//////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+//////            -> {}
+////            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+////            -> updateForNormal(
+////                editFragment,
+////                listIndexListViewHolder.fileName,
+////            )
+////            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+////            -> updateForTsv(
+////                editFragment,
+////                listIndexListViewHolder
+////            )
+////        }
+//
+//    }
 
     private fun updateForTsv(
         fragment: Fragment,
@@ -66,7 +65,7 @@ object ExecClickUpdate {
             editComponentListAdapter.indexListMap
         )
         when(sortType){
-            ListSettingsForListIndex.SortByKey.SORT_TYPE,
+            ListSettingsForListIndex.SortByKey.SORT,
             ListSettingsForListIndex.SortByKey.REVERSE
             -> return
             ListSettingsForListIndex.SortByKey.LAST_UPDATE,

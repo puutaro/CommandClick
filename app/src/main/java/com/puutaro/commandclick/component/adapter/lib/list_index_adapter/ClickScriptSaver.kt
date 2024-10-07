@@ -5,15 +5,15 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Cli
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 
 object ClickScriptSaver {
-    fun save(
-        listIndexArgsMaker: ListIndexArgsMaker,
-    ){
-        val clickConfigMap = listIndexArgsMaker.clickConfigPairList
-        val enableClickSave =
-            ClickSettingsForListIndex.howEnableClickSave(
-                clickConfigMap
-            )
-        if(!enableClickSave) return
-//        ScriptFileSaver.save(editFragment)
-    }
+//    fun save(
+//        listIndexArgsMaker: ListIndexArgsMaker,
+//    ){
+//        val clickConfigMap = listIndexArgsMaker.clickConfigPairList
+//        val enableClickSave =
+//            ClickSettingsForListIndex.howEnableClickSave(
+//                clickConfigMap
+//            )
+//        if(!enableClickSave) return
+////        ScriptFileSaver.save(editFragment)
+//    }
 }

@@ -5,9 +5,12 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
@@ -21,12 +24,14 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 object WithEditComponentListView{
@@ -63,6 +68,7 @@ object WithEditComponentListView{
         editListRecyclerView: RecyclerView,
         editListBkFrame: FrameLayout,
         editListSearchEditText: AppCompatEditText,
+        fannelContentsList: List<String>?,
     ) {
         val context = fragment.context ?: return
 //        val binding = editFragment.binding
@@ -129,14 +135,19 @@ object WithEditComponentListView{
 //        val editListRecyclerView =
 //            binding.editListRecyclerView
 //        val constraintLayoutParam = editListRecyclerView.layoutParams as ConstraintLayout.LayoutParams
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lfannelContentsList.txt").absolutePath,
+//            fannelContentsList?.joinToString("\n") ?: String()
+//        )
         val editComponentListAdapter = EditComponentListAdapter(
-            context,
+            fragment,
             fannelInfoMap,
             setReplaceVariableMap,
             listIndexConfigMap,
             busyboxExecutor,
             indexListMap,
             lineMapList,
+            fannelContentsList
         )
         val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
             listIndexConfigMap,
@@ -219,7 +230,8 @@ object WithEditComponentListView{
                     holder: EditComponentListAdapter.ListIndexListViewHolder,
                     listIndexPosition: Int,
                 ) {
-                    val tag = itemView.tag as String?
+                    val frameLayout = itemView as FrameLayout
+                    val tag = frameLayout.tag as String?
                         ?: return
 //                    FileSystems.writeFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "lclcik.txt").absolutePath,
@@ -234,8 +246,32 @@ object WithEditComponentListView{
                     keyboardHide(
                         fragment,
                     )
-                    val jsAcCon = holder.keyPairListConMap.get(tag)
+
+                    val frameOrLinearCon = holder.keyPairListConMap.get(tag)
                         ?: return
+                    frameLayout.children.firstOrNull{
+                        it is AppCompatTextView
+                    }?.let {
+                        val textView = it as AppCompatTextView
+                        val curSettingValue = textView.autofillHints?.firstOrNull()
+//                        FileSystems.writeFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lclickUpdate_inwithEdit.txt").absolutePath,
+//                            listOf(
+//                                "tag: ${tag}",
+//                                "text: ${textView.text}",
+//                                "settingValMap: ${editComponentListAdapter.initSettingValMap}",
+//                                "cmdValMap: ${editComponentListAdapter.initCmdValMap}",
+//                                "hint: ${textView.autofillHints?.firstOrNull()}"
+//                            ).joinToString("\n")
+//                        )
+                        editComponentListAdapter.handleClickEvent(
+                            editListRecyclerView,
+                            tag,
+                            curSettingValue,
+                            listIndexPosition,
+                            frameOrLinearCon
+                        )
+                    }
                     ListIndexEditConfig.handle(
                         fragment,
                         fannelInfoMap,
@@ -244,7 +280,7 @@ object WithEditComponentListView{
                         editListRecyclerView,
 //                        false,
                         selectedItemLineMap,
-                        jsAcCon,
+                        frameOrLinearCon,
                         listIndexPosition
                     )
                 }

@@ -24,7 +24,7 @@ object BroadcastReceiveHandlerForEdit {
                 if(editListSearchEditText.isVisible) {
                     editListSearchEditText.setText(String())
                 }
-                val editComponentListAdapter = editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+//                val editComponentListAdapter = editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
                 ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                     editComponentListAdapter,
                     ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(

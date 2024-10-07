@@ -292,7 +292,7 @@ object ExecAddForListIndexAdapter {
                         )
                     }
                 }
-            ListSettingsForListIndex.SortByKey.SORT_TYPE,
+            ListSettingsForListIndex.SortByKey.SORT,
             ListSettingsForListIndex.SortByKey.REVERSE ->
                 listUpdateByInsertItem(
 //                    editFragment,

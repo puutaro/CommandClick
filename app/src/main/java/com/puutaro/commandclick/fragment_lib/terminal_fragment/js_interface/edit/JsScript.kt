@@ -138,11 +138,11 @@ class JsScript(
         replaceNewlineSepaCon: String,
     ): String {
         val replacedCommandVariableCon = CommandClickVariables.replaceVariableInHolder(
-            scriptContents,
+            scriptContents.split("\n"),
             replaceNewlineSepaCon,
             commandStartHolder,
             commandEndHolder,
-        )
+        ).joinToString("\n")
         return replacedCommandVariableCon
     }
 
@@ -152,11 +152,11 @@ class JsScript(
         replaceNewlineSepaCon: String,
     ): String {
         val replacedSettingVariableCon = CommandClickVariables.replaceVariableInHolder(
-            scriptContents,
+            scriptContents.split("\n"),
             replaceNewlineSepaCon,
             settingStartHolder,
             settingEndHolder,
-        )
+        ).joinToString("\n")
         return replacedSettingVariableCon
     }
 

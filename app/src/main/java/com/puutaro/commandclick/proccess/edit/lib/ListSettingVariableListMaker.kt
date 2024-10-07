@@ -246,11 +246,11 @@ object ListSettingVariableListMaker {
                 UsePath.fannelSettingVariablsDirPath,
                 UsePath.setVariableTypesConfig
             ).absolutePath
-            CommandClickScriptVariable.HIDE_SETTING_VARIABLES
-            -> File(
-                UsePath.fannelSettingVariablsDirPath,
-                UsePath.hideSettingVariablesConfig
-            ).absolutePath
+//            CommandClickScriptVariable.HIDE_SETTING_VARIABLES
+//            -> File(
+//                UsePath.fannelSettingVariablsDirPath,
+//                UsePath.hideSettingVariablesConfig
+//            ).absolutePath
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS
             -> File(
                 UsePath.fannelSettingVariablsDirPath,

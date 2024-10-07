@@ -2,24 +2,9 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
-import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.proccess.lib.VariationErrDialog
-import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelStateManager
 import java.io.File
 
 

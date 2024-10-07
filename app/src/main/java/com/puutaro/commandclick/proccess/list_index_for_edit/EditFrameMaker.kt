@@ -49,6 +49,7 @@ object EditFrameMaker {
         weight: Float?,
         tag: String?,
         isMarginZero: Boolean,
+        totalSettingValMap: Map<String, String>?
     ): FrameLayout? {
         if(
             context == null
@@ -153,7 +154,10 @@ object EditFrameMaker {
                     labelKey,
                 )?.let {
                     EditComponent.Template.LabelManager.createLabelMap(
-                        it.second
+                        it.second,
+                        totalSettingValMap?.get(
+                            tag
+                        )
                     )
                 }
             }
@@ -320,14 +324,21 @@ object EditFrameMaker {
         strokeWidth: Int?,
         textAlpha: Float?,
     ) {
+        val settingValue = labelMap?.get(
+            EditComponent.Template.LabelManager.LabelKey.SETTING_VALUE.key
+        )
         val label = withContext(Dispatchers.IO) {
             EditComponent.Template.LabelManager.makeLabel(
                 labelMap,
+                settingValue
             )
         }
         labelTag?.let {
             captionTextView.tag = labelTag
         }
+        captionTextView.setAutofillHints(settingValue)
+//        captionTextView.autofillHints?.firstOrNull(0)
+//        captionTextView.hint = settingValue
         captionTextView.text = label
         CmdClickColor.values().firstOrNull {
             it.str == textColorStr

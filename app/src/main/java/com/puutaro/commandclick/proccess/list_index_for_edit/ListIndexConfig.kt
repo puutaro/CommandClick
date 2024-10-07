@@ -78,28 +78,28 @@ object ListIndexEditConfig {
             setReplaceVariableMap,
             mainFannelPath
         )
-        val clickConfigPairList = CmdClickMap.createMap(
-            jsAcCon,
-            '|'
-        )
-        val listIndexArgsMaker = ListIndexArgsMaker(
-            fannelInfoMap,
-            setReplaceVariableMap,
-            clickConfigPairList,
-        )
+//        val clickConfigPairList = CmdClickMap.createMap(
+//            jsAcCon,
+//            '|'
+//        )
+//        val listIndexArgsMaker = ListIndexArgsMaker(
+//            fannelInfoMap,
+//            setReplaceVariableMap,
+//            clickConfigPairList,
+//        )
 
-        ClickScriptSaver.save(
-            listIndexArgsMaker
-        )
-        val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
-        ExecClickUpdate.update(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            editComponentListAdapter,
-            listIndexArgsMaker,
-            listIndexPosition,
-        )
+//        ClickScriptSaver.save(
+//            listIndexArgsMaker
+//        )
+//        val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
+//        ExecClickUpdate.update(
+//            fragment,
+//            fannelInfoMap,
+//            setReplaceVariableMap,
+//            editComponentListAdapter,
+//            listIndexArgsMaker,
+//            listIndexPosition,
+//        )
         JsPathHandlerForQrAndListIndex.handle(
             fragment,
             fannelInfoMap,
@@ -431,7 +431,7 @@ object ListIndexEditConfig {
         DESC("desc"),
         BK("bk"),
         CHECK_ITEM("checkItem"),
-//        CLICK("click"),
+        CLICK("click"),
 //        LONG_CLICK("longClick"),
         LIST("list"),
         SEARCH_BOX("searchBox"),

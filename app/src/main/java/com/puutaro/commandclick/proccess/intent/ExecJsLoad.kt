@@ -242,12 +242,6 @@ object ExecJsLoad {
             jsContentsListSource,
             extraRepValMap = replaceMarkMap
         ) ?: return
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "wUrl.txt").absolutePath,
-            listOf(
-                "externalJsCon: ${externalJsCon}",
-            ).joinToString("\n")
-        )
         JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
             externalJsCon

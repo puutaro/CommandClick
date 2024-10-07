@@ -61,7 +61,7 @@ object CommandClickScriptVariable {
     val EXTRA_BUTTON_CONFIG = "extraButtonConfig"
     val LIST_INDEX_CONFIG = "listIndexConfig"
 //    val QR_DIALOG_CONFIG = "qrDialogConfig"
-    val HIDE_SETTING_VARIABLES = "hideSettingVariables"
+//    val HIDE_SETTING_VARIABLES = "hideSettingVariables"
 //    val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
     val DISABLE_SETTING_VALS_EDIT = "disableSettingValsEdit"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"

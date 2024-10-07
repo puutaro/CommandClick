@@ -33,7 +33,7 @@ object MapListFileTool {
     fun insertMapFileInFirst(
         mapListPath: String?,
         recentUpdateMap: Map<String, String>,
-        lineMapList: List<Map<String, String>>? = null
+        curLineMapList: List<Map<String, String>>? = null
     ) {
         if (
             mapListPath.isNullOrEmpty()
@@ -44,8 +44,8 @@ object MapListFileTool {
         ) return
         val mapListSeparator =
             ListSettingsForListIndex.MapListPathManager.mapListSeparator
-        val srcMapList = when (lineMapList.isNullOrEmpty()) {
-            false -> lineMapList
+        val srcMapList = when (curLineMapList.isNullOrEmpty()) {
+            false -> curLineMapList
             else -> ReadText(mapListPath).textToList().map {
                 CmdClickMap.createMap(
                     it,
@@ -53,12 +53,18 @@ object MapListFileTool {
                 ).toMap()
             }
         }
-        val updateMapListCon = listOf(recentUpdateMap) + srcMapList.filter { lineMap ->
+        val updateMapList = listOf(recentUpdateMap) + srcMapList.filter { lineMap ->
             lineMap != recentUpdateMap
         }
+        val updateMapListCon = updateMapList.map {
+            lineMap ->
+            lineMap.map {
+                "${it.key}=${it.value}"
+            }.joinToString(mapListSeparator.toString())
+        }.joinToString("\n")
         FileSystems.writeFile(
             mapListPath,
-            updateMapListCon.joinToString("\n")
+            updateMapListCon
         )
     }
 

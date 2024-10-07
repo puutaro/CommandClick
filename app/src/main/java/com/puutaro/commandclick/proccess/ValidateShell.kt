@@ -9,86 +9,86 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 
 
-object ValidateShell {
-    fun correct (
-        fragment: Fragment,
-        shellContentsList: List<String>,
-        shellFileName: String,
-    ): String {
-        val context = fragment.context
-//            val languageType =
-//                CommandClickVariables.judgeJsOrShellFromSuffix(shellFileName)
+//object ValidateShell {
+//    fun correct (
+//        fragment: Fragment,
+//        shellContentsList: List<String>,
+//        shellFileName: String,
+//    ): String {
+//        val context = fragment.context
+////            val languageType =
+////                CommandClickVariables.judgeJsOrShellFromSuffix(shellFileName)
+////
+////            val languageTypeToSectionHolderMap =
+////                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+//        val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
+////           languageTypeToSectionHolderMap?.get(
+////                CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+////            ) as String
+//        val labelingSectionEnd =  CommandClickScriptVariable.LABELING_SEC_END
+////            CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
+////                CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+////            ) as String
+//        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
+////            CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
+////                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+////            ) as String
+//        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+////            languageTypeToSectionHolderMap.get(
+////                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+////            ) as String
 //
-//            val languageTypeToSectionHolderMap =
-//                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val labelingSectionStart =  CommandClickScriptVariable.LABELING_SEC_START
-//           languageTypeToSectionHolderMap?.get(
-//                CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
-//            ) as String
-        val labelingSectionEnd =  CommandClickScriptVariable.LABELING_SEC_END
-//            CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
-//                CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
-//            ) as String
-        val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
-//            CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
-//                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//            ) as String
-        val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
-//            languageTypeToSectionHolderMap.get(
-//                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//            ) as String
-
-        val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
-//            CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
-//                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-//            ) as String
-        val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
-//            languageTypeToSectionHolderMap.get(
-//                CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-//            ) as String
-
-
-        val holderList = shellContentsList.filter {
-            it == labelingSectionStart
-                    || it == labelingSectionEnd
-                    || it == settingSectionStart
-                    || it == settingSectionEnd
-                    || it == commandSectionStart
-                    || it == commandSectionEnd
-        }
-        val holderCheck = HolderCheck(
-            context,
-            holderList,
-            shellFileName
-        )
-        val checkHolderNumErrMessage =
-            holderCheck.aboutHolderNum()
-        if(checkHolderNumErrMessage.isNotEmpty()) {
-            return checkHolderNumErrMessage
-        }
-        val checkHolderSetEqualErrMessage =
-            holderCheck.aboutHoderSetMatch()
-        if(checkHolderSetEqualErrMessage.isNotEmpty()) {
-            return checkHolderSetEqualErrMessage
-        }
-        val checkHolderOrderErrMessage =
-            holderCheck.aboutHolderOrder()
-        if(checkHolderOrderErrMessage.isNotEmpty()) {
-            return checkHolderOrderErrMessage
-        }
-
-        val checkVariableValue = CheckVariableValue(
-            context,
-            shellContentsList,
-//                shellFileName
-        )
-        val checkQuoteSetOrIsBackslash = checkVariableValue.aboutQuoteSetOrIsBackSlash()
-        if(checkQuoteSetOrIsBackslash.isNotEmpty()){
-            return checkQuoteSetOrIsBackslash
-        }
-        return String()
-    }
-}
+//        val commandSectionStart =  CommandClickScriptVariable.CMD_SEC_START
+////            CommandClickScriptVariable.SETTING_SEC_END,languageTypeToSectionHolderMap.get(
+////                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+////            ) as String
+//        val commandSectionEnd =  CommandClickScriptVariable.CMD_SEC_END
+////            languageTypeToSectionHolderMap.get(
+////                CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+////            ) as String
+//
+//
+//        val holderList = shellContentsList.filter {
+//            it == labelingSectionStart
+//                    || it == labelingSectionEnd
+//                    || it == settingSectionStart
+//                    || it == settingSectionEnd
+//                    || it == commandSectionStart
+//                    || it == commandSectionEnd
+//        }
+//        val holderCheck = HolderCheck(
+//            context,
+//            holderList,
+//            shellFileName
+//        )
+//        val checkHolderNumErrMessage =
+//            holderCheck.aboutHolderNum()
+//        if(checkHolderNumErrMessage.isNotEmpty()) {
+//            return checkHolderNumErrMessage
+//        }
+//        val checkHolderSetEqualErrMessage =
+//            holderCheck.aboutHoderSetMatch()
+//        if(checkHolderSetEqualErrMessage.isNotEmpty()) {
+//            return checkHolderSetEqualErrMessage
+//        }
+//        val checkHolderOrderErrMessage =
+//            holderCheck.aboutHolderOrder()
+//        if(checkHolderOrderErrMessage.isNotEmpty()) {
+//            return checkHolderOrderErrMessage
+//        }
+//
+////        val checkVariableValue = CheckVariableValue(
+////            context,
+////            shellContentsList,
+//////                shellFileName
+////        )
+////        val checkQuoteSetOrIsBackslash = checkVariableValue.aboutQuoteSetOrIsBackSlash()
+////        if(checkQuoteSetOrIsBackslash.isNotEmpty()){
+////            return checkQuoteSetOrIsBackslash
+////        }
+//        return String()
+//    }
+//}
 
 private class CheckVariableValue(
     private val context: Context?,
@@ -131,53 +131,53 @@ private class CheckVariableValue(
             commandSectionEnd
         )
 
-    fun aboutQuoteSetOrIsBackSlash(): String {
-        recordNumToMapNameValueInHolder?.forEach{
-                numToNameToValueMap ->
-            val currentMapNameValue = numToNameToValueMap.value
-            val currentVariableName = currentMapNameValue?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            ) ?: String()
-            val currentVariableValueString = currentMapNameValue?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-            ) ?: String()
-            val currentValueLength = currentVariableValueString.length - 1
-            if(currentVariableValueString.indexOf('\\') != -1) {
-                return context?.getString(
-                    R.string.variable_exist_backslash_err,
-                    "${currentVariableName}=${currentVariableValueString}"
-                ) ?: String()
-            }
-            if(currentVariableValueString.indexOf('\'') == -1) return@forEach
-            if(currentVariableValueString.indexOf('"') == -1) return@forEach
-            val middleCurrentVariableValueString = currentVariableValueString.substring(
-                1, currentValueLength
-            )
-            if(
-                middleCurrentVariableValueString.indexOf('"') != -1
-                && middleCurrentVariableValueString.indexOf('\'') != -1
-            ) return context?.getString(
-                R.string.variable_quote_set_err,
-                "${currentVariableName}=${currentVariableValueString}"
-            ) ?: String()
-            if(
-                currentVariableValueString.lastIndexOf('\'') == 0
-                && currentVariableValueString.lastIndexOf('\'') == currentValueLength
-                && currentVariableValueString.filter { it == '\'' }.count() == 2
-            ) return@forEach
-            if(
-                currentVariableValueString.lastIndexOf('"') == 0
-                && currentVariableValueString.lastIndexOf('"') == currentValueLength
-                && currentVariableValueString.filter { it == '"' }.count() == 2
-            ) return@forEach
-            if(currentVariableValueString.indexOf('\'') != -1) return@forEach
-            return context?.getString(
-                R.string.variable_quote_set_err,
-                "${currentVariableName}=${currentVariableValueString}"
-            ) ?: String()
-        }
-        return String()
-    }
+//    fun aboutQuoteSetOrIsBackSlash(): String {
+//        recordNumToMapNameValueInHolder?.forEach{
+//                numToNameToValueMap ->
+//            val currentMapNameValue = numToNameToValueMap.value
+//            val currentVariableName = currentMapNameValue?.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
+//            ) ?: String()
+//            val currentVariableValueString = currentMapNameValue?.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
+//            ) ?: String()
+//            val currentValueLength = currentVariableValueString.length - 1
+//            if(currentVariableValueString.indexOf('\\') != -1) {
+//                return context?.getString(
+//                    R.string.variable_exist_backslash_err,
+//                    "${currentVariableName}=${currentVariableValueString}"
+//                ) ?: String()
+//            }
+//            if(currentVariableValueString.indexOf('\'') == -1) return@forEach
+//            if(currentVariableValueString.indexOf('"') == -1) return@forEach
+//            val middleCurrentVariableValueString = currentVariableValueString.substring(
+//                1, currentValueLength
+//            )
+//            if(
+//                middleCurrentVariableValueString.indexOf('"') != -1
+//                && middleCurrentVariableValueString.indexOf('\'') != -1
+//            ) return context?.getString(
+//                R.string.variable_quote_set_err,
+//                "${currentVariableName}=${currentVariableValueString}"
+//            ) ?: String()
+//            if(
+//                currentVariableValueString.lastIndexOf('\'') == 0
+//                && currentVariableValueString.lastIndexOf('\'') == currentValueLength
+//                && currentVariableValueString.filter { it == '\'' }.count() == 2
+//            ) return@forEach
+//            if(
+//                currentVariableValueString.lastIndexOf('"') == 0
+//                && currentVariableValueString.lastIndexOf('"') == currentValueLength
+//                && currentVariableValueString.filter { it == '"' }.count() == 2
+//            ) return@forEach
+//            if(currentVariableValueString.indexOf('\'') != -1) return@forEach
+//            return context?.getString(
+//                R.string.variable_quote_set_err,
+//                "${currentVariableName}=${currentVariableValueString}"
+//            ) ?: String()
+//        }
+//        return String()
+//    }
 }
 
 

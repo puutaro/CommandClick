@@ -179,24 +179,24 @@ class FormJsDialog(
 //            FannelInfoSetting.current_app_dir.name
 //                to terminalFragment.currentAppDirPath
 //        )
-        val editParameters = EditParameters(
-//            terminalFragment,
-            virtualJsContentsList,
-            recordNumToMapNameValueInCommandHolder,
-            recordNumToMapNameValueInSettingHolder,
-            emptyMap(),
-            setReplaceVariableMap,
-            true,
-            emptyList()
-        )
+//        val editParameters = EditParameters(
+////            terminalFragment,
+//            virtualJsContentsList,
+////            recordNumToMapNameValueInCommandHolder,
+////            recordNumToMapNameValueInSettingHolder,
+//            emptyMap(),
+//            setReplaceVariableMap,
+//            true,
+////            emptyList()
+//        )
 
-        execFormPartsAdd(
-            terminalFragment,
-            editParameters,
-//            recordNumToSetVariableMaps,
-            exitTextStartId,
-            linearLayout
-        )
+//        execFormPartsAdd(
+//            terminalFragment,
+//            editParameters,
+////            recordNumToSetVariableMaps,
+//            exitTextStartId,
+//            linearLayout
+//        )
 
         terminalViewModel.onDialog = true
         returnValue = String()
@@ -283,76 +283,76 @@ class FormJsDialog(
         return "\n\n${settingSectionContents}\n\n\n${commandSectionContents}\n".split("\n")
     }
 
-    private fun execFormPartsAdd(
-        fragment: Fragment,
-        editParameters: EditParameters,
-//        recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
-        editTextStartId: Int,
-        linearLayout: LinearLayoutCompat
-    ){
-        val terminalFragment = terminalFragmentRef.get()
-            ?: return
-        val context = terminalFragment.context
-        val recordNumToNameToValueInHolderSize =
-            editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
-        (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
-            val linearParams = LinearLayoutCompat.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-            )
-            val currentOrder = seedNum - 1
-            val currentRecordNumToMapNameValueInHolder =
-                editParameters.recordNumToMapNameValueInCommandHolder.entries.elementAt(
-                    currentOrder
-                )
-            val currentRecordNumToNameToValueInHolder =
-                currentRecordNumToMapNameValueInHolder.value
-            val insertTextView = TextView(context)
-            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            )
-            val currentVariableValue = currentRecordNumToNameToValueInHolder?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-            )
-            val currentId = editTextStartId + currentOrder
-            insertTextView.text = currentVariableName
-            linearParams.weight = 1F
-            insertTextView.layoutParams = linearParams
-            linearLayout.addView(insertTextView)
-            val insertEditText = EditText(context)
-            insertEditText.tag = currentVariableName
-            insertEditText.id = currentId
-            insertEditText.backgroundTintList =
-                context?.getColorStateList(R.color.gray_out)
-            insertEditText.setSelectAllOnFocus(true)
-            val currentRecordNum =
-                currentRecordNumToMapNameValueInHolder.key
-//            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
-//                currentRecordNum
+//    private fun execFormPartsAdd(
+//        fragment: Fragment,
+//        editParameters: EditParameters,
+////        recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
+//        editTextStartId: Int,
+//        linearLayout: LinearLayoutCompat
+//    ){
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return
+//        val context = terminalFragment.context
+//        val recordNumToNameToValueInHolderSize =
+//            editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
+//        (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
+//            val linearParams = LinearLayoutCompat.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
 //            )
-//            editParameters.currentId = currentId
-//            editParameters.currentVariableName = currentVariableName
-//            editParameters.currentVariableValue = currentVariableValue
-//            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
-//                currentRecordNum
+//            val currentOrder = seedNum - 1
+//            val currentRecordNumToMapNameValueInHolder =
+//                editParameters.recordNumToMapNameValueInCommandHolder.entries.elementAt(
+//                    currentOrder
+//                )
+//            val currentRecordNumToNameToValueInHolder =
+//                currentRecordNumToMapNameValueInHolder.value
+//            val insertTextView = TextView(context)
+//            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
 //            )
-//            val variableTypeList = editParameters.setVariableMap?.get(
-//                SetVariableTypeColumn.VARIABLE_TYPE.name
-//            )?.split(":")?.filter {
-//                val isContain = variableTypeDefineListForMiniEdit.contains(it)
-//                if (
-//                    isContain
-//                ) return@filter isContain
-//                LogSystems.stdWarn("Irregular option: ${it}")
-//                false
-//            } ?: emptyList()
-//            editParameters.variableTypeList = variableTypeList
-//            val horizontalLinearLayout = WithEditComponentForFormJsDialog.insert(
-//                fragment,
-//                insertTextView,
-//                editParameters
+//            val currentVariableValue = currentRecordNumToNameToValueInHolder?.get(
+//                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
 //            )
-//            linearLayout.addView(horizontalLinearLayout)
-        }
-    }
+//            val currentId = editTextStartId + currentOrder
+//            insertTextView.text = currentVariableName
+//            linearParams.weight = 1F
+//            insertTextView.layoutParams = linearParams
+//            linearLayout.addView(insertTextView)
+//            val insertEditText = EditText(context)
+//            insertEditText.tag = currentVariableName
+//            insertEditText.id = currentId
+//            insertEditText.backgroundTintList =
+//                context?.getColorStateList(R.color.gray_out)
+//            insertEditText.setSelectAllOnFocus(true)
+//            val currentRecordNum =
+//                currentRecordNumToMapNameValueInHolder.key
+////            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
+////                currentRecordNum
+////            )
+////            editParameters.currentId = currentId
+////            editParameters.currentVariableName = currentVariableName
+////            editParameters.currentVariableValue = currentVariableValue
+////            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
+////                currentRecordNum
+////            )
+////            val variableTypeList = editParameters.setVariableMap?.get(
+////                SetVariableTypeColumn.VARIABLE_TYPE.name
+////            )?.split(":")?.filter {
+////                val isContain = variableTypeDefineListForMiniEdit.contains(it)
+////                if (
+////                    isContain
+////                ) return@filter isContain
+////                LogSystems.stdWarn("Irregular option: ${it}")
+////                false
+////            } ?: emptyList()
+////            editParameters.variableTypeList = variableTypeList
+////            val horizontalLinearLayout = WithEditComponentForFormJsDialog.insert(
+////                fragment,
+////                insertTextView,
+////                editParameters
+////            )
+////            linearLayout.addView(horizontalLinearLayout)
+//        }
+//    }
 }

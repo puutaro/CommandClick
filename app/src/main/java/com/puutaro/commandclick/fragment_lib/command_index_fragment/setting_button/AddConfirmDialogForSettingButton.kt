@@ -142,17 +142,17 @@ object AddConfirmDialogForSettingButton {
             shellContentsList,
 //            shellScriptName
         )
-        val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
-            shellScriptContentsLabelCommentOut,
-//            languageTypeToSectionHolderMap
-        )
-        FileSystems.writeFile(
-            File(
-                cmdclickDefaultAppDirPath,
-                shellScriptName,
-            ).absolutePath,
-            shellScriptContentsQuoteComp
-        )
+//        val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
+//            shellScriptContentsLabelCommentOut,
+////            languageTypeToSectionHolderMap
+//        )
+//        FileSystems.writeFile(
+//            File(
+//                cmdclickDefaultAppDirPath,
+//                shellScriptName,
+//            ).absolutePath,
+//            shellScriptContentsQuoteComp
+//        )
 //        CommandListManager.execListUpdateForCmdIndex(
 ////            currentAppDirPath,
 //            binding.cmdList,
@@ -161,40 +161,40 @@ object AddConfirmDialogForSettingButton {
 }
 
 
-private fun makeShellScriptContentsQuoteComp(
-    shellContentsList: List<String>,
-//    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
-): String {
-    val recordNumToMapNameValueInCommandHolder =
-        RecordNumToMapNameValueInHolder.parse(
-            shellContentsList,
-            CommandClickScriptVariable.CMD_SEC_START,
-            CommandClickScriptVariable.CMD_SEC_END,
-//            languageTypeToSectionHolderMap?.get(
-//                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-//            ) as String,
-//            languageTypeToSectionHolderMap[
-//                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-//            ] as String,
-        )
-    val recordNumToMapNameValueInSettingHolder =
-        RecordNumToMapNameValueInHolder.parse(
-            shellContentsList,
-            CommandClickScriptVariable.SETTING_SEC_START,
-            CommandClickScriptVariable.SETTING_SEC_END,
-//            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START) as String,
-//            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END] as String,
-            true,
-        )
-    val shellScriptListQuoteCompForCmdVariables = quoteCompShellScriptListVariables(
-        shellContentsList,
-        recordNumToMapNameValueInCommandHolder
-    )
-    return quoteCompShellScriptListVariables(
-        shellScriptListQuoteCompForCmdVariables,
-        recordNumToMapNameValueInSettingHolder,
-    ).joinToString("\n")
-}
+//private fun makeShellScriptContentsQuoteComp(
+//    shellContentsList: List<String>,
+////    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
+//): String {
+//    val recordNumToMapNameValueInCommandHolder =
+//        RecordNumToMapNameValueInHolder.parse(
+//            shellContentsList,
+//            CommandClickScriptVariable.CMD_SEC_START,
+//            CommandClickScriptVariable.CMD_SEC_END,
+////            languageTypeToSectionHolderMap?.get(
+////                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+////            ) as String,
+////            languageTypeToSectionHolderMap[
+////                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+////            ] as String,
+//        )
+//    val recordNumToMapNameValueInSettingHolder =
+//        RecordNumToMapNameValueInHolder.parse(
+//            shellContentsList,
+//            CommandClickScriptVariable.SETTING_SEC_START,
+//            CommandClickScriptVariable.SETTING_SEC_END,
+////            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START) as String,
+////            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END] as String,
+//            true,
+//        )
+//    val shellScriptListQuoteCompForCmdVariables = quoteCompShellScriptListVariables(
+//        shellContentsList,
+//        recordNumToMapNameValueInCommandHolder
+//    )
+//    return quoteCompShellScriptListVariables(
+//        shellScriptListQuoteCompForCmdVariables,
+//        recordNumToMapNameValueInSettingHolder,
+//    ).joinToString("\n")
+//}
 
 
 

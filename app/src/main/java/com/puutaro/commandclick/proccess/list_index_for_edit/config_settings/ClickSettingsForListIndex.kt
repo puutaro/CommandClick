@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 
 object ClickSettingsForListIndex {
@@ -25,28 +27,31 @@ object ClickSettingsForListIndex {
         ON,
     }
 
+    fun makeClickConfigMap(
+        listIndexConfigMap: Map<String, String>?
+    ): Map<String, String> {
+        return CmdClickMap.createMap(
+            listIndexConfigMap?.get(ListIndexEditConfig.ListIndexConfigKey.LIST.key),
+            '|'
+        ).toMap()
+    }
+
+
     fun howEnableClickUpdate(
-        clickConfigPairList: List<Pair<String, String>>?
+        clickConfigMap: Map<String, String>?
     ): Boolean {
-        val enableUpdateValue = clickConfigPairList?.firstOrNull {
-            val mainKey = it.first
-            mainKey == ClickSettingKey.ENABLE_UPDATE.key
-        }?.second.let {
+        return clickConfigMap?.get(ClickSettingKey.ENABLE_UPDATE.key)?.let {
             QuoteTool.trimBothEdgeQuote(it)
-        }
-        return enableUpdateValue == OnDisableUpdateValue.ON.name
+        } == OnDisableUpdateValue.ON.name
     }
 
     fun howEnableClickSave(
-        clickConfigPairList: List<Pair<String, String>>?
+        clickConfigMap: Map<String, String>?
     ): Boolean {
-        val onScriptSaveValue = clickConfigPairList?.firstOrNull {
-            val mainKey = it.first
-            mainKey == ClickSettingKey.ON_SCRIPT_SAVE.key
-        }?.second.let {
-            QuoteTool.trimBothEdgeQuote(it)
-        }
-        return onScriptSaveValue == OnScriptSave.ON.name
+        return clickConfigMap?.get(ClickSettingKey.ON_SCRIPT_SAVE.key)
+            ?.let {
+                QuoteTool.trimBothEdgeQuote(it)
+            } == OnScriptSave.ON.name
     }
 
 }

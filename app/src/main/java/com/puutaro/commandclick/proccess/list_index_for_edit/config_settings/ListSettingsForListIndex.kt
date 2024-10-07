@@ -113,14 +113,14 @@ object ListSettingsForListIndex  {
                                 it.isNotEmpty()
                             }
                         }
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse.txt").absolutePath,
-                    listOf(
-                        "layoutKey: ${layoutKey}",
-                        "framePairsConList: ${framePairsConList}",
-                        "linearPairConList: ${linearPairConList}",
-                    ).joinToString("\n") + "\n----\n"
-                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse.txt").absolutePath,
+//                    listOf(
+//                        "layoutKey: ${layoutKey}",
+//                        "framePairsConList: ${framePairsConList}",
+//                        "linearPairConList: ${linearPairConList}",
+//                    ).joinToString("\n") + "\n----\n"
+//                )
                 when (true) {
                     (layoutKey == frameTypeName) -> {
                         val frameLayoutKeyPairListCon =
@@ -262,19 +262,19 @@ object ListSettingsForListIndex  {
 //                    it.second
 //                }
 //            }.toMap()
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
-                listOf(
-//                    "layoutKey: ${layoutKey}",
-                    "framePairsConList: ${framePairsConList}",
-                    "linearPairConList: ${linearPairConList}",
-                    "\npair: ${Pair(
-                        framePairsConList.toMap(),
-                        frameTagToLinearPairConListMap,
-//                frameTagToLinearKeysListMap
-                    )}"
-                ).joinToString("\n") + "\n----\n"
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
+//                listOf(
+////                    "layoutKey: ${layoutKey}",
+//                    "framePairsConList: ${framePairsConList}",
+//                    "linearPairConList: ${linearPairConList}",
+//                    "\npair: ${Pair(
+//                        framePairsConList.toMap(),
+//                        frameTagToLinearPairConListMap,
+////                frameTagToLinearKeysListMap
+//                    )}"
+//                ).joinToString("\n") + "\n----\n"
+//            )
             return Pair(
                 framePairsConList.toMap(),
                 frameTagToLinearPairConListMap,
@@ -302,7 +302,7 @@ object ListSettingsForListIndex  {
         val key: String
     ) {
         LAST_UPDATE("lastUpdate"),
-        SORT_TYPE("sortType"),
+        SORT("sort"),
         REVERSE("reverse"),
     }
 
@@ -548,14 +548,14 @@ object ListSettingsForListIndex  {
                 ).toMap()
             }.let {
                 mapList ->
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "lmapList.txt").absolutePath,
-                    listOf(
-                        "indexListMap: ${indexListMap}",
-                        "mapListPath: ${mapListPath}",
-                        "mapList: ${mapList}",
-                    ).joinToString("\n\n")
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lmapList.txt").absolutePath,
+//                    listOf(
+//                        "indexListMap: ${indexListMap}",
+//                        "mapListPath: ${mapListPath}",
+//                        "mapList: ${mapList}",
+//                    ).joinToString("\n\n")
+//                )
                 howExistPathForTsv(
                     fannelInfoMap,
                     setReplaceVariableMap,
@@ -813,7 +813,7 @@ object ListSettingsForListIndex  {
                     lineMapList
                         .toMutableList()
                 }
-                SortByKey.SORT_TYPE -> {
+                SortByKey.SORT -> {
                         val sortedLineMapListSrc = lineMapList
                             .sortedWith(
                                 compareBy {
@@ -832,7 +832,7 @@ object ListSettingsForListIndex  {
                                 map ->
                             map.get(MapListPathManager.Key.SRC_LABEL.key)
                         }
-                    )
+                    ).reversed()
 //                    val sortedLineMapList =
 //                        if(isReverseLayout) sortedLineMapListSrc.reversed()
 //                        else sortedLineMapListSrc
@@ -860,13 +860,13 @@ object ListSettingsForListIndex  {
             sortType: SortByKey,
             sortedLineMapList: List<Map<String, String>>,
         ): MutableList<Map<String, String>> {
-            return when(sortType){
+            val sortedList = when(sortType){
                 SortByKey.LAST_UPDATE -> {
                     sortedLineMapList
 //                        .reversed()
                         .toMutableList()
                 }
-                SortByKey.SORT_TYPE -> {
+                SortByKey.SORT -> {
                     sortedLineMapList.sortedWith(
                         compareBy {
                                 map ->
@@ -882,10 +882,19 @@ object ListSettingsForListIndex  {
                             map.get(MapListPathManager.Key.SRC_LABEL.key)
                         }
                     )
-//                        .reversed()
+                        .reversed()
                         .toMutableList()
                 }
             }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lsort.txt").absolutePath,
+//                listOf(
+//                    "sortType: ${sortType}",
+//                    "sortedLineMapList: ${sortedLineMapList}",
+//                    "sortedList: ${sortedList}",
+//                ).joinToString("\n")
+//            )
+            return sortedList
         }
 
         private fun makeFilterShellCon(
@@ -1038,16 +1047,16 @@ private object CompPathManager {
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.COMP_MAP_LIST_PATH.key
         )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "lComp.txt").absolutePath,
-            listOf(
-                "indexListMap: ${indexListMap}",
-                "COMP_MAP_LIST_PATH: ${indexListMap.get(
-                    ListSettingsForListIndex.ListSettingKey.COMP_MAP_LIST_PATH.key
-                )}",
-                "compMapListPath: ${compMapListPath}",
-            ).joinToString("\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lComp.txt").absolutePath,
+//            listOf(
+//                "indexListMap: ${indexListMap}",
+//                "COMP_MAP_LIST_PATH: ${indexListMap.get(
+//                    ListSettingsForListIndex.ListSettingKey.COMP_MAP_LIST_PATH.key
+//                )}",
+//                "compMapListPath: ${compMapListPath}",
+//            ).joinToString("\n")
+//        )
         if(
             compMapListPath.isNullOrEmpty()
         ) return lineMapListSrc
@@ -1061,21 +1070,21 @@ private object CompPathManager {
                 )
             initMapListPathObj.isDirectory -> {
                 val initTsvConSrcDir = initMapListPathObj.absolutePath
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "linitTsvConSrcDir.txt").absolutePath,
-                    listOf(
-                        "initTsvConSrcDir: ${initTsvConSrcDir}",
-                        "list: ${FileSystems.sortedFiles(
-                            initTsvConSrcDir
-                        ).map {
-                            val fileObj = File(initTsvConSrcDir, it)
-                            mapOf(
-                                ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key to fileObj.name,
-                                ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to fileObj.absolutePath
-                            )
-                        }}",
-                    ).joinToString("\n")
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "linitTsvConSrcDir.txt").absolutePath,
+//                    listOf(
+//                        "initTsvConSrcDir: ${initTsvConSrcDir}",
+//                        "list: ${FileSystems.sortedFiles(
+//                            initTsvConSrcDir
+//                        ).map {
+//                            val fileObj = File(initTsvConSrcDir, it)
+//                            mapOf(
+//                                ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key to fileObj.name,
+//                                ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to fileObj.absolutePath
+//                            )
+//                        }}",
+//                    ).joinToString("\n")
+//                )
                 FileSystems.sortedFiles(
                     initTsvConSrcDir
                 ).map {

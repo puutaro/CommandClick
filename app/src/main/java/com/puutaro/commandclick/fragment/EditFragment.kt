@@ -76,10 +76,11 @@ class EditFragment: Fragment() {
     var setReplaceVariableMap: Map<String, String>? = null
     var settingFannelPath: String = String()
 //    var setVariableTypeList: List<String>? = null
-    var hideSettingVariableList: List<String> = emptyList()
+//    var hideSettingVariableList: List<String> = emptyList()
 //    var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
+    var mainFannelConList = emptyList<String>()
     var currentFannelConList = emptyList<String>()
     var settingFannelConList: List<String>? = null
 //    var existIndexList: Boolean = false
@@ -91,14 +92,14 @@ class EditFragment: Fragment() {
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap: MutableMap<ToolbarButtonBariantForEdit, Pair<Int, String>> = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var editBoxTitleConfig: Map<String, String> = emptyMap()
-    var filterDir = String()
+//    var filterDir = String()
     var buttonWeight = 0.25f
 //    var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
     var disableKeyboardFragmentChange = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
-    var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
-    var recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
+//    var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
+//    var recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
     var firstUpdate = false
     val alterIfShellResultMap: MutableMap<String, String> = mutableMapOf()
 
@@ -177,7 +178,7 @@ class EditFragment: Fragment() {
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val currentFannelPath =
             File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath
-        val mainFannelConList =
+        mainFannelConList =
             ReadText(currentFannelPath).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(

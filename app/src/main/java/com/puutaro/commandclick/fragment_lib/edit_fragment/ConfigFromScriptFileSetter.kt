@@ -59,20 +59,20 @@ object ConfigFromScriptFileSetter {
 //                fannelInfoMap,
 //                settingVariableList,
 //            )
-        editFragment.hideSettingVariableList =
-            ListSettingVariableListMaker.makeFromSettingVariableList(
-                CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-                fannelInfoMap,
-                editFragment.setReplaceVariableMap,
-                settingVariableList
-            )
-        editFragment.recordNumToMapNameValueInSettingHolder =
-            RecordNumToMapNameValueInHolderMaker.makeForSetting(editFragment)
-        editFragment.recordNumToMapNameValueInCommandHolder =
-            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(
-                editFragment,
-                mainFannelConList
-            )
+//        editFragment.hideSettingVariableList =
+//            ListSettingVariableListMaker.makeFromSettingVariableList(
+//                CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
+//                fannelInfoMap,
+//                editFragment.setReplaceVariableMap,
+//                settingVariableList
+//            )
+//        editFragment.recordNumToMapNameValueInSettingHolder =
+//            RecordNumToMapNameValueInHolderMaker.makeForSetting(editFragment)
+//        editFragment.recordNumToMapNameValueInCommandHolder =
+//            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(
+//                editFragment,
+//                mainFannelConList
+//            )
 //        editFragment.existIndexList =
 //            judgeExistListIndex(
 //                editFragment,

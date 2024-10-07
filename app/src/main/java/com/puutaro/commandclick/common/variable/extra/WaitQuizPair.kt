@@ -21,7 +21,7 @@ object WaitQuizPair {
     }
     private val UBUNTU_EXEC_MODE = CommandClickScriptVariable.UBUNTU_EXEC_MODE
     private val SHELL_EXEC_ENV = CommandClickScriptVariable.SHELL_EXEC_ENV
-    private val HIDE_SETTING_VARIABLES = CommandClickScriptVariable.HIDE_SETTING_VARIABLES
+//    private val HIDE_SETTING_VARIABLES = CommandClickScriptVariable.HIDE_SETTING_VARIABLES
     private val SET_VARIABLE_TYPE = CommandClickScriptVariable.SET_VARIABLE_TYPE
     private val SET_REPLACE_VARIABLE = CommandClickScriptVariable.SET_REPLACE_VARIABLE
     private val EDIT_EXECUTE = CommandClickScriptVariable.EDIT_EXECUTE
@@ -550,14 +550,14 @@ object WaitQuizPair {
             "How to convert edit box to gui app?",
             "-> Use \"${EDIT_EXECUTE}\""
         ),
-        Pair(
-            "Where's \"${HIDE_SETTING_VARIABLES}\"?",
-            "-> \"setting variables section\" in fannel script"
-        ),
-        Pair(
-            "How to hid seldom use \"setting variables\"  ?",
-            "-> Use \"${HIDE_SETTING_VARIABLES}\""
-        ),
+//        Pair(
+//            "Where's \"${HIDE_SETTING_VARIABLES}\"?",
+//            "-> \"setting variables section\" in fannel script"
+//        ),
+//        Pair(
+//            "How to hid seldom use \"setting variables\"  ?",
+//            "-> Use \"${HIDE_SETTING_VARIABLES}\""
+//        ),
         Pair(
             "Where's \"${SET_VARIABLE_TYPE}\"?",
             "-> \"setting variables section\" in fannel script"

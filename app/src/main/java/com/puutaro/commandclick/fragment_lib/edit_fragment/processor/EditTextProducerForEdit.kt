@@ -28,12 +28,12 @@ object EditTextProducerForEdit {
         val editParameters = EditParameters(
 //        editFragment,
             currentScriptContentsList,
-            editFragment.recordNumToMapNameValueInCommandHolder,
-            editFragment.recordNumToMapNameValueInSettingHolder,
+//            editFragment.recordNumToMapNameValueInCommandHolder,
+//            editFragment.recordNumToMapNameValueInSettingHolder,
             fannelInfoMap,
             setReplaceVariableMap,
             false,
-            editFragment.hideSettingVariableList,
+//            editFragment.hideSettingVariableList,
         )
 
         editViewModel.variableNameToEditTextIdMap.clear()
@@ -41,7 +41,7 @@ object EditTextProducerForEdit {
         execAddEditComponent(
             editFragment,
             editParameters,
-            editFragment.recordNumToMapNameValueInCommandHolder,
+//            editFragment.recordNumToMapNameValueInCommandHolder,
             EditTextIdForEdit.COMMAND_VARIABLE.id,
         )
 //        when (onSettingEdit) {
@@ -72,7 +72,7 @@ object EditTextProducerForEdit {
     private fun execAddEditComponent(
         editFragment: EditFragment,
         editParameters: EditParameters,
-        recordNumToMapNameValueInCommandOrSettingHolder:  Map<Int, Map<String, String>?>?,
+//        recordNumToMapNameValueInCommandOrSettingHolder:  Map<Int, Map<String, String>?>?,
         editTextStartId: Int,
     ){
 //        val recordNumToSetVariableMaps =
@@ -93,7 +93,7 @@ object EditTextProducerForEdit {
         execAdd(
             editFragment,
             editParameters,
-            recordNumToMapNameValueInCommandOrSettingHolder,
+//            recordNumToMapNameValueInCommandOrSettingHolder,
 //            recordNumToSetVariableMaps,
             editTextStartId
         )
@@ -102,14 +102,14 @@ object EditTextProducerForEdit {
     private fun execAdd(
         editFragment: EditFragment,
         editParameters: EditParameters,
-        recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
+//        recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
 //        recordNumToSetVariableMaps: Map<Int, Map<String, String>?>?,
         editTextStartId: Int,
     ) {
-        val context = editFragment.context
-        val binding = editFragment.binding
+//        val context = editFragment.context
+//        val binding = editFragment.binding
 //        val existIndexList = editFragment.existIndexList
-        val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
+//        val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
         setListIndexLayoutComponent(
             editFragment,
             editParameters,
@@ -213,6 +213,7 @@ object EditTextProducerForEdit {
             binding.editListRecyclerView,
             binding.editListBkFrame,
             binding.editListSearchEditText,
+            editFragment.mainFannelConList,
 //            editParameters
         )
 //        when(true){
