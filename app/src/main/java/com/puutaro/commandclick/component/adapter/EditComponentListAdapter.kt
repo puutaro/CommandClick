@@ -11,6 +11,7 @@ import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -299,6 +300,9 @@ class EditComponentListAdapter(
             withContext(Dispatchers.Main) {
                 val frameFrameLayout = EditFrameMaker.make(
                     context,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
                     frameKeyPairsList,
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     null,
@@ -429,6 +433,9 @@ class EditComponentListAdapter(
                         }
                         val linearFrameLayout = EditFrameMaker.make(
                             context,
+                            fannelInfoMap,
+                            setReplaceVariableMap,
+                            busyboxExecutor,
                             linearFrameKeyPairsList,
                             0,
                             layoutWeight,
@@ -704,7 +711,7 @@ class EditComponentListAdapter(
             editListRecyclerView,
             indexListMap,
             layoutConfigMap,
-            lineMapList,
+//            lineMapList,
             indexListPosition,
         )
     }
@@ -717,12 +724,16 @@ class EditComponentListAdapter(
             editListRecyclerView: RecyclerView,
             indexListMap: Map<String, String>,
             layoutConfigMap: Map<String, String>,
-            lineMapList: List<Map<String, String>>,
+//            lineMapList: List<Map<String, String>>,
             indexListPosition: Int,
         ) {
             if (
-                fragment == null
+                indexListPosition == 0
+                || fragment == null
             ) return
+            CoroutineScope(Dispatchers.Main).launch {
+                ToastUtils.showShort(indexListPosition.toString())
+            }
             val enableClickUpdate =
                 LayoutSettingsForListIndex.howClickUpdate(
                     fannelInfoMap,
@@ -746,7 +757,7 @@ class EditComponentListAdapter(
                 setReplaceVariableMap,
                 editListRecyclerView,
                 indexListMap,
-                lineMapList,
+//                lineMapList,
                 indexListPosition
             )
         }
@@ -757,7 +768,7 @@ class EditComponentListAdapter(
             setReplaceVariableMap: Map<String, String>?,
             editRecyclerView: RecyclerView,
             indexListMap: Map<String, String>,
-            lineMapList: List<Map<String, String>>,
+//            lineMapList: List<Map<String, String>>,
             bindingAdapterPosition: Int,
         ) {
             val sortType = ListSettingsForListIndex.getSortType(
@@ -774,8 +785,9 @@ class EditComponentListAdapter(
                 -> {
                 }
             }
+            val editComponentListAdapter = editRecyclerView.adapter as EditComponentListAdapter
             val lineMap =
-                lineMapList.getOrNull(
+                editComponentListAdapter.lineMapList.getOrNull(
                     bindingAdapterPosition
                 ) ?: return
             val mapListPath = FilePrefixGetter.get(
@@ -788,12 +800,11 @@ class EditComponentListAdapter(
                 mapListPath,
                 lineMap
             )
-            val editComponentListAdapter = editRecyclerView.adapter as EditComponentListAdapter
-//            val lineMap = editComponentList.lineMapList.get(bindingAdapterPosition)
-            editComponentListAdapter.lineMapList.removeAt(bindingAdapterPosition)
-            editComponentListAdapter.notifyItemRemoved(bindingAdapterPosition)
-            editComponentListAdapter.lineMapList.add(0, lineMap)
-            editComponentListAdapter.notifyItemInserted(0)
+            val lineMapList = editComponentListAdapter.lineMapList
+            lineMapList.removeAt(bindingAdapterPosition)
+            val updateLineListMap = listOf(lineMap) + lineMapList
+            editComponentListAdapter.lineMapList.clear()
+            editComponentListAdapter.lineMapList.addAll(updateLineListMap)
             BroadcastSender.normalSend(
                 fragment?.context,
                 BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action

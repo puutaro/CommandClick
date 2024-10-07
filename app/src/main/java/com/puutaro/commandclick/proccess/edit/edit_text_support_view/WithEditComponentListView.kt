@@ -10,7 +10,6 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
@@ -24,14 +23,12 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 
 object WithEditComponentListView{
@@ -94,6 +91,9 @@ object WithEditComponentListView{
             val bkFrameLayout = withContext(Dispatchers.Main){
                 BkImageSettingsForEditList.makeBkFrame(
                     context,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
                     editListBkPairs,
                 )
             }
@@ -317,19 +317,41 @@ object WithEditComponentListView{
                 holder: EditComponentListAdapter.ListIndexListViewHolder,
                 listIndexPosition: Int
             ) {
+                val frameLayout = itemView as FrameLayout
                 val tag = itemView.tag as String?
                     ?: return
                 val selectedItemLineMap =
                     editComponentListAdapter.lineMapList.getOrNull(holder.bindingAdapterPosition)
                         ?: return
-                val jsAcCon = holder.keyPairListConMap.get(tag)
+                val frameOrLinearCon = holder.keyPairListConMap.get(tag)
                     ?: return
+                val textView = frameLayout.children.firstOrNull{
+                    it is AppCompatTextView
+                } as? AppCompatTextView
                 consecutiveJob?.cancel()
                 consecutiveJob = CoroutineScope(Dispatchers.IO).launch {
                     var roopTimes = 0
                     while (true) {
                         execTouchJob = CoroutineScope(Dispatchers.Main).launch touch@ {
                             withContext(Dispatchers.Main) {
+                                val curSettingValue = textView?.autofillHints?.firstOrNull()
+//                        FileSystems.writeFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lclickUpdate_inwithEdit.txt").absolutePath,
+//                            listOf(
+//                                "tag: ${tag}",
+//                                "text: ${textView.text}",
+//                                "settingValMap: ${editComponentListAdapter.initSettingValMap}",
+//                                "cmdValMap: ${editComponentListAdapter.initCmdValMap}",
+//                                "hint: ${textView.autofillHints?.firstOrNull()}"
+//                            ).joinToString("\n")
+//                        )
+                                editComponentListAdapter.handleClickEvent(
+                                    editListRecyclerView,
+                                    tag,
+                                    curSettingValue,
+                                    listIndexPosition,
+                                    frameOrLinearCon
+                                )
                                 ListIndexEditConfig.handle(
                                     fragment,
                                     fannelInfoMap,
@@ -338,7 +360,7 @@ object WithEditComponentListView{
                                     editListRecyclerView,
 //                                    true,
                                     selectedItemLineMap,
-                                    jsAcCon,
+                                    frameOrLinearCon,
                                     listIndexPosition
                                 )
                             }

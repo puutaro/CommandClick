@@ -5,11 +5,14 @@ import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import java.io.File
 
@@ -21,7 +24,7 @@ object EditComponent {
                 const val keySeparator = '?'
                 const val valueSeparator = '&'
 
-                val switchOn = "ON"
+                const val switchOn = "ON"
 
                 object ReplaceHolder {
                         fun replaceHolder(
@@ -41,8 +44,10 @@ object EditComponent {
                         }
 
                         enum class SrcReplaceHolders(val key: String){
+                                SHELL_SRC("\${SHELL_SRC}"),
                                 SRC_LABEL("\${SRC_LABEL}"),
                                 SRC_CON("\${SRC_CON}"),
+                                SRC_STR("\${SRC_STR}"),
                                 SETTING_VALUE("\${SETTING_VALUE}"),
                         }
                 }
@@ -52,11 +57,6 @@ object EditComponent {
                         FOOTER("footer"),
                         LINEAR("linear"),
                 }
-
-//                val blockLayoutKeyList = listOf(
-//                        LayoutKey.FRAME.key,
-//                        LayoutKey.FOOTER.key,
-//                )
 
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
@@ -89,35 +89,6 @@ object EditComponent {
                         IMAGE_SCALE("imageScale")
                 }
 
-                object OnSaveManager {
-//                        fun makeClickConfigMap(
-//                                listIndexConfigMap: Map<String, String>?
-//                        ): Map<String, String> {
-//                                return CmdClickMap.createMap(
-//                                        listIndexConfigMap?.get(ListIndexEditConfig.ListIndexConfigKey.LIST.key),
-//                                        '|'
-//                                ).toMap()
-//                        }
-
-
-//                        fun howEnableClickUpdate(
-//                                clickConfigMap: Map<String, String>?
-//                        ): Boolean {
-//                                return clickConfigMap?.get(ClickSettingsForListIndex.ClickSettingKey.ENABLE_UPDATE.key)?.let {
-//                                        QuoteTool.trimBothEdgeQuote(it)
-//                                } == ClickSettingsForListIndex.OnDisableUpdateValue.ON.name
-//                        }
-//
-//                        fun howEnableClickSave(
-//                                clickConfigMap: Map<String, String>?
-//                        ): Boolean {
-//                                return clickConfigMap?.get(ClickSettingsForListIndex.ClickSettingKey.ON_SCRIPT_SAVE.key)
-//                                        ?.let {
-//                                                QuoteTool.trimBothEdgeQuote(it)
-//                                        } == ClickSettingsForListIndex.OnScriptSave.ON.name
-//                        }
-                }
-
 
                 enum class ImageScale(
                         val str: String,
@@ -130,11 +101,13 @@ object EditComponent {
 
                 object LabelManager {
                         enum class LabelKey(val key: String) {
-//                                PREFIX("prefix"),
-//                                SUFFIX("suffix"),
-//                                FILTER_SHELL_PATH("filterShellPath"),
-                                SRC("src"),
+                                REMOVE_REGEX("removeRegex"),
+                                REPLACE_STR("replaceStr"),
+                                FILTER_SHELL_PATH("filterShellPath"),
+                                DISPLAY_LABEL("displayLabel"),
+                                SRC_STR("srcStr"),
                                 SETTING_VALUE("settingValue"),
+                                LENGTH("length"),
                         }
 
 
@@ -155,9 +128,11 @@ object EditComponent {
                         }
 
                         fun makeLabel(
+                                fannelInfoMap: Map<String, String>,
+                                setReplaceVariableMap: Map<String, String>?,
+                                busyboxExecutor: BusyboxExecutor?,
                                 labelMap: Map<String, String>?,
-                                settingValue: String?,
-//                                busyboxExecutor: BusyboxExecutor?,
+                                settingValueSrc: String?,
                         ): String? {
 //                                FileSystems.updateFile(
 //                                        File(UsePath.cmdclickDefaultAppDirPath, "label.txt").absolutePath,
@@ -170,12 +145,52 @@ object EditComponent {
                                 if(
                                         labelMap.isNullOrEmpty()
                                 ) return String()
-                                return labelMap.get(
-                                        LabelKey.SRC.key
-                                )?.replace(
-                                        ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
-                                        settingValue ?: String()
+                                val settingValue = settingValueSrc?.let {
+                                        QuoteTool.trimBothEdgeQuote(it)
+                                }?: String()
+                                val displayLabelSrc = makeDisplayLabelByRemoveRegex(
+                                        labelMap,
+                                        settingValue,
+                                )?: return null
+                                val filterShellCon = labelMap.get(
+                                        LabelKey.FILTER_SHELL_PATH.key
+                                )?.let {
+                                        ReadText(it).readText().replace(
+                                                ReplaceHolder.SrcReplaceHolders.SHELL_SRC.key,
+                                                displayLabelSrc,
+                                        )
+                                }
+                                val length = labelMap.get(
+                                        LabelKey.LENGTH.key
+                                )?.let {
+                                        try{
+                                                it.toInt()
+                                        }catch (e: Exception){
+                                                null
+                                        }
+                                }
+                                if(
+                                        filterShellCon.isNullOrEmpty()
+                                ) return displayLabelSrc.let {
+                                        if(
+                                                length == null
+                                        ) return it
+                                        it.take(length)
+                                }
+                                val fannelName = FannelInfoTool.getCurrentFannelName(
+                                        fannelInfoMap
                                 )
+                                return getOutputByShellCon(
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        filterShellCon,
+                                        fannelName
+                                )?.let {
+                                        if(
+                                                length == null
+                                        ) return it
+                                        it.take(length)
+                                }
 //                                val filterPrefixListCon = labelMap.get(
 //                                        LabelKey.PREFIX.key
 //                                )?.split(valueSeparator)
@@ -196,6 +211,86 @@ object EditComponent {
 //                                        filterSuffixListCon,
 //                                        filterShellCon,
 //                                )
+                        }
+
+                        private fun makeDisplayLabelByRemoveRegex(
+                                labelMap: Map<String, String>,
+                                settingValue: String,
+                        ): String? {
+                                val displayLabelSrc = labelMap.get(
+                                        LabelKey.DISPLAY_LABEL.key
+                                )?.replace(
+                                        ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
+                                        settingValue
+                                ) ?: return null
+//                                if(displayLabelSrc.contains("\${SRC_STR}")) {
+//                                        FileSystems.updateFile(
+//                                                File(
+//                                                        UsePath.cmdclickDefaultAppDirPath,
+//                                                        "ldispalyText.txt"
+//                                                ).absolutePath,
+//                                                listOf(
+//                                                        "displayLabelSrc: ${displayLabelSrc}",
+//                                                        "srcStrBeforeRemove: ${
+//                                                                labelMap.get(
+//                                                                        LabelKey.SRC_STR.key
+//                                                                )?.replace(
+//                                                                        ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
+//                                                                        settingValue
+//                                                                )
+//                                                        }",
+//
+//                                                        ).joinToString("\n")
+//                                        )
+//                                }
+                                val srcStrBeforeRemove = labelMap.get(
+                                        LabelKey.SRC_STR.key
+                                )?.replace(
+                                        ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
+                                        settingValue
+                                ) ?: return displayLabelSrc
+                                val removeRegexToReplaceKeyList =
+                                        FilterAndMapModule.makeRemoveRegexToReplaceKeyPairList(
+                                                labelMap,
+                                                FilterAndMapModule.ExtraMapBaseKey.REMOVE_REGEX.key
+                                        )
+                                val srcStr = FilterAndMapModule.applyRemoveRegex(
+                                        srcStrBeforeRemove,
+                                        removeRegexToReplaceKeyList,
+                                        labelMap,
+                                )
+//                                FileSystems.updateFile(
+//                                        File(UsePath.cmdclickDefaultAppDirPath, "ldispalyText2.txt").absolutePath,
+//                                        listOf(
+//                                                "displayLabelSrc: ${displayLabelSrc}",
+//                                                "srcStrBeforeRemove: ${srcStrBeforeRemove}",
+//                                                "srcStr: ${srcStr}"
+//                                                ).joinToString("\n")
+//                                )
+                                return displayLabelSrc.replace(
+                                        ReplaceHolder.SrcReplaceHolders.SRC_STR.key,
+                                        srcStr
+                                )
+                        }
+
+                        private fun getOutputByShellCon(
+                                setReplaceVariableMap: Map<String, String>?,
+                                busyboxExecutor: BusyboxExecutor?,
+                                shellConSrc: String,
+                                currentFannelName: String,
+                        ): String? {
+                                val shellCon = SetReplaceVariabler.execReplaceByReplaceVariables(
+                                        shellConSrc,
+                                        setReplaceVariableMap,
+                                        currentFannelName
+                                )
+                                if(
+                                        shellCon.isEmpty()
+                                ) return null
+                                return busyboxExecutor?.getCmdOutput(
+                                        shellCon,
+                                        null
+                                )
                         }
                 }
         }
@@ -247,7 +342,6 @@ object EditComponent {
                 return null
         }
 
-//    const val idDuration = 1000
 
 
 }

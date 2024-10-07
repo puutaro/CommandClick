@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.list_index_for_edit.EditFrameMaker
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,9 @@ object BkImageSettingsForEditList {
 
     suspend fun makeBkFrame(
         context: Context?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         editListBkPairs: List<Pair<String, String>>?,
     ): FrameLayout? {
         val tag =  withContext(Dispatchers.IO) {
@@ -40,6 +44,9 @@ object BkImageSettingsForEditList {
         }
         return EditFrameMaker.make(
             context,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
             editListBkPairs,
             ViewGroup.LayoutParams.MATCH_PARENT,
             null,

@@ -19,6 +19,7 @@ import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
@@ -44,6 +45,9 @@ object EditFrameMaker {
 
     suspend fun make(
         context: Context?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         frameKeyPairList: List<Pair<String, String>>?,
         width: Int,
         weight: Float?,
@@ -210,6 +214,9 @@ object EditFrameMaker {
                 }
             }
             setCaption(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
                 captionTextView,
                 labelTag,
                 labelMap,
@@ -315,6 +322,9 @@ object EditFrameMaker {
     }
 
     private suspend fun setCaption(
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         captionTextView: OutlineTextView,
         labelTag: String?,
         labelMap: Map<String, String>?,
@@ -329,6 +339,9 @@ object EditFrameMaker {
         )
         val label = withContext(Dispatchers.IO) {
             EditComponent.Template.LabelManager.makeLabel(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
                 labelMap,
                 settingValue
             )
