@@ -9,13 +9,9 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ClickScriptSaver
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
@@ -36,7 +32,7 @@ object ListIndexEditConfig {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListRecyclerView: RecyclerView,
+        editListRecyclerView: RecyclerView?,
         selectedItemLineMap: Map<String, String>,
         jsAcCon: String,
         listIndexPosition: Int
@@ -427,6 +423,7 @@ object ListIndexEditConfig {
     ) {
         TYPE("type"),
         LAYOUT("layout"),
+        FOOTER_LAYOUT_PATH("footerLayoutPath"),
         NAME("name"),
         DESC("desc"),
         BK("bk"),
@@ -434,6 +431,7 @@ object ListIndexEditConfig {
         CLICK("click"),
 //        LONG_CLICK("longClick"),
         LIST("list"),
+        TITLE_SETTING_PATH("titleSettingPath"),
         SEARCH_BOX("searchBox"),
 //        PERFORM("perform"),
         DELETE("delete"),

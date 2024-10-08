@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -103,6 +104,7 @@ class TerminalFragment:
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
+    var fannelIndexDialog: Dialog? = null
 //    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
     var pocketWebViewManager: WebViewJsDialog? = null

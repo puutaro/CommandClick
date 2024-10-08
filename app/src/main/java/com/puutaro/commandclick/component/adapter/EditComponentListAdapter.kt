@@ -11,7 +11,6 @@ import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -122,10 +121,16 @@ class EditComponentListAdapter(
 //        ),
 //        '|'
 //    ).toMap()
+    private val viewLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
+        fannelInfoMap,
+        setReplaceVariableMap,
+        indexListMap,
+        ListSettingsForListIndex.ListSettingKey.VIEW_LAYOUT_PATH.key,
+    )
     private val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
         fannelInfoMap,
         setReplaceVariableMap,
-        indexListMap
+        viewLayoutPath
     )
     private val frameMap = frameMapListToLinearMapList?.first ?: emptyMap()
     private val frameTagToLinearKeysListMap = frameMapListToLinearMapList?.second ?: emptyMap()
@@ -239,7 +244,7 @@ class EditComponentListAdapter(
         ) return
         initListProperty(listIndexPosition)
         val lineMap = lineMapList[listIndexPosition]
-        val srcLabel = lineMap.get(
+        val srcTitle = lineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         ) ?: String()
         val srcCon = lineMap.get(
@@ -262,7 +267,7 @@ class EditComponentListAdapter(
             val frameKeyPairsCon = withContext(Dispatchers.IO) {
                 EditComponent.Template.ReplaceHolder.replaceHolder(
                     frameMap.get(frameTag),
-                    srcLabel,
+                    srcTitle,
                     srcCon
                 )
             }
@@ -415,7 +420,7 @@ class EditComponentListAdapter(
                         val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
                             EditComponent.Template.ReplaceHolder.replaceHolder(
                                 linearFrameKeyPairsListConSrc,
-                                srcLabel,
+                                srcTitle,
                                 srcCon
                             )
                         }

@@ -16,7 +16,7 @@ object JsPathHandlerForQrAndListIndex {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListRecyclerView: RecyclerView,
+        editListRecyclerView: RecyclerView?,
         jsActionMap: Map<String, String>?,
         selectedItemLineMap: Map<String, String>,
         listIndexPosition: Int

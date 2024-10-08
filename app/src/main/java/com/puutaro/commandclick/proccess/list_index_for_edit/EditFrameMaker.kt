@@ -266,7 +266,6 @@ object EditFrameMaker {
                 imageColor.id
             )
         }
-        imageView.imageTintList = null
         imageTag?.let {
             imageView.tag = imageTag
         }

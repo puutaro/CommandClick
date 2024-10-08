@@ -92,17 +92,17 @@ object ConfigFromScriptFileSetter {
                 setReplaceVariableMap
             )
         }
-        val binding = editFragment.binding
-        val editTextView = binding.editTextView
-        TitleImageAndViewSetter.set(
-            editFragment,
-            editTextView,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            editFragment.busyboxExecutor,
-            binding.editTitleImage,
-            editFragment.editBoxTitleConfig
-        )
+//        val binding = editFragment.binding
+//        val editTextView = binding.editTextView
+//        TitleImageAndViewSetter.set(
+//            editFragment,
+//            editTextView,
+//            fannelInfoMap,
+//            setReplaceVariableMap,
+//            editFragment.busyboxExecutor,
+//            binding.editTitleImage,
+//            editFragment.editBoxTitleConfig
+//        )
 
 //        val isSettingEdit = !editFragment.enableCmdEdit
 //                || editFragment.passCmdVariableEdit ==

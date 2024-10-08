@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ImageJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsConfirm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DebugJsAlert
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectJsDialog
@@ -89,6 +90,10 @@ class JsDialog(
     )
 
     private val debugJsAlert = DebugJsAlert(
+        terminalFragmentRef
+    )
+
+    private val editListDialog = EditListDialog(
         terminalFragmentRef
     )
 
@@ -435,5 +440,16 @@ class JsDialog(
             con,
         )
         return conArg
+    }
+
+    @JavascriptInterface
+    fun editList(
+        fannelInfoCon: String,
+        listIndexConfigPath: String
+    ){
+        editListDialog.create(
+            fannelInfoCon,
+            listIndexConfigPath,
+        )
     }
 }

@@ -2,10 +2,14 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,16 +20,24 @@ import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForListIndexAdapter
+import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.EditFrameMaker
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.BkImageSettingsForEditList
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,7 +48,6 @@ import java.io.File
 
 
 object WithEditComponentListView{
-
 
     fun keyboardHide(
         fragment: Fragment,
@@ -66,21 +77,37 @@ object WithEditComponentListView{
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         listIndexConfigMap: Map<String, String>?,
+        editTextView: AppCompatTextView,
+        editTitleImage: AppCompatImageView,
         editListRecyclerView: RecyclerView,
         editListBkFrame: FrameLayout,
         editListSearchEditText: AppCompatEditText,
+        editFooterLinearlayout: LinearLayoutCompat,
         fannelContentsList: List<String>?,
     ) {
         val context = fragment.context ?: return
-//        val binding = editFragment.binding
-//        val editListSearchEditText = binding.editListSearchEditText
-//        val editListBkFrame = binding.editListBkFrame
-//        val editListBkImage = binding.editListBkImage
 
-
-//        binding.editListLinearLayout.isVisible = true
-//        binding.editTextScroll.isVisible = false
-//        val listIndexConfigMap = editFragment.listIndexConfigMap
+        CoroutineScope(Dispatchers.Main).launch{
+            val titleSettingPath = listIndexConfigMap?.get(
+                ListIndexEditConfig.ListIndexConfigKey.TITLE_SETTING_PATH.key
+            ) ?: String()
+            val titleSettingMap = withContext(Dispatchers.IO){
+                ListSettingVariableListMaker.makeFromSettingPath(
+                    titleSettingPath,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                )
+            }
+            TitleImageAndViewSetter.set(
+                fragment,
+                editTextView,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editTitleImage,
+                titleSettingMap
+            )
+        }
         val editListBkPairs = ListIndexEditConfig.getConfigKeyConList(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.BK.key
@@ -105,9 +132,6 @@ object WithEditComponentListView{
                 editListBkFrame.addView(bkFrameLayout)
             }
         }
-//        val listIndexTypeKey = ListIndexEditConfig.getListIndexType(
-//            editFragment
-//        )
         val indexListMap = ListIndexEditConfig.getConfigKeyMap(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.LIST.key
@@ -186,6 +210,16 @@ object WithEditComponentListView{
 //                editComponentListAdapter,
 //            )
 //        }
+        CoroutineScope(Dispatchers.Main).launch {
+            setFooter(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editFooterLinearlayout,
+                listIndexConfigMap,
+            )
+        }
         invokeItemSetClickListenerForFileList(
             fragment,
             fannelInfoMap,
@@ -200,21 +234,208 @@ object WithEditComponentListView{
             busyboxExecutor,
             editListRecyclerView,
         )
-//        invokeQrLogoSetClickListenerForFileList(
-//            editFragment,
-//            binding.editListRecyclerView,
-//        )
-//        invokeQrLogoSetLongClickListenerForFileList(editFragment)
-//        invokeItemSetLongTimeClickListenerForIndexList(
-//            editFragment,
-//            editListRecyclerView,
-//        )
         makeSearchEditText(
             fragment,
             fannelInfoMap,
             editComponentListAdapter,
             editListSearchEditText,
             listIndexConfigMap
+        )
+    }
+
+    private suspend fun setFooter(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editFooterLinearlayout: LinearLayoutCompat,
+        listIndexConfigMap: Map<String, String>?,
+    ) {
+        val context = fragment.context
+            ?: return
+        val footerLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
+            fannelInfoMap,
+            setReplaceVariableMap,
+            listIndexConfigMap,
+            ListIndexEditConfig.ListIndexConfigKey.FOOTER_LAYOUT_PATH.key,
+        )
+        val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
+            fannelInfoMap,
+            setReplaceVariableMap,
+            footerLayoutPath
+        )
+        val frameMap = frameMapListToLinearMapList?.first ?: emptyMap()
+        val frameTagList = frameMap.keys
+        val frameTagToLinearKeysListMap = frameMapListToLinearMapList?.second ?: emptyMap()
+
+        val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+        val typeSeparator = EditComponent.Template.typeSeparator
+        val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+//            GridLayoutManager
+        withContext(Dispatchers.Main) {
+            frameTagList.forEach { frameTag ->
+                frameTagToLinearKeysListMap.get(frameTag)?.forEach {
+                        linearKeys ->
+
+                    val linearParam = LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    )
+                    val weightSumFloat = 1f
+                    val linearLayout = LinearLayoutCompat(context).apply {
+                        layoutParams = linearParam
+                        weightSum = weightSumFloat
+                        orientation = LinearLayoutCompat.HORIZONTAL
+                    }
+
+                    val layoutWeight = weightSumFloat / linearKeys.size
+                    linearKeys.forEach setFrame@{ linearFrameKeyPairsListConSrc ->
+                        val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
+                            EditComponent.Template.ReplaceHolder.replaceHolder(
+                                linearFrameKeyPairsListConSrc,
+                                frameTag,
+                                frameTag
+                            )
+                        }
+                        val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
+                            CmdClickMap.createMap(
+                                linearFrameKeyPairsListCon,
+                                typeSeparator
+                            )
+                        }
+                        val linearFrameTag = withContext(Dispatchers.IO) {
+                            PairListTool.getValue(
+                                linearFrameKeyPairsList,
+                                tagKey,
+                            ) ?: String()
+                        }
+                        val linearFrameLayout = EditFrameMaker.make(
+                            context,
+                            fannelInfoMap,
+                            setReplaceVariableMap,
+                            busyboxExecutor,
+                            linearFrameKeyPairsList,
+                            0,
+                            layoutWeight,
+                            linearFrameTag,
+                            false,
+                            null
+                        ) ?: return@setFrame
+                        val linearKeyList = JsActionKeyManager.JsActionsKey.values().map {
+                            it.key
+                        }
+                        withContext(Dispatchers.IO) execClick@ {
+                            if(
+                                linearFrameKeyPairsListCon.isNullOrEmpty()
+                            ) return@execClick
+                            val isConsec =
+                                PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    isConsecKey,
+                                ) == EditComponent.Template.switchOn
+                            linearKeyList.any {
+                                !PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    it,
+                                ).isNullOrEmpty()
+                            }.let { isJsAc ->
+                                if (
+                                    !isJsAc
+                                    && linearFrameLayout.tag != null
+                                ) {
+                                    linearFrameLayout.setBackgroundResource(0)
+                                    linearFrameLayout.isClickable = false
+                                    return@let
+                                }
+                                val outValue = TypedValue()
+                                context.theme.resolveAttribute(
+                                    android.R.attr.selectableItemBackground,
+                                    outValue,
+                                    true
+                                )
+                                linearFrameLayout.setBackgroundResource(outValue.resourceId)
+                                linearFrameLayout.isClickable = true
+                                if(!isConsec){
+                                    linearFrameLayout.setOnClickListener {
+                                        execJsAction(
+                                            fragment,
+                                            fannelInfoMap,
+                                            setReplaceVariableMap,
+                                            linearFrameKeyPairsListCon
+                                        )
+                                    }
+                                    return@execClick
+                                }
+                                with(linearFrameLayout) {
+                                    var consecutiveJob: Job? = null
+                                    setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                                        var execTouchJob: Job? = null
+                                        when (event.action) {
+                                            MotionEvent.ACTION_DOWN -> {
+                                                consecutiveJob?.cancel()
+                                                consecutiveJob = CoroutineScope(Dispatchers.IO).launch {
+                                                    var roopTimes = 0
+                                                    while (true) {
+                                                        execTouchJob = CoroutineScope(Dispatchers.Main).launch {
+                                                            execJsAction(
+                                                                fragment,
+                                                                fannelInfoMap,
+                                                                setReplaceVariableMap,
+                                                                linearFrameKeyPairsListCon
+                                                            )
+                                                        }
+                                                        withContext(Dispatchers.IO){
+                                                            if(
+                                                                roopTimes == 0
+                                                            ) delay(300)
+                                                            else delay(60)
+                                                        }
+                                                        roopTimes++
+                                                    }
+                                                }
+                                            }
+                                            MotionEvent.ACTION_UP,
+                                            MotionEvent.ACTION_CANCEL, -> {
+                                                v.performClick()
+                                                execTouchJob?.cancel()
+                                                consecutiveJob?.cancel()
+                                            }
+                                        }
+                                        true
+                                    })
+                                }
+                            }
+                        }
+                        linearLayout.addView(linearFrameLayout)
+                    }
+                    editFooterLinearlayout.addView(linearLayout)
+                }
+            }
+        }
+    }
+
+    private fun execJsAction(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        jsAcCon: String,
+    ){
+        val mainFannelPath = File(
+            UsePath.cmdclickDefaultAppDirPath,
+            FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+        ).absolutePath
+        val jsActionMap = JsActionTool.makeJsActionMap(
+            fragment,
+            fannelInfoMap,
+            jsAcCon,
+            setReplaceVariableMap,
+            mainFannelPath
+        )
+        JsPathHandlerForToolbarButton.handle(
+            fragment,
+            String(),
+            null,
+            jsActionMap,
         )
     }
 
@@ -384,67 +605,6 @@ object WithEditComponentListView{
 
     }
 
-//    private fun invokeItemSetClickListenerForFileList(
-//        editFragment: EditFragment,
-//        editListRecyclerView: RecyclerView
-//    ) {
-//        val listIndexForEditAdapter =
-//            editListRecyclerView.adapter as EditComponentListAdapter
-//        listIndexForEditAdapter.editAdapterClickListener =
-//            object: EditComponentListAdapter.OnEditAdapterClickListener {
-//                override fun onEditAdapterClick(
-//                    itemView: View,
-//                    holder: EditComponentListAdapter.ListIndexListViewHolder,
-//                    listIndexPosition: Int,
-//                ) {
-//                    keyboardHide(
-//                        editFragment,
-//                    )
-//                    val selectedItemLineMap = listIndexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
-////                    holder.fileName
-//                    ListIndexEditConfig.handle(
-//                        editFragment,
-//                        false,
-//                        selectedItemLineMap,
-//                        holder,
-//                        listIndexPosition
-//                    )
-//                }
-//        }
-//    }
-
-//    private fun invokeQrLogoSetClickListenerForFileList(
-//        editFragment: EditFragment,
-//        editListRecyclerView: RecyclerView,
-//    ) {
-//        val listIndexForEditAdapter =
-//            editListRecyclerView.adapter as EditComponentListAdapter
-//        listIndexForEditAdapter.fileQrLogoClickListener = object: EditComponentListAdapter.OnFileQrLogoItemClickListener {
-//            override fun onFileQrLogoClick(
-//                itemView: View,
-//                holder: EditComponentListAdapter.ListIndexListViewHolder,
-//                listIndexPosition: Int,
-//            ) {
-//                keyboardHide(editFragment)
-//                val selectedItemLineMap = listIndexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
-//                QrDialogClickHandler.handle(
-//                    false,
-//                    editFragment,
-//                    selectedItemLineMap,
-//                    holder.bindingAdapterPosition,
-//                )
-//            }
-//        }
-//    }
-
-//    private fun invokeQrLogoSetLongClickListenerForFileList(
-//        editFragment: EditFragment,
-//    ) {
-//        FannelLogoLongClickDoForListIndex.invoke(
-//            editFragment,
-//        )
-//    }
-
     private fun makeSearchEditText(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
@@ -490,7 +650,6 @@ object WithEditComponentListView{
                     editComponentListAdapter.setReplaceVariableMap,
                     editComponentListAdapter.indexListMap,
                     editComponentListAdapter.busyboxExecutor,
-//                    ListIndexAdapter.listIndexTypeKey
                 ).filter {
                     lineMap ->
                     val title = lineMap.get(
@@ -511,29 +670,5 @@ object WithEditComponentListView{
             }
         })
     }
-
-//    private fun invokeItemSetLongTimeClickListenerForIndexList(
-//        editFragment: EditFragment,
-//        editListRecyclerView: RecyclerView,
-//    ){
-//        val indexForEditAdapter = editListRecyclerView.adapter as EditComponentListAdapter
-//        indexForEditAdapter.itemLongClickListener = object : EditComponentListAdapter.OnItemLongClickListener {
-//            override fun onItemLongClick(
-//                itemView: View,
-//                holder: EditComponentListAdapter.ListIndexListViewHolder,
-//                listIndexPosition: Int
-//            ) {
-//                val selectedItemLineMap = indexForEditAdapter.lineMapList[holder.bindingAdapterPosition]
-////                    holder.fileName
-//                ListIndexEditConfig.handle(
-//                    editFragment,
-//                    true,
-//                    selectedItemLineMap,
-//                    holder,
-//                    listIndexPosition,
-//                )
-//            }
-//        }
-//    }
 }
 

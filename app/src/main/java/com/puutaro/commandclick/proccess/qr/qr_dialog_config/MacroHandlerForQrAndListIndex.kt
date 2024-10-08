@@ -16,7 +16,7 @@ object MacroHandlerForQrAndListIndex {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListRecyclerView: RecyclerView,
+        editListRecyclerView: RecyclerView?,
         jsActionMap: Map<String, String>?,
         selectecdLineMap: Map<String, String>,
         listIndexPosition: Int,

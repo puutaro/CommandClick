@@ -22,6 +22,8 @@ object TitleImageAndViewSetter {
 
     private const val backstackCountSeparator = " "
     private const val switchOff = "OFF"
+
+    private const val keySeparator = '|'
     fun set(
         fragment: Fragment,
         editTextView: AppCompatTextView,
@@ -29,22 +31,22 @@ object TitleImageAndViewSetter {
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editTitleImageView: AppCompatImageView,
-        editBoxTitleConfig: Map<String, String>,
+        titleSettingMap: Map<String, String>?,
     ) {
-        val titleTextMap = editBoxTitleConfig.get(
+        val titleTextMap = titleSettingMap?.get(
             EditBoxTitleKey.TEXT.key
         ).let {
             CmdClickMap.createMap(
                 it,
-               '|'
+                keySeparator
             )
         }.toMap()
-        val titleImageMap = editBoxTitleConfig.get(
+        val titleImageMap = titleSettingMap?.get(
             EditBoxTitleKey.IMAGE.key
         ).let {
             CmdClickMap.createMap(
                 it,
-                '|'
+                keySeparator
             )
         }.toMap()
         titleTextMap.get(

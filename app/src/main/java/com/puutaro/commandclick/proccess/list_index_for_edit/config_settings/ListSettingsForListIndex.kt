@@ -41,10 +41,24 @@ object ListSettingsForListIndex  {
 
     object ViewLayoutPathManager{
 
+        fun getViewLayoutPath(
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            configMap: Map<String, String>?,
+            keyName: String,
+        ): String {
+            return FilePrefixGetter.get(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                configMap,
+                keyName,
+            ) ?: String()
+        }
+
         fun parse(
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
-            indexListMap: Map<String, String>
+            viewLayoutPath: String,
         ):  Pair<
                 Map<String, String >,
                 Map<String, List< List<String> > >,
@@ -61,12 +75,12 @@ object ListSettingsForListIndex  {
             val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
 //            val linearPairList: MutableList< Pair<String, List<List<Pair<String, String>>> > > = mutableListOf()
 
-            val viewLayoutPath = FilePrefixGetter.get(
-                fannelInfoMap,
-                setReplaceVariableMap,
-                indexListMap,
-                ListSettingKey.VIEW_LAYOUT_PATH.key,
-            ) ?: String()
+//            val viewLayoutPath = FilePrefixGetter.get(
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                indexListMap,
+//                ListSettingKey.VIEW_LAYOUT_PATH.key,
+//            ) ?: String()
             val viewLayoutPathObj = File(viewLayoutPath)
             if(
                 !viewLayoutPathObj.isFile

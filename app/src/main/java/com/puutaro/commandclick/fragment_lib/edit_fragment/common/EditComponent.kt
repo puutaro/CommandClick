@@ -26,13 +26,13 @@ object EditComponent {
                 object ReplaceHolder {
                         fun replaceHolder(
                                 con: String?,
-                                srcText: String,
+                                srcTitle: String,
                                 srcCon: String,
                         ): String? {
                                 if(con == null) return null
                                 return con.replace(
                                         SrcReplaceHolders.SRC_TITLE.key,
-                                        srcText
+                                        srcTitle
                                 ).replace(
                                         SrcReplaceHolders.SRC_CON.key,
                                         srcCon
@@ -51,7 +51,7 @@ object EditComponent {
 
                 enum class LayoutKey(val key: String){
                         FRAME("frame"),
-                        FOOTER("footer"),
+//                        FOOTER("footer"),
                         LINEAR("linear"),
                 }
 

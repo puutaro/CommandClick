@@ -26,7 +26,7 @@ object ExecMacroHandlerForListIndex {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListRecyclerView: RecyclerView,
+        editListRecyclerView: RecyclerView?,
         jsActionMap: Map<String, String>?,
         selectedItemLineMap: Map<String, String>,
         listIndexPosition: Int,
@@ -44,7 +44,7 @@ object ExecMacroHandlerForListIndex {
             it.name == macroStr
         } ?: return
         val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView?.adapter as EditComponentListAdapter
         when(macro){
             JsPathMacroForListIndex.DELETE -> {
 //                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
@@ -105,6 +106,40 @@ object ListSettingVariableListMaker {
                 settingVariableName
             )
         }
+    }
+
+    fun makeFromSettingPath(
+        settingPath: String,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+    ): Map<String, String> {
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+        val configMapStr = SettingFile.read(
+            settingPath,
+            File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
+            setReplaceVariableMap,
+            true
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "ltitleSetting.txt").absolutePath,
+//            listOf(
+//                "settingPath: ${settingPath}",
+//                "currentFannelName: ${currentFannelName}",
+//                "configMapStr: ${configMapStr}",
+//                "settingMap: ${createFromSettingVal(
+//                    configMapStr,
+//                    String(),
+//                    fannelInfoMap,
+//                    setReplaceVariableMap
+//                )}"
+//            ).joinToString("\n")
+//        )
+        return createFromSettingVal(
+            configMapStr,
+            String(),
+            fannelInfoMap,
+            setReplaceVariableMap
+        )
     }
 
     private fun createFromSettingVal(
