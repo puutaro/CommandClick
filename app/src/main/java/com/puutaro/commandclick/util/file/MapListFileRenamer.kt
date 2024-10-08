@@ -8,7 +8,6 @@ import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
@@ -81,7 +80,7 @@ object MapListFileRenamer {
 //            TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                ?: return
         val fileNameOrSRCTitle = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         )
 //            titleFileNameAndPathConPair.first
 
@@ -151,7 +150,7 @@ object MapListFileRenamer {
 //            val titleFileNameAndPathConPair =
 //                TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                    ?: return
-            val SRCTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+            val SRCTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
             val fileNameOrTitle = lineMap.get(
                 SRCTitleKey
             ) ?: String()

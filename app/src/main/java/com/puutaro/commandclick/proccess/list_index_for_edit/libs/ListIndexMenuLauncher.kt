@@ -79,7 +79,7 @@ object ListIndexMenuLauncher {
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
         )?.text = selectedItemLineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         )
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_message

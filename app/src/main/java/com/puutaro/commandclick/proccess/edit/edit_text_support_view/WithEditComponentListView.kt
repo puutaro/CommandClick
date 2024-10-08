@@ -10,9 +10,11 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForListIndexAdapter
@@ -23,12 +25,14 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 object WithEditComponentListView{
@@ -237,7 +241,7 @@ object WithEditComponentListView{
 //                        File(UsePath.cmdclickDefaultAppDirPath, "lclcik.txt").absolutePath,
 //                        listOf(
 //                            "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
-//                            "lineMapList: ${listIndexForEditAdapter.lineMapList}",
+//                            "lineMapList: ${editComponentListAdapter.lineMapList}",
 //                        ).joinToString("\n")
 //                    )
                     val selectedItemLineMap =
@@ -250,9 +254,9 @@ object WithEditComponentListView{
                     val frameOrLinearCon = holder.keyPairListConMap.get(tag)
                         ?: return
                     frameLayout.children.firstOrNull{
-                        it is AppCompatTextView
+                        it is OutlineTextView
                     }?.let {
-                        val textView = it as AppCompatTextView
+                        val textView = it as OutlineTextView
                         val curSettingValue = textView.autofillHints?.firstOrNull()
 //                        FileSystems.writeFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "lclickUpdate_inwithEdit.txt").absolutePath,
@@ -326,8 +330,8 @@ object WithEditComponentListView{
                 val frameOrLinearCon = holder.keyPairListConMap.get(tag)
                     ?: return
                 val textView = frameLayout.children.firstOrNull{
-                    it is AppCompatTextView
-                } as? AppCompatTextView
+                    it is OutlineTextView
+                } as? OutlineTextView
                 consecutiveJob?.cancel()
                 consecutiveJob = CoroutineScope(Dispatchers.IO).launch {
                     var roopTimes = 0
@@ -490,7 +494,7 @@ object WithEditComponentListView{
                 ).filter {
                     lineMap ->
                     val title = lineMap.get(
-                        ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+                        ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
                     ) ?: String()
                     Regex(
                         searchText.text.toString()

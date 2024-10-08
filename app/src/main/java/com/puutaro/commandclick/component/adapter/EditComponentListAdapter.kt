@@ -240,7 +240,7 @@ class EditComponentListAdapter(
         initListProperty(listIndexPosition)
         val lineMap = lineMapList[listIndexPosition]
         val srcLabel = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         ) ?: String()
         val srcCon = lineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
@@ -459,6 +459,15 @@ class EditComponentListAdapter(
                                 ).isNullOrEmpty()
                             }.let {
                                 isJsAc ->
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "lSetClick.txt").absolutePath,
+//                                    listOf(
+//                                        "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+//                                        "isJsAc: ${isJsAc}",
+//                                        "linearFrameLayout.tag: ${linearFrameLayout.tag}",
+//
+//                                        ).joinToString("\n")
+//                                )
                                 if(
                                     !isJsAc
                                     && linearFrameLayout.tag != null
@@ -731,9 +740,6 @@ class EditComponentListAdapter(
                 indexListPosition == 0
                 || fragment == null
             ) return
-            CoroutineScope(Dispatchers.Main).launch {
-                ToastUtils.showShort(indexListPosition.toString())
-            }
             val enableClickUpdate =
                 LayoutSettingsForListIndex.howClickUpdate(
                     fannelInfoMap,
@@ -800,11 +806,18 @@ class EditComponentListAdapter(
                 mapListPath,
                 lineMap
             )
-            val lineMapList = editComponentListAdapter.lineMapList
-            lineMapList.removeAt(bindingAdapterPosition)
-            val updateLineListMap = listOf(lineMap) + lineMapList
-            editComponentListAdapter.lineMapList.clear()
-            editComponentListAdapter.lineMapList.addAll(updateLineListMap)
+//            val lineMapList = editComponentListAdapter.lineMapList
+//            lineMapList.removeAt(bindingAdapterPosition)
+//            val updateLineListMap = listOf(lineMap) + lineMapList
+//            editComponentListAdapter.lineMapList.clear()
+//            editComponentListAdapter.lineMapList.addAll(updateLineListMap)
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lSort.txt").absolutePath,
+//                listOf(
+//                    "before: ${lineMapList}\n\n",
+//                    "lineMapList: ${editComponentListAdapter.lineMapList}"
+//                ).joinToString("\n")
+//            )
             BroadcastSender.normalSend(
                 fragment?.context,
                 BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action

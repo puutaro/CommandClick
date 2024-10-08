@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.content.Intent
-import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
@@ -104,7 +103,7 @@ object ExecSimpleEditItem {
 //            TitleFileNameAndPathConPairForListIndexAdapter.get(selectedLineMap)
 //                ?: return
         val filePathOrCon = selectedLineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         ) ?: String()
         val filePathOrConObj = File(filePathOrCon)
         val isWithFileRename = filePathOrConObj.isFile

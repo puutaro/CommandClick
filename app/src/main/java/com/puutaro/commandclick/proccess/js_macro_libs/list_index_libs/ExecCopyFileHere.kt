@@ -6,7 +6,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 
 object ExecCopyFileHere {
@@ -61,7 +60,7 @@ object ExecCopyFileHere {
 //                val titleConList = it.split("\t")
 
                 val title = lineMap.get(
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
                 )?.let {
                     "${it}_${CommandClickScriptVariable.makeRndPrefix()}"
                 }

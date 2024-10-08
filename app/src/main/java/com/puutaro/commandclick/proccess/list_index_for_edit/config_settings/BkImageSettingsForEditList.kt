@@ -19,7 +19,7 @@ object BkImageSettingsForEditList {
 //    private val labelTagKey = EditComponent.Template.EditComponentKey.LABEL_TAG.key
     private val imageTagKey = EditComponent.Template.EditComponentKey.IMAGE_TAG.key
 //    private val labelKey = EditComponent.Template.EditComponentKey.LABEL.key
-    private val imagePathKey = EditComponent.Template.EditComponentKey.IMAGE_PATH.key
+    private val imagePATHPathKey = EditComponent.Template.EditComponentKey.IMAGE_PATH.key
 //    private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
 //    private val textSizeKey = EditComponent.Template.EditComponentKey.TEXT_SIZE.key
 //    private val textColorKey = EditComponent.Template.EditComponentKey.TEXT_COLOR.key
@@ -69,7 +69,7 @@ object BkImageSettingsForEditList {
         val imagePath =  withContext(Dispatchers.IO) {
             PairListTool.getValue(
                 editListBkPairs,
-                imagePathKey
+                imagePATHPathKey
             )
         }
         val imageAlpha =  withContext(Dispatchers.IO) {

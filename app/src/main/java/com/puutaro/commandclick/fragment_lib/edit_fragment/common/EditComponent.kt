@@ -4,17 +4,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
-import java.io.File
 
 object EditComponent {
         object Template {
@@ -29,13 +26,13 @@ object EditComponent {
                 object ReplaceHolder {
                         fun replaceHolder(
                                 con: String?,
-                                srcLabel: String,
+                                srcText: String,
                                 srcCon: String,
                         ): String? {
                                 if(con == null) return null
                                 return con.replace(
-                                        SrcReplaceHolders.SRC_LABEL.key,
-                                        srcLabel
+                                        SrcReplaceHolders.SRC_TITLE.key,
+                                        srcText
                                 ).replace(
                                         SrcReplaceHolders.SRC_CON.key,
                                         srcCon
@@ -45,7 +42,7 @@ object EditComponent {
 
                         enum class SrcReplaceHolders(val key: String){
                                 SHELL_SRC("\${SHELL_SRC}"),
-                                SRC_LABEL("\${SRC_LABEL}"),
+                                SRC_TITLE("\${SRC_TITLE}"),
                                 SRC_CON("\${SRC_CON}"),
                                 SRC_STR("\${SRC_STR}"),
                                 SETTING_VALUE("\${SETTING_VALUE}"),
@@ -60,11 +57,10 @@ object EditComponent {
 
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
-                        LABEL_TAG("labelTag"),
+//                        TEXT_TAG("textTag"),
                         IMAGE_TAG("imageTag"),
-                        LABEL("label"),
-                        SRC_CON("srcCon"),
-                        SRC_LABEL("srcLabel"),
+                        TEXT("text"),
+                        TEXT_PROPERTY("textProperty"),
                         IMAGE_PATH("imagePath"),
                         SET_IMAGE_TO_TAGS("setImageToTags"),
                         SET_TEXT_TO_TAGS("setTextToTags"),
@@ -73,20 +69,45 @@ object EditComponent {
                         SET_IMAGE_TO_BTN_TAGS("setImageToBtnTags"),
                         SET_TEXT_TO_BTN_TAGS("setTextToBtnTags"),
                         SET_SUGGEST_TO_BTN_TAGS("setSuggestToBtnTags"),
-                        DISABLE_TEXT_SELECT("disableTextSelect"),
-                        TEXT_PREFIXS("textPrefixs"),
-                        TEXT_SUFFIXS("textSuffixs"),
+//                        TEXT_PREFIXS("textPrefixs"),
+//                        TEXT_SUFFIXS("textSuffixs"),
+//                        TEXT_MAX_LINES("textMaxLines"),
                         ON_SAVE("onSave"),
                         IS_CONSEC("isConsec"),
-                        TEXT_SIZE("textSize"),
+//                        TEXT_SIZE("textSize"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
-                        TEXT_COLOR("textColor"),
-                        STROKE_COLOR("strokeColor"),
-                        STROKE_WIDTH("strokeWidth"),
+//                        TEXT_COLOR("textColor"),
+//                        STROKE_COLOR("strokeColor"),
+//                        STROKE_WIDTH("strokeWidth"),
                         HEIGHT("height"),
-                        TEXT_ALPHA("textAlpha"),
+//                        TEXT_ALPHA("textAlpha"),
                         IMAGE_ALPHA("imageAlpha"),
                         IMAGE_SCALE("imageScale")
+                }
+
+                object TextPropertyManager {
+
+                        fun makeTextPropertyMap(
+                                textPropertyCon: String?
+                        ): Map<String, String>? {
+                                if(
+                                        textPropertyCon.isNullOrEmpty()
+                                ) return null
+                                return CmdClickMap.createMap(
+                                        textPropertyCon,
+                                        keySeparator,
+                                ).toMap()
+                        }
+                        enum class Property(val key: String){
+                                TAG("tag"),
+                                MAX_LINES("maxLines"),
+                                SIZE("size"),
+                                COLOR("color"),
+                                STROKE_COLOR("strokeColor"),
+                                STROKE_WIDTH("strokeWidth"),
+                                ALPHA("alpha"),
+//                                DISABLE_TEXT_SELECT("disableTextSelect"),
+                        }
                 }
 
 
@@ -99,39 +120,39 @@ object EditComponent {
                         CENTER_CROP("centerCrop", ImageView.ScaleType.CENTER_CROP),
                 }
 
-                object LabelManager {
-                        enum class LabelKey(val key: String) {
+                object TextManager {
+                        enum class TextKey(val key: String) {
                                 REMOVE_REGEX("removeRegex"),
                                 REPLACE_STR("replaceStr"),
                                 FILTER_SHELL_PATH("filterShellPath"),
-                                DISPLAY_LABEL("displayLabel"),
+                                DISPLAY_TEXT("displayText"),
                                 SRC_STR("srcStr"),
                                 SETTING_VALUE("settingValue"),
                                 LENGTH("length"),
                         }
 
 
-                        fun createLabelMap(
-                                labelMapCon: String?,
+                        fun createTextMap(
+                                textMapCon: String?,
                                 settingValue: String?,
                         ): Map<String,String> {
-                                val labelMapSrc = CmdClickMap.createMap(
-                                        labelMapCon,
+                                val textMapSrc = CmdClickMap.createMap(
+                                        textMapCon,
                                         keySeparator
                                 ).toMap()
                                 return when(settingValue.isNullOrEmpty()){
-                                        true -> labelMapSrc
-                                        else -> labelMapSrc + mapOf(
-                                                LabelKey.SETTING_VALUE.key to settingValue
+                                        true -> textMapSrc
+                                        else -> textMapSrc + mapOf(
+                                                TextKey.SETTING_VALUE.key to settingValue
                                         )
                                 }
                         }
 
-                        fun makeLabel(
+                        fun makeText(
                                 fannelInfoMap: Map<String, String>,
                                 setReplaceVariableMap: Map<String, String>?,
                                 busyboxExecutor: BusyboxExecutor?,
-                                labelMap: Map<String, String>?,
+                                textMap: Map<String, String>?,
                                 settingValueSrc: String?,
                         ): String? {
 //                                FileSystems.updateFile(
@@ -143,25 +164,25 @@ object EditComponent {
 //
 //                                )
                                 if(
-                                        labelMap.isNullOrEmpty()
+                                        textMap.isNullOrEmpty()
                                 ) return String()
                                 val settingValue = settingValueSrc?.let {
                                         QuoteTool.trimBothEdgeQuote(it)
                                 }?: String()
-                                val displayLabelSrc = makeDisplayLabelByRemoveRegex(
-                                        labelMap,
+                                val displayTextSrc = makeDisplayTextByRemoveRegex(
+                                        textMap,
                                         settingValue,
                                 )?: return null
-                                val filterShellCon = labelMap.get(
-                                        LabelKey.FILTER_SHELL_PATH.key
+                                val filterShellCon = textMap.get(
+                                        TextKey.FILTER_SHELL_PATH.key
                                 )?.let {
                                         ReadText(it).readText().replace(
                                                 ReplaceHolder.SrcReplaceHolders.SHELL_SRC.key,
-                                                displayLabelSrc,
+                                                displayTextSrc,
                                         )
                                 }
-                                val length = labelMap.get(
-                                        LabelKey.LENGTH.key
+                                val length = textMap.get(
+                                        TextKey.LENGTH.key
                                 )?.let {
                                         try{
                                                 it.toInt()
@@ -171,7 +192,7 @@ object EditComponent {
                                 }
                                 if(
                                         filterShellCon.isNullOrEmpty()
-                                ) return displayLabelSrc.let {
+                                ) return displayTextSrc.let {
                                         if(
                                                 length == null
                                         ) return it
@@ -213,12 +234,12 @@ object EditComponent {
 //                                )
                         }
 
-                        private fun makeDisplayLabelByRemoveRegex(
-                                labelMap: Map<String, String>,
+                        private fun makeDisplayTextByRemoveRegex(
+                                textMap: Map<String, String>,
                                 settingValue: String,
                         ): String? {
-                                val displayLabelSrc = labelMap.get(
-                                        LabelKey.DISPLAY_LABEL.key
+                                val displayTextSrc = textMap.get(
+                                        TextKey.DISPLAY_TEXT.key
                                 )?.replace(
                                         ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
                                         settingValue
@@ -243,21 +264,21 @@ object EditComponent {
 //                                                        ).joinToString("\n")
 //                                        )
 //                                }
-                                val srcStrBeforeRemove = labelMap.get(
-                                        LabelKey.SRC_STR.key
+                                val srcStrBeforeRemove = textMap.get(
+                                        TextKey.SRC_STR.key
                                 )?.replace(
                                         ReplaceHolder.SrcReplaceHolders.SETTING_VALUE.key,
                                         settingValue
-                                ) ?: return displayLabelSrc
+                                ) ?: return displayTextSrc
                                 val removeRegexToReplaceKeyList =
                                         FilterAndMapModule.makeRemoveRegexToReplaceKeyPairList(
-                                                labelMap,
+                                                textMap,
                                                 FilterAndMapModule.ExtraMapBaseKey.REMOVE_REGEX.key
                                         )
                                 val srcStr = FilterAndMapModule.applyRemoveRegex(
                                         srcStrBeforeRemove,
                                         removeRegexToReplaceKeyList,
-                                        labelMap,
+                                        textMap,
                                 )
 //                                FileSystems.updateFile(
 //                                        File(UsePath.cmdclickDefaultAppDirPath, "ldispalyText2.txt").absolutePath,
@@ -267,7 +288,7 @@ object EditComponent {
 //                                                "srcStr: ${srcStr}"
 //                                                ).joinToString("\n")
 //                                )
-                                return displayLabelSrc.replace(
+                                return displayTextSrc.replace(
                                         ReplaceHolder.SrcReplaceHolders.SRC_STR.key,
                                         srcStr
                                 )

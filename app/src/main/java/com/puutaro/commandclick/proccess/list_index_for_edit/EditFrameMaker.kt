@@ -30,18 +30,24 @@ import java.io.File
 object EditFrameMaker {
 
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
-    private val labelTagKey = EditComponent.Template.EditComponentKey.LABEL_TAG.key
     private val imageTagKey = EditComponent.Template.EditComponentKey.IMAGE_TAG.key
-    private val labelKey = EditComponent.Template.EditComponentKey.LABEL.key
+    private val textKey = EditComponent.Template.EditComponentKey.TEXT.key
+    private val textPropertyKey = EditComponent.Template.EditComponentKey.TEXT_PROPERTY.key
     private val imagePathKey = EditComponent.Template.EditComponentKey.IMAGE_PATH.key
     private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
-    private val textSizeKey = EditComponent.Template.EditComponentKey.TEXT_SIZE.key
-    private val textColorKey = EditComponent.Template.EditComponentKey.TEXT_COLOR.key
-    private val strokeColorKey = EditComponent.Template.EditComponentKey.STROKE_COLOR.key
-    private val strokeWidthKey = EditComponent.Template.EditComponentKey.STROKE_WIDTH.key
-    private val textAlphaKey = EditComponent.Template.EditComponentKey.TEXT_ALPHA.key
     private val imageAlphaKey = EditComponent.Template.EditComponentKey.IMAGE_ALPHA.key
     private val imageScaleKey = EditComponent.Template.EditComponentKey.IMAGE_SCALE.key
+
+    private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
+    private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
+    private val textColorKey = EditComponent.Template.TextPropertyManager.Property.COLOR.key
+    private val strokeColorKey = EditComponent.Template.TextPropertyManager.Property.STROKE_COLOR.key
+    private val strokeWidthKey = EditComponent.Template.TextPropertyManager.Property.STROKE_WIDTH.key
+    private val textAlphaKey = EditComponent.Template.TextPropertyManager.Property.ALPHA.key
+    private val textMaxLinesKey = EditComponent.Template.TextPropertyManager.Property.MAX_LINES.key
+//    private val disableTextSelectKey = EditComponent.Template.TextPropertyManager.Property.DISABLE_TEXT_SELECT.key
+
+    private val switchOn = EditComponent.Template.switchOn
 
     suspend fun make(
         context: Context?,
@@ -146,18 +152,18 @@ object EditFrameMaker {
         }
         buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)?.let {
                 captionTextView ->
-            val labelTag = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    labelTagKey,
-                )
-            }
-            val labelMap = withContext(Dispatchers.IO) {
+//            val labelTag = withContext(Dispatchers.IO) {
+//                PairListTool.getValue(
+//                    frameKeyPairList,
+//                    textTagKey,
+//                )
+//            }
+            val textMap = withContext(Dispatchers.IO) {
                 PairListTool.getPair(
                     frameKeyPairList,
-                    labelKey,
+                    textKey,
                 )?.let {
-                    EditComponent.Template.LabelManager.createLabelMap(
+                    EditComponent.Template.TextManager.createTextMap(
                         it.second,
                         totalSettingValMap?.get(
                             tag
@@ -165,52 +171,14 @@ object EditFrameMaker {
                     )
                 }
             }
-            val textSize = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
+            val textPropertyMap = withContext(Dispatchers.IO) {
+                PairListTool.getPair(
                     frameKeyPairList,
-                    textSizeKey,
+                    textPropertyKey,
                 )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }
-            val textColorStr = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    textColorKey,
-                )
-            }
-            val strokeColorStr = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    strokeColorKey,
-                )
-            }
-            val strokeWidth = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    strokeWidthKey,
-                )?.let {
-                    try {
-                        it.toInt()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }
-            val textAlpha = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    textAlphaKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
+                    EditComponent.Template.TextPropertyManager.makeTextPropertyMap(
+                        it.second,
+                    )
                 }
             }
             setCaption(
@@ -218,13 +186,15 @@ object EditFrameMaker {
                 setReplaceVariableMap,
                 busyboxExecutor,
                 captionTextView,
-                labelTag,
-                labelMap,
-                textSize,
-                textColorStr,
-                strokeColorStr,
-                strokeWidth,
-                textAlpha,
+//                labelTag,
+                textMap,
+                textPropertyMap,
+//                textSize,
+//                textColorStr,
+//                strokeColorStr,
+//                strokeWidth,
+//                textAlpha,
+//                maxLines,
             )
         }
         return buttonLayout
@@ -326,57 +296,137 @@ object EditFrameMaker {
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         captionTextView: OutlineTextView,
-        labelTag: String?,
-        labelMap: Map<String, String>?,
-        textSize: Float?,
-        textColorStr: String?,
-        strokeColorStr: String?,
-        strokeWidth: Int?,
-        textAlpha: Float?,
+//        textTag: String?,
+        textMap: Map<String, String>?,
+        textPropertyMap: Map<String, String>?,
+//        textSize: Float?,
+//        textColorStr: String?,
+//        strokeColorStr: String?,
+//        strokeWidth: Int?,
+//        textAlpha: Float?,
+//        maxLines: Int,
     ) {
-        val settingValue = labelMap?.get(
-            EditComponent.Template.LabelManager.LabelKey.SETTING_VALUE.key
+        val settingValue = textMap?.get(
+            EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
         )
-        val label = withContext(Dispatchers.IO) {
-            EditComponent.Template.LabelManager.makeLabel(
+        val text = withContext(Dispatchers.IO) {
+            EditComponent.Template.TextManager.makeText(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 busyboxExecutor,
-                labelMap,
+                textMap,
                 settingValue
             )
         }
-        labelTag?.let {
-            captionTextView.tag = labelTag
+        val textTag = withContext(Dispatchers.IO) {
+            textPropertyMap?.get(
+                textTagKey,
+            )
         }
-        captionTextView.setAutofillHints(settingValue)
+        val textSize = withContext(Dispatchers.IO) {
+                textPropertyMap?.get(
+                textSizeKey,
+            )?.let {
+                try {
+                    it.toFloat()
+                } catch(e: Exception){
+                    null
+                }
+            }
+        }
+        val textColorStr = withContext(Dispatchers.IO) {
+            textPropertyMap?.get(
+                textColorKey,
+            )
+        }
+        val strokeColorStr = withContext(Dispatchers.IO) {
+            textPropertyMap?.get(
+                strokeColorKey,
+            )
+        }
+        val strokeWidth = withContext(Dispatchers.IO) {
+            textPropertyMap?.get(
+                strokeWidthKey,
+            )?.let {
+                try {
+                    it.toInt()
+                } catch(e: Exception){
+                    null
+                }
+            }
+        }
+        val textAlpha = withContext(Dispatchers.IO) {
+            textPropertyMap?.get(
+                textAlphaKey,
+            )?.let {
+                try {
+                    it.toFloat()
+                } catch(e: Exception){
+                    null
+                }
+            }
+        }
+        val maxLines = withContext(Dispatchers.IO){
+            textPropertyMap?.get(
+                textMaxLinesKey
+            )?.let {
+                try {
+                    it.toInt()
+                }catch (e: Exception){
+                    null
+                }
+            } ?: 1
+        }
+//        val enableTextSelect = withContext(Dispatchers.IO){
+//            textPropertyMap?.get(
+//                disableTextSelectKey
+//            ) != switchOn
+//        }
+        withContext(Dispatchers.Main) {
+            textTag?.let {
+                captionTextView.tag = textTag
+            }
+            captionTextView.setAutofillHints(settingValue)
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue
-        captionTextView.text = label
-        CmdClickColor.values().firstOrNull {
-            it.str == textColorStr
-        }?.let {
-            captionTextView.setFillColor(it.id)
-        } ?: let {
-            captionTextView.setFillColor(R.color.fill_gray)
+            captionTextView.text = text
+            captionTextView.maxLines = maxLines
+//            captionTextView.setTextIsSelectable(enableTextSelect)
+            CmdClickColor.values().firstOrNull {
+                it.str == textColorStr
+            }?.let {
+                captionTextView.setFillColor(it.id)
+            } ?: let {
+                captionTextView.setFillColor(R.color.fill_gray)
+            }
+            CmdClickColor.values().firstOrNull {
+                it.str == strokeColorStr
+            }?.let {
+                captionTextView.setStrokeColor(it.id)
+            } ?: let {
+                captionTextView.setStrokeColor(R.color.white)
+            }
+            strokeWidth?.let {
+                captionTextView.outlineWidthSrc = it
+            } ?: let {
+                captionTextView.outlineWidthSrc = 2
+            }
+            textSize?.let {
+                captionTextView.textSize = textSize
+            }
+            textAlpha?.let {
+                captionTextView.alpha = textAlpha
+            }
         }
-        CmdClickColor.values().firstOrNull {
-            it.str == strokeColorStr
-        }?.let {
-            captionTextView.setStrokeColor(it.id)
-        } ?: let {
-            captionTextView.setStrokeColor(R.color.white)
-        }
-        strokeWidth?.let {
-            captionTextView.outlineWidthSrc = it
-        } ?: let {
-            captionTextView.outlineWidthSrc = 2
-        }
-        textSize?.let {
-            captionTextView.textSize = textSize
-        }
-        textAlpha?.let {
-            captionTextView.alpha = textAlpha
-        }
+        FileSystems.updateFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "lcapt.txt").absolutePath,
+            listOf(
+                "textMap: ${textMap}",
+                "textPropertyMap: ${textPropertyMap}",
+                "strokeWidth: ${strokeWidth}",
+                "captionTextView.outlineWidthSrc: ${captionTextView.outlineWidthSrc}",
+
+            ).joinToString("\n")
+        )
     }
 }

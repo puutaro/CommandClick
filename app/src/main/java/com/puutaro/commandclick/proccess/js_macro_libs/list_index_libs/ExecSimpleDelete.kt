@@ -172,7 +172,7 @@ object ExecSimpleDelete {
                     com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
                 )
             confirmContentTextView?.text = selectedItemMap.get(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key
+                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
             )
             val confirmCancelButton =
                 delteConfirmDialog?.findViewById<AppCompatImageButton>(

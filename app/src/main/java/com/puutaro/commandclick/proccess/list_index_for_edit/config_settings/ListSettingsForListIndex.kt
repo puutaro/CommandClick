@@ -285,10 +285,10 @@ object ListSettingsForListIndex  {
 
     object MapListPathManager {
 
-        val mapListSeparator = ','
+        const val mapListSeparator = ','
 
         enum class Key(val key: String) {
-            SRC_LABEL("srcLabel"),
+            SRC_TITLE("srcTitle"),
             SRC_CON("srcCon"),
             VIEW_LAYOUT_TAG("viewLayoutTag"),
         }
@@ -478,7 +478,7 @@ object ListSettingsForListIndex  {
             filterSuffixListCon: String,
             filterShellCon: String,
         ): List<Map<String, String>> {
-            val srcLabelKey = MapListPathManager.Key.SRC_LABEL.key
+            val srcLabelKey = MapListPathManager.Key.SRC_TITLE.key
             val valueSeparatorStr = valueSeparator.toString()
             return lineMapList.filter {
                 lineMap ->
@@ -818,7 +818,7 @@ object ListSettingsForListIndex  {
                             .sortedWith(
                                 compareBy {
                                         map ->
-                                    map.get(MapListPathManager.Key.SRC_LABEL.key)
+                                    map.get(MapListPathManager.Key.SRC_TITLE.key)
                                 }
                             )
 //                    val sortedLineMapList =
@@ -830,7 +830,7 @@ object ListSettingsForListIndex  {
                     val sortedLineMapListSrc = lineMapList.sortedWith(
                         compareBy {
                                 map ->
-                            map.get(MapListPathManager.Key.SRC_LABEL.key)
+                            map.get(MapListPathManager.Key.SRC_TITLE.key)
                         }
                     ).reversed()
 //                    val sortedLineMapList =
@@ -870,7 +870,7 @@ object ListSettingsForListIndex  {
                     sortedLineMapList.sortedWith(
                         compareBy {
                                 map ->
-                            map.get(MapListPathManager.Key.SRC_LABEL.key)
+                            map.get(MapListPathManager.Key.SRC_TITLE.key)
                         }
                     )
                         .toMutableList()
@@ -879,7 +879,7 @@ object ListSettingsForListIndex  {
                     sortedLineMapList.sortedWith(
                         compareBy {
                                 map ->
-                            map.get(MapListPathManager.Key.SRC_LABEL.key)
+                            map.get(MapListPathManager.Key.SRC_TITLE.key)
                         }
                     )
                         .reversed()
@@ -1090,7 +1090,7 @@ private object CompPathManager {
                 ).map {
                     val fileObj = File(initTsvConSrcDir, it)
                     mapOf(
-                        ListSettingsForListIndex.MapListPathManager.Key.SRC_LABEL.key to fileObj.name,
+                        ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to fileObj.name,
                         ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to fileObj.absolutePath
                     )
                 }
