@@ -89,7 +89,7 @@ object WithEditComponentListView{
 
         CoroutineScope(Dispatchers.Main).launch{
             val titleSettingPath = listIndexConfigMap?.get(
-                ListIndexEditConfig.ListIndexConfigKey.TITLE_SETTING_PATH.key
+                ListIndexEditConfig.ListIndexConfigKey.TITLE_LAYOUT_PATH.key
             ) ?: String()
             val titleSettingMap = withContext(Dispatchers.IO){
                 ListSettingVariableListMaker.makeFromSettingPath(

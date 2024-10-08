@@ -431,7 +431,7 @@ object ListIndexEditConfig {
         CLICK("click"),
 //        LONG_CLICK("longClick"),
         LIST("list"),
-        TITLE_SETTING_PATH("titleSettingPath"),
+        TITLE_LAYOUT_PATH("titleLayoutPath"),
         SEARCH_BOX("searchBox"),
 //        PERFORM("perform"),
         DELETE("delete"),
