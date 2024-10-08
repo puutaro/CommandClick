@@ -59,5 +59,9 @@ enum class BroadCastIntentSchemeTerm(
     FANNEL_PIN_BAR_UPDATE(
         "com.puutaro.commandclick.fannel_pin_bar_update.update",
         String()
+    ),
+    EDIT_INDEX_LIST_UPDATE(
+    "com.puutaro.commandclick.edit_index_list.update",
+    String()
     )
 }

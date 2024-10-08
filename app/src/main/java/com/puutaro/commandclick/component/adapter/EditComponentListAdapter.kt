@@ -13,9 +13,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
@@ -811,11 +814,6 @@ class EditComponentListAdapter(
                 mapListPath,
                 lineMap
             )
-//            val lineMapList = editComponentListAdapter.lineMapList
-//            lineMapList.removeAt(bindingAdapterPosition)
-//            val updateLineListMap = listOf(lineMap) + lineMapList
-//            editComponentListAdapter.lineMapList.clear()
-//            editComponentListAdapter.lineMapList.addAll(updateLineListMap)
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lSort.txt").absolutePath,
 //                listOf(
@@ -823,10 +821,17 @@ class EditComponentListAdapter(
 //                    "lineMapList: ${editComponentListAdapter.lineMapList}"
 //                ).joinToString("\n")
 //            )
-            BroadcastSender.normalSend(
-                fragment?.context,
-                BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-            )
+            when(fragment){
+                is EditFragment -> BroadcastSender.normalSend(
+                    fragment.context,
+                    BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+                )
+                is TerminalFragment ->  BroadcastSender.normalSend(
+                    fragment.context,
+                    BroadCastIntentSchemeTerm.EDIT_INDEX_LIST_UPDATE.action
+                )
+            }
+
         }
     }
 

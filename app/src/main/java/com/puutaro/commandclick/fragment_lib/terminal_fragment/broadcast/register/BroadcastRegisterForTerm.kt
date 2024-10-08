@@ -25,6 +25,7 @@ object BroadcastRegisterForTerm {
 //                BroadCastIntentSchemeTerm.POCKET_WEBVIEW_PRELOAD_URL.action,
                 BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LOAD_URL.action,
                 BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE.action,
+                BroadCastIntentSchemeTerm.EDIT_INDEX_LIST_UPDATE.action,
             )
         )
     }
