@@ -421,17 +421,24 @@ object ExecSetToolbarButtonImage {
             FileSystems.checkSum(imagePath)
         }
         withContext(Dispatchers.Main) {
-            val beforeChecksum = TagManager.getChecksumFromTag(imageButton.tag)
+            val beforeChecksum = TagManager.getChecksumFromTag(
+                imageButton.autofillHints?.firstOrNull()
+            )
             if(
                 beforeChecksum == checksum
             ) return@withContext
             withContext(Dispatchers.Main) {
                 imageButton.imageTintList = null
             }
-            imageButton.tag = TagManager.make(
+            val iconSignal = TagManager.make(
                 iconMacro,
                 checksum
             )
+            imageButton.setAutofillHints(iconSignal)
+//            imageButton.tag = TagManager.make(
+//                iconMacro,
+//                checksum
+//            )
 //            imageButton.background =
 //                 AppCompatResources.getDrawable(context, R.color.terminal_color)
             val requestBuilder: RequestBuilder<Drawable> =

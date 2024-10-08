@@ -55,13 +55,26 @@ object EditComponent {
                         LINEAR("linear"),
                 }
 
+                fun makeKeyMap(
+                        mapCon: String?
+                ): Map<String, String>? {
+                        if(
+                                mapCon.isNullOrEmpty()
+                        ) return null
+                        return CmdClickMap.createMap(
+                                mapCon,
+                                keySeparator,
+                        ).toMap().filter {
+                                it.key.isNotEmpty()
+                        }
+                }
+
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
-//                        TEXT_TAG("textTag"),
-                        IMAGE_TAG("imageTag"),
                         TEXT("text"),
                         TEXT_PROPERTY("textProperty"),
-                        IMAGE_PATH("imagePath"),
+                        IMAGE("image"),
+                        IMAGE_PROPERTY("imageProperty"),
                         SET_IMAGE_TO_TAGS("setImageToTags"),
                         SET_TEXT_TO_TAGS("setTextToTags"),
                         SET_SETTING_VALS_TO_TAGS("setSettingValsToTags"),
@@ -69,35 +82,54 @@ object EditComponent {
                         SET_IMAGE_TO_BTN_TAGS("setImageToBtnTags"),
                         SET_TEXT_TO_BTN_TAGS("setTextToBtnTags"),
                         SET_SUGGEST_TO_BTN_TAGS("setSuggestToBtnTags"),
-//                        TEXT_PREFIXS("textPrefixs"),
-//                        TEXT_SUFFIXS("textSuffixs"),
-//                        TEXT_MAX_LINES("textMaxLines"),
                         ON_SAVE("onSave"),
                         IS_CONSEC("isConsec"),
-//                        TEXT_SIZE("textSize"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
-//                        TEXT_COLOR("textColor"),
-//                        STROKE_COLOR("strokeColor"),
-//                        STROKE_WIDTH("strokeWidth"),
                         HEIGHT("height"),
-//                        TEXT_ALPHA("textAlpha"),
-                        IMAGE_ALPHA("imageAlpha"),
-                        IMAGE_SCALE("imageScale")
+                }
+
+
+                object ImageManager {
+                       enum class ImageKey(val key: String) {
+                               PATHS("paths"),
+                               DELAY("delay"),
+                       }
+
+                        private const val iconMacroSeprator = ":"
+
+                        fun makeIconAndTypePair(macroStr: String): Pair<String, String>{
+                                val macroStrList = macroStr.split(iconMacroSeprator)
+                                return Pair(
+                                        macroStrList.firstOrNull() ?: String(),
+                                        macroStrList.getOrNull(1) ?: String(),
+                                )
+                        }
+
+                        enum class IconType(val type: String){
+                                IMAGE("image"),
+                                ICON("icon"),
+                        }
+                }
+
+                object ImagePropertyManager {
+
+                        enum class PropertyKey(val key: String) {
+                                TAG("tag"),
+                                ALPHA("alpha"),
+                                SCALE("scale"),
+                                COLOR("color")
+                        }
+                        enum class ImageScale(
+                                val str: String,
+                                val scale:  ImageView.ScaleType
+                        ){
+                                FIT_CENTER("fitCenter", ImageView.ScaleType.FIT_CENTER),
+                                FIT_XY("fitXy", ImageView.ScaleType.FIT_XY),
+                                CENTER_CROP("centerCrop", ImageView.ScaleType.CENTER_CROP),
+                        }
                 }
 
                 object TextPropertyManager {
-
-                        fun makeTextPropertyMap(
-                                textPropertyCon: String?
-                        ): Map<String, String>? {
-                                if(
-                                        textPropertyCon.isNullOrEmpty()
-                                ) return null
-                                return CmdClickMap.createMap(
-                                        textPropertyCon,
-                                        keySeparator,
-                                ).toMap()
-                        }
                         enum class Property(val key: String){
                                 TAG("tag"),
                                 MAX_LINES("maxLines"),
@@ -110,15 +142,6 @@ object EditComponent {
                         }
                 }
 
-
-                enum class ImageScale(
-                        val str: String,
-                        val scale:  ImageView.ScaleType
-                ){
-                        FIT_CENTER("fitCenter", ImageView.ScaleType.FIT_CENTER),
-                        FIT_XY("fitXy", ImageView.ScaleType.FIT_XY),
-                        CENTER_CROP("centerCrop", ImageView.ScaleType.CENTER_CROP),
-                }
 
                 object TextManager {
                         enum class TextKey(val key: String) {

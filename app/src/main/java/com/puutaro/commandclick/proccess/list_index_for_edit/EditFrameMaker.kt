@@ -1,11 +1,15 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
@@ -20,7 +24,9 @@ import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -29,14 +35,23 @@ import java.io.File
 
 object EditFrameMaker {
 
+
+    private val valueSeparator = EditComponent.Template.valueSeparator
+
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
-    private val imageTagKey = EditComponent.Template.EditComponentKey.IMAGE_TAG.key
+    private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
+    private val imagePropertyKey = EditComponent.Template.EditComponentKey.IMAGE_PROPERTY.key
     private val textKey = EditComponent.Template.EditComponentKey.TEXT.key
     private val textPropertyKey = EditComponent.Template.EditComponentKey.TEXT_PROPERTY.key
-    private val imagePathKey = EditComponent.Template.EditComponentKey.IMAGE_PATH.key
     private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
-    private val imageAlphaKey = EditComponent.Template.EditComponentKey.IMAGE_ALPHA.key
-    private val imageScaleKey = EditComponent.Template.EditComponentKey.IMAGE_SCALE.key
+
+
+    private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
+    private val imageDelayKey = EditComponent.Template.ImageManager.ImageKey.DELAY.key
+    private val imageTagKey = EditComponent.Template.ImagePropertyManager.PropertyKey.TAG.key
+    private val imageColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.COLOR.key
+    private val imageAlphaKey = EditComponent.Template.ImagePropertyManager.PropertyKey.ALPHA.key
+    private val imageScaleKey = EditComponent.Template.ImagePropertyManager.PropertyKey.SCALE.key
 
     private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
     private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
@@ -107,57 +122,34 @@ object EditFrameMaker {
 
         buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)?.let {
                 imageButtonView ->
-            val imageTag = withContext(Dispatchers.IO) {
+            val imageMap = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
-                    imageTagKey,
-                )
-            }
-            val imagePath = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    imagePathKey,
-                )
-            }
-            val imageAlpha = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    imageAlphaKey,
+                    imageKey,
                 )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
+                    EditComponent.Template.makeKeyMap(
+                        it,
+                    )
                 }
             }
-            val imageScale = withContext(Dispatchers.IO) {
+            val imagePropertyMap = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
-                    imageScaleKey,
-                ).let {
-                        scale ->
-                    EditComponent.Template.ImageScale.values().firstOrNull {
-                        it.str == scale
-                    } ?: EditComponent.Template.ImageScale.FIT_CENTER
+                    imagePropertyKey,
+                )?.let {
+                    EditComponent.Template.makeKeyMap(
+                        it,
+                    )
                 }
             }
             setImageView(
                 imageButtonView,
-                imageTag,
-                imagePath,
-                imageAlpha,
-                imageScale,
+                imageMap,
+                imagePropertyMap,
             )
         }
         buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)?.let {
                 captionTextView ->
-//            val labelTag = withContext(Dispatchers.IO) {
-//                PairListTool.getValue(
-//                    frameKeyPairList,
-//                    textTagKey,
-//                )
-//            }
             val textMap = withContext(Dispatchers.IO) {
                 PairListTool.getPair(
                     frameKeyPairList,
@@ -176,7 +168,7 @@ object EditFrameMaker {
                     frameKeyPairList,
                     textPropertyKey,
                 )?.let {
-                    EditComponent.Template.TextPropertyManager.makeTextPropertyMap(
+                    EditComponent.Template.makeKeyMap(
                         it.second,
                     )
                 }
@@ -186,30 +178,78 @@ object EditFrameMaker {
                 setReplaceVariableMap,
                 busyboxExecutor,
                 captionTextView,
-//                labelTag,
                 textMap,
                 textPropertyMap,
-//                textSize,
-//                textColorStr,
-//                strokeColorStr,
-//                strokeWidth,
-//                textAlpha,
-//                maxLines,
             )
         }
         return buttonLayout
     }
 
-    suspend fun setImageView(
+    private suspend fun setImageView(
         imageView: AppCompatImageView,
-        imageTag: String?,
-        imagePath: String?,
-        imageAlpha: Float?,
-        imageScale: EditComponent.Template.ImageScale
+        imageMap: Map<String, String>?,
+        imagePropertyMap: Map<String, String>?,
+//        imageTag: String?,
+//        imagePath: String?,
+//        imageAlpha: Float?,
+//        imageScale: EditComponent.Template.ImageScale
     ) {
-        imageView.isVisible = !imagePath.isNullOrEmpty()
+        val context = imageView.context
+        val imagePathList = withContext(Dispatchers.IO) {
+            imageMap?.get(
+                imagePathsKey,
+            )?.split(valueSeparator)
+        }
+        val delay = withContext(Dispatchers.IO) {
+            imageMap?.get(
+                imageDelayKey,
+            )?.let {
+                try {
+                    it.toInt()
+                } catch(e: Exception){
+                    null
+                }
+            } ?: 800
+        }
+        val imageAlpha = withContext(Dispatchers.IO) {
+            imagePropertyMap?.get(
+                imageAlphaKey,
+            )?.let {
+                try {
+                    it.toFloat()
+                } catch(e: Exception){
+                    null
+                }
+            }
+        }
+        val imageTag = withContext(Dispatchers.IO) {
+            imagePropertyMap?.get(
+                imageTagKey,
+            )
+        }
+        val imageColor = withContext(Dispatchers.IO) {
+            imagePropertyMap?.get(
+                imageColorKey,
+            )?.let {
+                colorStr ->
+                CmdClickColor.values().firstOrNull {
+                    it.str == colorStr
+                }
+            }
+        }
+        val imageScale = withContext(Dispatchers.IO) {
+            imagePropertyMap?.get(
+                imageScaleKey,
+            ).let {
+                    scale ->
+                EditComponent.Template.ImagePropertyManager.ImageScale.values().firstOrNull {
+                    it.str == scale
+                } ?: EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER
+            }
+        }
+        imageView.isVisible = !imagePathList.isNullOrEmpty()
         if(
-            imagePath.isNullOrEmpty()
+            imagePathList.isNullOrEmpty()
         ) {
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "licon0.txt").absolutePath,
@@ -219,6 +259,13 @@ object EditFrameMaker {
 //                )
             return
         }
+        when(imageColor == null){
+            true -> imageView.imageTintList = null
+            else -> imageView.imageTintList = AppCompatResources.getColorStateList(
+                context,
+                imageColor.id
+            )
+        }
         imageView.imageTintList = null
         imageTag?.let {
             imageView.tag = imageTag
@@ -227,84 +274,171 @@ object EditFrameMaker {
             imageView.alpha = imageAlpha
         }
         imageView.scaleType = imageScale.scale
-        val imageViewContext = imageView.context
 
+        when(imagePathList.size == 1){
+            false -> {
+                execSetMultipleImage(
+                    imageView,
+                    imagePathList,
+                    delay,
+                )
+            }
+            else -> {
+                execSetSingleImage(
+                    imageView,
+                    imagePathList.firstOrNull()
+                )
+            }
+        }
+    }
+
+    private suspend fun execSetSingleImage(
+        imageView: AppCompatImageView,
+        imagePathSrc: String?,
+    ){
+        if(
+            imagePathSrc.isNullOrEmpty()
+        ) return
+        val imageViewContext = imageView.context
         val requestBuilder: RequestBuilder<Drawable> =
             Glide.with(imageViewContext)
                 .asDrawable()
                 .sizeMultiplier(0.1f)
+        val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
+            imagePathSrc
+        )
+        val imagePath =
+            imagePathToIconType.first
         val icon = CmdClickIcons.values().firstOrNull {
             it.str == imagePath
         }
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "licon.txt").absolutePath,
-                listOf(
-                    "imagePath: ${imagePath}",
-                    "icon: ${icon?.str}",
-                ).joinToString("\n\n")
-            )
-        if(icon == null && File(imagePath).isFile){
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "liconImagePath.txt").absolutePath,
-                listOf(
-                    "imagePath: ${imagePath}",
-                    "icon: ${icon?.str}",
-                ).joinToString("\n\n")
-            )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "licon.txt").absolutePath,
+//            listOf(
+//                "imagePath: ${imagePathSrc}",
+//                "icon: ${icon?.str}",
+//            ).joinToString("\n\n")
+//        )
+        if(File(imagePathSrc).isFile){
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "liconImagePath.txt").absolutePath,
+//                listOf(
+//                    "imagePath: ${imagePathSrc}",
+//                    "icon: ${icon?.str}",
+//                ).joinToString("\n\n")
+//            )
             Glide.with(imageViewContext)
-                .load(imagePath)
+                .load(imagePathSrc)
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .thumbnail(requestBuilder)
                 .into(imageView)
             return
         }
-        val iconId = icon?.id
-        imageView.tag = CmdClickIcons.values().firstOrNull {
-            it.id == iconId
-        }?.str
-
-        val isImageFile =
-            ExecSetToolbarButtonImage.isImageFile(icon?.assetsPath)
-        when(true) {
-            (isImageFile && icon != null) ->
-                ExecSetToolbarButtonImage.setImageButton(
-                    imageView,
-                    icon
-                )
-            else -> {
-                imageView.isVisible = false
-//                    FileSystems.updateFile(
-//                        File(UsePath.cmdclickDefaultAppDirPath, "licon1.txt").absolutePath,
-//                        listOf(
-//                            "imageTag: ${imageTag}",
-//                            "imagePath: ${imagePath}",
-//                        ).joinToString("\n")
-//                    )
-            }
-//                Glide.with(imageViewContext)
-//                    .load(iconId)
-//                    .skipMemoryCache(true)
-//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .thumbnail(requestBuilder)
-//                    .into(imageView)
+        val iconType = imagePathToIconType.second.let {
+                iconTypeStr ->
+            EditComponent.Template.ImageManager.IconType.values().firstOrNull {
+                it.type == iconTypeStr
+            } ?: EditComponent.Template.ImageManager.IconType.IMAGE
         }
+//        val iconId = icon?.id
+//        imageView.setAutofillHints(CmdClickIcons.values().firstOrNull {
+//            it.id == iconId
+//        }?.str)
+        val assetsPath = CmdClickIcons.values().firstOrNull {
+            it.str == imagePath
+        }?.assetsPath ?: return
+        val bitmap = when(iconType) {
+            EditComponent.Template.ImageManager.IconType.IMAGE -> {
+                val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                    assetsPath
+                )
+                BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+            }
+            EditComponent.Template.ImageManager.IconType.ICON -> {
+                AssetsFileManager.assetsByteArray(
+                    imageViewContext,
+                    assetsPath,
+                )?.let {
+                    BitmapFactory.decodeByteArray(it, 0, it.size)
+                }
+            }
+        }
+        if(bitmap == null){
+            imageView.isVisible = false
+            return
+        }
+        Glide.with(imageViewContext)
+            .load(bitmap)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .thumbnail(requestBuilder)
+            .into(imageView)
     }
+
+    private fun execSetMultipleImage(
+        imageView: AppCompatImageView,
+        imagePathList: List<String>,
+        delay: Int,
+    ){
+        val imageViewContext = imageView.context
+        val animationDrawable = AnimationDrawable()
+        val bitmapList = imagePathList.map {
+            imagePathSrc ->
+            if(File(imagePathSrc).isFile) {
+                return@map BitmapTool.convertFileToBitmap(imagePathSrc)
+            }
+            val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
+                imagePathSrc
+            )
+            val imagePath =
+                imagePathToIconType.first
+            val iconType = imagePathToIconType.second.let {
+                    iconTypeStr ->
+                EditComponent.Template.ImageManager.IconType.values().firstOrNull {
+                    it.type == iconTypeStr
+                } ?: EditComponent.Template.ImageManager.IconType.IMAGE
+            }
+            val assetsPath = CmdClickIcons.values().firstOrNull {
+                it.str == imagePath
+            }?.assetsPath ?: return@map null
+            when(iconType) {
+                EditComponent.Template.ImageManager.IconType.IMAGE -> {
+                    val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                        assetsPath
+                    )
+                   BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+                }
+                EditComponent.Template.ImageManager.IconType.ICON -> {
+                    AssetsFileManager.assetsByteArray(
+                        imageViewContext,
+                        assetsPath,
+                    )?.let {
+                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                    }
+                }
+            }
+        }
+        bitmapList.forEach {
+            if(it == null) return@forEach
+            animationDrawable.addFrame(
+                BitmapDrawable(imageViewContext.resources, it),
+                delay
+            )
+        }
+        animationDrawable.isOneShot = false
+        imageView.setImageDrawable(animationDrawable)
+        animationDrawable.start()
+    }
+
 
     private suspend fun setCaption(
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         captionTextView: OutlineTextView,
-//        textTag: String?,
         textMap: Map<String, String>?,
         textPropertyMap: Map<String, String>?,
-//        textSize: Float?,
-//        textColorStr: String?,
-//        strokeColorStr: String?,
-//        strokeWidth: Int?,
-//        textAlpha: Float?,
-//        maxLines: Int,
     ) {
         val settingValue = textMap?.get(
             EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
@@ -418,15 +552,15 @@ object EditFrameMaker {
                 captionTextView.alpha = textAlpha
             }
         }
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "lcapt.txt").absolutePath,
-            listOf(
-                "textMap: ${textMap}",
-                "textPropertyMap: ${textPropertyMap}",
-                "strokeWidth: ${strokeWidth}",
-                "captionTextView.outlineWidthSrc: ${captionTextView.outlineWidthSrc}",
-
-            ).joinToString("\n")
-        )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lcapt.txt").absolutePath,
+//            listOf(
+//                "textMap: ${textMap}",
+//                "textPropertyMap: ${textPropertyMap}",
+//                "strokeWidth: ${strokeWidth}",
+//                "captionTextView.outlineWidthSrc: ${captionTextView.outlineWidthSrc}",
+//
+//            ).joinToString("\n")
+//        )
     }
 }
