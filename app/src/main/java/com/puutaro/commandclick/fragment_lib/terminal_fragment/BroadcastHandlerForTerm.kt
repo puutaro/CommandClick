@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLoadUrlExtra
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
@@ -107,10 +106,10 @@ object BroadcastHandlerForTerm {
                 )
             }
             BroadCastIntentSchemeTerm.EDIT_INDEX_LIST_UPDATE -> {
-                val editListRecyclerView = terminalFragment.fannelIndexDialog?.findViewById<RecyclerView>(
+                val editListRecyclerView = terminalFragment.editListDialog?.findViewById<RecyclerView>(
                     R.id.edit_list_dialog_recycler_view
                 ) ?: return
-                val editListSearchEditText = terminalFragment.fannelIndexDialog?.findViewById<AppCompatEditText>(
+                val editListSearchEditText = terminalFragment.editListDialog?.findViewById<AppCompatEditText>(
                     R.id.edit_list_dialog_search_edit_text
                 )
                 val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter

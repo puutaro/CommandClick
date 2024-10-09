@@ -4,7 +4,7 @@ object ClickSettingsForToolbarButton {
     enum class ClickConfigMapKey(
         val key: String
     ){
-        ON_SCRIPT_SAVE("onScriptSave"),
+        ON_SAVE("onSave"),
         MONITOR_SIZE("monitorSize"),
     }
 

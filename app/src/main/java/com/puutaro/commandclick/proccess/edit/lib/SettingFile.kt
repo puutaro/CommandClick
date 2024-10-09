@@ -1,13 +1,15 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object SettingFile {
 
-    private val importPreWord = SettingFileVariables.importPreWord
+    private const val importPreWord = SettingFileVariables.importPreWord
 
     fun read(
         settingFilePath: String,
@@ -17,8 +19,6 @@ object SettingFile {
     ): String {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
-        val recentAppDirPath = fannelPathObj.parent
-            ?: String()
         val scriptFileName = fannelPathObj.name
         val firstSettingCon = ReadText(
             settingFilePath
@@ -31,7 +31,41 @@ object SettingFile {
             ) return@map it
             importSetting(
                 it,
-                recentAppDirPath,
+                scriptFileName,
+                setReplaceVariableCompleteMap
+            )
+        }.let {
+            formSettingContents(it)
+        }.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableCompleteMap,
+//                recentAppDirPath,
+                scriptFileName
+            )
+        }
+    }
+
+    fun readLayout(
+        settingFilePath: String,
+        fannelPath: String,
+        setReplaceVariableCompleteMap: Map<String, String>?,
+        onImport: Boolean = true
+    ): String {
+        val fannelPathObj = File(fannelPath)
+        if (!fannelPathObj.isFile) return String()
+        val scriptFileName = fannelPathObj.name
+        val firstSettingCon = ReadText(
+            settingFilePath
+        ).textToList()
+        return settingConFormatter(
+            firstSettingCon
+        ).map {
+            if(
+                !onImport
+            ) return@map it
+            importLayoutSetting(
+                it,
                 scriptFileName,
                 setReplaceVariableCompleteMap
             )
@@ -54,13 +88,10 @@ object SettingFile {
     ): String {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
-        val recentAppDirPath = fannelPathObj.parent
-            ?: String()
         val scriptFileName = fannelPathObj.name
         return settingConList.map {
             importSetting(
                 it,
-                recentAppDirPath,
                 scriptFileName,
                 setReplaceVariableCompleteMap
             )
@@ -106,19 +137,77 @@ object SettingFile {
         }.joinToString("")
     }
 
-    private fun importSetting(
+    private fun importLayoutSetting(
         row: String,
-        recentAppDirPath: String,
         scriptFileName: String,
         setReplaceVariableCompleteMap: Map<String, String>?
     ): String {
+        if (
+            !row.contains(importPreWord)
+        ) return row
+        val trimRowSrc = row
+            .trim()
+            .trim(';')
+            .trim(',')
+        val prefixLayoutSeparator =  Regex("(^[-]+)").find(
+            trimRowSrc
+        )?.value ?: String()
+
+        val suffixLayoutSeparator =  Regex("([-]+)$").find(
+            trimRowSrc
+        )?.value ?: String()
+        val trimRow = trimRowSrc
+            .removePrefix(prefixLayoutSeparator)
+            .removeSuffix(suffixLayoutSeparator)
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lImport00.txt").absolutePath,
+//            listOf(
+//                "row: ${row}",
+//                "trimRowSrc: ${trimRowSrc}",
+//                "prefixLayoutSeparator: ${prefixLayoutSeparator}",
+//                "suffixLayoutSeparator: ${suffixLayoutSeparator}",
+//                "trimRow: ${trimRow}"
+//            ).joinToString("\n")
+//        )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lImport.txt").absolutePath,
+//            listOf(
+//                "row: ${row}",
+//                "trimRowSrc: ${trimRowSrc}",
+//                "trimRow: ${trimRow}"
+//            ).joinToString("\n")
+//        )
+        return trimRow
+            .replace("${importPreWord}=", "")
+            .trim()
+            .let {
+                SetReplaceVariabler.execReplaceByReplaceVariables(
+                    it,
+                    setReplaceVariableCompleteMap,
+//                    recentAppDirPath,
+                    scriptFileName
+                )
+            }.let {
+                QuoteTool.trimBothEdgeQuote(it)
+            }.let {
+                prefixLayoutSeparator + catImportContents(
+                    it
+                ) + suffixLayoutSeparator
+            }
+    }
+
+    private fun importSetting(
+        row: String,
+        scriptFileName: String,
+        setReplaceVariableCompleteMap: Map<String, String>?
+    ): String {
+        if (
+            !row.contains(importPreWord)
+        ) return row
         val trimRow = row
             .trim()
             .trim(';')
             .trim(',')
-        if (
-            !trimRow.contains(importPreWord)
-        ) return row
         return trimRow
             .replace("${importPreWord}=", "")
             .trim()

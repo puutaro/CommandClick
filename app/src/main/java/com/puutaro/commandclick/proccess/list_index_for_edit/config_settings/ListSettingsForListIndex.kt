@@ -94,15 +94,15 @@ object ListSettingsForListIndex  {
                 fannelPath,
                 setReplaceVariableMap,
             )
-//            FileSystems.writeFile(
+//            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
 //                listOf(
-//                    "indexListMap: ${indexListMap}",
+////                    "indexListMap: ${indexListMap}",
 //                    "viewLayoutPath: ${viewLayoutPath}",
 //                    "File(viewLayoutPath).isFile: ${File(viewLayoutPath).isFile}",
 //                    "viewLayoutPath: ${viewLayoutPath}",
-//                    "viewLayoutListSrc: ${viewLayoutListSrc}",
-//                ).joinToString("\n\n")
+//                    "viewLayoutListSrc: ${viewLayoutListSrc.joinToString("####")}",
+//                ).joinToString("\n\n") + "\n\n-----------\n\n"
 //            )
             val typeSeparator = EditComponent.Template.typeSeparator
             val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
@@ -131,6 +131,7 @@ object ListSettingsForListIndex  {
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse.txt").absolutePath,
 //                    listOf(
 //                        "layoutKey: ${layoutKey}",
+//                        "smallLayoutMapCon: ${smallLayoutMapCon}",
 //                        "framePairsConList: ${framePairsConList}",
 //                        "linearPairConList: ${linearPairConList}",
 //                    ).joinToString("\n") + "\n----\n"
@@ -276,19 +277,19 @@ object ListSettingsForListIndex  {
 //                    it.second
 //                }
 //            }.toMap()
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
-//                listOf(
-////                    "layoutKey: ${layoutKey}",
-//                    "framePairsConList: ${framePairsConList}",
-//                    "linearPairConList: ${linearPairConList}",
-//                    "\npair: ${Pair(
-//                        framePairsConList.toMap(),
-//                        frameTagToLinearPairConListMap,
-////                frameTagToLinearKeysListMap
-//                    )}"
-//                ).joinToString("\n") + "\n----\n"
-//            )
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
+                listOf(
+//                    "layoutKey: ${layoutKey}",
+                    "framePairsConList: ${framePairsConList}",
+                    "linearPairConList: ${linearPairConList}",
+                    "\npair: ${Pair(
+                        framePairsConList.toMap(),
+                        frameTagToLinearPairConListMap,
+//                frameTagToLinearKeysListMap
+                    )}"
+                ).joinToString("\n") + "\n----\n"
+            )
             return Pair(
                 framePairsConList.toMap(),
                 frameTagToLinearPairConListMap,
@@ -304,6 +305,7 @@ object ListSettingsForListIndex  {
         enum class Key(val key: String) {
             SRC_TITLE("srcTitle"),
             SRC_CON("srcCon"),
+            SRC_IMAGE("srcImage"),
             VIEW_LAYOUT_TAG("viewLayoutTag"),
         }
     }

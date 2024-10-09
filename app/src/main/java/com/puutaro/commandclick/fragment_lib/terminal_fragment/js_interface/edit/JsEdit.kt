@@ -2,8 +2,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -61,17 +63,29 @@ class JsEdit(
 //        )
 //    }
 
-//    @JavascriptInterface
-//    fun getFromEditText(
-//        targetVariableName: String,
-//    ): String {
-//        val terminalFragment = terminalFragmentRef.get()
-//            ?: return String()
+    @JavascriptInterface
+    fun getSettingValue(
+        targetVariableName: String,
+        srcFragment: String,
+    ): String {
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return String()
+
+        val editListRecyclerView = EditListRecyclerViewGetter.get(
+            terminalFragment,
+            srcFragment
+        ) ?: return String()
+        val editComponentListAdapter =
+            editListRecyclerView.adapter as EditComponentListAdapter
+        return editComponentListAdapter.getCurrentSettingVals(
+            targetVariableName
+        ) ?: String()
+
 //        val fannelInfoMap =
 //            terminalFragment.fannelInfoMap
-////        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-////            fannelInfoMap
-////        )
+//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
+//            fannelInfoMap
+//        )
 //
 //        val currentFannelName = FannelInfoTool.getCurrentFannelName(
 //            fannelInfoMap
@@ -91,7 +105,7 @@ class JsEdit(
 //            targetVariableName
 //        )
 //        return targetEditTextCon
-//    }
+    }
 
 //    @JavascriptInterface
 //    fun updateSpinner(

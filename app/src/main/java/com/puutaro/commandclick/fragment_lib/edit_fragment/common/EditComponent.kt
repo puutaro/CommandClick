@@ -28,6 +28,8 @@ object EditComponent {
                                 con: String?,
                                 srcTitle: String,
                                 srcCon: String,
+                                srcImage: String,
+                                srcPosition: Int,
                         ): String? {
                                 if(con == null) return null
                                 return con.replace(
@@ -36,6 +38,12 @@ object EditComponent {
                                 ).replace(
                                         SrcReplaceHolders.SRC_CON.key,
                                         srcCon
+                                ).replace(
+                                        SrcReplaceHolders.SRC_IMAGE.key,
+                                        srcImage
+                                ).replace(
+                                        SrcReplaceHolders.LIST_INDEX_POSITION.key,
+                                        srcPosition.toString()
                                 )
 
                         }
@@ -44,6 +52,8 @@ object EditComponent {
                                 SHELL_SRC("\${SHELL_SRC}"),
                                 SRC_TITLE("\${SRC_TITLE}"),
                                 SRC_CON("\${SRC_CON}"),
+                                SRC_IMAGE("\${SRC_IMAGE}"),
+                                LIST_INDEX_POSITION("\${LIST_INDEX_POSITION}"),
                                 SRC_STR("\${SRC_STR}"),
                                 SETTING_VALUE("\${SETTING_VALUE}"),
                         }

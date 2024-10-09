@@ -289,12 +289,15 @@ object WithEditComponentListView{
                     }
 
                     val layoutWeight = weightSumFloat / linearKeys.size
+                    val noIndexSign = -1
                     linearKeys.forEach setFrame@{ linearFrameKeyPairsListConSrc ->
                         val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
                             EditComponent.Template.ReplaceHolder.replaceHolder(
                                 linearFrameKeyPairsListConSrc,
                                 frameTag,
-                                frameTag
+                                frameTag,
+                                frameTag,
+                                noIndexSign,
                             )
                         }
                         val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
@@ -472,8 +475,13 @@ object WithEditComponentListView{
                         fragment,
                     )
 
-                    val frameOrLinearCon = holder.keyPairListConMap.get(tag)
-                        ?: return
+                    val frameOrLinearCon = EditComponent.Template.ReplaceHolder.replaceHolder(
+                        holder.keyPairListConMap.get(tag),
+                        holder.srcTitle,
+                        holder.srcCon,
+                        holder.srcImage,
+                        listIndexPosition,
+                    ) ?: return
                     frameLayout.children.firstOrNull{
                         it is OutlineTextView
                     }?.let {

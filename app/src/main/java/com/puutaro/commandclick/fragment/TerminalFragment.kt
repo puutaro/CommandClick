@@ -104,7 +104,7 @@ class TerminalFragment:
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
-    var fannelIndexDialog: Dialog? = null
+    var editListDialog: Dialog? = null
 //    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
     var pocketWebViewManager: WebViewJsDialog? = null

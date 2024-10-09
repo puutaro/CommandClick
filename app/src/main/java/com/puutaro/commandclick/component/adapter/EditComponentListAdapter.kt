@@ -52,12 +52,9 @@ class EditComponentListAdapter(
     val busyboxExecutor: BusyboxExecutor?,
     val indexListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
-    private var fannelContentsList: List<String>?,
+    var fannelContentsList: List<String>?,
 ): RecyclerView.Adapter<EditComponentListAdapter.ListIndexListViewHolder>()
 {
-//    private val fannelInfoMap = editFragmentRef.get()?.fannelInfoMap ?: emptyMap()
-//    private val context = editFragmentRef.get()?.context
-//    private val activity = editFragment.activity
     private val context = fragment?.context
     private val maxTakeSize = 150
     private val listLimitSize = 300
@@ -72,7 +69,7 @@ class EditComponentListAdapter(
         CommandClickScriptVariable.CMD_SEC_START,
         CommandClickScriptVariable.CMD_SEC_END,
     )
-    val totalSettingValMap =
+    private val totalSettingValMap =
         (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
 //    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
 
@@ -113,17 +110,23 @@ class EditComponentListAdapter(
             null
         }
     }
-//    private val layoutType = LayoutSettingsForListIndex.decideLayoutType(
-//        layoutConfigMap
-//    )
-//    private var performMap: Map<String, String> = mapOf()
 
-//    val checkItemConfigMap = CmdClickMap.createMap(
-//        listIndexConfigMap.get(
-//            ListIndexEditConfig.ListIndexConfigKey.CHECK_ITEM.key
-//        ),
-//        '|'
-//    ).toMap()
+    fun getCurrentSettingVals(
+        settingValName: String,
+    ): String? {
+        val curSettingValsMap = RecordNumToMapNameValueInHolder.parse(
+            fannelContentsList,
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+        ) ?: emptyMap()
+        val curCmdValsMap = RecordNumToMapNameValueInHolder.parse(
+            fannelContentsList,
+            CommandClickScriptVariable.CMD_SEC_START,
+            CommandClickScriptVariable.CMD_SEC_END,
+        ) ?: emptyMap()
+        val totalSettingValsMap = curSettingValsMap + curCmdValsMap
+        return totalSettingValsMap.get(settingValName)
+    }
     private val viewLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
         fannelInfoMap,
         setReplaceVariableMap,
@@ -138,27 +141,7 @@ class EditComponentListAdapter(
     private val frameMap = frameMapListToLinearMapList?.first ?: emptyMap()
     private val frameTagToLinearKeysListMap = frameMapListToLinearMapList?.second ?: emptyMap()
     var deleteConfigMap: Map<String, String> = mapOf()
-//    private val qrDialogConfigMap =
-//        editFragmentRef.get()?.qrDialogConfig ?: mapOf()
-//    private val textImagePngBitMap = ImageAdapterTool.makeFileMarkBitMap(
-//        editFragmentRef.get()?.context,
-//        AssetsFileManager.textImagePingPath
-//    )
-//    private val qrLogoConfigMap = QrLogoSettingsForQrDialog.makeLogoConfigMap(
-//        qrDialogConfigMap
-//    )
-//    private val iconConfigMap =
-//        QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.makeIconConfigMap(
-//            qrLogoConfigMap
-//        )
-//    private val itemNameToNameColorConfigMap =
-//        QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.makeIconNameConfigMap(
-//            editFragmentRef.get()?.setReplaceVariableMap,
-//            fannelInfoMap,
-//            iconConfigMap,
-//        )
     private var recentAppDirPath = String()
-//    private var filterDir = String()
     private var filterPrefix = String()
     private var filterSuffix = String()
 
@@ -169,7 +152,6 @@ class EditComponentListAdapter(
     }
 
     class ListIndexListViewHolder(
-//        val activity: FragmentActivity?,
         val view: View
     ): RecyclerView.ViewHolder(view) {
         val materialCardView =
@@ -177,36 +159,9 @@ class EditComponentListAdapter(
                 com.puutaro.commandclick.R.id.edit_component_adapter_mterial_card_view
             )
         var keyPairListConMap: MutableMap<String, String?> = mutableMapOf()
-//        val editComponentLinearLayout =
-//            view.findViewById<LinearLayoutCompat>(
-//                com.puutaro.commandclick.R.id.edit_component_adapter_linearlayout
-//            )
-//        val fileContentsQrLogoLinearLayout =
-//            view.findViewById<RelativeLayout>(
-//                com.puutaro.commandclick.R.id.list_index_edit_adapter_logo_linearlayout
-//            )
-//        val fileContentsQrLogoView =
-//            view.findViewById<AppCompatImageView>(
-//                com.puutaro.commandclick.R.id.list_index_edit_adapter_contents
-//            )
-//        val qrLogoImageCaptionTextView =
-//            view.findViewById<MagicTextView>(
-//                com.puutaro.commandclick.R.id.list_index_edit_adapter_image_caption
-//            )
-//
-//        val rightLinearlayout =
-//            view.findViewById<LinearLayoutCompat>(
-//                com.puutaro.commandclick.R.id.list_index_edit_adapter_vertical_linearlayout
-//            )
-//        val fileNameTextView =
-//            view.findViewById<AppCompatTextView>(
-//                com.puutaro.commandclick.R.id.list_index_edit_adapter_file_name
-//            )
-//        val fileDescTextView =
-//            view.findViewById<AppCompatTextView>(
-//                com.puutaro.commandclick.R.id.list_index_edit_adapter_file_desc
-//            )
-        var fileName = String()
+        var srcTitle = String()
+        var srcCon = String()
+        var srcImage = String()
     }
 
     override fun getItemId(position: Int): Long {
@@ -225,7 +180,6 @@ class EditComponentListAdapter(
             false
         )
         return ListIndexListViewHolder(
-//            activity,
             itemView
         )
     }
@@ -247,11 +201,14 @@ class EditComponentListAdapter(
         ) return
         initListProperty(listIndexPosition)
         val lineMap = lineMapList[listIndexPosition]
-        val srcTitle = lineMap.get(
+        holder.srcTitle = lineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         ) ?: String()
-        val srcCon = lineMap.get(
+        holder.srcCon = lineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+        ) ?: String()
+        holder.srcImage = lineMap.get(
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_IMAGE.key
         ) ?: String()
         val frameTag = lineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
@@ -267,11 +224,17 @@ class EditComponentListAdapter(
             frameTag.isNullOrEmpty()
         ) return
         CoroutineScope(Dispatchers.IO).launch {
+            val frameKeyPairsConSrc = withContext(Dispatchers.IO) {
+                frameMap.get(frameTag)
+
+            }
             val frameKeyPairsCon = withContext(Dispatchers.IO) {
                 EditComponent.Template.ReplaceHolder.replaceHolder(
-                    frameMap.get(frameTag),
-                    srcTitle,
-                    srcCon
+                    frameKeyPairsConSrc,
+                    holder.srcTitle,
+                    holder.srcCon,
+                    holder.srcImage,
+                    holder.bindingAdapterPosition,
                 )
             }
             val frameKeyPairsList = withContext(Dispatchers.IO) {
@@ -280,15 +243,15 @@ class EditComponentListAdapter(
                     typeSeparator
                 )
             }
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
-                listOf(
-                    "indexListMap: ${indexListMap}",
-                    "frameMap: ${frameMap}",
-                    "frameKeyMap: ${frameKeyPairsList}",
-                    "linearMapList: ${frameTagToLinearKeysListMap}",
-                ).joinToString("\n\n")
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_inadapter.txt").absolutePath,
+//                listOf(
+//                    "indexListMap: ${indexListMap}",
+//                    "frameMap: ${frameMap}",
+//                    "frameKeyMap: ${frameKeyPairsList}",
+//                    "linearMapList: ${frameTagToLinearKeysListMap}",
+//                ).joinToString("\n\n")
+//            )
             val materialCardView = withContext(Dispatchers.Main) {
                 holder.materialCardView.apply {
                     removeAllViews()
@@ -348,7 +311,7 @@ class EditComponentListAdapter(
                         }
                         holder.keyPairListConMap.put(
                             frameTag,
-                            frameKeyPairsCon
+                            frameKeyPairsConSrc
                         )
                         val outValue = TypedValue()
                         context.theme.resolveAttribute(
@@ -423,8 +386,10 @@ class EditComponentListAdapter(
                         val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
                             EditComponent.Template.ReplaceHolder.replaceHolder(
                                 linearFrameKeyPairsListConSrc,
-                                srcTitle,
-                                srcCon
+                                holder.srcTitle,
+                                holder.srcCon,
+                                holder.srcImage,
+                                holder.bindingAdapterPosition,
                             )
                         }
                         val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
@@ -540,120 +505,8 @@ class EditComponentListAdapter(
                 materialCardView.addView(baseLinearLayout)
 
             }
-
-//            withContext(Dispatchers.Main) {
-//                ListIndexEditConfig.setCheckToMaterialCardView(
-//                    holder.materialCardView,
-//                    checkItemConfigMap,
-//                    lineMapList,
-//                    listIndexPosition,
-//                )
-//            }
-//
-//            val fileNameOrInstallFannelLine =
-//                lineMapList.getOrNull(listIndexPosition)
-//                    ?: return@launch
-//            holder.fileName = FannelListVariable.getFannelName(
-//                fileNameOrInstallFannelLine
-//            )
-//            val fileNameText = withContext(Dispatchers.Main) {
-//                ListIndexEditConfig.makeFileNameText(
-////                    listIndexTypeKey,
-//                    holder.fileNameTextView,
-//                    holder.fileName,
-//                    listIndexConfigMap,
-//                    busyboxExecutor,
-//                )
-//            }
-//            val fileConList = makeFileConList(holder.fileName)
-//            withContext(Dispatchers.Main){
-//                holder.rightLinearlayout.isVisible = false
-//                if(
-//                    fileNameText.isNullOrEmpty()
-//                ) return@withContext
-//                holder.qrLogoImageCaptionTextView.isVisible = true
-//                holder.qrLogoImageCaptionTextView.text = fileNameText
-//            }
-//            when(layoutType){
-//                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR -> {
-//                    withContext(Dispatchers.Main){
-//                        if(
-//                            fileNameText.isNullOrEmpty()
-//                        ) return@withContext
-//                        holder.fileNameTextView?.text = fileNameText
-//                    }
-//                    setDescView(
-//                        holder.fileDescTextView,
-//                        fileNameOrInstallFannelLine,
-//                        fileConList.joinToString("\n"),
-//                    )
-//                }
-//                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID -> {
-//                    withContext(Dispatchers.Main){
-//                        holder.rightLinearlayout.isVisible = false
-//                        if(
-//                            fileNameText.isNullOrEmpty()
-//                        ) return@withContext
-//                        holder.qrLogoImageCaptionTextView.isVisible = true
-//                        holder.qrLogoImageCaptionTextView.text = fileNameText
-//                    }
-//                }
-//            }
-            val fileConBackGroundColorInt = withContext(Dispatchers.IO) {
-                val editExecuteValueForInstallFannel = String()
-//                    when(
-//                    listIndexTypeKey
-//                ){
-//                    TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-//                    -> FannelListVariable.getEditExecute(
-//                        fileNameOrInstallFannelLine
-//                    )
-//                    else -> String()
-//                }
-//                setFileContentsBackColor(
-//                    fileConList,
-////                    fileNameOrInstallFannelLine,
-//                    editExecuteValueForInstallFannel,
-//                )
-            }
-
-//            withContext(Dispatchers.Main) {
-//                context?.let {
-//                    holder.fileContentsQrLogoLinearLayout.backgroundTintList =
-//                        it.getColorStateList(fileConBackGroundColorInt)
-//                }
-//            }
-//            withContext(Dispatchers.Main) {
-//                QrLogoSettingsForQrDialog.OneSideLength.setLayout(
-//                    editFragmentRef.get(),
-//                    holder.baseLinearLayout,
-//                    holder.materialCardView,
-//                    holder.fileContentsQrLogoLinearLayout,
-//                    qrLogoConfigMap,
-////                    layoutType
-//                )
-//            }
-//            withContext(Dispatchers.Main) {
-//                val disableQrLogo =
-//                    QrLogoSettingsForQrDialog.Disable.how(qrLogoConfigMap)
-//                if(
-//                    disableQrLogo
-//                ) return@withContext
-//                qrLogoSetHandler(
-//                    holder,
-//                    recentAppDirPath,
-//                )
-//            }
             withContext(Dispatchers.Main) {
                 val itemView = holder.itemView
-//                itemView.setOnLongClickListener {
-//                    itemLongClickListener?.onItemLongClick(
-//                        itemView,
-//                        holder,
-//                        listIndexPosition
-//                    )
-//                    true
-//                }
                 itemView.setOnClickListener {
                     editAdapterClickListener?.onEditAdapterClick(
                         itemView,
@@ -661,22 +514,6 @@ class EditComponentListAdapter(
                         listIndexPosition,
                     )
                 }
-//                val fileContentsQrLogoView = holder.fileContentsQrLogoView
-//                fileContentsQrLogoView.setOnClickListener {
-//                    fileQrLogoClickListener?.onFileQrLogoClick(
-//                        itemView,
-//                        holder,
-//                        listIndexPosition
-//                    )
-//                }
-//                fileContentsQrLogoView.setOnLongClickListener {
-//                    qrLongClickListener?.onQrLongClick(
-//                        fileContentsQrLogoView,
-//                        holder,
-//                        listIndexPosition
-//                    )
-//                    true
-//                }
             }
         }
     }
@@ -895,6 +732,13 @@ class EditComponentListAdapter(
         )
     }
 
+    fun saveFannelCon() {
+        MainFannelUpdater.execSaveFannelCon(
+            fannelInfoMap,
+            fannelContentsList
+        )
+    }
+
 
     private object MainFannelUpdater {
 
@@ -914,6 +758,19 @@ class EditComponentListAdapter(
                 EditComponent.Template.EditComponentKey.ON_SAVE.key,
             ) == EditComponent.Template.switchOn
             if (!isSave) return
+            execSaveFannelCon(
+                fannelInfoMap,
+                saveFannelConList,
+            )
+        }
+
+        fun execSaveFannelCon(
+            fannelInfoMap: Map<String, String>,
+            saveFannelConList: List<String>?,
+        ){
+            if(
+                saveFannelConList.isNullOrEmpty()
+            ) return
             val fannelPath = FannelInfoTool.getCurrentFannelName(fannelInfoMap).let {
                 File(UsePath.cmdclickDefaultAppDirPath, it)
             }

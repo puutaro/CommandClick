@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
+import java.io.File
 
 object LayoutSettingFile {
 
@@ -10,12 +13,18 @@ object LayoutSettingFile {
         setReplaceVariableCompleteMap: Map<String, String>?,
         onImport: Boolean = true
     ): List<String> {
-        return SettingFile.read(
+        return SettingFile.readLayout(
             settingFilePath,
             fannelPath,
             setReplaceVariableCompleteMap,
             onImport
         ).let {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "layoutSettingFile.txt").absolutePath,
+//                listOf(
+//                    "settingFile: ${it}",
+//                ).joinToString("\n") + "\n------\n"
+//            )
             QuoteTool.layoutSplitBySurroundedIgnore(
                 it,
             )

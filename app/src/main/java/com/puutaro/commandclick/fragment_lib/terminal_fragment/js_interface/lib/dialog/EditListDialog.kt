@@ -53,37 +53,37 @@ class EditListDialog(
         val context = terminalFragment.context
             ?: return
 
-        terminalFragment.fannelIndexDialog = Dialog(context)
-        terminalFragment.fannelIndexDialog?.setContentView(
+        terminalFragment.editListDialog = Dialog(context)
+        terminalFragment.editListDialog?.setContentView(
             R.layout.edit_list_dialog_layout
         ) ?: return
         val constraintLayout =
-            terminalFragment.fannelIndexDialog?.findViewById<ConstraintLayout>(
+            terminalFragment.editListDialog?.findViewById<ConstraintLayout>(
                 R.id.edit_list_dialog_constraint_layout
             ) ?: return
         val editListTitleView =
-            terminalFragment.fannelIndexDialog?.findViewById<AppCompatTextView>(
+            terminalFragment.editListDialog?.findViewById<AppCompatTextView>(
                 R.id.edit_list_dialog_title_view
             ) ?: return
         val editListTitleImage =
-            terminalFragment.fannelIndexDialog?.findViewById<AppCompatImageView>(
+            terminalFragment.editListDialog?.findViewById<AppCompatImageView>(
                 R.id.edit_list_dialog_title_image
             ) ?: return
         val editListRecyclerView =
-            terminalFragment.fannelIndexDialog?.findViewById<RecyclerView>(
+            terminalFragment.editListDialog?.findViewById<RecyclerView>(
                 R.id.edit_list_dialog_recycler_view
             ) ?: return
         val editListBkFrame =
-            terminalFragment.fannelIndexDialog?.findViewById<FrameLayout>(
+            terminalFragment.editListDialog?.findViewById<FrameLayout>(
                 R.id.edit_list_bk_frame
             ) ?: return
 
         val editListSearchEditText =
-            terminalFragment.fannelIndexDialog?.findViewById<AppCompatEditText>(
+            terminalFragment.editListDialog?.findViewById<AppCompatEditText>(
                 R.id.edit_list_dialog_search_edit_text
             ) ?: return
         val editFooterLinearlayout =
-            terminalFragment.fannelIndexDialog?.findViewById<LinearLayoutCompat>(
+            terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
                 R.id.edit_list_dialog_footer_linearlayout
             ) ?: return
 
@@ -135,36 +135,36 @@ class EditListDialog(
             editFooterLinearlayout,
             mainFannelConList,
         )
-        terminalFragment.fannelIndexDialog?.setOnCancelListener {
+        terminalFragment.editListDialog?.setOnCancelListener {
             editListRecyclerView.removeAllViews()
             editFooterLinearlayout.removeAllViews()
             editListBkFrame.removeAllViews()
             constraintLayout.removeAllViews()
-            terminalFragment.fannelIndexDialog?.dismiss()
-            terminalFragment.fannelIndexDialog = null
+            terminalFragment.editListDialog?.dismiss()
+            terminalFragment.editListDialog = null
         }
-        terminalFragment.fannelIndexDialog?.window?.setLayout(
+        terminalFragment.editListDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        terminalFragment.fannelIndexDialog?.show()
+        terminalFragment.editListDialog?.show()
     }
 
     fun dismiss(){
         val constraintLayout =
-            terminalFragmentRef.get()?.fannelIndexDialog?.findViewById<ConstraintLayout>(
+            terminalFragmentRef.get()?.editListDialog?.findViewById<ConstraintLayout>(
                 R.id.edit_list_dialog_constraint_layout
             )
         val editListRecyclerView =
-            terminalFragmentRef.get()?.fannelIndexDialog?.findViewById<RecyclerView>(
+            terminalFragmentRef.get()?.editListDialog?.findViewById<RecyclerView>(
                 R.id.edit_list_dialog_recycler_view
             )
         val editListBkFrame =
-            terminalFragmentRef.get()?.fannelIndexDialog?.findViewById<FrameLayout>(
+            terminalFragmentRef.get()?.editListDialog?.findViewById<FrameLayout>(
                 R.id.edit_list_bk_frame
             )
         val editFooterLinearlayout =
-            terminalFragmentRef.get()?.fannelIndexDialog?.findViewById<LinearLayoutCompat>(
+            terminalFragmentRef.get()?.editListDialog?.findViewById<LinearLayoutCompat>(
                 R.id.edit_list_dialog_footer_linearlayout
             )
         editListRecyclerView?.removeAllViews()
@@ -172,7 +172,7 @@ class EditListDialog(
         editListBkFrame?.removeAllViews()
         constraintLayout?.removeAllViews()
         val terminalFragment = terminalFragmentRef.get()
-        terminalFragment?.fannelIndexDialog?.dismiss()
-        terminalFragment?.fannelIndexDialog = null
+        terminalFragment?.editListDialog?.dismiss()
+        terminalFragment?.editListDialog = null
     }
 }
