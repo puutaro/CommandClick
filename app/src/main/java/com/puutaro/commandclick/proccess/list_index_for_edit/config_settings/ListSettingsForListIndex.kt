@@ -63,24 +63,10 @@ object ListSettingsForListIndex  {
                 Map<String, String >,
                 Map<String, List< List<String> > >,
                 >?
-//                Triple<
-//                Map<String,List<Pair<String, String>> >,
-//                Map<String, List< List<String> > >,
-//                Map<String, List< List<List<Pair<String, String>>> > >,
-//                >?
         {
             var curFrameTag = String()
-//            val framePairList: MutableList< Pair<String, List<Pair<String, String>> > > = mutableListOf()
             val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
             val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
-//            val linearPairList: MutableList< Pair<String, List<List<Pair<String, String>>> > > = mutableListOf()
-
-//            val viewLayoutPath = FilePrefixGetter.get(
-//                fannelInfoMap,
-//                setReplaceVariableMap,
-//                indexListMap,
-//                ListSettingKey.VIEW_LAYOUT_PATH.key,
-//            ) ?: String()
             val viewLayoutPathObj = File(viewLayoutPath)
             if(
                 !viewLayoutPathObj.isFile
@@ -176,83 +162,7 @@ object ListSettingsForListIndex  {
                     else -> {}
                 }
             }
-//                val layoutTypePairList =
-//                    smallLayoutMapConList
-//                        .filterIndexed { innerIndex, _ ->  innerIndex > 0 }
-//                        .joinToString("=")
-//                        .let {
-//                            val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
-//                            val sectionConList = QuoteTool.splitBySurroundedIgnore(
-//                                trimSectionCon,
-//                                sectionSeparator
-//                            ).filter {
-//                                it.isNotEmpty()
-//                            }
-////                            FileSystems.updateFile(
-////                                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop.txt").absolutePath,
-////                                listOf(
-////                                    "layoutKey: ${layoutKey}",
-////                                    "trimSectionCon: ${trimSectionCon}",
-////                                    "sectionConList: ${sectionConList}",
-////                                    "sectionConList0: ${sectionConList.firstOrNull()}",
-////                                ).joinToString("\n") + "\n----\n"
-////                            )
-//                            sectionConList.map {
-//                                sectionCon ->
-////                                FileSystems.updateFile(
-////                                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_loop2.txt").absolutePath,
-////                                    listOf(
-////                                        "layoutKey: ${layoutKey}",
-////                                        "trimSectionCon: ${trimSectionCon}",
-////                                        "sectionConList: ${sectionConList}",
-////                                        "sectionConList0: ${sectionConList.firstOrNull()}",
-////                                    ).joinToString("\n") + "\n----\n"
-////                                )
-//                                CmdClickMap.createMap(
-//                                    sectionCon,
-//                                    typeSeparator
-//                                ).filter {
-//                                    it.first.isNotEmpty()
-//                                }
-//                            }
-//                        }
 
-
-//                when(true) {
-//                    (layoutKey == frameTypeName) -> {
-//                        val frameLayoutKeyPairList =
-//                            layoutTypePairList.firstOrNull()
-//                                ?: emptyList()
-//                        val tag =
-//                            frameLayoutKeyPairList.firstOrNull {
-//                                val key = it.first
-//                                key == tagKey
-//                            }?.second.let {
-//                                QuoteTool.trimBothEdgeQuote(it)
-//                            }
-//                        curFrameTag = tag
-//                        val frameTagToCon = Pair(
-//                            curFrameTag,
-//                            frameLayoutKeyPairList
-//                        )
-//                        if(
-//                            frameTagToCon.first.isEmpty()
-//                        ) return@forEachIndexed
-//                        framePairList.add(frameTagToCon)
-//                    }
-//                    (layoutKey == liearTypeName) -> {
-//                        val frameTagToLinearKeyPairList = Pair(
-//                            curFrameTag,
-//                            layoutTypePairList
-//                        )
-//                        if(
-//                            frameTagToLinearKeyPairList.first.isEmpty()
-//                        ) return@forEachIndexed
-//                        linearPairList.add(frameTagToLinearKeyPairList)
-//                    }
-//                    else -> {}
-//                }
-//            }
             val frameTagList = mutableListOf<String>()
             linearPairConList.forEach {
                 val frameTag = it.first
@@ -269,31 +179,21 @@ object ListSettingsForListIndex  {
                     it.second
                 }
             }.toMap()
-//            val frameTagToLinearKeysListMap = frameTagList.map {
-//                frameTag ->
-//                frameTag to linearPairList.filter {
-//                    it.first == frameTag
-//                }.map {
-//                    it.second
-//                }
-//            }.toMap()
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
-                listOf(
-//                    "layoutKey: ${layoutKey}",
-                    "framePairsConList: ${framePairsConList}",
-                    "linearPairConList: ${linearPairConList}",
-                    "\npair: ${Pair(
-                        framePairsConList.toMap(),
-                        frameTagToLinearPairConListMap,
-//                frameTagToLinearKeysListMap
-                    )}"
-                ).joinToString("\n") + "\n----\n"
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
+//                listOf(
+////                    "layoutKey: ${layoutKey}",
+//                    "framePairsConList: ${framePairsConList}",
+//                    "linearPairConList: ${linearPairConList}",
+//                    "\npair: ${Pair(
+//                        framePairsConList.toMap(),
+//                        frameTagToLinearPairConListMap,
+//                    )}"
+//                ).joinToString("\n") + "\n----\n"
+//            )
             return Pair(
                 framePairsConList.toMap(),
                 frameTagToLinearPairConListMap,
-//                frameTagToLinearKeysListMap
             )
         }
     }

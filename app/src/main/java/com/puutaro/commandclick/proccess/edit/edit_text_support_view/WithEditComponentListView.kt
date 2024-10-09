@@ -217,6 +217,7 @@ object WithEditComponentListView{
                 setReplaceVariableMap,
                 busyboxExecutor,
                 editFooterLinearlayout,
+                editListRecyclerView,
                 listIndexConfigMap,
             )
         }
@@ -249,6 +250,7 @@ object WithEditComponentListView{
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editFooterLinearlayout: LinearLayoutCompat,
+        editListRecyclerView: RecyclerView,
         listIndexConfigMap: Map<String, String>?,
     ) {
         val context = fragment.context
@@ -312,6 +314,8 @@ object WithEditComponentListView{
                                 tagKey,
                             ) ?: String()
                         }
+                        val editComponentListAdapter =
+                            editListRecyclerView.adapter as? EditComponentListAdapter
                         val linearFrameLayout = EditFrameMaker.make(
                             context,
                             fannelInfoMap,
@@ -322,7 +326,7 @@ object WithEditComponentListView{
                             layoutWeight,
                             linearFrameTag,
                             false,
-                            null
+                            editComponentListAdapter?.totalSettingValMap,
                         ) ?: return@setFrame
                         val linearKeyList = JsActionKeyManager.JsActionsKey.values().map {
                             it.key
@@ -364,6 +368,7 @@ object WithEditComponentListView{
                                             fragment,
                                             fannelInfoMap,
                                             setReplaceVariableMap,
+                                            editListRecyclerView,
                                             linearFrameKeyPairsListCon
                                         )
                                     }
@@ -384,6 +389,7 @@ object WithEditComponentListView{
                                                                 fragment,
                                                                 fannelInfoMap,
                                                                 setReplaceVariableMap,
+                                                                editListRecyclerView,
                                                                 linearFrameKeyPairsListCon
                                                             )
                                                         }
@@ -421,12 +427,19 @@ object WithEditComponentListView{
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView?,
         jsAcCon: String,
     ){
         val mainFannelPath = File(
             UsePath.cmdclickDefaultAppDirPath,
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
+        val editComponentListAdapter = editListRecyclerView?.adapter as? EditComponentListAdapter
+        EditComponentListAdapter.MainFannelUpdater.saveFannelCon(
+            editComponentListAdapter?.fannelContentsList,
+            fannelInfoMap,
+            jsAcCon
+        )
         val jsActionMap = JsActionTool.makeJsActionMap(
             fragment,
             fannelInfoMap,

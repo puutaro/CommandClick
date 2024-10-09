@@ -32,6 +32,7 @@ import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.MapListFileTool
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -69,7 +70,7 @@ class EditComponentListAdapter(
         CommandClickScriptVariable.CMD_SEC_START,
         CommandClickScriptVariable.CMD_SEC_END,
     )
-    private val totalSettingValMap =
+    val totalSettingValMap =
         (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
 //    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
 
@@ -694,6 +695,7 @@ class EditComponentListAdapter(
                     updateFannelList ->
                 if(
                     updateFannelList.isNullOrEmpty()
+                    || fannelContentsList == updateFannelList
                 ) return@updateFannel
                 fannelContentsList = updateFannelList
             }
@@ -710,6 +712,7 @@ class EditComponentListAdapter(
                     updateFannelList ->
                 if(
                     updateFannelList.isNullOrEmpty()
+                    || fannelContentsList == updateFannelList
                 ) return@updateFannel
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lclickUpdate.txt").absolutePath,
@@ -740,7 +743,7 @@ class EditComponentListAdapter(
     }
 
 
-    private object MainFannelUpdater {
+    object MainFannelUpdater {
 
         fun saveFannelCon(
             saveFannelConList: List<String>?,
@@ -771,11 +774,14 @@ class EditComponentListAdapter(
             if(
                 saveFannelConList.isNullOrEmpty()
             ) return
-            val fannelPath = FannelInfoTool.getCurrentFannelName(fannelInfoMap).let {
+            val fannelFile = FannelInfoTool.getCurrentFannelName(fannelInfoMap).let {
                 File(UsePath.cmdclickDefaultAppDirPath, it)
             }
+            if(
+                ReadText(fannelFile.absolutePath).textToList() == saveFannelConList
+            ) return
             FileSystems.writeFile(
-                fannelPath.absolutePath,
+                fannelFile.absolutePath,
                 saveFannelConList.joinToString("\n")
             )
         }
