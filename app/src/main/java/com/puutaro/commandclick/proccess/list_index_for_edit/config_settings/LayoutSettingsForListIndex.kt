@@ -122,44 +122,11 @@ object LayoutSettingsForListIndex {
         editListRecyclerView: RecyclerView,
         isReverseLayout: Boolean,
     ){
-//        val isToTop = howToTop(layoutConfigMap)
-//        val height = when(isToTop){
-//            true -> 0
-//            else -> ViewGroup.LayoutParams.WRAP_CONTENT
-//        }
-//        val constraintLayoutParam = ConstraintLayout.LayoutParams(
-//            0,
-//            0
-//        )
-////        if(
-////            isToTop
-////        ) {
-//            constraintLayoutParam.topToBottom = R.id.editTextView
-////        }
-//        constraintLayoutParam.startToStart = ConstraintSet.PARENT_ID
-//        constraintLayoutParam.endToEnd = ConstraintSet.PARENT_ID
-//        constraintLayoutParam.bottomToTop = R.id.edit_list_search_edit_text
-//        editListRecyclerView.layoutParams = constraintLayoutParam
-
         editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
             context,
             decideColNum(layoutConfigMap),
             isReverseLayout
         )
-//        val layoutType = decideLayoutType(layoutConfigMap)
-//        when(layoutType){
-//            LayoutTypeValueStr.LINEAR ->
-//                editListRecyclerView.layoutManager = PreLoadLayoutManager(
-//                    context,
-//                    isReverseLayout,
-//                )
-//            LayoutTypeValueStr.GRID ->
-//                editListRecyclerView.layoutManager = PreLoadGridLayoutManager(
-//                    context,
-//                    decideColNum(layoutConfigMap),
-//                    isReverseLayout
-//                )
-//        }
     }
 
 //    private fun howToTop(

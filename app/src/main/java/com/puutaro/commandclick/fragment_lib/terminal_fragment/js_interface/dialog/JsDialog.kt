@@ -19,6 +19,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.OnlyImageGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.OnlySpannableGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -95,6 +96,10 @@ class JsDialog(
 
     private val editListDialog = EditListDialog(
         terminalFragmentRef
+    )
+
+    private val promptWithListDialog = PromptWithListDialog(
+        terminalFragmentRef,
     )
 
     @JavascriptInterface
@@ -450,6 +455,15 @@ class JsDialog(
         editListDialog.create(
             fannelInfoCon,
             listIndexConfigPath,
+        )
+    }
+
+    @JavascriptInterface
+    fun promptWithList(
+        suggestOrDefoTxtVars: String
+    ): String {
+        return promptWithListDialog.create(
+            suggestOrDefoTxtVars
         )
     }
 }
