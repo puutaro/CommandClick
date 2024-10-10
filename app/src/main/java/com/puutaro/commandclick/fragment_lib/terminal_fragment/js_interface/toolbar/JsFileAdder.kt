@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -99,7 +99,7 @@ class JsFileAdder(
 //        val type = ListIndexEditConfig.getListIndexType(
 //            editFragment
 //        )
-        execAddForTsv(
+        execAddForMapList(
             editFragment,
             fileName,
             compFileNameMapCon,
@@ -176,7 +176,7 @@ class JsFileAdder(
 //        }
 //    }
 
-    private fun execAddForTsv(
+    private fun execAddForMapList(
         editFragment: EditFragment,
         fileName: String,
         compFileNameMapCon: String,
@@ -204,7 +204,7 @@ class JsFileAdder(
             FilePrefixGetter.get(
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
-                editComponentListAdapter.indexListMap,
+                editComponentListAdapter.editListMap,
                 ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
         ListIndexDuplicate.isTsvDetect(
@@ -217,7 +217,11 @@ class JsFileAdder(
                 isDetect
             ) return
         }
-        val insertLine = "${title}\t${compFilePath}"
+//        val insertLine = "${title}\t${compFilePath}"
+        val insertLineMap = mapOf(
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to title,
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to compFilePath,
+        )
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "add_makeCompfileName.txt").absolutePath,
 //            listOf(
@@ -231,12 +235,12 @@ class JsFileAdder(
 //            ).joinToString("\n\n\n")
 //        )
         val editContext = editFragment.context ?: return
-        ExecAddForListIndexAdapter.execAddForTsv(
+        ExecAddForEditListAdapter.execAddForEditList(
             editContext,
             editFragment.fannelInfoMap,
             editFragment.setReplaceVariableMap,
             editFragment.binding.editListRecyclerView,
-            insertLine,
+            insertLineMap,
         )
     }
 

@@ -83,7 +83,7 @@ object ExecSimpleEditItem {
         val tsvPath = FilePrefixGetter.get(
             editComponentListAdapter.fannelInfoMap,
             editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.indexListMap,
+            editComponentListAdapter.editListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return
         val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator

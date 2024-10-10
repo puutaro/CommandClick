@@ -121,7 +121,7 @@ object BroadcastHandlerForTerm {
                     ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                         editComponentListAdapter.fannelInfoMap,
                         editComponentListAdapter.setReplaceVariableMap,
-                        editComponentListAdapter.indexListMap,
+                        editComponentListAdapter.editListMap,
                         editComponentListAdapter.busyboxExecutor,
                     )
                 )

@@ -11,12 +11,13 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
@@ -173,18 +174,26 @@ object UrlHistoryAddToTsv {
             val menuListAdapter = urlHistoryToTsvListView.adapter as SubMenuAdapter
             val selectedTitle = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
-            val selectedUrlHistoryLine = takeFromUrlHistoryList(
+            val selectedUrlHistoryLineMap = takeFromUrlHistoryList(
                 editFragment,
                 jsActionMap,
             ).find {
                 it.startsWith(selectedTitle)
+            }?.let {
+                val titleAndConList = it.split("\t")
+                val title = titleAndConList.firstOrNull() ?: return@setOnItemClickListener
+                val con = titleAndConList.getOrNull(1) ?: return@setOnItemClickListener
+                mapOf(
+                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to title,
+                    ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to con
+                )
             } ?: return@setOnItemClickListener
-            ExecAddForListIndexAdapter.execAddForTsv(
+            ExecAddForEditListAdapter.execAddForEditList(
                 editFragment.context,
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
                 editFragment.binding.editListRecyclerView,
-                selectedUrlHistoryLine
+                selectedUrlHistoryLineMap
             )
             urlHistoryToTsvDialog?.dismiss()
             urlHistoryToTsvDialog = null

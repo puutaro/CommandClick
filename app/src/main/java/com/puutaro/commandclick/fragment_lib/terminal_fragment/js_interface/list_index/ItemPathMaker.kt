@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
-import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -80,7 +79,7 @@ object ItemPathMaker {
         val mapListPath = FilePrefixGetter.get(
             editComponentListAdapter.fannelInfoMap,
             editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.indexListMap,
+            editComponentListAdapter.editListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return null
         val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator

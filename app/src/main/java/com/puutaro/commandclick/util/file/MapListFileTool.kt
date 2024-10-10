@@ -13,11 +13,11 @@ object MapListFileTool {
         if (
             mapListFilePath.isNullOrEmpty()
         ) return
-        val separatorStr = separator.toString()
         val saveMapListCon = mapList.map { lineMap ->
-            lineMap.map {
-                "${it.key}=${it.value}"
-            }.joinToString(separatorStr)
+            convertLineMapToLine(
+                lineMap,
+                separator
+            )
         }.joinToString("\n")
         val curMapListCon = ReadText(mapListFilePath).readText()
         if (
@@ -58,9 +58,10 @@ object MapListFileTool {
         }
         val updateMapListCon = updateMapList.map {
             lineMap ->
-            lineMap.map {
-                "${it.key}=${it.value}"
-            }.joinToString(mapListSeparator.toString())
+            convertLineMapToLine(
+                lineMap,
+                mapListSeparator
+            )
         }.joinToString("\n")
         FileSystems.writeFile(
             mapListPath,
@@ -99,9 +100,10 @@ object MapListFileTool {
         FileSystems.writeFile(
             mapListPath,
             replaceTsvConList.map { lineMap ->
-                lineMap.map {
-                    "${it.key}=${it.value}"
-                }.joinToString(mapListSeparator.toString())
+                convertLineMapToLine(
+                    lineMap,
+                    mapListSeparator
+                )
             }.joinToString("\n")
         )
     }
@@ -125,9 +127,10 @@ object MapListFileTool {
             !removeItemLineMapList.contains(it)
         }.map{
             lineMap ->
-            lineMap.map {
-                "${it.key}=${it.value}"
-            }.joinToString(mapListSeparator.toString())
+            convertLineMapToLine(
+                lineMap,
+                mapListSeparator
+            )
         }.joinToString("\n")
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "remove.txt").absolutePath,
@@ -142,5 +145,35 @@ object MapListFileTool {
             tsvPath,
             removeTsvCon
         )
+    }
+
+    fun insertByLastUpdate(
+        mapListPath: String,
+        insertLineMap: Map<String, String>,
+    ){
+        val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        val insertLine = convertLineMapToLine(
+            insertLineMap,
+            mapListSeparator
+        )
+        val updateTsvCon = listOf(
+            insertLine,
+            ReadText(mapListPath).readText(),
+        ).joinToString("\n")
+        FileSystems.writeFile(
+            mapListPath,
+            updateTsvCon
+        )
+    }
+
+    private fun convertLineMapToLine(
+        lineMap: Map<String, String>,
+        separator: Char,
+    ): String {
+        val separatorStr = separator.toString()
+        return lineMap.map {
+                lineMapEntry ->
+            "${lineMapEntry.key}=${lineMapEntry.value}"
+        }.joinToString(separatorStr)
     }
 }

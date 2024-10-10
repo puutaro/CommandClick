@@ -29,13 +29,13 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -397,14 +397,17 @@ object QrScanner{
             ).absolutePath,
             decodeText,
         )
-        val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
+        val insertLineMap =  mapOf(
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to compFileName,
+            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to File(parentDirPath, compFileName).absolutePath
+        )
         withContext(Dispatchers.Main) {
-            ExecAddForListIndexAdapter.execAddForTsv(
+            ExecAddForEditListAdapter.execAddForEditList(
                 fragment.context,
                 fragment.fannelInfoMap,
                 fragment.setReplaceVariableMap,
                 fragment.binding.editListRecyclerView,
-                insertLine
+                insertLineMap
             )
         }
 //        when(type){

@@ -8,6 +8,7 @@ import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -18,17 +19,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-object ExecAddForListIndexAdapter {
+object ExecAddForEditListAdapter {
 
     private fun getInsertIndex(
         sortType: ListSettingsForListIndex.SortByKey,
         listIndexForEditAdapter: EditComponentListAdapter,
-        addLine: String,
+        addLineMap: Map<String, String>,
     ): Int {
-        val addLineMap = CmdClickMap.createMap(
-            addLine,
-            ListSettingsForListIndex.MapListPathManager.mapListSeparator
-        ).toMap()
+//        val addLineMap = CmdClickMap.createMap(
+//            addLine,
+//            ListSettingsForListIndex.MapListPathManager.mapListSeparator
+//        ).toMap()
         val virtualListIndexList =
             listIndexForEditAdapter.lineMapList +
                     listOf(addLineMap)
@@ -48,17 +49,17 @@ object ExecAddForListIndexAdapter {
 //        editFragment: EditFragment,
         editListRecyclerView: RecyclerView,
 //        editComponentListAdapter: EditComponentListAdapter,
-        addLine: String,
+        addLineMap: Map<String, String>,
         insertIndex: Int,
     ){
 //        val binding = editFragment.binding
 //        val editListRecyclerView = binding.editListRecyclerView
         val editComponentListAdapter =
             editListRecyclerView.adapter as EditComponentListAdapter
-        val addLineMap = CmdClickMap.createMap(
-            addLine,
-            ListSettingsForListIndex.MapListPathManager.mapListSeparator
-        ).toMap()
+//        val addLineMap = CmdClickMap.createMap(
+//            addLineMap,
+//            ListSettingsForListIndex.MapListPathManager.mapListSeparator
+//        ).toMap()
         editComponentListAdapter.lineMapList.add(insertIndex, addLineMap)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -178,7 +179,7 @@ object ExecAddForListIndexAdapter {
             FilePrefixGetter.get(
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
-                editComponentAdapter.indexListMap,
+                editComponentAdapter.editListMap,
                 ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
         if(
@@ -211,22 +212,22 @@ object ExecAddForListIndexAdapter {
     }
 
 
-    fun execAddForTsv(
+    fun execAddForEditList(
         context: Context?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
 //        editComponentListAdapter: EditComponentListAdapter,
-        insertLine: String,
+        insertLineMap: Map<String, String>,
     ){
 //        val context = editFragment.context
         val editComponentListAdapter =
             editListRecyclerView.adapter as EditComponentListAdapter
-        val tsvPath =
+        val mapListPath =
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
-                editComponentListAdapter.indexListMap,
+                editComponentListAdapter.editListMap,
                 ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
 //        FileSystems.writeFile(
@@ -238,47 +239,59 @@ object ExecAddForListIndexAdapter {
 //            ).joinToString("\n\n\n")
 //        )
         if(
-            tsvPath.trim().isEmpty()
+            mapListPath.trim().isEmpty()
         ) {
             ToastUtils.showShort("Retry unexpected err")
             return
         }
         if(
-            tsvPath.trim().isEmpty()
+            mapListPath.trim().isEmpty()
         ) {
             ToastUtils.showShort("Already exist")
             return
         }
-        val titleAndCon = insertLine.split("\t")
-        val title = titleAndCon.firstOrNull()?.trim() ?: String()
-        val con = titleAndCon.getOrNull(1)?.trim() ?: String()
-        ListIndexDuplicate.isTsvDetect(
-            tsvPath,
-            title,
-            con
-        ).let {
-                isDetect ->
+//        val title = insertLineMap.get(
+//            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+//        ) ?: String()
+//        val con = insertLineMap.get(
+//            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+//        ) ?: String()
+        editComponentListAdapter.lineMapList.contains(insertLineMap).let {
+                isDuplidate ->
             if(
-                isDetect
+                isDuplidate
             ) return
         }
+//        ListIndexDuplicate.isTsvDetect(
+//            mapListPath,
+//            title,
+//            con
+//        ).let {
+//                isDetect ->
+//            if(
+//                isDetect
+//            ) return
+//        }
 //        val editComponentAdapter =
 //            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val sortType = ListSettingsForListIndex.getSortType(
             editComponentListAdapter.fannelInfoMap,
             editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.indexListMap
+            editComponentListAdapter.editListMap
         )
         val insertIndex = getInsertIndex(
             sortType,
             editComponentListAdapter,
-            insertLine,
+            insertLineMap,
         )
-
-        TsvTool.insertByLastUpdate(
-            tsvPath,
-            insertLine
+        MapListFileTool.insertByLastUpdate(
+            mapListPath,
+            insertLineMap,
         )
+//        TsvTool.insertByLastUpdate(
+//            mapListPath,
+//            insertLine
+//        )
         when(sortType){
             ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
                 CoroutineScope(Dispatchers.Main).launch {
@@ -295,9 +308,8 @@ object ExecAddForListIndexAdapter {
             ListSettingsForListIndex.SortByKey.SORT,
             ListSettingsForListIndex.SortByKey.REVERSE ->
                 listUpdateByInsertItem(
-//                    editFragment,
                     editListRecyclerView,
-                    insertLine,
+                    insertLineMap,
                     insertIndex
                 )
         }

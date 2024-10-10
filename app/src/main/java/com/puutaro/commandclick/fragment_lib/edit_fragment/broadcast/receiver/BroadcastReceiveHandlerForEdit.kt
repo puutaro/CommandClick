@@ -29,7 +29,7 @@ object BroadcastReceiveHandlerForEdit {
                     ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                         editFragment.fannelInfoMap,
                         editFragment.setReplaceVariableMap,
-                        editComponentListAdapter.indexListMap,
+                        editComponentListAdapter.editListMap,
                         editFragment.busyboxExecutor,
                     )
                 )

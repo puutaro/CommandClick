@@ -4,9 +4,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 
@@ -62,7 +60,7 @@ object ExecClickUpdate {
         val sortType = ListSettingsForListIndex.getSortType(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter.indexListMap
+            editComponentListAdapter.editListMap
         )
         when(sortType){
             ListSettingsForListIndex.SortByKey.SORT,
@@ -81,7 +79,7 @@ object ExecClickUpdate {
         val mapListPath = FilePrefixGetter.get(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter.indexListMap,
+            editComponentListAdapter.editListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         )
         MapListFileTool.insertMapFileInFirst(

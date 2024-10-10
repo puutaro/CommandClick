@@ -51,7 +51,7 @@ class EditComponentListAdapter(
     val setReplaceVariableMap: Map<String, String>?,
     val listIndexConfigMap: Map<String, String>?,
     val busyboxExecutor: BusyboxExecutor?,
-    val indexListMap: Map<String, String>,
+    val editListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
     var fannelContentsList: List<String>?,
 ): RecyclerView.Adapter<EditComponentListAdapter.ListIndexListViewHolder>()
@@ -132,7 +132,7 @@ class EditComponentListAdapter(
     private val viewLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
         fannelInfoMap,
         setReplaceVariableMap,
-        indexListMap,
+        editListMap,
         ListSettingsForListIndex.ListSettingKey.VIEW_LAYOUT_PATH.key,
     )
     private val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
@@ -230,7 +230,7 @@ class EditComponentListAdapter(
             if(
                 !it.isNullOrEmpty()
             ) return@let it
-            indexListMap.get(
+            editListMap.get(
                 ListSettingsForListIndex.ListSettingKey.DEFAULT_FRAME_TAG.key
             )
         }
@@ -575,7 +575,7 @@ class EditComponentListAdapter(
             fannelInfoMap,
             setReplaceVariableMap,
             editListRecyclerView,
-            indexListMap,
+            editListMap,
             layoutConfigMap,
 //            lineMapList,
             indexListPosition,
@@ -1004,14 +1004,14 @@ class EditComponentListAdapter(
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
-                indexListMap,
+                editListMap,
                 ListSettingsForListIndex.ListSettingKey.PREFIX.key
             ) ?: String()
         filterSuffix =
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
-                indexListMap,
+                editListMap,
                 ListSettingsForListIndex.ListSettingKey.SUFFIX.key
             ) ?: String()
     }

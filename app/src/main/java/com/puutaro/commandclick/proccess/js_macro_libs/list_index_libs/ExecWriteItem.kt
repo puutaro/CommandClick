@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.file.ReadText
@@ -87,7 +85,7 @@ object ExecWriteItem {
         val tsvPath = FilePrefixGetter.get(
             editComponentListAdapter.fannelInfoMap,
             editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.indexListMap,
+            editComponentListAdapter.editListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return
         val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator

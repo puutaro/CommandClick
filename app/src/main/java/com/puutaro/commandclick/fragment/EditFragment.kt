@@ -364,7 +364,7 @@ class EditFragment: Fragment() {
                 ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                     this@EditFragment.fannelInfoMap,
                     this@EditFragment.setReplaceVariableMap,
-                    editComponentListAdapter.indexListMap,
+                    editComponentListAdapter.editListMap,
                     this@EditFragment.busyboxExecutor,
 //                    ListIndexAdapter.listIndexTypeKey
                 )

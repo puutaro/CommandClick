@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 
 object ExecCopyFileHere {
@@ -54,30 +54,31 @@ object ExecCopyFileHere {
     ){
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as EditComponentListAdapter
-        val addLine =
-            listIndexForEditAdapter.lineMapList[listIndexPosition].let {
-                lineMap ->
-//                val titleConList = it.split("\t")
-
-                val title = lineMap.get(
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
-                )?.let {
-                    "${it}_${CommandClickScriptVariable.makeRndPrefix()}"
-                }
-                val con = lineMap.get(
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
-                )
-                listOf(
-                    title,
-                    con,
-                ).joinToString("\t")
-            }
-        ExecAddForListIndexAdapter.execAddForTsv(
+        val addLineMap =
+            listIndexForEditAdapter.lineMapList[listIndexPosition]
+//                .let {
+//                lineMap ->
+////                val titleConList = it.split("\t")
+//
+//                val title = lineMap.get(
+//                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+//                )?.let {
+//                    "${it}_${CommandClickScriptVariable.makeRndPrefix()}"
+//                }
+//                val con = lineMap.get(
+//                    ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+//                )
+//                listOf(
+//                    title,
+//                    con,
+//                ).joinToString("\t")
+//            }
+        ExecAddForEditListAdapter.execAddForEditList(
             fragment.context,
             fannelInfoMap,
             setReplaceVariableMap,
             editListRecyclerView,
-            addLine
+            addLineMap
         )
     }
 

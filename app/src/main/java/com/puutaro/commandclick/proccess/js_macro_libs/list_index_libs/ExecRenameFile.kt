@@ -87,7 +87,7 @@ object ExecRenameFile {
         val mapListPath = FilePrefixGetter.get(
             editComponentListAdapter.fannelInfoMap,
             editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.indexListMap,
+            editComponentListAdapter.editListMap,
             ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: String()
         val isExist = ReadText(

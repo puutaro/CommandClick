@@ -311,7 +311,7 @@ object QrDialogMethod {
                             ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
-                                editComponentListAdapter.indexListMap,
+                                editComponentListAdapter.editListMap,
                                 fragment.busyboxExecutor
 //                                ListIndexAdapter.listIndexTypeKey
                             )
@@ -395,7 +395,7 @@ object QrDialogMethod {
                             ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
-                                editComponentListAdapter.indexListMap,
+                                editComponentListAdapter.editListMap,
                                 fragment.busyboxExecutor
 //                                ListIndexAdapter.listIndexTypeKey
                             )
