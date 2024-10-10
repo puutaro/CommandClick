@@ -5,21 +5,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/prompt_list_dialog_constraint"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginTop="10dp"
     >
 
 <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/prompt_list_dialog_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"
-        android:scrollbars="vertical"
-        android:fadeScrollbars="false"
-        />
+<!--    <FrameLayout-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"-->
+<!--        >-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/prompt_list_dialog_list_bk_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"
+            android:src="@drawable/google"
+            android:backgroundTint="@null"
+            android:background="@null"
+            app:tint="@null"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/prompt_list_dialog_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            />
+<!--        app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"-->
+<!--    </FrameLayout>-->
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/prompt_list_dialog_search_edit_text"
         android:layout_width="0dp"

@@ -27,8 +27,10 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -154,12 +156,15 @@ class PromptWithListDialog(
             true -> String()
             else -> setText ?: String()
         }
-        val promptList = makePromptList(
-            promptListFile,
-            promptListMap,
-            filterText,
-            listLimit,
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            val promptList = withContext(Dispatchers.IO) {
+                makePromptList(
+                    promptListFile,
+                    promptListMap,
+                    filterText,
+                    listLimit,
+                )
+            }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lPrompt.txt").absolutePath,
 //            listOf(
@@ -168,101 +173,124 @@ class PromptWithListDialog(
 //                "promptList: ${promptList}"
 //            ).joinToString("\n")
 //        )
-        val promptListAdapter = PromptListAdapter(
-            context,
-            promptList,
-        )
-        val listVisible =
-            promptListMap.get(PromptListVars.visible.name) != switchOff
-        val promptListView =
-            promptDialogObj?.findViewById<RecyclerView>(
-                R.id.prompt_list_dialog_list_view
-            )
-        promptListView?.isVisible = listVisible
-        promptListView?.adapter = promptListAdapter
-        promptListView?.layoutManager = PreLoadLayoutManager(
-            context,
-            true,
-        )
-        val promptEditText = EditTextMakerForPromptList.make(
-            promptDialogObj,
-            editTextMap,
-            setText,
-            editTextVisible,
-        )
-        val promptCancelButton =
-            promptDialogObj?.findViewById<AppCompatImageButton>(
-                R.id.prompt_list_dialog_cancel
-            )
-        promptCancelButton?.setOnClickListener {
-            returnValue = String()
-            promptDialogObj?.dismiss()
-            promptDialogObj = null
-            onDialog = false
-        }
-        val promptOkButtonView =
-            promptDialogObj?.findViewById<AppCompatImageButton>(
-                R.id.prompt_list_dialog_ok
-            )
-        promptOkButtonView?.isVisible = editTextVisible
-        promptOkButtonView?.setOnClickListener {
-            val inputEditable = promptEditText?.text
-            if(
-                inputEditable.isNullOrEmpty()
-            ) {
-                exitDialog(
+            val promptListAdapter = withContext(Dispatchers.Main) {
+                PromptListAdapter(
+                    context,
+                    promptList,
+                )
+            }
+            val listVisible =
+                withContext(Dispatchers.IO) {
+                    promptListMap.get(PromptListVars.visible.name) != switchOff
+                }
+            val promptListView =
+                withContext(Dispatchers.Main) {
+                    promptDialogObj?.findViewById<RecyclerView>(
+                        R.id.prompt_list_dialog_list_view
+                    )
+                }
+            withContext(Dispatchers.Main) {
+                promptDialogObj?.setOnCancelListener {
+                    exitDialog(
+                        promptListView,
+                        String(),
+                        promptListFile,
+                        listLimit,
+                    )
+                    returnValue = String()
+                    promptDialogObj?.dismiss()
+                    promptDialogObj = null
+                    onDialog = false
+                }
+            }
+            withContext(Dispatchers.Main) {
+                promptListView?.apply {
+                    isVisible = listVisible
+                    adapter = promptListAdapter
+                    layoutManager = PreLoadLayoutManager(
+                        context,
+                        true,
+                    )
+                }
+            }
+            val promptEditText = withContext(Dispatchers.Main) {
+                EditTextMakerForPromptList.make(
+                    promptDialogObj,
+                    editTextMap,
+                    setText,
+                    editTextVisible,
+                )
+            }
+            withContext(Dispatchers.Main) {
+                val promptCancelButton =promptDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.prompt_list_dialog_cancel
+                )
+                promptCancelButton?.setOnClickListener {
+                    returnValue = String()
+                    promptDialogObj?.dismiss()
+                    promptDialogObj = null
+                    onDialog = false
+                }
+            }
+            withContext(Dispatchers.Main) {
+                val promptOkButtonView =
+                    promptDialogObj?.findViewById<AppCompatImageButton>(
+                        R.id.prompt_list_dialog_ok
+                    )
+                promptOkButtonView?.isVisible = editTextVisible
+                promptOkButtonView?.setOnClickListener {
+                    val inputEditable = promptEditText?.text
+                    if (
+                        inputEditable.isNullOrEmpty()
+                    ) {
+                        exitDialog(
+                            promptListView,
+                            String(),
+                            promptListFile,
+                            listLimit,
+                        )
+                        return@setOnClickListener
+                    } else returnValue = inputEditable.toString()
+                    exitDialog(
+                        promptListView,
+                        inputEditable.toString(),
+                        promptListFile,
+                        listLimit,
+                    )
+                }
+            }
+            withContext(Dispatchers.Main) {
+                editTextKeyListener(
                     promptListView,
-                    String(),
+                    promptEditText,
                     promptListFile,
                     listLimit,
                 )
-                return@setOnClickListener
             }
-            else returnValue = inputEditable.toString()
-            exitDialog(
-                promptListView,
-                inputEditable.toString(),
-                promptListFile,
-                listLimit,
-            )
-        }
-        editTextKeyListener(
-            promptListView,
-            promptEditText,
-            promptListFile,
-            listLimit,
-        )
-        setPromptEditText(
-            promptEditText,
-            promptListFile,
-            promptListMap,
-            promptListAdapter,
-            disableListBind,
-            listLimit,
-        )
-        setItemClickListener(
-            promptListView,
-            promptListAdapter,
-            promptEditText,
-            promptListMap,
-            promptListFile,
-            listLimit,
-        )
-        promptDialogObj?.setOnCancelListener {
-            exitDialog(
-                promptListView,
-                String(),
-                promptListFile,
-                listLimit,
-            )
-            returnValue = String()
-            promptDialogObj?.dismiss()
-            promptDialogObj = null
-            onDialog = false
+            withContext(Dispatchers.Main) {
+                setPromptEditText(
+                    promptEditText,
+                    promptListFile,
+                    promptListMap,
+                    promptListAdapter,
+                    disableListBind,
+                    listLimit,
+                )
+            }
+            withContext(Dispatchers.Main) {
+                setItemClickListener(
+                    promptListView,
+                    promptListAdapter,
+                    promptEditText,
+                    promptListMap,
+                    promptListFile,
+                    listLimit,
+                )
+            }
         }
         promptDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.MATCH_PARENT
         )
         promptDialogObj?.window?.setGravity(
             Gravity.BOTTOM
