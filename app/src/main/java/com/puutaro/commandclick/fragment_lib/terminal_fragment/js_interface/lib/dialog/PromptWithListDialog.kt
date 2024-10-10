@@ -90,6 +90,7 @@ class PromptWithListDialog(
                 try {
                     execCreate(
                         terminalFragment,
+                        fannelDirPath,
                         promptListFile,
                         editTextMap,
                         promptListMap,
@@ -113,6 +114,7 @@ class PromptWithListDialog(
 
     private fun execCreate(
         terminalFragment: TerminalFragment,
+        fannelDirPath: String,
         promptListFile: File,
         editTextMap: Map<String, String>,
         promptListMap: Map<String, String>,
@@ -192,6 +194,7 @@ class PromptWithListDialog(
             withContext(Dispatchers.Main) {
                 promptDialogObj?.setOnCancelListener {
                     exitDialog(
+                        fannelDirPath,
                         promptListView,
                         String(),
                         promptListFile,
@@ -244,6 +247,7 @@ class PromptWithListDialog(
                         inputEditable.isNullOrEmpty()
                     ) {
                         exitDialog(
+                            fannelDirPath,
                             promptListView,
                             String(),
                             promptListFile,
@@ -252,6 +256,7 @@ class PromptWithListDialog(
                         return@setOnClickListener
                     } else returnValue = inputEditable.toString()
                     exitDialog(
+                        fannelDirPath,
                         promptListView,
                         inputEditable.toString(),
                         promptListFile,
@@ -261,6 +266,7 @@ class PromptWithListDialog(
             }
             withContext(Dispatchers.Main) {
                 editTextKeyListener(
+                    fannelDirPath,
                     promptListView,
                     promptEditText,
                     promptListFile,
@@ -279,6 +285,7 @@ class PromptWithListDialog(
             }
             withContext(Dispatchers.Main) {
                 setItemClickListener(
+                    fannelDirPath,
                     promptListView,
                     promptListAdapter,
                     promptEditText,
@@ -388,6 +395,7 @@ class PromptWithListDialog(
     }
 
     private fun editTextKeyListener(
+        fannelDirPath: String,
         promptListView: RecyclerView?,
         promptEditText: AppCompatEditText?,
         promptListFile: File,
@@ -401,6 +409,7 @@ class PromptWithListDialog(
                 val currentInputEditable = promptEditText.text
                 if(promptEditText.text.isNullOrEmpty()){
                     exitDialog(
+                        fannelDirPath,
                         promptListView,
                         String(),
                         promptListFile,
@@ -414,6 +423,7 @@ class PromptWithListDialog(
                 }
 //                returnValue = currentInputEditable.toString()
                 exitDialog(
+                    fannelDirPath,
                     promptListView,
                     currentInputEditable.toString(),
                     promptListFile,
@@ -428,6 +438,7 @@ class PromptWithListDialog(
     }
 
     private fun setItemClickListener(
+        fannelDirPath: String,
         promptListView: RecyclerView?,
         promptListAdapter: PromptListAdapter,
         promptEditText: AppCompatEditText?,
@@ -451,6 +462,7 @@ class PromptWithListDialog(
                     !onDismissByClick
                 ) return
                 exitDialog(
+                    fannelDirPath,
                     promptListView,
                     itemStr,
                     promptListFile,
@@ -483,6 +495,7 @@ class PromptWithListDialog(
     }
 
     private fun registerToColdList(
+        fannelDirPath: String,
         promptListFile: File,
         listLimit: Int?,
     ){
@@ -495,7 +508,7 @@ class PromptWithListDialog(
         val promptListDirPath = promptListFile.parent
             ?: return
         saveStatistics(
-            promptListDirPath,
+            fannelDirPath,
             trimedReturnValue,
         )
         FileSystems.createDirs(
@@ -523,11 +536,9 @@ class PromptWithListDialog(
     }
 
     private fun saveStatistics(
-        promptListDirPath: String,
+        fannelDirPath: String,
         trimedReturnValue: String,
     ){
-        val fannelDirPath = File(promptListDirPath).parent
-            ?: return
         val statisticsFile = File("${fannelDirPath}/${statisticsName}/${statisticsName}.txt")
         val updateStatisticsCon = ReadText(
             statisticsFile.absolutePath
@@ -563,6 +574,7 @@ class PromptWithListDialog(
     }
 
     private fun exitDialog(
+        fannelDirPath: String,
         promptListView: RecyclerView?,
         returnStr: String,
         promptListFile: File,
@@ -574,6 +586,7 @@ class PromptWithListDialog(
         promptListView?.removeAllViews()
         returnValue = returnStr
         registerToColdList(
+            fannelDirPath,
             promptListFile,
             listLimit,
         )
