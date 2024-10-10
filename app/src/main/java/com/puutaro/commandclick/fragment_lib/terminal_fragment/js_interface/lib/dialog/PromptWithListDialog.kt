@@ -8,15 +8,12 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.component.adapter.PromptListAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -44,9 +41,9 @@ class PromptWithListDialog(
     private var promptDialogObj: Dialog? = null
     private val suggestPrefix = "suggest"
     private val suggestDirName = "${suggestPrefix}Text"
+    private val statisticsName = "statistics"
     private val suggestTxtSuffix = ".txt"
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-    //        terminalFragment.currentAppDirPath
     private val mapSeparator = ','
     private val firstSeparator = '|'
     private val secondSeparator = '?'
@@ -167,6 +164,14 @@ class PromptWithListDialog(
         val editTextVisible = editTextMap.get(
             PromptEditTextKey.visible.name
         ) != switchOff
+        val listLimit =
+            promptListMap.get(PromptListVars.limit.name)?.let {
+                try{
+                    it.toInt()
+                } catch (e: Exception){
+                    null
+                }
+            }
         val filterText = when(disableSuggestBind || !editTextVisible){
             true -> String()
             else -> setText ?: String()
@@ -175,6 +180,7 @@ class PromptWithListDialog(
             promptListFile,
             promptListMap,
             filterText,
+            listLimit,
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lPrompt.txt").absolutePath,
@@ -231,6 +237,7 @@ class PromptWithListDialog(
                     promptListView,
                     String(),
                     promptListFile,
+                    listLimit,
                 )
                 return@setOnClickListener
             }
@@ -239,6 +246,7 @@ class PromptWithListDialog(
                 promptListView,
                 inputEditable.toString(),
                 promptListFile,
+                listLimit,
             )
         }
 //        val promptEditText =
@@ -259,6 +267,7 @@ class PromptWithListDialog(
             promptListView,
             promptEditText,
             promptListFile,
+            listLimit,
         )
         setSuggestEditText(
             promptEditText,
@@ -266,19 +275,22 @@ class PromptWithListDialog(
             promptListMap,
             promptListAdapter,
             disableSuggestBind,
+            listLimit,
         )
         setItemClickListener(
             promptListView,
             promptListAdapter,
             promptEditText,
             promptListMap,
-            promptListFile
+            promptListFile,
+            listLimit,
         )
         promptDialogObj?.setOnCancelListener {
             exitDialog(
                 promptListView,
                 String(),
-                promptListFile
+                promptListFile,
+                listLimit,
             )
             returnValue = String()
             promptDialogObj?.dismiss()
@@ -301,6 +313,7 @@ class PromptWithListDialog(
 //        suggestTxtName: String,
         suggestMap: Map<String, String>,
         filterString: String,
+        listLimit: Int?,
     ): MutableList<String> {
         val mainSuggestList = ReadText(
             promptListFile.absolutePath
@@ -336,7 +349,13 @@ class PromptWithListDialog(
                     line.lowercase()
                 )
             }
-        }.toMutableList()
+        }.let {
+            listSrc ->
+            when(listLimit == null){
+                true -> listSrc
+                else -> listSrc.take(listLimit)
+            } .toMutableList()
+        }
     }
 
 
@@ -346,6 +365,7 @@ class PromptWithListDialog(
         suggestMap: Map<String, String>,
         promptListAdapter: PromptListAdapter,
         disableSuggestBind: Boolean,
+        listLimit: Int?,
     ){
         if(promptEditText == null) return
         promptEditText.addTextChangedListener(object : TextWatcher {
@@ -360,7 +380,8 @@ class PromptWithListDialog(
                 val updatePromptList = makePromptList(
                     promptListFile,
                     suggestMap,
-                    promptEditText.text.toString()
+                    promptEditText.text.toString(),
+                    listLimit,
                 )
                 promptListAdapter.promptList.clear()
                 promptListAdapter.promptList.addAll(updatePromptList)
@@ -373,6 +394,7 @@ class PromptWithListDialog(
         promptListView: RecyclerView?,
         promptEditText: AppCompatEditText?,
         promptListFile: File,
+        listLimit: Int?,
     ){
         promptEditText?.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
@@ -385,6 +407,7 @@ class PromptWithListDialog(
                         promptListView,
                         String(),
                         promptListFile,
+                        listLimit,
                     )
 //                    returnValue = String()
 //                    promptDialogObj?.dismiss()
@@ -397,6 +420,7 @@ class PromptWithListDialog(
                     promptListView,
                     currentInputEditable.toString(),
                     promptListFile,
+                    listLimit,
                 )
 //                promptDialogObj?.dismiss()
 //                promptDialogObj = null
@@ -412,6 +436,7 @@ class PromptWithListDialog(
         promptEditText: AppCompatEditText?,
         promptListMap: Map<String, String>,
         promptListFile: File,
+        listLimit: Int?,
     ){
         val onInsertByClick = promptListMap.get(
             PromptListVars.onInsertByClick.name
@@ -431,51 +456,11 @@ class PromptWithListDialog(
                 exitDialog(
                     promptListView,
                     itemStr,
-                    promptListFile
+                    promptListFile,
+                    listLimit,
                 )
             }
         }
-    }
-
-
-    private fun makeSuggest(
-        terminalFragment: TerminalFragment,
-        promptEditText: AutoCompleteTextView?,
-        suggestSrcList: List<String>
-    ){
-        val context = terminalFragment.context
-        val currentScriptName = terminalFragment.currentFannelName
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptName
-        )
-        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
-        val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
-        if(promptEditText == null) return
-        if(context == null) return
-        if(
-            currentScriptName.isEmpty()
-            || currentScriptName == CommandClickScriptVariable.EMPTY_STRING
-        ) return
-        FileSystems.createDirs(
-            suggestDirPath
-        )
-        val currentText = promptEditText.text
-            ?: return
-        val suggestList = suggestSrcList.filter {
-            it.contains(currentText)
-        }
-        if(
-            suggestList.isEmpty()
-        ) return
-        val suggestAdapter = AutoCompleteAdapter(
-            context,
-            android.R.layout.simple_list_item_1,
-            suggestList
-        )
-        promptEditText.threshold = 0
-        promptEditText.setAdapter(
-            suggestAdapter
-        )
     }
 
     private fun makeExtraSuggestList(
@@ -491,23 +476,21 @@ class PromptWithListDialog(
     }
 
     private fun registerToSuggest(
-        promptListFile: File
+        promptListFile: File,
+        listLimit: Int?,
     ){
         val trimedReturnValue =
             returnValue.trim()
         if(
             trimedReturnValue.isEmpty()
         ) return
-//        if(
-//            variableName.isNullOrEmpty()
-//        ) return
-//        val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
-//        val suggestTxtName = makeSuggestTextFileName(
-//            variableName,
-//        )
-//            "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
+
         val promptListDirPath = promptListFile.parent
             ?: return
+        saveStatistics(
+            promptListDirPath,
+            trimedReturnValue,
+        )
         FileSystems.createDirs(
             promptListDirPath
         )
@@ -519,21 +502,34 @@ class PromptWithListDialog(
                         promptListDirPath,
                     ).filter {
                         trimedReturnValue != it
-                    }.distinct().take(200)
+                    }.distinct().let {
+                        listSrc ->
+                        when(listLimit == null){
+                            true -> listSrc
+                            else -> listSrc.take(listLimit)
+                        }
+                    }
         FileSystems.writeFile(
             promptListFile.absolutePath,
             updateSuggestList.joinToString("\n")
         )
     }
 
-//    private fun makeSuggestAndDefoTxtMap(
-//        suggestVars: String,
-//    ): Map<String, String> {
-//        return CmdClickMap.createMap(
-//            suggestVars,
-//            firstSeparator
-//        ).toMap()
-//    }
+    private fun saveStatistics(
+        promptListDirPath: String,
+        trimedReturnValue: String,
+    ){
+        val fannelDirPath = File(promptListDirPath).parent
+            ?: return
+        val statisticsFile = File("${fannelDirPath}/${statisticsName}/${statisticsName}.txt")
+        val updateStatisticsCon = ReadText(
+            statisticsFile.absolutePath
+        ).textToList() + listOf(trimedReturnValue)
+        FileSystems.writeFile(
+            statisticsFile.absolutePath,
+            updateStatisticsCon.joinToString("\n")
+        )
+    }
 
     private fun makeNoEmptyList(
         trimedReturnValue: String,
@@ -563,6 +559,7 @@ class PromptWithListDialog(
         promptListView: RecyclerView?,
         returnStr: String,
         promptListFile: File,
+        listLimit: Int?,
     ){
         promptListView?.layoutManager = null
         promptListView?.adapter = null
@@ -570,7 +567,8 @@ class PromptWithListDialog(
         promptListView?.removeAllViews()
         returnValue = returnStr
         registerToSuggest(
-            promptListFile
+            promptListFile,
+            listLimit,
         )
         promptDialogObj?.dismiss()
         promptDialogObj = null
@@ -689,4 +687,5 @@ private enum class PromptListVars {
     onInsertByClick,
     onDismissByClick,
     visible,
+    limit,
 }
