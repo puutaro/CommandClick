@@ -16,7 +16,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
 
-object EditTextAndFannelConUpdaterForTerminalFragment {
+object EditTextAndFannelUpdaterForTerm {
     fun update(
         activity: MainActivity,
         indexOrParentTagName: String,
@@ -83,44 +83,6 @@ object EditTextAndFannelConUpdaterForTerminalFragment {
                 isSave,
             )
             return
-//                val linearFrameKeyPairsListConSrc = holder.keyPairListConMap.get(
-//                    tagName
-//                )
-//                val linearFrameKeyPairsListCon =  EditComponent.Template.ReplaceHolder.replaceHolder(
-//                    linearFrameKeyPairsListConSrc,
-//                    holder.srcTitle,
-//                    holder.srcCon,
-//                    holder.srcImage,
-//                    editListIndex,
-//                )
-//                val linearFrameKeyPairsList = EditComponentListAdapter.makeLinearFrameKeyPairsList(
-//                    linearFrameKeyPairsListCon,
-//                )
-//                val textMap = PairListTool.getValue(
-//                    linearFrameKeyPairsList,
-//                    EditComponent.Template.EditComponentKey.TEXT.key
-//                ).let {
-//                    CmdClickMap.createMap(
-//                        it,
-//                        EditComponent.Template.keySeparator,
-//                    ).toMap()
-//                }
-//                val text = EditComponent.Template.TextManager.makeText(
-//                    editComponentListAdapter.fannelInfoMap,
-//                    editComponentListAdapter.setReplaceVariableMap,
-//                    editComponentListAdapter.busyboxExecutor,
-//                    textMap,
-//                    updateText
-//                )
-//                textView?.text = text
-//
-//                execUpdateAndSaveMainFannel(
-//                    textView,
-//                    editComponentListAdapter,
-//                    tagName,
-//                    updateText,
-//                    isSave,
-//                )
         }
 
 //        val editToolbarTag = activity.getString(
@@ -176,96 +138,6 @@ object EditTextAndFannelConUpdaterForTerminalFragment {
             textView,
             isSave,
         )
-//        val linearFrameKeyPairsListConSrc = editComponentListAdapter.footerKeyPairListConMap.get(
-//            tagName
-//        )
-//        val noSignIndex = -1
-//        val linearFrameKeyPairsListCon = EditComponent.Template.ReplaceHolder.replaceHolder(
-//            linearFrameKeyPairsListConSrc,
-//            tagName,
-//            tagName,
-//            tagName,
-//            noSignIndex,
-//        )
-//        val linearFrameKeyPairsList = EditComponentListAdapter.makeLinearFrameKeyPairsList(
-//            linearFrameKeyPairsListCon
-//        )
-//        val frameLayout = linearLayout?.findViewWithTag<FrameLayout>(
-//            tagName
-//        )
-//        val textView = frameLayout?.children?.firstOrNull {
-//                view ->
-//            view is OutlineTextView
-//        } as? OutlineTextView
-//
-//        val textMap = PairListTool.getValue(
-//            linearFrameKeyPairsList,
-//            EditComponent.Template.EditComponentKey.TEXT.key
-//        ).let {
-//            CmdClickMap.createMap(
-//                it,
-//                EditComponent.Template.keySeparator,
-//            ).toMap()
-//        }
-//        val text = EditComponent.Template.TextManager.makeText(
-//            editComponentListAdapter.fannelInfoMap,
-//            editComponentListAdapter.setReplaceVariableMap,
-//            editComponentListAdapter.busyboxExecutor,
-//            textMap,
-//            updateText
-//        )
-//        textView?.text = text
-//
-//        execUpdateAndSaveMainFannel(
-//            textView,
-//            editComponentListAdapter,
-//            tagName,
-//            updateText,
-//            isSave,
-//        )
-
-
-
-
-//
-//
-//        val editListRecyclerView = EditListRecyclerViewGetter.get(
-//            terminalFragment,
-//            srcFragment
-//        ) ?: return
-//        val editComponentListAdapter =
-//            editListRecyclerView.adapter as EditComponentListAdapter
-//        val sharePref = FannelInfoTool.getSharePref(activity)
-////        val currentAppDirPath = FannelInfoTool.getStringFromFannelInfo(
-////            sharePref,
-////            FannelInfoSetting.current_app_dir
-////        )
-//        val currentFannelName = FannelInfoTool.getStringFromFannelInfo(
-//            sharePref,
-//            FannelInfoSetting.current_fannel_name
-//        )
-//        val fannelState = FannelInfoTool.getStringFromFannelInfo(
-//            sharePref,
-//            FannelInfoSetting.current_fannel_state
-//        )
-//        val editExecuteFragment = TargetFragmentInstance.getCurrentEditFragmentFromActivity(
-//            activity,
-////            currentAppDirPath,
-//            currentFannelName,
-//            fannelState
-//        ) ?: return
-//        try {
-//            CoroutineScope(Dispatchers.Main).launch {
-//                val editTextInEditFragment =
-//                    EditComponent.findEditTextView(
-//                        editTextId,
-//                        EditComponent.makeEditLinearLayoutList(editExecuteFragment)
-//                    ) ?: return@launch
-//                editTextInEditFragment.setText(variableValue)
-//            }
-//        } catch(e: Exception){
-//            Log.e("edit", e.toString())
-//        }
     }
 
     object UpdateAndSaveMainFannel {

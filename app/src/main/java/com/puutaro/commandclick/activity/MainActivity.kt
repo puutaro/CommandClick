@@ -606,7 +606,7 @@ class MainActivity:
         isSave: Boolean,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
-            EditTextAndFannelConUpdaterForTerminalFragment.update(
+            EditTextAndFannelUpdaterForTerm.update(
                 this@MainActivity,
                 indexOrParentTagName,
                 srcFragment,

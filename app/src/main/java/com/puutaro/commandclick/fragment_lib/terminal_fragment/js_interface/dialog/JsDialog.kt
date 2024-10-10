@@ -22,7 +22,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import java.lang.ref.WeakReference
 
@@ -460,10 +459,10 @@ class JsDialog(
 
     @JavascriptInterface
     fun promptWithList(
-        suggestOrDefoTxtVars: String
+        listOrDefoTxtVars: String
     ): String {
         return promptWithListDialog.create(
-            suggestOrDefoTxtVars
+            listOrDefoTxtVars
         )
     }
 }
