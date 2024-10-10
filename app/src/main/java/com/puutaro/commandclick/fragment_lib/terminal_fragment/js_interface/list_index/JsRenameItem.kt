@@ -14,7 +14,8 @@ class JsRenameItem(
 
     @JavascriptInterface
     fun rename_S(
-        listIndexPosition: Int
+        listIndexPosition: Int,
+        srcFragmentStr: String
     ){
         /*
         ## Description
@@ -47,24 +48,30 @@ class JsRenameItem(
         */
         val terminalFragment = terminalFragmentRef.get()
             ?: return
-        val activity = terminalFragment.activity
-        val fannelInfoMap = terminalFragment.fannelInfoMap
-        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
-        val currentFannelState = FannelInfoTool.getCurrentStateName(
-            fannelInfoMap
-        )
-        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
-            activity,
-//            currentAppDirPath,
-            currentFannelName,
-            currentFannelState
-        ) ?: return
-        ExecRenameFile.rename(
-            editFragment,
-            editFragment.binding.editListRecyclerView,
+        val context = terminalFragment.context ?: return
+        val lisetener = context as TerminalFragment.OnTextViewAndMapListUpdateListenerForTerm
+        lisetener.onTextViewAndMapListUpdateForTerm(
             listIndexPosition,
+            srcFragmentStr
         )
+//        val activity = terminalFragment.activity
+//        val fannelInfoMap = terminalFragment.fannelInfoMap
+//        val currentFannelName = FannelInfoTool.getCurrentFannelName(
+//            fannelInfoMap
+//        )
+//        val currentFannelState = FannelInfoTool.getCurrentStateName(
+//            fannelInfoMap
+//        )
+//        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
+//            activity,
+////            currentAppDirPath,
+//            currentFannelName,
+//            currentFannelState
+//        ) ?: return
+//        ExecRenameFile.rename(
+//            editFragment,
+//            editFragment.binding.editListRecyclerView,
+//            listIndexPosition,
+//        )
     }
 }

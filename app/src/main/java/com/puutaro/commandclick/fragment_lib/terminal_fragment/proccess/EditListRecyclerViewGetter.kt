@@ -1,30 +1,39 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object EditListRecyclerViewGetter {
 
     fun get(
         terminalFragment: TerminalFragment?,
-        recyclerViewFragStr: String
+        srcFragStr: String
     ): RecyclerView? {
         val recyclerViewFrag = RecyclerViewFragment.values().firstOrNull {
-            it.frag == recyclerViewFragStr
-        } ?: return null
-        return when(recyclerViewFrag){
+            it.frag == srcFragStr
+        }
+        if(recyclerViewFrag == null){
+            ToastUtils.showShort("not found srcFragStr: ${srcFragStr}")
+            return null
+        }
+        val recyclerView = when(recyclerViewFrag){
             RecyclerViewFragment.WEB -> {
                 getFromTermFrag(terminalFragment)
             }
             RecyclerViewFragment.EDIT -> {
                 getFromEditFrag(terminalFragment)
             }
-
         }
-
+        if(recyclerView == null){
+            ToastUtils.showShort("not found recyclerView")
+            return null
+        }
+        return recyclerView
     }
     private fun getFromEditFrag(
         terminalFragment: TerminalFragment?

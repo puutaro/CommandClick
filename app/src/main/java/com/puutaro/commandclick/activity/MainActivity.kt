@@ -88,7 +88,8 @@ class MainActivity:
     TerminalFragment.OnPageLoadPageSearchDisableListener,
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
-    TerminalFragment.OnTextViewUpdateListenerForTermFragment,
+    TerminalFragment.OnTextViewAndFannelUpdateListenerForTerm,
+    TerminalFragment.OnTextViewAndMapListUpdateListenerForTerm,
 //    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
@@ -598,7 +599,7 @@ class MainActivity:
         )
     }
 
-    override fun onTextViewUpdateForTermFragment(
+    override fun onTextViewAndFannelForTermFragment(
         indexOrParentTagName: String,
         srcFragment: String,
         tagName: String,
@@ -613,6 +614,19 @@ class MainActivity:
                 tagName,
                 updateText,
                 isSave
+            )
+        }
+    }
+
+    override fun onTextViewAndMapListUpdateForTerm(
+        editListIndex: Int,
+        srcFragmentStr: String
+    ) {
+        CoroutineScope(Dispatchers.Main).launch {
+            EditTextAndMapListForTerm.update(
+                this@MainActivity,
+                editListIndex,
+                srcFragmentStr,
             )
         }
     }

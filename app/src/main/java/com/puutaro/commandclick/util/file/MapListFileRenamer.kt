@@ -79,13 +79,13 @@ object MapListFileRenamer {
 //        val titleFileNameAndPathConPair =
 //            TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                ?: return
-        val fileNameOrSRCTitle = lineMap.get(
+        val fileNameOrSrcTitle = lineMap.get(
             ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
         )
 //            titleFileNameAndPathConPair.first
 
         promptEditText?.setText(
-            fileNameOrSRCTitle
+            fileNameOrSrcTitle
         )
         val promptCancelButton =
             renamePromptDialog?.findViewById<AppCompatImageButton>(
@@ -150,9 +150,9 @@ object MapListFileRenamer {
 //            val titleFileNameAndPathConPair =
 //                TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                    ?: return
-            val SRCTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            val srcTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
             val fileNameOrTitle = lineMap.get(
-                SRCTitleKey
+                srcTitleKey
             ) ?: String()
 //                titleFileNameAndPathConPair.first
             val compExtend = CcPathTool.subExtend(fileNameOrTitle)
@@ -190,7 +190,7 @@ object MapListFileRenamer {
             }
             val viewLayoutPathKey = ListSettingsForListIndex.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
             val renameLineMap = mapOf(
-                SRCTitleKey to renamedFileNameOrTitle,
+                srcTitleKey to renamedFileNameOrTitle,
                 srcConKey to renameFilePathOrCon,
                 viewLayoutPathKey to (lineMap.get(viewLayoutPathKey) ?: String())
             )

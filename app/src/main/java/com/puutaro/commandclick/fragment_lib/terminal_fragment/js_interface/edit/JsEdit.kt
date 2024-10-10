@@ -57,7 +57,7 @@ class JsEdit(
 //    }
 
     @JavascriptInterface
-    fun updateTextViewAndFannel(
+    fun updateTextViewAndFannel_S(
         indexOrParentTagName: String,
         srcFragment: String,
         tagName: String,
@@ -67,8 +67,8 @@ class JsEdit(
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val context = terminalFragment.context ?: return
-        val listener = context as TerminalFragment.OnTextViewUpdateListenerForTermFragment
-        listener.onTextViewUpdateForTermFragment(
+        val listener = context as TerminalFragment.OnTextViewAndFannelUpdateListenerForTerm
+        listener.onTextViewAndFannelForTermFragment(
             indexOrParentTagName,
             srcFragment,
             tagName,
