@@ -54,8 +54,13 @@ class PromptWithListDialog(
     private val switchOff = "OFF"
 
     fun create(
+        fannelPath: String,
         listOrDefoTxtVars: String,
     ): String {
+        val fannelFile = File(fannelPath)
+        if(
+            !fannelFile.isFile
+        ) return String()
         val promptListTotalMap = CmdClickMap.createMap(
             listOrDefoTxtVars,
             mapSeparator,
@@ -70,11 +75,7 @@ class PromptWithListDialog(
         ).toMap()
         val terminalFragment = terminalFragmentRef.get()
             ?: return String()
-        val currentScriptName = terminalFragment.currentFannelName
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptName
-        )
-        val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
+        val fannelDirPath = CcPathTool.getMainFannelDirPath(fannelPath)
         val listDirPath = "${fannelDirPath}/${listDirName}"
 
         val variableName = promptListMap.get(PromptListVars.variableName.name)
@@ -314,7 +315,7 @@ class PromptWithListDialog(
         val mainList = ReadText(
             promptListFile.absolutePath
         ).textToList()
-        val srcListEntry = makeExtraList(
+        val comcatFilePathList = makeExtraList(
             promptListMap.get(PromptListVars.concatFilePathList.name)?.let {
                 QuoteTool.splitBySurroundedIgnore(
                     it,
@@ -322,22 +323,24 @@ class PromptWithListDialog(
                 )
             }
         )
-        val srcListEntryFromCon = makeExtraListFromCon(
+        val promptListByComcatFilePathList = mainList + comcatFilePathList.filter {
+            !mainList.contains(it)
+        }
+        val concatList = makeExtraListFromCon(
             promptListMap.get(PromptListVars.concatList.name)?.let {
                 QuoteTool.trimBothEdgeQuote(it)
             }
         )
-        val promptListSrc = mainList + srcListEntry.filter {
-            !mainList.contains(it)
-        }
-        val promptList = mainList + srcListEntryFromCon.filter {
-            !promptListSrc.contains(it)
+        val promptList = promptListByComcatFilePathList + concatList.filter {
+            !promptListByComcatFilePathList.contains(it)
         }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lPrompt_make.txt").absolutePath,
 //            listOf(
-//                "mainSuggestList: ${mainSuggestList}",
-//                "suggestSrcListEntry: ${suggestSrcListEntry}",
+//                "mainList: ${mainList}",
+//                "srcListEntry: ${comcatFilePathList}",
+//                "srcListEntryFromCon: ${concatList}",
+//                "promptListSrc: ${promptListByComcatFilePathList}",
 //                "promptList: ${promptList}",
 //            ).joinToString("\n")
 //        )
@@ -539,7 +542,13 @@ class PromptWithListDialog(
         fannelDirPath: String,
         trimedReturnValue: String,
     ){
-        val statisticsFile = File("${fannelDirPath}/${statisticsName}/${statisticsName}.txt")
+        val statisticsFile = File("${fannelDirPath}/${statisticsName}/promptWithList.txt")
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lStatistics.txt").absolutePath,
+//            listOf(
+//                "statisticsFile: ${statisticsFile.absolutePath}"
+//            ).joinToString("\n")
+//        )
         val updateStatisticsCon = ReadText(
             statisticsFile.absolutePath
         ).textToList() + listOf(trimedReturnValue)

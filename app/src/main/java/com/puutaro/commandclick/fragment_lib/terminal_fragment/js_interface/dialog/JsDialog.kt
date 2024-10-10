@@ -459,10 +459,12 @@ class JsDialog(
 
     @JavascriptInterface
     fun promptWithList(
-        listOrDefoTxtVars: String
+        fannelPath: String,
+        listOrDefoTxtVars: String,
     ): String {
         return promptWithListDialog.create(
-            listOrDefoTxtVars
+            fannelPath,
+            listOrDefoTxtVars,
         )
     }
 }
