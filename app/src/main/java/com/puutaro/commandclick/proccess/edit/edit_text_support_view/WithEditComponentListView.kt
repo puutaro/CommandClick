@@ -191,7 +191,6 @@ object WithEditComponentListView{
 
         editListRecyclerView.adapter = editComponentListAdapter
 
-
         val isReverseLayout = LayoutSettingsForListIndex.howReverseLayout(
             fannelInfoMap,
             setReplaceVariableMap,
@@ -285,6 +284,7 @@ object WithEditComponentListView{
                     )
                     val weightSumFloat = 1f
                     val linearLayout = LinearLayoutCompat(context).apply {
+                        tag = frameTag
                         layoutParams = linearParam
                         weightSum = weightSumFloat
                         orientation = LinearLayoutCompat.HORIZONTAL
@@ -316,6 +316,10 @@ object WithEditComponentListView{
                         }
                         val editComponentListAdapter =
                             editListRecyclerView.adapter as? EditComponentListAdapter
+                        editComponentListAdapter?.footerKeyPairListConMap?.put(
+                            linearFrameTag,
+                            linearFrameKeyPairsListConSrc
+                        )
                         val linearFrameLayout = EditFrameMaker.make(
                             context,
                             fannelInfoMap,

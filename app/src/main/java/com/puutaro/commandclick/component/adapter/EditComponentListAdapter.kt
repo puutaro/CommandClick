@@ -72,6 +72,7 @@ class EditComponentListAdapter(
     )
     val totalSettingValMap =
         (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
+    val footerKeyPairListConMap: MutableMap<String, String> = mutableMapOf()
 //    private val busyboxExecutor = editFragmentRef.get()?.busyboxExecutor
 
 //    private val listIndexConfigMap =
@@ -186,10 +187,22 @@ class EditComponentListAdapter(
     }
 
     override fun getItemCount(): Int = lineMapList.size
-    private val typeSeparator = EditComponent.Template.typeSeparator
 
-    private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
-    private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+    companion object {
+
+        private val typeSeparator = EditComponent.Template.typeSeparator
+        private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+        private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        fun makeLinearFrameKeyPairsList(
+            linearFrameKeyPairsListCon: String?
+        ): List<Pair<String, String>> {
+            return CmdClickMap.createMap(
+                linearFrameKeyPairsListCon,
+                typeSeparator
+            )
+        }
+    }
+
     override fun onBindViewHolder(
         holder: ListIndexListViewHolder,
         listIndexPosition: Int
@@ -239,9 +252,8 @@ class EditComponentListAdapter(
                 )
             }
             val frameKeyPairsList = withContext(Dispatchers.IO) {
-                CmdClickMap.createMap(
+                makeLinearFrameKeyPairsList(
                     frameKeyPairsCon,
-                    typeSeparator
                 )
             }
 //            FileSystems.writeFile(
@@ -394,9 +406,8 @@ class EditComponentListAdapter(
                             )
                         }
                         val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
-                            CmdClickMap.createMap(
+                            makeLinearFrameKeyPairsList(
                                 linearFrameKeyPairsListCon,
-                                typeSeparator
                             )
                         }
                         val linearFrameTag = withContext(Dispatchers.IO) {
@@ -678,6 +689,22 @@ class EditComponentListAdapter(
         settingValue: String?,
         frameOrLinearCon: String,
     ){
+        updateMainFannelList(
+            tag,
+            settingValue,
+        )
+        MainFannelUpdater.saveFannelCon(
+            fannelContentsList,
+            fannelInfoMap,
+            frameOrLinearCon,
+        )
+    }
+
+
+    fun updateMainFannelList(
+        tag: String,
+        settingValue: String?,
+    ){
         val updateSettingValsCon = settingValue?.let {
             listOf(
                 "${tag}=${settingValue}"
@@ -727,12 +754,6 @@ class EditComponentListAdapter(
                 fannelContentsList = updateFannelList
             }
         }
-
-        MainFannelUpdater.saveFannelCon(
-            fannelContentsList,
-            fannelInfoMap,
-            frameOrLinearCon,
-        )
     }
 
     fun saveFannelCon() {
@@ -754,10 +775,13 @@ class EditComponentListAdapter(
                 saveFannelConList.isNullOrEmpty()
             ) return
             val isSave = PairListTool.getValue(
-                CmdClickMap.createMap(
+                makeLinearFrameKeyPairsList(
                     frameOrLinearCon,
-                    EditComponent.Template.typeSeparator
                 ),
+//                CmdClickMap.createMap(
+//                    frameOrLinearCon,
+//                    EditComponent.Template.typeSeparator
+//                ),
                 EditComponent.Template.EditComponentKey.ON_SAVE.key,
             ) == EditComponent.Template.switchOn
             if (!isSave) return
@@ -933,14 +957,14 @@ class EditComponentListAdapter(
         if(
             listIndexPosition != 0
         ) return
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "layout.txt").absolutePath,
-            listOf(
-                "frameMapListToLinearMapList: ${frameMapListToLinearMapList}",
-                "frameMap: ${frameMap}",
-                "linearMapList: ${frameTagToLinearKeysListMap}",
-            ).joinToString("\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "layout.txt").absolutePath,
+//            listOf(
+//                "frameMapListToLinearMapList: ${frameMapListToLinearMapList}",
+//                "frameMap: ${frameMap}",
+//                "linearMapList: ${frameTagToLinearKeysListMap}",
+//            ).joinToString("\n\n")
+//        )
         setListProperty()
     }
 

@@ -130,6 +130,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:orientation="horizontal"
+            android:tag="@string/edit_toolbar_tag"
             android:background="@color/dark_red"
             >
         </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,17 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 
 import android.webkit.JavascriptInterface
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
-import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.view_model.activity.EditViewModel
 import java.lang.ref.WeakReference
 
 class JsEdit(
@@ -20,7 +14,6 @@ class JsEdit(
 //    private val context = terminalFragment.context
 //    private val activity = terminalFragment.activity
 //    private val editViewModel: EditViewModel by terminalFragment.activityViewModels()
-
 
     @JavascriptInterface
     fun updateByVariable(
@@ -62,6 +55,27 @@ class JsEdit(
 //            updateVariableValue
 //        )
 //    }
+
+    @JavascriptInterface
+    fun updateTextViewAndFannel(
+        indexOrParentTagName: String,
+        srcFragment: String,
+        tagName: String,
+        updateText: String,
+        isSave: Boolean,
+    ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context ?: return
+        val listener = context as TerminalFragment.OnTextViewUpdateListenerForTermFragment
+        listener.onTextViewUpdateForTermFragment(
+            indexOrParentTagName,
+            srcFragment,
+            tagName,
+            updateText,
+            isSave,
+        )
+    }
 
     @JavascriptInterface
     fun getSettingValue(

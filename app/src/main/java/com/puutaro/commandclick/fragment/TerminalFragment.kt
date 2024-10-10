@@ -375,12 +375,15 @@ class TerminalFragment:
         )
     }
 
-//    interface OnEditTextUpdateListenerForTermFragment {
-//        fun onEditTextUpdateForTermFragment(
-//            editTextId: Int?,
-//            variableValue: String
-//        )
-//    }
+    interface OnTextViewUpdateListenerForTermFragment {
+        fun onTextViewUpdateForTermFragment(
+            indexOrParentTagName: String,
+            srcFragment: String,
+            tagName: String,
+            updateText: String,
+            isSave: Boolean,
+        )
+    }
 
 //    interface OnSpinnerUpdateListenerForTermFragment {
 //        fun onSpinnerUpdateForTermFragment(

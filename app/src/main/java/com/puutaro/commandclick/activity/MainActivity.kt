@@ -31,7 +31,6 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.ExecUpdateNoSaveUr
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecWifiSet
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecFileChooser
-import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecTermMinimumForEdit
@@ -89,7 +88,7 @@ class MainActivity:
     TerminalFragment.OnPageLoadPageSearchDisableListener,
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
-//    TerminalFragment.OnEditTextUpdateListenerForTermFragment,
+    TerminalFragment.OnTextViewUpdateListenerForTermFragment,
 //    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
@@ -599,16 +598,24 @@ class MainActivity:
         )
     }
 
-//    override fun onEditTextUpdateForTermFragment(
-//        editTextId: Int?,
-//        variableValue: String
-//    ) {
-//        EditTextUpdaterForTerminalFragment.update(
-//            this,
-//            editTextId,
-//            variableValue
-//        )
-//    }
+    override fun onTextViewUpdateForTermFragment(
+        indexOrParentTagName: String,
+        srcFragment: String,
+        tagName: String,
+        updateText: String,
+        isSave: Boolean,
+    ) {
+        CoroutineScope(Dispatchers.Main).launch {
+            EditTextAndFannelConUpdaterForTerminalFragment.update(
+                this@MainActivity,
+                indexOrParentTagName,
+                srcFragment,
+                tagName,
+                updateText,
+                isSave
+            )
+        }
+    }
 
     override fun onEditableSpinnerUpdateForTermFragment(spinnerId: Int?, variableValue: String) {
         EditableSpinnerUpdaterForTerminalFragment.update(

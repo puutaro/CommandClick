@@ -189,10 +189,6 @@ object EditFrameMaker {
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
-//        imageTag: String?,
-//        imagePath: String?,
-//        imageAlpha: Float?,
-//        imageScale: EditComponent.Template.ImageScale
     ) {
         val context = imageView.context
         val imagePathList = withContext(Dispatchers.IO) {
@@ -308,9 +304,6 @@ object EditFrameMaker {
         )
         val imagePath =
             imagePathToIconType.first
-        val icon = CmdClickIcons.values().firstOrNull {
-            it.str == imagePath
-        }
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "licon.txt").absolutePath,
 //            listOf(
@@ -516,9 +509,9 @@ object EditFrameMaker {
 //            ) != switchOn
 //        }
         withContext(Dispatchers.Main) {
-            textTag?.let {
+//            textTag?.let {
                 captionTextView.tag = textTag
-            }
+//            }
             captionTextView.setAutofillHints(settingValue)
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue
