@@ -9,6 +9,7 @@ object ButtonAssetsImage {
     const val downPingPath = "${resButtonPngDirPath}/down.png"
     const val topPingPath = "${resButtonPngDirPath}/top.png"
     const val aboutPingPath = "${resButtonPngDirPath}/about.png"
+    const val cPingPath = "${resButtonPngDirPath}/c.png"
     const val cancelPingPath = "${resButtonPngDirPath}/cancel.png"
     const val copyPingPath = "${resButtonPngDirPath}/copy.png"
     const val backPingPath = "${resButtonPngDirPath}/back.png"

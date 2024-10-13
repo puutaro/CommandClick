@@ -150,15 +150,16 @@ object BitmapTool {
         fun makeGradientBitmap2(
             width: Int,
             height: Int,
-            startColor: String,
-            endColor: String,
+            colorIntArray: IntArray,
+//            startColor: String,
+//            endColor: String,
         ): Bitmap {
-            val color = intArrayOf(
-                Color.parseColor(startColor),
-                Color.parseColor(endColor),
-            )
+//            val color = intArrayOf(
+//                Color.parseColor(startColor),
+//                Color.parseColor(endColor),
+//            )
 
-            val gradient = GradientDrawable(gradientOrientationList.random(), color)
+            val gradient = GradientDrawable(gradientOrientationList.random(), colorIntArray)
             gradient.cornerRadius = 0f
             return gradient.toBitmap(width, height)
         }

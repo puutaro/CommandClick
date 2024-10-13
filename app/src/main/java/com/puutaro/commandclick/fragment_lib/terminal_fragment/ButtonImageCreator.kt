@@ -84,6 +84,7 @@ object ButtonImageCreator {
                     context,
                     listOf(CmdClickIcons.GOOGLE.assetsPath),
                     defaultUrlCapBitmap,
+                    null,
                 )
 //                withContext(Dispatchers.IO){
 //                    FileSystems.updateFile(
@@ -118,26 +119,33 @@ object ButtonImageCreator {
                                 (1..4).random() % 4 <= 2
                             ) return@async
                         }
-                        val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
-                                dirPath ->
-                            if(
-                                dirPath.isEmpty()
-                            ) return@let null
-                            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
-                                if(
-                                    it.isEmpty()
-                                ) return@fileList null
-                                File(dirPath, it).absolutePath
-                            }
-                        }
-                        val byteArray = cropImage(
+                        val byteArray = ButtonImageCreator.create(
                             context,
                             assetsPath,
-                            originalImagePath,
+                            capturePartPngDirPathList,
                             defaultUrlCapBitmap,
                             null,
-                            null,
                         ) ?: return@async
+//                        val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
+//                                dirPath ->
+//                            if(
+//                                dirPath.isEmpty()
+//                            ) return@let null
+//                            FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
+//                                if(
+//                                    it.isEmpty()
+//                                ) return@fileList null
+//                                File(dirPath, it).absolutePath
+//                            }
+//                        }
+//                        val byteArray = cropImage(
+//                            context,
+//                            assetsPath,
+//                            originalImagePath,
+//                            defaultUrlCapBitmap,
+//                            null,
+//                            null,
+//                        ) ?: return@async
 
                         FileSystems.writeFromByteArray(
                             toolbarButtonImageFile.absolutePath,
@@ -147,6 +155,38 @@ object ButtonImageCreator {
                 }
             }
             jobList.forEach { it.await() }
+        }
+    }
+
+    object ButtonImageCreator{
+        suspend fun create(
+            context: Context?,
+            assetsPath: String,
+            capturePartPngDirPathList: List<String>,
+            defaultUrlCapBitmap: Bitmap?,
+            centerColorStr: String?,
+        ): ByteArray? {
+            val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
+                    dirPath ->
+                if(
+                    dirPath.isEmpty()
+                ) return@let null
+                FileSystems.sortedFiles(dirPath).shuffled().firstOrNull()?.let fileList@ {
+                    if(
+                        it.isEmpty()
+                    ) return@fileList null
+                    File(dirPath, it).absolutePath
+                }
+            }
+            return cropImage(
+                context,
+                assetsPath,
+                originalImagePath,
+                defaultUrlCapBitmap,
+                null,
+                null,
+                centerColorStr,
+            )
         }
     }
 
@@ -173,6 +213,7 @@ object ButtonImageCreator {
             context: Context?,
             assetsPathList: List<String>,
             defaultUrlCapBitmap: Bitmap?,
+            centerColorStr: String?,
         ) {
             val capturePartPngDirPathList = makeCapturePartPngDirPathList()
             val concurrentLimit = 5
@@ -220,6 +261,7 @@ object ButtonImageCreator {
                                 defaultUrlCapBitmap,
                                 ccGradColorList.random(),
                                 ccGradColorList.random(),
+                                centerColorStr,
                             ) ?: return@async
                             FileSystems.writeFromByteArray(
                                 selectionBarImageFile.absolutePath,
@@ -277,7 +319,8 @@ object ButtonImageCreator {
         originalImagePath: String?,
         defaultUrlCapBitmap: Bitmap?,
         startGradColor: String?,
-        endGradColor: String?
+        endGradColor: String?,
+        centerColorStr: String?,
     ): ByteArray? {
         val original = withContext(Dispatchers.IO) {
             when(originalImagePath.isNullOrEmpty()){
@@ -324,11 +367,17 @@ object ButtonImageCreator {
             return@withContext output
         }
         val cornerDips = (2..8).random()
+        val colorIntArray = listOf(
+            colorList.random(),
+            centerColorStr ?: colorList.random(),
+            colorList.random()
+        ).map {
+            Color.parseColor(it)
+        }.toIntArray()
         val bkBitmapSrc = BitmapTool.GradientBitmap.makeGradientBitmap2(
             original.width,
             original.height,
-            startGradColor ?: colorList.random(),
-            endGradColor ?: colorList.random(),
+            colorIntArray,
         )
          val overBitmap = overlayBitmap(
              bkBitmapSrc,

@@ -22,6 +22,7 @@ object ScreenSizeCalculator {
             else 4.0f
         return -(dpHeight / hideShowRate).toInt()
     }
+
     fun dpHeight(
         activity: Activity?
     ): Float {

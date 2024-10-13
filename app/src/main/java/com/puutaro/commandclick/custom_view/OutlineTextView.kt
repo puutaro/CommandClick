@@ -3,7 +3,9 @@ package com.puutaro.commandclick.custom_view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
@@ -42,7 +44,7 @@ class OutlineTextView : AppCompatTextView {
 //        }
         setTextColor(strokeColor)
         paint.apply {
-            style = Paint.Style.FILL_AND_STROKE
+            style = Paint.Style.STROKE
             strokeWidth = outlineWidthSrc * densityForOutline
         }
         super.onDraw(canvas)
@@ -59,6 +61,25 @@ class OutlineTextView : AppCompatTextView {
             strokeWidth = 0f
         }
         super.onDraw(canvas)
+
+
+//        paint.isAntiAlias = true
+//
+//        // グラデーションの設定 (例: 赤から青へのグラデーション)
+//        val gradient = LinearGradient(0f, 0f, width.toFloat(), 0f, Color.RED, Color.BLUE, Shader.TileMode.CLAMP)
+//        paint.shader = gradient
+//
+//        // 最初の文字の幅を取得
+//        val firstCharSrc = text.toString().firstOrNull()?.toString() ?: return
+//        val firstCharWidth = paint.measureText(firstCharSrc)
+//
+//        // 最初の文字をグラデーションで描画
+//        paint.shader = gradient
+//        canvas?.drawText(firstCharSrc, 0f, baseline.toFloat(), paint)
+
+//        // 残りの文字を通常のテキストで描画
+//        paint.shader = null
+//        canvas.drawText(text.toString().substring(1), firstCharWidth, baseline, paint)
     }
 
 //    fun revOutline(isRev: Boolean){

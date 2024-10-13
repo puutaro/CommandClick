@@ -1,21 +1,61 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
 import android.app.Dialog
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Paint.FontMetricsInt
+import android.graphics.Shader
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
 import android.text.TextWatcher
+import android.text.style.CharacterStyle
+import android.text.style.RelativeSizeSpan
+import android.text.style.ReplacementSpan
+import android.text.style.UpdateAppearance
 import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickColor
+import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.common.variable.res.FannelIcons
 import com.puutaro.commandclick.component.adapter.PromptListAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
@@ -24,6 +64,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -33,57 +74,42 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.io.File
 import java.lang.ref.WeakReference
+import java.time.LocalDateTime
+
 
 class PromptWithListDialog(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
     private var returnValue = String()
     private var promptDialogObj: Dialog? = null
-    private val listPrefix = "list"
-    private val listDirName = "${listPrefix}Text"
-    private val statisticsName = "statistics"
-    private val listTxtSuffix = ".txt"
-    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-    private val mapSeparator = ','
-    private val firstSeparator = '|'
-    private val secondSeparator = '?'
-    private var onDialog = false
-    private val switchOn = "ON"
-    private val switchOff = "OFF"
+
+    companion object {
+        private val listPrefix = "list"
+        private val listDirName = "${listPrefix}Text"
+        private val listTxtSuffix = ".txt"
+        private val mapSeparator = ','
+        private val firstSeparator = '|'
+        val secondSeparator = '?'
+        private var onDialog = false
+        private val switchOn = "ON"
+        private val switchOff = "OFF"
+    }
 
     fun create(
         fannelPath: String,
+        title: String,
         listOrDefoTxtVars: String,
     ): String {
         val fannelFile = File(fannelPath)
         if(
             !fannelFile.isFile
         ) return String()
-        val promptListTotalMap = CmdClickMap.createMap(
-            listOrDefoTxtVars,
-            mapSeparator,
-        ).toMap()
-        val editTextMap = CmdClickMap.createMap(
-            promptListTotalMap.get(PromptWithTextMapKey.editText.name),
-            firstSeparator
-        ).toMap()
-        val promptListMap = CmdClickMap.createMap(
-            promptListTotalMap.get(PromptWithTextMapKey.list.name),
-            firstSeparator
-        ).toMap()
         val terminalFragment = terminalFragmentRef.get()
             ?: return String()
-        val fannelDirPath = CcPathTool.getMainFannelDirPath(fannelPath)
-        val listDirPath = "${fannelDirPath}/${listDirName}"
-
-        val variableName = promptListMap.get(PromptListVars.variableName.name)
-        val listTxtName = makeListTextFileName(
-            variableName,
-        )
-        val promptListFile =
-            File(listDirPath, listTxtName)
         onDialog = true
         returnValue = String()
         runBlocking {
@@ -91,10 +117,9 @@ class PromptWithListDialog(
                 try {
                     execCreate(
                         terminalFragment,
-                        fannelDirPath,
-                        promptListFile,
-                        editTextMap,
-                        promptListMap,
+                        fannelPath,
+                        title,
+                        listOrDefoTxtVars,
                     )
                 } catch (e: Exception){
                     Log.e(this.javaClass.name, e.toString())
@@ -115,22 +140,255 @@ class PromptWithListDialog(
 
     private fun execCreate(
         terminalFragment: TerminalFragment,
-        fannelDirPath: String,
-        promptListFile: File,
-        editTextMap: Map<String, String>,
-        promptListMap: Map<String, String>,
+        fannelPath: String,
+        title: String,
+        listOrDefoTxtVars: String,
     ) {
         val context = terminalFragment.context
             ?: return
 
         promptDialogObj = Dialog(
             context,
-//            R.style.BottomSheetDialogTheme
+            R.style.BottomSheetDialogTheme
         )
-
+        val randEndNum = 5
+        val isWhiteBackgrond =
+            (1..randEndNum).random() % randEndNum == 0
         promptDialogObj?.setContentView(
             R.layout.prompt_list_dialog_layout
         )
+        val holderConstraint = promptDialogObj?.findViewById<ConstraintLayout>(
+            R.id.prompt_list_dialog_constraint
+        )
+        val bkRelative = promptDialogObj?.findViewById<RelativeLayout>(
+            R.id.prompt_list_dialog_bk_relative
+        ) ?: return
+        val promptListTitleView = promptDialogObj?.findViewById<OutlineTextView>(
+            R.id.prompt_list_dialog_list_title
+        )?.apply {
+//            AppCompatResources.getDrawable(context, R.drawable.textbk)?.toBitmap()?.let {
+//                val spanna: Spannable = SpannableString(title)
+//                spanna.setSpan(
+//                    it,
+//                    0,
+//                    title.length,
+//                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//                )
+////                paint.setShader(
+////                    BitmapShader(
+////                        it,
+////                        Shader.TileMode.REPEAT,
+////                        Shader.TileMode.REPEAT
+////                    )
+////                )
+//                text = spanna
+//            }
+            val titleStr = title.map {
+                "${it}"
+            }.joinToString(" ")
+            val ss1 = SpannableString(titleStr)
+            ss1.setSpan(
+                RelativeSizeSpan(2f),
+                0,
+                1,
+                0
+            ) // set size
+
+//            val gradientColors = intArrayOf(-0xffff01, -0xff0100) // Example: Blue to Green
+
+//            val shader: Shader = LinearGradient(
+//                0f,
+//                0f,
+//                0f,
+//                this.textSize,
+//                gradientColors,
+//                null,
+//                Shader.TileMode.CLAMP
+//            )
+//            val length: Int = this.getMeasuredWidth()
+//
+//            val angle = 45f // specify angle in degrees here
+
+
+//            val textShader: Shader = LinearGradient(
+//                0f,
+//                0f,
+//                (Math.sin(Math.PI * angle / 180) * length).toInt().toFloat(),
+//                (Math.cos(Math.PI * angle / 180) * length).toInt().toFloat(),
+//                intArrayOf(
+//                    Color.BLUE,
+//                    Color.GREEN,
+//                    Color.GREEN,
+//                    Color.BLUE,
+//                    Color.RED,
+//                    Color.GREEN,
+//                    Color.BLUE,
+//                    Color.RED
+//                ),
+//                null,
+//                Shader.TileMode.CLAMP
+//            )
+////            paint.shader = shader
+//            ss1.set(0, 10, textShader)
+
+            // Apply the gradient color span to the desired part of the text
+
+            // Apply the gradient color span to the desired part of the text
+//            ss1.setSpan(
+//                GradientSpan(shader),
+//                0,
+//                1,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+
+//            val htmpSpan = HtmlCompat.fromHtml(
+//                "<span style=\"text-stroke: 1px #ff0000; color: #FFFFFF ; background-color: #FF8983\">Highlighted</span><b> Bold!</b> Not bold <span style=\"background-color: #00FF00\">string</span>",
+//                HtmlCompat.FROM_HTML_MODE_LEGACY )
+//            ss1.setSpan(
+////                htmpSpan,
+//                ForegroundColorSpan(
+//                    Color.parseColor(
+//                        CmdClickColorStr.values().map {
+//                            it.str
+//                        }.shuffled().first()
+//                    )
+//                ),
+//                0,
+//                1,
+//                0
+//            ) // set color
+//            val textShader: Shader = LinearGradient(
+//                0f,
+//                0f,
+//                0f,
+//                0f,
+//                intArrayOf(
+//                    Color.BLUE,
+//                    Color.GREEN
+//                ),
+//                null,
+////                floatArrayOf(0f, 1f),
+//                Shader.TileMode.CLAMP
+//            )
+//            paint.shader = textShader
+            val colorList = listOf(
+                CmdClickColorStr.LIGHT_GREEN.str,
+                CmdClickColorStr.THICK_AO.str,
+                CmdClickColorStr.BLUE.str,
+                CmdClickColorStr.SKERLET.str,
+                CmdClickColorStr.YELLOW.str,
+                CmdClickColorStr.WHITE_GREEN.str,
+                CmdClickColorStr.GREEN.str,
+                CmdClickColorStr.YELLOW_GREEN.str,
+                CmdClickColorStr.BLACK_AO.str,
+                CmdClickColorStr.WATER_BLUE.str,
+                CmdClickColorStr.PURPLE.str,
+                CmdClickColorStr.ORANGE.str,
+                CmdClickColorStr.BROWN.str,
+            )
+            val whiteColorStr = "#ffffff"
+            val color1 = colorList.random()
+            val color2 = runBlocking {
+                if(
+                    !isWhiteBackgrond
+                ) return@runBlocking whiteColorStr
+                var color2Str = String()
+                for(i in 1..5) {
+                    color2Str = colorList.random()
+                    if (
+                        color2Str != color1
+                    ) return@runBlocking color2Str
+                }
+                color2Str
+            }
+            val alreadyColorList = listOf(
+                color1,
+                color2,
+            )
+            val color3 = runBlocking {
+                var color3Str = String()
+                for(i in 1..5) {
+                    color3Str = colorList.random()
+                    if (
+                        !alreadyColorList.contains(color3Str)
+                    ) return@runBlocking color3Str
+                }
+                color3Str
+            }
+            val colors = intArrayOf(
+                Color.parseColor(color1),
+                Color.parseColor(color2),
+                Color.parseColor(whiteColorStr),
+                Color.parseColor(color3)
+            ) // Define your gradient colors
+
+            val positions = floatArrayOf(0.5f, 0.1f) // Define color positions
+
+            val angle = (220..320).random() //45 // Set the gradient angle
+            FileSystems.updateFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "lgradient.txt").absolutePath,
+                listOf(
+                    "positions: ${positions.map { it }.joinToString("| ")}, angle: ${angle}, color1: ${color1}, color2: ${color2}"
+                ).joinToString("\n")
+            )
+
+            val gradientSpan = LinearGradientSpan(colors, null, angle)
+
+            ss1.setSpan(gradientSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+
+            val radius = 10f
+            val dx = 10f
+            val dy = 10f
+            val shadowColor = Color.WHITE
+
+            val shadowSpan = ShadowSpan(radius, dx, dy, shadowColor)
+            ss1.setSpan(shadowSpan, 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+
+
+            text = ss1
+//            htmpSpan
+                //titleStr
+//            val curWidth = this.width
+//            val curHeight = this.height
+//            val drawable = AppCompatResources.getDrawable(context, R.drawable.textbk)
+//            drawable?.setBounds(0, 0, curWidth, curHeight)
+//            setCompoundDrawables(drawable, null, null, null)
+
+            setFillColor(R.color.ao)
+            setStrokeColor(CmdClickColor.WHITE.id)
+            outlineWidthSrc = 3
+//            when(isWhiteBackgrond) {
+//                true -> setStrokeColor(
+//                    CmdClickColor.values().filter {
+//                        it != CmdClickColor.WHITE
+//                    }.shuffled().first().id
+//                )
+//                else -> setStrokeColor(CmdClickColor.WHITE.id)
+//            }
+        }
+        val promptListTotalMap = CmdClickMap.createMap(
+            listOrDefoTxtVars,
+            mapSeparator,
+        ).toMap()
+        val editTextMap = CmdClickMap.createMap(
+            promptListTotalMap.get(PromptWithTextMapKey.editText.name),
+            firstSeparator
+        ).toMap()
+        val promptListMap = CmdClickMap.createMap(
+            promptListTotalMap.get(PromptWithTextMapKey.list.name),
+            firstSeparator
+        ).toMap()
+        val fannelDirPath = CcPathTool.getMainFannelDirPath(fannelPath)
+        val listDirPath = "${fannelDirPath}/${listDirName}"
+
+        val variableName = promptListMap.get(PromptListVars.variableName.name)
+        val listTxtName = makeListTextFileName(
+            variableName,
+        )
+        val promptListFile =
+            File(listDirPath, listTxtName)
+
         val setTextSrc = editTextMap.get(
             PromptEditTextKey.default.name
         ) ?: String()
@@ -159,52 +417,93 @@ class PromptWithListDialog(
             true -> String()
             else -> setText ?: String()
         }
+        val promptList =
+            PromptList.makePromptList(
+                promptListFile,
+                promptListMap,
+                filterText,
+                listLimit,
+            )
+        val promptListView = promptDialogObj?.findViewById<RecyclerView>(
+            R.id.prompt_list_dialog_list_view
+        )
         CoroutineScope(Dispatchers.Main).launch {
-            val promptList = withContext(Dispatchers.IO) {
-                makePromptList(
-                    promptListFile,
-                    promptListMap,
-                    filterText,
-                    listLimit,
+            val promptEditText = withContext(Dispatchers.Main) {
+                EditTextMakerForPromptList.make(
+                    promptDialogObj,
+                    editTextMap,
+                    setText,
+                    editTextVisible,
                 )
             }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lPrompt.txt").absolutePath,
-//            listOf(
-//                "editTextMap: ${editTextMap}",
-//                "promptListMap: ${promptListMap}",
-//                "promptList: ${promptList}"
-//            ).joinToString("\n")
-//        )
+            withContext(Dispatchers.Main) {
+                val promptCancelButton = promptDialogObj?.findViewById<AppCompatImageView>(
+                    R.id.prompt_list_dialog_cancel
+                )
+
+                promptCancelButton?.apply {
+                    ExecSetToolbarButtonImage.setImageButton(
+                        this,
+                        CmdClickIcons.CANCEL
+                    )
+                    setOnClickListener {
+                        returnValue = String()
+                        promptDialogObj?.dismiss()
+                        promptDialogObj = null
+                        onDialog = false
+                    }
+                }
+            }
+            CoroutineScope(Dispatchers.Main).launch{
+
+                withContext(Dispatchers.Main) {
+                    if (
+                        isWhiteBackgrond
+                    ) return@withContext
+
+                    val bkImageView = promptDialogObj?.findViewById<AppCompatImageView>(
+                        R.id.prompt_list_dialog_list_bk_image
+                    ) ?: return@withContext
+                    val bitmap = withContext(Dispatchers.IO) {
+                        val colorStrList = CmdClickColorStr.values().map { it.str }
+                        val colorIntArray = listOf(
+                            colorStrList.random(),
+                            colorStrList.random(),
+                            colorStrList.random()
+                        ).map {
+                            Color.parseColor(it)
+                        }.toIntArray()
+                        BitmapTool.GradientBitmap.makeGradientBitmap2(
+                            600,
+                            1200,
+                            colorIntArray
+                        )
+                    }
+                    bkImageView.setImageBitmap(bitmap)
+                }
+            }
             val promptListAdapter = withContext(Dispatchers.Main) {
                 PromptListAdapter(
                     context,
                     promptList,
+                    isWhiteBackgrond
                 )
             }
             val listVisible =
                 withContext(Dispatchers.IO) {
                     promptListMap.get(PromptListVars.visible.name) != switchOff
                 }
-            val promptListView =
-                withContext(Dispatchers.Main) {
-                    promptDialogObj?.findViewById<RecyclerView>(
-                        R.id.prompt_list_dialog_list_view
-                    )
-                }
             withContext(Dispatchers.Main) {
                 promptDialogObj?.setOnCancelListener {
                     exitDialog(
                         fannelDirPath,
+                        holderConstraint,
+                        bkRelative,
                         promptListView,
                         String(),
                         promptListFile,
                         listLimit,
                     )
-                    returnValue = String()
-                    promptDialogObj?.dismiss()
-                    promptDialogObj = null
-                    onDialog = false
                 }
             }
             withContext(Dispatchers.Main) {
@@ -217,57 +516,47 @@ class PromptWithListDialog(
                     )
                 }
             }
-            val promptEditText = withContext(Dispatchers.Main) {
-                EditTextMakerForPromptList.make(
-                    promptDialogObj,
-                    editTextMap,
-                    setText,
-                    editTextVisible,
-                )
-            }
             withContext(Dispatchers.Main) {
-                val promptCancelButton =promptDialogObj?.findViewById<AppCompatImageButton>(
-                    R.id.prompt_list_dialog_cancel
-                )
-                promptCancelButton?.setOnClickListener {
-                    returnValue = String()
-                    promptDialogObj?.dismiss()
-                    promptDialogObj = null
-                    onDialog = false
-                }
-            }
-            withContext(Dispatchers.Main) {
-                val promptOkButtonView =
-                    promptDialogObj?.findViewById<AppCompatImageButton>(
-                        R.id.prompt_list_dialog_ok
+                promptDialogObj?.findViewById<AppCompatImageView>(
+                    R.id.prompt_list_dialog_ok
+                )?.apply {
+                    ExecSetToolbarButtonImage.setImageButton(
+                        this,
+                        CmdClickIcons.OK
                     )
-                promptOkButtonView?.isVisible = editTextVisible
-                promptOkButtonView?.setOnClickListener {
-                    val inputEditable = promptEditText?.text
-                    if (
-                        inputEditable.isNullOrEmpty()
-                    ) {
+                    setOnClickListener {
+                        val inputEditable = promptEditText?.text
+                        if (
+                            inputEditable.isNullOrEmpty()
+                        ) {
+                            exitDialog(
+                                fannelDirPath,
+                                holderConstraint,
+                                bkRelative,
+                                promptListView,
+                                String(),
+                                promptListFile,
+                                listLimit,
+                            )
+                            return@setOnClickListener
+                        } else returnValue = inputEditable.toString()
                         exitDialog(
                             fannelDirPath,
+                            holderConstraint,
+                            bkRelative,
                             promptListView,
-                            String(),
+                            inputEditable.toString(),
                             promptListFile,
                             listLimit,
                         )
-                        return@setOnClickListener
-                    } else returnValue = inputEditable.toString()
-                    exitDialog(
-                        fannelDirPath,
-                        promptListView,
-                        inputEditable.toString(),
-                        promptListFile,
-                        listLimit,
-                    )
+                    }
                 }
             }
             withContext(Dispatchers.Main) {
                 editTextKeyListener(
                     fannelDirPath,
+                    holderConstraint,
+                    bkRelative,
                     promptListView,
                     promptEditText,
                     promptListFile,
@@ -279,6 +568,7 @@ class PromptWithListDialog(
                     promptEditText,
                     promptListFile,
                     promptListMap,
+                    promptListView,
                     promptListAdapter,
                     disableListBind,
                     listLimit,
@@ -287,6 +577,8 @@ class PromptWithListDialog(
             withContext(Dispatchers.Main) {
                 setItemClickListener(
                     fannelDirPath,
+                    holderConstraint,
+                    bkRelative,
                     promptListView,
                     promptListAdapter,
                     promptEditText,
@@ -295,6 +587,12 @@ class PromptWithListDialog(
                     listLimit,
                 )
             }
+//            withContext(Dispatchers.Main){
+//                scrollToBottom(
+//                    promptListView,
+//                    promptListAdapter,
+//                )
+//            }
         }
         promptDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -304,36 +602,171 @@ class PromptWithListDialog(
             Gravity.BOTTOM
         )
         promptDialogObj?.show()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            StatisticsTool.displayStatisticsBk(
+                terminalFragmentRef,
+                promptDialogObj,
+                fannelDirPath,
+                promptList,
+                isWhiteBackgrond,
+            )
+        }
+        KeyboardHandler.handle(
+            terminalFragment,
+            promptDialogObj,
+            promptListTitleView,
+            promptListView,
+            editTextVisible,
+        )
     }
 
-    private fun makePromptList(
-        promptListFile: File,
-        promptListMap: Map<String, String>,
-        filterString: String,
-        listLimit: Int?,
-    ): MutableList<String> {
-        val mainList = ReadText(
-            promptListFile.absolutePath
-        ).textToList()
-        val comcatFilePathList = makeExtraList(
-            promptListMap.get(PromptListVars.concatFilePathList.name)?.let {
-                QuoteTool.splitBySurroundedIgnore(
+//    private suspend fun scrollToBottom(
+//        promptListView: RecyclerView?,
+//        promptListAdapter: PromptListAdapter,
+//    ){
+//        delay(200)
+//        promptListView?.scrollToPosition(promptListAdapter.itemCount - 1)
+//    }
+
+    private object KeyboardHandler {
+        fun handle(
+            terminalFragment: TerminalFragment,
+            promptDialogObj: Dialog?,
+            promptListTitleView: AppCompatTextView?,
+            promptListView: RecyclerView?,
+            editTextVisible: Boolean,
+        ){
+            val context = terminalFragment.context
+                ?: return
+            val searchCardView = promptDialogObj?.findViewById<CardView>(
+                R.id.prompt_list_dialog_search_edit_cardview
+            )
+            val cancelImageView = promptDialogObj?.findViewById<AppCompatImageView>(
+                R.id.prompt_list_dialog_cancel
+            )
+            val okImageView = promptDialogObj?.findViewById<AppCompatImageView>(
+                R.id.prompt_list_dialog_ok
+            )
+            val searchCardViewVerticalMarginNormalDp = context.resources.getDimension(
+                R.dimen.prompt_list_dialog_vertical_search_cardview_margin
+            ).toInt()
+//            .let {
+//            ScreenSizeCalculator.toDp(
+//                context,
+//                it
+//            )
+//        }
+            okImageView?.isVisible = editTextVisible
+            val searchCardViewVerticalMarginKeyOpenDp = context.resources.getDimension(
+                R.dimen.prompt_list_dialog_vertical_search_cardview_key_open_margin
+            ).toInt()
+            terminalFragment.activity?.let {
+                KeyboardVisibilityEvent.setEventListener(
                     it,
-                    secondSeparator
+                    terminalFragment.viewLifecycleOwner,
+                    KeyboardVisibilityEventListener {
+                            isOpen ->
+                        if(
+                            !terminalFragment.isVisible
+                            || promptDialogObj?.isShowing != true
+                        ) return@KeyboardVisibilityEventListener
+                        when(isOpen){
+                            true -> {
+                                promptListTitleView?.alpha = 0.4f
+                                val constraintLayout = promptListView?.layoutParams as? ConstraintLayout.LayoutParams
+                                constraintLayout?.apply {
+                                    topToTop = ConstraintSet.PARENT_ID
+                                    topToBottom = ConstraintLayout.LayoutParams.UNSET
+                                    bottomMargin = searchCardViewVerticalMarginKeyOpenDp
+                                }
+                                promptListView?.layoutParams = constraintLayout
+
+                                val cardConstraintLayout = searchCardView?.layoutParams as? ConstraintLayout.LayoutParams
+                                cardConstraintLayout?.setMargins(
+                                    cardConstraintLayout.marginStart,
+                                    cardConstraintLayout.topMargin,
+                                    cardConstraintLayout.marginEnd,
+                                    0
+                                )
+                                searchCardView?.layoutParams = cardConstraintLayout
+                                cancelImageView?.isVisible = false
+                                okImageView?.isVisible = false
+//                            val cancelConstraintLayout = cancelImageView?.layoutParams as? ConstraintLayout.LayoutParams
+//                            cancelConstraintLayout?.apply {
+//                               height = bottomButtonKeyOpenHeightDp
+//                            }
+//                            val okConstraintLayout = okImageView?.layoutParams as? ConstraintLayout.LayoutParams
+//                            okConstraintLayout?.apply {
+//                                height = bottomButtonKeyOpenHeightDp
+//                            }
+
+                            }
+                            else -> {
+                                promptListTitleView?.alpha = 1f
+                                val constraintLayout = promptListView?.layoutParams as? ConstraintLayout.LayoutParams
+                                constraintLayout?.apply {
+                                    topToTop = ConstraintLayout.LayoutParams.UNSET
+                                    topToBottom = R.id.prompt_list_dialog_list_title
+                                    bottomMargin = searchCardViewVerticalMarginNormalDp
+                                }
+                                promptListView?.layoutParams = constraintLayout
+
+                                val cardConstraintLayout = searchCardView?.layoutParams as? ConstraintLayout.LayoutParams
+                                cardConstraintLayout?.setMargins(
+                                    cardConstraintLayout.marginStart,
+                                    cardConstraintLayout.topMargin,
+                                    cardConstraintLayout.marginEnd,
+                                    searchCardViewVerticalMarginNormalDp
+                                )
+                                cancelImageView?.isVisible = true
+                                okImageView?.isVisible = true && editTextVisible
+//                            val cancelConstraintLayout = cancelImageView?.layoutParams as? ConstraintLayout.LayoutParams
+//                            cancelConstraintLayout?.apply {
+//                                height = bottomButtonNormalHeightDp
+//                            }
+//                            val okConstraintLayout = okImageView?.layoutParams as? ConstraintLayout.LayoutParams
+//                            okConstraintLayout?.apply {
+//                                height = bottomButtonNormalHeightDp
+//                            }
+                            }
+                        }
+                    }
                 )
             }
-        )
-        val promptListByComcatFilePathList = mainList + comcatFilePathList.filter {
-            !mainList.contains(it)
         }
-        val concatList = makeExtraListFromCon(
-            promptListMap.get(PromptListVars.concatList.name)?.let {
-                QuoteTool.trimBothEdgeQuote(it)
+    }
+
+
+    private object PromptList {
+        fun makePromptList(
+            promptListFile: File,
+            promptListMap: Map<String, String>,
+            filterString: String,
+            listLimit: Int?,
+        ): MutableList<String> {
+            val mainList = ReadText(
+                promptListFile.absolutePath
+            ).textToList()
+            val comcatFilePathList = makeExtraList(
+                promptListMap.get(PromptListVars.concatFilePathList.name)?.let {
+                    QuoteTool.splitBySurroundedIgnore(
+                        it,
+                        secondSeparator
+                    )
+                }
+            )
+            val promptListByComcatFilePathList = mainList + comcatFilePathList.filter {
+                !mainList.contains(it)
             }
-        )
-        val promptList = promptListByComcatFilePathList + concatList.filter {
-            !promptListByComcatFilePathList.contains(it)
-        }
+            val concatList = makeExtraListFromCon(
+                promptListMap.get(PromptListVars.concatList.name)?.let {
+                    QuoteTool.trimBothEdgeQuote(it)
+                }
+            )
+            val promptList = promptListByComcatFilePathList + concatList.filter {
+                !promptListByComcatFilePathList.contains(it)
+            }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lPrompt_make.txt").absolutePath,
 //            listOf(
@@ -344,32 +777,53 @@ class PromptWithListDialog(
 //                "promptList: ${promptList}",
 //            ).joinToString("\n")
 //        )
-        return when(filterString.isEmpty()){
-            true -> promptList
-            else -> promptList.distinct().filter {
-                    line ->
-                Regex(
-                    filterString
-                        .lowercase()
-                        .replace("\n", "")
-                ).containsMatchIn(
-                    line.lowercase()
-                )
+            return when (filterString.isEmpty()) {
+                true -> promptList
+                else -> promptList.distinct().filter { line ->
+                    Regex(
+                        filterString
+                            .lowercase()
+                            .replace("\n", "")
+                    ).containsMatchIn(
+                        line.lowercase()
+                    )
+                }
+            }.let { listSrc ->
+                when (listLimit == null) {
+                    true -> listSrc
+                    else -> listSrc.take(listLimit)
+                }.toMutableList()
             }
-        }.let {
-            listSrc ->
-            when(listLimit == null){
-                true -> listSrc
-                else -> listSrc.take(listLimit)
-            } .toMutableList()
+        }
+
+        private fun makeExtraList(
+            listConcatFilePathList: List<String>?,
+        ): List<String> {
+            if (
+                listConcatFilePathList.isNullOrEmpty()
+            ) return emptyList()
+            return listConcatFilePathList.map {
+                ReadText(it).textToList()
+            }.flatten().filter { it.trim().isNotEmpty() }
+
+        }
+
+        private fun makeExtraListFromCon(
+            concatList: String?,
+        ): List<String> {
+            if (
+                concatList.isNullOrEmpty()
+            ) return emptyList()
+            return concatList.split(secondSeparator)
+
         }
     }
-
 
     private fun setPromptEditText(
         promptEditText: AppCompatEditText?,
         promptListFile: File,
         editTextMap: Map<String, String>,
+        promptListView: RecyclerView?,
         promptListAdapter: PromptListAdapter,
         disableListBind: Boolean,
         listLimit: Int?,
@@ -384,7 +838,7 @@ class PromptWithListDialog(
                     !promptEditText.hasFocus()
                     || disableListBind
                 ) return
-                val updatePromptList = makePromptList(
+                val updatePromptList = PromptList.makePromptList(
                     promptListFile,
                     editTextMap,
                     promptEditText.text.toString(),
@@ -393,12 +847,20 @@ class PromptWithListDialog(
                 promptListAdapter.promptList.clear()
                 promptListAdapter.promptList.addAll(updatePromptList)
                 promptListAdapter.notifyDataSetChanged()
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    scrollToBottom(
+//                        promptListView,
+//                        promptListAdapter,
+//                    )
+//                }
             }
         })
     }
 
     private fun editTextKeyListener(
         fannelDirPath: String,
+        holderLinear: ConstraintLayout?,
+        bkRelative: RelativeLayout?,
         promptListView: RecyclerView?,
         promptEditText: AppCompatEditText?,
         promptListFile: File,
@@ -413,28 +875,24 @@ class PromptWithListDialog(
                 if(promptEditText.text.isNullOrEmpty()){
                     exitDialog(
                         fannelDirPath,
+                        holderLinear,
+                        bkRelative,
                         promptListView,
                         String(),
                         promptListFile,
                         listLimit,
                     )
-//                    returnValue = String()
-//                    promptDialogObj?.dismiss()
-//                    promptDialogObj = null
-//                    onDialog = false
                     return false
                 }
-//                returnValue = currentInputEditable.toString()
                 exitDialog(
                     fannelDirPath,
+                    holderLinear,
+                    bkRelative,
                     promptListView,
                     currentInputEditable.toString(),
                     promptListFile,
                     listLimit,
                 )
-//                promptDialogObj?.dismiss()
-//                promptDialogObj = null
-//                onDialog = false
                 return false
             }
         })
@@ -442,6 +900,8 @@ class PromptWithListDialog(
 
     private fun setItemClickListener(
         fannelDirPath: String,
+        holderConstraint: ConstraintLayout?,
+        bkRelative: RelativeLayout?,
         promptListView: RecyclerView?,
         promptListAdapter: PromptListAdapter,
         promptEditText: AppCompatEditText?,
@@ -466,6 +926,8 @@ class PromptWithListDialog(
                 ) return
                 exitDialog(
                     fannelDirPath,
+                    holderConstraint,
+                    bkRelative,
                     promptListView,
                     itemStr,
                     promptListFile,
@@ -475,115 +937,10 @@ class PromptWithListDialog(
         }
     }
 
-    private fun makeExtraList(
-        listConcatFilePathList: List<String>?,
-    ): List<String> {
-        if(
-            listConcatFilePathList.isNullOrEmpty()
-        ) return emptyList()
-        return listConcatFilePathList.map {
-            ReadText(it).textToList()
-        }.flatten().filter { it.trim().isNotEmpty()}
-
-    }
-
-    private fun makeExtraListFromCon(
-        concatList: String?,
-    ): List<String> {
-        if(
-            concatList.isNullOrEmpty()
-        ) return emptyList()
-        return concatList.split(secondSeparator)
-
-    }
-
-    private fun registerToColdList(
-        fannelDirPath: String,
-        promptListFile: File,
-        listLimit: Int?,
-    ){
-        val trimedReturnValue =
-            returnValue.trim()
-        if(
-            trimedReturnValue.isEmpty()
-        ) return
-
-        val promptListDirPath = promptListFile.parent
-            ?: return
-        saveStatistics(
-            fannelDirPath,
-            trimedReturnValue,
-        )
-        FileSystems.createDirs(
-            promptListDirPath
-        )
-        val updatePromptList =
-            listOf(trimedReturnValue) +
-                    makeNoEmptyList(
-                        trimedReturnValue,
-                        promptListFile.name,
-                        promptListDirPath,
-                    ).filter {
-                        trimedReturnValue != it
-                    }.distinct().let {
-                        listSrc ->
-                        when(listLimit == null){
-                            true -> listSrc
-                            else -> listSrc.take(listLimit)
-                        }
-                    }
-        FileSystems.writeFile(
-            promptListFile.absolutePath,
-            updatePromptList.joinToString("\n")
-        )
-    }
-
-    private fun saveStatistics(
-        fannelDirPath: String,
-        trimedReturnValue: String,
-    ){
-        val statisticsFile = File("${fannelDirPath}/${statisticsName}/promptWithList.txt")
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lStatistics.txt").absolutePath,
-//            listOf(
-//                "statisticsFile: ${statisticsFile.absolutePath}"
-//            ).joinToString("\n")
-//        )
-        val updateStatisticsCon = ReadText(
-            statisticsFile.absolutePath
-        ).textToList() + listOf(trimedReturnValue)
-        FileSystems.writeFile(
-            statisticsFile.absolutePath,
-            updateStatisticsCon.joinToString("\n")
-        )
-    }
-
-    private fun makeNoEmptyList(
-        trimedReturnValue: String,
-        listTxtName: String,
-        listDirPath: String,
-    ): List<String> {
-        val curList = ReadText(
-            File(
-                listDirPath,
-                listTxtName
-            ).absolutePath
-        ).textToList()
-        if(
-            trimedReturnValue.isNotEmpty()
-        ) return listOf(trimedReturnValue) + curList
-        return curList
-    }
-
-    private fun makeListTextFileName(
-        variableName: String?,
-    ): String {
-        val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
-        return "${listPrefix}${prefixUpperVariableName}${listTxtSuffix}"
-    }
-
     private fun exitDialog(
         fannelDirPath: String,
+        holderConstraint: ConstraintLayout?,
+        bkRelative: RelativeLayout?,
         promptListView: RecyclerView?,
         returnStr: String,
         promptListFile: File,
@@ -593,16 +950,854 @@ class PromptWithListDialog(
         promptListView?.adapter = null
         promptListView?.recycledViewPool?.clear()
         promptListView?.removeAllViews()
+        bkRelative?.removeAllViews()
+        holderConstraint?.removeAllViews()
         returnValue = returnStr
-        registerToColdList(
+        ColdListRegister.register(
             fannelDirPath,
             promptListFile,
             listLimit,
+            returnValue
         )
         promptDialogObj?.dismiss()
         promptDialogObj = null
         onDialog = false
     }
+
+    private object StatisticsTool {
+
+        val statisticsName = "statistics"
+        val statisticsMapSeparator = ','
+
+        enum class StatisticsKey(
+            val key: String
+        ){
+            TITLE("title"),
+            DATETIME("datetime"),
+        }
+
+        suspend fun displayStatisticsBk(
+            terminalFragmentRef: WeakReference<TerminalFragment>,
+            promptDialogObj: Dialog?,
+            fannelDirPath: String,
+            promptList: List<String>,
+            isWhiteBackgrond: Boolean,
+        ){
+            when(
+                (1..2).random()
+            ) {
+                1 -> makeTextBk(
+                    terminalFragmentRef,
+                    promptDialogObj,
+                    fannelDirPath,
+                    promptList,
+                    isWhiteBackgrond,
+                )
+                else -> makePieBk(
+                    terminalFragmentRef,
+                    promptDialogObj,
+                    fannelDirPath,
+                    promptList
+                )
+            }
+        }
+
+        private suspend fun makeTextBk(
+            terminalFragmentRef: WeakReference<TerminalFragment>,
+            promptDialogObj: Dialog?,
+            fannelDirPath: String,
+            promptList: List<String>,
+            isWhiteBackgrond: Boolean,
+        ){
+            val context = terminalFragmentRef.get()?.context
+                ?: return
+            withContext(Dispatchers.IO){
+                //chartのコンポーネントを取得
+                val bkRelative = promptDialogObj?.findViewById<RelativeLayout>(
+                    R.id.prompt_list_dialog_bk_relative
+                ) ?: return@withContext
+
+                val dialogMargin = 200
+                val screenHeightFloat = withContext(Dispatchers.Main) {
+                    bkRelative.measuredHeight - dialogMargin
+                }
+                val screenHeightInt = screenHeightFloat.toInt()
+                val screenWidthFloat = withContext(Dispatchers.Main) {
+                    bkRelative.measuredWidth - dialogMargin
+                }
+
+                val screenWidthInt = screenWidthFloat.toInt()
+
+                val statisticsTxtFile = makeStatisticsTextFile(
+                    fannelDirPath
+                )
+                val statisticsMapList = ReadText(
+                    statisticsTxtFile.absolutePath
+                ).textToList().filter{
+                    it.isNotEmpty()
+                }.map {
+                    CmdClickMap.createMap(
+                        it,
+                        statisticsMapSeparator
+                    ).toMap()
+                }
+                val titleKey = StatisticsKey.TITLE.key
+                val frequencyMapListSrc = statisticsMapList.map{
+                        elMap ->
+                    elMap.get(titleKey)
+                }
+                val decentTextToFreqList = (frequencyMapListSrc + promptList).groupBy { it }
+                    .mapValues { it.value.size }
+                    .filterKeys { !it.isNullOrEmpty() }
+                    .toList()
+                    .sortedByDescending { (_, value) -> value }
+                val frequencyMapList =
+                    decentTextToFreqList.toMap()
+                val decentTextList = decentTextToFreqList.map {
+                    it.first
+                }.filter {
+                    !it.isNullOrEmpty()
+                }
+                val textList = frequencyMapList.map {
+                    freqMap ->
+                    val text = freqMap.key
+                        ?: return@map emptyList<String>()
+                    val freq = freqMap.value
+                    (0..freq).map { text }
+                }.flatten()
+
+//表示する色を設定
+//                frequencyMapList.forEach { frequencyMap ->
+//                    value.add(
+//                        PieEntry(
+//                            frequencyMap.value.toFloat(),
+//                            frequencyMap.key
+//                        )
+//                    )
+//                }
+                val srcColorList = listOf(
+                    CmdClickColorStr.LIGHT_GREEN,
+                    CmdClickColorStr.WHITE_GREEN,
+                    CmdClickColorStr.ANDROID_GREEN,
+                    CmdClickColorStr.YELLOW_GREEN,
+                    CmdClickColorStr.GREEN,
+//                    CmdClickColorStr.THICK_GREEN,
+//                    CmdClickColorStr.DARK_GREEN,
+//                    CmdClickColorStr.CARKI,
+//                    CmdClickColorStr.GOLD_YELLOW,
+                    CmdClickColorStr.WATER_BLUE,
+                    CmdClickColorStr.WHITE_BLUE,
+//                    CmdClickColorStr.THICK_AO,
+//                    CmdClickColorStr.BLACK_AO,
+                    CmdClickColorStr.BLUE,
+                    CmdClickColorStr.WHITE_BLUE_PURPLE,
+//                    CmdClickColorStr.BLUE_DARK_PURPLE,
+//                    CmdClickColorStr.NAVY,
+                    CmdClickColorStr.PURPLE,
+                    CmdClickColorStr.ORANGE,
+//                    CmdClickColorStr.BROWN,
+//                    CmdClickColorStr.DARK_BROWN,
+                    CmdClickColorStr.YELLOW,
+                    CmdClickColorStr.SKERLET,
+                )
+                val color: ArrayList<Int> = ArrayList()
+                val colorStrList = srcColorList.map {
+                    it.str
+                }
+                val colorIdList = CmdClickColor.values().map {
+                    it.id
+                }
+//                CmdClickColorStr.values()
+                val colorMap = mutableListOf<String>()
+                val textColorMap = frequencyMapList.map {
+                    val text = it.key ?: String()
+                    val colorStr = colorStrList.shuffled().first()
+                    text to colorStr
+//                    colorList.add(colorStr)
+//                    color.add(Color.parseColor(colorStr))
+                }.filter {
+                    it.first.isNotEmpty()
+                }.toMap()
+                val textColorIdMap = frequencyMapList.map {
+                    val text = it.key ?: String()
+                    val colorId = colorIdList.shuffled().first()
+                    text to colorId
+//                    colorList.add(colorStr)
+//                    color.add(Color.parseColor(colorStr))
+                }.filter {
+                    it.first.isNotEmpty()
+                }.toMap()
+                val oneSideLengthRndList = (200..screenWidthInt + 500)
+                val screenWidth = screenWidthInt + 500
+                val oneSideLengthDiff = (screenWidth) / decentTextList.size
+                val textToOneSideLengthMap = decentTextList.mapIndexed {
+                        index, text ->
+                    val startInt = screenWidth - oneSideLengthDiff * (index + 1)
+                    val endInt = screenWidth - oneSideLengthDiff * index
+                    text to (startInt..endInt)
+                }.toMap()
+                val isSync = (1..3).random() % 3 > 0
+                val rotateAngleRndList = (-270..270)
+                val syncAngle = when(isSync) {
+                    true -> rotateAngleRndList.random()
+                    else -> null
+                }
+                val alphaRndList = (100..400)
+                val repeatTimes = (7..10).random()
+//                    (20..40).random()
+//                when(isSync) {
+//                    true -> (20..40).random()
+//                    else -> (50..100).random()
+//                }
+                val xyDurationSrcList = (200..20000)
+                val textSizeEnd = 10
+                val textSizeDiff = textSizeEnd / decentTextList.size
+                val textToIntRangeMap = decentTextList.mapIndexed {
+                    index, text ->
+                    val startInt = textSizeEnd - textSizeDiff * (index + 1)
+                    val endInt = textSizeEnd - textSizeDiff * index
+                    text to (startInt..endInt)
+                }.toMap()
+                val textToFloatMap = decentTextList.mapIndexed {
+                        index, text ->
+                    text to (textSizeEnd - textSizeDiff * index).toFloat()
+                }.toMap()
+
+
+                val centerXY = Pair(
+                    screenWidthInt / 2,
+                    screenHeightInt / 2
+                )
+
+                val maxRadius = (screenWidthInt / 3)
+                val radius = (100..maxRadius).random()
+                val holeNum = (1..1).random()
+                val centerXYToRadiusList = (1..holeNum).map {
+                    Pair(
+                        (0..screenWidthInt).random(),
+                        ((0..screenHeightInt).random() * screenHeightFloat) / screenWidthFloat
+                    ) to (0..maxRadius).random()
+                }
+                    //((screenWidthInt / 4)..(screenWidthInt / 2))
+                val thetaDiff = 360f / repeatTimes
+
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "ltextView.txt").absolutePath,
+//                    listOf(
+//                        "textToIntRangeMap: ${textToIntRangeMap}"
+//                    ).joinToString("\n")
+//                )
+
+                val daenRate = screenHeightFloat / screenWidthFloat
+                val durationList = (4000..20000)
+                val animationTriggerEndNum = 4
+                val animationTriggerRndList = (1..animationTriggerEndNum)
+//                val plotImageColorStrList = CmdClickColorStr.values().map { it.str }
+                val fixRotationAngle = rotateAngleRndList.random().toFloat()
+
+                val colorStr = colorStrList.random()
+                val colorIntArray = listOf(
+                    colorStr,
+                    colorStr,
+                ).map {
+                    Color.parseColor(it)
+                }.toIntArray()
+                val bitMap = BitmapTool.GradientBitmap.makeGradientBitmap2(
+                    100,
+                    100,
+                    colorIntArray
+                )
+                val requestBuilder: RequestBuilder<Drawable> =
+                    Glide.with(context)
+                        .asDrawable()
+                        .sizeMultiplier(0.1f)
+                (0..repeatTimes).forEachIndexed {
+                        index, _ ->
+                    val curTheta = thetaDiff * index
+                    val blackAndWhite = listOf(
+                        R.color.white,
+                        R.color.file_dark_green_color
+                    )
+                    withContext(Dispatchers.Main) createText@{
+                        val blackOrWhite = when(isWhiteBackgrond) {
+                            true -> R.color.black
+                            else -> R.color.black//blackAndWhite.random()
+                        }
+                        val textBlackOrWhite = when(isWhiteBackgrond) {
+                            true -> R.color.white
+                            else -> R.color.white
+//                            blackAndWhite.filter {
+//                                it != blackOrWhite
+//                            }.first()
+                        }
+                        val inflater = LayoutInflater.from(context)
+                        val buttonLayout = inflater.inflate(
+                            R.layout.prompt_list_bk_another_component,
+                            null
+                        ) as FrameLayout
+                        val curText = textList.shuffled().first()
+                        buttonLayout.apply {
+                            val oneSideLength = textToOneSideLengthMap.get(curText)?.random() ?: screenWidthInt
+//                            oneSideLengthRndList.random()
+                            val relativeParam = RelativeLayout.LayoutParams(
+                                oneSideLength,
+                                oneSideLength,
+                            )
+                            layoutParams = relativeParam
+                            alpha = alphaRndList.random().toFloat() / 1000
+                            rotation = fixRotationAngle
+                            //rotateAngleRndList.random().toFloat()
+                            val margin = oneSideLength / 2
+                            val putXyPair = runBlocking {
+                                var putXyPairSrc: Pair<Float, Float> = Pair(0f, 0f)
+                                for(i in 1..5 ){
+                                    putXyPairSrc = Pair(
+                                        (-oneSideLength..screenWidthInt).random().toFloat(),
+                                        (-oneSideLength..screenHeightInt).random().toFloat()
+                                    )
+                                    val isBottomLeft = putXyPairSrc.first > (screenWidthInt / 2)
+                                            || putXyPairSrc.second > screenHeightInt / 2
+                                    if(
+                                        !isBottomLeft
+                                    ) return@runBlocking putXyPairSrc
+                                    if (
+                                        (1..3).random() == 1
+                                    ) return@runBlocking putXyPairSrc
+                                }
+                                putXyPairSrc
+                            }
+                            x = putXyPair.first
+                            y = putXyPair.second
+                        }
+                        bkRelative.addView(buttonLayout)
+
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val textView =
+                                buttonLayout.findViewById<AppCompatTextView>(R.id.prompt_list_bk_another_caption)
+
+                            textView.apply {
+                                text = curText
+                                typeface = Typeface.DEFAULT
+//                                setFillColor(textBlackOrWhite)
+//                                setStrokeColor(R.color.trans)
+                                textToFloatMap.get(curText)?.let {
+                                    textSize = it
+                                }
+//                                textSize = 9f
+//                            textToIntRangeMap.get(curText)?.random()?.toFloat()?.let {
+//                                textSize = it
+//                            }
+                            }
+
+                            buttonLayout.findViewById<AppCompatImageView>(R.id.prompt_list_bk_another_layout_image)
+                                .apply {
+
+//                            val colorStr = colorStrList.random()
+//                            val colorIntArray = listOf(
+//                                colorStr,
+//                                colorStr,
+//                            ).map {
+//                                Color.parseColor(it)
+//                            }.toIntArray()
+//                            val bitMap = BitmapTool.GradientBitmap.makeGradientBitmap2(
+//                                100,
+//                                100,
+//                                colorIntArray
+//                            )
+                                    imageTintList = AppCompatResources.getColorStateList(
+                                        context,
+                                        blackOrWhite
+                                    )
+//                                    setImageBitmap(bitMap)
+//                                    val duration = when (
+//                                        (1..animationTriggerEndNum).random() % animationTriggerEndNum > 1
+//                                    ) {
+//                                        true -> durationList.random()
+//                                        else -> 0
+//                                    }
+                                    Glide
+                                        .with(context)
+                                        .load(bitMap)
+                                        .transition(DrawableTransitionOptions.withCrossFade())
+                                        .skipMemoryCache(true)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .thumbnail(requestBuilder)
+                                        .into(this)
+                                }
+                        }
+
+//                        val oneSideLength = oneSideLengthRndList.random()
+//                        val relativeParam = RelativeLayout.LayoutParams(
+//                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+//                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+//                        )
+//                        val bkTextView = AppCompatTextView(context).apply {
+//                            layoutParams = relativeParam
+//
+//                            val curText = textList.shuffled().first()
+//                            text = curText
+//
+//                            val plusXY = centerXY
+//                                Pair(
+//                                (radius * cos(curTheta)) * daenRate,
+//                                (radius * sin(curTheta)) * daenRate,
+//                            )
+////                            FileSystems.updateFile(
+////                                File(UsePath.cmdclickDefaultAppDirPath, "lputxy.txt").absolutePath,
+////                                listOf(
+////                                    "centerXY: ${centerXY} putXY: ${putXY}"
+////                                ).joinToString("\n") + "\n------------\n"
+////                            )
+//                            x = centerXY.first.toFloat() - width / 2
+////                                putXY.first
+//                                    //(-oneSideLength..screenWidthInt).random().toFloat()
+//                            y = centerXY.second.toFloat() - height / 2
+//                                //putXY.second
+////                            (-oneSideLength..screenHeightInt).random().toFloat()
+//
+////                            val rotationAngleEnd = syncAngle?.toFloat()
+////                                ?: rotateAngleRndList.random().toFloat()
+////                            rotationX = centerXY.first.toFloat()
+////                            rotationY = centerXY.second.toFloat()
+////                            pivotY =((y - width / 2) * .98f);
+//                            val rotateAngle = (-15..15).random()
+//                            rotation = rotateAngle.toFloat()
+//
+//                                //rotationAngleEnd
+////                            setTextColor(
+////                                AppCompatResources.getColorStateList(context, R.color.terminal_color)
+////                            )
+//                            textColorIdMap.get(curText)?.let {
+//                                setTextColor(
+//                                    AppCompatResources.getColorStateList(context, it)
+//                                )
+//                            }
+//                            textToIntRangeMap.get(curText)?.let {
+//                                sizeIntRange ->
+//                                val curRadius = centerXYToRadiusList.random().second.toFloat()
+//                                val curFontSize = sizeIntRange.shuffled().first().toFloat()
+//                                textSize = curFontSize
+//                                //(curFontSize *  curRadius) / maxRadius.toFloat()
+//                            }
+////                            textSize = textSizeList.shuffled().first().toFloat() //50f
+////
+//                            val alphaFloat = alphaRndList.random().toFloat() / 1000
+//                            alpha = alphaFloat
+//
+//                            // refresh
+//                        }
+//                        CoroutineScope(Dispatchers.Main).launch {
+//                            withContext(Dispatchers.Main) {
+//                                bkTextView.invalidate()
+//                            }
+////                            if(
+////                                animationTriggerRndList.random() % animationTriggerEndNum > 0
+////                            ) return@launch
+////                            withContext(Dispatchers.Main) {
+////                                val durationMilliisX = xyDurationSrcList.random()
+////                                val durationMilliisY = xyDurationSrcList.random()
+////                                val durationMiliSec = 800
+////                            }
+//                        }
+                    }
+                }
+                withContext(Dispatchers.Main) {
+//                    delay(200)
+                    val iconId = FannelIcons.values().map { it.id }.shuffled().first()
+                    val shuujiImage = AppCompatImageView(context).apply {
+                        val oneSideLength = screenWidthInt
+//                            oneSideLengthRndList.random()
+                        val relativeParam = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
+//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
+//                            (screenWidthInt * 3) / 4,
+//                            (screenHeightInt * 3) / 4,
+                        ).apply {
+//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+//                            addRule(RelativeLayout.ALIGN_PARENT_END)
+                            bottomMargin = 2
+                            leftMargin = 2
+                        }
+                        layoutParams = relativeParam
+//                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
+//                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
+//                        x = 0f
+//                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
+                        imageTintList = AppCompatResources.getColorStateList(context, R.color.black)
+                        setImageResource(iconId)
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        alpha = 1f
+                    }
+                    val shuujiImageWhiteShadow2 = AppCompatImageView(context).apply {
+                        val oneSideLength = screenWidthInt
+//                            oneSideLengthRndList.random()
+                        val relativeParam = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
+//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
+//                            (screenWidthInt * 3) / 4,
+//                            (screenHeightInt * 3) / 4,
+                        ).apply {
+//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+//                            addRule(RelativeLayout.ALIGN_PARENT_END)
+                            bottomMargin = 0
+                            leftMargin = 0
+                        }
+                        layoutParams = relativeParam
+                        imageTintList =
+                            AppCompatResources.getColorStateList(context, R.color.white)
+//                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
+//                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
+//                        x = 0f
+//                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
+                        setImageResource(iconId)
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        alpha = 1f
+                    }
+                    val shuujiImageWhiteShadow3 = AppCompatImageView(context).apply {
+                        val oneSideLength = screenWidthInt
+//                            oneSideLengthRndList.random()
+                        val relativeParam = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
+//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
+//                            (screenWidthInt * 3) / 4,
+//                            (screenHeightInt * 3) / 4,
+                        ).apply {
+//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+//                            addRule(RelativeLayout.ALIGN_PARENT_END)
+                            bottomMargin = 4
+                            leftMargin = 4
+                        }
+                        layoutParams = relativeParam
+                        imageTintList =
+                            AppCompatResources.getColorStateList(context, R.color.white)
+//                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
+//                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
+//                        x = 0f
+//                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
+                        setImageResource(iconId)
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        alpha = 1f
+                    }
+                    val bkFrameLayout = FrameLayout(context).apply {
+                        val relativeParam = RelativeLayout.LayoutParams(
+                            (screenWidthInt * 3) / 4,
+                            (screenHeightInt * 3) / 4,
+//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
+//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
+//                            (screenWidthInt * 3) / 4,
+//                            (screenHeightInt * 3) / 4,
+                        ).apply {
+                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                            addRule(RelativeLayout.ALIGN_PARENT_END)
+                        }
+                        layoutParams = relativeParam
+                        alpha = 0.6f
+                    }
+                    bkFrameLayout.addView(shuujiImageWhiteShadow2)
+                    bkFrameLayout.addView(shuujiImageWhiteShadow3)
+                    bkFrameLayout.addView(shuujiImage)
+                    bkRelative.addView(bkFrameLayout)
+//                    bkRelative.addView(shuujiImageWhiteShadow3)
+//                    bkRelative.addView(shuujiImage)
+                }
+
+            }
+        }
+
+        private suspend fun makePieBk(
+            terminalFragmentRef: WeakReference<TerminalFragment>,
+            promptDialogObj: Dialog?,
+            fannelDirPath: String,
+            promptList: List<String>
+        ){
+            val context = terminalFragmentRef.get()?.context
+                ?: return
+            withContext(Dispatchers.IO){
+                //chartのコンポーネントを取得
+                val bkRelative = promptDialogObj?.findViewById<RelativeLayout>(
+                    R.id.prompt_list_dialog_bk_relative
+                ) ?: return@withContext
+
+                val dialogMargin = 200
+                val screenHeightFloat = withContext(Dispatchers.Main) {
+                    bkRelative.measuredHeight - dialogMargin
+                }
+                val screenHeightInt = screenHeightFloat.toInt()
+                val screenWidthFloat = withContext(Dispatchers.Main) {
+                    bkRelative.measuredWidth - dialogMargin
+                }
+
+                val screenWidthInt = screenWidthFloat.toInt()
+
+                val statisticsTxtFile = makeStatisticsTextFile(
+                    fannelDirPath
+                )
+                val statisticsMapList = ReadText(
+                    statisticsTxtFile.absolutePath
+                ).textToList().filter{
+                    it.isNotEmpty()
+                }.map {
+                    CmdClickMap.createMap(
+                        it,
+                        statisticsMapSeparator
+                    ).toMap()
+                }
+                val titleKey = StatisticsKey.TITLE.key
+                val frequencyMapListSrc = statisticsMapList.map{
+                        elMap ->
+                    elMap.get(titleKey)
+                }
+                val frequencyMapList = (frequencyMapListSrc + promptList).groupBy { it }
+                    .mapValues { it.value.size }
+                    .filterKeys { !it.isNullOrEmpty() }
+                    .toList()
+                    .sortedByDescending { (_, value) -> value }
+                    .toMap()
+
+//表示する色を設定
+                val value: ArrayList<PieEntry> = ArrayList()
+                frequencyMapList.forEach { frequencyMap ->
+                    value.add(
+                        PieEntry(
+                            frequencyMap.value.toFloat(),
+                            frequencyMap.key
+                        )
+                    )
+                }
+                val srcColorList = listOf(
+                    CmdClickColorStr.LIGHT_GREEN,
+                    CmdClickColorStr.WHITE_GREEN,
+                    CmdClickColorStr.ANDROID_GREEN,
+                    CmdClickColorStr.YELLOW_GREEN,
+                    CmdClickColorStr.GREEN,
+//                    CmdClickColorStr.THICK_GREEN,
+//                    CmdClickColorStr.DARK_GREEN,
+//                    CmdClickColorStr.CARKI,
+//                    CmdClickColorStr.GOLD_YELLOW,
+                    CmdClickColorStr.WATER_BLUE,
+                    CmdClickColorStr.WHITE_BLUE,
+//                    CmdClickColorStr.THICK_AO,
+//                    CmdClickColorStr.BLACK_AO,
+                    CmdClickColorStr.BLUE,
+                    CmdClickColorStr.WHITE_BLUE_PURPLE,
+//                    CmdClickColorStr.BLUE_DARK_PURPLE,
+//                    CmdClickColorStr.NAVY,
+                    CmdClickColorStr.PURPLE,
+                    CmdClickColorStr.ORANGE,
+//                    CmdClickColorStr.BROWN,
+//                    CmdClickColorStr.DARK_BROWN,
+                    CmdClickColorStr.YELLOW,
+                    CmdClickColorStr.SKERLET,
+                )
+                val color: ArrayList<Int> = ArrayList()
+                val colorStrList = srcColorList.map {
+                    it.str
+                }
+//                CmdClickColorStr.values()
+                val colorList = mutableListOf<String>()
+                frequencyMapList.forEach {
+                    val colorStr = colorStrList.shuffled().first()
+                    colorList.add(colorStr)
+                    color.add(Color.parseColor(colorStr))
+                }
+                val oneSideLengthRndList = (300..(7 * screenWidthInt) / 4)
+                val holeRadiasHolePercentRndList = (0..75)
+                val rotateAngleRndList = (-270..270)
+                val alphaRndList = (100..400)
+                val repeatTimes = (10..15).random()
+                val animationTriggerEndNum = 8
+                val animationTriggerRndList = (1..animationTriggerEndNum)
+                val xyDurationSrcList = (200..20000)
+                (0..repeatTimes).forEach {
+                    _ ->
+                    //グラフのデータを設定
+
+                    //chartに設定
+                    val dataSet = PieDataSet(value, "sample")
+//                    dataSet.isUsingSliceColorAsValueLineColor = true
+
+//                    value.setValueTextColor(Color.BLACK);
+//                    dataSet.setValueLinePart1OffsetPercentage(90.0f);
+//                    dataSet.setValueLinePart1Length(1f);
+//                    dataSet.setValueLinePart2Length(.2f);
+//                    dataSet.valueTextColor = Color.BLACK;
+//                    dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
+                    dataSet.colors = color
+                    dataSet.valueTextSize = 9f
+                    withContext(Dispatchers.Main) createPie@{
+                        val oneSideLength = oneSideLengthRndList.random()
+                        val relativeParam = RelativeLayout.LayoutParams(
+                            oneSideLength,
+                            oneSideLength,
+                        )
+                        val pieChart = PieChart(context).apply {
+                            layoutParams = relativeParam
+                            x = (-oneSideLength..screenWidthInt).random().toFloat()
+                            y = (-oneSideLength..screenHeightInt).random().toFloat()
+                            description?.isEnabled = false
+                            legend?.isEnabled = false
+                            setTouchEnabled(false)
+//                            val high = Highlight(highlightIndex, 0, 0)
+//                            high.dataIndex = 0
+//                            highlightValue(null)
+
+                            isDrawHoleEnabled = true; // 真ん中に穴を空けるかどうか
+                            val holeRadiusFloat = holeRadiasHolePercentRndList.random().toFloat()
+                            holeRadius = holeRadiusFloat //50f;       // 真ん中の穴の大きさ(%指定)
+                            val transparentCircleRadiusFloat =
+                                (holeRadiusFloat.toInt()..100).random().toFloat()
+                            transparentCircleRadius = transparentCircleRadiusFloat //55f
+                            val rotationAngleEnd = rotateAngleRndList.random().toFloat()
+                            rotationAngle = rotationAngleEnd
+//
+                            //270F          // 開始位置の調整
+                            isRotationEnabled = true
+
+                            val alphaFloat = alphaRndList.random().toFloat() / 1000
+                            alpha = alphaFloat
+
+                            setEntryLabelTextSize(13f)
+                            isSelected = false
+
+                            data = PieData(dataSet)
+                            // refresh
+                        }
+                        bkRelative.addView(pieChart)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            withContext(Dispatchers.Main) {
+                                pieChart.invalidate()
+                            }
+                            if(
+                                animationTriggerRndList.random() < 7
+                            ) return@launch
+                            withContext(Dispatchers.Main) {
+                                val durationMilliisX = xyDurationSrcList.random()
+                                val durationMilliisY = xyDurationSrcList.random()
+                                val durationMiliSec = 800
+                                pieChart.animateXY(durationMilliisX, durationMilliisY)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        fun makeStatisticsTextFile(
+            fannelDirPath: String
+        ): File {
+            return File("${fannelDirPath}/${statisticsName}/promptWithList.txt")
+        }
+
+        fun saveStatistics(
+            fannelDirPath: String,
+            trimedReturnValue: String,
+        ) {
+            val statisticsFile = makeStatisticsTextFile(
+                fannelDirPath
+            )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lStatistics.txt").absolutePath,
+//            listOf(
+//                "statisticsFile: ${statisticsFile.absolutePath}"
+//            ).joinToString("\n")
+//        )
+            val statisticsTitle = trimedReturnValue.replace(
+                statisticsMapSeparator.toString(),
+                String()
+            )
+            val insertLine = listOf(
+                "${StatisticsKey.TITLE.key}=${statisticsTitle}",
+                "${StatisticsKey.DATETIME.key}=${LocalDateTime.now()}",
+            ).joinToString(statisticsMapSeparator.toString())
+            val updateStatisticsCon = ReadText(
+                statisticsFile.absolutePath
+            ).textToList() + listOf(insertLine)
+            val historyTakeNum = 500
+            FileSystems.writeFile(
+                statisticsFile.absolutePath,
+                updateStatisticsCon
+                    .takeLast(historyTakeNum)
+                    .joinToString("\n")
+            )
+        }
+    }
+
+    private object ColdListRegister {
+
+
+        fun register(
+            fannelDirPath: String,
+            promptListFile: File,
+            listLimit: Int?,
+            returnValue: String,
+        ) {
+            val trimedReturnValue =
+                returnValue.trim()
+            if (
+                trimedReturnValue.isEmpty()
+            ) return
+
+            val promptListDirPath = promptListFile.parent
+                ?: return
+            StatisticsTool.saveStatistics(
+                fannelDirPath,
+                trimedReturnValue,
+            )
+            FileSystems.createDirs(
+                promptListDirPath
+            )
+            val updatePromptList =
+                listOf(trimedReturnValue) +
+                        makeNoEmptyList(
+                            trimedReturnValue,
+                            promptListFile.name,
+                            promptListDirPath,
+                        ).filter {
+                            trimedReturnValue != it
+                        }.distinct().let { listSrc ->
+                            when (listLimit == null) {
+                                true -> listSrc
+                                else -> listSrc.take(listLimit)
+                            }
+                        }
+            FileSystems.writeFile(
+                promptListFile.absolutePath,
+                updatePromptList.joinToString("\n")
+            )
+        }
+
+        private fun makeNoEmptyList(
+            trimedReturnValue: String,
+            listTxtName: String,
+            listDirPath: String,
+        ): List<String> {
+            val curList = ReadText(
+                File(
+                    listDirPath,
+                    listTxtName
+                ).absolutePath
+            ).textToList()
+            if(
+                trimedReturnValue.isNotEmpty()
+            ) return listOf(trimedReturnValue) + curList
+            return curList
+        }
+    }
+
+    private fun makeListTextFileName(
+        variableName: String?,
+    ): String {
+        val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
+        return "${listPrefix}${prefixUpperVariableName}${listTxtSuffix}"
+    }
+
 }
 
 private object EditTextMakerForPromptList {
@@ -719,3 +1914,94 @@ private enum class PromptListVars {
     visible,
     limit,
 }
+
+class CustomGradientSpan(private val paint: TextPaint) : ReplacementSpan() {
+
+    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
+        return paint.measureText(text, start, end).toInt()
+    }
+
+    override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
+        canvas.drawText(text, start, end, x, y.toFloat(), this.paint)
+    }
+}
+
+class LinearGradientSpan(
+    private val colors: IntArray,
+    private val positions: FloatArray?,
+    private val angle: Int
+) :
+    ReplacementSpan() {
+    override fun getSize(
+        @NonNull paint: Paint,
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        @Nullable fm: FontMetricsInt?
+    ): Int {
+        return paint.measureText(text, start, end).toInt()
+    }
+
+    override fun draw(
+        @NonNull canvas: Canvas,
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        x: Float,
+        top: Int,
+        y: Int,
+        bottom: Int,
+        @NonNull paint: Paint
+    ) {
+        val width = paint.measureText(text, start, end)
+        val height = (bottom - top).toFloat()
+        val radians = Math.toRadians(angle.toDouble())
+        val gradientX = (Math.cos(radians) * width).toFloat()
+        val gradientY = (Math.sin(radians) * height).toFloat()
+        val gradient = LinearGradient(
+            x,
+            y.toFloat(),
+            x + gradientX,
+            y + gradientY,
+            colors,
+            positions,
+            Shader.TileMode.CLAMP
+        )
+        paint.shader = gradient
+        canvas.drawText(text, start, end, x, y.toFloat(), paint)
+    }
+}
+
+class ShadowSpan(
+    private val radius: Float,
+    private val dx: Float,
+    private val dy: Float,
+    private val shadowColor: Int
+) :
+    CharacterStyle(), UpdateAppearance {
+    override fun updateDrawState(tp: TextPaint) {
+        tp.setShadowLayer(radius, dx, dy, shadowColor)
+    }
+
+//    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt): Int {
+//        // Adjust font metrics for the shadow
+//        fm.ascent -= radius.toInt()
+//        fm.descent += radius.toInt()
+//        return super.getSize(paint, text, start, end, fm)
+//    }
+}
+
+//class ShadowSpan(private val radius: Float, private val dx: Float, private val dy: Float, private val color: Int) : CharacterStyle(), MetricAffectingSpan() {
+//
+//    override fun updateDrawState(ds: TextPaint) {
+//        ds.setShadowLayer(radius, dx, dy, color)
+//    }
+//
+//    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt): Int {
+//        // Adjust font metrics for the shadow
+//        fm.ascent -= radius.toInt()
+//        fm.descent += radius.toInt()
+//        return super.getSize(paint, text, start, end, fm)
+//    }
+//}
+

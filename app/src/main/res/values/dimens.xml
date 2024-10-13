@@ -9,4 +9,8 @@
     <dimen name="toolbar_image_width">40dp</dimen>
     <dimen name="extra_toolbar_image_one_side">100dp</dimen>
     <dimen name="extra_button_image_one_side">95dp</dimen>
+    <dimen name="prompt_list_dialog_vertical_search_cardview_margin">20dp</dimen>
+    <dimen name="prompt_list_dialog_vertical_search_cardview_key_open_margin">5dp</dimen>
+    <dimen name="prompt_list_dialog_bottom_button_normal_height">50dp</dimen>
+    <dimen name="prompt_list_dialog_bottom_button_key_open_height">40dp</dimen>
 </resources>
