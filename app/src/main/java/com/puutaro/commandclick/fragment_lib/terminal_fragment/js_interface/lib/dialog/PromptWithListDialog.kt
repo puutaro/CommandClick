@@ -345,27 +345,10 @@ class PromptWithListDialog(
             val shadowSpan = ShadowSpan(radius, dx, dy, shadowColor)
             ss1.setSpan(shadowSpan, 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
 
-
             text = ss1
-//            htmpSpan
-                //titleStr
-//            val curWidth = this.width
-//            val curHeight = this.height
-//            val drawable = AppCompatResources.getDrawable(context, R.drawable.textbk)
-//            drawable?.setBounds(0, 0, curWidth, curHeight)
-//            setCompoundDrawables(drawable, null, null, null)
-
             setFillColor(R.color.ao)
             setStrokeColor(CmdClickColor.WHITE.id)
             outlineWidthSrc = 3
-//            when(isWhiteBackgrond) {
-//                true -> setStrokeColor(
-//                    CmdClickColor.values().filter {
-//                        it != CmdClickColor.WHITE
-//                    }.shuffled().first().id
-//                )
-//                else -> setStrokeColor(CmdClickColor.WHITE.id)
-//            }
         }
         val promptListTotalMap = CmdClickMap.createMap(
             listOrDefoTxtVars,
@@ -983,10 +966,9 @@ class PromptWithListDialog(
             promptList: List<String>,
             isWhiteBackgrond: Boolean,
         ){
-            when(
-                (1..2).random()
-            ) {
-                1 -> makeTextBk(
+            val handleRnd = (1..4).random()
+            when(true) {
+                (handleRnd > 2) -> makeMonocroBk(
                     terminalFragmentRef,
                     promptDialogObj,
                     fannelDirPath,
@@ -1002,7 +984,7 @@ class PromptWithListDialog(
             }
         }
 
-        private suspend fun makeTextBk(
+        private suspend fun makeMonocroBk(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
             fannelDirPath: String,
@@ -1065,69 +1047,6 @@ class PromptWithListDialog(
                     val freq = freqMap.value
                     (0..freq).map { text }
                 }.flatten()
-
-//表示する色を設定
-//                frequencyMapList.forEach { frequencyMap ->
-//                    value.add(
-//                        PieEntry(
-//                            frequencyMap.value.toFloat(),
-//                            frequencyMap.key
-//                        )
-//                    )
-//                }
-                val srcColorList = listOf(
-                    CmdClickColorStr.LIGHT_GREEN,
-                    CmdClickColorStr.WHITE_GREEN,
-                    CmdClickColorStr.ANDROID_GREEN,
-                    CmdClickColorStr.YELLOW_GREEN,
-                    CmdClickColorStr.GREEN,
-//                    CmdClickColorStr.THICK_GREEN,
-//                    CmdClickColorStr.DARK_GREEN,
-//                    CmdClickColorStr.CARKI,
-//                    CmdClickColorStr.GOLD_YELLOW,
-                    CmdClickColorStr.WATER_BLUE,
-                    CmdClickColorStr.WHITE_BLUE,
-//                    CmdClickColorStr.THICK_AO,
-//                    CmdClickColorStr.BLACK_AO,
-                    CmdClickColorStr.BLUE,
-                    CmdClickColorStr.WHITE_BLUE_PURPLE,
-//                    CmdClickColorStr.BLUE_DARK_PURPLE,
-//                    CmdClickColorStr.NAVY,
-                    CmdClickColorStr.PURPLE,
-                    CmdClickColorStr.ORANGE,
-//                    CmdClickColorStr.BROWN,
-//                    CmdClickColorStr.DARK_BROWN,
-                    CmdClickColorStr.YELLOW,
-                    CmdClickColorStr.SKERLET,
-                )
-                val color: ArrayList<Int> = ArrayList()
-                val colorStrList = srcColorList.map {
-                    it.str
-                }
-                val colorIdList = CmdClickColor.values().map {
-                    it.id
-                }
-//                CmdClickColorStr.values()
-                val colorMap = mutableListOf<String>()
-                val textColorMap = frequencyMapList.map {
-                    val text = it.key ?: String()
-                    val colorStr = colorStrList.shuffled().first()
-                    text to colorStr
-//                    colorList.add(colorStr)
-//                    color.add(Color.parseColor(colorStr))
-                }.filter {
-                    it.first.isNotEmpty()
-                }.toMap()
-                val textColorIdMap = frequencyMapList.map {
-                    val text = it.key ?: String()
-                    val colorId = colorIdList.shuffled().first()
-                    text to colorId
-//                    colorList.add(colorStr)
-//                    color.add(Color.parseColor(colorStr))
-                }.filter {
-                    it.first.isNotEmpty()
-                }.toMap()
-                val oneSideLengthRndList = (200..screenWidthInt + 500)
                 val screenWidth = screenWidthInt + 500
                 val oneSideLengthDiff = (screenWidth) / decentTextList.size
                 val textToOneSideLengthMap = decentTextList.mapIndexed {
@@ -1136,69 +1055,22 @@ class PromptWithListDialog(
                     val endInt = screenWidth - oneSideLengthDiff * index
                     text to (startInt..endInt)
                 }.toMap()
-                val isSync = (1..3).random() % 3 > 0
                 val rotateAngleRndList = (-270..270)
-                val syncAngle = when(isSync) {
-                    true -> rotateAngleRndList.random()
-                    else -> null
-                }
                 val alphaRndList = (100..400)
                 val repeatTimes = (7..10).random()
-//                    (20..40).random()
-//                when(isSync) {
-//                    true -> (20..40).random()
-//                    else -> (50..100).random()
-//                }
-                val xyDurationSrcList = (200..20000)
-                val textSizeEnd = 10
+                val textSizeEnd = 11
                 val textSizeDiff = textSizeEnd / decentTextList.size
-                val textToIntRangeMap = decentTextList.mapIndexed {
-                    index, text ->
-                    val startInt = textSizeEnd - textSizeDiff * (index + 1)
-                    val endInt = textSizeEnd - textSizeDiff * index
-                    text to (startInt..endInt)
-                }.toMap()
                 val textToFloatMap = decentTextList.mapIndexed {
                         index, text ->
                     text to (textSizeEnd - textSizeDiff * index).toFloat()
                 }.toMap()
 
-
-                val centerXY = Pair(
-                    screenWidthInt / 2,
-                    screenHeightInt / 2
-                )
-
-                val maxRadius = (screenWidthInt / 3)
-                val radius = (100..maxRadius).random()
-                val holeNum = (1..1).random()
-                val centerXYToRadiusList = (1..holeNum).map {
-                    Pair(
-                        (0..screenWidthInt).random(),
-                        ((0..screenHeightInt).random() * screenHeightFloat) / screenWidthFloat
-                    ) to (0..maxRadius).random()
-                }
-                    //((screenWidthInt / 4)..(screenWidthInt / 2))
-                val thetaDiff = 360f / repeatTimes
-
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "ltextView.txt").absolutePath,
-//                    listOf(
-//                        "textToIntRangeMap: ${textToIntRangeMap}"
-//                    ).joinToString("\n")
-//                )
-
-                val daenRate = screenHeightFloat / screenWidthFloat
-                val durationList = (4000..20000)
-                val animationTriggerEndNum = 4
-                val animationTriggerRndList = (1..animationTriggerEndNum)
-//                val plotImageColorStrList = CmdClickColorStr.values().map { it.str }
+                val durationList = (0..100)
                 val fixRotationAngle = rotateAngleRndList.random().toFloat()
 
-                val colorStr = colorStrList.random()
                 val colorIntArray = listOf(
-                    colorStr,
-                    colorStr,
+                    CmdClickColorStr.DARK_GREEN.str,
+                    CmdClickColorStr.DARK_GREEN.str
                 ).map {
                     Color.parseColor(it)
                 }.toIntArray()
@@ -1213,23 +1085,7 @@ class PromptWithListDialog(
                         .sizeMultiplier(0.1f)
                 (0..repeatTimes).forEachIndexed {
                         index, _ ->
-                    val curTheta = thetaDiff * index
-                    val blackAndWhite = listOf(
-                        R.color.white,
-                        R.color.file_dark_green_color
-                    )
                     withContext(Dispatchers.Main) createText@{
-                        val blackOrWhite = when(isWhiteBackgrond) {
-                            true -> R.color.black
-                            else -> R.color.black//blackAndWhite.random()
-                        }
-                        val textBlackOrWhite = when(isWhiteBackgrond) {
-                            true -> R.color.white
-                            else -> R.color.white
-//                            blackAndWhite.filter {
-//                                it != blackOrWhite
-//                            }.first()
-                        }
                         val inflater = LayoutInflater.from(context)
                         val buttonLayout = inflater.inflate(
                             R.layout.prompt_list_bk_another_component,
@@ -1246,8 +1102,6 @@ class PromptWithListDialog(
                             layoutParams = relativeParam
                             alpha = alphaRndList.random().toFloat() / 1000
                             rotation = fixRotationAngle
-                            //rotateAngleRndList.random().toFloat()
-                            val margin = oneSideLength / 2
                             val putXyPair = runBlocking {
                                 var putXyPairSrc: Pair<Float, Float> = Pair(0f, 0f)
                                 for(i in 1..5 ){
@@ -1278,43 +1132,20 @@ class PromptWithListDialog(
                             textView.apply {
                                 text = curText
                                 typeface = Typeface.DEFAULT
-//                                setFillColor(textBlackOrWhite)
-//                                setStrokeColor(R.color.trans)
                                 textToFloatMap.get(curText)?.let {
                                     textSize = it
                                 }
-//                                textSize = 9f
-//                            textToIntRangeMap.get(curText)?.random()?.toFloat()?.let {
-//                                textSize = it
-//                            }
                             }
 
                             buttonLayout.findViewById<AppCompatImageView>(R.id.prompt_list_bk_another_layout_image)
                                 .apply {
-
-//                            val colorStr = colorStrList.random()
-//                            val colorIntArray = listOf(
-//                                colorStr,
-//                                colorStr,
-//                            ).map {
-//                                Color.parseColor(it)
-//                            }.toIntArray()
-//                            val bitMap = BitmapTool.GradientBitmap.makeGradientBitmap2(
-//                                100,
-//                                100,
-//                                colorIntArray
-//                            )
                                     imageTintList = AppCompatResources.getColorStateList(
                                         context,
-                                        blackOrWhite
+                                        R.color.black
                                     )
-//                                    setImageBitmap(bitMap)
-//                                    val duration = when (
-//                                        (1..animationTriggerEndNum).random() % animationTriggerEndNum > 1
-//                                    ) {
-//                                        true -> durationList.random()
-//                                        else -> 0
-//                                    }
+                                    setImageBitmap(bitMap)
+                                    val duration = durationList.random()
+
                                     Glide
                                         .with(context)
                                         .load(bitMap)
@@ -1325,161 +1156,51 @@ class PromptWithListDialog(
                                         .into(this)
                                 }
                         }
-
-//                        val oneSideLength = oneSideLengthRndList.random()
-//                        val relativeParam = RelativeLayout.LayoutParams(
-//                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-//                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-//                        )
-//                        val bkTextView = AppCompatTextView(context).apply {
-//                            layoutParams = relativeParam
-//
-//                            val curText = textList.shuffled().first()
-//                            text = curText
-//
-//                            val plusXY = centerXY
-//                                Pair(
-//                                (radius * cos(curTheta)) * daenRate,
-//                                (radius * sin(curTheta)) * daenRate,
-//                            )
-////                            FileSystems.updateFile(
-////                                File(UsePath.cmdclickDefaultAppDirPath, "lputxy.txt").absolutePath,
-////                                listOf(
-////                                    "centerXY: ${centerXY} putXY: ${putXY}"
-////                                ).joinToString("\n") + "\n------------\n"
-////                            )
-//                            x = centerXY.first.toFloat() - width / 2
-////                                putXY.first
-//                                    //(-oneSideLength..screenWidthInt).random().toFloat()
-//                            y = centerXY.second.toFloat() - height / 2
-//                                //putXY.second
-////                            (-oneSideLength..screenHeightInt).random().toFloat()
-//
-////                            val rotationAngleEnd = syncAngle?.toFloat()
-////                                ?: rotateAngleRndList.random().toFloat()
-////                            rotationX = centerXY.first.toFloat()
-////                            rotationY = centerXY.second.toFloat()
-////                            pivotY =((y - width / 2) * .98f);
-//                            val rotateAngle = (-15..15).random()
-//                            rotation = rotateAngle.toFloat()
-//
-//                                //rotationAngleEnd
-////                            setTextColor(
-////                                AppCompatResources.getColorStateList(context, R.color.terminal_color)
-////                            )
-//                            textColorIdMap.get(curText)?.let {
-//                                setTextColor(
-//                                    AppCompatResources.getColorStateList(context, it)
-//                                )
-//                            }
-//                            textToIntRangeMap.get(curText)?.let {
-//                                sizeIntRange ->
-//                                val curRadius = centerXYToRadiusList.random().second.toFloat()
-//                                val curFontSize = sizeIntRange.shuffled().first().toFloat()
-//                                textSize = curFontSize
-//                                //(curFontSize *  curRadius) / maxRadius.toFloat()
-//                            }
-////                            textSize = textSizeList.shuffled().first().toFloat() //50f
-////
-//                            val alphaFloat = alphaRndList.random().toFloat() / 1000
-//                            alpha = alphaFloat
-//
-//                            // refresh
-//                        }
-//                        CoroutineScope(Dispatchers.Main).launch {
-//                            withContext(Dispatchers.Main) {
-//                                bkTextView.invalidate()
-//                            }
-////                            if(
-////                                animationTriggerRndList.random() % animationTriggerEndNum > 0
-////                            ) return@launch
-////                            withContext(Dispatchers.Main) {
-////                                val durationMilliisX = xyDurationSrcList.random()
-////                                val durationMilliisY = xyDurationSrcList.random()
-////                                val durationMiliSec = 800
-////                            }
-//                        }
                     }
                 }
                 withContext(Dispatchers.Main) {
 //                    delay(200)
                     val iconId = FannelIcons.values().map { it.id }.shuffled().first()
                     val shuujiImage = AppCompatImageView(context).apply {
-                        val oneSideLength = screenWidthInt
-//                            oneSideLengthRndList.random()
                         val relativeParam = FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.MATCH_PARENT,
-//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-//                            (screenWidthInt * 3) / 4,
-//                            (screenHeightInt * 3) / 4,
                         ).apply {
-//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-//                            addRule(RelativeLayout.ALIGN_PARENT_END)
                             bottomMargin = 2
                             leftMargin = 2
                         }
                         layoutParams = relativeParam
-//                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
-//                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
-//                        x = 0f
-//                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
                         imageTintList = AppCompatResources.getColorStateList(context, R.color.black)
                         setImageResource(iconId)
                         scaleType = ImageView.ScaleType.FIT_XY
                         alpha = 1f
                     }
                     val shuujiImageWhiteShadow2 = AppCompatImageView(context).apply {
-                        val oneSideLength = screenWidthInt
-//                            oneSideLengthRndList.random()
                         val relativeParam = FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.MATCH_PARENT,
-//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-//                            (screenWidthInt * 3) / 4,
-//                            (screenHeightInt * 3) / 4,
                         ).apply {
-//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-//                            addRule(RelativeLayout.ALIGN_PARENT_END)
                             bottomMargin = 0
                             leftMargin = 0
                         }
                         layoutParams = relativeParam
                         imageTintList =
                             AppCompatResources.getColorStateList(context, R.color.white)
-//                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
-//                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
-//                        x = 0f
-//                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
                         setImageResource(iconId)
                         scaleType = ImageView.ScaleType.FIT_XY
                         alpha = 1f
                     }
                     val shuujiImageWhiteShadow3 = AppCompatImageView(context).apply {
-                        val oneSideLength = screenWidthInt
-//                            oneSideLengthRndList.random()
                         val relativeParam = FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.MATCH_PARENT,
-//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-//                            (screenWidthInt * 3) / 4,
-//                            (screenHeightInt * 3) / 4,
                         ).apply {
-//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-//                            addRule(RelativeLayout.ALIGN_PARENT_END)
                             bottomMargin = 4
                             leftMargin = 4
                         }
                         layoutParams = relativeParam
                         imageTintList =
                             AppCompatResources.getColorStateList(context, R.color.white)
-//                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
-//                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
-//                        x = 0f
-//                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
                         setImageResource(iconId)
                         scaleType = ImageView.ScaleType.FIT_XY
                         alpha = 1f
@@ -1488,10 +1209,6 @@ class PromptWithListDialog(
                         val relativeParam = RelativeLayout.LayoutParams(
                             (screenWidthInt * 3) / 4,
                             (screenHeightInt * 3) / 4,
-//                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-//                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-//                            (screenWidthInt * 3) / 4,
-//                            (screenHeightInt * 3) / 4,
                         ).apply {
                             addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                             addRule(RelativeLayout.ALIGN_PARENT_END)
@@ -1502,9 +1219,8 @@ class PromptWithListDialog(
                     bkFrameLayout.addView(shuujiImageWhiteShadow2)
                     bkFrameLayout.addView(shuujiImageWhiteShadow3)
                     bkFrameLayout.addView(shuujiImage)
+//                    delay(100)
                     bkRelative.addView(bkFrameLayout)
-//                    bkRelative.addView(shuujiImageWhiteShadow3)
-//                    bkRelative.addView(shuujiImage)
                 }
 
             }
