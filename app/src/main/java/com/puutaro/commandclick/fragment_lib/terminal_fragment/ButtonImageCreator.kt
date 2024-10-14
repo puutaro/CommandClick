@@ -391,7 +391,7 @@ object ButtonImageCreator {
         return BitmapTool.convertBitmapToByteArray(resultBitmap)
     }
 
-    private fun makeCapturePartPngDirPathList(): List<String> {
+    fun makeCapturePartPngDirPathList(): List<String> {
         val lastModifyExtend = UrlHistoryPath.lastModifyExtend
         val partPngDirName = UrlHistoryPath.partPngDirName
         val captureDirPath = UrlHistoryPath.makeCaptureHistoryDirPath()
