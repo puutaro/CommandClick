@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<FrameLayout-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    >-->
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/prompt_list_dialog_constraint"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@null"
+    android:background="@color/trans"
     >
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/prompt_list_dialog_list_bk_image"
@@ -24,7 +19,7 @@
         android:backgroundTint="@null"
         android:background="@null"
         app:tint="@null"
-        android:src="@drawable/white_floor"
+        android:src="@null"
         android:scaleType="centerCrop"
         android:layout_gravity="center"
         />
@@ -36,29 +31,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@null"
+        android:background="@null">
 
     </RelativeLayout>
-<!--    <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--        android:id="@+id/prompt_list_dialog_total_linear"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:layout_marginStart="15dp"-->
-<!--        android:layout_marginEnd="15dp"-->
-<!--        android:orientation="vertical"-->
-<!--        android:weightSum="1"-->
-<!--        android:background="@null"-->
-<!--        android:backgroundTint="@null"-->
-<!--        >-->
-
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-
-<!--        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"-->
-
     <com.puutaro.commandclick.custom_view.OutlineTextView
         android:id="@+id/prompt_list_dialog_list_title"
         android:layout_width="wrap_content"
@@ -101,9 +78,6 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="@dimen/prompt_list_dialog_vertical_search_cardview_margin"
             />
-    <!--        app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_search_edit_text"-->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/prompt_list_dialog_search_edit_cardview"
         android:layout_width="match_parent"
@@ -134,56 +108,39 @@
             android:autofillHints=""
             />
     </com.google.android.material.card.MaterialCardView>
-    <!--     app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_bottom_linear"-->
-<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--            android:id="@+id/prompt_list_dialog_bottom_linear"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:background="@null"-->
-<!--            android:backgroundTint="@null"-->
-<!--            >-->
-    <!--         app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"-->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/prompt_list_dialog_cancel"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/prompt_list_dialog_ok"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintHorizontal_weight="1"
-            app:tint="@null"
-            android:background="@null"
-            android:backgroundTint="@null"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackground"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/prompt_list_dialog_ok"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"
-            app:layout_constraintStart_toEndOf="@+id/prompt_list_dialog_cancel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:tint="@null"
-            android:background="@null"
-            android:backgroundTint="@null"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackground"
-            />
-<!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
-<!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
-    </androidx.constraintlayout.widget.ConstraintLayout>
-<!--</FrameLayout>-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/prompt_list_dialog_cancel"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/prompt_list_dialog_ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="1"
+        app:tint="@null"
+        android:background="@null"
+        android:backgroundTint="@null"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/prompt_list_dialog_ok"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"
+        app:layout_constraintStart_toEndOf="@+id/prompt_list_dialog_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:tint="@null"
+        android:background="@null"
+        android:backgroundTint="@null"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

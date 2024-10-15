@@ -33,7 +33,7 @@ import java.io.File
 class PromptListAdapter(
     val context: Context?,
     var promptList: MutableList<String>,
-    private val isWhiteBackgrond: Boolean,
+    isWhiteBackgrond: Boolean,
 ): RecyclerView.Adapter<PromptListAdapter.PromptListViewHolder>() {
 
     class PromptListViewHolder(val view: View): RecyclerView.ViewHolder(view) {

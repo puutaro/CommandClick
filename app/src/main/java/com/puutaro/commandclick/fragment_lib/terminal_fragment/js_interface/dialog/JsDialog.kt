@@ -461,12 +461,12 @@ class JsDialog(
     fun promptWithList(
         fannelPath: String,
         title: String,
-        listOrDefoTxtVars: String,
+        promptConfigMapCon: String,
     ): String {
         return promptWithListDialog.create(
             fannelPath,
             title,
-            listOrDefoTxtVars,
+            promptConfigMapCon,
         )
     }
 }

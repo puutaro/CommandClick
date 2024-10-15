@@ -94,6 +94,8 @@ object UrlHistoryButtonEvent{
         terminalViewModel.onDialog = true
         urlHistoryDialog = Dialog(
             context,
+            R.style.BottomSheetDialogTheme
+//            R.style.extraMenuDialogStyle,
         )
         urlHistoryDialog?.setContentView(
             R.layout.url_history_list_view_layout
@@ -164,7 +166,7 @@ object UrlHistoryButtonEvent{
         urlHistoryDialog?.window
             ?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
         urlHistoryDialog?.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog?.show()
@@ -594,85 +596,6 @@ object UrlHistoryButtonEvent{
             args = ScriptArgsMapList.ScriptArgsName.URL_HISTORY_CLICK.str
         )
     }
-
-//    private fun makeBottomScriptUrlList(
-//    ): List<Map<String, String>> {
-//        val fannelName = when(fragment) {
-//            is CommandIndexFragment
-//            -> String()
-//            else
-//            -> FannelInfoTool.getCurrentFannelName(
-//                fannelInfoMap
-//            )
-//        }
-//        val replaceVariableMap = when(
-//            fannelName.isEmpty()
-//        ) {
-//            true -> null
-//            else -> SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-//                context,
-//                "${cmdclickDefaultAppDirPath}/${fannelName}",
-//            )
-//        }
-//        val bottomScriptUrlList =
-//            when(fragment){
-//                is CommandIndexFragment
-//                -> fragment.bottomScriptUrlList
-//                is EditFragment
-//                -> fragment.bottomScriptUrlList
-//                else
-//                -> return emptyList()
-//            }
-//        return convertBottomScriptUrlListToUrlList(
-//            bottomScriptUrlList,
-//            replaceVariableMap,
-//            fannelName,
-//        )
-//    }
-
-//    private fun convertBottomScriptUrlListToUrlList(
-//        bottomScriptUrlList: List<String>,
-//        replaceVariableMap: Map<String, String>?,
-//        fannelName: String,
-//    ): List<Map<String, String>> {
-//        return execSetRepalceVariable(
-//            bottomScriptUrlList,
-//            replaceVariableMap,
-//            fannelName,
-//        ).map {
-//                url ->
-//            val replaceUrl = ScriptPreWordReplacer.replace(
-//                url,
-////                cmdclickDefaultAppDirPath,
-//                String(),
-//            )
-//            val title = url.split("/")
-//                .lastOrNull()
-//                ?: String()
-//            mapOf(
-//                titleKey to title,
-//                urlKey to replaceUrl,
-//                iconBase64Key to bottomFannelFileType.name
-//            )
-//        }.filter {
-//            it.isNotEmpty()
-//        }.reversed()
-//    }
-
-//    private fun execSetRepalceVariable(
-//        bottomScriptUrlList: List<String>,
-//        replaceVariableMap: Map<String, String>?,
-//        fannelName: String,
-//    ): List<String> {
-//        return bottomScriptUrlList.joinToString("\n").let {
-//            SetReplaceVariabler.execReplaceByReplaceVariables(
-//                it,
-//                replaceVariableMap,
-////                cmdclickDefaultAppDirPath,
-//                fannelName
-//            )
-//        }.split("\n")
-//    }
 
     private fun isNotDuplicate(
         titleAndUrlList: List<String>,

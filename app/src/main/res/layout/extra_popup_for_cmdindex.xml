@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<androidx.appcompat.widget.LinearLayoutCompat-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:id="@+id/extra_popup_cmdindex_liner_layout"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:weightSum="1"-->
-<!--    >-->
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/extra_popup_cmdindex_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,12 +20,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@mipmap/ic_cmdclick_launcher_background"
         android:scaleType="fitXY"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:alpha="1"
         android:layout_gravity="center"
         android:background="@null"
         android:backgroundTint="@null"/>
+<!--     android:paddingLeft="10dp"
+        android:paddingRight="10dp"-->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_fg2_image"
         android:layout_width="0dp"
@@ -45,8 +36,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@mipmap/ic_cmdclick_launcher_background"
         android:scaleType="fitXY"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:alpha="1"
         android:layout_gravity="center"
         android:background="@null"
@@ -61,14 +50,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@mipmap/ic_cmdclick_launcher_background"
         android:scaleType="fitXY"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:alpha="1"
         android:layout_gravity="center"
         android:background="@null"
         android:backgroundTint="@null"/>
-
-
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/extra_popup_cmdindex_restart_ubuntu_image"
@@ -394,4 +379,3 @@
         android:gravity="center"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
-<!--</androidx.appcompat.widget.LinearLayoutCompat>-->

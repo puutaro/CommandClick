@@ -97,7 +97,8 @@ object FannelHistoryButtonEvent {
             fannelNameList.toMutableList()
         )
         fannelHistoryDialog = Dialog(
-            context
+            context,
+            R.style.BottomSheetDialogTheme
         )
         fannelHistoryDialog?.setContentView(
                 R.layout.fannel_history_recycler_view
@@ -146,7 +147,7 @@ object FannelHistoryButtonEvent {
         fannelHistoryDialog?.window
             ?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
         fannelHistoryDialog?.window
             ?.setGravity(Gravity.BOTTOM)

@@ -131,6 +131,7 @@ object ExtraMenuForCmdIndex  {
                 ?: return@setOnClickListener
             imageDialogObj = Dialog(
                 context,
+//                R.style.BottomSheetDialogTheme
                 R.style.extraMenuDialogStyle,
             )
             imageDialogObj?.requestWindowFeature(Window.FEATURE_NO_TITLE)
