@@ -35,13 +35,7 @@ class OutlineTextView : AppCompatTextView {
     fun setFillColor(id: Int){
         fillColor = context.getColor(id)
     }
-    override fun onDraw(canvas: Canvas?) {
-//        val strokeColor = when(
-//            isRevOutLine
-//        ){
-//            true -> Color.BLACK
-//            else -> Color.WHITE
-//        }
+    override fun onDraw(canvas: Canvas) {
         setTextColor(strokeColor)
         paint.apply {
             style = Paint.Style.STROKE
@@ -49,12 +43,6 @@ class OutlineTextView : AppCompatTextView {
         }
         super.onDraw(canvas)
 
-//        val fillColor = when(
-//            isRevOutLine
-//        ){
-//            true -> Color.WHITE
-//            else -> Color.BLACK
-//        }
         setTextColor(fillColor)
         paint.apply {
             style = Paint.Style.FILL
@@ -81,9 +69,4 @@ class OutlineTextView : AppCompatTextView {
 //        paint.shader = null
 //        canvas.drawText(text.toString().substring(1), firstCharWidth, baseline, paint)
     }
-
-//    fun revOutline(isRev: Boolean){
-//        isRevOutLine = isRev
-//
-//    }
 }

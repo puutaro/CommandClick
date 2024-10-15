@@ -12,12 +12,18 @@ val versionPatch = 2
 
 android {
     namespace = "com.puutaro.commandclick"
-    compileSdk = 33
+    compileSdk = 34
 
-    packagingOptions {
-        resources.excludes.add("META-INF/INDEX.LIST")
-        resources.excludes.add("META-INF/io.netty.versions.properties")
+    packaging {
+        resources {
+            excludes.add("META-INF/INDEX.LIST")
+            excludes.add("META-INF/io.netty.versions.properties")
+            jniLibs {
+                useLegacyPackaging = false
+            }
+        }
     }
+
 
     buildFeatures {
         buildConfig = true
@@ -60,11 +66,14 @@ android {
 
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+            //JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_17
+            //JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    //"1.8"
     }
 //    buildFeatures.compose = true
     dataBinding {
@@ -94,6 +103,7 @@ extra["libDir"] = "${project.projectDir}/src/main/jniLibs"
 
 
 dependencies {
+
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
 
