@@ -14,13 +14,15 @@
         android:id="@+id/web_bk_image_caption_layout_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/tramp_diamond"
-        app:tint="@color/file_dark_green_color"
+        android:src="@null"
+        app:tint="@null"
         android:scaleType="fitCenter"
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="0dp"
         />
+<!--     android:src="@drawable/tramp_diamond"
+        app:tint="@color/file_dark_green_color"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
         android:id="@+id/web_bk_image_caption_layout_caption"
         android:layout_width="match_parent"

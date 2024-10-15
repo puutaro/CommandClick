@@ -50,7 +50,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -96,7 +95,7 @@ class PromptWithListDialog(
         private val listTxtSuffix = ".txt"
         private val mapSeparator = ','
         private val firstSeparator = '|'
-        val secondSeparator = '?'
+        const val secondSeparator = '?'
         private var onDialog = false
         private val switchOn = "ON"
         private val switchOff = "OFF"
@@ -169,23 +168,6 @@ class PromptWithListDialog(
         val promptListTitleView = promptDialogObj?.findViewById<OutlineTextView>(
             R.id.prompt_list_dialog_list_title
         )?.apply {
-//            AppCompatResources.getDrawable(context, R.drawable.textbk)?.toBitmap()?.let {
-//                val spanna: Spannable = SpannableString(title)
-//                spanna.setSpan(
-//                    it,
-//                    0,
-//                    title.length,
-//                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-//                )
-////                paint.setShader(
-////                    BitmapShader(
-////                        it,
-////                        Shader.TileMode.REPEAT,
-////                        Shader.TileMode.REPEAT
-////                    )
-////                )
-//                text = spanna
-//            }
             val titleStr = title.map {
                 "${it}"
             }.joinToString(" ")
@@ -195,85 +177,7 @@ class PromptWithListDialog(
                 0,
                 1,
                 0
-            ) // set size
-
-//            val gradientColors = intArrayOf(-0xffff01, -0xff0100) // Example: Blue to Green
-
-//            val shader: Shader = LinearGradient(
-//                0f,
-//                0f,
-//                0f,
-//                this.textSize,
-//                gradientColors,
-//                null,
-//                Shader.TileMode.CLAMP
-//            )
-//            val length: Int = this.getMeasuredWidth()
-//
-//            val angle = 45f // specify angle in degrees here
-
-
-//            val textShader: Shader = LinearGradient(
-//                0f,
-//                0f,
-//                (Math.sin(Math.PI * angle / 180) * length).toInt().toFloat(),
-//                (Math.cos(Math.PI * angle / 180) * length).toInt().toFloat(),
-//                intArrayOf(
-//                    Color.BLUE,
-//                    Color.GREEN,
-//                    Color.GREEN,
-//                    Color.BLUE,
-//                    Color.RED,
-//                    Color.GREEN,
-//                    Color.BLUE,
-//                    Color.RED
-//                ),
-//                null,
-//                Shader.TileMode.CLAMP
-//            )
-////            paint.shader = shader
-//            ss1.set(0, 10, textShader)
-
-            // Apply the gradient color span to the desired part of the text
-
-            // Apply the gradient color span to the desired part of the text
-//            ss1.setSpan(
-//                GradientSpan(shader),
-//                0,
-//                1,
-//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-//            )
-
-//            val htmpSpan = HtmlCompat.fromHtml(
-//                "<span style=\"text-stroke: 1px #ff0000; color: #FFFFFF ; background-color: #FF8983\">Highlighted</span><b> Bold!</b> Not bold <span style=\"background-color: #00FF00\">string</span>",
-//                HtmlCompat.FROM_HTML_MODE_LEGACY )
-//            ss1.setSpan(
-////                htmpSpan,
-//                ForegroundColorSpan(
-//                    Color.parseColor(
-//                        CmdClickColorStr.values().map {
-//                            it.str
-//                        }.shuffled().first()
-//                    )
-//                ),
-//                0,
-//                1,
-//                0
-//            ) // set color
-//            val textShader: Shader = LinearGradient(
-//                0f,
-//                0f,
-//                0f,
-//                0f,
-//                intArrayOf(
-//                    Color.BLUE,
-//                    Color.GREEN
-//                ),
-//                null,
-////                floatArrayOf(0f, 1f),
-//                Shader.TileMode.CLAMP
-//            )
-//            paint.shader = textShader
+            )
             val colorList = listOf(
                 CmdClickColorStr.LIGHT_GREEN.str,
                 CmdClickColorStr.THICK_AO.str,
@@ -325,15 +229,15 @@ class PromptWithListDialog(
                 Color.parseColor(color3)
             ) // Define your gradient colors
 
-            val positions = floatArrayOf(0.5f, 0.1f) // Define color positions
+//            val positions = floatArrayOf(0.5f, 0.1f) // Define color positions
 
             val angle = (220..320).random() //45 // Set the gradient angle
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "lgradient.txt").absolutePath,
-                listOf(
-                    "positions: ${positions.map { it }.joinToString("| ")}, angle: ${angle}, color1: ${color1}, color2: ${color2}"
-                ).joinToString("\n")
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lgradient.txt").absolutePath,
+//                listOf(
+//                    "positions: ${positions.map { it }.joinToString("| ")}, angle: ${angle}, color1: ${color1}, color2: ${color2}"
+//                ).joinToString("\n")
+//            )
 
             val gradientSpan = LinearGradientSpan(colors, null, angle)
 
@@ -595,7 +499,6 @@ class PromptWithListDialog(
                 promptDialogObj,
                 fannelDirPath,
                 promptList,
-                isWhiteBackgrond,
             )
         }
         KeyboardHandler.handle(
@@ -678,14 +581,6 @@ class PromptWithListDialog(
                                 searchCardView?.layoutParams = cardConstraintLayout
                                 cancelImageView?.isVisible = false
                                 okImageView?.isVisible = false
-//                            val cancelConstraintLayout = cancelImageView?.layoutParams as? ConstraintLayout.LayoutParams
-//                            cancelConstraintLayout?.apply {
-//                               height = bottomButtonKeyOpenHeightDp
-//                            }
-//                            val okConstraintLayout = okImageView?.layoutParams as? ConstraintLayout.LayoutParams
-//                            okConstraintLayout?.apply {
-//                                height = bottomButtonKeyOpenHeightDp
-//                            }
 
                             }
                             else -> {
@@ -707,14 +602,6 @@ class PromptWithListDialog(
                                 )
                                 cancelImageView?.isVisible = true
                                 okImageView?.isVisible = true && editTextVisible
-//                            val cancelConstraintLayout = cancelImageView?.layoutParams as? ConstraintLayout.LayoutParams
-//                            cancelConstraintLayout?.apply {
-//                                height = bottomButtonNormalHeightDp
-//                            }
-//                            val okConstraintLayout = okImageView?.layoutParams as? ConstraintLayout.LayoutParams
-//                            okConstraintLayout?.apply {
-//                                height = bottomButtonNormalHeightDp
-//                            }
                             }
                         }
                     }
@@ -967,7 +854,6 @@ class PromptWithListDialog(
             promptDialogObj: Dialog?,
             fannelDirPath: String,
             promptList: List<String>,
-            isWhiteBackgrond: Boolean,
         ){
             val handleRnd = (1..6).random()
             when(true) {
@@ -976,14 +862,12 @@ class PromptWithListDialog(
                     promptDialogObj,
                     fannelDirPath,
                     promptList,
-                    isWhiteBackgrond,
                 )
                 (handleRnd <= 4) -> makeWebBk(
                     terminalFragmentRef,
                     promptDialogObj,
                     fannelDirPath,
                     promptList,
-                    isWhiteBackgrond,
                 )
                 else -> makePieBk(
                     terminalFragmentRef,
@@ -999,7 +883,6 @@ class PromptWithListDialog(
             promptDialogObj: Dialog?,
             fannelDirPath: String,
             promptList: List<String>,
-            isWhiteBackgrond: Boolean,
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1241,7 +1124,6 @@ class PromptWithListDialog(
             promptDialogObj: Dialog?,
             fannelDirPath: String,
             promptList: List<String>,
-            isWhiteBackgrond: Boolean,
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1300,15 +1182,6 @@ class PromptWithListDialog(
                     (0..freq).map { text }
                 }.flatten()
 
-//表示する色を設定
-//                frequencyMapList.forEach { frequencyMap ->
-//                    value.add(
-//                        PieEntry(
-//                            frequencyMap.value.toFloat(),
-//                            frequencyMap.key
-//                        )
-//                    )
-//                }
                 val srcColorList = listOf(
                     CmdClickColorStr.LIGHT_GREEN,
                     CmdClickColorStr.WHITE_GREEN,
@@ -1334,36 +1207,20 @@ class PromptWithListDialog(
                     CmdClickColorStr.YELLOW,
                     CmdClickColorStr.SKERLET,
                 )
-                val color: ArrayList<Int> = ArrayList()
                 val colorStrList = srcColorList.map {
                     it.str
                 }
                 val colorIdList = CmdClickColor.values().map {
                     it.id
                 }
-//                CmdClickColorStr.values()
-                val colorMap = mutableListOf<String>()
-                val textColorMap = frequencyMapList.map {
-                    val text = it.key ?: String()
-                    val colorStr = colorStrList.shuffled().first()
-                    text to colorStr
-//                    colorList.add(colorStr)
-//                    color.add(Color.parseColor(colorStr))
-                }.filter {
-                    it.first.isNotEmpty()
-                }.toMap()
                 val textColorIdMap = frequencyMapList.map {
                     val text = it.key ?: String()
                     val colorId = colorIdList.shuffled().first()
                     text to colorId
-//                    colorList.add(colorStr)
-//                    color.add(Color.parseColor(colorStr))
                 }.filter {
                     it.first.isNotEmpty()
                 }.toMap()
                 val capturePartPngDirPathList = ButtonImageCreator.makeCapturePartPngDirPathList()
-
-
                 val colorStr = colorStrList.random()
                 val colorIntArray = listOf(
                     colorStr,
@@ -1421,50 +1278,16 @@ class PromptWithListDialog(
                     val endInt = screenWidth - oneSideLengthDiff * index
                     text to (startInt..endInt)
                 }.toMap()
-                val isSync = (1..3).random() % 3 > 0
                 val rotateAngleRndList = (-270..270)
-                val syncAngle = rotateAngleRndList.random()
-//                when(isSync) {
-//                    true -> rotateAngleRndList.random()
-//                    else -> null
-//                }
                 val alphaRndList = (100..400)
                 val repeatTimes = (5..10).random()
-//                    (20..40).random()
-//                when(isSync) {
-//                    true -> (20..40).random()
-//                    else -> (50..100).random()
-//                }
-                val xyDurationSrcList = (200..20000)
                 val textSizeEnd = 30
                 val textSizeDiff = textSizeEnd / decentTextList.size
-                val textToIntRangeMap = decentTextList.mapIndexed {
-                        index, text ->
-                    val startInt = textSizeEnd - textSizeDiff * (index + 1)
-                    val endInt = textSizeEnd - textSizeDiff * index
-                    text to (startInt..endInt)
-                }.toMap()
                 val textToFloatMap = decentTextList.mapIndexed {
                         index, text ->
                     text to (textSizeEnd - textSizeDiff * index).toFloat()
                 }.toMap()
 
-
-                val centerXY = Pair(
-                    screenWidthInt / 2,
-                    screenHeightInt / 2
-                )
-
-                val maxRadius = (screenWidthInt / 3)
-                val radius = (100..maxRadius).random()
-                val holeNum = (1..1).random()
-                val centerXYToRadiusList = (1..holeNum).map {
-                    Pair(
-                        (0..screenWidthInt).random(),
-                        ((0..screenHeightInt).random() * screenHeightFloat) / screenWidthFloat
-                    ) to (0..maxRadius).random()
-                }
-                //((screenWidthInt / 4)..(screenWidthInt / 2))
                 val thetaDiff = 360f / repeatTimes
 
 //                FileSystems.writeFile(
@@ -1473,12 +1296,6 @@ class PromptWithListDialog(
 //                        "textToIntRangeMap: ${textToIntRangeMap}"
 //                    ).joinToString("\n")
 //                )
-
-                val daenRate = screenHeightFloat / screenWidthFloat
-                val durationList = (0..100)
-                val animationTriggerEndNum = 4
-                val animationTriggerRndList = (1..animationTriggerEndNum)
-//                val plotImageColorStrList = CmdClickColorStr.values().map { it.str }
                 val fixRotationAngle = rotateAngleRndList.random().toFloat()
 
 
@@ -1486,25 +1303,14 @@ class PromptWithListDialog(
                     Glide.with(context)
                         .asDrawable()
                         .sizeMultiplier(0.1f)
+                val plusRotateListSrc = listOf(-90f, 0f, 90f)
+                val plusRotateList = when((1..3).random() == 3) {
+                    false -> listOf(plusRotateListSrc.random())
+                    else -> plusRotateListSrc
+                }
                 (0..repeatTimes).forEachIndexed {
                         index, _ ->
-                    val curTheta = thetaDiff * index
-                    val blackAndWhite = listOf(
-                        R.color.white,
-                        R.color.file_dark_green_color
-                    )
                     withContext(Dispatchers.Main) createText@{
-                        val blackOrWhite = when(isWhiteBackgrond) {
-                            true -> R.color.black
-                            else -> R.color.black//blackAndWhite.random()
-                        }
-                        val textBlackOrWhite = when(isWhiteBackgrond) {
-                            true -> R.color.white
-                            else -> R.color.white
-//                            blackAndWhite.filter {
-//                                it != blackOrWhite
-//                            }.first()
-                        }
                         val inflater = LayoutInflater.from(context)
                         val buttonLayout = inflater.inflate(
                             R.layout.web_bk_image_caption_layout,
@@ -1514,15 +1320,13 @@ class PromptWithListDialog(
                         buttonLayout.apply {
                             val scaleWidth = textToOneSideLengthMap.get(curText)?.random() ?: screenWidthInt
                             val scaleHeight = (scaleWidth * 1.73).toInt()
-//                            oneSideLengthRndList.random()
                             val relativeParam = RelativeLayout.LayoutParams(
                                 scaleWidth,
                                 scaleHeight,
                             )
                             layoutParams = relativeParam
                             alpha = alphaRndList.random().toFloat() / 1000
-                            rotation = fixRotationAngle
-                            //rotateAngleRndList.random().toFloat()
+                            rotation = fixRotationAngle + plusRotateList.random()
                             val margin = scaleWidth / 2
                             val putXyPair = runBlocking {
                                 var putXyPairSrc: Pair<Float, Float> = Pair(0f, 0f)
@@ -1562,10 +1366,6 @@ class PromptWithListDialog(
                                 textToFloatMap.get(curText)?.let {
                                     textSize = it
                                 }
-//                                textSize = 9f
-//                            textToIntRangeMap.get(curText)?.random()?.toFloat()?.let {
-//                                textSize = it
-//                            }
                             }
 
                             buttonLayout.findViewById<AppCompatImageView>(R.id.web_bk_image_caption_layout_image)
@@ -1575,8 +1375,6 @@ class PromptWithListDialog(
                                     if(!isAnime) {
                                         val bkBitmap =
                                             textBkBitmapMap.get(curText) ?: defaultBkBitmap
-//                                    setImageBitmap(bitMap)
-//                                    val duration = durationList.random()
 
                                         Glide
                                             .with(context)
@@ -1611,189 +1409,8 @@ class PromptWithListDialog(
                                     animationDrawable.start()
                                 }
                         }
-
-//                        val oneSideLength = oneSideLengthRndList.random()
-//                        val relativeParam = RelativeLayout.LayoutParams(
-//                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-//                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-//                        )
-//                        val bkTextView = AppCompatTextView(context).apply {
-//                            layoutParams = relativeParam
-//
-//                            val curText = textList.shuffled().first()
-//                            text = curText
-//
-//                            val plusXY = centerXY
-//                                Pair(
-//                                (radius * cos(curTheta)) * daenRate,
-//                                (radius * sin(curTheta)) * daenRate,
-//                            )
-////                            FileSystems.updateFile(
-////                                File(UsePath.cmdclickDefaultAppDirPath, "lputxy.txt").absolutePath,
-////                                listOf(
-////                                    "centerXY: ${centerXY} putXY: ${putXY}"
-////                                ).joinToString("\n") + "\n------------\n"
-////                            )
-//                            x = centerXY.first.toFloat() - width / 2
-////                                putXY.first
-//                                    //(-oneSideLength..screenWidthInt).random().toFloat()
-//                            y = centerXY.second.toFloat() - height / 2
-//                                //putXY.second
-////                            (-oneSideLength..screenHeightInt).random().toFloat()
-//
-////                            val rotationAngleEnd = syncAngle?.toFloat()
-////                                ?: rotateAngleRndList.random().toFloat()
-////                            rotationX = centerXY.first.toFloat()
-////                            rotationY = centerXY.second.toFloat()
-////                            pivotY =((y - width / 2) * .98f);
-//                            val rotateAngle = (-15..15).random()
-//                            rotation = rotateAngle.toFloat()
-//
-//                                //rotationAngleEnd
-////                            setTextColor(
-////                                AppCompatResources.getColorStateList(context, R.color.terminal_color)
-////                            )
-//                            textColorIdMap.get(curText)?.let {
-//                                setTextColor(
-//                                    AppCompatResources.getColorStateList(context, it)
-//                                )
-//                            }
-//                            textToIntRangeMap.get(curText)?.let {
-//                                sizeIntRange ->
-//                                val curRadius = centerXYToRadiusList.random().second.toFloat()
-//                                val curFontSize = sizeIntRange.shuffled().first().toFloat()
-//                                textSize = curFontSize
-//                                //(curFontSize *  curRadius) / maxRadius.toFloat()
-//                            }
-////                            textSize = textSizeList.shuffled().first().toFloat() //50f
-////
-//                            val alphaFloat = alphaRndList.random().toFloat() / 1000
-//                            alpha = alphaFloat
-//
-//                            // refresh
-//                        }
-//                        CoroutineScope(Dispatchers.Main).launch {
-//                            withContext(Dispatchers.Main) {
-//                                bkTextView.invalidate()
-//                            }
-////                            if(
-////                                animationTriggerRndList.random() % animationTriggerEndNum > 0
-////                            ) return@launch
-////                            withContext(Dispatchers.Main) {
-////                                val durationMilliisX = xyDurationSrcList.random()
-////                                val durationMilliisY = xyDurationSrcList.random()
-////                                val durationMiliSec = 800
-////                            }
-//                        }
                     }
                 }
-//                withContext(Dispatchers.Main) {
-////                    delay(200)
-//                    val iconId = FannelIcons.values().map { it.id }.shuffled().first()
-//                    val shuujiImage = AppCompatImageView(context).apply {
-//                        val oneSideLength = screenWidthInt
-////                            oneSideLengthRndList.random()
-//                        val relativeParam = FrameLayout.LayoutParams(
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-////                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-////                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-////                            (screenWidthInt * 3) / 4,
-////                            (screenHeightInt * 3) / 4,
-//                        ).apply {
-////                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-////                            addRule(RelativeLayout.ALIGN_PARENT_END)
-//                            bottomMargin = 2
-//                            leftMargin = 2
-//                        }
-//                        layoutParams = relativeParam
-////                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
-////                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
-////                        x = 0f
-////                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
-//                        imageTintList = AppCompatResources.getColorStateList(context, R.color.black)
-//                        setImageResource(iconId)
-//                        scaleType = ImageView.ScaleType.FIT_XY
-//                        alpha = 1f
-//                    }
-//                    val shuujiImageWhiteShadow2 = AppCompatImageView(context).apply {
-//                        val oneSideLength = screenWidthInt
-////                            oneSideLengthRndList.random()
-//                        val relativeParam = FrameLayout.LayoutParams(
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-////                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-////                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-////                            (screenWidthInt * 3) / 4,
-////                            (screenHeightInt * 3) / 4,
-//                        ).apply {
-////                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-////                            addRule(RelativeLayout.ALIGN_PARENT_END)
-//                            bottomMargin = 0
-//                            leftMargin = 0
-//                        }
-//                        layoutParams = relativeParam
-//                        imageTintList =
-//                            AppCompatResources.getColorStateList(context, R.color.white)
-////                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
-////                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
-////                        x = 0f
-////                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
-//                        setImageResource(iconId)
-//                        scaleType = ImageView.ScaleType.FIT_XY
-//                        alpha = 1f
-//                    }
-//                    val shuujiImageWhiteShadow3 = AppCompatImageView(context).apply {
-//                        val oneSideLength = screenWidthInt
-////                            oneSideLengthRndList.random()
-//                        val relativeParam = FrameLayout.LayoutParams(
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-////                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-////                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-////                            (screenWidthInt * 3) / 4,
-////                            (screenHeightInt * 3) / 4,
-//                        ).apply {
-////                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-////                            addRule(RelativeLayout.ALIGN_PARENT_END)
-//                            bottomMargin = 4
-//                            leftMargin = 4
-//                        }
-//                        layoutParams = relativeParam
-//                        imageTintList =
-//                            AppCompatResources.getColorStateList(context, R.color.white)
-////                        x = ScreenSizeCalculator.toDp(context, ((screenWidthInt * 1) / 4)).toFloat()
-////                        y = ScreenSizeCalculator.toDp(context, (screenHeightInt * 1) / 4).toFloat()
-////                        x = 0f
-////                        y = (screenHeightInt / 3..screenHeightInt / 2).random().toFloat()
-//                        setImageResource(iconId)
-//                        scaleType = ImageView.ScaleType.FIT_XY
-//                        alpha = 1f
-//                    }
-//                    val bkFrameLayout = FrameLayout(context).apply {
-//                        val relativeParam = RelativeLayout.LayoutParams(
-//                            (screenWidthInt * 3) / 4,
-//                            (screenHeightInt * 3) / 4,
-////                            ScreenSizeCalculator.toDp(context, (screenWidthInt * 3) / 4),
-////                            ScreenSizeCalculator.toDp(context, (screenHeightInt * 3) / 4),
-////                            (screenWidthInt * 3) / 4,
-////                            (screenHeightInt * 3) / 4,
-//                        ).apply {
-//                            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-//                            addRule(RelativeLayout.ALIGN_PARENT_END)
-//                        }
-//                        layoutParams = relativeParam
-//                        alpha = 0.6f
-//                    }
-//                    bkFrameLayout.addView(shuujiImageWhiteShadow2)
-//                    bkFrameLayout.addView(shuujiImageWhiteShadow3)
-//                    bkFrameLayout.addView(shuujiImage)
-////                    delay(100)
-//                    bkRelative.addView(bkFrameLayout)
-////                    bkRelative.addView(shuujiImageWhiteShadow3)
-////                    bkRelative.addView(shuujiImage)
-//                }
-
             }
         }
 
@@ -2182,6 +1799,7 @@ private object EditTextMakerForPromptList {
 private enum class PromptWithTextMapKey {
     list,
     editText,
+    background,
 }
 
 private enum class PromptEditTextKey {
@@ -2203,6 +1821,16 @@ private enum class PromptListVars {
     limit,
 }
 
+
+object PromptBackground {
+    private enum class Key {
+        type
+    }
+
+    private enum class Type{
+        sckelton
+    }
+}
 class CustomGradientSpan(private val paint: TextPaint) : ReplacementSpan() {
 
     override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
@@ -2270,26 +1898,4 @@ class ShadowSpan(
     override fun updateDrawState(tp: TextPaint) {
         tp.setShadowLayer(radius, dx, dy, shadowColor)
     }
-
-//    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt): Int {
-//        // Adjust font metrics for the shadow
-//        fm.ascent -= radius.toInt()
-//        fm.descent += radius.toInt()
-//        return super.getSize(paint, text, start, end, fm)
-//    }
 }
-
-//class ShadowSpan(private val radius: Float, private val dx: Float, private val dy: Float, private val color: Int) : CharacterStyle(), MetricAffectingSpan() {
-//
-//    override fun updateDrawState(ds: TextPaint) {
-//        ds.setShadowLayer(radius, dx, dy, color)
-//    }
-//
-//    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt): Int {
-//        // Adjust font metrics for the shadow
-//        fm.ascent -= radius.toInt()
-//        fm.descent += radius.toInt()
-//        return super.getSize(paint, text, start, end, fm)
-//    }
-//}
-
