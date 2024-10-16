@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
@@ -66,7 +65,7 @@ object ButtonImageCreator {
                         BitmapFactory.decodeByteArray(it, 0, it.size)
                     }
                 }
-                val assetsPathList = CmdClickIcons.values().map {
+                val assetsPathList = CmdClickIcons.entries.map {
                     it.assetsPath
                 }
                 execCreate(
@@ -125,6 +124,7 @@ object ButtonImageCreator {
                             capturePartPngDirPathList,
                             defaultUrlCapBitmap,
                             null,
+                            BitmapTool.GradientBitmap.GradOrient.BOTH,
                         ) ?: return@async
 //                        val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
 //                                dirPath ->
@@ -165,6 +165,7 @@ object ButtonImageCreator {
             capturePartPngDirPathList: List<String>,
             defaultUrlCapBitmap: Bitmap?,
             centerColorStr: String?,
+            gradOrient: BitmapTool.GradientBitmap.GradOrient,
         ): ByteArray? {
             val originalImagePath = capturePartPngDirPathList.shuffled().firstOrNull()?.let {
                     dirPath ->
@@ -183,9 +184,8 @@ object ButtonImageCreator {
                 assetsPath,
                 originalImagePath,
                 defaultUrlCapBitmap,
-                null,
-                null,
                 centerColorStr,
+                gradOrient,
             )
         }
     }
@@ -259,9 +259,8 @@ object ButtonImageCreator {
                                 assetsPath,
                                 originalImagePath,
                                 defaultUrlCapBitmap,
-                                ccGradColorList.random(),
-                                ccGradColorList.random(),
                                 centerColorStr,
+                                BitmapTool.GradientBitmap.GradOrient.BOTH,
                             ) ?: return@async
                             FileSystems.writeFromByteArray(
                                 selectionBarImageFile.absolutePath,
@@ -318,9 +317,8 @@ object ButtonImageCreator {
         maskAssetsPath: String,
         originalImagePath: String?,
         defaultUrlCapBitmap: Bitmap?,
-        startGradColor: String?,
-        endGradColor: String?,
         centerColorStr: String?,
+        gradOrient: BitmapTool.GradientBitmap.GradOrient,
     ): ByteArray? {
         val original = withContext(Dispatchers.IO) {
             when(originalImagePath.isNullOrEmpty()){
@@ -378,11 +376,12 @@ object ButtonImageCreator {
             original.width,
             original.height,
             colorIntArray,
+            gradOrient,
         )
-         val overBitmap = overlayBitmap(
+         val overBitmap = BitmapTool.ImageRemaker.overlayBitmap(
              bkBitmapSrc,
              outBitmap,
-        ) ?: return null
+        )
         val resultBitmap = getRoundedCornerBitmap(
             context,
             overBitmap,
@@ -420,20 +419,6 @@ object ButtonImageCreator {
 
 // Crop bitmap
        return Bitmap.createBitmap(bitmap, startX, startY, widthPx, heightPx, null, false)
-    }
-
-
-    private fun overlayBitmap(bitmapBackground: Bitmap, bitmapImage: Bitmap): Bitmap? {
-        val bitmap2Width = bitmapImage.width
-        val bitmap2Height = bitmapImage.height
-        val marginLeft = (bitmapBackground.width * 0.5 - bitmap2Width * 0.5).toFloat()
-        val marginTop = (bitmapBackground.height * 0.5 - bitmap2Height * 0.5).toFloat()
-        val overlayBitmap =
-            Bitmap.createBitmap(bitmap2Width, bitmap2Height, bitmapBackground.config)
-        val canvas = Canvas(overlayBitmap)
-        canvas.drawBitmap(bitmapBackground, Matrix(), null)
-        canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
-        return overlayBitmap
     }
 
     private fun getRoundedCornerBitmap(

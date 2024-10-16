@@ -6,18 +6,19 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.material.card.MaterialCardView
+import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ButtonAssetsImage
@@ -32,20 +33,21 @@ import java.io.File
 
 class PromptListAdapter(
     val context: Context?,
-    var promptList: MutableList<String>,
-    isWhiteBackgrond: Boolean,
+    var prompMapList: MutableList<Map<String, String?>>,
+    private val isWhiteBackgrond: Boolean,
 ): RecyclerView.Adapter<PromptListAdapter.PromptListViewHolder>() {
 
     class PromptListViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 //        val cardView = view.findViewById<MaterialCardView>(
 //            R.id.prompt_list_adapter_cardview
 //        )
+        val promptListAdapterTitleBk = view.findViewById<ShapeableImageView>(R.id.prompt_list_adapter_thumbnail_bk)
         val promptListAdapterThumnail = view.findViewById<AppCompatImageView>(R.id.prompt_list_adapter_thumbnail)
         val promptListAdapterTitle = view.findViewById<OutlineTextView>(R.id.prompt_list_adapter_title)
-        var itemStr: String = String()
+        var itemMap: Map<String, String?> = emptyMap()
     }
 
-    override fun getItemCount(): Int = promptList.size
+    override fun getItemCount(): Int = prompMapList.size
 
     override fun getItemId(position: Int): Long {
         //return super.getItemId(position)
@@ -68,6 +70,7 @@ class PromptListAdapter(
         true -> null
         else -> "#ffffff"
     }
+    private val rotateList = listOf(45, 135, 225, 315)
 
     private val thumbnailByteArray =
         runBlocking {
@@ -76,16 +79,10 @@ class PromptListAdapter(
                 ButtonAssetsImage.cPingPath,
                 makeCapturePartPngDirPathList(),
                 defaultUrlCapBitmap,
-                centerWhiteColor
+                centerWhiteColor,
+                BitmapTool.GradientBitmap.GradOrient.DIAGONAL,
             )
         }
-//        CmdClickIcons.values().map {
-//            it.assetsPath
-//        }.shuffled().firstOrNull()?.let {
-//            ExecSetToolbarButtonImage.getImageFile(it)
-//        }?.let {
-//            BitmapTool.convertFileToByteArray(it.absolutePath)
-//        }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -105,21 +102,26 @@ class PromptListAdapter(
         return promptListViewHolder
     }
 
+    private val titleKey =  PromptWithListDialog.Companion.PromptList.PromptListKey.TITLE.key
+    private val iconKey =  PromptWithListDialog.Companion.PromptList.PromptListKey.ICON.key
+
     override fun onBindViewHolder(
         holder: PromptListViewHolder,
         position: Int
     ) {
+        if(
+            context == null
+        ) return
         CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Main){
-//                holder.cardView.elevation = 0f
-//                holder.cardView.radius = 5f
-//            }
-            val text = promptList[position]
+            val lineMap = prompMapList[position]
             withContext(Dispatchers.Main){
+                val title = withContext(Dispatchers.IO) {
+                    lineMap.get(titleKey)
+                }
                 val promptListAdapterTitle = holder.promptListAdapterTitle
                 promptListAdapterTitle.setFillColor(R.color.ao)
                 promptListAdapterTitle.outlineWidthSrc = 2
-                promptListAdapterTitle.text = text
+                promptListAdapterTitle.text = title
             }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lPromptAdapter.txt").absolutePath,
@@ -127,18 +129,70 @@ class PromptListAdapter(
 //                    "text: ${text}"
 //                ).joinToString("\n")
 //            )
-            holder.itemStr = text
+            holder.itemMap = lineMap
             withContext(Dispatchers.Main){
-                val promptListAdapterThumbnail = holder.promptListAdapterThumnail
-                val rotateList = listOf(45, 135, 225, 315)
-//                promptListAdapterThumbnail.rotation
-                val curRotation = promptListAdapterThumbnail.rotation
-                val nextRotate = rotateList.random()
-                when(curRotation % 45f == 0f){
-                    true -> promptListAdapterThumbnail.rotation = 45f + nextRotate
-                    else -> nextRotate
+                val iconStr = lineMap.get(iconKey)
+                val icon = CmdClickIcons.entries.firstOrNull {
+                    it.str == iconStr
                 }
-                promptListAdapterThumbnail.rotation = promptListAdapterThumbnail.rotation + rotateList.random()
+                val isSetWhiteGradBk = when (true) {
+                    (!iconStr.isNullOrEmpty() && File(iconStr).isFile)
+                        -> true && !isWhiteBackgrond
+                    else -> false
+                }
+                val promptListAdapterTitleBk = holder.promptListAdapterTitleBk
+                if(isSetWhiteGradBk){
+                    promptListAdapterTitleBk.isVisible = true
+                    val titleBkContext = promptListAdapterTitleBk.context
+                    val bkTitleDrawable = AppCompatResources.getDrawable(
+                        titleBkContext,
+                        R.drawable.white_grad
+                    )
+                    val requestBuilder: RequestBuilder<Drawable> =
+                        Glide.with(titleBkContext)
+                            .asDrawable()
+                            .sizeMultiplier(0.1f)
+                    Glide
+                        .with(titleBkContext)
+                        .load(bkTitleDrawable)
+                        .skipMemoryCache( true )
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .thumbnail( requestBuilder )
+                        .into(promptListAdapterTitleBk)
+
+                    val nextRotate = rotateList.random().toFloat()
+                    val curRotation = holder.promptListAdapterTitleBk.rotation
+                    val nextRotaionAngle = when(curRotation % 45f == 0f){
+                        true -> nextRotate
+                        else -> 45f + nextRotate
+                    }
+                    holder.promptListAdapterTitleBk.rotation = nextRotaionAngle
+                }
+                val byteArray = withContext(Dispatchers.IO) {
+                    when (true) {
+                        (icon != null)
+                            -> {
+                            ButtonImageCreator.ButtonImageCreator.create(
+                                context,
+                                icon.assetsPath,
+                                makeCapturePartPngDirPathList(),
+                                defaultUrlCapBitmap,
+                                centerWhiteColor,
+                                BitmapTool.GradientBitmap.GradOrient.DIAGONAL,
+                            )
+                        }
+                        (!iconStr.isNullOrEmpty() && File(iconStr).isFile)
+                            -> BitmapTool.convertFileToByteArray(iconStr)
+                        else -> thumbnailByteArray
+                    }
+                } ?: return@withContext
+                val promptListAdapterThumbnail = holder.promptListAdapterThumnail
+                val curRotation = promptListAdapterThumbnail.rotation
+                val nextRotate = rotateList.random().toFloat()
+                when(curRotation % 45f == 0f){
+                    true -> promptListAdapterThumbnail.rotation = nextRotate
+                    else -> promptListAdapterThumbnail.rotation = 45f + nextRotate
+                }
                 val logoViewContext = promptListAdapterThumbnail.context
                 val requestBuilder: RequestBuilder<Drawable> =
                     Glide.with(logoViewContext)
@@ -146,7 +200,7 @@ class PromptListAdapter(
                         .sizeMultiplier(0.1f)
                 Glide
                     .with(logoViewContext)
-                    .load(thumbnailByteArray)
+                    .load(byteArray)
                     .skipMemoryCache( true )
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .thumbnail( requestBuilder )

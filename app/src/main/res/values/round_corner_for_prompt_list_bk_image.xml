@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="round_corner_for_prompt_list_bk_image_view" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">1dp</item>
+    </style>
+</resources>

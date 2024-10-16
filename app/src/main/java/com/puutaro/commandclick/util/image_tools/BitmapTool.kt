@@ -15,9 +15,7 @@ import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.util.file.FileSystems
-import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -136,11 +134,22 @@ object BitmapTool {
     }
 
     object GradientBitmap {
-        private val gradientOrientationList = listOf(
+
+        enum class GradOrient{
+            LINEAR,
+            DIAGONAL,
+            BOTH
+
+        }
+
+        private val linearGradOrientList = listOf(
             GradientDrawable.Orientation.TOP_BOTTOM,
             GradientDrawable.Orientation.BOTTOM_TOP,
             GradientDrawable.Orientation.LEFT_RIGHT,
             GradientDrawable.Orientation.RIGHT_LEFT,
+        )
+
+        private val diagonalGradOrientList = listOf(
             GradientDrawable.Orientation.BL_TR,
             GradientDrawable.Orientation.TR_BL,
             GradientDrawable.Orientation.TL_BR,
@@ -151,6 +160,7 @@ object BitmapTool {
             width: Int,
             height: Int,
             colorIntArray: IntArray,
+            gradOrient: GradOrient
 //            startColor: String,
 //            endColor: String,
         ): Bitmap {
@@ -158,7 +168,11 @@ object BitmapTool {
 //                Color.parseColor(startColor),
 //                Color.parseColor(endColor),
 //            )
-
+            val gradientOrientationList = when(gradOrient){
+                GradOrient.BOTH -> linearGradOrientList + diagonalGradOrientList
+                GradOrient.LINEAR -> linearGradOrientList
+                GradOrient.DIAGONAL -> diagonalGradOrientList
+            }
             val gradient = GradientDrawable(gradientOrientationList.random(), colorIntArray)
             gradient.cornerRadius = 0f
             return gradient.toBitmap(width, height)
@@ -343,6 +357,19 @@ object BitmapTool {
 
 // Crop bitmap
             return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
+        }
+
+        fun overlayBitmap(bitmapBackground: Bitmap, bitmapImage: Bitmap): Bitmap {
+            val bitmap2Width = bitmapImage.width
+            val bitmap2Height = bitmapImage.height
+            val marginLeft = (bitmapBackground.width * 0.5 - bitmap2Width * 0.5).toFloat()
+            val marginTop = (bitmapBackground.height * 0.5 - bitmap2Height * 0.5).toFloat()
+            val overlayBitmap =
+                Bitmap.createBitmap(bitmap2Width, bitmap2Height, bitmapBackground.config)
+            val canvas = Canvas(overlayBitmap)
+            canvas.drawBitmap(bitmapBackground, Matrix(), null)
+            canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
+            return overlayBitmap
         }
 
     }

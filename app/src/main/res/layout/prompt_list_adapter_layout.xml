@@ -19,7 +19,7 @@
 
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,24 +27,54 @@
     android:paddingBottom="13dp"
     android:weightSum="1"
     android:background="@android:color/transparent"
-    android:backgroundTint="@null">
+    android:backgroundTint="@null"
+    android:gravity="center_vertical">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/prompt_list_adapter_thumbnail"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:contentDescription=""
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="0dp"
         android:layout_weight="0.1"
-        android:layout_marginStart="15dp"
-        android:gravity="center_vertical"
-        android:alpha="1"
-        android:layout_gravity="center_vertical"
+        android:foregroundGravity="center"
+        android:gravity="center"
         android:background="@null"
-        android:backgroundTint="@null"
-        />
+        >
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/prompt_list_adapter_thumbnail_bk"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription=""
+            android:gravity="center_vertical"
+            android:alpha="1"
+            android:layout_marginStart="0dp"
+            android:layout_gravity="center"
+            app:shapeAppearanceOverlay="@style/round_corner_for_prompt_list_bk_image_view"
+            app:srcCompat="@drawable/white_grad"
+            android:background="@null"
+            android:backgroundTint="@null"
+            android:rotation="45"
+            android:visibility="invisible"
+            android:foregroundGravity="center"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/prompt_list_adapter_thumbnail"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription=""
+            android:gravity="center"
+            android:alpha="0.8"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:backgroundTint="@null"
+            android:foregroundGravity="center"
+            />
+    </FrameLayout>
 
     <com.puutaro.commandclick.custom_view.OutlineTextView
         android:id="@+id/prompt_list_adapter_title"
