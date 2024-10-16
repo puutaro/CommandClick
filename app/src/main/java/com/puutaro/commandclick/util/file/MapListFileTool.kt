@@ -166,7 +166,7 @@ object MapListFileTool {
         )
     }
 
-    private fun convertLineMapToLine(
+    fun convertLineMapToLine(
         lineMap: Map<String, String>,
         separator: Char,
     ): String {

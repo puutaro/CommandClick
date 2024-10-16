@@ -186,17 +186,17 @@ class PromptWithListDialog(
                         concatLineTitle == extraTitle
                     }
                 }
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "lPrompt_make.txt").absolutePath,
-                    listOf(
-                        "mainMapListSrc: ${mainMapListSrc}",
-                        "mainMapList: ${mainMapList}",
-                        "extraMapListFromFileSrc: ${extraMapListFromFileSrc}",
-                        "concatMapListFromFile: ${concatMapListFromFile}",
-                        "extraMapList: ${extraMapList}",
-                        "promptMapList ${promptMapList}",
-                    ).joinToString("\n-------------\n")
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lPrompt_make.txt").absolutePath,
+//                    listOf(
+//                        "mainMapListSrc: ${mainMapListSrc}",
+//                        "mainMapList: ${mainMapList}",
+//                        "extraMapListFromFileSrc: ${extraMapListFromFileSrc}",
+//                        "concatMapListFromFile: ${concatMapListFromFile}",
+//                        "extraMapList: ${extraMapList}",
+//                        "promptMapList ${promptMapList}",
+//                    ).joinToString("\n-------------\n")
+//                )
                 return when (filterString.isEmpty()) {
                     true -> promptMapList
                     else -> promptMapList.distinct().filter { lineMap ->
@@ -215,6 +215,11 @@ class PromptWithListDialog(
                     when (listLimit == null) {
                         true -> listSrc
                         else -> listSrc.take(listLimit)
+                    }.filter {
+                        lineMap ->
+                        !lineMap.get(
+                            PromptListKey.TITLE.key
+                        ).isNullOrEmpty()
                     }.toMutableList()
                 }
             }
@@ -505,6 +510,7 @@ class PromptWithListDialog(
                         bkRelative,
                         promptListView,
                         String(),
+                        null,
                         promptListFile,
                         listLimit,
                     )
@@ -539,17 +545,30 @@ class PromptWithListDialog(
                                 bkRelative,
                                 promptListView,
                                 String(),
+                                null,
                                 promptListFile,
                                 listLimit,
                             )
                             return@setOnClickListener
                         } else returnValue = inputEditable.toString()
+                        val titleKey = PromptList.PromptListKey.TITLE.key
+                        val iconKey = PromptList.PromptListKey.ICON.key
+                        val iconStr = promptListAdapter.prompMapList.firstOrNull {
+                            lineMap ->
+                            val curTitle = lineMap.get(
+                                titleKey
+                            )
+                            curTitle == returnValue
+                        }?.get(
+                            iconKey
+                        )
                         exitDialog(
                             fannelDirPath,
                             holderConstraint,
                             bkRelative,
                             promptListView,
                             inputEditable.toString(),
+                            iconStr,
                             promptListFile,
                             listLimit,
                         )
@@ -884,6 +903,7 @@ class PromptWithListDialog(
         promptListFile: File,
         listLimit: Int?,
     ){
+        val promptListAdapter = promptListView?.adapter as? PromptListAdapter
         promptEditText?.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action != KeyEvent.ACTION_DOWN ||
@@ -897,17 +917,30 @@ class PromptWithListDialog(
                         bkRelative,
                         promptListView,
                         String(),
+                        null,
                         promptListFile,
                         listLimit,
                     )
                     return false
                 }
+                val titleKey = PromptList.PromptListKey.TITLE.key
+                val iconKey = PromptList.PromptListKey.ICON.key
+                val iconStr = promptListAdapter?.prompMapList?.firstOrNull {
+                        lineMap ->
+                    val curTitle = lineMap.get(
+                        titleKey
+                    )
+                    curTitle == returnValue
+                }?.get(
+                    iconKey
+                )
                 exitDialog(
                     fannelDirPath,
                     holderLinear,
                     bkRelative,
                     promptListView,
                     currentInputEditable.toString(),
+                    iconStr,
                     promptListFile,
                     listLimit,
                 )
@@ -935,21 +968,35 @@ class PromptWithListDialog(
         ) == switchOn
         promptListAdapter.itemClickListener = object: PromptListAdapter.OnItemClickListener{
             override fun onItemClick(holder: PromptListAdapter.PromptListViewHolder) {
-                val itemStr = holder.itemMap.get(
+                val itemTitle = holder.itemMap.get(
                     PromptList.PromptListKey.TITLE.key
                 ) ?: return
+                val itemIconStr = holder.itemMap.get(
+                    PromptList.PromptListKey.ICON.key
+                )
                 if(onInsertByClick) {
-                    promptEditText?.setText(itemStr)
+                    promptEditText?.setText(itemTitle)
                 }
                 if(
                     !onDismissByClick
-                ) return
+                ) {
+                    ColdListRegister.register(
+                        fannelDirPath,
+                        promptListFile,
+                        listLimit,
+                        itemTitle,
+                        itemIconStr,
+                    )
+                    promptListAdapter.notifyDataSetChanged()
+                    return
+                }
                 exitDialog(
                     fannelDirPath,
                     holderConstraint,
                     bkRelative,
                     promptListView,
-                    itemStr,
+                    itemTitle,
+                    itemIconStr,
                     promptListFile,
                     listLimit,
                 )
@@ -963,6 +1010,7 @@ class PromptWithListDialog(
         bkRelative: RelativeLayout?,
         promptListView: RecyclerView?,
         returnStr: String,
+        iconStr: String?,
         promptListFile: File,
         listLimit: Int?,
     ){
@@ -977,7 +1025,8 @@ class PromptWithListDialog(
             fannelDirPath,
             promptListFile,
             listLimit,
-            returnValue
+            returnValue,
+            iconStr,
         )
         promptDialogObj?.dismiss()
         promptDialogObj = null
@@ -1792,6 +1841,7 @@ class PromptWithListDialog(
             promptListFile: File,
             listLimit: Int?,
             returnValue: String,
+            itemIconStr: String?,
         ) {
             val trimedReturnValue =
                 returnValue.trim()
@@ -1809,40 +1859,96 @@ class PromptWithListDialog(
                 promptListDirPath
             )
             val updatePromptList =
-                listOf(trimedReturnValue) +
                         makeNoEmptyList(
                             trimedReturnValue,
-                            promptListFile.name,
-                            promptListDirPath,
-                        ).filter {
-                            trimedReturnValue != it
-                        }.distinct().let { listSrc ->
+                            itemIconStr,
+                            promptListFile,
+                        ).distinct().let { listSrc ->
                             when (listLimit == null) {
                                 true -> listSrc
                                 else -> listSrc.take(listLimit)
                             }
                         }
+           val lineMapCon = updatePromptList.map {
+                   lineMap ->
+               val title = lineMap.get(
+                   PromptList.PromptListKey.TITLE.key
+               ) ?: String()
+               val iconStr = lineMap.get(
+                   PromptList.PromptListKey.ICON.key
+               ) ?: String()
+               listOf(
+                   title,
+                   iconStr
+               ).joinToString(PromptList.promptListSeparator.toString())
+           }.joinToString("\n")
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "list.txt").absolutePath,
+//                listOf(
+//                    "trimedReturnValue: ${trimedReturnValue}",
+//                    "trimedReturnValue: ${trimedReturnValue}",
+//                    "lineMapCon: ${lineMapCon}",
+//                ).joinToString("\n")
+//            )
             FileSystems.writeFile(
                 promptListFile.absolutePath,
-                updatePromptList.joinToString("\n")
+                lineMapCon
             )
         }
 
         private fun makeNoEmptyList(
             trimedReturnValue: String,
-            listTxtName: String,
-            listDirPath: String,
-        ): List<String> {
-            val curList = ReadText(
-                File(
-                    listDirPath,
-                    listTxtName
-                ).absolutePath
-            ).textToList()
+            iconStr: String?,
+            promptListFile: File,
+        ): List<Map<String, String>> {
+            val titleKey = PromptList.PromptListKey.TITLE.key
+            val iconKey = PromptList.PromptListKey.ICON.key
+            val curMapList = ReadText(
+                promptListFile.absolutePath
+            ).textToList().map {
+                titleToIconStr ->
+                val titleToIconStrList = titleToIconStr.split(
+                    PromptList.promptListSeparator,
+                )
+                val curTitle = titleToIconStrList.firstOrNull() ?: String()
+                val curConStr = titleToIconStrList.getOrNull(1) ?: String()
+               mapOf(
+                   titleKey to curTitle,
+                   iconKey to curConStr
+               )
+            }
             if(
-                trimedReturnValue.isNotEmpty()
-            ) return listOf(trimedReturnValue) + curList
-            return curList
+                trimedReturnValue.isEmpty()
+            ) return curMapList
+            val selectedMap = when(
+                iconStr.isNullOrEmpty()
+            ){
+                true -> mapOf(
+                    titleKey to trimedReturnValue,
+                )
+                else -> mapOf(
+                    titleKey to trimedReturnValue,
+                    iconKey to iconStr
+                )
+            }
+            val selectedTitle = selectedMap.get(titleKey)
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "list_makeNoEmptyList.txt").absolutePath,
+//                listOf(
+//                    "promptListFilePath: ${promptListFile.absolutePath}",
+//                    "promptListFileCon: ${ReadText(
+//                        promptListFile.absolutePath
+//                    ).textToList()}",
+//                    "trimedReturnValue: ${trimedReturnValue}",
+//                    "curMapList: ${curMapList}",
+//                    "curMap: ${selectedMap}",
+//                ).joinToString("\n")
+//            )
+            return listOf(selectedMap) + curMapList.filter {
+                lineMap ->
+                val title = lineMap.get(titleKey)
+                title != selectedTitle
+            }
         }
     }
 
