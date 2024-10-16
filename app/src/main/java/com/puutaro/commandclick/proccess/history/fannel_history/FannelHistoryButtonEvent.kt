@@ -75,11 +75,7 @@ object FannelHistoryButtonEvent {
     ) {
         HistoryCaptureTool.launchCapture(fragment)
         val context = fragment.context
-        val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)
-        val listLinearWeight = 1F - searchTextLinearWeight
-        if(
-            context == null
-        ) return
+            ?: return
         val fannelNameList = makeUpdateFannelNameList()
         val fannelInfoMap = when(fragment){
             is CommandIndexFragment -> {
@@ -101,22 +97,12 @@ object FannelHistoryButtonEvent {
             R.style.BottomSheetDialogTheme
         )
         fannelHistoryDialog?.setContentView(
-                R.layout.fannel_history_recycler_view
+                R.layout.fannel_history_recycler_view_layout
             )
-        val searchText =
-            fannelHistoryDialog?.findViewById<AppCompatEditText>(
-                R.id.fannel_history_search_edit_text
-            )
-        val searchTextLinearParams =
-            searchText?.layoutParams as LinearLayout.LayoutParams
-        searchTextLinearParams.weight = searchTextLinearWeight
         val fannelManageListView =
             fannelHistoryDialog?.findViewById<RecyclerView>(
                 R.id.fannel_history_recycler_view
-            )
-        val historyListViewLinearParams =
-            fannelManageListView?.layoutParams as LinearLayout.LayoutParams
-        historyListViewLinearParams.weight = listLinearWeight
+            ) ?: return
         fannelManageListView.layoutManager = GridLayoutManager(
             context,
             2,
@@ -128,6 +114,11 @@ object FannelHistoryButtonEvent {
             fannelManageListAdapter.itemCount - 1
         )
         fannelManageListView.setHasFixedSize(true)
+
+        val searchText =
+            fannelHistoryDialog?.findViewById<AppCompatEditText>(
+                R.id.fannel_history_search_edit_text
+            ) ?: return
         SearchEditTextHideShow.monitor(
             fragment,
             fannelManageListView,

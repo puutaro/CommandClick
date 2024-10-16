@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -72,8 +73,6 @@ object UrlHistoryButtonEvent{
         HistoryCaptureTool.launchCapture(fragment)
         val context = fragment.context
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment.activity)
-        val listLinearWeight = 1F - searchTextLinearWeight
         if(
             context == null
         ) return
@@ -102,19 +101,19 @@ object UrlHistoryButtonEvent{
         )
         val urlHistoryListView = urlHistoryDialog?.findViewById<RecyclerView>(
             R.id.url_history_list_view
-        )
+        ) ?: return
 //        val catchSize = 50 * (context.resources?.displayMetrics?.heightPixels ?: 0)
 //        urlHistoryListView?.setItemViewCacheSize(catchSize)
-        val urlHistoryListViewLinearParams =
-            urlHistoryListView?.layoutParams as LinearLayout.LayoutParams
-        urlHistoryListViewLinearParams.weight = listLinearWeight
+//        val urlHistoryListViewLinearParams =
+//            urlHistoryListView?.layoutParams as ConstraintLayout.LayoutParams
+//        urlHistoryListViewLinearParams.weight = listLinearWeight
         val urlHistoryList = makeUrlHistoryList()
         val searchText = urlHistoryDialog?.findViewById<AppCompatEditText>(
             R.id.url_history_search_edit_text
-        )
-        val searchTextLinearParams =
-            searchText?.layoutParams as LinearLayout.LayoutParams
-        searchTextLinearParams.weight = searchTextLinearWeight
+        ) ?: return
+//        val searchTextLinearParams =
+//            searchText?.layoutParams as LinearLayout.LayoutParams
+//        searchTextLinearParams.weight = searchTextLinearWeight
         urlHistoryListView.layoutManager = GridLayoutManager(
             context,
             2,
