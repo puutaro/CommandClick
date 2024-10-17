@@ -95,6 +95,7 @@
         android:elevation="5dp"
         android:alpha="0.8"
         android:layout_marginBottom="@dimen/prompt_list_dialog_vertical_search_cardview_margin"
+        android:visibility="gone"
         >
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/prompt_list_dialog_search_edit_text"

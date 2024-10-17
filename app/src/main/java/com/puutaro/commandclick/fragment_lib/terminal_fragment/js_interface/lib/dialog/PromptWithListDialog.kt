@@ -2126,13 +2126,16 @@ private object EditTextMakerForPromptList {
         )?.let {
             promptEditText.hint = it
         }
-        if(!visible) {
+//        if(!visible) {
             promptDialogObj.findViewById<MaterialCardView>(
                 R.id.prompt_list_dialog_search_edit_cardview
             )?.apply {
-                isVisible = false
+                isVisible = visible
             }
 //            promptEditText.isVisible = false
+//            return promptEditText
+//        }
+        if(!visible) {
             return promptEditText
         }
         promptEditText.requestFocus()
