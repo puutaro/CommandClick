@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
@@ -13,12 +13,14 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.proccess.broadcast.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.lang.ref.WeakReference
 
 
@@ -134,12 +136,17 @@ object TermOnLongClickListener {
                         ?: return@setOnLongClickListener false
                     val longPressImageUrl = message.data.getString("src")
                         ?: return@setOnLongClickListener  false
+                    val longPressImageText = message.data.getString("title")
+                        ?.replace(
+                            "(https?|ftp|file)://[^ 　\t]*".toRegex(),
+                            String()
+                        ) ?: return@setOnLongClickListener  false
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
                     ) {
                         longPressForSrcImageAnchor.launch(
-                            terminalWebView.title,
+                            longPressImageText,
                             longPressLinkUrl,
                             longPressImageUrl,
                             currentUrl
@@ -150,12 +157,16 @@ object TermOnLongClickListener {
                 WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
                     val longPressLinkUrl = hitTestResult.extra
                         ?: return@setOnLongClickListener false
+                    val message = Handler(Looper.getMainLooper()).obtainMessage()
+                    terminalWebView.requestFocusNodeHref(message)
+                    val srcText = message.data.getString("title")
+                        ?: return@setOnLongClickListener  false
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
                     ) {
                         longPressForSrcAnchor.launch(
-                            terminalWebView.title,
+                            srcText,
                             longPressLinkUrl,
                             currentUrl
                         )

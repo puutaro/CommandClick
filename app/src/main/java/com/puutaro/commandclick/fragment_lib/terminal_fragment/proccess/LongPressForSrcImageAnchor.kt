@@ -1,39 +1,27 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import android.app.Dialog
 import android.content.Context
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.ListAdapter
-import android.widget.ListView
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.isVisible
+import android.webkit.ValueCallback
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.HistoryListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.SettingVariableReader
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.str.QuoteTool
 import java.io.File
 import java.lang.ref.WeakReference
-import java.time.LocalDateTime
 
 class LongPressForSrcImageAnchor(
     private val terminalFragmentRef: WeakReference<TerminalFragment>,
     private val context: Context?,
     private val srcImageAnchorMenuFilePath: String,
 )  {
-//    private val currentAppDirPath = terminalFragment.currentAppDirPath
     private val srcImageAnchorLongPressMenuFilePathObj = File(srcImageAnchorMenuFilePath)
     private val srcImageAnchorLongPressMenuDirPath = srcImageAnchorLongPressMenuFilePathObj.parent
     private val srcImageAnchorLongPressMenuFileName = srcImageAnchorLongPressMenuFilePathObj.name
-    private var longPressSrcImageAnchorDialog: Dialog? = null
 
     fun launch(
         title: String?,
@@ -61,7 +49,8 @@ class LongPressForSrcImageAnchor(
             )
             return
         }
-        val terminalFragment = terminalFragmentRef.get() ?: return
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
         val longPressScriptList = LongPressMenuTool.makeLongPressScriptList(
             terminalFragment,
             srcImageAnchorLongPressMenuDirPath,
@@ -86,24 +75,17 @@ class LongPressForSrcImageAnchor(
         val menuList = LongPressMenuTool.LongPressInfoMapList.extractTitleIconOathList(
             longPressMenuMapList
         )
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "longpress.txt").absolutePath,
-//            listOf(
-//                "longPressScriptList: ${longPressScriptList}",
-//                "longPressMenuMapList: ${longPressMenuMapList}",
-//                "menuList: ${menuList}",
-//            ).joinToString("\n\n")
-//        )
         val menuListSize = menuList.size
         if(
             menuListSize == 0
         ) return
+        val titleKey = LongPressMenuTool.LongPressKey.TITLE
         if(
             menuListSize == 1
         ){
             val firstMenuTitle = menuList.first().first
             val jsPath = longPressMenuMapList.firstOrNull {
-                it.get(LongPressMenuTool.LongPressKey.TITLE) == firstMenuTitle
+                it.get(titleKey) == firstMenuTitle
             }?.get(LongPressMenuTool.LongPressKey.JS_PATH) ?: return
             execJsFile(
                 jsPath,
@@ -113,124 +95,82 @@ class LongPressForSrcImageAnchor(
             )
             return
         }
-
-        longPressSrcImageAnchorDialog = Dialog(
-            context
+//        val currentValidFannelName =
+//            ValidFannelNameGetterForTerm.get(
+//                terminalFragment
+//            )
+//        val concatListCon = menuList.map {
+//            val menuTitle = it.first
+//            val menuIconStr = it.second
+//            "${menuTitle}${PromptMapList.promptListSeparator}${menuIconStr}"
+//        }.joinToString(PromptWithListDialog.valueSeparator.toString())
+//        val promptConfigCon = """
+//            title=
+//                maxLines=1,
+//            list=
+//                |saveTag=srcImageAnchor
+//                |onUpdate=OFF
+//                |concatList="${concatListCon}"
+//                |onInsertByClick=OFF
+//                |visible=ON
+//                |onDismissByClick=ON
+//                |limit=100
+//                |disableUpdate=ON,
+//            editText=
+//                |disableListBind=OFF
+//                |visible=OFF,
+//            background=
+//                type=transparent
+//        """.trimIndent().split("\n").joinToString(String()) {
+//            it.trim()
+//        }
+//        val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+//            JsDialog::class.java.simpleName
+//        )
+        val longPressSelectJsScript = LongPressMenuTool.LongPressJsDialogScript.make(
+            terminalFragment,
+            title,
+            menuList
         )
-        longPressSrcImageAnchorDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.list_dialog_layout
-        )
-        val listDialogTitle = longPressSrcImageAnchorDialog?.findViewById<AppCompatTextView>(
-            com.puutaro.commandclick.R.id.list_dialog_title
-        )
-        listDialogTitle?.text = title
-        val listDialogMessage = longPressSrcImageAnchorDialog?.findViewById<AppCompatTextView>(
-            com.puutaro.commandclick.R.id.list_dialog_message
-        )
-        listDialogMessage?.isVisible = false
-        val listDialogSearchEditText = longPressSrcImageAnchorDialog?.findViewById<AppCompatEditText>(
-            com.puutaro.commandclick.R.id.list_dialog_search_edit_text
-        )
-        listDialogSearchEditText?.isVisible = false
-        val cancelButton = longPressSrcImageAnchorDialog?.findViewById<AppCompatImageButton>(
-            com.puutaro.commandclick.R.id.list_dialog_cancel
-        )
-        cancelButton?.setOnClickListener {
-            longPressSrcImageAnchorDialog?.dismiss()
-            longPressSrcImageAnchorDialog = null
-        }
-        setListView(
-            menuList,
-//            longPressScriptList,
-            longPressLinkUrl,
-            longPressImageUrl,
-            currentUrl,
-            longPressMenuMapList
-        )
-        longPressSrcImageAnchorDialog?.setOnCancelListener {
-            longPressSrcImageAnchorDialog?.dismiss()
-            longPressSrcImageAnchorDialog = null
-        }
-        longPressSrcImageAnchorDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        longPressSrcImageAnchorDialog?.window?.setGravity(Gravity.BOTTOM)
-        longPressSrcImageAnchorDialog?.show()
-    }
-
-    private fun setListView(
-        menuList: List<Pair<String, String>>,
-//        longpressScriptList: List<String>,
-        longPressLinkUrl: String,
-        longPressImageUrl: String,
-        currentUrl: String,
-        longPressMenuMapList: List<Map<LongPressMenuTool.LongPressKey, String>>,
-    ) {
-        val terminalFragment = terminalFragmentRef.get() ?: return
-        val context = terminalFragment.context
-            ?: return
-        val subMenuListView =
-            longPressSrcImageAnchorDialog?.findViewById<ListView>(
-                com.puutaro.commandclick.R.id.list_dialog_list_view
-            ) ?: return
-        val subMenuAdapter = HistoryListAdapter(
-            context,
-            menuList.toMutableList()
-        )
-        subMenuListView.adapter = subMenuAdapter
-        invokeListItemSetClickListenerForListDialog(
-            subMenuListView,
-            longPressMenuMapList,
-//            longpressScriptList,
-            longPressLinkUrl,
-            longPressImageUrl,
-            currentUrl,
-        )
-    }
-
-    private fun invokeListItemSetClickListenerForListDialog(
-        subMenuListView: ListView,
-        longPressMenuMapList: List<Map<LongPressMenuTool.LongPressKey, String>>,
-//        longpressScriptList: List<String>,
-        longPressLinkUrl: String,
-        longPressImageUrl: String,
-        currentUrl: String,
-
-    ) {
-
-        subMenuListView.setOnItemClickListener {
-                parent, View, pos, id
-            ->
-            longPressSrcImageAnchorDialog?.dismiss()
-            longPressSrcImageAnchorDialog = null
-            val menuListAdapter = subMenuListView.adapter as HistoryListAdapter
-            val title =  menuListAdapter.getItem(pos)
-                ?: return@setOnItemClickListener
-            HistoryListAdapter.saveItemToList(
-                context,
-                title
-            )
-            val selectedJsPath = longPressMenuMapList.firstOrNull {
-                it.get(LongPressMenuTool.LongPressKey.TITLE) == title
-            }?.get(LongPressMenuTool.LongPressKey.JS_PATH) ?: return@setOnItemClickListener
-            if(
-                !File(selectedJsPath).isFile
-            ) return@setOnItemClickListener
-//            val selectedMenuName = menuListAdapter.getItem(pos)
-//                ?: return@setOnItemClickListener
-//            val selectedJsPath = LongPressMenuTool.extractJsPathFromLongPressMenuList(
-//                selectedMenuName,
-//                longpressScriptList,
-//            ) ?: return@setOnItemClickListener
-            execJsFile(
-                selectedJsPath,
-                longPressLinkUrl,
-                longPressImageUrl,
-                currentUrl,
-            )
-            return@setOnItemClickListener
-        }
+        val terminalWebView = terminalFragment.binding.terminalWebView
+        terminalWebView.evaluateJavascript(
+            longPressSelectJsScript,
+            ValueCallback<String?> { selectedTitleSrc ->
+                val selectedTitle =
+                    QuoteTool.trimBothEdgeQuote(selectedTitleSrc)
+                if(
+                    selectedTitle.isEmpty()
+                ) return@ValueCallback
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "longpress.txt").absolutePath,
+//                    listOf(
+//                        "longPressScriptList: ${longPressScriptList}",
+//                        "longPressMenuMapList: ${longPressMenuMapList}",
+//                        "selectedTitleSrc: ${selectedTitleSrc}",
+//                        "selectedTitle: ${selectedTitle}",
+//                        "selectedMap: ${longPressMenuMapList.firstOrNull {
+//                            it.get(titleKey) == selectedTitle
+//                        }}",
+//                        "selectedJsPath: ${longPressMenuMapList.firstOrNull {
+//                            it.get(titleKey) == selectedTitle
+//                        }?.get(LongPressMenuTool.LongPressKey.JS_PATH)}",
+//                    ).joinToString("\n\n")
+//                )
+                val selectedJsPath = longPressMenuMapList.firstOrNull {
+                    it.get(titleKey) == selectedTitle
+                }?.get(LongPressMenuTool.LongPressKey.JS_PATH)
+                    ?: return@ValueCallback
+                if(
+                    !File(selectedJsPath).isFile
+                ) return@ValueCallback
+                execJsFile(
+                    selectedJsPath,
+                    longPressLinkUrl,
+                    longPressImageUrl,
+                    currentUrl,
+                )
+            })
+        return
     }
 
     private fun execJsFile(

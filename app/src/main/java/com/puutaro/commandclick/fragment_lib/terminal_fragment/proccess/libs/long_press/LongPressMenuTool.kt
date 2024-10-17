@@ -7,6 +7,11 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog.Companion.PromptMapList
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.CcPathTool
@@ -49,6 +54,60 @@ object LongPressMenuTool {
                 selectedScriptNameOrPath.absolutePath,
                 currentFannelName,
             )
+        }
+    }
+
+    object LongPressJsDialogScript {
+        fun make(
+            terminalFragment: TerminalFragment,
+            titleSrc: String?,
+            menuList: List<Pair<String, String>>,
+        ): String {
+            val title = titleSrc
+                ?: terminalFragment.binding.terminalWebView.title
+                ?: String()
+            val currentValidFannelName =
+                ValidFannelNameGetterForTerm.get(
+                    terminalFragment
+                )
+            val concatListCon = menuList.map {
+                val menuTitle = it.first
+                val menuIconStr = it.second
+                "${menuTitle}${PromptMapList.promptListSeparator}${menuIconStr}"
+            }.joinToString(PromptWithListDialog.valueSeparator.toString())
+            val promptConfigCon = """
+                title=
+                    maxLines=1,
+                list=
+                    |saveTag=srcImageAnchor
+                    |onUpdate=OFF
+                    |concatList="${concatListCon}"
+                    |onInsertByClick=OFF
+                    |visible=ON
+                    |onDismissByClick=ON
+                    |limit=100
+                    |disableUpdate=ON,
+                editText=
+                    |disableListBind=OFF
+                    |visible=OFF,
+                background=
+                    type=transparent
+            """.trimIndent().split("\n").joinToString(String()) {
+                it.trim()
+            }
+            val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                JsDialog::class.java.simpleName
+            )
+            val longPressSelectJsScript = """
+                 (function() {
+                    return ${jsDialogStr}.promptWithList(
+                      "${File(cmdclickDefaultAppDirPath, currentValidFannelName).absolutePath}",
+                      "${title}",
+                      `${promptConfigCon}`,
+                    );
+                 })()
+            """.trimIndent()
+            return longPressSelectJsScript
         }
     }
 

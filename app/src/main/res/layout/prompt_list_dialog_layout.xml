@@ -59,6 +59,8 @@
         android:paddingBottom="15dp"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:maxLines="@null"
+        android:ellipsize="end"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -96,7 +98,6 @@
             android:id="@+id/prompt_list_dialog_search_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
             android:inputType="text"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"

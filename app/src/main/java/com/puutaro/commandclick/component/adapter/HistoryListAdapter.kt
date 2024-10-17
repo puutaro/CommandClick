@@ -45,33 +45,33 @@ class HistoryListAdapter(
     companion object {
 
         val listHistoryPath = File(UsePath.fannelSystemDirPath, "listHistory.tsv").absolutePath
-        fun saveItemToList(
-            context: Context?,
-            menuName: String
-        ) {
-            val sharePref = FannelInfoTool.getSharePref(context)
-            CoroutineScope(Dispatchers.IO).launch {
-                val currentFannelName = withContext(Dispatchers.IO) {
-                    FannelInfoTool.getStringFromFannelInfo(
-                        sharePref,
-                        FannelInfoSetting.current_fannel_name
-                    )
-                }
-                val listHistoryPath = withContext(Dispatchers.IO) {
-                    ScriptPreWordReplacer.replace(
-                        listHistoryPath,
-                        currentFannelName,
-                    )
-                }
-                withContext(Dispatchers.IO) {
-                    val insertLine = "${menuName}\t${LocalDateTime.now()}"
-                    TsvTool.insertByLastUpdate(
-                        listHistoryPath,
-                        insertLine
-                    )
-                }
-            }
-        }
+//        fun saveItemToList(
+//            context: Context?,
+//            menuName: String
+//        ) {
+//            val sharePref = FannelInfoTool.getSharePref(context)
+//            CoroutineScope(Dispatchers.IO).launch {
+//                val currentFannelName = withContext(Dispatchers.IO) {
+//                    FannelInfoTool.getStringFromFannelInfo(
+//                        sharePref,
+//                        FannelInfoSetting.current_fannel_name
+//                    )
+//                }
+//                val listHistoryPath = withContext(Dispatchers.IO) {
+//                    ScriptPreWordReplacer.replace(
+//                        listHistoryPath,
+//                        currentFannelName,
+//                    )
+//                }
+//                withContext(Dispatchers.IO) {
+//                    val insertLine = "${menuName}\t${LocalDateTime.now()}"
+//                    TsvTool.insertByLastUpdate(
+//                        listHistoryPath,
+//                        insertLine
+//                    )
+//                }
+//            }
+//        }
     }
 
     override fun getView(

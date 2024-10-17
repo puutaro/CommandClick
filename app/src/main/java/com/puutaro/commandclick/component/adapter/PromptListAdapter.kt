@@ -102,8 +102,8 @@ class PromptListAdapter(
         return promptListViewHolder
     }
 
-    private val titleKey =  PromptWithListDialog.Companion.PromptList.PromptListKey.TITLE.key
-    private val iconKey =  PromptWithListDialog.Companion.PromptList.PromptListKey.ICON.key
+    private val titleKey =  PromptWithListDialog.Companion.PromptMapList.PromptListKey.TITLE.key
+    private val iconKey =  PromptWithListDialog.Companion.PromptMapList.PromptListKey.ICON.key
 
     override fun onBindViewHolder(
         holder: PromptListViewHolder,
