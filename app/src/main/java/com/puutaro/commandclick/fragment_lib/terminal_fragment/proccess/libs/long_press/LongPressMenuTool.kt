@@ -85,7 +85,7 @@ object LongPressMenuTool {
                     |onInsertByClick=OFF
                     |visible=ON
                     |onDismissByClick=ON
-                    |limit=100
+                    |limit=20
                     |disableUpdate=ON,
                 editText=
                     |disableListBind=OFF
