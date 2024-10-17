@@ -77,7 +77,7 @@ object LongPressMenuTool {
             }.joinToString(PromptWithListDialog.valueSeparator.toString())
             val promptConfigCon = """
                 title=
-                    maxLines=1,
+                    maxLines=1Null,
                 list=
                     |saveTag=srcImageAnchor
                     |onUpdate=OFF
@@ -91,7 +91,9 @@ object LongPressMenuTool {
                     |disableListBind=OFF
                     |visible=OFF,
                 background=
-                    type=transparent
+                    type=transparent,
+                extra=
+                    |onKeyOpenMode=ON,
             """.trimIndent().split("\n").joinToString(String()) {
                 it.trim()
             }

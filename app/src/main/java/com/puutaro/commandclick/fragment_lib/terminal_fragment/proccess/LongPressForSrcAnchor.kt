@@ -91,7 +91,7 @@ class LongPressForSrcAnchor(
         val longPressSelectJsScript = LongPressMenuTool.LongPressJsDialogScript.make(
             terminalFragment,
             title,
-            menuList
+            menuList.reversed()
         )
         val terminalWebView = terminalFragment.binding.terminalWebView
         terminalWebView.evaluateJavascript(

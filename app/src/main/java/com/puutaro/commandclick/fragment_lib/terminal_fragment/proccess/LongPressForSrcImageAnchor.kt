@@ -95,42 +95,10 @@ class LongPressForSrcImageAnchor(
             )
             return
         }
-//        val currentValidFannelName =
-//            ValidFannelNameGetterForTerm.get(
-//                terminalFragment
-//            )
-//        val concatListCon = menuList.map {
-//            val menuTitle = it.first
-//            val menuIconStr = it.second
-//            "${menuTitle}${PromptMapList.promptListSeparator}${menuIconStr}"
-//        }.joinToString(PromptWithListDialog.valueSeparator.toString())
-//        val promptConfigCon = """
-//            title=
-//                maxLines=1,
-//            list=
-//                |saveTag=srcImageAnchor
-//                |onUpdate=OFF
-//                |concatList="${concatListCon}"
-//                |onInsertByClick=OFF
-//                |visible=ON
-//                |onDismissByClick=ON
-//                |limit=100
-//                |disableUpdate=ON,
-//            editText=
-//                |disableListBind=OFF
-//                |visible=OFF,
-//            background=
-//                type=transparent
-//        """.trimIndent().split("\n").joinToString(String()) {
-//            it.trim()
-//        }
-//        val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-//            JsDialog::class.java.simpleName
-//        )
         val longPressSelectJsScript = LongPressMenuTool.LongPressJsDialogScript.make(
             terminalFragment,
             title,
-            menuList
+            menuList.reversed()
         )
         val terminalWebView = terminalFragment.binding.terminalWebView
         terminalWebView.evaluateJavascript(

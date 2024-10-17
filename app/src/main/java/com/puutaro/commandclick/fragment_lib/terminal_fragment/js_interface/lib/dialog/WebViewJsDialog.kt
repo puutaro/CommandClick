@@ -136,9 +136,12 @@ class WebViewJsDialog(
     private var webViewDialogInstance: Dialog? = let {
         val terminalFragment = terminalFragmentRef.get()
         val context = terminalFragment?.context
-        val webViewDialog = Dialog(context as Context)
+        val webViewDialog = Dialog(
+            context as Context,
+            R.style.BottomSheetDialogTheme,
+            )
         webViewDialog.setContentView(
-            R.layout.dialog_webview_layout
+            R.layout.dialog_webview_layout,
         )
         webViewDialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -508,8 +511,10 @@ class WebViewJsDialog(
         settings.cacheMode = WebSettings.LOAD_NO_CACHE
 
 
-
-        settings.textZoom = ((terminalFragment?.fontZoomPercent ?: 100) * 95 ) / 100
+        terminalFragment?.fontZoomPercent?.let {
+            settings.textZoom = it
+        }
+//        settings.textZoom = ((terminalFragment?.fontZoomPercent ?: 100) * 95 ) / 100
         pocketWebViewSrc.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         JsInterfaceAdder.add(
             WeakReference(terminalFragment),

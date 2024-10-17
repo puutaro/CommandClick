@@ -52,7 +52,7 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="3"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:paddingStart="10dp"
         android:paddingEnd="5dp"
         android:paddingTop="0dp"
@@ -62,6 +62,8 @@
         android:maxLines="@null"
         android:ellipsize="end"
         />
+<!--    android:lineSpacingMultiplier="30"
+        android:lineSpacingExtra="30dp"-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/prompt_list_dialog_list_view"
@@ -86,7 +88,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/prompt_list_dialog_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:cardCornerRadius="8dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -109,39 +111,39 @@
             android:autofillHints=""
             />
     </com.google.android.material.card.MaterialCardView>
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/prompt_list_dialog_cancel"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/prompt_list_dialog_ok"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintHorizontal_weight="1"
-        app:tint="@null"
-        android:background="@null"
-        android:backgroundTint="@null"
-        android:layout_gravity="center"
-        android:layout_weight="0.5"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/prompt_list_dialog_ok"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"
-        app:layout_constraintStart_toEndOf="@+id/prompt_list_dialog_cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:tint="@null"
-        android:background="@null"
-        android:backgroundTint="@null"
-        android:layout_gravity="center"
-        android:layout_weight="0.5"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        />
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/prompt_list_dialog_cancel"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/prompt_list_dialog_ok"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintHorizontal_chainStyle="spread"-->
+<!--        app:layout_constraintHorizontal_weight="1"-->
+<!--        app:tint="@null"-->
+<!--        android:background="@null"-->
+<!--        android:backgroundTint="@null"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_weight="0.5"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:foreground="?selectableItemBackground"-->
+<!--        />-->
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/prompt_list_dialog_ok"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/prompt_list_dialog_bottom_button_normal_height"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/prompt_list_dialog_cancel"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintHorizontal_weight="1"-->
+<!--        app:tint="@null"-->
+<!--        android:background="@null"-->
+<!--        android:backgroundTint="@null"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_weight="0.5"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:foreground="?selectableItemBackground"-->
+<!--        />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

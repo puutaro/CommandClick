@@ -53,7 +53,10 @@ class GgleSchDialog(
     private var webViewDialogInstance: Dialog? = let {
         val terminalFragment = terminalFragmentRef.get()
         val context = terminalFragment?.context
-        val webViewDialog = Dialog(context as Context)
+        val webViewDialog = Dialog(
+            context as Context,
+            R.style.BottomSheetDialogTheme,
+        )
         webViewDialog.setContentView(
             R.layout.ggle_sch_webview_layout
         )
@@ -309,7 +312,10 @@ class GgleSchDialog(
 
 
 
-        settings.textZoom = ((terminalFragment?.fontZoomPercent ?: 100) * 95 ) / 100
+        terminalFragment?.fontZoomPercent?.let {
+            settings.textZoom = it
+        }
+//        settings.textZoom = ((terminalFragment?.fontZoomPercent ?: 100) * 95 ) / 100
         pocketWebViewSrc.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         JsInterfaceAdder.add(
             WeakReference(terminalFragment),
