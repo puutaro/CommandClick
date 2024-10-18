@@ -241,8 +241,6 @@ class TerminalFragment:
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
         FannelHistoryGifCreator.watch(this)
-        ButtonImageCreator.create(this)
-
     }
 
     override fun onStart() {
@@ -251,6 +249,7 @@ class TerminalFragment:
         TerminalOnHandlerForEdit.handle(this)
         JsDebugger.stockLogSender(this)
         GifCreateMonitor.watch(this)
+        ButtonImageCreator.create(this)
     }
 
 
@@ -277,6 +276,7 @@ class TerminalFragment:
         displayUpdateCoroutineJob?.cancel()
         UrlCaptureWatcher.exit()
         GifCreateMonitor.exit()
+        ButtonImageCreator.exit()
 //        FannelHistoryGifCreator.exit()
 //        GifCreateMonitor.exit()
 //        ButtonImageCreator.exit()

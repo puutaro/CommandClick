@@ -14,6 +14,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -44,28 +45,27 @@ object FannelHistoryGifCreator {
         val concurrentLimit = 5
         val semaphore = Semaphore(concurrentLimit)
         val tag = terminalFragment.tag
-        gifCreateJob = terminalFragment.lifecycleScope.launch {
-            terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                if(
-                    !tag.isNullOrEmpty()
-                    && tag != terminalFragment.context?.getString(R.string.index_terminal_fragment)
-                ) return@repeatOnLifecycle
-                val fannelList = withContext(Dispatchers.IO) {
-                    UrlFileSystems.getFannelList(
-                        context
-                    ).split("\n").filter {
-                        it.isNotEmpty()
-                    }
+        gifCreateJob = CoroutineScope(Dispatchers.IO).launch {
+            if(
+                !tag.isNullOrEmpty()
+                && tag != terminalFragment.context?.getString(R.string.index_terminal_fragment)
+            ) return@launch
+            val fannelList = withContext(Dispatchers.IO) {
+                UrlFileSystems.getFannelList(
+                    context
+                ).split("\n").filter {
+                    it.isNotEmpty()
                 }
-                val fannelNameList = withContext(Dispatchers.IO) {
-                    UrlFileSystems.extractFannelNameList(fannelList)
-                }
-                val urlPrtPngMap = withContext(Dispatchers.IO) {
-                    makeUrlPrtPngMapList(
-                        fannelNameList,
-                        fannelList,
-                    )
-                }
+            }
+            val fannelNameList = withContext(Dispatchers.IO) {
+                UrlFileSystems.extractFannelNameList(fannelList)
+            }
+            val urlPrtPngMap = withContext(Dispatchers.IO) {
+                makeUrlPrtPngMapList(
+                    fannelNameList,
+                    fannelList,
+                )
+            }
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "gifList.txt").absolutePath,
 //                    listOf(
@@ -75,46 +75,46 @@ object FannelHistoryGifCreator {
 ////                        "partPngMap: ${partPngMap}",
 //                    ).joinToString("\n############\n") + "\n----------------\n"
 //                )
-                withContext(Dispatchers.IO) {
-                    val jobList = urlPrtPngMap.map {
-                            map ->
+            withContext(Dispatchers.IO) {
+                val jobList = urlPrtPngMap.map {
+                        map ->
 //                        if(
 //                            !isActive()
 //                        ) return@withContext
-                        async {
+                    async {
 //                            if(
 //                                !isActive()
 //                            ) return@async
-                            semaphore.withPermit {
+                        semaphore.withPermit {
 //                                if(
 //                                    !isActive()
 //                                ) return@withPermit
-                                val fannelName = map.key
-                                val urlPngPathList = map.value
+                            val fannelName = map.key
+                            val urlPngPathList = map.value
 //                                val appDirName = withContext(Dispatchers.IO) {
 //                                    FannelHistoryManager.getAppDirNameFromAppHistoryFileName(
 //                                        historyName
 //                                    )
 //                                }
 //                                val appDirPath = File(cmdclickAppDirPath, appDirName).absolutePath
-                                val designList = makeDesignConList(
-                                    fannelName,
+                            val designList = makeDesignConList(
+                                fannelName,
 //                                    appDirName,
-                                    urlPngPathList,
-                                )
-                                val captureGifDesignConList = FannelHistoryPath.getCaptureGifDesignPath(
+                                urlPngPathList,
+                            )
+                            val captureGifDesignConList = FannelHistoryPath.getCaptureGifDesignPath(
 //                                    appDirPath,
-                                    fannelName,
-                                ).let {
-                                    ReadText(it).textToList()
-                                }
-                                val gifPath = FannelHistoryPath.getCaptureGifPath(
+                                fannelName,
+                            ).let {
+                                ReadText(it).textToList()
+                            }
+                            val gifPath = FannelHistoryPath.getCaptureGifPath(
 //                                    appDirPath,
-                                    fannelName,
-                                )
-                                val isRecreateGif =
-                                    !File(gifPath).isFile
-                                            || captureGifDesignConList != designList
+                                fannelName,
+                            )
+                            val isRecreateGif =
+                                !File(gifPath).isFile
+                                        || captureGifDesignConList != designList
 //                                if(historyName.contains("newsSpeecher")) {
 //                                    FileSystems.updateFile(
 //                                        File(
@@ -130,20 +130,19 @@ object FannelHistoryGifCreator {
 //                                        ).joinToString("\n") + "\n-----------\n"
 //                                    )
 //                                }
-                                if (
-                                    !isRecreateGif
+                            if (
+                                !isRecreateGif
 //                                    || !isActive()
-                                ) return@withPermit
-                                GifCreator.create(
-                                    context,
-                                    fannelName,
-                                    urlPngPathList,
-                                )
-                            }
+                            ) return@withPermit
+                            GifCreator.create(
+                                context,
+                                fannelName,
+                                urlPngPathList,
+                            )
                         }
                     }
-                    jobList.forEach { it.await() }
                 }
+                jobList.forEach { it.await() }
             }
         }
     }

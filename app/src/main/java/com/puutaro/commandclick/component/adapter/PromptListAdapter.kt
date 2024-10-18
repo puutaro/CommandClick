@@ -74,7 +74,7 @@ class PromptListAdapter(
 
     private val thumbnailByteArray =
         runBlocking {
-            ButtonImageCreator.ButtonImageCreator.create(
+            ButtonImageCreator.ExecButtonImageCreator.create(
                 context,
                 ButtonAssetsImage.cPingPath,
                 makeCapturePartPngDirPathList(),
@@ -172,7 +172,7 @@ class PromptListAdapter(
                     when (true) {
                         (icon != null)
                             -> {
-                            ButtonImageCreator.ButtonImageCreator.create(
+                            ButtonImageCreator.ExecButtonImageCreator.create(
                                 context,
                                 icon.assetsPath,
                                 makeCapturePartPngDirPathList(),

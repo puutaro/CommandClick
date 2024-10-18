@@ -118,7 +118,7 @@ object ButtonImageCreator {
                                 (1..4).random() % 4 <= 2
                             ) return@async
                         }
-                        val byteArray = ButtonImageCreator.create(
+                        val byteArray = ExecButtonImageCreator.create(
                             context,
                             assetsPath,
                             capturePartPngDirPathList,
@@ -158,7 +158,7 @@ object ButtonImageCreator {
         }
     }
 
-    object ButtonImageCreator{
+    object ExecButtonImageCreator{
         suspend fun create(
             context: Context?,
             assetsPath: String,
