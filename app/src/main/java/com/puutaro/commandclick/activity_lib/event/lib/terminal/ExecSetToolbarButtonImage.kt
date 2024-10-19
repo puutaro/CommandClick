@@ -50,10 +50,10 @@ object ExecSetToolbarButtonImage {
                 )
                 setForTerminalFragment(activity)
             }
-            is EditFragment ->
-                setForEditFragment(
-                    bottomFragment,
-                )
+            is EditFragment -> {}
+//                setForEditFragment(
+//                    bottomFragment,
+//                )
         }
     }
 
@@ -67,7 +67,7 @@ object ExecSetToolbarButtonImage {
             }?.let {
                     icon ->
                 setImageButton(
-                    binding.cmdindexHistoryButtonImage,
+                    binding.cmdindexFannelCenterButtonImage,
                     icon
                 )
             }
@@ -347,37 +347,37 @@ object ExecSetToolbarButtonImage {
         }
     }
 
-    fun setForEditFragment(
-        editFragment: EditFragment,
-    ){
-        CoroutineScope(Dispatchers.IO).launch {
-            ToolbarButtonBariantForEdit.values().forEach {
-                val frameLayout = withContext(Dispatchers.Main) {
-                    editFragment.binding.editToolBarLinearLayout.findViewWithTag<FrameLayout>(
-                        it.str
-                    )
-                } ?: return@forEach
-                val imageView = withContext(Dispatchers.Main) {
-                    frameLayout.children.forEach imageSet@{
-                            view ->
-                        if (
-                            view !is AppCompatImageView
-                        ) return@imageSet
-                        return@withContext view
-                    }
-                    return@withContext null
-                } ?: return@forEach
-                val imageMacro = TagManager.getIconMacroFromTag(imageView.tag)
-                val icon = cmdClickIconList.firstOrNull {
-                    it.str == imageMacro
-                } ?: return@forEach
-                setImageButton(
-                    imageView,
-                    icon
-                )
-            }
-        }
-    }
+//    fun setForEditFragment(
+//        editFragment: EditFragment,
+//    ){
+//        CoroutineScope(Dispatchers.IO).launch {
+//            ToolbarButtonBariantForEdit.entries.forEach {
+//                val frameLayout = withContext(Dispatchers.Main) {
+//                    editFragment.binding.editToolBarLinearLayout.findViewWithTag<FrameLayout>(
+//                        it.str
+//                    )
+//                } ?: return@forEach
+//                val imageView = withContext(Dispatchers.Main) {
+//                    frameLayout.children.forEach imageSet@{
+//                            view ->
+//                        if (
+//                            view !is AppCompatImageView
+//                        ) return@imageSet
+//                        return@withContext view
+//                    }
+//                    return@withContext null
+//                } ?: return@forEach
+//                val imageMacro = TagManager.getIconMacroFromTag(imageView.tag)
+//                val icon = cmdClickIconList.firstOrNull {
+//                    it.str == imageMacro
+//                } ?: return@forEach
+//                setImageButton(
+//                    imageView,
+//                    icon
+//                )
+//            }
+//        }
+//    }
 
     suspend fun setImageButton(
         imageView: AppCompatImageView?,

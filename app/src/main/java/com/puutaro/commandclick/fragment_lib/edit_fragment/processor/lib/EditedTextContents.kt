@@ -3,12 +3,8 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
-import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.extractValListFromHolder
 import com.puutaro.commandclick.util.file.FileSystems

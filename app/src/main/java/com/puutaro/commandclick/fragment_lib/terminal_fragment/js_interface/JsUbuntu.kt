@@ -1,14 +1,16 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
@@ -18,15 +20,13 @@ import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.shell.LinuxCmd
-import com.puutaro.commandclick.util.state.FannelInfoTool
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.lang.ref.WeakReference
 
 
@@ -299,7 +299,7 @@ class JsUbuntu(
     fun isInstall(
         installStampFilePath: String,
         expectStampCon: String,
-        installConfirmTitleAndMessage: String,
+        installConfirmTitle: String,
         installOneList: String,
         cautionTitleAndMessage: String,
     ): Boolean {
@@ -315,9 +315,9 @@ class JsUbuntu(
 
         Stamp file contents
 
-        ### installConfirmTitleAndMessage
+        ### installConfirmTitle
 
-        Install confirm title and message separated by `|`
+        Install confirm title
 
         ### installOneList
 
@@ -336,7 +336,7 @@ class JsUbuntu(
             ?args=
                 installStampFilePath=`${cmdYoutuberInstallStampFilePath}`
                 &expectStampCon=`${INSTALL_STAMP_CON}`
-                &confirmTitleAndMsg="Press install button|"
+                &confirmTitleAndMsg="Press install button"
                 &installOneList="install\tpuzzle"
                 &cautionTitleAndMsg="Caution!|Install by ⚙️ button"
         ```
@@ -351,12 +351,25 @@ class JsUbuntu(
             return isInstall
         }
         val jsDialog = JsDialog(terminalFragmentRef)
-        val installTitleToMsg = makeTitleToMsg(installConfirmTitleAndMessage)
+//        val installTitleToMsg = makeTitleToMsg(installConfirmTitle)
+        val listDialogMapCon = listOf(
+            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
+            "${ListJsDialogV2.ListJsDialogKey.SEARCH_VISIBLE.key}=${PromptWithListDialog.switchOff}",
+            "${ListJsDialogV2.ListJsDialogKey.SAVE_TAG.key}=isInstallUbuntu",
+//            "${ListJsDialogV2.ListJsDialogKey.BACKGROUND_TYPE.key}=${PromptWithListDialog.Companion.PromptBackground.Type.transparent.name}",
+            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
+        ).joinToString(ListJsDialogV2.listJsDialogMapSeparator.toString())
         val el = jsDialog.listDialog(
-            installTitleToMsg.first,
-            installTitleToMsg.second,
-            installOneList
+            File(UsePath.cmdclickDefaultAppDirPath, SystemFannel.preference).absolutePath,
+            installConfirmTitle,
+            installOneList,
+            listDialogMapCon
         )
+//            jsDialog.listDialog(
+//            installTitleToMsg.first,
+//            installTitleToMsg.second,
+//            installOneList
+//        )
         if(
             el.isNotEmpty()
         ) {
@@ -364,7 +377,7 @@ class JsUbuntu(
             return isInstall
         }
         val cautionTitleToMsg = makeTitleToMsg(cautionTitleAndMessage)
-        JsDialog(terminalFragmentRef).listDialog(
+        JsDialog(terminalFragmentRef).listDialogOld(
             cautionTitleToMsg.first,
             cautionTitleToMsg.second,
             String()

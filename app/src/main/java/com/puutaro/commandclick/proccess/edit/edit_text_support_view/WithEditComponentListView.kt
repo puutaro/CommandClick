@@ -35,6 +35,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Sea
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -83,6 +84,8 @@ object WithEditComponentListView{
         editListBkFrame: FrameLayout,
         editListSearchEditText: AppCompatEditText,
         editFooterLinearlayout: LinearLayoutCompat,
+        editToolbarLinearLayout: LinearLayoutCompat?,
+        fannelCenterButtonLayout: FrameLayout?,
         fannelContentsList: List<String>?,
     ) {
         val context = fragment.context ?: return
@@ -150,7 +153,6 @@ object WithEditComponentListView{
             setReplaceVariableMap,
             indexListMap,
             busyboxExecutor,
-//            listIndexTypeKey
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfileList.txt").absolutePath,
@@ -159,10 +161,6 @@ object WithEditComponentListView{
 //                "fileList: ${fileList}",
 //            ).joinToString("\n\n")
 //        )
-
-//        val editListRecyclerView =
-//            binding.editListRecyclerView
-//        val constraintLayoutParam = editListRecyclerView.layoutParams as ConstraintLayout.LayoutParams
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfannelContentsList.txt").absolutePath,
 //            fannelContentsList?.joinToString("\n") ?: String()
@@ -202,13 +200,18 @@ object WithEditComponentListView{
             editListRecyclerView,
             isReverseLayout,
         )
-
-//        if(isReverseLayout) {
-//            ListViewToolForListIndexAdapter.scrollToBottom(
-//                editListRecyclerView,
-//                editComponentListAdapter,
-//            )
-//        }
+        CoroutineScope(Dispatchers.Main).launch {
+            setToolbar(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editListRecyclerView,
+                editToolbarLinearLayout,
+                fannelCenterButtonLayout,
+                listIndexConfigMap,
+            )
+        }
         CoroutineScope(Dispatchers.Main).launch {
             setFooter(
                 fragment,
@@ -251,14 +254,68 @@ object WithEditComponentListView{
         editFooterLinearlayout: LinearLayoutCompat,
         editListRecyclerView: RecyclerView,
         listIndexConfigMap: Map<String, String>?,
+    ){
+        setFooterOrToolbar(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editFooterLinearlayout,
+            editListRecyclerView,
+            null,
+            null,
+            listIndexConfigMap,
+        )
+    }
+
+
+    private suspend fun setToolbar(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
+        editToolbarLinearLayout: LinearLayoutCompat?,
+        fannelCentrButtonLayout: FrameLayout?,
+        listIndexConfigMap: Map<String, String>?,
+    ){
+        setFooterOrToolbar(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            null,
+            editListRecyclerView,
+            editToolbarLinearLayout,
+            fannelCentrButtonLayout,
+            listIndexConfigMap,
+        )
+    }
+
+    private suspend fun setFooterOrToolbar(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editFooterLinearlayout: LinearLayoutCompat?,
+        editListRecyclerView: RecyclerView,
+        editToolbarLinearLayout: LinearLayoutCompat?,
+        fannelCenterButtonLayout: FrameLayout?,
+        listIndexConfigMap: Map<String, String>?,
+
     ) {
         val context = fragment.context
             ?: return
+        val isEditToolbar = editToolbarLinearLayout != null
+        val layoutKey = when(isEditToolbar){
+            true -> ListIndexEditConfig.ListIndexConfigKey.TOOLBAR_LAYOUT_PATH
+            else -> ListIndexEditConfig.ListIndexConfigKey.FOOTER_LAYOUT_PATH
+        }.key
         val footerLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
             fannelInfoMap,
             setReplaceVariableMap,
             listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.FOOTER_LAYOUT_PATH.key,
+            layoutKey,
         )
         val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
             fannelInfoMap,
@@ -272,26 +329,45 @@ object WithEditComponentListView{
         val tagKey = EditComponent.Template.EditComponentKey.TAG.key
         val typeSeparator = EditComponent.Template.typeSeparator
         val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
-//            GridLayoutManager
         withContext(Dispatchers.Main) {
             frameTagList.forEach { frameTag ->
-                frameTagToLinearKeysListMap.get(frameTag)?.forEach {
-                        linearKeys ->
-
-                    val linearParam = LinearLayoutCompat.LayoutParams(
-                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                    )
-                    val weightSumFloat = 1f
-                    val linearLayout = LinearLayoutCompat(context).apply {
-                        tag = frameTag
-                        layoutParams = linearParam
-                        weightSum = weightSumFloat
-                        orientation = LinearLayoutCompat.HORIZONTAL
+                val linearKeysList = frameTagToLinearKeysListMap.get(frameTag)?.let {
+                    linearKeysListSrc ->
+                    when (isEditToolbar) {
+                        true -> listOf(linearKeysListSrc.firstOrNull() ?: emptyList())
+                        else -> linearKeysListSrc
                     }
-
-                    val layoutWeight = weightSumFloat / linearKeys.size
-                    val noIndexSign = -1
+                }
+                linearKeysList?.forEach {
+                        linearKeys ->
+                    val weightSumFloat = 1f
+                    val linearLayout = when(isEditToolbar) {
+                        true -> editToolbarLinearLayout
+                        else -> LinearLayoutCompat(context).apply {
+                            tag = frameTag
+                            val linearParam = LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                            )
+                            layoutParams = linearParam
+                            weightSum = weightSumFloat
+                            orientation = LinearLayoutCompat.HORIZONTAL
+                        }
+                    }
+                    val layoutWeight = when(isEditToolbar) {
+                        true -> weightSumFloat / (linearKeys.size + 1)
+                        else -> weightSumFloat / linearKeys.size
+                    }
+                    if(isEditToolbar) {
+                        let {
+                            val layoutParam =
+                                fannelCenterButtonLayout?.layoutParams as? LinearLayoutCompat.LayoutParams
+                            if (layoutParam?.weight == layoutWeight) return@let
+                            layoutParam?.weight = layoutWeight
+                            fannelCenterButtonLayout?.layoutParams = layoutParam
+                        }
+                    }
+                    val noIndexSign = - 1
                     linearKeys.forEach setFrame@{ linearFrameKeyPairsListConSrc ->
                         val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
                             EditComponent.Template.ReplaceHolder.replaceHolder(
@@ -332,7 +408,7 @@ object WithEditComponentListView{
                             false,
                             editComponentListAdapter?.totalSettingValMap,
                         ) ?: return@setFrame
-                        val linearKeyList = JsActionKeyManager.JsActionsKey.values().map {
+                        val linearKeyList = JsActionKeyManager.JsActionsKey.entries.map {
                             it.key
                         }
                         withContext(Dispatchers.IO) execClick@ {
@@ -419,9 +495,9 @@ object WithEditComponentListView{
                                 }
                             }
                         }
-                        linearLayout.addView(linearFrameLayout)
+                        linearLayout?.addView(linearFrameLayout)
                     }
-                    editFooterLinearlayout.addView(linearLayout)
+                    editFooterLinearlayout?.addView(linearLayout)
                 }
             }
         }

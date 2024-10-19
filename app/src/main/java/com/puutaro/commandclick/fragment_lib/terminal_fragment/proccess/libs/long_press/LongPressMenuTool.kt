@@ -33,6 +33,8 @@ import java.io.File
 object LongPressMenuTool {
 
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+    private val switchOn = PromptWithListDialog.switchOn
+    private val switchOff = PromptWithListDialog.switchOff
 
     fun makeExecJsPath(
         terminalFragment: TerminalFragment,
@@ -62,6 +64,7 @@ object LongPressMenuTool {
             terminalFragment: TerminalFragment,
             titleSrc: String?,
             menuList: List<Pair<String, String>>,
+            saveTag: String,
         ): String {
             val title = titleSrc
                 ?: terminalFragment.binding.terminalWebView.title
@@ -76,24 +79,23 @@ object LongPressMenuTool {
                 "${menuTitle}${PromptMapList.promptListSeparator}${menuIconStr}"
             }.joinToString(PromptWithListDialog.valueSeparator.toString())
             val promptConfigCon = """
-                title=
-                    maxLines=1Null,
-                list=
-                    |saveTag=srcImageAnchor
-                    |onUpdate=OFF
-                    |concatList="${concatListCon}"
-                    |onInsertByClick=OFF
-                    |visible=ON
-                    |onDismissByClick=ON
-                    |limit=20
-                    |disableUpdate=ON,
-                editText=
-                    |disableListBind=OFF
-                    |visible=OFF,
-                background=
-                    type=transparent,
-                extra=
-                    |onKeyOpenMode=ON,
+                ${PromptWithListDialog.Companion.PromptWithTextMapKey.title.name}=
+                    ${PromptWithListDialog.Companion.PromptTitleKey.maxLines.name}=null,
+                ${PromptWithListDialog.Companion.PromptWithTextMapKey.list.name}=
+                    |${PromptWithListDialog.Companion.PromptListVars.saveTag.name}=${saveTag}
+                    |${PromptWithListDialog.Companion.PromptListVars.concatList.name}="${concatListCon}"
+                    |${PromptWithListDialog.Companion.PromptListVars.onInsertByClick.name}=${switchOff}
+                    |${PromptWithListDialog.Companion.PromptListVars.visible.name}=${switchOn}
+                    |${PromptWithListDialog.Companion.PromptListVars.onDismissByClick.name}=${switchOn}
+                    |${PromptWithListDialog.Companion.PromptListVars.limit.name}=20
+                    |${PromptWithListDialog.Companion.PromptListVars.disableUpdate.name}=${switchOn},
+                ${PromptWithListDialog.Companion.PromptWithTextMapKey.editText.name}=
+                    |${PromptWithListDialog.Companion.PromptEditTextKey.disableListBind.name}=${switchOff}
+                    |${PromptWithListDialog.Companion.PromptEditTextKey.visible.name}=${switchOff},
+                ${PromptWithListDialog.Companion.PromptWithTextMapKey.background.name}=
+                    ${PromptWithListDialog.Companion.PromptBackground.Key.type.name}=transparent,
+                ${PromptWithListDialog.Companion.PromptWithTextMapKey.extra.name}=
+                    |${PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name}=${switchOn},
             """.trimIndent().split("\n").joinToString(String()) {
                 it.trim()
             }

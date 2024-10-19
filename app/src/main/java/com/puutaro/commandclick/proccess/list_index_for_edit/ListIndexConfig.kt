@@ -424,6 +424,7 @@ object ListIndexEditConfig {
         TYPE("type"),
         LAYOUT("layout"),
         FOOTER_LAYOUT_PATH("footerLayoutPath"),
+        TOOLBAR_LAYOUT_PATH("toolbarLayoutPath"),
         NAME("name"),
         DESC("desc"),
         BK("bk"),

@@ -96,7 +96,8 @@ class LongPressForImage(
         val longPressSelectJsScript = LongPressMenuTool.LongPressJsDialogScript.make(
             terminalFragment,
             title,
-            menuList.reversed()
+            menuList.reversed(),
+            "image",
         )
         val terminalWebView = terminalFragment.binding.terminalWebView
         terminalWebView.evaluateJavascript(

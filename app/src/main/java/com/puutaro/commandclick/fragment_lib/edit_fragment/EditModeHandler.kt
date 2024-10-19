@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
@@ -40,39 +38,39 @@ object EditModeHandler{
                 editFragment,
             )
         }
-        buttonCreate(
-            editFragment,
-            ToolbarButtonBariantForEdit.HISTORY,
-        )
+//        buttonCreate(
+//            editFragment,
+//            ToolbarButtonBariantForEdit.HISTORY,
+//        )
 
-        buttonCreate(
-            editFragment,
-            ToolbarButtonBariantForEdit.OK,
-        )
-
-        buttonCreate(
-            editFragment,
-            ToolbarButtonBariantForEdit.EDIT,
-        )
-        buttonCreate(
-            editFragment,
-            ToolbarButtonBariantForEdit.SETTING,
-        )
-        buttonCreate(
-            editFragment,
-            ToolbarButtonBariantForEdit.EXTRA,
-        )
+//        buttonCreate(
+//            editFragment,
+//            ToolbarButtonBariantForEdit.OK,
+//        )
+//
+//        buttonCreate(
+//            editFragment,
+//            ToolbarButtonBariantForEdit.EDIT,
+//        )
+//        buttonCreate(
+//            editFragment,
+//            ToolbarButtonBariantForEdit.SETTING,
+//        )
+//        buttonCreate(
+//            editFragment,
+//            ToolbarButtonBariantForEdit.EXTRA,
+//        )
     }
 
-    private fun buttonCreate(
-        editFragment: EditFragment,
-        toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
-    ){
-        ToolbarButtonProducerForEdit.make(
-            editFragment,
-            toolbarButtonVariantForEdit,
-        )
-    }
+//    private fun buttonCreate(
+//        editFragment: EditFragment,
+//        toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
+//    ){
+//        ToolbarButtonProducerForEdit.make(
+//            editFragment,
+//            toolbarButtonVariantForEdit,
+//        )
+//    }
 
 //    private fun editSettingVariable(
 //        editFragment: EditFragment

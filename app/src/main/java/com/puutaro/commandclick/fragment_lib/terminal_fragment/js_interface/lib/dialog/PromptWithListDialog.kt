@@ -27,6 +27,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -96,8 +97,58 @@ class PromptWithListDialog(
         private const val keySeparator = '|'
         const val valueSeparator = '?'
         private var onDialog = false
-        private const val switchOn = "ON"
-        private const val switchOff = "OFF"
+        const val switchOn = "ON"
+        const val switchOff = "OFF"
+
+        enum class PromptWithTextMapKey {
+            list,
+            editText,
+            background,
+            title,
+            extra,
+        }
+
+        enum class PromptTitleKey {
+            maxLines,
+        }
+
+        enum class PromptEditTextKey {
+            default,
+            hint,
+            shellPath,
+            fannelPath,
+            repValCon,
+            disableListBind,
+            visible,
+            onFocus,
+        }
+        enum class PromptListVars {
+            saveTag,
+            concatFilePathList,
+            concatList,
+            onInsertByClick,
+            onDismissByClick,
+            visible,
+            limit,
+            disableUpdate,
+            focusItemTitles,
+        }
+
+        enum class PromptExtraKey {
+            removeFilePaths,
+            onKeyOpenMode,
+        }
+
+
+        object PromptBackground {
+            enum class Key {
+                type
+            }
+
+            enum class Type{
+                transparent
+            }
+        }
 
         object PromptMapList {
 
@@ -156,16 +207,16 @@ class PromptWithListDialog(
                     concatMapListFromFile,
                     extraMapList
                 )
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "lpromptList.txt").absolutePath,
-                    listOf(
-                        "mainMapListSrc: ${mainMapListSrc}",
-                        "extraMapListFromFileSrc: ${extraMapListFromFileSrc}",
-                        "concatMapListFromFile: ${concatMapListFromFile}",
-                        "extraMapList: ${extraMapList}",
-                        "promptMapList: ${promptMapList}",
-                    ).joinToString("\n\n----------\n\n")
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lpromptList.txt").absolutePath,
+//                    listOf(
+//                        "mainMapListSrc: ${mainMapListSrc}",
+//                        "extraMapListFromFileSrc: ${extraMapListFromFileSrc}",
+//                        "concatMapListFromFile: ${concatMapListFromFile}",
+//                        "extraMapList: ${extraMapList}",
+//                        "promptMapList: ${promptMapList}",
+//                    ).joinToString("\n\n----------\n\n")
+//                )
                 return when (filterString.isEmpty()) {
                     true -> promptMapList
                     else -> promptMapList.distinct().filter { lineMap ->
@@ -422,15 +473,15 @@ class PromptWithListDialog(
             File(listDirPath, it)
         }
 
-        val setTextSrc = editTextMap.get(
+        val defaultTextSrc = editTextMap.get(
             PromptEditTextKey.default.name
         ) ?: String()
-        val setText = when(setTextSrc.isEmpty()){
+        val defaultText = when(defaultTextSrc.isEmpty()){
             true -> EditTextMakerForPromptList.makeTextByShell(
                 terminalFragment,
                 editTextMap
             )
-            else -> setTextSrc
+            else -> defaultTextSrc
         }
         val disableListBind = editTextMap.get(
             PromptEditTextKey.disableListBind.name
@@ -446,6 +497,9 @@ class PromptWithListDialog(
                     null
                 }
             }
+        val focusItemTitlesList =
+            promptListMap.get(PromptListVars.focusItemTitles.name)?.split(valueSeparator)
+
         val listVisible =
             promptListMap.get(PromptListVars.visible.name) != switchOff
         val filterText = when(
@@ -454,7 +508,7 @@ class PromptWithListDialog(
                     || !editTextVisible
         ){
             true -> String()
-            else -> setText ?: String()
+            else -> defaultText ?: String()
         }
         val promptList =
             PromptMapList.makePromptMapList(
@@ -538,7 +592,8 @@ class PromptWithListDialog(
                 PromptListAdapter(
                     context,
                     promptList,
-                    isWhiteBackgrond
+                    isWhiteBackgrond,
+                    focusItemTitlesList
                 )
             }
             withContext(Dispatchers.Main) {
@@ -811,6 +866,15 @@ class PromptWithListDialog(
             setStrokeColor(CmdClickColor.WHITE.id)
             outlineWidthSrc = 3
             maxLines = maxLinesInt
+            viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    // Remove listener because we don't want this called before _every_ frame
+                    viewTreeObserver?.removeOnPreDrawListener(this)
+                    minHeight = height + lineHeight
+                    // Do whatever you want in case text view has more than 2 lines
+                    return true // true because we don't want to skip this frame
+                }
+            })
         }
     }
 
@@ -853,6 +917,36 @@ class PromptWithListDialog(
 //                    cancelImageView,
 //                    okImageView,
                 )
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.IO){
+                    delay(1000)
+                }
+//                promptListTitleView?.viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+//                    override fun onPreDraw(): Boolean {
+//                        // Remove listener because we don't want this called before _every_ frame
+//                        promptListTitleView?.viewTreeObserver?.removeOnPreDrawListener(this)
+//
+//                        // Drawing happens after layout so we can assume lineCount returns the correct value
+//                        if (promptListTitleView.lineCount > 1) {
+//                            val oneLineMinHeight = context.resources.getDimension(
+//                                R.dimen.prompt_list_dialog_title_min_height
+//                            )
+//                            promptListTitleView.minHeight = (oneLineMinHeight * 2).toInt()
+//                            // Do whatever you want in case text view has more than 2 lines
+//                        }
+//                        FileSystems.writeFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lMinHeight.txt").absolutePath,
+//                            listOf(
+//                                "text: ${promptListTitleView.text}",
+//                                "maxLines: ${promptListTitleView.maxLines}",
+//                                "lineCount]: ${promptListTitleView.lineCount}",
+//                                "minHeight: ${promptListTitleView.minHeight}"
+//                            ).joinToString("\n")
+//                        )
+//                        return true // true because we don't want to skip this frame
+//                    }
+//                })
             }
             terminalFragment.activity?.let {
                 KeyboardVisibilityEvent.setEventListener(
@@ -2116,13 +2210,13 @@ private object EditTextMakerForPromptList {
             promptDialogObj?.findViewById<AppCompatEditText>(
                 R.id.prompt_list_dialog_search_edit_text
             ) ?: return null
-        if(
-            !setText.isNullOrEmpty()
-        ){
-            promptEditText.setText(setText)
-        }
+//        if(
+//            !setText.isNullOrEmpty()
+//        ){
+        promptEditText.setText(setText)
+//        }
         editTextMap.get(
-            PromptEditTextKey.hint.name
+            PromptWithListDialog.Companion.PromptEditTextKey.hint.name
         )?.let {
             promptEditText.hint = it
         }
@@ -2138,7 +2232,12 @@ private object EditTextMakerForPromptList {
         if(!visible) {
             return promptEditText
         }
-        promptEditText.requestFocus()
+        val isFocus = editTextMap.get(
+            PromptWithListDialog.Companion. PromptEditTextKey.onFocus.name
+        ) == PromptWithListDialog.switchOn
+        if(isFocus) {
+            promptEditText.requestFocus()
+        }
         return promptEditText
     }
 
@@ -2149,7 +2248,7 @@ private object EditTextMakerForPromptList {
         val context = terminalFragment.context
             ?: return null
         val mainOrSubFannelPath = editTextMap.get(
-            PromptEditTextKey.fannelPath.name
+            PromptWithListDialog.Companion.PromptEditTextKey.fannelPath.name
         )
         val setReplaceVariableMap = when(
             mainOrSubFannelPath.isNullOrEmpty()
@@ -2173,7 +2272,7 @@ private object EditTextMakerForPromptList {
         )
 
         val shellCon = editTextMap.get(
-            PromptEditTextKey.shellPath.name
+            PromptWithListDialog.Companion.PromptEditTextKey.shellPath.name
         )?.let {
             EditSettingExtraArgsTool.makeShellCon(editTextMap)
         }?.let {
@@ -2189,7 +2288,7 @@ private object EditTextMakerForPromptList {
             UbuntuFiles(context),
         )
         val repValMap = editTextMap.get(
-            PromptEditTextKey.repValCon.name
+            PromptWithListDialog.Companion.PromptEditTextKey.repValCon.name
         ).let {
             CmdClickMap.createMap(
                 it,
@@ -2203,54 +2302,6 @@ private object EditTextMakerForPromptList {
     }
 }
 
-
-private enum class PromptWithTextMapKey {
-    list,
-    editText,
-    background,
-    title,
-    extra,
-}
-
-private enum class PromptTitleKey {
-    maxLines,
-}
-
-private enum class PromptEditTextKey {
-    default,
-    hint,
-    shellPath,
-    fannelPath,
-    repValCon,
-    disableListBind,
-    visible,
-}
-private enum class PromptListVars {
-    saveTag,
-    concatFilePathList,
-    concatList,
-    onInsertByClick,
-    onDismissByClick,
-    visible,
-    limit,
-    disableUpdate,
-}
-
-private enum class PromptExtraKey {
-    removeFilePaths,
-    onKeyOpenMode,
-}
-
-
-object PromptBackground {
-    enum class Key {
-        type
-    }
-
-    enum class Type{
-        transparent
-    }
-}
 
 class LinearGradientSpan(
     private val colors: IntArray,

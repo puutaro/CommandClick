@@ -63,17 +63,6 @@
                 android:background="@color/ligthBlue"
                 >
             </FrameLayout>
-<!--            <androidx.appcompat.widget.AppCompatImageView-->
-<!--                android:id="@+id/edit_list_bk_image"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:src="@null"-->
-<!--                android:backgroundTint="@null"-->
-<!--                app:tint="@null"-->
-<!--                android:scaleType="fitCenter"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:gravity="center"-->
-<!--                />-->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_list_recycler_view"
                 android:layout_width="match_parent"
@@ -84,13 +73,7 @@
                 android:fadeScrollbars="false"
                 android:layout_gravity="center"
                 />
-<!--             app:layout_constraintTop_toBottomOf="@+id/editTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/edit_list_search_edit_text"-->
         </FrameLayout>
-<!--         app:layout_constraintTop_toBottomOf="@+id/editTextView"-->
-<!--            android:stackFromBottom="true"-->
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edit_list_search_edit_text"
             android:layout_width="0dp"
@@ -132,182 +115,46 @@
             android:orientation="horizontal"
             android:tag="@string/edit_toolbar_tag"
             android:background="@color/dark_red"
+            android:weightSum="1"
             >
+            <FrameLayout
+                android:id="@+id/edit_toolbar_fannel_center_button"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/toolbar_layout_height"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@null"
+                android:backgroundTint="@null"
+                android:foreground="?selectableItemBackground"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/edit_toolbar_fannel_center_button_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icons8_history"
+                    app:tint="@color/file_dark_green_color"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="0dp"
+                    />
+                <com.puutaro.commandclick.custom_view.OutlineTextView
+                    android:id="@+id/edit_toolbar_fannel_center_button_caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="0dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/fannel_center_caption"
+                    />
+            </FrameLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/edit_fragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:background="@color/white"-->
-<!--        tools:context="com.puutaro.commandclick.fragment.EditFragment">-->
-
-<!--        <ScrollView-->
-<!--            android:id="@+id/edit_text_scroll"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:scrollbars="vertical"-->
-<!--            android:orientation="vertical"-->
-<!--            android:descendantFocusability="blocksDescendants"-->
-<!--            android:scrollbarThumbVertical="@android:color/darker_gray"-->
-<!--            tools:context="com.puutaro.commandclick.fragment.TerminalFragment"-->
-<!--            android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"-->
-<!--            android:layout_above="@+id/edit_tool_bar_linear_layout"-->
-
-<!--            >-->
-<!--&lt;!&ndash;-->
-<!-- app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constrainedHeight="true"-->
-<!-- android:layout_above="@+id/edit_tool_bar_linear_layout"&ndash;&gt;-->
-<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                android:id="@+id/edit_linear_layout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical"-->
-<!--                android:descendantFocusability="beforeDescendants"-->
-<!--                android:focusableInTouchMode="true"-->
-<!--                android:background="@color/white"-->
-<!--                >-->
-<!--                <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                    android:id="@+id/edit_title_linearlayout"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="35dp"-->
-<!--                    android:background="@color/white"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:layout_marginBottom="10dp"-->
-<!--                    >-->
-<!--                    <androidx.appcompat.widget.AppCompatImageView-->
-<!--                        android:id="@+id/edit_title_image"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_gravity="center_vertical"-->
-<!--                        android:adjustViewBounds="true"-->
-<!--                        android:src="@mipmap/ic_cmdclick_launcher"-->
-<!--                        />-->
-<!--                    <TextView-->
-<!--                        android:id="@+id/editTextView"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center_vertical"-->
-<!--                        android:layout_marginStart="10dp"-->
-<!--                        android:textColor="#050505"-->
-<!--                        android:text=""-->
-<!--                        android:textSize="18sp"-->
-<!--                        android:maxLines="1"-->
-<!--                        android:singleLine="true"-->
-<!--                        android:ellipsize="end"-->
-<!--                        android:autofillHints="test"-->
-<!--                        />-->
-<!--                    <requestFocus/>-->
-<!--                </androidx.appcompat.widget.LinearLayoutCompat>-->
-<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
-<!--        </ScrollView>-->
-<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--            android:id="@+id/edit_list_linear_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:descendantFocusability="beforeDescendants"-->
-<!--            android:focusableInTouchMode="true"-->
-<!--            android:background="@color/white"-->
-<!--            android:layout_above="@+id/edit_tool_bar_linear_layout"-->
-<!--            android:weightSum="1"-->
-<!--            android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"-->
-<!--            >-->
-<!--&lt;!&ndash;            android:layout_above="@+id/edit_tool_bar_linear_layout"&ndash;&gt;-->
-<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                android:id="@+id/edit_list_inner_top_linear_layout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"-->
-<!--                android:orientation="vertical"-->
-<!--                android:descendantFocusability="beforeDescendants"-->
-<!--                android:focusableInTouchMode="true"-->
-<!--                android:background="@color/white"-->
-<!--                >-->
-<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/edit_list_recycler_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:textIsSelectable="true"-->
-<!--                android:scrollbars="vertical"-->
-<!--                android:fadeScrollbars="false"-->
-<!--                android:layout_weight="1"-->
-<!--                />-->
-<!--&lt;!&ndash;            android:stackFromBottom="true"&ndash;&gt;-->
-<!--            <androidx.appcompat.widget.AppCompatEditText-->
-<!--                android:id="@+id/edit_list_search_edit_text"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:imeOptions="actionDone"-->
-<!--                android:selectAllOnFocus="true"-->
-<!--                android:paddingTop="10dp"-->
-<!--                android:paddingBottom="10dp"-->
-<!--                android:paddingStart="10dp"-->
-<!--                android:paddingEnd="10dp"-->
-<!--                android:background="#00000000"-->
-<!--                android:hint="search"-->
-<!--                android:textSize="20sp"-->
-<!--                android:autofillHints=""-->
-<!--                android:inputType="text"-->
-<!--                />-->
-<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                android:id="@+id/edit_list_inner_bottom_linear_layout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical"-->
-<!--                android:descendantFocusability="beforeDescendants"-->
-<!--                android:focusableInTouchMode="true"-->
-<!--                android:background="@color/white"-->
-<!--                >-->
-<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
-<!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
-
-<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--            android:id="@+id/edit_tool_bar_linear_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="@dimen/toolbar_layout_height"-->
-<!--            android:orientation="vertical"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:background="@color/white"-->
-<!--            android:weightSum="1"-->
-<!--            >-->
-<!--&lt;!&ndash;            android:layout_alignParentBottom="true"&ndash;&gt;-->
-<!--            <include-->
-<!--                layout="@layout/page_search"-->
-<!--                android:id="@+id/page_search"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="0"-->
-<!--                />-->
-<!--            <include-->
-<!--                layout="@layout/web_search"-->
-<!--                android:id="@+id/web_search"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="0"-->
-<!--                />-->
-<!--            <android.widget.Toolbar-->
-<!--                android:id="@+id/edit_tool_bar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:contentInsetEnd="0dp"-->
-<!--                android:contentInsetStart="0dp"-->
-<!--                android:focusableInTouchMode="true"-->
-<!--                android:layout_weight="1"-->
-<!--                >-->
-<!--                <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                    android:id="@+id/edit_toolbar_linear_layout"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:orientation="horizontal">-->
-<!--                </androidx.appcompat.widget.LinearLayoutCompat>-->
-<!--            </android.widget.Toolbar>-->
-<!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
-<!--    </RelativeLayout>-->
 </layout>

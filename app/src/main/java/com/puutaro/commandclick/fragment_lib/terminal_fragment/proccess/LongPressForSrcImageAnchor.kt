@@ -98,7 +98,8 @@ class LongPressForSrcImageAnchor(
         val longPressSelectJsScript = LongPressMenuTool.LongPressJsDialogScript.make(
             terminalFragment,
             title,
-            menuList.reversed()
+            menuList.reversed(),
+            "srcImageAnchor",
         )
         val terminalWebView = terminalFragment.binding.terminalWebView
         terminalWebView.evaluateJavascript(

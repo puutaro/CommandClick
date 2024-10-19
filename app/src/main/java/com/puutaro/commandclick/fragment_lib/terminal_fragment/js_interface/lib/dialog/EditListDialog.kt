@@ -133,6 +133,8 @@ class EditListDialog(
             editListBkFrame,
             editListSearchEditText,
             editFooterLinearlayout,
+            null,
+            null,
             mainFannelConList,
         )
         terminalFragment.editListDialog?.setOnCancelListener {

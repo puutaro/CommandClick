@@ -11,9 +11,9 @@ object ToolBarHistoryButtonControl {
         cmdIndexFragment: CommandIndexFragment
     ) {
         val binding = cmdIndexFragment.binding
-        val historyButtonView = binding.cmdindexHistoryButton
+        val cmdindexFannelCenterButton = binding.cmdindexFannelCenterButton
         val cmdindexUrlHistoryButton = binding.cmdindexUrlHistoryButton
-        historyButtonView.setOnClickListener {
+        cmdindexFannelCenterButton.setOnClickListener {
             historyButtonInnerView ->
             FannelHistoryButtonEvent.invoke(cmdIndexFragment)
         }

@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DebugJsAlert
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectOnlyImageGridViewJsDialog
@@ -102,7 +103,7 @@ class JsDialog(
     )
 
     @JavascriptInterface
-    fun listDialog(
+    fun listDialogOld(
         title: String,
         message: String,
         listSource: String
@@ -466,6 +467,22 @@ class JsDialog(
         return promptWithListDialog.create(
             fannelPath,
             title,
+            promptConfigMapCon,
+        )
+    }
+
+    @JavascriptInterface
+    fun listDialog(
+        fannelPath: String,
+        title: String,
+        listIconTsvCon: String,
+        promptConfigMapCon: String,
+    ): String {
+        return ListJsDialogV2.launch(
+            promptWithListDialog,
+            fannelPath,
+            title,
+            listIconTsvCon,
             promptConfigMapCon,
         )
     }

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.str.QuoteTool
 import java.lang.ref.WeakReference
 
 class JsEdit(
@@ -93,7 +94,9 @@ class JsEdit(
             editListRecyclerView.adapter as EditComponentListAdapter
         return editComponentListAdapter.getCurrentSettingVals(
             targetVariableName
-        ) ?: String()
+        )?.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        } ?: String()
 
 //        val fannelInfoMap =
 //            terminalFragment.fannelInfoMap

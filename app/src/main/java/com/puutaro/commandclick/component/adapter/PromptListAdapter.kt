@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -35,12 +36,14 @@ class PromptListAdapter(
     val context: Context?,
     var prompMapList: MutableList<Map<String, String?>>,
     private val isWhiteBackgrond: Boolean,
+    private val focusItemTitleList: List<String>?,
 ): RecyclerView.Adapter<PromptListAdapter.PromptListViewHolder>() {
 
     class PromptListViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 //        val cardView = view.findViewById<MaterialCardView>(
 //            R.id.prompt_list_adapter_cardview
 //        )
+        val promptListAdapterLinear = view.findViewById<LinearLayoutCompat>(R.id.prompt_list_linear)
         val promptListAdapterTitleBk = view.findViewById<ShapeableImageView>(R.id.prompt_list_adapter_thumbnail_bk)
         val promptListAdapterThumnail = view.findViewById<AppCompatImageView>(R.id.prompt_list_adapter_thumbnail)
         val promptListAdapterTitle = view.findViewById<OutlineTextView>(R.id.prompt_list_adapter_title)
@@ -114,10 +117,22 @@ class PromptListAdapter(
         ) return
         CoroutineScope(Dispatchers.IO).launch {
             val lineMap = prompMapList[position]
+            val title = withContext(Dispatchers.IO) {
+                lineMap.get(titleKey)
+            }
             withContext(Dispatchers.Main){
-                val title = withContext(Dispatchers.IO) {
-                    lineMap.get(titleKey)
-                }
+                val isFocus =
+                    withContext(Dispatchers.IO) {
+                        !focusItemTitleList.isNullOrEmpty()
+                                && focusItemTitleList.contains(title)
+                    }
+                if(!isFocus) return@withContext
+                holder.promptListAdapterLinear.background = AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.focus_dark_green
+                )
+            }
+            withContext(Dispatchers.Main){
                 val promptListAdapterTitle = holder.promptListAdapterTitle
                 promptListAdapterTitle.setFillColor(R.color.ao)
                 promptListAdapterTitle.outlineWidthSrc = 2

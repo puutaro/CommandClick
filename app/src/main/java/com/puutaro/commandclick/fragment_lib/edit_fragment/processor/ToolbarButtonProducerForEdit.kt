@@ -25,93 +25,93 @@ import java.io.File
 
 object ToolbarButtonProducerForEdit {
 
-    fun make(
-        editFragment: EditFragment,
-        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-    ) {
-        val context = editFragment.context
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "toolbar.txt").absolutePath,
-//            listOf(
-//                "toolbarButtonBariantForEdit: ${toolbarButtonBariantForEdit.str}",
-//                "howSetButton: ${howSetButton(
-//                    editFragment,
-//                    toolbarButtonBariantForEdit
-//                )}",
-//                "toolBarButtonVisibleMap: ${editFragment.toolBarButtonVisibleMap}",
-//                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
-//            ).joinToString("\n")
+//    fun make(
+//        editFragment: EditFragment,
+//        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
+//    ) {
+//        val context = editFragment.context
+////        FileSystems.updateFile(
+////            File(UsePath.cmdclickDefaultAppDirPath, "toolbar.txt").absolutePath,
+////            listOf(
+////                "toolbarButtonBariantForEdit: ${toolbarButtonBariantForEdit.str}",
+////                "howSetButton: ${howSetButton(
+////                    editFragment,
+////                    toolbarButtonBariantForEdit
+////                )}",
+////                "toolBarButtonVisibleMap: ${editFragment.toolBarButtonVisibleMap}",
+////                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
+////            ).joinToString("\n")
+////        )
+//        if(
+//            !howSetButton(
+//                editFragment,
+//                toolbarButtonBariantForEdit
+//            )
+//            || context == null
+//        ) return
+//
+//
+//        val buttonLayout = makeButtonLayout(
+//            editFragment,
+//            toolbarButtonBariantForEdit,
 //        )
-        if(
-            !howSetButton(
-                editFragment,
-                toolbarButtonBariantForEdit
-            )
-            || context == null
-        ) return
-
-
-        val buttonLayout = makeButtonLayout(
-            editFragment,
-            toolbarButtonBariantForEdit,
-        )
-        val iconIdToCaption = editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit]
-            ?: Pair(R.drawable.icons8_ok, String())
-
-
-        buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)?.let {
-            imageButtonView ->
-            setImageView(
-                editFragment,
-                imageButtonView,
-                toolbarButtonBariantForEdit,
-                iconIdToCaption
-            )
-        }
-        buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)?.let {
-            captionTextView ->
-            setCaption(
-                captionTextView,
-                iconIdToCaption,
-            )
-        }
-        buttonLayout.setOnLongClickListener {
-                buttonInnerView ->
-            onLongClickHandler(
-                editFragment,
-                buttonLayout,
-                toolbarButtonBariantForEdit,
-            )
-            true
-        }
-
-        buttonLayout.setOnClickListener { view ->
-            when (toolbarButtonBariantForEdit) {
-                ToolbarButtonBariantForEdit.HISTORY -> {
-                    FannelHistoryButtonEvent.invoke(editFragment)
-                    return@setOnClickListener
-                }
-                ToolbarButtonBariantForEdit.SETTING,
-                ToolbarButtonBariantForEdit.OK,
-                ToolbarButtonBariantForEdit.EDIT,
-                ToolbarButtonBariantForEdit.EXTRA,
-                -> {
-                    ToolbarButtonHandler.handle(
-                        editFragment,
-                        false,
-                        toolbarButtonBariantForEdit,
-                        buttonLayout
-//                        makeButtonView,
-                    )
-                }
-                ToolbarButtonBariantForEdit.CANCEL -> {}
-            }
-        }
-        editFragment.binding.editToolBarLinearLayout.addView(
-            buttonLayout
-//            makeButtonView
-        )
-    }
+//        val iconIdToCaption = editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit]
+//            ?: Pair(R.drawable.icons8_ok, String())
+//
+//
+//        buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_layout_image)?.let {
+//            imageButtonView ->
+//            setImageView(
+//                editFragment,
+//                imageButtonView,
+//                toolbarButtonBariantForEdit,
+//                iconIdToCaption
+//            )
+//        }
+//        buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_layout_caption)?.let {
+//            captionTextView ->
+//            setCaption(
+//                captionTextView,
+//                iconIdToCaption,
+//            )
+//        }
+//        buttonLayout.setOnLongClickListener {
+//                buttonInnerView ->
+//            onLongClickHandler(
+//                editFragment,
+//                buttonLayout,
+//                toolbarButtonBariantForEdit,
+//            )
+//            true
+//        }
+//
+//        buttonLayout.setOnClickListener { view ->
+//            when (toolbarButtonBariantForEdit) {
+//                ToolbarButtonBariantForEdit.HISTORY -> {
+//                    FannelHistoryButtonEvent.invoke(editFragment)
+//                    return@setOnClickListener
+//                }
+//                ToolbarButtonBariantForEdit.SETTING,
+//                ToolbarButtonBariantForEdit.OK,
+//                ToolbarButtonBariantForEdit.EDIT,
+//                ToolbarButtonBariantForEdit.EXTRA,
+//                -> {
+//                    ToolbarButtonHandler.handle(
+//                        editFragment,
+//                        false,
+//                        toolbarButtonBariantForEdit,
+//                        buttonLayout
+////                        makeButtonView,
+//                    )
+//                }
+//                ToolbarButtonBariantForEdit.CANCEL -> {}
+//            }
+//        }
+//        editFragment.binding.editToolBarLinearLayout.addView(
+//            buttonLayout
+////            makeButtonView
+//        )
+//    }
 
     private fun makeButtonLayout(
         editFragment: EditFragment,
@@ -140,53 +140,53 @@ object ToolbarButtonProducerForEdit {
         return buttonLayout
     }
 
-    private fun setCaption(
-        captionTextView: OutlineTextView,
-        iconIdToCaption: Pair<Int, String>
-    ) {
-        captionTextView.text =iconIdToCaption.second.ifEmpty {
-            val iconId = iconIdToCaption.first
-            CmdClickIcons.values().firstOrNull {
-                it.id == iconId
-            }?.str ?: String()
-        }
-        captionTextView.setStrokeColor(R.color.white)
-        captionTextView.setFillColor(R.color.fill_gray)
-    }
-
-    private fun setImageView(
-        editFragment: EditFragment,
-        imageView: AppCompatImageView,
-        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        iconIdToCaption: Pair<Int, String>
-    ): AppCompatImageView{
-        val imageViewContext = imageView.context
-        val iconId = iconIdToCaption.first
-        imageView.tag = CmdClickIcons.values().firstOrNull {
-            it.id == iconId
-        }?.str ?: toolbarButtonBariantForEdit.str
-        val icon = CmdClickIcons.values().firstOrNull {
-            it.id == iconId
-        }
-        val requestBuilder: RequestBuilder<Drawable> =
-            Glide.with(imageViewContext)
-                .asDrawable()
-                .sizeMultiplier(0.1f)
-        val isImageFile =
-            ExecSetToolbarButtonImage.isImageFile(icon?.assetsPath)
-        when(isImageFile && icon != null) {
-            true -> ExecSetToolbarButtonImage.setForEditFragment(
-                editFragment,
-            )
-            else -> Glide.with(imageViewContext)
-                .load(iconId)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .thumbnail(requestBuilder)
-                .into(imageView)
-        }
-        return imageView
-    }
+//    private fun setCaption(
+//        captionTextView: OutlineTextView,
+//        iconIdToCaption: Pair<Int, String>
+//    ) {
+//        captionTextView.text =iconIdToCaption.second.ifEmpty {
+//            val iconId = iconIdToCaption.first
+//            CmdClickIcons.values().firstOrNull {
+//                it.id == iconId
+//            }?.str ?: String()
+//        }
+//        captionTextView.setStrokeColor(R.color.white)
+//        captionTextView.setFillColor(R.color.fill_gray)
+//    }
+//
+//    private fun setImageView(
+//        editFragment: EditFragment,
+//        imageView: AppCompatImageView,
+//        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
+//        iconIdToCaption: Pair<Int, String>
+//    ): AppCompatImageView{
+//        val imageViewContext = imageView.context
+//        val iconId = iconIdToCaption.first
+//        imageView.tag = CmdClickIcons.values().firstOrNull {
+//            it.id == iconId
+//        }?.str ?: toolbarButtonBariantForEdit.str
+//        val icon = CmdClickIcons.values().firstOrNull {
+//            it.id == iconId
+//        }
+//        val requestBuilder: RequestBuilder<Drawable> =
+//            Glide.with(imageViewContext)
+//                .asDrawable()
+//                .sizeMultiplier(0.1f)
+//        val isImageFile =
+//            ExecSetToolbarButtonImage.isImageFile(icon?.assetsPath)
+//        when(isImageFile && icon != null) {
+//            true -> ExecSetToolbarButtonImage.setForEditFragment(
+//                editFragment,
+//            )
+//            else -> Glide.with(imageViewContext)
+//                .load(iconId)
+//                .skipMemoryCache(true)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .thumbnail(requestBuilder)
+//                .into(imageView)
+//        }
+//        return imageView
+//    }
 
     private fun howSetButton(
         editFragment: EditFragment,
