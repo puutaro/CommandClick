@@ -95,7 +95,7 @@ object LongPressMenuTool {
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.background.name}=
                     ${PromptWithListDialog.Companion.PromptBackground.Key.type.name}=transparent,
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.extra.name}=
-                    |${PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name}=${switchOn},
+                    |${PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name}=${switchOff},
             """.trimIndent().split("\n").joinToString(String()) {
                 it.trim()
             }

@@ -32,6 +32,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 
+
 class PromptListAdapter(
     val context: Context?,
     var prompMapList: MutableList<Map<String, String?>>,
@@ -40,9 +41,6 @@ class PromptListAdapter(
 ): RecyclerView.Adapter<PromptListAdapter.PromptListViewHolder>() {
 
     class PromptListViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-//        val cardView = view.findViewById<MaterialCardView>(
-//            R.id.prompt_list_adapter_cardview
-//        )
         val promptListAdapterLinear = view.findViewById<LinearLayoutCompat>(R.id.prompt_list_linear)
         val promptListAdapterTitleBk = view.findViewById<ShapeableImageView>(R.id.prompt_list_adapter_thumbnail_bk)
         val promptListAdapterThumnail = view.findViewById<AppCompatImageView>(R.id.prompt_list_adapter_thumbnail)
@@ -138,12 +136,6 @@ class PromptListAdapter(
                 promptListAdapterTitle.outlineWidthSrc = 2
                 promptListAdapterTitle.text = title
             }
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lPromptAdapter.txt").absolutePath,
-//                listOf(
-//                    "text: ${text}"
-//                ).joinToString("\n")
-//            )
             holder.itemMap = lineMap
             withContext(Dispatchers.Main){
                 val iconStr = lineMap.get(iconKey)
