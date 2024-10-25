@@ -36,9 +36,9 @@ class JsSelectMonitor(
             "${ListJsDialogV2.ListJsDialogKey.FOCUS_ITEM_TITLES.key}=${terminalViewModel.currentMonitorFileName}",
 //            "${ListJsDialogV2.ListJsDialogKey.BACKGROUND_TYPE.key}=${PromptWithListDialog.Companion.PromptBackground.Type.transparent.name}",
 //            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
-            "${ListJsDialogV2.ListJsDialogKey.ON_KEY_OPEN_MODE.key}=${switchOff}",
+//            "${ListJsDialogV2.ListJsDialogKey.ON_KEY_OPEN_MODE.key}=${switchOff}",
         ).joinToString(ListJsDialogV2.listJsDialogMapSeparator.toString())
-        val selectedMonitorFile = JsDialog(terminalFragmentRef).listDialog(
+        val selectedMonitorFile = JsDialog(terminalFragmentRef).list(
             File(UsePath.cmdclickDefaultAppDirPath, SystemFannel.preference).absolutePath,
             "Select monitor",
             subMenuPairListStr,

@@ -158,6 +158,24 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("androidx.documentfile:documentfile:1.0.1")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.github.gleb8k:Android-PathShapeView:1.3.2")
+    implementation("com.daimajia.androidanimations:library:2.4@aar")
+    val htextview_version = "0.1.2"
+//    implementation("com.github.kibotu:htextview:0.1.28")
+    implementation("com.github.takusemba:spotlight:2.0.5")
+    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
+
+// as 3.0 use implementation
+//    implementation ("com.hanks:htextview-base:0.1.6" )       // base library
+
+//    implementation( "com.hanks:htextview-fade:$htextview_version")        // optional
+//    implementation ("com.hanks:htextview-line:$htextview_version")        // optional
+//    implementation ("com.hanks:htextview-rainbow:$htextview_version")     // optional
+//    implementation ("com.hanks:htextview-typer:$htextview_version")       // optional
+//
+////    implementation ("com.hanks:htextview-scale:$htextview_version")       // optional
+//    implementation ("com.hanks:htextview-evaporate:$htextview_version")   // optional
+//    implementation ("com.hanks:htextview-fall:$htextview_version" )       // optional
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")

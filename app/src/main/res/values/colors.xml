@@ -15,6 +15,7 @@
     <color name="terminal_color">#043d02</color>
     <color name="file_dark_green_color">#1e2e1c</color>>
     <color name="web_icon_color">#1b8ef2</color>
+    <color name="true_blue_color">#0526fa</color>
     <color name="icon_selected_color">#A8F2E1</color>
     <color name="cmdclick_text_black">#3A3A3A</color>
     <color name="setting_menu_footer">#dcf4f5</color>

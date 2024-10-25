@@ -2,26 +2,37 @@ package com.puutaro.commandclick.util.image_tools
 
 import android.R
 import android.app.Activity
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
+import android.text.TextUtils
 import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+import shape.path.view.utils.BitmapUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
+import kotlin.random.Random
 
 
 object BitmapTool {
@@ -284,7 +295,295 @@ object BitmapTool {
         return screenshot
     }
 
-    object ImageRemaker {
+    object DrawText {
+
+        fun drawTextToBitmap(
+            text: String,
+            imageWidth: Float,
+            imageHeight: Float,
+            bkColor: Int?,
+            fontSize: Float?,
+            fillColorInt: Int?,
+            strokeColorInt: Int?,
+            strokeSize: Float?,
+        ): Bitmap {
+//            val imgWidth = 200f     // 画像幅
+//            val imgHeight = 200f    // 画像高さ
+//            val rectWidth = imageWidth //- 10f    // 矩形幅
+            val rectHeight = imageHeight - 10f   // 矩形高さ
+//            val x = (imageWidth - rectWidth) / 2      // 矩形左上x座標
+//            val y = (imageHeight - rectHeight) / 2    // 矩形左上y座標
+
+            val bmp = Bitmap.createBitmap(imageWidth.toInt(), imageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+            val paint = Paint()
+
+            // 全体を塗りつぶし
+            paint.color = bkColor ?: Color.TRANSPARENT
+            paint.style = Paint.Style.FILL
+
+            canvas.drawRect(
+                0f,
+                0f,
+                imageWidth,
+                imageHeight,
+                paint
+            )
+
+//            // 矩形描画
+//            paint.color = Color.TRANSPARENT
+//            paint.style = Paint.Style.STROKE
+//            canvas.drawRect(x, y, x + rectWidth, y + rectHeight, paint)
+            val spacingMilti = 0.85f
+//            val spacingMilti = (
+//                    ((fontSize ?: 80f) * spacingMiltiBase) / 80f
+//                    ).let {
+//                        spacintMultiSrc ->
+//                        val baseMulti = 0.75f
+//                        if(
+//                            spacintMultiSrc > baseMulti
+//                            ) return@let spacintMultiSrc
+//                    baseMulti
+//                }
+            val staticLayoutForStroke = makeStaticsLayout(
+                text,
+                imageWidth,
+                fontSize,
+                strokeSize ?: 8f,
+                strokeColorInt ?: Color.WHITE,
+                Paint.Style.STROKE,
+                spacingMilti
+            )
+            canvas.translate(
+                ((canvas.width / 2) - (staticLayoutForStroke.width / 2)).toFloat(),
+                ((canvas.height / 2) - ((staticLayoutForStroke.height / 2))).toFloat(),
+            )
+            staticLayoutForStroke.draw(canvas)
+            val staticLayout = makeStaticsLayout(
+                text,
+                imageWidth,
+                fontSize,
+                0f,
+                fillColorInt,
+                Paint.Style.FILL,
+                spacingMilti
+            )
+//                builder.build()
+//            canvas.translate(x, y)
+//            canvas.translate(
+//                0f,
+//                0f,
+//            )
+//            canvas.translate(
+//                ((canvas.width / 2) - (staticLayout.width / 2)).toFloat(),
+//                ((canvas.height / 2) - ((staticLayout.height / 2))).toFloat(),
+//            )
+            staticLayout.draw(canvas)
+
+            return bmp
+        }
+
+        private fun makeStaticsLayout(
+            text: String,
+            imageWidth: Float,
+            fontSize: Float?,
+            strokeSize: Float?,
+            fillColorInt: Int?,
+            paintStyle: Paint. Style,
+            spacingMulti: Float?
+        ): StaticLayout {
+            // 文字列描画
+            val textPaint = TextPaint()
+            textPaint.color = fillColorInt ?: Color.BLACK
+            textPaint.style = paintStyle
+            textPaint.strokeWidth = strokeSize ?: 2f
+            textPaint.textSize = fontSize ?: 30f
+//            textPaint.setLea(lineSpacingMultiplier * paint.getFontSpacing());
+//            textPaint.textAlign = Paint.Align.CENTER
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
+//            textPaint.isAntiAlias = true
+
+            val alignment = Layout.Alignment.ALIGN_CENTER
+//            val spacingAdd = 4f
+//            val spacingMulti = 1.1f
+//            val maxLines = (rectHeight / (textPaint.getFontMetrics(null) * spacingMulti + spacingAdd)).toInt()
+
+            val builder = StaticLayout.Builder.obtain(
+                text,
+                0,
+                text.length,
+                textPaint,
+                imageWidth.toInt()
+            )
+                .setAlignment(alignment)
+//                .setMaxLines(2)
+                .setLineSpacing(0f, spacingMulti ?: 0.5f)
+                .setEllipsize(TextUtils.TruncateAt.END)
+            return builder.build()
+        }
+
+        fun drawTextToBitmapByRandom(
+            text: String,
+            imageWidth: Float,
+            imageHeight: Float,
+            fontSize: Float?,
+            fillColorInt: Int?,
+//            strokeColorInt: Int?,
+        ): Bitmap {
+//            val imgWidth = 200f     // 画像幅
+//            val imgHeight = 200f    // 画像高さ
+//            val rectWidth = imageWidth //- 10f    // 矩形幅
+            val rectHeight = imageHeight - 10f   // 矩形高さ
+//            val x = (imageWidth - rectWidth) / 2      // 矩形左上x座標
+//            val y = (imageHeight - rectHeight) / 2    // 矩形左上y座標
+
+            val bmp = Bitmap.createBitmap(imageWidth.toInt(), imageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+            val paint = Paint()
+
+            // 全体を塗りつぶし
+            paint.color = Color.TRANSPARENT
+            paint.style = Paint.Style.FILL
+            val randomWidthOffset = (1..20).random().toFloat()
+            val randomHeightOffset = (1..20).random().toFloat()
+
+            canvas.drawRect(
+                -200 + randomWidthOffset,
+                -200 + randomHeightOffset,
+                imageWidth + randomWidthOffset,
+                imageHeight + randomHeightOffset, paint
+            )
+
+
+            // 文字列描画
+            val textPaint = TextPaint()
+            textPaint.color = fillColorInt ?: Color.BLACK
+            textPaint.strokeWidth = 1f
+            textPaint.style = Paint.Style.FILL
+            textPaint.textSize = fontSize ?: 30f
+//            textPaint.setLea(lineSpacingMultiplier * paint.getFontSpacing());
+//            textPaint.textAlign = Paint.Align.CENTER
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+//            textPaint.isAntiAlias = true
+
+            val alignment = Layout.Alignment.ALIGN_CENTER
+//            val spacingAdd = 4f
+//            val spacingMulti = 1.1f
+//            val maxLines = (rectHeight / (textPaint.getFontMetrics(null) * spacingMulti + spacingAdd)).toInt()
+
+            val staticLayout: StaticLayout
+            val builder = StaticLayout.Builder.obtain(text, 0, text.length, textPaint, imageWidth.toInt())
+                .setAlignment(alignment)
+//                .setMaxLines(2)
+                .setLineSpacing(0f, 0.5f)
+                .setEllipsize(TextUtils.TruncateAt.END)
+            staticLayout = builder.build()
+//            canvas.translate(x, y)
+            canvas.translate(
+                ((canvas.width / 2) - (staticLayout.width / 2)).toFloat(),
+                ((canvas.height / 2) - ((staticLayout.height / 2))).toFloat(),
+            )
+            staticLayout.draw(canvas)
+
+            return bmp
+        }
+
+        fun drawTextToBitmapOld(
+            mContext: Context,
+            mText: String
+        ): Bitmap? {
+            try {
+                val resources: Resources = mContext.resources
+                val scale = resources.displayMetrics.density
+//                val bitmapSrc = BitmapFactory.decodeResource(resources, resourceId)
+//                val bitmapConfig = bitmapSrc.config
+                // set default bitmap config if none
+//            if (bitmapConfig == null) {
+//                bitmapConfig = Bitmap.Config.ARGB_8888
+//            }
+                // resource bitmaps are imutable,
+                // so we need to convert it to mutable one
+//                val bitmap = bitmapSrc.copy(bitmapConfig, true)
+
+                // new antialised Paint
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+                // text color - #3D3D3D
+                paint.color = Color.rgb(110, 110, 110)
+                // text size in pixels
+                paint.textSize = 12 * scale
+                // text shadow
+                paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY)
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                // draw text to the Canvas center
+                val bounds: Rect = Rect()
+                paint.getTextBounds(mText, 0, mText.length, bounds)
+
+                val transparantBitmap: Bitmap = Bitmap.createBitmap(
+                    bounds.width() + 10,
+                    bounds.height() + 10,
+                    Bitmap.Config.ARGB_8888
+                )
+                val canvas = Canvas(transparantBitmap)
+
+                val x: Int = (transparantBitmap.width - bounds.width()) / 6
+                val y: Int = (transparantBitmap.height + bounds.height()) / 5
+
+                canvas.drawText(mText, x * scale, y * scale, paint)
+
+                return transparantBitmap
+            } catch (e: java.lang.Exception) {
+                // TODO: handle exception
+
+                return null
+            }
+        }
+
+        fun drawTextOnBitmap(
+            mContext: Context,
+            resourceId: Int,
+            mText: String
+        ): Bitmap? {
+            try {
+                val resources: Resources = mContext.resources
+                val scale = resources.displayMetrics.density
+                val bitmapSrc = BitmapFactory.decodeResource(resources, resourceId)
+                val bitmapConfig = bitmapSrc.config
+                // set default bitmap config if none
+//            if (bitmapConfig == null) {
+//                bitmapConfig = Bitmap.Config.ARGB_8888
+//            }
+                // resource bitmaps are imutable,
+                // so we need to convert it to mutable one
+                val bitmap = bitmapSrc.copy(bitmapConfig, true)
+
+                val canvas = Canvas(bitmap)
+                // new antialised Paint
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+                // text color - #3D3D3D
+                paint.color = Color.rgb(110, 110, 110)
+                // text size in pixels
+                paint.textSize = 12 * scale
+                // text shadow
+                paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY)
+
+                // draw text to the Canvas center
+                val bounds: Rect = Rect()
+                paint.getTextBounds(mText, 0, mText.length, bounds)
+                val x: Int = (bitmap.width - bounds.width()) / 6
+                val y: Int = (bitmap.height + bounds.height()) / 5
+
+                canvas.drawText(mText, x * scale, y * scale, paint)
+
+                return bitmap
+            } catch (e: java.lang.Exception) {
+                // TODO: handle exception
+
+                return null
+            }
+        }
+    }
+
+    object ImageTransformer {
         fun flipHorizontally(
             bitmap: Bitmap
         ): Bitmap {
@@ -292,6 +591,108 @@ object BitmapTool {
             val height = bitmap.height
             val matrix = Matrix().apply { postScale(-1f, 1f, width / 2f, height / 2f) }
             return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        }
+
+        fun createKasureBitmap(bitmap: Bitmap): Bitmap {
+            val resultBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+            val randomList = (-10..10)
+            for (x in 0 until resultBitmap.width) {
+                for (y in 0 until resultBitmap.height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    if (
+                        Color.alpha(pixel) == 0
+                    ) continue
+//                    val red = Color.red(pixel) + randomList.random()
+//                    val green = Color.green(pixel) + randomList.random()
+//                    val blue = Color.blue(pixel) + randomList.random()
+                    if (randomList.random() < 3) {
+                        resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                    }
+
+                }
+            }
+            return resultBitmap
+        }
+
+        fun distortImage(bitmap: Bitmap): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(newBitmap)
+
+            val paint = Paint()
+            paint.isFilterBitmap = true // アンチエイリアス処理
+
+            val randomList = (-10..10)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    // ランダムなオフセットを計算
+                    val pixel = newBitmap.getPixel(x, y)
+                    if (
+                        Color.alpha(pixel) == 0
+                    ) {
+                        paint.color = Color.TRANSPARENT
+                        canvas.drawPoint(x.toFloat(), y.toFloat(), paint)
+                        continue
+                    }
+                    val offsetX = randomList.random()
+                    val offsetY = randomList.random()
+
+                    // 新しい座標を計算
+                    val newX = x + offsetX
+                    val newY = y + offsetY
+
+                    // 範囲外の場合は描画しない
+                    if (newX in 0 until width && newY in 0 until height) {
+                        canvas.drawPoint(newX.toFloat(), newY.toFloat(), paint)
+                    }
+                }
+            }
+
+            return newBitmap
+        }
+
+        fun applyUnevenFade(originalBitmap: Bitmap): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+            val result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(result)
+
+            // 不均質な透明度を適用
+            val paint = Paint()
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = originalBitmap.getPixel(x, y)
+                    if (
+                        Color.alpha(pixel) == 0
+                    ) {
+                        paint.color = Color.TRANSPARENT
+                        canvas.drawPoint(x.toFloat(), y.toFloat(), paint)
+                        continue
+                    }
+                    val alpha = (Random.nextFloat() * 255).toInt()
+                    paint.color =
+                        Color.argb(alpha, Color.red(pixel), Color.green(pixel), Color.blue(pixel))
+                    canvas.drawPoint(x.toFloat(), y.toFloat(), paint)
+                }
+            }
+            return result
+        }
+
+        fun createNozeBitmap(bitmap: Bitmap): Bitmap {
+            val resultBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+            val randomList = (-10..10)
+            for (x in 0 until resultBitmap.width) {
+                for (y in 0 until resultBitmap.height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    val red = Color.red(pixel) + randomList.random()
+                    val green = Color.green(pixel) + randomList.random()
+                    val blue = Color.blue(pixel) + randomList.random()
+                    resultBitmap.setPixel(x, y, Color.argb(255, red, green, blue))
+                }
+            }
+
+            return resultBitmap
         }
 
         // To flip vertically:
@@ -344,6 +745,79 @@ object BitmapTool {
             return output
         }
 
+        fun convertWhiteToTransparent(
+            originalBitmap: Bitmap,
+        ): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+
+            // Create a mutable copy of the bitmap
+            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    val red = Color.red(pixel)
+                    val green = Color.green(pixel)
+                    val blue = Color.blue(pixel)
+
+                    // Check if the pixel is white or close to white
+                    if (red > 240 && green > 240 && blue > 240) {
+                        // Set the pixel to fully transparent
+                        resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                    }
+                }
+            }
+
+            return resultBitmap
+        }
+
+        private fun isWhite(pixel: Int): Boolean {
+            val red = Color.red(pixel)
+            val green = Color.green(pixel)
+            val blue = Color.blue(pixel)
+            return red == 255 && green == 255 && blue == 255
+        }
+
+        fun maskImage(originalImage: Bitmap, maskImage: Bitmap): Bitmap {
+            val resultBitmap = Bitmap.createBitmap(originalImage.width, originalImage.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(resultBitmap)
+
+            // マスク画像の描画とクリッピング
+            val paint = Paint()
+            canvas.drawBitmap(maskImage, 0f, 0f, paint)
+            canvas.clipPath(bitmapToPath(maskImage))
+
+            // 元の画像の描画
+            canvas.drawBitmap(originalImage, 0f, 0f, paint)
+
+            return resultBitmap
+        }
+
+        fun bitmapToPath(bitmap: Bitmap): Path {
+            val bitmapWidth = bitmap.width
+            val bitmapHeight = bitmap.height
+            val path = Path()
+            for (x in 0 until bitmapWidth) {
+                for (y in 0 until bitmapHeight) {
+                    val pixelColor = bitmap.getPixel(x, y)
+                    // Process pixel color to determine if it should be part of the path
+//                    if (shouldIncludePixel(pixelColor)) {
+                        // Add pixel coordinates to the path
+                        path.lineTo(x.toFloat(), y.toFloat())
+//                    }
+                }
+            }
+
+            return path
+        }
+
+        private fun shouldIncludePixel(pixelColor: Int): Boolean {
+            // Implement your logic to determine if a pixel should be included in the path
+            // For example, you might check if the pixel is within a certain color range or threshold
+            return pixelColor != Color.TRANSPARENT
+        }
+
         fun cut(
             bitmap: Bitmap,
             limitWidthPx: Int,
@@ -359,6 +833,36 @@ object BitmapTool {
             return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
         }
 
+        fun cutCenter(
+            bitmap: Bitmap,
+            limitWidthPx: Int,
+            limitHeightPx: Int,
+        ): Bitmap {
+            // Set some constants
+            val srcWidth = bitmap.width
+            val srcHeight = bitmap.height
+            val startX = (0..(srcWidth - limitWidthPx)).random()
+            val startY = (0..(srcHeight - limitHeightPx)).random()
+
+// Crop bitmap
+            return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
+        }
+
+        fun cutCenter2(
+            bitmap: Bitmap,
+            limitWidthPx: Int,
+            limitHeightPx: Int,
+        ): Bitmap {
+            // Set some constants
+            val srcWidth = bitmap.width
+            val srcHeight = bitmap.height
+            val startX = (srcWidth - limitWidthPx) / 2
+            val startY = (srcHeight - limitHeightPx) / 2
+
+// Crop bitmap
+            return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
+        }
+
         fun overlayBitmap(bitmapBackground: Bitmap, bitmapImage: Bitmap): Bitmap {
             val bitmap2Width = bitmapImage.width
             val bitmap2Height = bitmapImage.height
@@ -366,6 +870,21 @@ object BitmapTool {
             val marginTop = (bitmapBackground.height * 0.5 - bitmap2Height * 0.5).toFloat()
             val overlayBitmap =
                 Bitmap.createBitmap(bitmap2Width, bitmap2Height, bitmapBackground.config)
+            val canvas = Canvas(overlayBitmap)
+            canvas.drawBitmap(bitmapBackground, Matrix(), null)
+            canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
+            return overlayBitmap
+        }
+
+        fun overlayOnBkBitmap(bitmapBackground: Bitmap, bitmapImage: Bitmap): Bitmap {
+            val bitmapWidth = bitmapBackground.width
+            val bitmapHeight = bitmapBackground.height
+            val bitmap2Width = bitmapImage.width
+            val bitmap2Height = bitmapImage.height
+            val marginLeft = (0..(bitmapBackground.width - bitmap2Width)).random().toFloat()
+            val marginTop = (0..(bitmapBackground.height - bitmap2Height)).random().toFloat()
+            val overlayBitmap =
+                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bitmapBackground.config)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)

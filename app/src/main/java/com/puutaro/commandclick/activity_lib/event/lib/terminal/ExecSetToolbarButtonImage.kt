@@ -6,10 +6,8 @@ import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.children
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,7 +18,6 @@ import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.FileSystems
@@ -243,7 +240,7 @@ object ExecSetToolbarButtonImage {
             if(
                 colorRepeatTimes == 0
             ) return gOutBitmap
-            val colorRect = BitmapTool.ImageRemaker.makeRect(
+            val colorRect = BitmapTool.ImageTransformer.makeRect(
                 rectColor,
                 gBitmap.width,
                 gBitmap.height

@@ -378,7 +378,7 @@ object ButtonImageCreator {
             colorIntArray,
             gradOrient,
         )
-         val overBitmap = BitmapTool.ImageRemaker.overlayBitmap(
+         val overBitmap = BitmapTool.ImageTransformer.overlayBitmap(
              bkBitmapSrc,
              outBitmap,
         )

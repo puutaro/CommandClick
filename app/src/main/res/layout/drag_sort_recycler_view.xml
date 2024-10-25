@@ -3,17 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_view_in_recycler_view"
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/drag_sort_text_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:tint="@null"-->
+<!--        android:background="@null"-->
+<!--        android:backgroundTint="@null"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        />-->
+    <com.puutaro.commandclick.custom_view.OutlineTextView
+        android:id="@+id/drag_sort_adapter_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
+        android:textStyle="bold"
          />
 
 </LinearLayout>

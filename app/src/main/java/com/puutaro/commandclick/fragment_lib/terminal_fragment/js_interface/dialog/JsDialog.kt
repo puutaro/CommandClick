@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ImageJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsConfirm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DebugJsAlert
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DragSortJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
@@ -102,8 +103,12 @@ class JsDialog(
         terminalFragmentRef,
     )
 
+    private val dragSortJsDialog = DragSortJsDialog(
+        terminalFragmentRef
+    )
+
     @JavascriptInterface
-    fun listDialogOld(
+    fun listDialog(
         title: String,
         message: String,
         listSource: String
@@ -472,7 +477,7 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun listDialog(
+    fun list(
         fannelPath: String,
         title: String,
         listIconTsvCon: String,
@@ -484,6 +489,17 @@ class JsDialog(
             title,
             listIconTsvCon,
             promptConfigMapCon,
+        )
+    }
+
+    @JavascriptInterface
+    fun dragSort(
+        title: String,
+        dragSortFilePath: String
+    ){
+        dragSortJsDialog.create(
+            title,
+            dragSortFilePath
         )
     }
 }

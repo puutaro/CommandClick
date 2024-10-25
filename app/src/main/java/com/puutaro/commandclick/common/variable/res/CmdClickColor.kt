@@ -8,6 +8,7 @@ enum class CmdClickColor(
 ) {
     LIGTH_BLUE("ligthBlue", R.color.ligthBlue),
     BLUE("blue", R.color.web_icon_color),
+    TRUE_BLUE("trueBlue", R.color.true_blue_color),
     NABY("navy", R.color.navy),
     GRAY("gray", R.color.gray_out),
     LIGHT_GREEN("lightGreen", R.color.fannel_icon_color),

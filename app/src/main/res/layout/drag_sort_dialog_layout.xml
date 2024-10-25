@@ -1,59 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drag_sort_dialog_constraint"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:backgroundTint="@null"
+    android:background="@null"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="15dp"
-    android:weightSum="1"
     >
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/drag_sort_dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:paddingTop="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:textSize="23sp"
-        android:textColor="@color/cmdclick_text_black"
+    <FrameLayout
+        android:id="@+id/drag_sort_dialog_bk_image_bk"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/file_dark_green_color"
+        android:alpha="0"
         />
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/drag_sort_dialog_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:textSize="21sp"
-        android:textColor="@color/cmdclick_text_black"
-        android:visibility="gone"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/drag_sort_dialog_bk_image_bk_allow1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/drag_sort_dialog_bk_image_bk_allow2"
+        app:layout_constraintBottom_toTopOf="@+id/drag_sort_dialog_bottom_linear"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="1"
+        android:scaleType="fitXY"
+        android:backgroundTint="@null"
+        android:background="@null"
         />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/drag_sort_dialog_bk_image_bk_allow2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/drag_sort_dialog_bk_image_bk_allow1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/drag_sort_dialog_bottom_linear"
+        app:layout_constraintHorizontal_weight="1"
+        android:scaleType="fitXY"
+        android:backgroundTint="@null"
+        android:background="@null"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/drag_sort_dialog_title_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@null"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@null"
+        />
+<!--    <com.puutaro.commandclick.custom_view.OutlineTextView-->
+<!--        android:id="@+id/drag_sort_dialog_bk_image_text"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        android:textStyle="bold"-->
+<!--        android:gravity="center"-->
+<!--        app:autoSizeTextType="uniform"-->
+<!--        />-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drag_sort_dialog_recycler_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/drag_sort_dialog_bottom_linear"
         android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true"
         android:paddingTop="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:listSelector="@android:color/transparent"
         android:layout_marginBottom="10dp"
+        android:backgroundTint="@null"
+        android:background="@null"
         />
     <!--
             android:layout_marginStart="0dp"
@@ -65,29 +101,41 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/drag_sort_dialog_bottom_linear"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="@color/setting_menu_footer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@null"
+        android:background="@null"
         >
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/drag_sort_dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@drawable/icons8_cancel"
             app:tint="@color/cmdclick_text_black"
-            android:backgroundTint="@color/setting_menu_footer"
+            android:backgroundTint="@null"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
             android:layout_gravity="center"
             android:layout_weight="0.5"
             />
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/drag_sort_dialog_ok"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@drawable/icons8_check_ok"
             app:tint="@color/cmdclick_text_black"
-            android:backgroundTint="@color/setting_menu_footer"
+            android:backgroundTint="@null"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
             android:layout_gravity="center"
             android:layout_weight="0.5"
             />
     </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

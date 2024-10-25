@@ -35,24 +35,22 @@ object ListJsDialogV2 {
         val backgroundType = listJsDialogMap.get(
             ListJsDialogKey.BACKGROUND_TYPE.key
         ) ?: String()
-        val onKeyOpenMode = listJsDialogMap.get(
-            ListJsDialogKey.ON_KEY_OPEN_MODE.key
-        ) ?: String()
-        val maxLines = when(onKeyOpenMode){
-            PromptWithListDialog.switchOn -> null
-            else -> listJsDialogMap.get(
-                ListJsDialogKey.MAX_LINES.key
-            ).let {
-                try {
-                    it?.toInt()
-                } catch(e: Exception){
-                    null
-                }
-            }
-        }
+//        val onKeyOpenMode = listJsDialogMap.get(
+//            ListJsDialogKey.ON_KEY_OPEN_MODE.key
+//        ) ?: String()
+//        val maxLines = when(onKeyOpenMode){
+//            PromptWithListDialog.switchOn -> null
+//            else -> listJsDialogMap.get(
+//                ListJsDialogKey.MAX_LINES.key
+//            ).let {
+//                try {
+//                    it?.toInt()
+//                } catch(e: Exception){
+//                    null
+//                }
+//            }
+//        }
         val promptConfigCon = """
-                ${PromptWithListDialog.Companion.PromptWithTextMapKey.title.name}=
-                    ${PromptWithListDialog.Companion.PromptTitleKey.maxLines.name}=${maxLines},
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.list.name}=
                     |${PromptWithListDialog.Companion.PromptListVars.saveTag.name}=${saveTag}
                     |${PromptWithListDialog.Companion.PromptListVars.concatList.name}="${listIconTsvCon}"
@@ -67,8 +65,6 @@ object ListJsDialogV2 {
                     |${PromptWithListDialog.Companion.PromptEditTextKey.visible.name}=${searchVisible},
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.background.name}=
                     ${PromptWithListDialog.Companion.PromptBackground.Key.type.name}=${backgroundType},
-                ${PromptWithListDialog.Companion.PromptWithTextMapKey.extra.name}=
-                    |${PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name}=${onKeyOpenMode},
             """.trimIndent().split("\n").joinToString(String()) {
             it.trim()
         }
@@ -81,7 +77,7 @@ object ListJsDialogV2 {
 
 
     enum class ListJsDialogKey(val key: String){
-        MAX_LINES(PromptWithListDialog.Companion.PromptTitleKey.maxLines.name),
+//        MAX_LINES(PromptWithListDialog.Companion.PromptTitleKey.maxLines.name),
         SAVE_TAG(PromptWithListDialog.Companion.PromptListVars.saveTag.name),
         FOCUS_ITEM_TITLES(PromptWithListDialog.Companion.PromptListVars.focusItemTitles.name),
         SEARCH_VISIBLE("searchVisible"),
@@ -89,6 +85,6 @@ object ListJsDialogV2 {
         DEFAULT_SEARCH_TEXT("defaultSearchText"),
 //        DISABLE_LIST_BIND_STR(PromptWithListDialog.Companion.PromptEditTextKey.disableListBind.name),
         BACKGROUND_TYPE("backgroundType"),
-        ON_KEY_OPEN_MODE(PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name),
+//        ON_KEY_OPEN_MODE(PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name),
     }
 }

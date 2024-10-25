@@ -88,9 +88,9 @@ class PromptWithListDialog(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 )  {
     private var returnValue = String()
-    private var promptDialogObj: Dialog? = null
 
     companion object {
+        private var promptDialogObj: Dialog? = null
         private const val listPrefix = "list"
         private const val listDirName = "${listPrefix}Text"
         private const val listTxtSuffix = ".txt"
@@ -372,7 +372,7 @@ class PromptWithListDialog(
                 }
             }
             withContext(Dispatchers.IO) {
-                while (true) {
+                for (i in 1..60 * 5) {
                     delay(100)
                     if (
                         !onDialog
@@ -525,6 +525,43 @@ class PromptWithListDialog(
                 listLimit,
             )
 
+        CoroutineScope(Dispatchers.Main).launch{
+            val bkImageView = withContext(Dispatchers.Main) {
+                promptDialogObj?.findViewById<AppCompatImageView>(
+                    R.id.prompt_list_dialog_list_bk_image
+                )
+            } ?: return@launch
+            when(isTransparent) {
+                true -> bkImageView.isVisible = false
+                else -> {
+                    if (
+                        isWhiteBackgrond
+                    ) {
+                        bkImageView.setImageDrawable(
+                            AppCompatResources.getDrawable(context, R.drawable.white_floor)
+                        )
+                        return@launch
+                    }
+                    val bitmap = withContext(Dispatchers.IO) {
+                        val colorStrList = CmdClickColorStr.entries.map { it.str }
+                        val colorIntArray = listOf(
+                            colorStrList.random(),
+                            colorStrList.random(),
+                            colorStrList.random()
+                        ).map {
+                            Color.parseColor(it)
+                        }.toIntArray()
+                        BitmapTool.GradientBitmap.makeGradientBitmap2(
+                            600,
+                            1200,
+                            colorIntArray,
+                            BitmapTool.GradientBitmap.GradOrient.BOTH
+                        )
+                    }
+                    bkImageView.setImageBitmap(bitmap)
+                }
+            }
+        }
         CoroutineScope(Dispatchers.Main).launch {
             val promptEditText = withContext(Dispatchers.Main) {
                 EditTextMakerForPromptList.make(
@@ -552,44 +589,6 @@ class PromptWithListDialog(
 //                    }
 //                }
 //            }
-            CoroutineScope(Dispatchers.Main).launch{
-                withContext(Dispatchers.Main) {
-                    val bkImageView = promptDialogObj?.findViewById<AppCompatImageView>(
-                        R.id.prompt_list_dialog_list_bk_image
-                    ) ?: return@withContext
-                    when(isTransparent) {
-                        true -> bkImageView.isVisible = false
-                        else -> {
-                            if (
-                                isWhiteBackgrond
-                            ) {
-                                bkImageView.setImageDrawable(
-                                    AppCompatResources.getDrawable(context, R.drawable.white_floor)
-                                )
-                                return@withContext
-                            }
-                            val bitmap = withContext(Dispatchers.IO) {
-                                val colorStrList = CmdClickColorStr.entries.map { it.str }
-                                val colorIntArray = listOf(
-                                    colorStrList.random(),
-                                    colorStrList.random(),
-                                    colorStrList.random()
-                                ).map {
-                                    Color.parseColor(it)
-                                }.toIntArray()
-                                BitmapTool.GradientBitmap.makeGradientBitmap2(
-                                    600,
-                                    1200,
-                                    colorIntArray,
-                                    BitmapTool.GradientBitmap.GradOrient.BOTH
-                                )
-                            }
-                            bkImageView.setImageBitmap(bitmap)
-                        }
-
-                    }
-                }
-            }
             val promptListAdapter = withContext(Dispatchers.Main) {
                 PromptListAdapter(
                     context,
@@ -1784,7 +1783,7 @@ class PromptWithListDialog(
                     val text = it.key
                     val srcBitmap = it.value
 
-                    val cutBitmap = BitmapTool.ImageRemaker.cut(
+                    val cutBitmap = BitmapTool.ImageTransformer.cut(
                         srcBitmap,
                         bitmapCutWidth,
                         (bitmapCutWidth * 1.73).toInt()
@@ -1913,7 +1912,7 @@ class PromptWithListDialog(
                                     val animationDrawable = AnimationDrawable()
                                     val cutHeight = (bitmapCutWidth * 1.73).toInt()
                                     val bitmapList = (1..3).map {
-                                        BitmapTool.ImageRemaker.cut(
+                                        BitmapTool.ImageTransformer.cut(
                                             srcBkBitmap,
                                             bitmapCutWidth,
                                             cutHeight

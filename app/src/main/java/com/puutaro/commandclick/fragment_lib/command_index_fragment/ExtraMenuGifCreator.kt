@@ -150,7 +150,7 @@ object ExtraMenuGifCreator {
             val bkBitmap = createBk(
                 imageWidth
             )
-            val fg = BitmapTool.ImageRemaker.mask(
+            val fg = BitmapTool.ImageTransformer.mask(
                 bkBitmap,
                 maskBitmap,
             )
@@ -161,7 +161,7 @@ object ExtraMenuGifCreator {
         private fun createBk(
             imageWidth: Int
         ): Bitmap {
-            return BitmapTool.ImageRemaker.makeRect(
+            return BitmapTool.ImageTransformer.makeRect(
                 "#0a6161",
                 imageWidth,
                 imageHeight
@@ -201,14 +201,14 @@ object ExtraMenuGifCreator {
         val rndInt = (1..4).random()
         return when(rndInt){
             1 -> {
-                BitmapTool.ImageRemaker.flipHorizontally(bitmap)
+                BitmapTool.ImageTransformer.flipHorizontally(bitmap)
             }
             2 -> {
-                BitmapTool.ImageRemaker.flipVertically(bitmap)
+                BitmapTool.ImageTransformer.flipVertically(bitmap)
             }
             3 -> {
-                BitmapTool.ImageRemaker.flipVertically(bitmap).let {
-                    BitmapTool.ImageRemaker.flipHorizontally(it)
+                BitmapTool.ImageTransformer.flipVertically(bitmap).let {
+                    BitmapTool.ImageTransformer.flipHorizontally(it)
                 }
             }
             else -> bitmap

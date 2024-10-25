@@ -353,13 +353,13 @@ class JsUbuntu(
         val jsDialog = JsDialog(terminalFragmentRef)
 //        val installTitleToMsg = makeTitleToMsg(installConfirmTitle)
         val listDialogMapCon = listOf(
-            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
+//            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
             "${ListJsDialogV2.ListJsDialogKey.SEARCH_VISIBLE.key}=${PromptWithListDialog.switchOff}",
             "${ListJsDialogV2.ListJsDialogKey.SAVE_TAG.key}=isInstallUbuntu",
 //            "${ListJsDialogV2.ListJsDialogKey.BACKGROUND_TYPE.key}=${PromptWithListDialog.Companion.PromptBackground.Type.transparent.name}",
-            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
+//            "${ListJsDialogV2.ListJsDialogKey.MAX_LINES.key}=null",
         ).joinToString(ListJsDialogV2.listJsDialogMapSeparator.toString())
-        val el = jsDialog.listDialog(
+        val el = jsDialog.list(
             File(UsePath.cmdclickDefaultAppDirPath, SystemFannel.preference).absolutePath,
             installConfirmTitle,
             installOneList,
@@ -377,7 +377,7 @@ class JsUbuntu(
             return isInstall
         }
         val cautionTitleToMsg = makeTitleToMsg(cautionTitleAndMessage)
-        JsDialog(terminalFragmentRef).listDialogOld(
+        JsDialog(terminalFragmentRef).listDialog(
             cautionTitleToMsg.first,
             cautionTitleToMsg.second,
             String()
