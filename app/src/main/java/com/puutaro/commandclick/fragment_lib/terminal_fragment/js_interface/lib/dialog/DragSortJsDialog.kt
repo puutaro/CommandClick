@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
@@ -68,7 +69,7 @@ class DragSortJsDialog(
     }
 
     fun execCreate(
-        title: String,
+        titleSrc: String,
         dragSortFilePath: String,
     ) {
         val terminalFragment = terminalFragmentRef.get()
@@ -112,8 +113,22 @@ class DragSortJsDialog(
             )
         }
         dragSortDialogObj?.show()
+        val title = titleSrc.ifEmpty {
+            "Drag sort"
+        }
         setBkImageJob?.cancel()
         setBkImageJob = CoroutineScope(Dispatchers.Main).launch {
+
+//            withContext(Dispatchers.Main){
+//                dragSortDialogObj?.findViewById<AppCompatImageView>(
+//                    R.id.drag_sort_dialog_bk_image_bk_cut_in
+//                )?.apply {
+//                    YoYo.with(Techniques.FadeOut)
+//                        .duration(500)
+//                        .repeat(0)
+//                        .playOn(this@apply)
+//                }
+//            }
             val imageSizePair =  withContext(Dispatchers.Main) {
                 Pair(
                     200f,
@@ -152,7 +167,7 @@ class DragSortJsDialog(
             val allowBitmapList = withContext(Dispatchers.IO) {
                 listOf(
                     R.drawable.brushi_allow_dot,
-                    R.drawable.brushi_allow2,
+                    R.drawable.brushi_allow22,
                     R.drawable.brushi_allow3,
                 ).map {
                     AppCompatResources.getDrawable(
@@ -232,19 +247,20 @@ class DragSortJsDialog(
                         context,
                         shuujiColorStr
                     )
-                    val animationDrawable = AnimationDrawable()
-                    allowBitmapList.forEachIndexed { index, allow ->
-                        if(allow == null) return@forEachIndexed
-                        val duration = when(index){
-                            0 -> 200
-                            else -> 100
-                        }
-                        animationDrawable.addFrame(
-                            BitmapDrawable(context.resources, allow),
-                            duration
-                        )
-                    }
-                    animationDrawable.isOneShot = true
+                    val animationDrawable = makeAllowDuration(
+                        context,
+                        allowBitmapList
+                    )
+//                    AnimationDrawable()
+//                    allowBitmapList.forEachIndexed { index, allow ->
+//                        if(allow == null) return@forEachIndexed
+//                        val duration = makeAllowDuration(index)
+//                        animationDrawable.addFrame(
+//                            BitmapDrawable(context.resources, allow),
+//                            duration
+//                        )
+//                    }
+//                    animationDrawable.isOneShot = true
                     setImageDrawable(animationDrawable)
                     animationDrawable.start()
 
@@ -256,19 +272,20 @@ class DragSortJsDialog(
                         context,
                         shuujiColorStr
                     )
-                    val animationDrawable = AnimationDrawable()
-                    rotateAllowBitmapList.forEachIndexed { index, allow ->
-                        if(allow == null) return@forEachIndexed
-                        val duration = when(index){
-                            0 -> 200
-                            else -> 100
-                        }
-                        animationDrawable.addFrame(
-                            BitmapDrawable(context.resources, allow),
-                            duration
-                        )
-                    }
-                    animationDrawable.isOneShot = true
+                    val animationDrawable = makeAllowDuration(
+                        context,
+                        rotateAllowBitmapList
+                    )
+//                    val animationDrawable = AnimationDrawable()
+//                    rotateAllowBitmapList.forEachIndexed { index, allow ->
+//                        if(allow == null) return@forEachIndexed
+//                        val duration = makeAllowDuration(index)
+//                        animationDrawable.addFrame(
+//                            BitmapDrawable(context.resources, allow),
+//                            duration
+//                        )
+//                    }
+//                    animationDrawable.isOneShot = true
                     setImageDrawable(animationDrawable)
                     animationDrawable.start()
                 }
@@ -288,7 +305,7 @@ class DragSortJsDialog(
                     val maxSize = 100f
                     val titleTextSize = ((80f * baseTextSize) / titleText.length).let  {
                         titleTextSizeSrc ->
-                        val baseTitleSize = 60f
+                        val baseTitleSize = 65f
                         if(
                             titleTextSizeSrc > maxSize
                         ) return@let maxSize
@@ -366,7 +383,7 @@ class DragSortJsDialog(
                     dimAlphaJob?.cancel()
                     dimAlphaJob = CoroutineScope(Dispatchers.IO).launch{
                         withContext(Dispatchers.IO){
-                            delay(100)
+                            delay(200)
                         }
                         withContext(Dispatchers.IO) {
                             val changeTimes = 4
@@ -464,6 +481,33 @@ class DragSortJsDialog(
                     }
                 }
             }
+        }
+    }
+
+    private fun makeAllowDuration(
+        context: Context,
+        rotateAllowBitmapList: List<Bitmap?>
+    ): AnimationDrawable {
+        return AnimationDrawable().apply {
+            rotateAllowBitmapList.forEachIndexed {
+                                                 index, allow ->
+                if(
+                    allow == null
+                ) return@forEachIndexed
+                val duration = when(index){
+                    0 -> 200
+                    1 -> 150
+                    else -> 100
+                }
+                addFrame(
+                    BitmapDrawable(
+                        context.resources,
+                        allow
+                    ),
+                    duration
+                )
+            }
+            isOneShot = true
         }
     }
 
