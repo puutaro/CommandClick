@@ -17,21 +17,24 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.text.Layout
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
+import android.text.style.RelativeSizeSpan
 import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
-import shape.path.view.utils.BitmapUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
+import java.util.Locale
 import kotlin.random.Random
 
 
@@ -306,6 +309,7 @@ object BitmapTool {
             fillColorInt: Int?,
             strokeColorInt: Int?,
             strokeSize: Float?,
+            firstCharRate: Float?,
         ): Bitmap {
 //            val imgWidth = 200f     // 画像幅
 //            val imgHeight = 200f    // 画像高さ
@@ -345,6 +349,7 @@ object BitmapTool {
 //                            ) return@let spacintMultiSrc
 //                    baseMulti
 //                }
+
             val staticLayoutForStroke = makeStaticsLayout(
                 text,
                 imageWidth,
@@ -352,13 +357,16 @@ object BitmapTool {
                 strokeSize ?: 8f,
                 strokeColorInt ?: Color.WHITE,
                 Paint.Style.STROKE,
-                spacingMilti
+                spacingMilti,
+                firstCharRate
             )
             canvas.translate(
                 ((canvas.width / 2) - (staticLayoutForStroke.width / 2)).toFloat(),
                 ((canvas.height / 2) - ((staticLayoutForStroke.height / 2))).toFloat(),
             )
             staticLayoutForStroke.draw(canvas)
+
+
             val staticLayout = makeStaticsLayout(
                 text,
                 imageWidth,
@@ -366,7 +374,8 @@ object BitmapTool {
                 0f,
                 fillColorInt,
                 Paint.Style.FILL,
-                spacingMilti
+                spacingMilti,
+                firstCharRate
             )
 //                builder.build()
 //            canvas.translate(x, y)
@@ -390,7 +399,8 @@ object BitmapTool {
             strokeSize: Float?,
             fillColorInt: Int?,
             paintStyle: Paint. Style,
-            spacingMulti: Float?
+            spacingMulti: Float?,
+            firstCharRate: Float?,
         ): StaticLayout {
             // 文字列描画
             val textPaint = TextPaint()
@@ -408,8 +418,21 @@ object BitmapTool {
 //            val spacingMulti = 1.1f
 //            val maxLines = (rectHeight / (textPaint.getFontMetrics(null) * spacingMulti + spacingAdd)).toInt()
 
+            //Change first character to capital letter
+            val tempStr = text.first().uppercase(Locale.getDefault()) + text.substring(1)
+
+
+//Change font size of the first character. You can change 2f as you want
+            val spannableString = SpannableString(tempStr)
+            spannableString.setSpan(
+                RelativeSizeSpan(firstCharRate ?: 1f),
+                0,
+                1,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
             val builder = StaticLayout.Builder.obtain(
-                text,
+                spannableString,
                 0,
                 text.length,
                 textPaint,

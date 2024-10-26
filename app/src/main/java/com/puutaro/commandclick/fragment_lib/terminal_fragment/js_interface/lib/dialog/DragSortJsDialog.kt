@@ -15,10 +15,8 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.puutaro.commandclick.R
@@ -187,8 +185,7 @@ class DragSortJsDialog(
             }
             val allColorUIdList = listOf(
                 CmdClickColor.LIGTH_BLUE.id,
-                CmdClickColor.BLUE.id,
-                CmdClickColor.TRUE_BLUE.id,
+                R.color.true_blue_color,
                 CmdClickColor.NABY.id,
                 CmdClickColor.LIGHT_GREEN.id,
                 CmdClickColor.DARK_GREEN.id,
@@ -206,7 +203,7 @@ class DragSortJsDialog(
             )
             val shuujiColorIdList = listOf(
                 CmdClickColor.LIGTH_BLUE.id,
-                CmdClickColor.TRUE_BLUE.id,
+                R.color.true_blue_color,
                 CmdClickColor.LIGHT_GREEN.id,
                 CmdClickColor.RED.id,
                 CmdClickColor.LIGHT_AO.id,
@@ -214,11 +211,21 @@ class DragSortJsDialog(
                 CmdClickColor.LIGHT_ORANGE.id,
                 CmdClickColor.WHITE.id,
                 CmdClickColor.YELLOW.id,
-                CmdClickColor.BLACK.id,
                 R.color.purple_200,
+                CmdClickColor.BLACK.id,
+                CmdClickColor.NABY.id,
+                CmdClickColor.DARK_GREEN.id,
+            )
+            val darkColorIdList = listOf(
+                R.color.true_blue_color,
+                CmdClickColor.NABY.id,
+                CmdClickColor.DARK_GREEN.id,
+                CmdClickColor.OLIVE_GREEN.id,
+                CmdClickColor.BROWN.id,
+                CmdClickColor.BLACK.id,
             )
             val useColorIdList = mutableListOf<Int>()
-            val shuujiColorStr = withContext(Dispatchers.IO) {
+            val shuujiColorId = withContext(Dispatchers.IO) {
                 val shuujiColorStrSrc = shuujiColorIdList.filter {
                     !useColorIdList.contains(it)
                 }.random()
@@ -232,9 +239,24 @@ class DragSortJsDialog(
                 useColorIdList.add(textColorIdSrc)
                 textColorIdSrc
             }
+            val goalAlpha = when(
+                darkColorIdList.contains(shuujiColorId)
+            ){
+                true -> 0.4f
+                else -> 0.8f
+            }
             val strokeColorId = withContext(Dispatchers.IO) {
+                val isLightColor = darkColorIdList.contains(textColorId)
                 val strokeColorIdSrc = allColorUIdList.filter {
                     !useColorIdList.contains(it)
+                }.let {
+                    entryColorIdList ->
+                    if(
+                        !isLightColor
+                        ) return@let entryColorIdList
+                    entryColorIdList.filter {
+                        !darkColorIdList.contains(it)
+                    }
                 }.random()
                 useColorIdList.add(strokeColorIdSrc)
                 strokeColorIdSrc
@@ -245,7 +267,7 @@ class DragSortJsDialog(
                 )?.apply {
                     imageTintList = AppCompatResources.getColorStateList(
                         context,
-                        shuujiColorStr
+                        shuujiColorId
                     )
                     val animationDrawable = makeAllowDuration(
                         context,
@@ -270,7 +292,7 @@ class DragSortJsDialog(
                 )?.apply {
                     imageTintList = AppCompatResources.getColorStateList(
                         context,
-                        shuujiColorStr
+                        shuujiColorId
                     )
                     val animationDrawable = makeAllowDuration(
                         context,
@@ -294,36 +316,62 @@ class DragSortJsDialog(
                 dragSortDialogObj?.findViewById<AppCompatImageView>(
                     R.id.drag_sort_dialog_title_image
                 )?.apply {
-                    val titleLimitLength = 22
+                    val titleLimitLength = 20
                     val titleText = title.take(titleLimitLength).mapIndexed { index, c ->
                         if (index == 0) {
                             return@mapIndexed c.uppercase()
                         }
                         c
                     }.joinToString(" ")
-                    val baseTextSize = 16
-                    val maxSize = 100f
-                    val titleTextSize = ((80f * baseTextSize) / titleText.length).let  {
-                        titleTextSizeSrc ->
-                        val baseTitleSize = 65f
-                        if(
-                            titleTextSizeSrc > maxSize
-                        ) return@let maxSize
-                        if(
-                            titleTextSizeSrc > baseTitleSize
-                            ) return@let titleTextSizeSrc
-                        baseTitleSize
-                    }
-                    val maxStrokeSize = 6f
-                    val strokeWidth = (
-                            ((maxStrokeSize * baseTextSize) / titleText.length + 1)
-                            ).let {
-                                strokeWidthSrc ->
-                                if(
-                                    strokeWidthSrc > maxStrokeSize
-                                    ) return@let maxStrokeSize
-                            strokeWidthSrc
+                    val titleTextSize = sizeCalculator(
+                        100f,
+                        60f,
+                        titleLimitLength,
+                        titleText,
+                    )
+//                    ((80f * baseTextSize) / titleText.length).let {
+//                        titleTextSizeSrc ->
+//                        if(
+//                            titleTextSizeSrc > maxSize
+//                        ) return@let maxSize
+//                        if(
+//                            titleTextSizeSrc > titleTextSize
+//                            ) return@let titleTextSizeSrc
+//                        titleTextSize
+//                    }
+                    val minStrokeSize = 5f
+                    val strokeWidth =
+                        sizeCalculator(
+                            15f,
+                            minStrokeSize,
+                            titleLimitLength,
+                            titleText,
+                        ).let {
+                            if(it < minStrokeSize) return@let minStrokeSize
+                            it
                         }
+//                    let {
+//                        val maxSize = 6f
+//                        val minSize = 3f
+//                        val maxSizeDelta = maxSize - minSize
+//                        val maxLengthDelta = titleLimitLength.toFloat()
+//                        val inclination = maxSizeDelta / maxLengthDelta
+//                        val curLength = (titleText.length / 2).let curLength@ {
+//                            if(it == 0) return@curLength 1
+//                            it
+//                        }
+//                        val strokeWidth = minSize + inclination * curLength
+//                        strokeWidth
+//                    }
+//                    (
+//                            ((maxStrokeSize * baseTextSize) / titleText.length + 1)
+//                            ).let {
+//                                strokeWidthSrc ->
+//                                if(
+//                                    strokeWidthSrc > maxStrokeSize
+//                                    ) return@let maxStrokeSize
+//                            strokeWidthSrc
+//                        }
                     val textColor = ContextCompat.getColor(
                         context,
                         textColorId
@@ -341,6 +389,7 @@ class DragSortJsDialog(
                         textColor,
                         strokeColor,
                         strokeWidth,
+                        1.5f,
                     )
                     val textBitmapListSrc = withContext(Dispatchers.IO) {
 //                        FileSystems.writeFromByteArray(
@@ -387,16 +436,15 @@ class DragSortJsDialog(
                         }
                         withContext(Dispatchers.IO) {
                             val changeTimes = 4
-                            val alphaGoal = 0.8f
-                            val plusAlpha = alphaGoal / changeTimes
+                            val plusAlpha = goalAlpha / changeTimes
                             val delayTime = 200L / changeTimes
                             for(i in 1..changeTimes) {
                                 delay(delayTime)
                                 if (
                                     dragSortDialogObj?.isShowing != true
-                                    || alpha >= alphaGoal
+                                    || alpha >= goalAlpha
                                 ) {
-                                    alpha = alphaGoal
+                                    alpha = goalAlpha
                                     dimAlphaJob?.cancel()
                                     break
                                 }
@@ -428,12 +476,12 @@ class DragSortJsDialog(
                 )
             }
             withContext(Dispatchers.Main) {
-                val itemDecoration: ItemDecoration =
-                    DividerItemDecoration(
-                        context,
-                        DividerItemDecoration.VERTICAL
-                    )
-                dragSortRecyclerView?.addItemDecoration(itemDecoration)
+//                val itemDecoration: ItemDecoration =
+//                    DividerItemDecoration(
+//                        context,
+//                        DividerItemDecoration.VERTICAL
+//                    )
+//                dragSortRecyclerView?.addItemDecoration(itemDecoration)
                 setItemTouchHelper(
                     dragSortRecyclerView,
                     dragSortRecyclerAdapter,
@@ -511,6 +559,37 @@ class DragSortJsDialog(
         }
     }
 
+    private fun sizeCalculator(
+        maxSize: Float,
+        minSize: Float,
+        titleLimitLength: Int,
+        titleText: String,
+    ): Float {
+//        val maxSize = 100f
+//        val minSize = 60f
+        val maxSizeDelta = maxSize - minSize
+        val maxLengthDelta = titleLimitLength.toFloat()
+        val inclination = maxSizeDelta / maxLengthDelta
+        val marginLength = 1
+        val curLength = (titleText.length / 2).let curLength@ {
+            if(it == 0) return@curLength 1
+            if(it % 2 == 1) return@curLength it + 1
+            it
+        } + marginLength
+        val textSize = maxSize - inclination * curLength
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lsize.txt").absolutePath,
+//            listOf(
+//                "maxSizeDelta: ${maxSizeDelta}",
+//                "maxLengthDelta: ${maxLengthDelta}",
+//                "inclination: ${inclination}",
+//                "curLength: ${curLength}",
+//                "textSize: ${textSize}",
+//            ).joinToString("\n")
+//        )
+        return textSize
+    }
+
     private fun exitDialog(
         dragSortDialogConstraint: ConstraintLayout?,
         dragSortRecyclerView: RecyclerView?,
@@ -545,6 +624,8 @@ class DragSortJsDialog(
         recyclerView: RecyclerView?,
         dragSortRecyclerAdapter: DragSortRecyclerAdapter,
     ){
+        val context = recyclerView?.context
+            ?: return
         val mIth = ItemTouchHelper(
             object : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -577,16 +658,26 @@ class DragSortJsDialog(
 
                 override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                     super.onSelectedChanged(viewHolder, actionState)
-
                     if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
                         viewHolder?.itemView?.alpha = 0.5f
+                        viewHolder?.itemView?.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.light_ao
+                            )
+                        )
                     }
                 }
 
                 override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                     super.clearView(recyclerView, viewHolder)
-
                     viewHolder.itemView.alpha = 1.0f
+                    viewHolder.itemView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.trans
+                        )
+                    )
                 }
             })
         mIth.attachToRecyclerView(recyclerView)
