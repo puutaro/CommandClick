@@ -59,6 +59,7 @@ import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog.StatisticsTool.makeStatisticsMapList
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -742,13 +743,23 @@ class PromptWithListDialog(
 //                    else -> File(fannelDirPath, promptListFile.name).absolutePath
 //                }
 //            }
-            StatisticsTool.displayStatisticsBk(
-                terminalFragmentRef,
-                promptDialogObj,
-                fannelDirPath,
-                promptListFile?.name,
-                promptList,
-            )
+            val statisticsTitleList = withContext(Dispatchers.IO) {
+                makeStatisticsMapList(
+                    fannelDirPath,
+                    promptListFile?.name,
+                    promptList,
+                )
+            }
+            withContext(Dispatchers.Main) {
+                StatisticsTool.displayStatisticsBk(
+                    terminalFragmentRef,
+                    promptDialogObj,
+                    statisticsTitleList,
+//                fannelDirPath,
+//                promptListFile?.name,
+//                promptList,
+                )
+            }
         }
         CoroutineScope(Dispatchers.Main).launch {
             if(
@@ -1359,32 +1370,36 @@ class PromptWithListDialog(
         suspend fun displayStatisticsBk(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
-            fannelDirPath: String,
-            saveTagName: String?,
-            promptMapList: List<Map<String, String?>>,
+            statisticsTitleList: List<String?>,
+//            fannelDirPath: String,
+//            saveTagName: String?,
+//            promptMapList: List<Map<String, String?>>,
         ){
             val handleRnd = (1..6).random()
             when(true) {
                 (handleRnd <= 2) -> makeMonocroBk(
                     terminalFragmentRef,
                     promptDialogObj,
-                    fannelDirPath,
-                    saveTagName,
-                    promptMapList,
+                    statisticsTitleList,
+//                    fannelDirPath,
+//                    saveTagName,
+//                    promptMapList,
                 )
                 (handleRnd <= 4) -> makeWebBk(
                     terminalFragmentRef,
                     promptDialogObj,
-                    fannelDirPath,
-                    saveTagName,
-                    promptMapList,
+                    statisticsTitleList,
+//                    fannelDirPath,
+//                    saveTagName,
+//                    promptMapList,
                 )
                 else -> makePieBk(
                     terminalFragmentRef,
                     promptDialogObj,
-                    fannelDirPath,
-                    saveTagName,
-                    promptMapList
+                    statisticsTitleList,
+//                    fannelDirPath,
+//                    saveTagName,
+//                    promptMapList
                 )
             }
         }
@@ -1392,9 +1407,10 @@ class PromptWithListDialog(
         private suspend fun makeMonocroBk(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
-            fannelDirPath: String,
-            saveTagName: String?,
-            promptMapList: List<Map<String, String?>>,
+            statisticsTitleList: List<String?>,
+//            fannelDirPath: String,
+//            saveTagName: String?,
+//            promptMapList: List<Map<String, String?>>,
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1412,32 +1428,32 @@ class PromptWithListDialog(
                     bkRelative.measuredWidth - dialogMargin
                 }
 
-                val statisticsTxtFile = makeStatisticsTextFile(
-                    fannelDirPath,
-                    saveTagName
-                )
-                val statisticsMapList = ReadText(
-                    statisticsTxtFile.absolutePath
-                ).textToList().filter{
-                    it.isNotEmpty()
-                }.map {
-                    CmdClickMap.createMap(
-                        it,
-                        statisticsMapSeparator
-                    ).toMap()
-                }
-                val titleKey = StatisticsKey.TITLE.key
-                val frequencyMapListSrc = statisticsMapList.map{
-                        elMap ->
-                    elMap.get(titleKey)
-                }
-                val promptList = promptMapList.map {
-                    lineMap ->
-                    lineMap.get(
-                        PromptMapList.PromptListKey.TITLE.key
-                    ) ?: String()
-                }.filter { it.isNotEmpty() }
-                val decentTextToFreqList = (frequencyMapListSrc + promptList).groupBy { it }
+//                val statisticsTxtFile = makeStatisticsTextFile(
+//                    fannelDirPath,
+//                    saveTagName
+//                )
+//                val statisticsMapList = ReadText(
+//                    statisticsTxtFile.absolutePath
+//                ).textToList().filter{
+//                    it.isNotEmpty()
+//                }.map {
+//                    CmdClickMap.createMap(
+//                        it,
+//                        statisticsMapSeparator
+//                    ).toMap()
+//                }
+//                val titleKey = StatisticsKey.TITLE.key
+//                val frequencyMapListSrc = statisticsMapList.map{
+//                        elMap ->
+//                    elMap.get(titleKey)
+//                }
+//                val promptList = promptMapList.map {
+//                    lineMap ->
+//                    lineMap.get(
+//                        PromptMapList.PromptListKey.TITLE.key
+//                    ) ?: String()
+//                }.filter { it.isNotEmpty() }
+                val decentTextToFreqList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
                     .filterKeys { !it.isNullOrEmpty() }
                     .toList()
@@ -1639,9 +1655,10 @@ class PromptWithListDialog(
         private suspend fun makeWebBk(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
-            fannelDirPath: String,
-            saveTagName: String?,
-            promptMapList: List<Map<String, String?>>,
+            statisticsTitleList: List<String?>,
+//            fannelDirPath: String,
+//            saveTagName: String?,
+//            promptMapList: List<Map<String, String?>>,
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1659,32 +1676,37 @@ class PromptWithListDialog(
                     bkRelative.measuredWidth - dialogMargin
                 }
 
-                val statisticsTxtFile = makeStatisticsTextFile(
-                    fannelDirPath,
-                    saveTagName
-                )
-                val statisticsMapList = ReadText(
-                    statisticsTxtFile.absolutePath
-                ).textToList().filter{
-                    it.isNotEmpty()
-                }.map {
-                    CmdClickMap.createMap(
-                        it,
-                        statisticsMapSeparator
-                    ).toMap()
-                }
-                val titleKey = StatisticsKey.TITLE.key
-                val frequencyMapListSrc = statisticsMapList.map{
-                        elMap ->
-                    elMap.get(titleKey)
-                }
-                val promptList = promptMapList.map {
-                    lineMap ->
-                    lineMap.get(
-                        PromptMapList.PromptListKey.TITLE.key
-                    ) ?: String()
-                }.filter { it.isNotEmpty() }
-                val decentTextToFreqList = (frequencyMapListSrc + promptList).groupBy { it }
+//                val statisticsTxtFile = makeStatisticsTextFile(
+//                    fannelDirPath,
+//                    saveTagName
+//                )
+//                val statisticsMapList = ReadText(
+//                    statisticsTxtFile.absolutePath
+//                ).textToList().filter{
+//                    it.isNotEmpty()
+//                }.map {
+//                    CmdClickMap.createMap(
+//                        it,
+//                        statisticsMapSeparator
+//                    ).toMap()
+//                }
+//                val titleKey = StatisticsKey.TITLE.key
+//                val frequencyMapListSrc = statisticsMapList.map{
+//                        elMap ->
+//                    elMap.get(titleKey)
+//                }
+//                val promptList = promptMapList.map {
+//                    lineMap ->
+//                    lineMap.get(
+//                        PromptMapList.PromptListKey.TITLE.key
+//                    ) ?: String()
+//                }.filter { it.isNotEmpty() }
+//                val statisticsTitleList = makeStatisticsMapList(
+//                    fannelDirPath,
+//                    saveTagName,
+//                    promptMapList,
+//                )
+                val decentTextToFreqList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
                     .filterKeys { !it.isNullOrEmpty() }
                     .toList()
@@ -1939,9 +1961,10 @@ class PromptWithListDialog(
         private suspend fun makePieBk(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
-            fannelDirPath: String,
-            saveTagName: String?,
-            promptMapList: List<Map<String, String?>>
+            statisticsTitleList: List<String?>,
+//            fannelDirPath: String,
+//            saveTagName: String?,
+//            promptMapList: List<Map<String, String?>>
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1958,32 +1981,33 @@ class PromptWithListDialog(
                 val screenWidthInt = withContext(Dispatchers.Main) {
                     bkRelative.measuredWidth - dialogMargin
                 }
-                val statisticsTxtFile = makeStatisticsTextFile(
-                    fannelDirPath,
-                    saveTagName,
-                )
-                val statisticsMapList = ReadText(
-                    statisticsTxtFile.absolutePath
-                ).textToList().filter{
-                    it.isNotEmpty()
-                }.map {
-                    CmdClickMap.createMap(
-                        it,
-                        statisticsMapSeparator
-                    ).toMap()
-                }
-                val titleKey = StatisticsKey.TITLE.key
-                val frequencyMapListSrc = statisticsMapList.map{
-                        elMap ->
-                    elMap.get(titleKey)
-                }
-                val promptList = promptMapList.map {
-                    lineMap ->
-                    lineMap.get(
-                        PromptMapList.PromptListKey.TITLE.key
-                    )
-                }
-                val frequencyMapList = (frequencyMapListSrc + promptList).groupBy { it }
+//                val statisticsTxtFile = makeStatisticsTextFile(
+//                    fannelDirPath,
+//                    saveTagName,
+//                )
+//                val statisticsMapList = ReadText(
+//                    statisticsTxtFile.absolutePath
+//                ).textToList().filter{
+//                    it.isNotEmpty()
+//                }.map {
+//                    CmdClickMap.createMap(
+//                        it,
+//                        statisticsMapSeparator
+//                    ).toMap()
+//                }
+//                val titleKey = StatisticsKey.TITLE.key
+//                val frequencyMapListSrc = statisticsMapList.map{
+//                        elMap ->
+//                    elMap.get(titleKey)
+//                }
+//                val promptList = promptMapList.map {
+//                    lineMap ->
+//                    lineMap.get(
+//                        PromptMapList.PromptListKey.TITLE.key
+//                    )
+//                }
+
+                val frequencyMapList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
                     .filterKeys { !it.isNullOrEmpty() }
                     .toList()
@@ -2170,6 +2194,46 @@ class PromptWithListDialog(
                     .takeLast(historyTakeNum)
                     .joinToString("\n")
             )
+        }
+
+        fun makeStatisticsMapList(
+            fannelDirPath: String,
+            saveTagName: String?,
+            promptMapList: List<Map<String, String?>>,
+        ): List<String?> {
+            val statisticsTxtFile = makeStatisticsTextFile(
+                fannelDirPath,
+                saveTagName,
+            )
+            val statisticsMapList = ReadText(
+                statisticsTxtFile.absolutePath
+            ).textToList().filter{
+                it.isNotEmpty()
+            }.map {
+                CmdClickMap.createMap(
+                    it,
+                    statisticsMapSeparator
+                ).toMap()
+            }
+            val titleKey = StatisticsKey.TITLE.key
+            val frequencyMapListSrc = statisticsMapList.map{
+                    elMap ->
+                elMap.get(titleKey)
+            }
+            val promptList = promptMapList.map {
+                    lineMap ->
+                lineMap.get(
+                    PromptMapList.PromptListKey.TITLE.key
+                )
+            }
+            val statistiscTitleList = frequencyMapListSrc + promptList
+            return statistiscTitleList.ifEmpty {
+                listOf(
+                    "CC",
+                    "cmdclick",
+                    "CommandClick",
+                )
+            }
         }
     }
 
