@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
 import android.app.Dialog
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -38,6 +41,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -66,17 +70,27 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.PromptListImageSet
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.BitmapTool.DotArt.maskSquareMaker
+import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
@@ -103,6 +117,9 @@ class PromptWithListDialog(
         const val switchOff = "OFF"
         const val onSystemkeyOpenModeStr = "onSystemKeyOpenMode"
 
+        fun exit(){
+            StatisticsTool.exit()
+        }
         enum class PromptWithTextMapKey {
             list,
             editText,
@@ -395,20 +412,6 @@ class PromptWithListDialog(
         val context = terminalFragment.context
             ?: return
 
-        promptDialogObj = Dialog(
-            context,
-//            R.style.extraMenuDialogStyle,
-            R.style.BottomSheetDialogTheme
-        )
-        promptDialogObj?.setContentView(
-            R.layout.prompt_list_dialog_layout
-        )
-        val holderConstraint = promptDialogObj?.findViewById<ConstraintLayout>(
-            R.id.prompt_list_dialog_constraint
-        )
-        val bkRelative = promptDialogObj?.findViewById<RelativeLayout>(
-            R.id.prompt_list_dialog_bk_relative
-        ) ?: return
         val promptConfigMap = CmdClickMap.createMap(
             promptConfigMapCon,
             sectionSeparator,
@@ -418,14 +421,6 @@ class PromptWithListDialog(
                 it,
                 keySeparator
             ).toMap()
-        }
-        promptExtraMap?.get(PromptExtraKey.removeFilePaths.name)?.split(
-            valueSeparator
-        )?.forEach {
-            removeFilePath ->
-            FileSystems.removeFiles(
-                removeFilePath,
-            )
         }
         val promptBkMap = promptConfigMap.get(PromptWithTextMapKey.background.name)?.let {
             CmdClickMap.createMap(
@@ -444,6 +439,38 @@ class PromptWithListDialog(
                     (1..randEndNum).random() % randEndNum == 0
                 }
             }
+
+        promptDialogObj = when(isTransparent) {
+            true -> Dialog(
+                context,
+                R.style.BottomSheetDialogTheme
+//            R.style.extraMenuDialogStyle,
+//                R.style.BottomSheetDialogThemeWithLightDimm
+            )
+            else -> Dialog(
+                context,
+//            R.style.extraMenuDialogStyle,
+                R.style.BottomSheetDialogTheme
+            )
+        }
+        promptDialogObj?.setContentView(
+            R.layout.prompt_list_dialog_layout
+        )
+        val holderConstraint = promptDialogObj?.findViewById<ConstraintLayout>(
+            R.id.prompt_list_dialog_constraint
+        )
+        val bkRelative = promptDialogObj?.findViewById<RelativeLayout>(
+            R.id.prompt_list_dialog_bk_relative
+        ) ?: return
+
+        promptExtraMap?.get(PromptExtraKey.removeFilePaths.name)?.split(
+            valueSeparator
+        )?.forEach {
+            removeFilePath ->
+            FileSystems.removeFiles(
+                removeFilePath,
+            )
+        }
 
         val titleMap = CmdClickMap.createMap(
             promptConfigMap.get(PromptWithTextMapKey.title.name),
@@ -525,13 +552,11 @@ class PromptWithListDialog(
                 filterText,
                 listLimit,
             )
-
+        val bkImageView =
+            promptDialogObj?.findViewById<AppCompatImageView>(
+                R.id.prompt_list_dialog_list_bk_image
+            ) ?: return
         CoroutineScope(Dispatchers.Main).launch{
-            val bkImageView = withContext(Dispatchers.Main) {
-                promptDialogObj?.findViewById<AppCompatImageView>(
-                    R.id.prompt_list_dialog_list_bk_image
-                )
-            } ?: return@launch
             when(isTransparent) {
                 true -> bkImageView.isVisible = false
                 else -> {
@@ -572,24 +597,6 @@ class PromptWithListDialog(
                     editTextVisible,
                 )
             }
-//            withContext(Dispatchers.Main) {
-//                val promptCancelButton = promptDialogObj?.findViewById<AppCompatImageView>(
-//                    R.id.prompt_list_dialog_cancel
-//                )
-//
-//                promptCancelButton?.apply {
-//                    ExecSetToolbarButtonImage.setImageButton(
-//                        this,
-//                        CmdClickIcons.CANCEL
-//                    )
-//                    setOnClickListener {
-//                        returnValue = String()
-//                        promptDialogObj?.dismiss()
-//                        promptDialogObj = null
-//                        onDialog = false
-//                    }
-//                }
-//            }
             val promptListAdapter = withContext(Dispatchers.Main) {
                 PromptListAdapter(
                     context,
@@ -623,57 +630,6 @@ class PromptWithListDialog(
                     )
                 }
             }
-//            withContext(Dispatchers.Main) {
-//                promptDialogObj?.findViewById<AppCompatImageView>(
-//                    R.id.prompt_list_dialog_ok
-//                )?.apply {
-//                    ExecSetToolbarButtonImage.setImageButton(
-//                        this,
-//                        CmdClickIcons.OK
-//                    )
-//                    setOnClickListener {
-//                        val inputEditable = promptEditText?.text
-//                        if (
-//                            inputEditable.isNullOrEmpty()
-//                        ) {
-//                            exitDialog(
-//                                fannelDirPath,
-//                                holderConstraint,
-//                                bkRelative,
-//                                promptListView,
-//                                String(),
-//                                null,
-//                                promptListFile,
-//                                listLimit,
-//                                disableUpdate
-//                            )
-//                            return@setOnClickListener
-//                        } else returnValue = inputEditable.toString()
-//                        val titleKey = PromptMapList.PromptListKey.TITLE.key
-//                        val iconKey = PromptMapList.PromptListKey.ICON.key
-//                        val iconStr = promptListAdapter.prompMapList.firstOrNull {
-//                            lineMap ->
-//                            val curTitle = lineMap.get(
-//                                titleKey
-//                            )
-//                            curTitle == returnValue
-//                        }?.get(
-//                            iconKey
-//                        )
-//                        exitDialog(
-//                            fannelDirPath,
-//                            holderConstraint,
-//                            bkRelative,
-//                            promptListView,
-//                            inputEditable.toString(),
-//                            iconStr,
-//                            promptListFile,
-//                            listLimit,
-//                            disableUpdate
-//                        )
-//                    }
-//                }
-//            }
             withContext(Dispatchers.Main) {
                 editTextKeyListener(
                     fannelDirPath,
@@ -755,9 +711,8 @@ class PromptWithListDialog(
                     terminalFragmentRef,
                     promptDialogObj,
                     statisticsTitleList,
-//                fannelDirPath,
-//                promptListFile?.name,
-//                promptList,
+                    fannelDirPath,
+                    promptListFile?.name,
                 )
             }
         }
@@ -997,12 +952,12 @@ class PromptWithListDialog(
     }
 
     private object KeyboardHandler {
+
         fun handle(
             terminalFragment: TerminalFragment,
             promptDialogObj: Dialog?,
             promptListTitleView: AppCompatTextView?,
             promptListView: RecyclerView?,
-//            editTextVisible: Boolean,
             promptExtraMap: Map<String, String>?,
         ){
             val context = terminalFragment.context
@@ -1355,10 +1310,11 @@ class PromptWithListDialog(
         onDialog = false
     }
 
+
     private object StatisticsTool {
 
-        val statisticsName = "statistics"
-        val statisticsMapSeparator = ','
+        const val statisticsName = "statistics"
+        const val statisticsMapSeparator = ','
 
         enum class StatisticsKey(
             val key: String
@@ -1367,40 +1323,703 @@ class PromptWithListDialog(
             DATETIME("datetime"),
         }
 
+        fun exit(){
+            DotBk.exit()
+        }
+
         suspend fun displayStatisticsBk(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
             statisticsTitleList: List<String?>,
+            fannelDirPath: String,
+            saveTagName: String?,
 //            fannelDirPath: String,
 //            saveTagName: String?,
 //            promptMapList: List<Map<String, String?>>,
         ){
-            val handleRnd = (1..6).random()
+//            DotBk.handle(
+//                terminalFragmentRef,
+//                promptDialogObj,
+//                statisticsTitleList,
+//                fannelDirPath,
+//                saveTagName,
+//            )
+//            return
+            val handleRnd = (1..8).random()
+//            when(isTransparent) {
+//                true -> (1..8).random()
+//                else -> (1..6).random()
+//            }
             when(true) {
                 (handleRnd <= 2) -> makeMonocroBk(
                     terminalFragmentRef,
                     promptDialogObj,
                     statisticsTitleList,
-//                    fannelDirPath,
-//                    saveTagName,
-//                    promptMapList,
+//
                 )
                 (handleRnd <= 4) -> makeWebBk(
                     terminalFragmentRef,
                     promptDialogObj,
                     statisticsTitleList,
-//                    fannelDirPath,
-//                    saveTagName,
-//                    promptMapList,
+//
+                )
+                (handleRnd <= 6) -> DotBk.handle(
+                    terminalFragmentRef,
+                    promptDialogObj,
+                    statisticsTitleList,
+                    fannelDirPath,
+                    saveTagName,
                 )
                 else -> makePieBk(
                     terminalFragmentRef,
                     promptDialogObj,
                     statisticsTitleList,
-//                    fannelDirPath,
-//                    saveTagName,
-//                    promptMapList
                 )
+            }
+        }
+
+        private object DotBk {
+
+
+            private var imageSetMakeJob: Job? = null
+
+            fun exit(){
+                imageSetMakeJob?.cancel()
+            }
+
+            suspend fun handle(
+                terminalFragmentRef: WeakReference<TerminalFragment>,
+                promptDialogObj: Dialog?,
+                statisticsTitleList: List<String?>,
+                fannelDirPath: String,
+                saveTagName: String?,
+            ){
+                setImageSet(
+                    terminalFragmentRef,
+                    promptDialogObj,
+                    fannelDirPath,
+                    saveTagName,
+                )
+                exit()
+                imageSetMakeJob = CoroutineScope(Dispatchers.IO).launch {
+                    makeImageSet(
+                        terminalFragmentRef.get()?.context,
+                        statisticsTitleList,
+                        fannelDirPath,
+                        saveTagName,
+                    )
+                }
+            }
+
+            suspend fun setImageSet(
+                terminalFragmentRef: WeakReference<TerminalFragment>,
+                promptDialogObj: Dialog?,
+                fannelDirPath: String,
+                saveTagName: String?,
+            ) {
+                val terminalFragment =
+                    terminalFragmentRef.get()
+                        ?: return
+                val context = terminalFragment.context
+                    ?: return
+                val isAlreadySet = isDotImageCreate(
+                    fannelDirPath,
+                    saveTagName,
+                )
+                val statisticsDotImageDirPath = getStatisticsDotImageDir(
+                    fannelDirPath,
+                    saveTagName
+                ).absolutePath
+                val firstDotStormBitmapList = when (isAlreadySet) {
+                    false -> PromptListImageSet.firstDotStormImagePathList.map {
+                        AssetsFileManager.assetsByteArray(
+                            context,
+                            it
+                        )?.let {
+                            BitmapFactory.decodeByteArray(
+                                it,
+                                0,
+                                it.size
+                            )
+                        }
+                    }
+
+                    else -> PromptListImageSet.getFirstDotStormPathList(
+                        statisticsDotImageDirPath
+                    ).map {
+                        BitmapTool.convertFileToBitmap(
+                            it
+                        )
+                    }
+                }
+                val mainImageBitmap = when (isAlreadySet) {
+                    false ->
+                        AssetsFileManager.assetsByteArray(
+                            context,
+                            PromptListImageSet.mainImagePath
+                        )?.let {
+                            BitmapFactory.decodeByteArray(
+                                it,
+                                0,
+                                it.size
+                            )
+                        }
+
+                    else -> PromptListImageSet.getMainImagePath(
+                        statisticsDotImageDirPath
+                    ).let {
+                        BitmapTool.convertFileToBitmap(
+                            it
+                        )
+                    }
+                }
+                val strImageBitmapList = when (isAlreadySet) {
+                    false -> PromptListImageSet.strImagePathList.map {
+                        AssetsFileManager.assetsByteArray(
+                            context,
+                            it
+                        )?.let {
+                            BitmapFactory.decodeByteArray(
+                                it,
+                                0,
+                                it.size
+                            )
+                        }
+                    }
+
+                    else -> PromptListImageSet.getStrImagePathList(
+                        statisticsDotImageDirPath
+                    ).map {
+                        BitmapTool.convertFileToBitmap(
+                            it
+                        )
+                    }
+                }
+
+                val imageColorStrList = listOf(
+                    CmdClickColorStr.LIGHT_GREEN.str,
+                    CmdClickColorStr.WHITE_GREEN.str,
+                    CmdClickColorStr.ANDROID_GREEN.str,
+                    CmdClickColorStr.YELLOW_GREEN.str,
+                    CmdClickColorStr.GREEN.str,
+//                    CmdClickColorStr.THICK_GREEN.str,
+                    CmdClickColorStr.DARK_GREEN.str,
+//                    CmdClickColorStr.GOLD_YELLOW.str,
+                    CmdClickColorStr.WATER_BLUE.str,
+                    CmdClickColorStr.WHITE_BLUE.str,
+//                    CmdClickColorStr.THICK_AO.str,
+//                    CmdClickColorStr.BLACK_AO.str,
+                    CmdClickColorStr.BLUE.str,
+                    CmdClickColorStr.WHITE_BLUE_PURPLE.str,
+                    CmdClickColorStr.BLUE_DARK_PURPLE.str,
+                    CmdClickColorStr.NAVY.str,
+                    CmdClickColorStr.PURPLE.str,
+                    CmdClickColorStr.ORANGE.str,
+//                    CmdClickColorStr.BROWN.str,
+//                    CmdClickColorStr.DARK_BROWN.str,
+                    CmdClickColorStr.YELLOW.str,
+//                    CmdClickColorStr.SKERLET.str,
+                    "#000000",
+                    "#ffffff",
+                    CmdClickColorStr.SKERLET.str,
+                    CmdClickColorStr.YELLOW.str,
+                )
+                val darkColorList = listOf(
+                    CmdClickColorStr.GREEN.str,
+//                    CmdClickColorStr.THICK_GREEN.str,
+                    CmdClickColorStr.DARK_GREEN.str,
+//                    CmdClickColorStr.GOLD_YELLOW.str,
+                    CmdClickColorStr.THICK_AO.str,
+//                    CmdClickColorStr.BLACK_AO.str,
+                    CmdClickColorStr.BLUE.str,
+                    CmdClickColorStr.BLUE_DARK_PURPLE.str,
+                    CmdClickColorStr.NAVY.str,
+                    CmdClickColorStr.PURPLE.str,
+//                    CmdClickColorStr.BROWN.str,
+//                    CmdClickColorStr.DARK_BROWN.str,
+                    "#000000",
+                )
+                val frontBkImageColorStr = imageColorStrList.random()
+                val isLightColorToBack = darkColorList.contains(frontBkImageColorStr)
+                val backBkImageColorStr = imageColorStrList.filter {
+                    if (isLightColorToBack) {
+                        return@filter !darkColorList.contains(it)
+                    }
+                    true
+                }.filter {
+                    it != frontBkImageColorStr
+                }.random()
+                promptDialogObj?.findViewById<AppCompatImageView>(
+                    R.id.prompt_list_dialog_list_extra_bk_fore_image
+                )?.apply {
+                    imageTintList = null
+                    setColorFilter(
+                        Color.parseColor(frontBkImageColorStr)
+                    )
+                    scaleType = ImageView.ScaleType.FIT_XY
+                    isVisible = true
+                    val animationDrawable = AnimationDrawable()
+                    firstDotStormBitmapList.forEachIndexed { index, bitmap ->
+                        alpha = 0.95f
+                        val duration = when (index) {
+                            0 -> 200
+                            1 -> 150
+                            2 -> 250
+                            else -> 100
+                        }
+                        animationDrawable.addFrame(
+                            BitmapDrawable(
+                                context.resources,
+                                bitmap
+                            ),
+                            duration
+                        )
+                    }
+                    animationDrawable.isOneShot = true
+                    setImageDrawable(animationDrawable)
+                    animationDrawable.start()
+                }
+                promptDialogObj?.findViewById<AppCompatImageView>(
+                    R.id.prompt_list_dialog_list_bk_extra_back_image1
+                )?.apply {
+                    imageTintList = null
+                    setColorFilter(
+                        Color.parseColor(backBkImageColorStr)
+                    )
+                    scaleType = ImageView.ScaleType.FIT_XY
+                    isVisible = true
+                    setImageBitmap(
+                        mainImageBitmap
+                    )
+                }
+                promptDialogObj?.findViewById<AppCompatImageView>(
+                    R.id.prompt_list_dialog_list_bk_extra_back_image2
+                )?.apply {
+                    imageTintList = null
+                    setColorFilter(
+                        Color.parseColor(frontBkImageColorStr)
+                    )
+                    scaleType = ImageView.ScaleType.FIT_XY
+                    isVisible = true
+                    val animationDrawable = AnimationDrawable()
+                    strImageBitmapList.forEach {
+                        animationDrawable.addFrame(
+                            BitmapDrawable(context.resources, it),
+                            500
+                        )
+                    }
+                    animationDrawable.isOneShot = false
+                    setImageDrawable(animationDrawable)
+                    animationDrawable.start()
+                }
+                promptDialogObj?.findViewById<FrameLayout>(
+                    R.id.prompt_list_dialog_list_extra_bk_container
+                )?.apply {
+                    isVisible = true
+                    val goalAlpha = 1f
+                    val loopTimes = 2
+                    val plusAlpha = goalAlpha / loopTimes
+                    CoroutineScope(Dispatchers.IO).launch {
+                        for (i in 1..loopTimes) {
+                            withContext(Dispatchers.IO) {
+                                delay(200)
+                            }
+                            withContext(Dispatchers.Main) {
+                                alpha += plusAlpha
+                            }
+                        }
+                    }
+                }
+            }
+
+            suspend fun makeImageSet(
+                context: Context?,
+                statisticsTitleList: List<String?>,
+                fannelDirPath: String,
+                saveTagName: String?,
+            ) {
+                if(
+                    context == null
+                    ) return
+                val isCreating = isDotImageCreatingFile(
+                    fannelDirPath,
+                    saveTagName
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lisCreating.txt").absolutePath,
+//                    listOf(
+//                        "isCreating: ${isCreating}"
+//                    ).joinToString("\n")
+//                )
+                if(
+                    isCreating
+                ) return
+                createCreatingFile(
+                    fannelDirPath,
+                    saveTagName
+                )
+                val decentTextToFreqList = statisticsTitleList.groupBy { it }
+                    .mapValues { it.value.size }
+                    .filterKeys { !it.isNullOrEmpty() }
+                    .toList()
+                    .sortedByDescending { (_, value) -> value }
+                val frequencyMapList =
+                    decentTextToFreqList.toMap()
+                val textList = frequencyMapList.map { freqMap ->
+                    val text = freqMap.key
+                        ?: return@map emptyList<String>()
+                    val freq = freqMap.value
+                    (0..freq).map { text }
+                }.flatten()
+
+                val cutPeaceLength = 128
+                val srcOneSide = cutPeaceLength * 8
+                val curRepeatNum = let {
+                    val baseRepeatNum = 1800
+                    val baseCutPeace = 32f
+                    (baseRepeatNum * cutPeaceLength * 2.5) / baseCutPeace
+                }
+//                FileSystems.writeFile(
+//                    File(
+//                        UsePath.cmdclickDefaultAppDirPath,
+//                        "lLocal_titletextbk_make.txt"
+//                    ).absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}"
+//                    ).joinToString("\n")
+//                )
+                val textBitmapList = (1..10).map {
+                    textList.random()
+                }.joinToString(" ").let { titlesTextSrc ->
+                    val repeatNum = (curRepeatNum / titlesTextSrc.length).toInt()
+                    titlesTextSrc.repeat(repeatNum)
+                }.let { titlesText ->
+                    val srcTextBitmapSideLength =
+                        (srcOneSide * 1.1).toFloat()
+                    val concurrencyLimitForMakeTextBitmap = 3
+                    val semaphoreForMakeTextBitmap = Semaphore(concurrencyLimitForMakeTextBitmap)
+                    val channelForMakeTextBitmap =
+                        Channel<Pair<Int, Bitmap?>>(concurrencyLimitForMakeTextBitmap)
+                    val indexToTextBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
+                    withContext(Dispatchers.IO) {
+                        val jobList = (1..concurrencyLimitForMakeTextBitmap).map { index ->
+                            async {
+                                semaphoreForMakeTextBitmap.withPermit {
+                                    val textBitmap = BitmapTool.DrawText.drawTextToBitmapByRandom(
+                                        titlesText,
+                                        srcTextBitmapSideLength,
+                                        srcTextBitmapSideLength,
+                                        (17..22).random().toFloat(),
+                                        Color.BLACK
+                                    ).let {
+                                        ImageTransformer.cutCenter2(
+                                            it,
+                                            srcOneSide,
+                                            srcOneSide
+                                        )
+                                    }
+                                    channelForMakeTextBitmap.send(Pair(index, textBitmap))
+                                }
+                            }
+                        }
+                        jobList.forEach { it.await() }
+                        channelForMakeTextBitmap.close()
+                        for (indexToBitmap in channelForMakeTextBitmap) {
+                            indexToTextBitmapList.add(indexToBitmap)
+                        }
+                        indexToTextBitmapList.sortBy { it.first }
+                        indexToTextBitmapList.map {
+                            it.second
+                        }.let {
+//                            FileSystems.writeFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lLocal_maskSquare_make.txt").absolutePath,
+//                                listOf(
+//                                    "${LocalDateTime.now()}",
+//                                    "indexToTextBitmapListSize: ${it.size}",
+//                                ).joinToString("\n")
+//                            )
+                            it + it[1]
+                        }
+                    }
+                }
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_maskSquare_make.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}",
+//                        "textBitmapList: ${textBitmapList.size}",
+//                    ).joinToString("\n")
+//                )
+
+                val textBitmapListToMaskSquare = makeDrawableBitmapListToMaskSquare(
+                    textBitmapList,
+                    srcOneSide,
+                    cutPeaceLength
+                )
+                val statisticsDotImageDirPath = getStatisticsDotImageDir(
+                    fannelDirPath,
+                    saveTagName
+                ).absolutePath
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_maskSquare_make_end.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}",
+//                        "statisticsDotImageDirPath: ${statisticsDotImageDirPath}",
+//                        "statisticsDotImageDirPath: ${statisticsDotImageDirPath}",
+//                        "statisticsDotImageDirPath: ${statisticsDotImageDirPath}",
+//                    ).joinToString("\n")
+//                )
+                val firstDotStormBitmapList = textBitmapListToMaskSquare.first
+                val firstDotStormPathList = PromptListImageSet.getFirstDotStormPathList(
+                    statisticsDotImageDirPath
+                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lfirstDotStormPathList.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}",
+//                        "statisticsDotImageDirPath: ${statisticsDotImageDirPath}",
+//                        "firstDotStormBitmapListSize: ${firstDotStormBitmapList.size}",
+//                        "firstDotStormPathListSize: ${firstDotStormPathList.size}",
+//                        "firstDotStormPathList: ${firstDotStormPathList}",
+//                    ).joinToString("\n")
+//                )
+                firstDotStormBitmapList.forEachIndexed { index, bitmap ->
+                    if (
+                        bitmap == null
+                        ) return@forEachIndexed
+                    firstDotStormPathList.getOrNull(index)?.let { saveFilePath ->
+                        FileSystems.writeFromByteArray(
+                            saveFilePath,
+                            BitmapTool.convertBitmapToByteArray(bitmap)
+                        )
+                    }
+                }
+                val maskSquare = textBitmapListToMaskSquare.second ?: return
+                val marginOneSide = srcOneSide + 10
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}"
+//                    ).joinToString("\n")
+//                )
+                val srcMainImageBitmap = AppCompatResources.getDrawable(
+                    context,
+                    FannelIcons.entries.random().id
+                )?.toBitmap(
+                    marginOneSide,
+                    marginOneSide
+                )?.let {
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make_cut.txt").absolutePath,
+//                        listOf(
+//                            "${LocalDateTime.now()}"
+//                        ).joinToString("\n")
+//                    )
+                    ImageTransformer.cutCenter2(
+                        it,
+                        srcOneSide,
+                        srcOneSide
+                    )
+                } as Bitmap
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make_excange.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}"
+//                    ).joinToString("\n")
+//                )
+                val mainImageBitmap = let {
+                    val reversedSquareBitmap = ImageTransformer.exchangeTransparentToBlack(
+                        maskSquare,
+                    )
+//                    FileSystems.writeFile(
+//                        File(
+//                            UsePath.cmdclickDefaultAppDirPath,
+//                            "lLocal_CenterImage_make_mask.txt"
+//                        ).absolutePath,
+//                        listOf(
+//                            "${LocalDateTime.now()}"
+//                        ).joinToString("\n")
+//                    )
+                    ImageTransformer.maskImageByTransparent(
+                        srcMainImageBitmap,
+                        reversedSquareBitmap,
+                    )
+                }
+                val mainImagePathList =
+                    PromptListImageSet.getMainImagePath(statisticsDotImageDirPath)
+                FileSystems.writeFromByteArray(
+                    mainImagePathList,
+                    BitmapTool.convertBitmapToByteArray(mainImageBitmap)
+                )
+//                FileSystems.writeFile(
+//                    File(
+//                        UsePath.cmdclickDefaultAppDirPath,
+//                        "lLocal_CenterImage_make_end.txt"
+//                    ).absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}"
+//                    ).joinToString("\n")
+//                )
+//
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_TextBk_make.txt").absolutePath,
+//                    listOf(
+//                        "${LocalDateTime.now()}"
+//                    ).joinToString("\n")
+//                )
+                val concurrencyLimitForCenterImage = textBitmapList.size
+                val semaphoreForTextBk = Semaphore(10)
+                val channelForTextBk = Channel<Pair<Int, Bitmap?>>(concurrencyLimitForCenterImage)
+                val indexToTextBkBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
+                val shrinkNumb = (0..5).random()
+                val strImageList =
+                    withContext(Dispatchers.IO) {
+                        val jobList = textBitmapList.mapIndexed { index, textBitmap ->
+                            async {
+                                semaphoreForTextBk.withPermit {
+                                    if (
+                                        textBitmap == null
+                                    ) return@withPermit null
+                                    val textBkBitmap =
+                                        ImageTransformer.maskImageByTransparent(
+                                            textBitmap,
+                                            srcMainImageBitmap,
+                                        ).let { drawableBitmap ->
+                                            val shrinkOneSideLength = srcOneSide - shrinkNumb
+                                            ImageTransformer.cutCenter2(
+                                                drawableBitmap,
+                                                shrinkOneSideLength,
+                                                shrinkOneSideLength,
+                                            )
+                                        }
+                                    channelForTextBk.send(Pair(index, textBkBitmap))
+                                }
+                            }
+                        }
+                        jobList.forEach { it.await() }
+                        channelForTextBk.close()
+                        for (indexToBitmap in channelForTextBk) {
+                            indexToTextBkBitmapList.add(indexToBitmap)
+                        }
+                        indexToTextBkBitmapList.sortBy { it.first }
+                        indexToTextBkBitmapList.map {
+                            it.second
+                        }
+                    }
+                val strImagePathList =
+                    PromptListImageSet.getStrImagePathList(statisticsDotImageDirPath)
+                strImageList.forEachIndexed { index, bitmap ->
+                    if (bitmap == null) return@forEachIndexed
+                    strImagePathList.getOrNull(index)?.let { saveFilePath ->
+                        FileSystems.writeFromByteArray(
+                            saveFilePath,
+                            BitmapTool.convertBitmapToByteArray(bitmap)
+                        )
+                    }
+                }
+                removeCreatingFile(
+                    fannelDirPath,
+                    saveTagName
+                )
+            }
+
+            private suspend fun makeDrawableBitmapListToMaskSquare(
+                textBitmapList: List<Bitmap?>,
+                srcOneSide: Int,
+                peaceLength: Int,
+            ): Pair<List<Bitmap?>, Bitmap?> {
+                val textBitmapListSize = textBitmapList.size
+                val startX = 4
+                val endX = 10
+                val ajustNum = 2
+                val concurrencyLimit = textBitmapListSize
+                val semaphore = Semaphore(concurrencyLimit)
+                val channelForSquareList = Channel<Pair<Int, Bitmap?>>(textBitmapListSize)
+                val maskIndexToSquareList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
+                withContext(Dispatchers.IO) {
+                    val jobList = (1..textBitmapListSize).map { order ->
+                        async {
+                            semaphore.withPermit {
+                                val incline = ((endX - startX) / textBitmapListSize.toFloat())
+                                val currentRndEnd = (endX - incline * order).toInt() - ajustNum
+                                val rndList = (1..currentRndEnd)
+                                val maskSquare = maskSquareMaker(
+                                    srcOneSide,
+                                    peaceLength,
+                                    rndList,
+                                    2
+                                )
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "lLocalDateTime${order}_start.txt").absolutePath,
+//                                    listOf(
+//                                        "LocalDateTime: ${LocalDateTime.now()}",
+//                                        "srcOneSide: ${srcOneSide}",
+//                                        "peaceLength: ${peaceLength}",
+//                                        "currentRndEnd: ${currentRndEnd}",
+//                                        "maskSquare:: ${maskSquare == null}"
+//                                    ).joinToString("\n")
+//                                )
+                                channelForSquareList.send(Pair(order, maskSquare))
+                            }
+                        }
+                    }
+                    jobList.forEach { it.await() }
+                    channelForSquareList.close()
+                    for(indexToBitmap in channelForSquareList){
+                        maskIndexToSquareList.add(indexToBitmap)
+                    }
+                }
+                maskIndexToSquareList.sortBy {
+                    val index = it.first
+                    index
+                }
+                val maskSquareList = maskIndexToSquareList.map {
+                    val bitmap = it.second
+                    bitmap
+                }.take(4)
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lmaskSquareList0.txt").absolutePath,
+//                    listOf(
+//                        "LocalDateTime: ${LocalDateTime.now()}",
+//                        "srcOneSide: ${srcOneSide}",
+//                        "peaceLength: ${peaceLength}",
+//                        "maskSquareListSize: ${maskSquareList.size}",
+//                        "isNull:: ${maskSquareList.any {
+//                            it == null }
+//                        }",
+//                    ).joinToString("\n")
+//                )
+                val concurrencyLimitForMask = maskSquareList.size
+                val semaphoreForMask = Semaphore(concurrencyLimitForMask)
+                val channelForMask = Channel<Pair<Int, Bitmap?>>(concurrencyLimitForMask)
+                val indexToMaskTextList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
+                val maskTextList = withContext(Dispatchers.IO) {
+                    val jobList = maskSquareList.mapIndexed { index, maskSquareSrc ->
+                        if (
+                            maskSquareSrc == null
+                        ) return@mapIndexed null
+                        async {
+                            semaphoreForMask.withPermit {
+                                val curTextBitmap = textBitmapList.getOrNull(index)
+                                    ?: return@withPermit
+                                val maskedBitmap1 = ImageTransformer.maskImageByTransparent(
+                                    curTextBitmap,
+                                    maskSquareSrc,
+                                )
+                                channelForMask.send(Pair(index, maskedBitmap1))
+                            }
+                        }
+                    }
+                    jobList.forEach { it?.await() }
+                    channelForMask.close()
+                    for(indexToBitmap in channelForMask){
+                        indexToMaskTextList.add(indexToBitmap)
+                    }
+                    indexToMaskTextList.sortBy { it.first }
+                    indexToMaskTextList.map {
+                        it.second
+                    }
+                }
+                return maskTextList to maskSquareList.getOrNull(2)
             }
         }
 
@@ -1408,9 +2027,6 @@ class PromptWithListDialog(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
             statisticsTitleList: List<String?>,
-//            fannelDirPath: String,
-//            saveTagName: String?,
-//            promptMapList: List<Map<String, String?>>,
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1427,32 +2043,6 @@ class PromptWithListDialog(
                 val screenWidthInt = withContext(Dispatchers.Main) {
                     bkRelative.measuredWidth - dialogMargin
                 }
-
-//                val statisticsTxtFile = makeStatisticsTextFile(
-//                    fannelDirPath,
-//                    saveTagName
-//                )
-//                val statisticsMapList = ReadText(
-//                    statisticsTxtFile.absolutePath
-//                ).textToList().filter{
-//                    it.isNotEmpty()
-//                }.map {
-//                    CmdClickMap.createMap(
-//                        it,
-//                        statisticsMapSeparator
-//                    ).toMap()
-//                }
-//                val titleKey = StatisticsKey.TITLE.key
-//                val frequencyMapListSrc = statisticsMapList.map{
-//                        elMap ->
-//                    elMap.get(titleKey)
-//                }
-//                val promptList = promptMapList.map {
-//                    lineMap ->
-//                    lineMap.get(
-//                        PromptMapList.PromptListKey.TITLE.key
-//                    ) ?: String()
-//                }.filter { it.isNotEmpty() }
                 val decentTextToFreqList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
                     .filterKeys { !it.isNullOrEmpty() }
@@ -1656,9 +2246,6 @@ class PromptWithListDialog(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
             statisticsTitleList: List<String?>,
-//            fannelDirPath: String,
-//            saveTagName: String?,
-//            promptMapList: List<Map<String, String?>>,
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1675,37 +2262,6 @@ class PromptWithListDialog(
                 val screenWidthInt = withContext(Dispatchers.Main) {
                     bkRelative.measuredWidth - dialogMargin
                 }
-
-//                val statisticsTxtFile = makeStatisticsTextFile(
-//                    fannelDirPath,
-//                    saveTagName
-//                )
-//                val statisticsMapList = ReadText(
-//                    statisticsTxtFile.absolutePath
-//                ).textToList().filter{
-//                    it.isNotEmpty()
-//                }.map {
-//                    CmdClickMap.createMap(
-//                        it,
-//                        statisticsMapSeparator
-//                    ).toMap()
-//                }
-//                val titleKey = StatisticsKey.TITLE.key
-//                val frequencyMapListSrc = statisticsMapList.map{
-//                        elMap ->
-//                    elMap.get(titleKey)
-//                }
-//                val promptList = promptMapList.map {
-//                    lineMap ->
-//                    lineMap.get(
-//                        PromptMapList.PromptListKey.TITLE.key
-//                    ) ?: String()
-//                }.filter { it.isNotEmpty() }
-//                val statisticsTitleList = makeStatisticsMapList(
-//                    fannelDirPath,
-//                    saveTagName,
-//                    promptMapList,
-//                )
                 val decentTextToFreqList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
                     .filterKeys { !it.isNullOrEmpty() }
@@ -1831,13 +2387,6 @@ class PromptWithListDialog(
                         index, text ->
                     text to (textSizeEnd - textSizeDiff * index).toFloat()
                 }.toMap()
-
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "ltextView.txt").absolutePath,
-//                    listOf(
-//                        "textToIntRangeMap: ${textToIntRangeMap}"
-//                    ).joinToString("\n")
-//                )
                 val fixRotationAngle = rotateAngleRndList.random().toFloat()
 
 
@@ -1962,9 +2511,6 @@ class PromptWithListDialog(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
             statisticsTitleList: List<String?>,
-//            fannelDirPath: String,
-//            saveTagName: String?,
-//            promptMapList: List<Map<String, String?>>
         ){
             val context = terminalFragmentRef.get()?.context
                 ?: return
@@ -1981,31 +2527,6 @@ class PromptWithListDialog(
                 val screenWidthInt = withContext(Dispatchers.Main) {
                     bkRelative.measuredWidth - dialogMargin
                 }
-//                val statisticsTxtFile = makeStatisticsTextFile(
-//                    fannelDirPath,
-//                    saveTagName,
-//                )
-//                val statisticsMapList = ReadText(
-//                    statisticsTxtFile.absolutePath
-//                ).textToList().filter{
-//                    it.isNotEmpty()
-//                }.map {
-//                    CmdClickMap.createMap(
-//                        it,
-//                        statisticsMapSeparator
-//                    ).toMap()
-//                }
-//                val titleKey = StatisticsKey.TITLE.key
-//                val frequencyMapListSrc = statisticsMapList.map{
-//                        elMap ->
-//                    elMap.get(titleKey)
-//                }
-//                val promptList = promptMapList.map {
-//                    lineMap ->
-//                    lineMap.get(
-//                        PromptMapList.PromptListKey.TITLE.key
-//                    )
-//                }
 
                 val frequencyMapList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
@@ -2161,6 +2682,127 @@ class PromptWithListDialog(
             }
         }
 
+
+        private val dotImageSetName = "dotImageSet"
+
+        fun getStatisticsDotImageDir(
+            fannelDirPath: String,
+            saveTagName: String?,
+        ): File {
+            return when(saveTagName.isNullOrEmpty()) {
+                true -> File("${fannelDirPath}/${statisticsName}/${dotImageSetName}")
+                else -> listOf(
+                    fannelDirPath,
+                    statisticsName,
+                    saveTagName,
+                    dotImageSetName,
+                ).joinToString("/")
+                    .replace(Regex("[/]+"), "/")
+                    .let {
+                        File(it)
+                    }
+            }
+        }
+
+        fun getStatisticsDotImageCreatingFile(
+            fannelDirPath: String,
+            saveTagName: String?,
+        ): File {
+            val createOkFileName = "creating.txt"
+            return when(saveTagName.isNullOrEmpty()) {
+                true -> File(
+                    "${fannelDirPath}/${statisticsName}/${dotImageSetName}",
+                    createOkFileName
+                )
+                else -> listOf(
+                    fannelDirPath,
+                    statisticsName,
+                    saveTagName,
+                    dotImageSetName,
+                    createOkFileName,
+                ).joinToString("/")
+                    .replace(Regex("[/]+"), "/")
+                    .let {
+                        File(it)
+                    }
+            }
+        }
+
+
+        fun isDotImageCreatingFile(
+            fannelDirPath: String,
+            saveTagName: String?,
+        ): Boolean {
+            val creatingFile = getStatisticsDotImageCreatingFile(
+                fannelDirPath,
+                saveTagName,
+            )
+            if(
+                !creatingFile.isFile
+                ) return false
+            val curDatetime = LocalDateTime.now()
+            val pastDatetime = ReadText(
+                creatingFile.absolutePath
+            ).readText().trim().let {
+                try {
+                    LocalDatetimeTool.convertStrToLocalDatetime(
+                        it
+                    )
+                } catch(e: Exception){
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lDatetime_err.txt").absolutePath,
+//                        listOf(
+//                            "${e}"
+//                        ).joinToString("\n")
+//                    )
+                    LocalDateTime.parse("2020-02-15T21:30:50")
+                }
+            }
+            return LocalDatetimeTool.getDurationSec(
+                pastDatetime,
+                curDatetime
+            ) < 10
+        }
+
+        fun isDotImageCreate(
+            fannelDirPath: String,
+            saveTagName: String?,
+        ): Boolean {
+            val statisticImageDotImageDir = getStatisticsDotImageDir(
+                fannelDirPath,
+                saveTagName,
+            )
+                return PromptListImageSet.isImageSetOk(
+                statisticImageDotImageDir.absolutePath
+            )
+        }
+
+        fun createCreatingFile(
+            fannelDirPath: String,
+            saveTagName: String?,
+        ) {
+            FileSystems.writeFile(
+                getStatisticsDotImageCreatingFile(
+                    fannelDirPath,
+                    saveTagName,
+                ).absolutePath,
+                LocalDateTime.now().toString()
+            )
+        }
+
+        fun removeCreatingFile(
+            fannelDirPath: String,
+            saveTagName: String?,
+        ) {
+            FileSystems.removeFiles(
+                getStatisticsDotImageCreatingFile(
+                    fannelDirPath,
+                    saveTagName,
+                ).absolutePath,
+            )
+        }
+
+
         fun saveStatistics(
             fannelDirPath: String,
             saveTagName: String?,
@@ -2170,12 +2812,6 @@ class PromptWithListDialog(
                 fannelDirPath,
                 saveTagName,
             )
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lStatistics.txt").absolutePath,
-//            listOf(
-//                "statisticsFile: ${statisticsFile.absolutePath}"
-//            ).joinToString("\n")
-//        )
             val statisticsTitle = trimedReturnValue.replace(
                 statisticsMapSeparator.toString(),
                 String()
@@ -2286,14 +2922,6 @@ class PromptWithListDialog(
                    iconStr
                ).joinToString(PromptMapList.promptListSeparator.toString())
            }.joinToString("\n")
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "list.txt").absolutePath,
-//                listOf(
-//                    "trimedReturnValue: ${trimedReturnValue}",
-//                    "trimedReturnValue: ${trimedReturnValue}",
-//                    "lineMapCon: ${lineMapCon}",
-//                ).joinToString("\n")
-//            )
             FileSystems.writeFile(
                 promptListFile.absolutePath,
                 lineMapCon
@@ -2381,11 +3009,7 @@ private object EditTextMakerForPromptList {
             promptDialogObj?.findViewById<AppCompatEditText>(
                 R.id.prompt_list_dialog_search_edit_text
             ) ?: return null
-//        if(
-//            !setText.isNullOrEmpty()
-//        ){
         promptEditText.setText(setText)
-//        }
         editTextMap.get(
             PromptWithListDialog.Companion.PromptEditTextKey.hint.name
         )?.let {

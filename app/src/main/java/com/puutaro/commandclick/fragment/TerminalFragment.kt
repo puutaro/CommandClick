@@ -31,6 +31,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GgleSchDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
@@ -414,6 +415,7 @@ class TerminalFragment:
             this,
             broadcastReceiverForTerm
         )
+        PromptWithListDialog.exit()
         UrlCaptureWatcher.exit()
         PinFannelBarManager.clear(binding.fannelPinRecyclerView)
         FannelHistoryGifCreator.exit()

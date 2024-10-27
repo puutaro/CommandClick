@@ -164,7 +164,7 @@ dependencies {
 //    implementation("com.github.kibotu:htextview:0.1.28")
     implementation("com.github.takusemba:spotlight:2.0.5")
     implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
-
+    implementation("jp.wasabeef:glide-transformations:4.3.0")
 // as 3.0 use implementation
 //    implementation ("com.hanks:htextview-base:0.1.6" )       // base library
 
@@ -181,6 +181,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
+
 
 
 //    implementation("androidx.camera:camera-camera2:1.2.2")

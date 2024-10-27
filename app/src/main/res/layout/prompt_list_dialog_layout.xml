@@ -23,6 +23,59 @@
         android:scaleType="centerCrop"
         android:layout_gravity="center"
         />
+    <FrameLayout
+        android:id="@+id/prompt_list_dialog_list_extra_bk_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@null"
+        app:tint="@null"
+        android:src="@null"
+        android:alpha="0">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/prompt_list_dialog_list_bk_extra_back_image2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@null"
+            android:background="@null"
+            app:tint="@null"
+            android:src="@null"
+            android:layout_gravity="center"
+            android:visibility="gone"
+
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/prompt_list_dialog_list_bk_extra_back_image1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@null"
+            android:background="@null"
+            app:tint="@null"
+            android:src="@null"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:alpha="1"
+            />
+    </FrameLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/prompt_list_dialog_list_extra_bk_fore_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@null"
+        android:background="@null"
+        app:tint="@null"
+        android:src="@null"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:id="@+id/prompt_list_dialog_bk_relative"

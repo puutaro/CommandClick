@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.datetime
 
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -26,6 +27,12 @@ object LocalDatetimeTool {
         val summerVacationDuration: Duration =
             Duration.between(start, end) // 期間分の時間を取得する
         return summerVacationDuration.seconds
+    }
+
+    fun convertStrToLocalDatetime(
+        datetimeStr: String
+    ): LocalDateTime {
+        return LocalDateTime.parse(datetimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
 

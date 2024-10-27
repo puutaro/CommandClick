@@ -14,7 +14,9 @@ import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.GradientDrawable
 import android.text.Layout
 import android.text.SpannableString
@@ -26,15 +28,24 @@ import android.text.style.RelativeSizeSpan
 import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
+import java.time.LocalDateTime
 import java.util.Arrays
 import java.util.Locale
+import kotlin.math.max
 import kotlin.random.Random
 
 
@@ -137,6 +148,12 @@ object BitmapTool {
     } catch(IOException e) {
       Log.e("combineImages", "problem combining images", e);
     }*/return cs
+    }
+
+    fun convertBitmapToDrawable(
+        context: Context,
+        bitmap: Bitmap?): BitmapDrawable {
+        return BitmapDrawable(context.getResources(), bitmap);
     }
 
     fun convertFileToBitmap(path: String): Bitmap? {
@@ -606,7 +623,107 @@ object BitmapTool {
         }
     }
 
+    object DotArt {
+
+        fun maskSquareMaker(
+            resolution: Int,
+            peaceLength: Int,
+            rndList: IntRange,
+            cutThresholds: Int,
+        ): Bitmap? {
+            val loopTimes = resolution / peaceLength
+            var resultRect: Bitmap? = null
+            for(i in 1..loopTimes) {
+                var horizontalRect: Bitmap? = null
+                for(j in 1..loopTimes) {
+                    val colorStr = when(rndList.random() <= cutThresholds) {
+                        true -> "#00000000"
+                        else -> "#000000"
+                    }
+                    val bitmap = ImageTransformer.makeRect(
+                        colorStr,
+                        peaceLength,
+                        peaceLength
+                    )
+                    horizontalRect = when(horizontalRect == null){
+                        true -> bitmap
+                        else -> concatByHorizon(
+                            horizontalRect,
+                            bitmap
+                        )
+                    }
+                }
+                val verticalBitmap = rotate(
+                    horizontalRect as Bitmap,
+                    90f,
+                )
+                resultRect = when(resultRect == null) {
+                    true -> verticalBitmap
+                    else -> concatByHorizon(
+                        resultRect,
+                        verticalBitmap
+                    )
+                }
+            }
+            return resultRect
+        }
+        fun dotArtMaker(
+            srcBitmap: Bitmap
+        ): Bitmap {
+           val bitmap = Bitmap.createScaledBitmap(
+               srcBitmap,
+               32,
+               32,
+               false,
+           )
+            val dotBitmap = Bitmap.createScaledBitmap(
+                bitmap,
+                192,
+                192,
+                false,
+            )
+            return bitmap
+        }
+    }
+
     object ImageTransformer {
+
+        fun stretchImageWithoutBlur(
+            originalBitmap: Bitmap?,
+            targetWidth: Int,
+            targetHeight: Int
+        ): Bitmap? {
+            if(originalBitmap == null) {
+                return originalBitmap
+            }
+            // Create a new bitmap with the target dimensions
+            val scaledBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
+
+            // Create a canvas to draw on the new bitmap
+            val canvas = Canvas(scaledBitmap)
+
+            // Set up the paint for drawing
+            val paint = Paint().apply {
+                isFilterBitmap = false  // Disable bitmap filtering
+                isAntiAlias = false     // Disable anti-aliasing
+            }
+
+            // Calculate the scaling factors
+            val scaleX = targetWidth.toFloat() / originalBitmap.width
+            val scaleY = targetHeight.toFloat() / originalBitmap.height
+
+            // Create a matrix to apply the scaling
+            val matrix = Matrix().apply {
+                setScale(scaleX, scaleY)
+            }
+
+            // Draw the scaled bitmap onto the canvas
+            canvas.drawBitmap(originalBitmap, matrix, paint)
+
+            return scaledBitmap
+        }
+
+
         fun flipHorizontally(
             bitmap: Bitmap
         ): Bitmap {
@@ -749,6 +866,142 @@ object BitmapTool {
             return bg
         }
 
+        fun maskImageByTransparent(bitmap: Bitmap, maskBitmap: Bitmap): Bitmap {
+            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(resultBitmap)
+
+            val paint = Paint()
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+
+            canvas.drawBitmap(bitmap, 0f, 0f, null)
+            canvas.drawBitmap(maskBitmap, 0f, 0f, paint)
+
+            paint.xfermode = null
+            return resultBitmap
+        }
+
+        suspend fun maskImageByTransparentForEqualEvenRect(
+            bitmap: Bitmap,
+            maskBitmap: Bitmap,
+            oneSide: Int,
+        ): Bitmap? {
+            val divideTimes = bitmap.width / oneSide
+            val divideHeight = bitmap.width / divideTimes
+            val divideWidth = bitmap.height / divideTimes
+            val bitmapList = (0..< divideTimes).map {
+                yOrder ->
+                val yOffset = yOrder * divideWidth
+                (0..<divideTimes).map {
+                    xOrder ->
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lmaskImageByTrans.txt").absolutePath,
+//                        listOf(
+//                            "divideWidth: ${divideWidth}",
+//                            "divideHeight: ${divideHeight}",
+//                            "xOrder * divideWidth: ${xOrder * divideWidth}",
+//                            "yOffset: ${yOffset}",
+//                        ).joinToString("\n")
+//                    )
+                    cutByTarget(
+                        bitmap,
+                        divideWidth,
+                        divideHeight,
+                        xOrder * divideWidth,
+                        yOffset
+
+                    )
+                }
+            }.flatten()
+            val maskBitmapList = (0..<divideTimes).map {
+                    yOrder ->
+                val yOffset = yOrder * divideWidth
+                (0..<divideTimes).map {
+                        xOrder ->
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lmaskImageByTransMask.txt").absolutePath,
+//                        listOf(
+//                            "divideWidth: ${divideWidth}",
+//                            "divideHeight: ${divideHeight}",
+//                            "xOrder * divideWidth: ${xOrder * divideWidth}",
+//                            "yOffset: ${yOffset}",
+//                        ).joinToString("\n")
+//                    )
+                    cutByTarget(
+                        maskBitmap,
+                        divideWidth,
+                        divideHeight,
+                        xOrder * divideWidth,
+                        yOffset
+
+                    )
+                }
+            }.flatten()
+            val concurrencyLimitForMakeTextBitmap = 10
+            val semaphore = Semaphore(concurrencyLimitForMakeTextBitmap)
+            val bitmapListSize = bitmapList.size
+            val channel = Channel<Pair<Int, Bitmap?>>(bitmapListSize)
+            val indexToBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
+            val maskedBitmapList = withContext(Dispatchers.IO) {
+                val jobList = bitmapList.mapIndexed {
+                    index, bkPartBitmap ->
+                    async {
+                        semaphore.withPermit {
+                            val maskPartBitmap = maskBitmapList[index]
+                            val maskedBitmap = maskImageByTransparent(
+                                bkPartBitmap,
+                                maskPartBitmap,
+                            )
+                            channel.send(Pair(index, maskedBitmap))
+                        }
+                    }
+                }
+                jobList.forEach { it.await() }
+                channel.close()
+                for(indexToBitmap in channel){
+                    indexToBitmapList.add(indexToBitmap)
+                }
+                indexToBitmapList.sortBy { it.first }
+                indexToBitmapList.map {
+                    it.second
+                }
+            }
+            val maskedBitmapListLastIndex = maskedBitmapList.lastIndex
+            var totalBitmap: Bitmap? = null
+            var horizonBitmap: Bitmap? = null
+            for(i in 0..< maskedBitmapListLastIndex){
+                val maskedBitmapPart = maskedBitmapList[i]
+                horizonBitmap = when(horizonBitmap == null){
+                    true -> maskedBitmapPart
+                    else -> concatByHorizon(
+                        horizonBitmap,
+                        maskedBitmapPart as Bitmap,
+
+                        )
+                }
+                if(
+                    (i + 1) % divideTimes != 0
+                    ) continue
+                val verticalBitmap = rotate(
+                    horizonBitmap as Bitmap,
+                    90f
+                )
+                totalBitmap = when(totalBitmap == null){
+                    true -> verticalBitmap
+                    else -> concatByHorizon(
+                        horizonBitmap,
+                        maskedBitmapPart as Bitmap,
+                        )
+                }
+            }
+            if(
+                totalBitmap == null
+            ) return null
+            return rotate(
+                totalBitmap,
+                -90f
+            )
+        }
+
         fun mask(
             bkBitmap: Bitmap,
             mascSrcBitmap: Bitmap,
@@ -767,6 +1020,42 @@ object BitmapTool {
             canvas.drawBitmap(mascSrcBitmap, 0f, 0f, paint)
             return output
         }
+
+
+        fun crop(
+            bkBitmap: Bitmap?,
+            toTransform: Bitmap,
+            outWidth: Int,
+            outHeight: Int,
+            out: Boolean
+        ): Bitmap {
+            bkBitmap ?: return toTransform
+
+            val SRC_OUT_PAINT = Paint(PAINT_FLAGS).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_OUT) }
+            val SRC_IN_PAINT = Paint(PAINT_FLAGS).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) }
+            val srcWidth = toTransform.width
+            val srcHeight = toTransform.height
+            val scaleX = outWidth / srcWidth.toFloat()
+            val scaleY = outHeight / srcHeight.toFloat()
+            val maxScale = max(scaleX, scaleY)
+
+            val scaledWidth = maxScale * srcWidth
+            val scaledHeight = maxScale * srcHeight
+            val left = (outWidth - scaledWidth) / 2f
+            val top = (outHeight - scaledHeight) / 2f
+            val destRect = RectF(left, top, left + scaledWidth, top + scaledHeight)
+
+            val bitmap = Bitmap.createBitmap(outWidth, outHeight, Bitmap.Config.ARGB_8888)
+//            pool.get(outWidth, outHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            val paint = if (out) SRC_OUT_PAINT else SRC_IN_PAINT
+            canvas.drawBitmap(bkBitmap, 0f, 0f, null)
+//            drawable.bounds = Rect(0, 0, outWidth, outHeight)
+//            drawable.draw(canvas)
+            canvas.drawBitmap(toTransform, null, destRect, paint)
+            return bitmap
+        }
+
 
         fun convertWhiteToTransparent(
             originalBitmap: Bitmap,
@@ -795,26 +1084,69 @@ object BitmapTool {
             return resultBitmap
         }
 
+        fun exchangeTransparentToBlack(
+            originalBitmap: Bitmap,
+        ): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+
+            // Create a mutable copy of the bitmap
+            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    if (
+                        Color.alpha(pixel) == 0
+                    ) {
+                        resultBitmap.setPixel(x, y, Color.BLACK)
+                        continue
+                    }
+                    resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                }
+            }
+
+            return resultBitmap
+        }
+
+        fun convertBlackToColor(
+            originalBitmap: Bitmap,
+            colorStr: String,
+        ): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+
+            // Create a mutable copy of the bitmap
+            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    val red = Color.red(pixel)
+                    val green = Color.green(pixel)
+                    val blue = Color.blue(pixel)
+                    if (red < 10 && green < 10 && blue < 10) {
+                        // Set the pixel to fully transparent
+                        resultBitmap.setPixel(
+                            x,
+                            y,
+                            Color.parseColor(colorStr)
+                        )
+                        continue
+                    }
+                    resultBitmap.setPixel(x, y, Color.rgb(red, green, blue))
+
+                }
+            }
+
+            return resultBitmap
+        }
+
         private fun isWhite(pixel: Int): Boolean {
             val red = Color.red(pixel)
             val green = Color.green(pixel)
             val blue = Color.blue(pixel)
             return red == 255 && green == 255 && blue == 255
-        }
-
-        fun maskImage(originalImage: Bitmap, maskImage: Bitmap): Bitmap {
-            val resultBitmap = Bitmap.createBitmap(originalImage.width, originalImage.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(resultBitmap)
-
-            // マスク画像の描画とクリッピング
-            val paint = Paint()
-            canvas.drawBitmap(maskImage, 0f, 0f, paint)
-            canvas.clipPath(bitmapToPath(maskImage))
-
-            // 元の画像の描画
-            canvas.drawBitmap(originalImage, 0f, 0f, paint)
-
-            return resultBitmap
         }
 
         fun bitmapToPath(bitmap: Bitmap): Path {
@@ -854,6 +1186,21 @@ object BitmapTool {
 
 // Crop bitmap
             return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
+        }
+
+        fun cutByTarget(
+            bitmap: Bitmap,
+            limitWidthPx: Int,
+            limitHeightPx: Int,
+            offsetX: Int,
+            offsetY: Int,
+        ): Bitmap {
+            // Set some constants
+            val srcWidth = bitmap.width
+            val srcHeight = bitmap.height
+
+// Crop bitmap
+            return Bitmap.createBitmap(bitmap, offsetX, offsetY, limitWidthPx, limitHeightPx, null, false)
         }
 
         fun cutCenter(
