@@ -1864,6 +1864,9 @@ class PromptWithListDialog(
                 val ordinalySizeIconList = listOf(
                     FannelIcons.CROCODILE,
                     FannelIcons.LABRADOR,
+                    FannelIcons.JANOMITI,
+                    FannelIcons.JANOMITI2,
+                    FannelIcons.CHECKER,
                 )
                 val srcMainImageDrawable = AppCompatResources.getDrawable(
                     context,
@@ -1950,7 +1953,7 @@ class PromptWithListDialog(
                 val semaphoreForTextBk = Semaphore(10)
                 val channelForTextBk = Channel<Pair<Int, Bitmap?>>(concurrencyLimitForCenterImage)
                 val indexToTextBkBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
-                val shrinkNumb = (0..5).random()
+                val shrinkNumb = (0..7).random()
                 val strImageList =
                     withContext(Dispatchers.IO) {
                         val jobList = textBitmapList.mapIndexed { index, textBitmap ->
