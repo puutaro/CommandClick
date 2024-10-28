@@ -44,6 +44,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -443,7 +444,7 @@ class PromptWithListDialog(
         promptDialogObj = when(isTransparent) {
             true -> Dialog(
                 context,
-                R.style.BottomSheetDialogTheme
+                R.style.BottomSheetDialogThemeWithNoDimm
 //            R.style.extraMenuDialogStyle,
 //                R.style.BottomSheetDialogThemeWithLightDimm
             )
@@ -557,17 +558,35 @@ class PromptWithListDialog(
                 R.id.prompt_list_dialog_list_bk_image
             ) ?: return
         CoroutineScope(Dispatchers.Main).launch{
-            when(isTransparent) {
-                true -> bkImageView.isVisible = false
+//            when(isTransparent) {
+//                true -> {
+////                    bkImageView.isVisible = false
+//                    val goalAlpha = 0.6f
+//                    val loopTimes = 2
+//                    val plusAlpha = goalAlpha / loopTimes
+//                    bkImageView.apply {
+//                        ToastUtils.showShort("aaa")
+//                        alpha = 1f
+//                        CoroutineScope(Dispatchers.IO).launch {
+//                            for (i in 1..loopTimes) {
+//                                withContext(Dispatchers.IO) {
+//                                    delay(200)
+//                                }
+//                                withContext(Dispatchers.Main) {
+//                                    alpha += plusAlpha
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                else -> {
+            when (
+                isWhiteBackgrond
+            ) {
+                true -> bkImageView.setImageDrawable(
+                    AppCompatResources.getDrawable(context, R.drawable.white_floor)
+                )
                 else -> {
-                    if (
-                        isWhiteBackgrond
-                    ) {
-                        bkImageView.setImageDrawable(
-                            AppCompatResources.getDrawable(context, R.drawable.white_floor)
-                        )
-                        return@launch
-                    }
                     val bitmap = withContext(Dispatchers.IO) {
                         val colorStrList = CmdClickColorStr.entries.map { it.str }
                         val colorIntArray = listOf(
@@ -584,9 +603,17 @@ class PromptWithListDialog(
                             BitmapTool.GradientBitmap.GradOrient.BOTH
                         )
                     }
-                    bkImageView.setImageBitmap(bitmap)
+                    bkImageView.apply {
+                        setImageBitmap(bitmap)
+                    }
                 }
             }
+            if(!isTransparent) return@launch
+            originalDimmEffect(
+                bkImageView
+            )
+//                }
+//            }
         }
         CoroutineScope(Dispatchers.Main).launch {
             val promptEditText = withContext(Dispatchers.Main) {
@@ -712,7 +739,9 @@ class PromptWithListDialog(
                     promptDialogObj,
                     statisticsTitleList,
                     fannelDirPath,
-                    promptListFile?.name,
+                    promptListFile?.name?.let {
+                        CcPathTool.trimAllExtend(it)
+                    },
                 )
             }
         }
@@ -840,6 +869,27 @@ class PromptWithListDialog(
 //        delay(200)
 //        promptListView?.scrollToPosition(promptListAdapter.itemCount - 1)
 //    }
+
+    private fun originalDimmEffect(
+        imageView: AppCompatImageView?
+    ){
+        val goalAlpha = 0.9f
+        val loopTimes = 2
+        val plusAlpha = goalAlpha / loopTimes
+        imageView?.apply {
+            alpha = 0f
+            CoroutineScope(Dispatchers.IO).launch {
+                for (i in 1..loopTimes) {
+                    withContext(Dispatchers.IO) {
+                        delay(200)
+                    }
+                    withContext(Dispatchers.Main) {
+                        alpha += plusAlpha
+                    }
+                }
+            }
+        }
+    }
 
     private fun makePromptTitle(
         promptDialogObj: Dialog?,
@@ -1333,9 +1383,6 @@ class PromptWithListDialog(
             statisticsTitleList: List<String?>,
             fannelDirPath: String,
             saveTagName: String?,
-//            fannelDirPath: String,
-//            saveTagName: String?,
-//            promptMapList: List<Map<String, String?>>,
         ){
 //            DotBk.handle(
 //                terminalFragmentRef,
@@ -1422,7 +1469,7 @@ class PromptWithListDialog(
                         ?: return
                 val context = terminalFragment.context
                     ?: return
-                val isAlreadySet = isDotImageCreate(
+                val isAlreadySet =  isDotImageCreate(
                     fannelDirPath,
                     saveTagName,
                 )
@@ -1675,7 +1722,7 @@ class PromptWithListDialog(
                 val cutPeaceLength = 128
                 val srcOneSide = cutPeaceLength * 8
                 val curRepeatNum = let {
-                    val baseRepeatNum = 1800
+                    val baseRepeatNum = 2500
                     val baseCutPeace = 32f
                     (baseRepeatNum * cutPeaceLength * 2.5) / baseCutPeace
                 }
@@ -1709,7 +1756,7 @@ class PromptWithListDialog(
                                         titlesText,
                                         srcTextBitmapSideLength,
                                         srcTextBitmapSideLength,
-                                        (17..22).random().toFloat(),
+                                        (15..20).random().toFloat(),
                                         Color.BLACK
                                     ).let {
                                         ImageTransformer.cutCenter2(
@@ -1803,6 +1850,7 @@ class PromptWithListDialog(
 //                )
                 val srcMainImageBitmap = AppCompatResources.getDrawable(
                     context,
+//                    FannelIcons.LABRADOR.id
                     FannelIcons.entries.random().id
                 )?.toBitmap(
                     marginOneSide,
@@ -1814,11 +1862,22 @@ class PromptWithListDialog(
 //                            "${LocalDateTime.now()}"
 //                        ).joinToString("\n")
 //                    )
-                    ImageTransformer.cutCenter2(
+                    val mainImageSrc = ImageTransformer.cutCenter2(
                         it,
                         srcOneSide,
                         srcOneSide
                     )
+                    when(
+                        (1..3).random() % 2 == 0
+                    ){
+                        true -> {
+                           ImageTransformer.exchangeTransparentToBlack(
+                               mainImageSrc
+                           )
+                        }
+                        else -> mainImageSrc
+                    }
+//                    mainImageSrc
                 } as Bitmap
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make_excange.txt").absolutePath,
@@ -1839,10 +1898,41 @@ class PromptWithListDialog(
 //                            "${LocalDateTime.now()}"
 //                        ).joinToString("\n")
 //                    )
-                    ImageTransformer.maskImageByTransparent(
+                    val colorList = CmdClickColorStr.entries.map {
+                        it.str
+                    }
+                    val centerColorStr = null
+//                    val colorIntArray = listOf(
+//                        colorList.random(),
+////                        centerColorStr ?: colorList.random(),
+//                        colorList.random()
+//                    ).map {
+//                        Color.parseColor(it)
+//                    }.toIntArray()
+                    val maskedMainImageBitmap = ImageTransformer.maskImageByTransparent(
                         srcMainImageBitmap,
                         reversedSquareBitmap,
                     )
+                    maskedMainImageBitmap
+//                    val gradationRect = BitmapTool.GradientBitmap.makeGradientBitmap2(
+//                        srcMainImageBitmap.width,
+//                        srcMainImageBitmap.height,
+//                        colorIntArray,
+//                        BitmapTool.GradientBitmap.GradOrient.BOTH
+//                    )
+//                    FileSystems.writeFromByteArray(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lgradationRect.png").absolutePath,
+//                        BitmapTool.convertBitmapToByteArray(gradationRect)
+//                    )
+//                    val cropMainImageBitmap = ImageTransformer.mask(
+//                        gradationRect,
+//                        maskedMainImageBitmap,
+//                    )
+//                    FileSystems.writeFromByteArray(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lcropMainImageBitmap.png").absolutePath,
+//                        BitmapTool.convertBitmapToByteArray(cropMainImageBitmap)
+//                    )
+//                    cropMainImageBitmap
                 }
                 val mainImagePathList =
                     PromptListImageSet.getMainImagePath(statisticsDotImageDirPath)
@@ -1870,7 +1960,7 @@ class PromptWithListDialog(
                 val semaphoreForTextBk = Semaphore(10)
                 val channelForTextBk = Channel<Pair<Int, Bitmap?>>(concurrencyLimitForCenterImage)
                 val indexToTextBkBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
-                val shrinkNumb = 0 //(0..5).random()
+                val shrinkNumb = (0..5).random()
                 val strImageList =
                     withContext(Dispatchers.IO) {
                         val jobList = textBitmapList.mapIndexed { index, textBitmap ->
@@ -2071,7 +2161,8 @@ class PromptWithListDialog(
                     text to (startInt..endInt)
                 }.toMap()
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (100..400)
+                val alphaRndList = (200..400)
+//                    (100..400)
                 val repeatTimes = (7..10).random()
                 val textSizeEnd = 11
                 val textSizeDiff = textSizeEnd / decentTextList.size
@@ -2230,7 +2321,7 @@ class PromptWithListDialog(
                             addRule(RelativeLayout.ALIGN_PARENT_END)
                         }
                         layoutParams = relativeParam
-                        alpha = 0.6f
+                        alpha = 0.7f
                     }
                     bkFrameLayout.addView(shuujiImageWhiteShadow2)
                     bkFrameLayout.addView(shuujiImageWhiteShadow3)
@@ -2379,7 +2470,8 @@ class PromptWithListDialog(
                     text to (startInt..endInt)
                 }.toMap()
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (100..400)
+                val alphaRndList = (200..400)
+                    //(100..400)
                 val repeatTimes = (5..10).random()
                 val textSizeEnd = 30
                 val textSizeDiff = textSizeEnd / decentTextList.size
@@ -2584,7 +2676,7 @@ class PromptWithListDialog(
                 val oneSideLengthRndList = (300..(7 * screenWidthInt) / 4)
                 val holeRadiasHolePercentRndList = (0..75)
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (100..400)
+                val alphaRndList = (200..400) //(100..400)
                 val repeatTimes = (10..15).random()
                 val animationTriggerEndNum = 8
                 val animationTriggerRndList = (1..animationTriggerEndNum)

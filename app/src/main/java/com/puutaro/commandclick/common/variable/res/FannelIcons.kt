@@ -18,10 +18,10 @@ enum class FannelIcons(
         "airphane",
         R.drawable.fannel_at_mark
     ),
-    AWARD(
-        "award",
-        R.drawable.fannel_award
-    ),
+//    AWARD(
+//        "award",
+//        R.drawable.fannel_award
+//    ),
     BALLOON(
         "balloon",
         R.drawable.fannel_balloon
@@ -48,7 +48,7 @@ enum class FannelIcons(
     ),
     CORSAIR(
         "corsair",
-        R.drawable.fannel_corsair
+        R.drawable.fannel_cosair
     ),
     CROCODILE(
         "crocodile",
@@ -124,7 +124,7 @@ enum class FannelIcons(
     ),
     HIME(
         "hime",
-        R.drawable.fannel_hime
+        R.drawable.fannel_hime1
     ),
     HIME2(
         "hime2",
@@ -140,7 +140,7 @@ enum class FannelIcons(
     ),
     JINJA(
         "jinja",
-        R.drawable.fannel_jinja
+        R.drawable.fannel_jinja1
     ),
     JINJA2(
         "jinja2",
@@ -220,7 +220,7 @@ enum class FannelIcons(
     ),
     PHENIX(
         "phenix",
-        R.drawable.fannel_phenix
+        R.drawable.fannel_phenix1
     ),
     PHENIX2(
         "phenix2",
