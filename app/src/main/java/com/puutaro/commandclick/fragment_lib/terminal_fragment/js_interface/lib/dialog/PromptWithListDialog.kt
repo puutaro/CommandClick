@@ -1520,7 +1520,7 @@ class PromptWithListDialog(
                     CmdClickColorStr.YELLOW.str,
 //                    CmdClickColorStr.SKERLET.str,
                     "#000000",
-                    "#ffffff",
+//                    "#ffffff",
                     CmdClickColorStr.SKERLET.str,
                     CmdClickColorStr.YELLOW.str,
                 )
@@ -1870,7 +1870,7 @@ class PromptWithListDialog(
                 val semaphoreForTextBk = Semaphore(10)
                 val channelForTextBk = Channel<Pair<Int, Bitmap?>>(concurrencyLimitForCenterImage)
                 val indexToTextBkBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
-                val shrinkNumb = (0..5).random()
+                val shrinkNumb = 0 //(0..5).random()
                 val strImageList =
                     withContext(Dispatchers.IO) {
                         val jobList = textBitmapList.mapIndexed { index, textBitmap ->
