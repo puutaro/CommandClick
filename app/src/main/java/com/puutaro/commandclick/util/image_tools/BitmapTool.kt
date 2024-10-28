@@ -29,6 +29,7 @@ import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
+import com.itextpdf.text.pdf.PdfName.FF
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
-import java.time.LocalDateTime
 import java.util.Arrays
 import java.util.Locale
 import kotlin.math.max
@@ -843,6 +843,18 @@ object BitmapTool {
             val height = bitmap.height
             val matrix = Matrix().apply { postScale(1f, -1f, width / 2f, height / 2f) }
             return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        }
+
+        fun addPadding(Src: Bitmap, padding_x: Int, padding_y: Int): Bitmap {
+            val outputimage = Bitmap.createBitmap(
+                Src.width + padding_x,
+                Src.height + padding_y,
+                Bitmap.Config.ARGB_8888
+            )
+            val can = Canvas(outputimage)
+            can.drawARGB(0, 0, 0, 0) //This represents White color
+            can.drawBitmap(Src, (padding_x / 2f), (padding_y / 2f), null)
+            return outputimage
         }
 
         fun makeRect(

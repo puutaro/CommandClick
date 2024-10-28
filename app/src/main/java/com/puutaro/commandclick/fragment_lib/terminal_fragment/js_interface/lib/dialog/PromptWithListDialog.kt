@@ -1851,67 +1851,68 @@ class PromptWithListDialog(
                     }
                 }
                 val maskSquare = textBitmapListToMaskSquare.second ?: return
-                val marginOneSide = srcOneSide + 10
+                val padding = srcOneSide * 0.15
+                val marginOneSide = (srcOneSide - padding).toInt()
+                    //srcOneSide + 10
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make.txt").absolutePath,
 //                    listOf(
 //                        "${LocalDateTime.now()}"
 //                    ).joinToString("\n")
 //                )
-                val srcMainImageBitmap = AppCompatResources.getDrawable(
+                val fannelIcon = FannelIcons.entries.random()
+                val ordinalySizeIconList = listOf(
+                    FannelIcons.CROCODILE,
+                    FannelIcons.LABRADOR,
+                )
+                val srcMainImageDrawable = AppCompatResources.getDrawable(
                     context,
 //                    FannelIcons.LABRADOR.id
-                    FannelIcons.entries.random().id
-                )?.toBitmap(
-                    marginOneSide,
-                    marginOneSide
-                )?.let {
-//                    FileSystems.writeFile(
-//                        File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make_cut.txt").absolutePath,
-//                        listOf(
-//                            "${LocalDateTime.now()}"
-//                        ).joinToString("\n")
-//                    )
-                    val mainImageSrc = ImageTransformer.cutCenter2(
-                        it,
+                    fannelIcon.id
+                ) ?: return
+                val srcMainImageBitmap = when(
+                    ordinalySizeIconList.contains(fannelIcon)
+                ) {
+                    true -> srcMainImageDrawable.toBitmap(
                         srcOneSide,
                         srcOneSide
                     )
+                    else -> {
+                        val srcMainImageBitmapWithMargin = srcMainImageDrawable.toBitmap(
+                            marginOneSide,
+                            marginOneSide
+                        )
+                        ImageTransformer.addPadding(
+                            srcMainImageBitmapWithMargin,
+                            padding.toInt(),
+                            padding.toInt()
+                        ).let {
+                            BitmapTool.resizeByMaxHeight(
+                                it,
+                                srcOneSide.toDouble()
+                            )
+                        }
+                    }
+                }.let {
                     when(
                         (1..3).random() % 2 == 0
                     ){
                         true -> {
-                           ImageTransformer.exchangeTransparentToBlack(
-                               mainImageSrc
-                           )
+                            ImageTransformer.exchangeTransparentToBlack(
+                                it
+                            )
                         }
-                        else -> mainImageSrc
+                        else -> it
                     }
-//                    mainImageSrc
-                } as Bitmap
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_CenterImage_make_excange.txt").absolutePath,
-//                    listOf(
-//                        "${LocalDateTime.now()}"
-//                    ).joinToString("\n")
-//                )
+                }
                 val mainImageBitmap = let {
                     val reversedSquareBitmap = ImageTransformer.exchangeTransparentToBlack(
                         maskSquare,
                     )
-//                    FileSystems.writeFile(
-//                        File(
-//                            UsePath.cmdclickDefaultAppDirPath,
-//                            "lLocal_CenterImage_make_mask.txt"
-//                        ).absolutePath,
-//                        listOf(
-//                            "${LocalDateTime.now()}"
-//                        ).joinToString("\n")
-//                    )
-                    val colorList = CmdClickColorStr.entries.map {
-                        it.str
-                    }
-                    val centerColorStr = null
+//                    val colorList = CmdClickColorStr.entries.map {
+//                        it.str
+//                    }
+//                    val centerColorStr = null
 //                    val colorIntArray = listOf(
 //                        colorList.random(),
 ////                        centerColorStr ?: colorList.random(),
@@ -1919,11 +1920,11 @@ class PromptWithListDialog(
 //                    ).map {
 //                        Color.parseColor(it)
 //                    }.toIntArray()
-                    val maskedMainImageBitmap = ImageTransformer.maskImageByTransparent(
-                        srcMainImageBitmap,
-                        reversedSquareBitmap,
-                    )
-                    maskedMainImageBitmap
+                val maskedMainImageBitmap = ImageTransformer.maskImageByTransparent(
+                    srcMainImageBitmap,
+                    reversedSquareBitmap,
+                )
+                maskedMainImageBitmap
 //                    val gradationRect = BitmapTool.GradientBitmap.makeGradientBitmap2(
 //                        srcMainImageBitmap.width,
 //                        srcMainImageBitmap.height,
@@ -1938,11 +1939,6 @@ class PromptWithListDialog(
 //                        gradationRect,
 //                        maskedMainImageBitmap,
 //                    )
-//                    FileSystems.writeFromByteArray(
-//                        File(UsePath.cmdclickDefaultAppDirPath, "lcropMainImageBitmap.png").absolutePath,
-//                        BitmapTool.convertBitmapToByteArray(cropMainImageBitmap)
-//                    )
-//                    cropMainImageBitmap
                 }
                 val mainImagePathList =
                     PromptListImageSet.getMainImagePath(statisticsDotImageDirPath)
@@ -1950,22 +1946,6 @@ class PromptWithListDialog(
                     mainImagePathList,
                     BitmapTool.convertBitmapToByteArray(mainImageBitmap)
                 )
-//                FileSystems.writeFile(
-//                    File(
-//                        UsePath.cmdclickDefaultAppDirPath,
-//                        "lLocal_CenterImage_make_end.txt"
-//                    ).absolutePath,
-//                    listOf(
-//                        "${LocalDateTime.now()}"
-//                    ).joinToString("\n")
-//                )
-//
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "lLocal_TextBk_make.txt").absolutePath,
-//                    listOf(
-//                        "${LocalDateTime.now()}"
-//                    ).joinToString("\n")
-//                )
                 val concurrencyLimitForCenterImage = textBitmapList.size
                 val semaphoreForTextBk = Semaphore(10)
                 val channelForTextBk = Channel<Pair<Int, Bitmap?>>(concurrencyLimitForCenterImage)
