@@ -32,9 +32,9 @@ object ListJsDialogV2 {
         val saveTag = listJsDialogMap.get(
             ListJsDialogKey.SAVE_TAG.key
         ) ?: String()
-        val backgroundType = listJsDialogMap.get(
-            ListJsDialogKey.BACKGROUND_TYPE.key
-        ) ?: String()
+//        val backgroundType = listJsDialogMap.get(
+//            ListJsDialogKey.BACKGROUND_TYPE.key
+//        ) ?: String()
 //        val onKeyOpenMode = listJsDialogMap.get(
 //            ListJsDialogKey.ON_KEY_OPEN_MODE.key
 //        ) ?: String()
@@ -63,8 +63,6 @@ object ListJsDialogV2 {
                     ${PromptWithListDialog.Companion.PromptEditTextKey.default.name}=${defaultSearchText}
                     |${PromptWithListDialog.Companion.PromptEditTextKey.hint.name}="${searchHint}"
                     |${PromptWithListDialog.Companion.PromptEditTextKey.visible.name}=${searchVisible},
-                ${PromptWithListDialog.Companion.PromptWithTextMapKey.background.name}=
-                    ${PromptWithListDialog.Companion.PromptBackground.Key.type.name}=${backgroundType},
             """.trimIndent().split("\n").joinToString(String()) {
             it.trim()
         }
@@ -84,7 +82,7 @@ object ListJsDialogV2 {
         SEARCH_HINT("searchHint"),
         DEFAULT_SEARCH_TEXT("defaultSearchText"),
 //        DISABLE_LIST_BIND_STR(PromptWithListDialog.Companion.PromptEditTextKey.disableListBind.name),
-        BACKGROUND_TYPE("backgroundType"),
+//        BACKGROUND_TYPE("backgroundType"),
 //        ON_KEY_OPEN_MODE(PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name),
     }
 }

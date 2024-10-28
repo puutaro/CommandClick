@@ -124,7 +124,7 @@ class PromptWithListDialog(
         enum class PromptWithTextMapKey {
             list,
             editText,
-            background,
+//            background,
             title,
             extra,
         }
@@ -161,15 +161,15 @@ class PromptWithListDialog(
         }
 
 
-        object PromptBackground {
-            enum class Key {
-                type
-            }
-
-            enum class Type{
-                transparent
-            }
-        }
+//        object PromptBackground {
+//            enum class Key {
+//                type
+//            }
+//
+//            enum class Type{
+//                transparent
+//            }
+//        }
 
         object PromptMapList {
 
@@ -423,37 +423,47 @@ class PromptWithListDialog(
                 keySeparator
             ).toMap()
         }
-        val promptBkMap = promptConfigMap.get(PromptWithTextMapKey.background.name)?.let {
-            CmdClickMap.createMap(
-                it,
-                keySeparator
-            ).toMap()
+//        val promptBkMap = promptConfigMap.get(PromptWithTextMapKey.background.name)?.let {
+//            CmdClickMap.createMap(
+//                it,
+//                keySeparator
+//            ).toMap()
+//        }
+//        val isTransparent = true
+//        promptBkMap?.get(
+//            PromptBackground.Key.type.name
+//        ) == PromptBackground.Type.transparent.name
+        val isWhiteBackgrond = let {
+            val randEndNum = 5
+            (1..randEndNum).random() % randEndNum == 0
         }
-        val isTransparent = promptBkMap?.get(
-            PromptBackground.Key.type.name
-        ) == PromptBackground.Type.transparent.name
-        val isWhiteBackgrond =
-            when(isTransparent) {
-                true -> false
-                else -> {
-                    val randEndNum = 5
-                    (1..randEndNum).random() % randEndNum == 0
-                }
-            }
+//            when(isTransparent) {
+//                true -> false
+//                else -> {
+//                    val randEndNum = 5
+//                    (1..randEndNum).random() % randEndNum == 0
+//                }
+//            }
 
-        promptDialogObj = when(isTransparent) {
-            true -> Dialog(
-                context,
-                R.style.BottomSheetDialogThemeWithNoDimm
+        promptDialogObj = Dialog(
+            context,
+            R.style.BottomSheetDialogThemeWithNoDimm
 //            R.style.extraMenuDialogStyle,
 //                R.style.BottomSheetDialogThemeWithLightDimm
-            )
-            else -> Dialog(
-                context,
-//            R.style.extraMenuDialogStyle,
-                R.style.BottomSheetDialogTheme
-            )
-        }
+        )
+//        when(isTransparent) {
+//            true -> Dialog(
+//                context,
+//                R.style.BottomSheetDialogThemeWithNoDimm
+////            R.style.extraMenuDialogStyle,
+////                R.style.BottomSheetDialogThemeWithLightDimm
+//            )
+//            else -> Dialog(
+//                context,
+////            R.style.extraMenuDialogStyle,
+//                R.style.BottomSheetDialogTheme
+//            )
+//        }
         promptDialogObj?.setContentView(
             R.layout.prompt_list_dialog_layout
         )
@@ -608,7 +618,7 @@ class PromptWithListDialog(
                     }
                 }
             }
-            if(!isTransparent) return@launch
+//            if(!isTransparent) return@launch
             originalDimmEffect(
                 bkImageView
             )
@@ -708,11 +718,11 @@ class PromptWithListDialog(
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         promptDialogObj?.window?.apply {
-            if(isTransparent) {
+//            if(isTransparent) {
                 setBackgroundDrawable(
                     ColorDrawable(Color.TRANSPARENT)
                 )
-            }
+//            }
             setGravity(
                 Gravity.BOTTOM
             )
@@ -2470,7 +2480,7 @@ class PromptWithListDialog(
                     text to (startInt..endInt)
                 }.toMap()
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (200..400)
+                val alphaRndList = (100..300)
                     //(100..400)
                 val repeatTimes = (5..10).random()
                 val textSizeEnd = 30

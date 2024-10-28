@@ -92,8 +92,6 @@ object LongPressMenuTool {
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.editText.name}=
                     |${PromptWithListDialog.Companion.PromptEditTextKey.disableListBind.name}=${switchOff}
                     |${PromptWithListDialog.Companion.PromptEditTextKey.visible.name}=${switchOff},
-                ${PromptWithListDialog.Companion.PromptWithTextMapKey.background.name}=
-                    ${PromptWithListDialog.Companion.PromptBackground.Key.type.name}=transparent,
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.extra.name}=
                     |${PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name}=${switchOff},
             """.trimIndent().split("\n").joinToString(String()) {
