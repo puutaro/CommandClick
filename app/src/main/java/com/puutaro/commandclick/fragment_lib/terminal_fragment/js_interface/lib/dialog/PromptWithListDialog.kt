@@ -44,7 +44,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -433,7 +432,7 @@ class PromptWithListDialog(
 //        promptBkMap?.get(
 //            PromptBackground.Key.type.name
 //        ) == PromptBackground.Type.transparent.name
-        val isWhiteBackgrond = let {
+        val isWhiteBackground = let {
             val randEndNum = 5
             (1..randEndNum).random() % randEndNum == 0
         }
@@ -493,7 +492,7 @@ class PromptWithListDialog(
         val promptListTitleView = makePromptTitle(
             promptDialogObj,
             title,
-            isWhiteBackgrond,
+            isWhiteBackground,
             titleMap,
         )
         val editTextMap = CmdClickMap.createMap(
@@ -591,7 +590,7 @@ class PromptWithListDialog(
 //                }
 //                else -> {
             when (
-                isWhiteBackgrond
+                isWhiteBackground
             ) {
                 true -> bkImageView.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.white_floor)
@@ -638,7 +637,7 @@ class PromptWithListDialog(
                 PromptListAdapter(
                     context,
                     promptList,
-                    isWhiteBackgrond,
+                    isWhiteBackground,
                     focusItemTitlesList,
                 )
             }
@@ -752,6 +751,7 @@ class PromptWithListDialog(
                     promptListFile?.name?.let {
                         CcPathTool.trimAllExtend(it)
                     },
+                    isWhiteBackground,
                 )
             }
         }
@@ -1393,6 +1393,7 @@ class PromptWithListDialog(
             statisticsTitleList: List<String?>,
             fannelDirPath: String,
             saveTagName: String?,
+            isWhiteBackground: Boolean,
         ){
 //            DotBk.handle(
 //                terminalFragmentRef,
@@ -1426,6 +1427,7 @@ class PromptWithListDialog(
                     statisticsTitleList,
                     fannelDirPath,
                     saveTagName,
+                    isWhiteBackground,
                 )
                 else -> makePieBk(
                     terminalFragmentRef,
@@ -1450,12 +1452,14 @@ class PromptWithListDialog(
                 statisticsTitleList: List<String?>,
                 fannelDirPath: String,
                 saveTagName: String?,
+                isWhiteBackground: Boolean,
             ){
                 setImageSet(
                     terminalFragmentRef,
                     promptDialogObj,
                     fannelDirPath,
                     saveTagName,
+                    isWhiteBackground,
                 )
                 exit()
                 imageSetMakeJob = CoroutineScope(Dispatchers.IO).launch {
@@ -1473,6 +1477,7 @@ class PromptWithListDialog(
                 promptDialogObj: Dialog?,
                 fannelDirPath: String,
                 saveTagName: String?,
+                isWhiteBackground: Boolean,
             ) {
                 val terminalFragment =
                     terminalFragmentRef.get()
@@ -1596,7 +1601,10 @@ class PromptWithListDialog(
 //                    CmdClickColorStr.DARK_BROWN.str,
                     "#000000",
                 )
-                val frontBkImageColorStr = imageColorStrList.random()
+                val frontBkImageColorStr = when(isWhiteBackground) {
+                    true -> darkColorList.random()
+                    else -> imageColorStrList.random()
+                }
                 val isLightColorToBack = darkColorList.contains(frontBkImageColorStr)
                 val backBkImageColorStr = imageColorStrList.filter {
                     if (isLightColorToBack) {
