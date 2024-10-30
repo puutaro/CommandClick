@@ -53,7 +53,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.FannelIcons
@@ -486,9 +485,13 @@ class PromptWithListDialog(
         val promptListView = promptDialogObj?.findViewById<RecyclerView>(
             R.id.prompt_list_dialog_list_view
         )
+        val firstTitleGradColorsStrList = firstTitleGradColorStrList(
+            isWhiteBackground
+        )
         val promptListTitleView = makePromptTitle(
             promptDialogObj,
             title,
+            firstTitleGradColorsStrList,
             isWhiteBackground,
             titleMap,
         )
@@ -740,6 +743,7 @@ class PromptWithListDialog(
                     terminalFragmentRef,
                     promptDialogObj,
                     statisticsTitleList,
+                    firstTitleGradColorsStrList,
                     isWhiteBackground,
                 )
             }
@@ -861,6 +865,61 @@ class PromptWithListDialog(
         )
     }
 
+    private fun firstTitleGradColorStrList(
+        isWhiteBackgrond: Boolean
+    ): List<String> {
+        val whiteColorStr = "#ffffff"
+        val colorList = listOf(
+            CmdClickColorStr.LIGHT_GREEN.str,
+            CmdClickColorStr.THICK_AO.str,
+            CmdClickColorStr.BLUE.str,
+            CmdClickColorStr.SKERLET.str,
+            CmdClickColorStr.YELLOW.str,
+            CmdClickColorStr.WHITE_GREEN.str,
+            CmdClickColorStr.GREEN.str,
+            CmdClickColorStr.YELLOW_GREEN.str,
+            CmdClickColorStr.BLACK_AO.str,
+            CmdClickColorStr.WATER_BLUE.str,
+            CmdClickColorStr.PURPLE.str,
+            CmdClickColorStr.ORANGE.str,
+            CmdClickColorStr.BROWN.str,
+        )
+        val color1 = colorList.random()
+        val color2 = let {
+            if(
+                !isWhiteBackgrond
+            ) return@let whiteColorStr
+            var color2Str = String()
+            for(i in 1..5) {
+                color2Str = colorList.random()
+                if (
+                    color2Str != color1
+                ) return@let color2Str
+            }
+            color2Str
+        }
+        val alreadyColorList = listOf(
+            color1,
+            color2,
+        )
+        val color3 = runBlocking {
+            var color3Str = String()
+            for(i in 1..5) {
+                color3Str = colorList.random()
+                if (
+                    !alreadyColorList.contains(color3Str)
+                ) return@runBlocking color3Str
+            }
+            color3Str
+        }
+        return listOf(
+            color1,
+            color2,
+            whiteColorStr,
+            color3
+        ) // Define your gradient colors
+    }
+
 //    private suspend fun scrollToBottom(
 //        promptListView: RecyclerView?,
 //        promptListAdapter: PromptListAdapter,
@@ -893,6 +952,7 @@ class PromptWithListDialog(
     private fun makePromptTitle(
         promptDialogObj: Dialog?,
         title: String,
+        firstTitleGradColorsStrList: List<String>,
         isWhiteBackgrond: Boolean,
         titleMap: Map<String, String>?,
     ): OutlineTextView? {
@@ -918,56 +978,60 @@ class PromptWithListDialog(
                 1,
                 0
             )
-            val colorList = listOf(
-                CmdClickColorStr.LIGHT_GREEN.str,
-                CmdClickColorStr.THICK_AO.str,
-                CmdClickColorStr.BLUE.str,
-                CmdClickColorStr.SKERLET.str,
-                CmdClickColorStr.YELLOW.str,
-                CmdClickColorStr.WHITE_GREEN.str,
-                CmdClickColorStr.GREEN.str,
-                CmdClickColorStr.YELLOW_GREEN.str,
-                CmdClickColorStr.BLACK_AO.str,
-                CmdClickColorStr.WATER_BLUE.str,
-                CmdClickColorStr.PURPLE.str,
-                CmdClickColorStr.ORANGE.str,
-                CmdClickColorStr.BROWN.str,
-            )
-            val whiteColorStr = "#ffffff"
-            val color1 = colorList.random()
-            val color2 = runBlocking {
-                if(
-                    !isWhiteBackgrond
-                ) return@runBlocking whiteColorStr
-                var color2Str = String()
-                for(i in 1..5) {
-                    color2Str = colorList.random()
-                    if (
-                        color2Str != color1
-                    ) return@runBlocking color2Str
-                }
-                color2Str
-            }
-            val alreadyColorList = listOf(
-                color1,
-                color2,
-            )
-            val color3 = runBlocking {
-                var color3Str = String()
-                for(i in 1..5) {
-                    color3Str = colorList.random()
-                    if (
-                        !alreadyColorList.contains(color3Str)
-                    ) return@runBlocking color3Str
-                }
-                color3Str
-            }
-            val colors = intArrayOf(
-                Color.parseColor(color1),
-                Color.parseColor(color2),
-                Color.parseColor(whiteColorStr),
-                Color.parseColor(color3)
-            ) // Define your gradient colors
+//            val colorList = listOf(
+//                CmdClickColorStr.LIGHT_GREEN.str,
+//                CmdClickColorStr.THICK_AO.str,
+//                CmdClickColorStr.BLUE.str,
+//                CmdClickColorStr.SKERLET.str,
+//                CmdClickColorStr.YELLOW.str,
+//                CmdClickColorStr.WHITE_GREEN.str,
+//                CmdClickColorStr.GREEN.str,
+//                CmdClickColorStr.YELLOW_GREEN.str,
+//                CmdClickColorStr.BLACK_AO.str,
+//                CmdClickColorStr.WATER_BLUE.str,
+//                CmdClickColorStr.PURPLE.str,
+//                CmdClickColorStr.ORANGE.str,
+//                CmdClickColorStr.BROWN.str,
+//            )
+//            val whiteColorStr = "#ffffff"
+//            val color1 = colorList.random()
+//            val color2 = runBlocking {
+//                if(
+//                    !isWhiteBackgrond
+//                ) return@runBlocking whiteColorStr
+//                var color2Str = String()
+//                for(i in 1..5) {
+//                    color2Str = colorList.random()
+//                    if (
+//                        color2Str != color1
+//                    ) return@runBlocking color2Str
+//                }
+//                color2Str
+//            }
+//            val alreadyColorList = listOf(
+//                color1,
+//                color2,
+//            )
+//            val color3 = runBlocking {
+//                var color3Str = String()
+//                for(i in 1..5) {
+//                    color3Str = colorList.random()
+//                    if (
+//                        !alreadyColorList.contains(color3Str)
+//                    ) return@runBlocking color3Str
+//                }
+//                color3Str
+//            }
+
+            val colors = firstTitleGradColorsStrList.map {
+                Color.parseColor(it)
+            }.toIntArray()
+//            intArrayOf(
+//                Color.parseColor(color1),
+//                Color.parseColor(color2),
+//                Color.parseColor(whiteColorStr),
+//                Color.parseColor(color3)
+//            ) // Define your gradient colors
             val angle = (220..320).random() //45 // Set the gradient angle
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lgradient.txt").absolutePath,
@@ -1380,6 +1444,7 @@ class PromptWithListDialog(
             terminalFragmentRef: WeakReference<TerminalFragment>,
             promptDialogObj: Dialog?,
             statisticsTitleList: List<String?>,
+            firstTitleGradColorsStrList: List<String>,
             isWhiteBackground: Boolean,
         ){
 //            DotBk.handle(
@@ -1409,6 +1474,7 @@ class PromptWithListDialog(
                     terminalFragmentRef,
                     promptDialogObj,
                     statisticsTitleList,
+                    firstTitleGradColorsStrList,
                     isWhiteBackground,
                 )
                 else -> makePieBk(
@@ -1432,6 +1498,7 @@ class PromptWithListDialog(
                 terminalFragmentRef: WeakReference<TerminalFragment>,
                 promptDialogObj: Dialog?,
                 statisticsTitleList: List<String?>,
+                firstTitleGradColorsStrList: List<String>,
                 isWhiteBackground: Boolean,
             ){
                 val context = terminalFragmentRef.get()?.context
@@ -1444,6 +1511,7 @@ class PromptWithListDialog(
                     terminalFragmentRef,
                     promptDialogObj,
                     imageSetTriple,
+                    firstTitleGradColorsStrList,
                     isWhiteBackground,
                 )
             }
@@ -1452,6 +1520,7 @@ class PromptWithListDialog(
                 terminalFragmentRef: WeakReference<TerminalFragment>,
                 promptDialogObj: Dialog?,
                 imageSetTriple: Triple<List<Bitmap?>, Bitmap, List<Bitmap?>>?,
+                firstTitleGradColorsStrList: List<String>,
                 isWhiteBackground: Boolean,
             ) {
                 if(
@@ -1598,10 +1667,19 @@ class PromptWithListDialog(
                     "#000000",
                 )
                 val frontBkImageColorStr = when(isWhiteBackground) {
-                    true -> dotStormColorListForWhiteBackground.random()
+                    true -> dotStormColorListForWhiteBackground
                         // darkColorList.random()
-                    else -> imageColorStrList.random()
-                }
+                    else -> imageColorStrList
+                }.let {
+                    frontBkImageColorStrListSrc ->
+                    val filteredFirstTitleGradColorsStrList = frontBkImageColorStrListSrc.filter {
+                        firstTitleGradColorsStrList.contains(it)
+                    }
+                    if(
+                        filteredFirstTitleGradColorsStrList.isNotEmpty()
+                    ) return@let filteredFirstTitleGradColorsStrList
+                    frontBkImageColorStrListSrc
+                }.random()
                 val isLightColorToBack = darkColorList.contains(frontBkImageColorStr)
                 val backBkImageColorStr = imageColorStrList.filter {
                     if (isLightColorToBack) {
@@ -1610,6 +1688,15 @@ class PromptWithListDialog(
                     true
                 }.filter {
                     it != frontBkImageColorStr
+                }.let {
+                    colorStrList ->
+                    val filteredFirstTitleGradColorsStrList = colorStrList.filter {
+                        firstTitleGradColorsStrList.contains(it)
+                    }
+                    if(
+                        filteredFirstTitleGradColorsStrList.isNotEmpty()
+                    ) return@let filteredFirstTitleGradColorsStrList
+                    colorStrList
                 }.random()
                 promptDialogObj?.findViewById<AppCompatImageView>(
                     R.id.prompt_list_dialog_list_extra_bk_fore_image
@@ -1793,7 +1880,12 @@ class PromptWithListDialog(
                     FannelIcons.SKULL_HORIZON,
 
                 )
-                val fannelIcon = FannelIcons.entries.random()
+                val noUseFannelIconList = listOf(
+                    FannelIcons.JANOMITI2
+                )
+                val fannelIcon = FannelIcons.entries.filter {
+                    !noUseFannelIconList.contains(it)
+                }.random()
                 //useFannelIconList.random()
                 val ordinalySizeIconList = listOf(
                     FannelIcons.CROCODILE,
