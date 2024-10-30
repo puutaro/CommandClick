@@ -1541,7 +1541,6 @@ class PromptWithListDialog(
 
                 val imageColorStrList = listOf(
                     CmdClickColorStr.LIGHT_GREEN.str,
-                    CmdClickColorStr.WHITE_GREEN.str,
                     CmdClickColorStr.ANDROID_GREEN.str,
                     CmdClickColorStr.YELLOW_GREEN.str,
                     CmdClickColorStr.GREEN.str,
@@ -1549,23 +1548,20 @@ class PromptWithListDialog(
                     CmdClickColorStr.DARK_GREEN.str,
 //                    CmdClickColorStr.GOLD_YELLOW.str,
                     CmdClickColorStr.WATER_BLUE.str,
-                    CmdClickColorStr.WHITE_BLUE.str,
 //                    CmdClickColorStr.THICK_AO.str,
 //                    CmdClickColorStr.BLACK_AO.str,
                     CmdClickColorStr.BLUE.str,
-                    CmdClickColorStr.WHITE_BLUE_PURPLE.str,
                     CmdClickColorStr.BLUE_DARK_PURPLE.str,
                     CmdClickColorStr.NAVY.str,
                     CmdClickColorStr.PURPLE.str,
                     CmdClickColorStr.ORANGE.str,
 //                    CmdClickColorStr.BROWN.str,
 //                    CmdClickColorStr.DARK_BROWN.str,
-                    CmdClickColorStr.YELLOW.str,
+//                    CmdClickColorStr.YELLOW.str,
 //                    CmdClickColorStr.SKERLET.str,
                     "#000000",
 //                    "#ffffff",
                     CmdClickColorStr.SKERLET.str,
-                    CmdClickColorStr.YELLOW.str,
                 )
                 val darkColorList = listOf(
                     CmdClickColorStr.ANDROID_GREEN.str,
@@ -2519,7 +2515,7 @@ class PromptWithListDialog(
                 }
                 val srcColorList = listOf(
                     CmdClickColorStr.LIGHT_GREEN,
-                    CmdClickColorStr.WHITE_GREEN,
+//                    CmdClickColorStr.WHITE_GREEN,
                     CmdClickColorStr.ANDROID_GREEN,
                     CmdClickColorStr.YELLOW_GREEN,
                     CmdClickColorStr.GREEN,
@@ -2528,18 +2524,18 @@ class PromptWithListDialog(
 //                    CmdClickColorStr.CARKI,
 //                    CmdClickColorStr.GOLD_YELLOW,
                     CmdClickColorStr.WATER_BLUE,
-                    CmdClickColorStr.WHITE_BLUE,
+//                    CmdClickColorStr.WHITE_BLUE,
 //                    CmdClickColorStr.THICK_AO,
 //                    CmdClickColorStr.BLACK_AO,
                     CmdClickColorStr.BLUE,
-                    CmdClickColorStr.WHITE_BLUE_PURPLE,
+//                    CmdClickColorStr.WHITE_BLUE_PURPLE,
 //                    CmdClickColorStr.BLUE_DARK_PURPLE,
-//                    CmdClickColorStr.NAVY,
+                    CmdClickColorStr.NAVY,
                     CmdClickColorStr.PURPLE,
                     CmdClickColorStr.ORANGE,
 //                    CmdClickColorStr.BROWN,
 //                    CmdClickColorStr.DARK_BROWN,
-                    CmdClickColorStr.YELLOW,
+//                    CmdClickColorStr.YELLOW,
                     CmdClickColorStr.SKERLET,
                 )
                 val color: ArrayList<Int> = ArrayList()
@@ -2556,7 +2552,7 @@ class PromptWithListDialog(
                 val oneSideLengthRndList = (300..(7 * screenWidthInt) / 4)
                 val holeRadiasHolePercentRndList = (0..75)
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (150..300) //(100..400)
+                val alphaRndList = (100..200) //(100..400)
                 val repeatTimes = (10..15).random()
                 val animationTriggerEndNum = 8
                 val animationTriggerRndList = (1..animationTriggerEndNum)
