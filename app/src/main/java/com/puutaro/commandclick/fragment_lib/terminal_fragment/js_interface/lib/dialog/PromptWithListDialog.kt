@@ -98,6 +98,7 @@ class PromptWithListDialog(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 )  {
     private var returnValue = String()
+    private var onDialog = false
 
     companion object {
         private var promptDialogObj: Dialog? = null
@@ -107,7 +108,6 @@ class PromptWithListDialog(
         private const val sectionSeparator = ','
         private const val keySeparator = '|'
         const val valueSeparator = '?'
-        private var onDialog = false
         const val switchOn = "ON"
         const val switchOff = "OFF"
         const val onSystemkeyOpenModeStr = "onSystemKeyOpenMode"
@@ -2049,11 +2049,33 @@ class PromptWithListDialog(
                 ) ?: return@withContext
 
                 val dialogMargin = 200
-                val screenHeightInt = withContext(Dispatchers.Main) {
-                    bkRelative.measuredHeight - dialogMargin
+                val screenHeightInt = withContext(Dispatchers.Main) screenHeightInt@ {
+                    for(i in 1..5) {
+                        val screenHeightIntSrc = bkRelative.measuredHeight - dialogMargin
+                        if(screenHeightIntSrc <= 0) {
+                            delay(100)
+                            continue
+                        }
+                        return@screenHeightInt screenHeightIntSrc
+                    }
+                    0
+                }.let {
+                    if(it <= 0) return@withContext
+                    it
                 }
-                val screenWidthInt = withContext(Dispatchers.Main) {
-                    bkRelative.measuredWidth - dialogMargin
+                val screenWidthInt = withContext(Dispatchers.Main) screenWidthInt@ {
+                    for(i in 1..5) {
+                        val screenWidthIntSrc = bkRelative.measuredWidth - dialogMargin
+                        if(screenWidthIntSrc <= 0) {
+                            delay(100)
+                            continue
+                        }
+                        return@screenWidthInt screenWidthIntSrc
+                    }
+                    0
+                }.let {
+                    if(it <= 0) return@withContext
+                    it
                 }
                 val decentTextToFreqList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
@@ -2269,12 +2291,35 @@ class PromptWithListDialog(
                 ) ?: return@withContext
 
                 val dialogMargin = 200
-                val screenHeightInt = withContext(Dispatchers.Main) {
-                    bkRelative.measuredHeight - dialogMargin
+                val screenHeightInt = withContext(Dispatchers.Main) screenHeightInt@ {
+                        for(i in 1..5) {
+                            val screenHeightIntSrc = bkRelative.measuredHeight - dialogMargin
+                            if(screenHeightIntSrc <= 0) {
+                                delay(100)
+                                continue
+                            }
+                            return@screenHeightInt screenHeightIntSrc
+                        }
+                        0
+                }.let {
+                    if(it <= 0) return@withContext
+                    it
                 }
-                val screenWidthInt = withContext(Dispatchers.Main) {
-                    bkRelative.measuredWidth - dialogMargin
-                }
+                val screenWidthInt =
+                    withContext(Dispatchers.Main) screenWidthInt@ {
+                        for(i in 1..5) {
+                            val screenWidthIntSrc = bkRelative.measuredWidth - dialogMargin
+                            if(screenWidthIntSrc <= 0) {
+                                delay(100)
+                                continue
+                            }
+                            return@screenWidthInt screenWidthIntSrc
+                        }
+                        0
+                    }.let {
+                        if(it <= 0) return@withContext
+                        it
+                    }
                 val decentTextToFreqList = statisticsTitleList.groupBy { it }
                     .mapValues { it.value.size }
                     .filterKeys { !it.isNullOrEmpty() }
@@ -2535,11 +2580,33 @@ class PromptWithListDialog(
                 ) ?: return@withContext
 
                 val dialogMargin = 200
-                val screenHeightInt = withContext(Dispatchers.Main) {
-                    bkRelative.measuredHeight - dialogMargin
+                val screenHeightInt = withContext(Dispatchers.Main) screenHeightInt@ {
+                    for(i in 1..5) {
+                        val screenHeightIntSrc = bkRelative.measuredHeight - dialogMargin
+                        if(screenHeightIntSrc <= 0) {
+                            delay(100)
+                            continue
+                        }
+                        return@screenHeightInt screenHeightIntSrc
+                    }
+                    0
+                }.let {
+                    if(it <= 0) return@withContext
+                    it
                 }
-                val screenWidthInt = withContext(Dispatchers.Main) {
-                    bkRelative.measuredWidth - dialogMargin
+                val screenWidthInt = withContext(Dispatchers.Main) screenWidthInt@ {
+                    for(i in 1..5) {
+                        val screenWidthIntSrc = bkRelative.measuredWidth - dialogMargin
+                        if(screenWidthIntSrc <= 0) {
+                            delay(100)
+                            continue
+                        }
+                        return@screenWidthInt screenWidthIntSrc
+                    }
+                    0
+                }.let {
+                    if(it <= 0) return@withContext
+                    it
                 }
 
                 val frequencyMapList = statisticsTitleList.groupBy { it }
