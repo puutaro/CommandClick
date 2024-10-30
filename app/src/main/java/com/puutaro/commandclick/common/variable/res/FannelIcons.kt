@@ -58,6 +58,10 @@ enum class FannelIcons(
         "crown",
         R.drawable.fannel_crown
     ),
+    BRAIN(
+        "brain",
+        R.drawable.fannel_brain
+    ),
     DOG_FACE(
         "dog_face",
         R.drawable.fannel_dog_face
@@ -218,6 +222,14 @@ enum class FannelIcons(
         "other_moon",
         R.drawable.fannel_other_moon
     ),
+    ROBOT(
+        "robot",
+        R.drawable.fannel_robot
+    ),
+    PHANTOM(
+        "phantom",
+        R.drawable.fannel_phantom
+    ),
     PHENIX(
         "phenix",
         R.drawable.fannel_phenix1
@@ -266,6 +278,14 @@ enum class FannelIcons(
         "siro",
         R.drawable.fannel_siro
     ),
+    SKULL(
+        "skull",
+        R.drawable.fannel_skull
+    ),
+    SKULL_HORIZON(
+        "skull",
+        R.drawable.fannel_skull_horizon
+    ),
     SNAKE(
         "snake",
         R.drawable.fannel_snake
@@ -302,6 +322,10 @@ enum class FannelIcons(
         "train",
         R.drawable.fannel_train
     ),
+    TREX(
+        "trex",
+        R.drawable.fannel_trex
+    ),
     TROPHY(
         "trophy",
         R.drawable.fannel_trophy
@@ -310,6 +334,4 @@ enum class FannelIcons(
         "wind",
         R.drawable.fannel_wind
     ),
-
-
 }
