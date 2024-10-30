@@ -492,7 +492,6 @@ class PromptWithListDialog(
             promptDialogObj,
             title,
             firstTitleGradColorsStrList,
-            isWhiteBackground,
             titleMap,
         )
         val editTextMap = CmdClickMap.createMap(
@@ -953,7 +952,6 @@ class PromptWithListDialog(
         promptDialogObj: Dialog?,
         title: String,
         firstTitleGradColorsStrList: List<String>,
-        isWhiteBackgrond: Boolean,
         titleMap: Map<String, String>?,
     ): OutlineTextView? {
         val maxLinesInt = titleMap?.get(
@@ -978,60 +976,9 @@ class PromptWithListDialog(
                 1,
                 0
             )
-//            val colorList = listOf(
-//                CmdClickColorStr.LIGHT_GREEN.str,
-//                CmdClickColorStr.THICK_AO.str,
-//                CmdClickColorStr.BLUE.str,
-//                CmdClickColorStr.SKERLET.str,
-//                CmdClickColorStr.YELLOW.str,
-//                CmdClickColorStr.WHITE_GREEN.str,
-//                CmdClickColorStr.GREEN.str,
-//                CmdClickColorStr.YELLOW_GREEN.str,
-//                CmdClickColorStr.BLACK_AO.str,
-//                CmdClickColorStr.WATER_BLUE.str,
-//                CmdClickColorStr.PURPLE.str,
-//                CmdClickColorStr.ORANGE.str,
-//                CmdClickColorStr.BROWN.str,
-//            )
-//            val whiteColorStr = "#ffffff"
-//            val color1 = colorList.random()
-//            val color2 = runBlocking {
-//                if(
-//                    !isWhiteBackgrond
-//                ) return@runBlocking whiteColorStr
-//                var color2Str = String()
-//                for(i in 1..5) {
-//                    color2Str = colorList.random()
-//                    if (
-//                        color2Str != color1
-//                    ) return@runBlocking color2Str
-//                }
-//                color2Str
-//            }
-//            val alreadyColorList = listOf(
-//                color1,
-//                color2,
-//            )
-//            val color3 = runBlocking {
-//                var color3Str = String()
-//                for(i in 1..5) {
-//                    color3Str = colorList.random()
-//                    if (
-//                        !alreadyColorList.contains(color3Str)
-//                    ) return@runBlocking color3Str
-//                }
-//                color3Str
-//            }
-
             val colors = firstTitleGradColorsStrList.map {
                 Color.parseColor(it)
             }.toIntArray()
-//            intArrayOf(
-//                Color.parseColor(color1),
-//                Color.parseColor(color2),
-//                Color.parseColor(whiteColorStr),
-//                Color.parseColor(color3)
-//            ) // Define your gradient colors
             val angle = (220..320).random() //45 // Set the gradient angle
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lgradient.txt").absolutePath,
