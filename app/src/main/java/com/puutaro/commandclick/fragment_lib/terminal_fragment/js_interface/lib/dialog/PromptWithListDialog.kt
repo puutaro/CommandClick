@@ -47,6 +47,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -1639,36 +1641,90 @@ class PromptWithListDialog(
                         firstTitleGradColorsStrList
                     )
                 }.random()
-                promptDialogObj?.findViewById<AppCompatImageView>(
-                    R.id.prompt_list_dialog_list_extra_bk_fore_image
+                promptDialogObj?.findViewById<FrameLayout>(
+                    R.id.prompt_list_dialog_list_extra_fore_container
                 )?.apply {
-                    imageTintList = null
-                    setColorFilter(
-                        Color.parseColor(frontBkImageColorStr)
-                    )
-                    scaleType = ImageView.ScaleType.FIT_XY
+                    val goalMinusAlpha = 1f
+                    val loopTimes = 5
+                    val minusAlpha = goalMinusAlpha / loopTimes
+                    alpha = 1f
                     isVisible = true
-                    val animationDrawable = AnimationDrawable()
-                    firstDotStormBitmapList.forEachIndexed { index, bitmap ->
-                        alpha = 0.3f
-                        val duration = when (index) {
-                            0 -> 50
-                            1 -> 50
-                            2 -> 150
-                            else -> 100
+                    CoroutineScope(Dispatchers.IO).launch {
+                        withContext(Dispatchers.IO){
+                            delay(200)
                         }
-                        animationDrawable.addFrame(
-                            BitmapDrawable(
-                                context.resources,
-                                bitmap
-                            ),
-                            duration
-                        )
+                        for (i in 1..loopTimes) {
+                            withContext(Dispatchers.IO) {
+                                delay(50)
+                            }
+                            withContext(Dispatchers.Main) {
+                                alpha -= minusAlpha
+                            }
+                        }
                     }
-                    animationDrawable.isOneShot = true
-                    setImageDrawable(animationDrawable)
-                    animationDrawable.start()
                 }
+                val forImageViewIdList = listOf(
+                    R.id.prompt_list_dialog_list_extra_bk_fore_image3,
+                    R.id.prompt_list_dialog_list_extra_bk_fore_image2,
+                    R.id.prompt_list_dialog_list_extra_bk_fore_image1,
+                )
+                listOf(
+                    firstDotStormBitmapList[1],
+                    firstDotStormBitmapList[2],
+                ).forEachIndexed { index, bitmap ->
+                    val imageViewId = forImageViewIdList.getOrNull(index)
+                        ?: return@forEachIndexed
+                    promptDialogObj?.findViewById<AppCompatImageView>(
+                        imageViewId
+                    )?.apply {
+                        setColorFilter(
+                            Color.parseColor(frontBkImageColorStr)
+                        )
+                        setImageBitmap(bitmap)
+                        isVisible = true
+                        val duration = when (index) {
+                            0 -> 350L
+                            1 -> 700L
+                            2 -> 700L
+                            else -> 700L
+                        }
+                        YoYo.with(Techniques.FadeOut)
+                            .duration(duration)
+                            .repeat(0)
+                            .playOn(this@apply)
+                    }
+                }
+//                promptDialogObj?.findViewById<AppCompatImageView>(
+//                    R.id.prompt_list_dialog_list_extra_bk_fore_image3
+//                )?.apply {
+//                    imageTintList = null
+//                    setColorFilter(
+//                        Color.parseColor(frontBkImageColorStr)
+//                    )
+//                    scaleType = ImageView.ScaleType.FIT_XY
+//                    setImageBitmap(firstDotStormBitmapList[0])
+//                    isVisible = true
+////                    val animationDrawable = AnimationDrawable()
+////                    firstDotStormBitmapList.forEachIndexed { index, bitmap ->
+////                        alpha = 0.3f
+////                        val duration = when (index) {
+////                            0 -> 50
+////                            1 -> 50
+////                            2 -> 150
+////                            else -> 100
+////                        }
+////                        animationDrawable.addFrame(
+////                            BitmapDrawable(
+////                                context.resources,
+////                                bitmap
+////                            ),
+////                            duration
+////                        )
+////                    }
+////                    animationDrawable.isOneShot = true
+////                    setImageDrawable(animationDrawable)
+////                    animationDrawable.start()
+//                }
                 promptDialogObj?.findViewById<AppCompatImageView>(
                     R.id.prompt_list_dialog_list_bk_extra_back_image1
                 )?.apply {
