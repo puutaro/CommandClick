@@ -1672,13 +1672,10 @@ class PromptWithListDialog(
                     else -> imageColorStrList
                 }.let {
                     frontBkImageColorStrListSrc ->
-                    val filteredFirstTitleGradColorsStrList = frontBkImageColorStrListSrc.filter {
-                        firstTitleGradColorsStrList.contains(it)
-                    }
-                    if(
-                        filteredFirstTitleGradColorsStrList.isNotEmpty()
-                    ) return@let filteredFirstTitleGradColorsStrList
-                    frontBkImageColorStrListSrc
+                    filterByFirstGradColorList(
+                        frontBkImageColorStrListSrc,
+                        firstTitleGradColorsStrList
+                    )
                 }.random()
                 val isLightColorToBack = darkColorList.contains(frontBkImageColorStr)
                 val backBkImageColorStr = imageColorStrList.filter {
@@ -1689,14 +1686,11 @@ class PromptWithListDialog(
                 }.filter {
                     it != frontBkImageColorStr
                 }.let {
-                    colorStrList ->
-                    val filteredFirstTitleGradColorsStrList = colorStrList.filter {
-                        firstTitleGradColorsStrList.contains(it)
-                    }
-                    if(
-                        filteredFirstTitleGradColorsStrList.isNotEmpty()
-                    ) return@let filteredFirstTitleGradColorsStrList
-                    colorStrList
+                        colorStrList ->
+                    filterByFirstGradColorList(
+                        colorStrList,
+                        firstTitleGradColorsStrList
+                    )
                 }.random()
                 promptDialogObj?.findViewById<AppCompatImageView>(
                     R.id.prompt_list_dialog_list_extra_bk_fore_image
@@ -1781,6 +1775,19 @@ class PromptWithListDialog(
                         }
                     }
                 }
+            }
+
+            private fun filterByFirstGradColorList(
+                colorStrList: List<String>,
+                firstTitleGradColorsStrList: List<String>
+            ): List<String> {
+                val filteredFirstTitleGradColorsStrList = colorStrList.filter {
+                    firstTitleGradColorsStrList.contains(it)
+                }
+                if(
+                    filteredFirstTitleGradColorsStrList.isNotEmpty()
+                ) return filteredFirstTitleGradColorsStrList
+                return colorStrList
             }
 
             suspend fun makeImageSet(
