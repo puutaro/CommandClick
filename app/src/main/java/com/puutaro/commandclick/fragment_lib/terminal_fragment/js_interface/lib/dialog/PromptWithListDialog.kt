@@ -1652,9 +1652,9 @@ class PromptWithListDialog(
                     firstDotStormBitmapList.forEachIndexed { index, bitmap ->
                         alpha = 0.3f
                         val duration = when (index) {
-                            0 -> 200
-                            1 -> 150
-                            2 -> 250
+                            0 -> 50
+                            1 -> 50
+                            2 -> 150
                             else -> 100
                         }
                         animationDrawable.addFrame(
@@ -1710,7 +1710,7 @@ class PromptWithListDialog(
                     CoroutineScope(Dispatchers.IO).launch {
                         for (i in 1..loopTimes) {
                             withContext(Dispatchers.IO) {
-                                delay(300)
+                                delay(100)
                             }
                             withContext(Dispatchers.Main) {
                                 val plusAlpha = when(i){
