@@ -1679,7 +1679,7 @@ class PromptWithListDialog(
                         setImageBitmap(bitmap)
                         isVisible = true
                         val duration = when (index) {
-                            0 -> 300L
+                            0 -> 275L
                             1 -> 700L
                             else -> 700L
                         }
