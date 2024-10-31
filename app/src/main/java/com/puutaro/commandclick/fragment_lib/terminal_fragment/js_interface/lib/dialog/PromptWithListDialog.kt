@@ -55,6 +55,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.FannelIcons
@@ -73,7 +74,6 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.image_tools.BitmapTool.DotArt.maskSquareMaker
 import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -1663,17 +1663,13 @@ class PromptWithListDialog(
                         }
                     }
                 }
-                val forImageViewIdList = listOf(
-                    R.id.prompt_list_dialog_list_extra_bk_fore_image3,
-                    R.id.prompt_list_dialog_list_extra_bk_fore_image2,
-                    R.id.prompt_list_dialog_list_extra_bk_fore_image1,
+                val forImageViewBitmapToResIdList = listOf(
+                    firstDotStormBitmapList[0] to R.id.prompt_list_dialog_list_extra_bk_fore_image3,
+                    firstDotStormBitmapList[1] to R.id.prompt_list_dialog_list_extra_bk_fore_image2,
                 )
-                listOf(
-                    firstDotStormBitmapList[1],
-                    firstDotStormBitmapList[2],
-                ).forEachIndexed { index, bitmap ->
-                    val imageViewId = forImageViewIdList.getOrNull(index)
-                        ?: return@forEachIndexed
+                forImageViewBitmapToResIdList.forEachIndexed { index, bitmapToResId ->
+                    val bitmap = bitmapToResId.first
+                    val imageViewId = bitmapToResId.second
                     promptDialogObj?.findViewById<AppCompatImageView>(
                         imageViewId
                     )?.apply {
@@ -1683,9 +1679,8 @@ class PromptWithListDialog(
                         setImageBitmap(bitmap)
                         isVisible = true
                         val duration = when (index) {
-                            0 -> 350L
+                            0 -> 300L
                             1 -> 700L
-                            2 -> 700L
                             else -> 700L
                         }
                         YoYo.with(Techniques.FadeOut)
@@ -1694,37 +1689,6 @@ class PromptWithListDialog(
                             .playOn(this@apply)
                     }
                 }
-//                promptDialogObj?.findViewById<AppCompatImageView>(
-//                    R.id.prompt_list_dialog_list_extra_bk_fore_image3
-//                )?.apply {
-//                    imageTintList = null
-//                    setColorFilter(
-//                        Color.parseColor(frontBkImageColorStr)
-//                    )
-//                    scaleType = ImageView.ScaleType.FIT_XY
-//                    setImageBitmap(firstDotStormBitmapList[0])
-//                    isVisible = true
-////                    val animationDrawable = AnimationDrawable()
-////                    firstDotStormBitmapList.forEachIndexed { index, bitmap ->
-////                        alpha = 0.3f
-////                        val duration = when (index) {
-////                            0 -> 50
-////                            1 -> 50
-////                            2 -> 150
-////                            else -> 100
-////                        }
-////                        animationDrawable.addFrame(
-////                            BitmapDrawable(
-////                                context.resources,
-////                                bitmap
-////                            ),
-////                            duration
-////                        )
-////                    }
-////                    animationDrawable.isOneShot = true
-////                    setImageDrawable(animationDrawable)
-////                    animationDrawable.start()
-//                }
                 promptDialogObj?.findViewById<AppCompatImageView>(
                     R.id.prompt_list_dialog_list_bk_extra_back_image1
                 )?.apply {
@@ -2014,13 +1978,14 @@ class PromptWithListDialog(
                 val channelForSquareList = Channel<Pair<Int, Bitmap?>>(textBitmapListSize)
                 val maskIndexToSquareList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
                 withContext(Dispatchers.IO) {
-                    val jobList = (1..textBitmapListSize).map { order ->
+//                    (1..textBitmapListSize)
+                    val jobList = listOf(2, 3).map { order ->
                         async {
                             semaphore.withPermit {
                                 val incline = ((endX - startX) / textBitmapListSize.toFloat())
                                 val currentRndEnd = (endX - incline * order).toInt() - ajustNum
                                 val rndList = (1..currentRndEnd)
-                                val maskSquare = maskSquareMaker(
+                                val maskSquare = BitmapTool.DotArt.maskSquareMaker(
                                     srcOneSide,
                                     peaceLength,
                                     rndList,
@@ -2043,7 +2008,13 @@ class PromptWithListDialog(
                 val maskSquareList = maskIndexToSquareList.map {
                     val bitmap = it.second
                     bitmap
-                }.take(4)
+                }
+//                    .take(4).let {
+//                    listOf(
+//                        it[1],
+//                        it[2],
+//                    )
+//                }
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lmaskSquareList0.txt").absolutePath,
 //                    listOf(
@@ -2087,7 +2058,7 @@ class PromptWithListDialog(
                         it.second
                     }
                 }
-                return maskTextList to maskSquareList.getOrNull(2)
+                return maskTextList to maskSquareList.last()
             }
         }
 
