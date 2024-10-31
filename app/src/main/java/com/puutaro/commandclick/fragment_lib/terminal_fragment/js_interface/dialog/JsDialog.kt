@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DebugJsAlert
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DragSortJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GridJsDialogV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectGridViewJsDialog
@@ -104,6 +105,10 @@ class JsDialog(
     )
 
     private val dragSortJsDialog = DragSortJsDialog(
+        terminalFragmentRef
+    )
+
+    private val gridDialogV2 = GridJsDialogV2(
         terminalFragmentRef
     )
 
@@ -500,6 +505,19 @@ class JsDialog(
         dragSortJsDialog.create(
             title,
             dragSortFilePath
+        )
+    }
+
+    @JavascriptInterface
+    fun grid(
+        title: String,
+        imagePathListCon: String,
+        configMapCon: String,
+    ): String {
+        return gridDialogV2.create(
+            title,
+            imagePathListCon,
+            configMapCon,
         )
     }
 }

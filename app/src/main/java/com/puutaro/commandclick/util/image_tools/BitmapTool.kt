@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
@@ -15,6 +16,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.GradientDrawable
@@ -29,7 +31,6 @@ import android.util.Base64
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
-import com.itextpdf.text.pdf.PdfName.FF
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
@@ -169,7 +170,8 @@ object BitmapTool {
         enum class GradOrient{
             LINEAR,
             DIAGONAL,
-            BOTH
+            BOTH,
+            VERTICAL_BOTTOM_TO_TOP,
 
         }
 
@@ -187,6 +189,34 @@ object BitmapTool {
             GradientDrawable.Orientation.BR_TL,
         )
 
+        private val bottomTopGradOrientList = listOf(
+            GradientDrawable.Orientation.BOTTOM_TOP,
+        )
+        fun addGradient(originalBitmap: Bitmap, startColor: Int, endColor: Int): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+            val updatedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(updatedBitmap)
+
+            canvas.drawBitmap(originalBitmap, 0f, 0f, null)
+
+            val paint = Paint()
+            val shader: LinearGradient =
+                LinearGradient(
+                    0f,
+                    0f,
+                    0f,
+                    height.toFloat(),
+                    startColor, //-0xf2dae,
+                    endColor, //-0xf8cfb,
+                    Shader.TileMode.CLAMP
+                )
+            paint.setShader(shader)
+            paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+            return updatedBitmap
+        }
         fun makeGradientBitmap2(
             width: Int,
             height: Int,
@@ -203,6 +233,7 @@ object BitmapTool {
                 GradOrient.BOTH -> linearGradOrientList + diagonalGradOrientList
                 GradOrient.LINEAR -> linearGradOrientList
                 GradOrient.DIAGONAL -> diagonalGradOrientList
+                GradOrient.VERTICAL_BOTTOM_TO_TOP -> bottomTopGradOrientList
             }
             val gradient = GradientDrawable(gradientOrientationList.random(), colorIntArray)
             gradient.cornerRadius = 0f

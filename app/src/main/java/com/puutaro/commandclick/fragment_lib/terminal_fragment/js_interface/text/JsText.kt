@@ -112,6 +112,26 @@ class JsText(
     }
 
     @JavascriptInterface
+    fun repeat(
+        con: String,
+        separator: String,
+        repeatNum: Int,
+    ): String{
+
+        /*
+        ## Description
+
+        Take last ${takeNum} element
+        */
+
+        if(repeatNum < 1) return con
+        val lastTakenCon = (1..repeatNum).map {
+            con.split(separator)
+        }.flatten().joinToString(separator)
+        return lastTakenCon
+    }
+
+    @JavascriptInterface
     fun distinct(
         con: String,
         separator: String,
