@@ -1152,6 +1152,78 @@ object BitmapTool {
             return resultBitmap
         }
 
+        fun exchangeColorToBlack(
+            originalBitmap: Bitmap,
+        ): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+
+            // Create a mutable copy of the bitmap
+            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    if (
+                        Color.alpha(pixel) == 0
+                    ) {
+                        resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                        continue
+                    }
+                    resultBitmap.setPixel(x, y, Color.BLACK)
+                }
+            }
+
+            return resultBitmap
+        }
+
+
+        fun adjustOpacity(
+            bitmap: Bitmap,
+            opacity: Int, //0(trans)..255
+        ): Bitmap {
+            val mutableBitmap = if (bitmap.isMutable)
+                bitmap
+            else
+                bitmap.copy(Bitmap.Config.ARGB_8888, true)
+            val canvas = Canvas(mutableBitmap)
+            val colour = (opacity and 0xFF) shl 24
+            canvas.drawColor(colour, PorterDuff.Mode.DST_IN)
+            return mutableBitmap
+        }
+
+        fun addAlpha(
+            originalBitmap: Bitmap,
+            alpha: Float?,
+        ): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+
+            // Create a mutable copy of the bitmap
+            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    val red = Color.red(pixel)
+                    val green = Color.green(pixel)
+                    val blue = Color.blue(pixel)
+                    Color.argb(0 ,red, green, blue)
+                    if (
+                        Color.alpha(pixel) == 0
+                    ) {
+                        resultBitmap.setPixel(x, y, Color.BLACK)
+                        continue
+                    }
+                    resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                }
+            }
+
+            return resultBitmap
+        }
+
+
+
         fun convertBlackToColor(
             originalBitmap: Bitmap,
             colorStr: String,
@@ -1202,7 +1274,7 @@ object BitmapTool {
                     // Process pixel color to determine if it should be part of the path
 //                    if (shouldIncludePixel(pixelColor)) {
                         // Add pixel coordinates to the path
-                        path.lineTo(x.toFloat(), y.toFloat())
+                    path.lineTo(x.toFloat(), y.toFloat())
 //                    }
                 }
             }

@@ -20,6 +20,8 @@ object AssetsFileManager {
     const val firstUrlCapPngPath = "${urlPngDirPath}/first_url_cap.png"
     const val extraMenuDirPath = "${resPngDirPath}/extra_menu"
     const val textViewDecoDirPath = "${resPngDirPath}/text_view_deco"
+    const val gridDialogDirPath = "${resPngDirPath}/grid_dialog"
+    const val sibukiPngPath = "${gridDialogDirPath}/sibuki.png"
     const val underLinePngPath = "${textViewDecoDirPath}/under_line.png"
     const val resGifDirPath = "res/gif"
     const val urlHistoryGifPath = "${resGifDirPath}/url_history.gif"

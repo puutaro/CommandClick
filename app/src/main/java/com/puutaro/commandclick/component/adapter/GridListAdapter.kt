@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.puutaro.commandclick.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,6 +77,10 @@ class GridListAdapter(
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .thumbnail( requestBuilder )
                     .into(itemImageView)
+                YoYo.with(Techniques.RotateInUpRight)
+                    .duration(100)
+                    .repeat(0)
+                    .playOn(itemImageView)
             }
             withContext(Dispatchers.Main){
                 holder.itemView.setOnClickListener {
