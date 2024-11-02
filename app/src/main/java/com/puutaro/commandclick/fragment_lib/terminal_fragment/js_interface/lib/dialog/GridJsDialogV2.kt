@@ -88,15 +88,15 @@ class GridJsDialogV2(
             ?: return
         val colorPairList = listOf(
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.ORANGE.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.SKERLET.str,
+//            CmdClickColorStr.YELLOW.str to CmdClickColorStr.SKERLET.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_BROWN.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.NAVY.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_GREEN.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.THICK_AO.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLACK_AO.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.GREEN.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.CARKI.str,
+//            CmdClickColorStr.YELLOW.str to CmdClickColorStr.GREEN.str,
+//            CmdClickColorStr.YELLOW.str to CmdClickColorStr.CARKI.str,
             CmdClickColorStr.YELLOW.str to CmdClickColorStr.PURPLE.str,
 
             CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.NAVY.str,
@@ -402,7 +402,7 @@ class GridJsDialogV2(
 //                            maskedBitmap,
 //                            170,
 //                        )
-                        val bkShibukiBitmap =  shibukiBitmapList.random()
+                        val bkShibukiBitmap = shibukiBitmapList.random()
                             ?: return@setBkGridImage
                         BitmapTool.ImageTransformer.cutByTarget(
                             bkShibukiBitmap,
@@ -422,12 +422,18 @@ class GridJsDialogV2(
 //                        ).let {
 //                            setImageBitmap(shibukiBitmapList.random(),)
 //                        }
+                        delay(300) //300
                         isVisible = true
-                        YoYo.with(Techniques.FadeIn)
-                            .duration(1000)
-                            .repeat(0)
-                            .playOn(this@setBkGridImage)
+//                        YoYo.with(Techniques.FadeIn)
+//                            .duration(1100) // //400
+//                            .repeat(0)
+//                            .playOn(this@setBkGridImage)
 
+
+//                        YoYo.with(Techniques.FadeIn)
+//                        .duration(1000)
+//                        .repeat(0)
+//                        .playOn(this@setBkGridImage)
                     }
                 }
                 CoroutineScope(Dispatchers.Main).launch {
