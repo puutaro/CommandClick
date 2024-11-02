@@ -86,37 +86,53 @@ class GridJsDialogV2(
             ?: return
         val context = terminalFragment.context
             ?: return
+        val blackGreen = "#0f1419"
         val colorPairList = listOf(
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.ORANGE.str,
-//            CmdClickColorStr.YELLOW.str to CmdClickColorStr.SKERLET.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_BROWN.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.NAVY.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_GREEN.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.THICK_AO.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLACK_AO.str,
-//            CmdClickColorStr.YELLOW.str to CmdClickColorStr.GREEN.str,
-//            CmdClickColorStr.YELLOW.str to CmdClickColorStr.CARKI.str,
-            CmdClickColorStr.YELLOW.str to CmdClickColorStr.PURPLE.str,
+                blackGreen to CmdClickColorStr.WHITE_GREEN.str,
+                blackGreen to CmdClickColorStr.WHITE_BLUE.str,
+                CmdClickColorStr.DARK_GREEN.str to CmdClickColorStr.WHITE_GREEN.str,
+                CmdClickColorStr.DARK_GREEN.str to CmdClickColorStr.WHITE_BLUE.str,
+                CmdClickColorStr.NAVY.str to CmdClickColorStr.WHITE_BLUE.str,
+                CmdClickColorStr.BLUE.str to CmdClickColorStr.WHITE_BLUE.str,
+                CmdClickColorStr.BLUE_DARK_PURPLE.str to CmdClickColorStr.WHITE_BLUE.str,
+                CmdClickColorStr.PURPLE.str to CmdClickColorStr.WHITE_GREEN.str,
+                CmdClickColorStr.DARK_BROWN.str to CmdClickColorStr.WHITE_GREEN.str,
+                CmdClickColorStr.SKERLET.str to CmdClickColorStr.WHITE_GREEN.str,
+                CmdClickColorStr.SKERLET.str to CmdClickColorStr.WHITE_BLUE.str,
+                CmdClickColorStr.ORANGE.str to CmdClickColorStr.NAVY.str,
+                CmdClickColorStr.SKERLET.str to CmdClickColorStr.NAVY.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.ORANGE.str,
+    //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.SKERLET.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_BROWN.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.NAVY.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_GREEN.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.THICK_AO.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLACK_AO.str,
+    //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.GREEN.str,
+    //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.CARKI.str,
+                CmdClickColorStr.YELLOW.str to CmdClickColorStr.PURPLE.str,
 
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.NAVY.str,
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.THICK_AO.str,
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLACK_AO.str,
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.GREEN.str,
-            CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.CARKI.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.NAVY.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.THICK_AO.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLACK_AO.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.GREEN.str,
+                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.CARKI.str,
 
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLACK_AO.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.NAVY.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.ORANGE.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.SKERLET.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_BROWN.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.THICK_AO.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.GREEN.str,
-            CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.PURPLE.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLACK_AO.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.NAVY.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.ORANGE.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.SKERLET.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_BROWN.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.THICK_AO.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.GREEN.str,
+                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.PURPLE.str,
+                CmdClickColorStr.WHITE_BLUE.str to blackGreen,
+                CmdClickColorStr.WHITE_GREEN.str to blackGreen,
         )
         val usrColorPair = colorPairList.random()
         val waterColor = usrColorPair.first
@@ -173,7 +189,6 @@ class GridJsDialogV2(
             )?.apply {
                 val imageViewContext = this.context
                 val pngSizePair = Pair(200, 300)
-//                val gradTopColorStr = CmdClickColorStr.entries.random().str
                 val gradientRect = BitmapTool.GradientBitmap.makeGradientBitmap2(
                     pngSizePair.first,
                     pngSizePair.second,
@@ -195,34 +210,7 @@ class GridJsDialogV2(
                         200
                     )
                 }
-//                val titleBkRect = BitmapTool.ImageTransformer.makeRect(
-//                        gradTopColorStr,
-//                    pngSizePair.first,
-//                    pngSizePair.second,
-//                )
-//                FileSystems.writeFromByteArray(
-//                    File("${UsePath.cmdclickDefaultAppDirPath}/pour", "gradientRect.png").absolutePath,
-//                    BitmapTool.convertBitmapToByteArray(gradientRect)
-//                )
-//                val skullMaskBitmap = ImageTransformer.mask(
-//                    gradientRect,
-//                    AppCompatResources.getDrawable(
-//                        context,
-//                        R.drawable.fannel_skull
-//                    )?.toBitmap(
-//                        pngSizePair.first,
-//                        pngSizePair.second
-//                    ) as Bitmap,
-//                )
-
-//                AppCompatResources.getDrawable(
-//                    context,
-//                    R.drawable.sibuki4
-//                )?.toBitmap(
-//                    pngSizePair.first,
-//                    pngSizePair.second
-//                ) as Bitmap,
-                val shibukiBitmapList = (1..2).map {
+                val cutSrcBitmap =
                     AssetsFileManager.assetsByteArray(
                         context,
                         AssetsFileManager.sibukiPngPath
@@ -241,31 +229,34 @@ class GridJsDialogV2(
                                 cutHeight,
                                 0,
                                 0
-                            ).let {
-                                when(
-                                    (1..2).random()
-                                ){
-                                    1 -> BitmapTool.ImageTransformer.flipHorizontally(it)
-                                    else -> it
-                                }
-                            }
-                            val cutBitmap = BitmapTool.ImageTransformer.cut(
-                                cutSrcBitmap,
-                                (srcWidth / 3),
-                                cutHeight,
                             )
-                            val gradientRectCutForShibuki = Bitmap.createScaledBitmap(
-                                gradientRect,
-                                cutBitmap.width,
-                                cutBitmap.height,
-                                true
-                            )
-                            ImageTransformer.mask(
-                                gradientRectCutForShibuki,
-                                cutBitmap,
-                            )
+                            cutSrcBitmap
                         }
+                    } ?: return@apply
+                val cutWidth = cutSrcBitmap.width / 3
+                val cutHeight = cutSrcBitmap.height
+                val gradientRectCutForShibuki =  Bitmap.createScaledBitmap(
+                    gradientRect,
+                    cutWidth,
+                    cutHeight,
+                    true
+                )
+                val shibukiBitmapList = (1..2).map {
+                    val normalOrFlipBitmap = when(
+                        (1..2).random()
+                    ){
+                        1 -> BitmapTool.ImageTransformer.flipHorizontally(cutSrcBitmap)
+                        else -> cutSrcBitmap
                     }
+                    val cutBitmap = BitmapTool.ImageTransformer.cut(
+                        cutSrcBitmap,
+                        (normalOrFlipBitmap.width / 3),
+                        normalOrFlipBitmap.height,
+                    )
+                    ImageTransformer.mask(
+                        gradientRectCutForShibuki,
+                        cutBitmap,
+                    )
                 }
 
 //                val shibukiBitmapRight = ImageTransformer.mask(
@@ -285,35 +276,6 @@ class GridJsDialogV2(
                         shibukiBitmapList.last() as Bitmap,
                         shibukiBitmapList.first() as Bitmap,
                     )
-//                }
-//                FileSystems.writeFromByteArray(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "shibukiBitmap.png").absolutePath,
-//                    BitmapTool.convertBitmapToByteArray(shibukiBitmap)
-//                )
-//                FileSystems.writeFromByteArray(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "shibuki180Bitmap.png").absolutePath,
-//                    BitmapTool.convertBitmapToByteArray(shibukiOverlayBitmap)
-//                )
-
-//                FileSystems.writeFromByteArray(
-//                    File("${UsePath.cmdclickDefaultAppDirPath}/pour", "skullMaskBitmap.png").absolutePath,
-//                    BitmapTool.convertBitmapToByteArray(skullMaskBitmap)
-//                )
-//                val pour1Bitmap = ImageTransformer.mask(
-//                    gradientRect,
-//                    AppCompatResources.getDrawable(
-//                        context,
-//                        R.drawable.pour1
-//                    )?.toBitmap(
-//                        pngSizePair.first,
-//                        pngSizePair.second
-//                    ) as Bitmap,
-//                )
-
-//                FileSystems.writeFromByteArray(
-//                    File("${UsePath.cmdclickDefaultAppDirPath}/pour", "pour1Bitmap.png").absolutePath,
-//                    BitmapTool.convertBitmapToByteArray(pour1Bitmap)
-//                )
                 val animationDrawable = AnimationDrawable()
                 val bitmapList = listOf(
                     R.drawable.pour1,
@@ -563,11 +525,11 @@ class GridJsDialogV2(
                     isVisible = true
                 }
                 withContext(Dispatchers.IO){
-                    delay(500)
+                    delay(400) //500
                 }
                 withContext(Dispatchers.Main){
                     val animation1 = AlphaAnimation(1f, goalAlpha)
-                    animation1.duration = 200
+                    animation1.duration = 70 //200
 //                    animation1.startOffset = 5000
                     animation1.fillAfter = true
                     startAnimation(animation1)
