@@ -51,6 +51,61 @@ class GridJsDialogV2(
     private var gridDialogObj: Dialog? = null
     private var onDialog = false
     private var dimAlphaJob: Job? = null
+    private val pink = "#faf0f9"
+    private val whiteColorList = listOf(
+        CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.WHITE_BLUE.str,
+        pink,
+    )
+
+    private val blackGreen = "#0f1419"
+    val colorPairList = listOf(
+        blackGreen to CmdClickColorStr.WHITE_GREEN.str,
+        blackGreen to CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.DARK_GREEN.str to CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.DARK_GREEN.str to CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.NAVY.str to CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.BLUE.str to CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.BLUE_DARK_PURPLE.str to CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.PURPLE.str to CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.DARK_BROWN.str to CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.SKERLET.str to CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.SKERLET.str to CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.ORANGE.str to CmdClickColorStr.NAVY.str,
+        CmdClickColorStr.SKERLET.str to CmdClickColorStr.NAVY.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.ORANGE.str,
+        //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.SKERLET.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_BROWN.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.NAVY.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_GREEN.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.THICK_AO.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLACK_AO.str,
+        //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.GREEN.str,
+        //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.CARKI.str,
+        CmdClickColorStr.YELLOW.str to CmdClickColorStr.PURPLE.str,
+
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.NAVY.str,
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.THICK_AO.str,
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLACK_AO.str,
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.GREEN.str,
+        CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.CARKI.str,
+
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLACK_AO.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.NAVY.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.ORANGE.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.SKERLET.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_BROWN.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.THICK_AO.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.GREEN.str,
+        CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.PURPLE.str,
+        CmdClickColorStr.WHITE_BLUE.str to blackGreen,
+        CmdClickColorStr.WHITE_GREEN.str to blackGreen,
+    )
 
     fun create(
         title: String,
@@ -86,57 +141,17 @@ class GridJsDialogV2(
             ?: return
         val context = terminalFragment.context
             ?: return
-        val blackGreen = "#0f1419"
-        val colorPairList = listOf(
-                blackGreen to CmdClickColorStr.WHITE_GREEN.str,
-                blackGreen to CmdClickColorStr.WHITE_BLUE.str,
-                CmdClickColorStr.DARK_GREEN.str to CmdClickColorStr.WHITE_GREEN.str,
-                CmdClickColorStr.DARK_GREEN.str to CmdClickColorStr.WHITE_BLUE.str,
-                CmdClickColorStr.NAVY.str to CmdClickColorStr.WHITE_BLUE.str,
-                CmdClickColorStr.BLUE.str to CmdClickColorStr.WHITE_BLUE.str,
-                CmdClickColorStr.BLUE_DARK_PURPLE.str to CmdClickColorStr.WHITE_BLUE.str,
-                CmdClickColorStr.PURPLE.str to CmdClickColorStr.WHITE_GREEN.str,
-                CmdClickColorStr.DARK_BROWN.str to CmdClickColorStr.WHITE_GREEN.str,
-                CmdClickColorStr.SKERLET.str to CmdClickColorStr.WHITE_GREEN.str,
-                CmdClickColorStr.SKERLET.str to CmdClickColorStr.WHITE_BLUE.str,
-                CmdClickColorStr.ORANGE.str to CmdClickColorStr.NAVY.str,
-                CmdClickColorStr.SKERLET.str to CmdClickColorStr.NAVY.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.ORANGE.str,
-    //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.SKERLET.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_BROWN.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.NAVY.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.DARK_GREEN.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.THICK_AO.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.BLACK_AO.str,
-    //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.GREEN.str,
-    //            CmdClickColorStr.YELLOW.str to CmdClickColorStr.CARKI.str,
-                CmdClickColorStr.YELLOW.str to CmdClickColorStr.PURPLE.str,
 
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.NAVY.str,
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.THICK_AO.str,
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.BLACK_AO.str,
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.GREEN.str,
-                CmdClickColorStr.WATER_BLUE.str to CmdClickColorStr.CARKI.str,
-
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_GREEN.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLACK_AO.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.NAVY.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.BLUE_DARK_PURPLE.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.ORANGE.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.SKERLET.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.DARK_BROWN.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.THICK_AO.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.GREEN.str,
-                CmdClickColorStr.WHITE_BLUE.str to CmdClickColorStr.PURPLE.str,
-                CmdClickColorStr.WHITE_BLUE.str to blackGreen,
-                CmdClickColorStr.WHITE_GREEN.str to blackGreen,
+        val usrColorPair = Pair(
+            CmdClickColorStr.SKERLET.str,
+            pink,
         )
-        val usrColorPair = colorPairList.random()
+//        colorPairList.random()
+
         val waterColor = usrColorPair.first
+//        convertWhiteColor(usrColorPair.first)
         val titleAndDimColor = usrColorPair.second
+//        convertWhiteColor(usrColorPair.second)
         gridDialogObj = Dialog(
             context,
             R.style.BottomSheetDialogTheme
@@ -447,7 +462,7 @@ class GridJsDialogV2(
 //                            }
                             CoroutineScope(Dispatchers.Main).launch {
                                 YoYo.with(Techniques.FadeOut)
-                                    .duration(500)
+                                    .duration(400)
                                     .repeat(0)
                                     .playOn(this@setEffectImage)
                             }
@@ -509,6 +524,15 @@ class GridJsDialogV2(
                 )
             }
         }
+    }
+
+    private fun convertWhiteColor(
+        colorStr: String,
+    ): String {
+        if(
+            !whiteColorList.contains(colorStr)
+        ) return colorStr
+        return whiteColorList.random()
     }
 
     private fun originalDimmEffect(
