@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.puutaro.commandclick.R
@@ -142,16 +141,10 @@ class GridJsDialogV2(
         val context = terminalFragment.context
             ?: return
 
-        val usrColorPair = Pair(
-            CmdClickColorStr.SKERLET.str,
-            pink,
-        )
-//        colorPairList.random()
+        val usrColorPair =  colorPairList.random()
 
-        val waterColor = usrColorPair.first
-//        convertWhiteColor(usrColorPair.first)
-        val titleAndDimColor = usrColorPair.second
-//        convertWhiteColor(usrColorPair.second)
+        val waterColor = convertWhiteColor(usrColorPair.first)
+        val titleAndDimColor = convertWhiteColor(usrColorPair.second)
         gridDialogObj = Dialog(
             context,
             R.style.BottomSheetDialogTheme
@@ -193,11 +186,6 @@ class GridJsDialogV2(
                 gridDialogObj?.findViewById<AppCompatImageView>(
                     R.id.grid_dialog_v2_title_bk_image
                 )
-//                    ?.apply {
-//                    setBackgroundColor(
-//                        Color.parseColor(titleAndDimColor)
-//                    )
-//                }
             }
             gridDialogObj?.findViewById<AppCompatImageView>(
                 R.id.grid_dialog_v2_pour_image1
@@ -273,20 +261,6 @@ class GridJsDialogV2(
                         cutBitmap,
                     )
                 }
-
-//                val shibukiBitmapRight = ImageTransformer.mask(
-//                    gradientRectCutForShibuki,
-//                    shibukiSrcBitmapList.first() as Bitmap,
-//                )
-//                val shibukiBitmapLeft = BitmapTool.ImageTransformer.flipHorizontally(
-//                    shibukiSrcBitmapList.last() as Bitmap,
-//                )
-//                val shibukiBitmapList = listOf(
-//                    shibukiBitmapRight,
-//                    shibukiBitmapLeft,
-//                )
-//                val shibukiBitmap = shibukiBitmapRight.let {
-//                    shibukiSrc ->
                 val shibukiBitmap = BitmapTool.ImageTransformer.overlayBitmap(
                         shibukiBitmapList.last() as Bitmap,
                         shibukiBitmapList.first() as Bitmap,
@@ -308,35 +282,11 @@ class GridJsDialogV2(
                         val maskedBitmap = BitmapTool.ImageTransformer.mask(
                             gradientRect,
                             maskBitmap,
-//                            maskBitmap.width,
-//                            maskBitmap.height,
-//                            false
                         )
-//                        FileSystems.writeFromByteArray(
-//                            File("${UsePath.cmdclickDefaultAppDirPath}/pour", "maskBitmap${index}.png").absolutePath,
-//                            BitmapTool.convertBitmapToByteArray(maskBitmap)
-//                        )
-//                        FileSystems.writeFromByteArray(
-//                            File("${UsePath.cmdclickDefaultAppDirPath}/pour", "maskedBitmap${index}.png").absolutePath,
-//                            BitmapTool.convertBitmapToByteArray(maskedBitmap)
-//                        )
                         maskedBitmap
                     }
                 }
-//                val requestBuilder: RequestBuilder<Drawable> =
-//                    Glide.with(context)
-//                        .asDrawable()
-//                        .sizeMultiplier(0.1f)
                 bitmapList.forEachIndexed { index, bitmap ->
-//                    delay(300)
-//                    Glide
-//                        .with(context)
-//                        .load(bitmap)
-//                        .skipMemoryCache( true )
-//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                        .thumbnail( requestBuilder )
-//                        .into(this)
-//                    bitmap ->
                     if(bitmap == null) return@forEachIndexed
                     val duration = when(index){
                         0 -> 150
@@ -356,61 +306,44 @@ class GridJsDialogV2(
                     .duration(600) // 400
                     .repeat(0)
                     .playOn(this)
+                val bkShibukiBitmap = withContext(Dispatchers.IO){
+                    val bkShibukiBitmapSrc = shibukiBitmapList.random()
+                    BitmapTool.ImageTransformer.cutByTarget(
+                        bkShibukiBitmapSrc,
+                        bkShibukiBitmapSrc.width,
+                        (bkShibukiBitmapSrc.height / 3),
+                        0,
+                        0
+
+                    )
+                }
                 CoroutineScope(Dispatchers.Main).launch {
                     gridDialogObj?.findViewById<AppCompatImageView>(
-                        R.id.grid_dialog_v2_dimm_image_view
+                        R.id.grid_dialog_v2_splash_image_view
+                    )?.apply setBkGridImage@{
+                        imageTintList = ColorStateList.valueOf(
+                            Color.parseColor(waterColor)
+                        )
+                        setImageBitmap(bkShibukiBitmap)
+                        delay(300) //300
+                        isVisible = true
+                        delay(50)
+                        YoYo.with(Techniques.FadeOut)
+                            .duration(300) // //400
+                            .repeat(0)
+                            .playOn(this@setBkGridImage)
+                    }
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    gridDialogObj?.findViewById<AppCompatImageView>(
+                        R.id.grid_dialog_v2_splash_bk_image_view
                     )?.apply setBkGridImage@ {
                         imageTintList = ColorStateList.valueOf(
                             Color.parseColor(waterColor)
                         )
-//                        val maskBitmap = BitmapTool.ImageTransformer.exchangeColorToBlack(
-//                            it,
-//                        )
-//                        val maskBkBitmap = BitmapTool.ImageTransformer.makeRect(
-//                            waterColor,
-//                            maskBitmap.width,
-//                            maskBitmap.height,
-//                        )
-//                        val maskedBitmap = BitmapTool.ImageTransformer.maskImageByTransparent(
-//                            maskBkBitmap,
-//                            maskBitmap,
-//                        )
-//                        BitmapTool.ImageTransformer.adjustOpacity(
-//                            maskedBitmap,
-//                            170,
-//                        )
-                        val bkShibukiBitmap = shibukiBitmapList.random()
-                            ?: return@setBkGridImage
-                        BitmapTool.ImageTransformer.cutByTarget(
-                            bkShibukiBitmap,
-                            bkShibukiBitmap.width,
-                            (bkShibukiBitmap.height / 3),
-                            0,
-                            0
-
-                        ).let {
-                            setImageBitmap(it)
-                        }
-//                        setImageBitmap(shibukiBitmapList.random())
-//                        setImageBitmap(shibukiBitmapList.random())
-//                        BitmapTool.ImageTransformer.adjustOpacity(
-//                            shibukiBitmapList.random(),
-//                            250
-//                        ).let {
-//                            setImageBitmap(shibukiBitmapList.random(),)
-//                        }
+                        setImageBitmap(bkShibukiBitmap)
                         delay(300) //300
                         isVisible = true
-//                        YoYo.with(Techniques.FadeIn)
-//                            .duration(1100) // //400
-//                            .repeat(0)
-//                            .playOn(this@setBkGridImage)
-
-
-//                        YoYo.with(Techniques.FadeIn)
-//                        .duration(1000)
-//                        .repeat(0)
-//                        .playOn(this@setBkGridImage)
                     }
                 }
                 CoroutineScope(Dispatchers.Main).launch {
@@ -442,27 +375,12 @@ class GridJsDialogV2(
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .thumbnail(requestBuilder)
                                 .into(this@setEffectImage)
-//                            setImageBitmap(shibukiBitmap)
                             imageTintList =  ColorStateList.valueOf(
                                 Color.parseColor(waterColor)
                             )
-//                            CoroutineScope(Dispatchers.Main).launch{
-//                                withContext(Dispatchers.Main){
-//                                    val constraintLayoutParam =
-//                                        this@setTitleBk.layoutParams as ConstraintLayout.LayoutParams
-//                                    val minusRatio = 0.075
-//                                    var widthRelative = 1.5
-//                                    for(i in 1..12){
-//                                        widthRelative -= minusRatio
-//                                        constraintLayoutParam.dimensionRatio = "H,1:${widthRelative}"
-//                                        this@setTitleBk.layoutParams = constraintLayoutParam
-//                                        delay(20)
-//                                    }
-//                                }
-//                            }
                             CoroutineScope(Dispatchers.Main).launch {
                                 YoYo.with(Techniques.FadeOut)
-                                    .duration(400)
+                                    .duration(500)
                                     .repeat(0)
                                     .playOn(this@setEffectImage)
                             }
@@ -554,22 +472,10 @@ class GridJsDialogV2(
                 withContext(Dispatchers.Main){
                     val animation1 = AlphaAnimation(1f, goalAlpha)
                     animation1.duration = 70 //200
-//                    animation1.startOffset = 5000
                     animation1.fillAfter = true
                     startAnimation(animation1)
                 }
             }
-//            alpha = 0f
-//            CoroutineScope(Dispatchers.IO).launch {
-//                for (i in 1..loopTimes) {
-//                    withContext(Dispatchers.IO) {
-//                        delay(200)
-//                    }
-//                    withContext(Dispatchers.Main) {
-//                        alpha += plusAlpha
-//                    }
-//                }
-//            }
         }
     }
 
@@ -616,14 +522,6 @@ class GridJsDialogV2(
             recycledViewPool.clear()
             removeAllViews()
         }
-
-//        gridListBkView?.apply {
-//            layoutManager = null
-//            adapter = null
-//            recycledViewPool.clear()
-//            removeAllViews()
-//        }
-
         holderConstraint?.removeAllViews()
         returnValue = returnStr
         gridDialogObj?.dismiss()

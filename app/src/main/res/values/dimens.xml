@@ -15,4 +15,7 @@
     <dimen name="prompt_list_dialog_bottom_button_key_open_height">40dp</dimen>
     <dimen name="screen_width_padding">100dp</dimen>
     <dimen name="grid_title_height">60dp</dimen>
+    <dimen name="grid_dialog_max_elevation">10dp</dimen>
+    <dimen name="grid_dialog_middle_elevation">5dp</dimen>
+    <dimen name="grid_dialog_min_elevation">2dp</dimen>
 </resources>

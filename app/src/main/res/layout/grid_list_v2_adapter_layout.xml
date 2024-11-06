@@ -8,9 +8,10 @@
     android:paddingBottom="0dp"
     android:background="@android:color/transparent"
     android:backgroundTint="@null"
+    android:layout_margin="1dp"
     >
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/grid_list_v2_adapter_image"
             android:layout_width="0dp"
             android:layout_height="0dp"

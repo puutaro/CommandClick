@@ -1002,7 +1002,7 @@ class PromptWithListDialog(
             setStrokeColor(CmdClickColor.WHITE.id)
             outlineWidthSrc = 3
             maxLines = maxLinesInt
-            viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     // Remove listener because we don't want this called before _every_ frame
                     viewTreeObserver?.removeOnPreDrawListener(this)

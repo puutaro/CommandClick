@@ -21,17 +21,26 @@
         android:backgroundTint="@null"
         android:alpha="1"
         android:visibility="visible">
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/grid_dialog_v2_dimm_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/sibuki"
-            android:backgroundTint="@null"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:visibility="gone"
-            />
     </FrameLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/grid_dialog_v2_splash_bk_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@null"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/grid_dialog_v2_splash_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/grid_dialog_max_elevation"
+        android:backgroundTint="@null"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        />
     <FrameLayout
         android:id="@+id/grid_dialog_v2_title_bk_frame"
         android:layout_width="0dp"
@@ -39,7 +48,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="5dp"
+        android:elevation="@dimen/grid_dialog_middle_elevation"
         >
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/grid_dialog_v2_title_bk_image"
@@ -86,7 +95,6 @@
             android:paddingTop="0dp"
             android:backgroundTint="@null"
             android:background="@null"
-            android:layout_marginBottom="10dp"
             />
     </FrameLayout>
     <androidx.appcompat.widget.AppCompatImageView
@@ -94,7 +102,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="h, 1:1.5"
-        android:elevation="2dp"
+        android:elevation="@dimen/grid_dialog_min_elevation"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +116,7 @@
         android:id="@+id/grid_dialog_v2_pour_frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="6dp"
+        android:elevation="@dimen/grid_dialog_max_elevation"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,16 +133,4 @@
             android:scaleType="fitXY"
             />
     </FrameLayout>
-<!--    <androidx.appcompat.widget.AppCompatImageView-->
-<!--        android:id="@+id/grid_dialog_v2_cancel"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="50dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        android:src="@drawable/icons8_cancel"-->
-<!--        android:backgroundTint="@null"-->
-<!--        android:background="@null"-->
-<!--        android:layout_gravity="center"-->
-<!--        />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
