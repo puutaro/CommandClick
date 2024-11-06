@@ -317,24 +317,30 @@ class GridJsDialogV2(
 
                     )
                 }
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    gridDialogObj?.findViewById<AppCompatImageView>(
-//                        R.id.grid_dialog_v2_splash_image_view
-//                    )?.apply setBkGridImage@{
-//                        imageTintList = ColorStateList.valueOf(
-//                            Color.parseColor(waterColor)
-//                        )
-//                        alpha = 0.0001f
-//                        setImageBitmap(bkShibukiBitmap)
-//                        delay(300) //300
-//                        isVisible = true
-//                        delay(50)
-//                        YoYo.with(Techniques.FadeOut)
-//                            .duration(300) // //400
-//                            .repeat(0)
-//                            .playOn(this@setBkGridImage)
-//                    }
-//                }
+                val bkShibukiBitmapOpacity = withContext(Dispatchers.IO){
+                    BitmapTool.ImageTransformer.adjustOpacity(
+                        bkShibukiBitmap,
+                        50
+                    )
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    gridDialogObj?.findViewById<AppCompatImageView>(
+                        R.id.grid_dialog_v2_splash_image_view
+                    )?.apply setBkGridImage@{
+                        imageTintList = ColorStateList.valueOf(
+                            Color.parseColor(waterColor)
+                        )
+                        alpha = 1f
+                        setImageBitmap(bkShibukiBitmapOpacity)
+                        delay(300) //300
+                        isVisible = true
+                        delay(50)
+                        YoYo.with(Techniques.FadeOut)
+                            .duration(300) // //400
+                            .repeat(0)
+                            .playOn(this@setBkGridImage)
+                    }
+                }
                 CoroutineScope(Dispatchers.Main).launch {
                     gridDialogObj?.findViewById<AppCompatImageView>(
                         R.id.grid_dialog_v2_splash_bk_image_view

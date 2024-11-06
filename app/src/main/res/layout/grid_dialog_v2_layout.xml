@@ -31,16 +31,16 @@
         android:scaleType="fitXY"
         android:visibility="gone"
         />
-<!--    <androidx.appcompat.widget.AppCompatImageView-->
-<!--        android:id="@+id/grid_dialog_v2_splash_image_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:elevation="@dimen/grid_dialog_max_elevation"-->
-<!--        android:backgroundTint="@null"-->
-<!--        android:background="@null"-->
-<!--        android:scaleType="fitXY"-->
-<!--        android:visibility="gone"-->
-<!--        />-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/grid_dialog_v2_splash_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/grid_dialog_max_elevation"
+        android:backgroundTint="@null"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        />
     <FrameLayout
         android:id="@+id/grid_dialog_v2_title_bk_frame"
         android:layout_width="0dp"

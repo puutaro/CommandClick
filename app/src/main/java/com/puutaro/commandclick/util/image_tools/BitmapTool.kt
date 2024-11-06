@@ -1182,10 +1182,7 @@ object BitmapTool {
             bitmap: Bitmap,
             opacity: Int, //0(trans)..255
         ): Bitmap {
-            val mutableBitmap = if (bitmap.isMutable)
-                bitmap
-            else
-                bitmap.copy(Bitmap.Config.ARGB_8888, true)
+            val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
             val canvas = Canvas(mutableBitmap)
             val colour = (opacity and 0xFF) shl 24
             canvas.drawColor(colour, PorterDuff.Mode.DST_IN)

@@ -118,6 +118,7 @@ class GridListAdapter(
 //                withContext(Dispatchers.IO){
 //                    delay(200)
 //                }
+
                 val requestBuilder: RequestBuilder<Drawable> =
                     Glide.with(itemImageContext)
                         .asDrawable()
@@ -130,7 +131,7 @@ class GridListAdapter(
                     .thumbnail( requestBuilder )
                     .into(itemImageView)
 //                YoYo.with(Techniques.RotateInUpRight)
-//                    .duration(300)
+//                    .duration(150)
 //                    .repeat(0)
 //                    .playOn(itemImageView)
             }
