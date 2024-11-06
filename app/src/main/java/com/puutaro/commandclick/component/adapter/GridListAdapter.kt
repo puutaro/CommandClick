@@ -111,10 +111,10 @@ class GridListAdapter(
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .thumbnail( requestBuilder )
                     .into(itemImageView)
-                YoYo.with(Techniques.RotateInUpRight)
-                    .duration(100)
-                    .repeat(0)
-                    .playOn(itemImageView)
+//                YoYo.with(Techniques.RotateInUpRight)
+//                    .duration(100)
+//                    .repeat(0)
+//                    .playOn(itemImageView)
             }
             withContext(Dispatchers.Main){
                 holder.itemView.setOnClickListener {
