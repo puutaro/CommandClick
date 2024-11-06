@@ -218,7 +218,7 @@ class GridListAdapter(
     private fun makeCornerRateMap(): Map<CornerKey, Float> {
         val surplus = (0..1).random()
         val cornerRateList = (1..4).map {
-            if (it % 2 == surplus) 0.5f else 0.02f
+            if (it % 2 == surplus) 0.4f else 0.02f
         }
         return mapOf(
             CornerKey.TOP_LEFT to cornerRateList[0],
