@@ -17,6 +17,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -75,31 +76,48 @@ class GridListAdapter(
                     viewTreeObserver?.addOnPreDrawListener(object :
                         ViewTreeObserver.OnPreDrawListener {
                         override fun onPreDraw(): Boolean {
-                            // Remove listener because we don't want this called before _every_ frame
                             viewTreeObserver?.removeOnPreDrawListener(this)
-                            val cornerFirstStopAnimator = makeCornerAnimation(
-                                itemImageView,
-                                cornerRateMap,
-                                100L,
-                                0f,
-                            )
-                            val cornerChangeAnimator = makeCornerAnimation(
-                                itemImageView,
-                                cornerRateMap,
-                                200L,
-                                null,
-                            )
-                            // アニメーションセットを作成し、順に再生
-                            val animatorSet = AnimatorSet()
-                            animatorSet.playSequentially(
-                                cornerFirstStopAnimator,
-                                cornerChangeAnimator
-                            )
-                            animatorSet.start()
+                            CoroutineScope(Dispatchers.Main).launch {
+                                // Remove listener because we don't want this called before _every_ frame
+//                                val cornerFirstStopAnimator = withContext(Dispatchers.IO) {
+//                                    makeCornerAnimation(
+//                                        itemImageView,
+//                                        cornerRateMap,
+//                                        100L,
+//                                        0f,
+//                                    )
+//                                }
+//                                val cornerChangeAnimator = withContext(Dispatchers.IO) {
+//                                    makeCornerAnimation(
+//
+//                                        itemImageView,
+//                                        cornerRateMap,
+//                                        1L,
+//                                        null,
+//                                    )
+//                                }
+                                // アニメーションセットを作成し、順に再生
+                                withContext(Dispatchers.Main) {
+                                    setShape(
+                                        itemImageView,
+                                        cornerRateMap,
+                                    )
+//                                    val animatorSet = AnimatorSet().apply {
+//                                        playSequentially(
+//                                            cornerFirstStopAnimator,
+//                                            cornerChangeAnimator
+//                                        )
+//                                    }
+//                                    animatorSet.start()
+                                }
+                            }
                             return true // true because we don't want to skip this frame
                         }
                     })
                 }
+//                withContext(Dispatchers.IO){
+//                    delay(200)
+//                }
                 val requestBuilder: RequestBuilder<Drawable> =
                     Glide.with(itemImageContext)
                         .asDrawable()
@@ -112,7 +130,7 @@ class GridListAdapter(
                     .thumbnail( requestBuilder )
                     .into(itemImageView)
 //                YoYo.with(Techniques.RotateInUpRight)
-//                    .duration(100)
+//                    .duration(300)
 //                    .repeat(0)
 //                    .playOn(itemImageView)
             }
@@ -193,6 +211,41 @@ class GridListAdapter(
             }
         }
         return cornerChangeAnimator
+    }
+
+    private fun setShape(
+        itemImageView: ShapeableImageView,
+        curCornerRateMap: Map<CornerKey, Float>,
+    ){
+        val curWidth = itemImageView.width
+        val shapeAppearanceModel =
+            itemImageView.shapeAppearanceModel.toBuilder()
+                .setTopLeftCornerSize(
+                    culcRadius(
+                        curWidth,
+                        curCornerRateMap[CornerKey.TOP_LEFT] as Float
+                    )
+                )
+                .setTopRightCornerSize(
+                    culcRadius(
+                        curWidth,
+                        curCornerRateMap[CornerKey.TOP_RIGHT] as Float
+                    )
+                )
+                .setBottomRightCornerSize(
+                    culcRadius(
+                        curWidth,
+                        curCornerRateMap[CornerKey.BOTTOM_RIGHT] as Float,
+                    )
+                )
+                .setBottomLeftCornerSize(
+                    culcRadius(
+                        curWidth,
+                        curCornerRateMap[CornerKey.BOTTOM_LEFT] as Float,
+                    )
+                )
+                .build()
+        itemImageView.shapeAppearanceModel = shapeAppearanceModel
     }
 
     private enum class CornerKey{
