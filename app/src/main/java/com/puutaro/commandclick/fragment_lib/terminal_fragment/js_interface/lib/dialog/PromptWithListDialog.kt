@@ -949,7 +949,7 @@ class PromptWithListDialog(
 
     private fun makePromptTitle(
         promptDialogObj: Dialog?,
-        title: String,
+        titleSrc: String,
         firstTitleGradColorsStrList: List<String>,
         titleMap: Map<String, String>?,
     ): OutlineTextView? {
@@ -962,6 +962,10 @@ class PromptWithListDialog(
                 null
             }
         } ?: Integer.MAX_VALUE
+        val title = when(titleSrc.length <= 3){
+            true -> "Select"
+            else -> titleSrc
+        }
         return promptDialogObj?.findViewById<OutlineTextView>(
             R.id.prompt_list_dialog_list_title
         )?.apply {
