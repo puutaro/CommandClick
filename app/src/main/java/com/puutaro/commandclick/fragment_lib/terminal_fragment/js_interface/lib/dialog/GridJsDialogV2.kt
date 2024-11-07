@@ -137,9 +137,13 @@ class GridJsDialogV2(
         configMapCon: String,
     ) {
         val terminalFragment = terminalFragmentRef.get()
-            ?: return
+            ?: return Unit.also {
+                simpleExitDialog()
+            }
         val context = terminalFragment.context
-            ?: return
+            ?: return Unit.also {
+                simpleExitDialog()
+            }
 
         val usrColorPair =  colorPairList.random()
 
@@ -515,6 +519,15 @@ class GridJsDialogV2(
             .filter {
                 it.trim().isNotEmpty()
             }
+    }
+
+    private fun simpleExitDialog(){
+        exitDialog(
+            null,
+            null,
+//        gridListBkView: RecyclerView?,
+            String(),
+        )
     }
 
     private fun exitDialog(

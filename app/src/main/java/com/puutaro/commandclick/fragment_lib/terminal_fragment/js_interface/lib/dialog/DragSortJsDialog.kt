@@ -71,14 +71,20 @@ class DragSortJsDialog(
         dragSortFilePath: String,
     ) {
         val terminalFragment = terminalFragmentRef.get()
-            ?: return
+            ?: return Unit.also {
+                simpleExitDialog()
+            }
         val context = terminalFragment.context
-            ?: return
+            ?: return Unit.also {
+                simpleExitDialog()
+            }
 
         val dragSortFileFileObj = File(dragSortFilePath)
         if(
             !dragSortFileFileObj.isFile
-            ) return
+            ) return Unit.also {
+            simpleExitDialog()
+        }
         dragSortDialogObj = Dialog(
             context,
             R.style.BottomSheetDialogThemeWithNoDimm
@@ -588,6 +594,13 @@ class DragSortJsDialog(
 //            ).joinToString("\n")
 //        )
         return textSize
+    }
+
+    private fun simpleExitDialog(){
+        exitDialog(
+            null,
+            null,
+        )
     }
 
     private fun exitDialog(
