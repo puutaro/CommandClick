@@ -20,7 +20,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/prompt_list_linear"
+    android:id="@+id/prompt_list_linear"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

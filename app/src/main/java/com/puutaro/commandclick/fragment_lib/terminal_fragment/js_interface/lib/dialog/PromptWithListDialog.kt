@@ -23,7 +23,6 @@ import android.text.style.CharacterStyle
 import android.text.style.RelativeSizeSpan
 import android.text.style.ReplacementSpan
 import android.text.style.UpdateAppearance
-import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -169,7 +168,7 @@ class PromptWithListDialog(
 
         object PromptMapList {
 
-            val promptListSeparator = '\t'
+            const val promptListSeparator = '\t'
 
             enum class PromptListKey(
                 val key: String
@@ -383,7 +382,11 @@ class PromptWithListDialog(
                         promptConfigMapCon,
                     )
                 } catch (e: Exception){
-                    Log.e(this.javaClass.name, e.toString())
+                    LogSystems.stdErr(
+                        terminalFragment.context,
+                        e.toString()
+                    )
+                    simpleExitDialog()
                 }
             }
             withContext(Dispatchers.IO) {
@@ -399,26 +402,30 @@ class PromptWithListDialog(
     }
 
 
-    private fun execCreate(
+    private suspend fun execCreate(
         terminalFragment: TerminalFragment,
         fannelPath: String,
         setReplaceVariablesMap: Map<String, String>?,
         title: String,
         promptConfigMapCon: String,
     ) {
+        val execCreateStart = LocalDateTime.now()
         val context = terminalFragment.context
-            ?: return
+            ?: return Unit.also {
+                simpleExitDialog()
+            }
 
-        val promptConfigMap = CmdClickMap.createMap(
-            promptConfigMapCon,
-            sectionSeparator,
-        ).toMap()
-        val promptExtraMap = promptConfigMap.get(PromptWithTextMapKey.extra.name)?.let {
+        val promptConfigMap =
             CmdClickMap.createMap(
-                it,
-                keySeparator
+                promptConfigMapCon,
+                sectionSeparator,
             ).toMap()
-        }
+        val promptExtraMap = promptConfigMap.get(PromptWithTextMapKey.extra.name)?.let {
+                CmdClickMap.createMap(
+                    it,
+                    keySeparator
+                ).toMap()
+            }
 //        val promptBkMap = promptConfigMap.get(PromptWithTextMapKey.background.name)?.let {
 //            CmdClickMap.createMap(
 //                it,
@@ -441,13 +448,12 @@ class PromptWithListDialog(
 //                    (1..randEndNum).random() % randEndNum == 0
 //                }
 //            }
-
         promptDialogObj = Dialog(
-            context,
-            R.style.BottomSheetDialogThemeWithNoDimm
+                context,
+                R.style.BottomSheetDialogThemeWithNoDimm
 //            R.style.extraMenuDialogStyle,
 //                R.style.BottomSheetDialogThemeWithLightDimm
-        )
+            )
 //        when(isTransparent) {
 //            true -> Dialog(
 //                context,
@@ -464,68 +470,82 @@ class PromptWithListDialog(
         promptDialogObj?.setContentView(
             R.layout.prompt_list_dialog_layout
         )
-        val holderConstraint = promptDialogObj?.findViewById<ConstraintLayout>(
-            R.id.prompt_list_dialog_constraint
-        )
-        val bkRelative = promptDialogObj?.findViewById<RelativeLayout>(
-            R.id.prompt_list_dialog_bk_relative
-        ) ?: return
+        val holderConstraint =
+            promptDialogObj?.findViewById<ConstraintLayout>(
+                R.id.prompt_list_dialog_constraint
+            ) ?: return Unit.also {
+                simpleExitDialog()
+            }
+        val bkRelative =
+            promptDialogObj?.findViewById<RelativeLayout>(
+                R.id.prompt_list_dialog_bk_relative
+            ) ?: return Unit.also {
+                simpleExitDialog()
+            }
+
 
         promptExtraMap?.get(PromptExtraKey.removeFilePaths.name)?.split(
             valueSeparator
-        )?.forEach {
-            removeFilePath ->
+        )?.forEach { removeFilePath ->
             FileSystems.removeFiles(
                 removeFilePath,
             )
         }
 
         val titleMap = CmdClickMap.createMap(
-            promptConfigMap.get(PromptWithTextMapKey.title.name),
-            keySeparator
-        ).toMap()
+                promptConfigMap.get(PromptWithTextMapKey.title.name),
+                keySeparator
+            ).toMap()
         val promptListView = promptDialogObj?.findViewById<RecyclerView>(
-            R.id.prompt_list_dialog_list_view
-        )
+                R.id.prompt_list_dialog_list_view
+            )  ?: return Unit.also {
+            simpleExitDialog()
+        }
         val firstTitleGradColorsStrList = firstTitleGradColorStrList(
-            isWhiteBackground
-        )
+                isWhiteBackground
+            )
+        val promptTitleStart = LocalDateTime.now()
         val promptListTitleView = makePromptTitle(
-            promptDialogObj,
-            title,
-            firstTitleGradColorsStrList,
-            titleMap,
-        )
+                promptDialogObj,
+                title,
+                firstTitleGradColorsStrList,
+                titleMap,
+            )
+        val promptTitleEnd = LocalDateTime.now()
         val editTextMap = CmdClickMap.createMap(
-            promptConfigMap.get(PromptWithTextMapKey.editText.name),
-            keySeparator
-        ).toMap()
+                promptConfigMap.get(PromptWithTextMapKey.editText.name),
+                keySeparator
+            ).toMap()
         val promptListMap = CmdClickMap.createMap(
-            promptConfigMap.get(PromptWithTextMapKey.list.name),
-            keySeparator
-        ).toMap()
+                promptConfigMap.get(PromptWithTextMapKey.list.name),
+                keySeparator
+            ).toMap()
         val disableUpdate = promptListMap.get(
-            PromptListVars.disableUpdate.name
-        ) == switchOn
+                PromptListVars.disableUpdate.name
+            ) == switchOn
         val fannelDirPath = CcPathTool.getMainFannelDirPath(fannelPath)
-        val listDirPath = "${fannelDirPath}/${listDirName}"
-
-        val saveTag = promptListMap.get(PromptListVars.saveTag.name)
-        val promptListFile = makeListTextFileName(
-            saveTag,
-        )?.let {
-            File(listDirPath, it)
+        val promptListFile = withContext(Dispatchers.IO) {
+            val listDirPath = "${fannelDirPath}/${listDirName}"
+            val saveTag = promptListMap.get(PromptListVars.saveTag.name)
+            makeListTextFileName(
+                saveTag,
+            )?.let {
+                File(listDirPath, it)
+            }
         }
 
-        val defaultTextSrc = editTextMap.get(
-            PromptEditTextKey.default.name
-        ) ?: String()
-        val defaultText = when(defaultTextSrc.isEmpty()){
-            true -> EditTextMakerForPromptList.makeTextByShell(
-                terminalFragment,
-                editTextMap
-            )
-            else -> defaultTextSrc
+        val defaultText = withContext(Dispatchers.IO) {
+            val defaultTextSrc = editTextMap.get(
+                PromptEditTextKey.default.name
+            ) ?: String()
+            when (defaultTextSrc.isEmpty()) {
+                true -> EditTextMakerForPromptList.makeTextByShell(
+                    terminalFragment,
+                    editTextMap
+                )
+
+                else -> defaultTextSrc
+            }
         }
         val disableListBind = editTextMap.get(
             PromptEditTextKey.disableListBind.name
@@ -554,7 +574,8 @@ class PromptWithListDialog(
             true -> String()
             else -> defaultText ?: String()
         }
-        val promptList =
+        val promptlistStart = LocalDateTime.now()
+        val promptList: MutableList<Map<String, String?>> = //mutableListOf()
             PromptMapList.makePromptMapList(
                 File(fannelPath).name,
                 setReplaceVariablesMap,
@@ -563,33 +584,38 @@ class PromptWithListDialog(
                 filterText,
                 listLimit,
             )
-        val bkImageView =
-            promptDialogObj?.findViewById<AppCompatImageView>(
-                R.id.prompt_list_dialog_list_bk_image
-            ) ?: return
+        val promptWindowSetStart = LocalDateTime.now()
+        val bkImageView = promptDialogObj?.findViewById<AppCompatImageView>(
+            R.id.prompt_list_dialog_list_bk_image
+        ) ?: return Unit.also {
+            simpleExitDialog()
+        }
+        promptDialogObj?.window?.apply {
+            setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundDrawable(
+                ColorDrawable(Color.TRANSPARENT)
+            )
+            setGravity(
+                Gravity.BOTTOM
+            )
+        }
+        val promptWindowSetEnd = LocalDateTime.now()
+        promptDialogObj?.show()
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "promptTime.txt").absolutePath,
+            listOf(
+                "execCreateStart: ${execCreateStart}",
+                "promptTitleStart: ${promptTitleStart}",
+                "promptTitleEnd: ${promptTitleEnd}",
+                "promptlistStart: ${promptlistStart}",
+                "promptWindowSetStart: ${promptWindowSetStart}",
+                "promptWindowSetEnd: ${promptWindowSetEnd}",
+            ).joinToString("\n")
+        )
         CoroutineScope(Dispatchers.Main).launch{
-//            when(isTransparent) {
-//                true -> {
-////                    bkImageView.isVisible = false
-//                    val goalAlpha = 0.6f
-//                    val loopTimes = 2
-//                    val plusAlpha = goalAlpha / loopTimes
-//                    bkImageView.apply {
-//                        ToastUtils.showShort("aaa")
-//                        alpha = 1f
-//                        CoroutineScope(Dispatchers.IO).launch {
-//                            for (i in 1..loopTimes) {
-//                                withContext(Dispatchers.IO) {
-//                                    delay(200)
-//                                }
-//                                withContext(Dispatchers.Main) {
-//                                    alpha += plusAlpha
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                else -> {
             when (
                 isWhiteBackground
             ) {
@@ -618,12 +644,9 @@ class PromptWithListDialog(
                     }
                 }
             }
-//            if(!isTransparent) return@launch
             originalDimmEffect(
                 bkImageView
             )
-//                }
-//            }
         }
         CoroutineScope(Dispatchers.Main).launch {
             val promptEditText = withContext(Dispatchers.Main) {
@@ -713,21 +736,6 @@ class PromptWithListDialog(
 //                )
 //            }
         }
-        promptDialogObj?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        promptDialogObj?.window?.apply {
-//            if(isTransparent) {
-                setBackgroundDrawable(
-                    ColorDrawable(Color.TRANSPARENT)
-                )
-//            }
-            setGravity(
-                Gravity.BOTTOM
-            )
-        }
-        promptDialogObj?.show()
 
         CoroutineScope(Dispatchers.Main).launch {
             val statisticsTitleList = withContext(Dispatchers.IO) {
@@ -825,17 +833,17 @@ class PromptWithListDialog(
                                             R.id.prompt_list_dialog_search_edit_cardview
                                         )
                                     }
-                                    val searchCardViewVerticalMarginKeyOpenDp = withContext(Dispatchers.IO){
-                                        context.resources.getDimension(
-                                            R.dimen.prompt_list_dialog_vertical_search_cardview_key_open_margin
-                                        ).toInt()
-                                    }
+//                                    val searchCardViewVerticalMarginKeyOpenDp = withContext(Dispatchers.IO){
+//                                        context.resources.getDimension(
+//                                            R.dimen.prompt_list_dialog_vertical_search_cardview_key_open_margin
+//                                        ).toInt()
+//                                    }
                                     withContext(Dispatchers.Main) {
                                         promptListView.setAutofillHints(onSystemkeyOpenModeStr)
                                         KeyboardHandler.setToKeyOpen(
                                             promptListTitleView,
                                             promptListView,
-                                            searchCardViewVerticalMarginKeyOpenDp,
+//                                            searchCardViewVerticalMarginKeyOpenDp,
                                             searchCardView
                                         )
                                     }
@@ -886,32 +894,21 @@ class PromptWithListDialog(
             CmdClickColorStr.BROWN.str,
         )
         val color1 = colorList.random()
+        val alreadyColorList: MutableList<String> = mutableListOf()
+        alreadyColorList.add(color1)
         val color2 = let {
             if(
                 !isWhiteBackgrond
             ) return@let whiteColorStr
-            var color2Str = String()
-            for(i in 1..5) {
-                color2Str = colorList.random()
-                if (
-                    color2Str != color1
-                ) return@let color2Str
-            }
-            color2Str
+            colorList.filter{
+                it != color1
+            }.random()
         }
-        val alreadyColorList = listOf(
-            color1,
-            color2,
-        )
-        val color3 = runBlocking {
-            var color3Str = String()
-            for(i in 1..5) {
-                color3Str = colorList.random()
-                if (
-                    !alreadyColorList.contains(color3Str)
-                ) return@runBlocking color3Str
-            }
-            color3Str
+        alreadyColorList.add(color2)
+        val color3 = let {
+            colorList.filter {
+                !alreadyColorList.contains(it)
+            }.random()
         }
         return listOf(
             color1,
@@ -1037,9 +1034,9 @@ class PromptWithListDialog(
                 R.dimen.prompt_list_dialog_vertical_search_cardview_margin
             ).toInt()
 //            okImageView?.isVisible = editTextVisible
-            val searchCardViewVerticalMarginKeyOpenDp = context.resources.getDimension(
-                R.dimen.prompt_list_dialog_vertical_search_cardview_key_open_margin
-            ).toInt()
+//            val searchCardViewVerticalMarginKeyOpenDp = context.resources.getDimension(
+//                R.dimen.prompt_list_dialog_vertical_search_cardview_key_open_margin
+//            ).toInt()
             val isKeyOpenMode = promptExtraMap?.get(
                 PromptExtraKey.onKeyOpenMode.name
             ) == switchOn
@@ -1047,7 +1044,7 @@ class PromptWithListDialog(
                 setToKeyOpen(
                     promptListTitleView,
                     promptListView,
-                    searchCardViewVerticalMarginKeyOpenDp,
+//                    searchCardViewVerticalMarginKeyOpenDp,
                     searchCardView,
 //                    cancelImageView,
 //                    okImageView,
@@ -1057,31 +1054,6 @@ class PromptWithListDialog(
                 withContext(Dispatchers.IO){
                     delay(1000)
                 }
-//                promptListTitleView?.viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-//                    override fun onPreDraw(): Boolean {
-//                        // Remove listener because we don't want this called before _every_ frame
-//                        promptListTitleView?.viewTreeObserver?.removeOnPreDrawListener(this)
-//
-//                        // Drawing happens after layout so we can assume lineCount returns the correct value
-//                        if (promptListTitleView.lineCount > 1) {
-//                            val oneLineMinHeight = context.resources.getDimension(
-//                                R.dimen.prompt_list_dialog_title_min_height
-//                            )
-//                            promptListTitleView.minHeight = (oneLineMinHeight * 2).toInt()
-//                            // Do whatever you want in case text view has more than 2 lines
-//                        }
-//                        FileSystems.writeFile(
-//                            File(UsePath.cmdclickDefaultAppDirPath, "lMinHeight.txt").absolutePath,
-//                            listOf(
-//                                "text: ${promptListTitleView.text}",
-//                                "maxLines: ${promptListTitleView.maxLines}",
-//                                "lineCount]: ${promptListTitleView.lineCount}",
-//                                "minHeight: ${promptListTitleView.minHeight}"
-//                            ).joinToString("\n")
-//                        )
-//                        return true // true because we don't want to skip this frame
-//                    }
-//                })
             }
             terminalFragment.activity?.let {
                 KeyboardVisibilityEvent.setEventListener(
@@ -1098,7 +1070,7 @@ class PromptWithListDialog(
                                 setToKeyOpen(
                                     promptListTitleView,
                                     promptListView,
-                                    searchCardViewVerticalMarginKeyOpenDp,
+//                                    searchCardViewVerticalMarginKeyOpenDp,
                                     searchCardView,
 //                                    cancelImageView,
 //                                    okImageView,
@@ -1158,7 +1130,7 @@ class PromptWithListDialog(
         fun setToKeyOpen(
             promptListTitleView: AppCompatTextView?,
             promptListView: RecyclerView?,
-            searchCardViewVerticalMarginKeyOpenDp: Int,
+//            searchCardViewVerticalMarginKeyOpenDp: Int,
             searchCardView: MaterialCardView?,
         ){
             promptListTitleView?.alpha = 0.4f
@@ -1166,7 +1138,7 @@ class PromptWithListDialog(
             constraintLayout?.apply {
                 topToTop = ConstraintSet.PARENT_ID
                 topToBottom = ConstraintLayout.LayoutParams.UNSET
-                bottomMargin = searchCardViewVerticalMarginKeyOpenDp
+//                bottomMargin = searchCardViewVerticalMarginKeyOpenDp
             }
             promptListView?.layoutParams = constraintLayout
 
@@ -1339,6 +1311,20 @@ class PromptWithListDialog(
                 )
             }
         }
+    }
+
+    private fun simpleExitDialog(){
+        exitDialog(
+            String(),
+            null,
+            null,
+            null,
+            String(),
+            String(),
+            null,
+            null,
+            true,
+        )
     }
 
     private fun exitDialog(
@@ -2181,7 +2167,7 @@ class PromptWithListDialog(
                             layoutParams = relativeParam
                             alpha = alphaRndList.random().toFloat() / 1000
                             rotation = fixRotationAngle
-                            val putXyPair = runBlocking {
+                            val putXyPair = let {
                                 var putXyPairSrc: Pair<Float, Float> = Pair(0f, 0f)
                                 for(i in 1..5 ){
                                     putXyPairSrc = Pair(
@@ -2192,10 +2178,10 @@ class PromptWithListDialog(
                                             || putXyPairSrc.second > screenHeightInt / 2
                                     if(
                                         !isBottomLeft
-                                    ) return@runBlocking putXyPairSrc
+                                    ) return@let putXyPairSrc
                                     if (
                                         (1..3).random() == 1
-                                    ) return@runBlocking putXyPairSrc
+                                    ) return@let putXyPairSrc
                                 }
                                 putXyPairSrc
                             }
@@ -2506,7 +2492,7 @@ class PromptWithListDialog(
                             layoutParams = relativeParam
                             alpha = alphaRndList.random().toFloat() / 1000
                             rotation = fixRotationAngle + plusRotateList.random()
-                            val putXyPair = runBlocking {
+                            val putXyPair = let {
                                 var putXyPairSrc: Pair<Float, Float> = Pair(0f, 0f)
                                 val shrinkRate = 10
                                 for(i in 1..5 ){
@@ -2518,10 +2504,10 @@ class PromptWithListDialog(
                                             || putXyPairSrc.second > screenHeightInt / 2
                                     if(
                                         !isBottomLeft
-                                    ) return@runBlocking putXyPairSrc
+                                    ) return@let putXyPairSrc
                                     if (
                                         (1..3).random() == 1
-                                    ) return@runBlocking putXyPairSrc
+                                    ) return@let putXyPairSrc
                                 }
                                 putXyPairSrc
                             }
