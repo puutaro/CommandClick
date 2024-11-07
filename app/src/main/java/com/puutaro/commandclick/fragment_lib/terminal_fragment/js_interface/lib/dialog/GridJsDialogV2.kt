@@ -407,7 +407,7 @@ class GridJsDialogV2(
                     imagePathListNewlineSepaStr
                 )
             }
-            val gridListAdapter = withContext(Dispatchers.Main) {
+            val gridListAdapter = withContext(Dispatchers.IO) {
                 GridListAdapter(
                     imagePathList
                 )

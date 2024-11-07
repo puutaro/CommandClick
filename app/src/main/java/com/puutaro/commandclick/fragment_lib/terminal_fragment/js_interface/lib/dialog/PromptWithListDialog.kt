@@ -409,7 +409,7 @@ class PromptWithListDialog(
         title: String,
         promptConfigMapCon: String,
     ) {
-        val execCreateStart = LocalDateTime.now()
+//        val execCreateStart = LocalDateTime.now()
         val context = terminalFragment.context
             ?: return Unit.also {
                 simpleExitDialog()
@@ -504,14 +504,14 @@ class PromptWithListDialog(
         val firstTitleGradColorsStrList = firstTitleGradColorStrList(
                 isWhiteBackground
             )
-        val promptTitleStart = LocalDateTime.now()
+//        val promptTitleStart = LocalDateTime.now()
         val promptListTitleView = makePromptTitle(
                 promptDialogObj,
                 title,
                 firstTitleGradColorsStrList,
                 titleMap,
             )
-        val promptTitleEnd = LocalDateTime.now()
+//        val promptTitleEnd = LocalDateTime.now()
         val editTextMap = CmdClickMap.createMap(
                 promptConfigMap.get(PromptWithTextMapKey.editText.name),
                 keySeparator
@@ -574,7 +574,7 @@ class PromptWithListDialog(
             true -> String()
             else -> defaultText ?: String()
         }
-        val promptlistStart = LocalDateTime.now()
+//        val promptlistStart = LocalDateTime.now()
         val promptList: MutableList<Map<String, String?>> = //mutableListOf()
             PromptMapList.makePromptMapList(
                 File(fannelPath).name,
@@ -584,7 +584,7 @@ class PromptWithListDialog(
                 filterText,
                 listLimit,
             )
-        val promptWindowSetStart = LocalDateTime.now()
+//        val promptWindowSetStart = LocalDateTime.now()
         val bkImageView = promptDialogObj?.findViewById<AppCompatImageView>(
             R.id.prompt_list_dialog_list_bk_image
         ) ?: return Unit.also {
@@ -602,19 +602,19 @@ class PromptWithListDialog(
                 Gravity.BOTTOM
             )
         }
-        val promptWindowSetEnd = LocalDateTime.now()
+//        val promptWindowSetEnd = LocalDateTime.now()
         promptDialogObj?.show()
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "promptTime.txt").absolutePath,
-            listOf(
-                "execCreateStart: ${execCreateStart}",
-                "promptTitleStart: ${promptTitleStart}",
-                "promptTitleEnd: ${promptTitleEnd}",
-                "promptlistStart: ${promptlistStart}",
-                "promptWindowSetStart: ${promptWindowSetStart}",
-                "promptWindowSetEnd: ${promptWindowSetEnd}",
-            ).joinToString("\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "promptTime.txt").absolutePath,
+//            listOf(
+//                "execCreateStart: ${execCreateStart}",
+//                "promptTitleStart: ${promptTitleStart}",
+//                "promptTitleEnd: ${promptTitleEnd}",
+//                "promptlistStart: ${promptlistStart}",
+//                "promptWindowSetStart: ${promptWindowSetStart}",
+//                "promptWindowSetEnd: ${promptWindowSetEnd}",
+//            ).joinToString("\n")
+//        )
         CoroutineScope(Dispatchers.Main).launch{
             when (
                 isWhiteBackground
@@ -2062,9 +2062,12 @@ class PromptWithListDialog(
                 ) ?: return@withContext
 
                 val dialogMargin = 200
-                val screenHeightInt = withContext(Dispatchers.Main) screenHeightInt@ {
+                val screenHeightInt = withContext(Dispatchers.IO) screenHeightInt@ {
                     for(i in 1..5) {
-                        val screenHeightIntSrc = bkRelative.measuredHeight - dialogMargin
+                        val measuredHeight = withContext(Dispatchers.Main){
+                            bkRelative.measuredHeight
+                        }
+                        val screenHeightIntSrc = measuredHeight - dialogMargin
                         if(screenHeightIntSrc <= 0) {
                             delay(100)
                             continue
@@ -2076,9 +2079,12 @@ class PromptWithListDialog(
                     if(it <= 0) return@withContext
                     it
                 }
-                val screenWidthInt = withContext(Dispatchers.Main) screenWidthInt@ {
+                val screenWidthInt = withContext(Dispatchers.IO) screenWidthInt@ {
                     for(i in 1..5) {
-                        val screenWidthIntSrc = bkRelative.measuredWidth - dialogMargin
+                        val measuredWidth = withContext(Dispatchers.Main){
+                            bkRelative.measuredWidth
+                        }
+                        val screenWidthIntSrc = measuredWidth - dialogMargin
                         if(screenWidthIntSrc <= 0) {
                             delay(100)
                             continue
@@ -2304,9 +2310,12 @@ class PromptWithListDialog(
                 ) ?: return@withContext
 
                 val dialogMargin = 200
-                val screenHeightInt = withContext(Dispatchers.Main) screenHeightInt@ {
+                val screenHeightInt = withContext(Dispatchers.IO) screenHeightInt@ {
                         for(i in 1..5) {
-                            val screenHeightIntSrc = bkRelative.measuredHeight - dialogMargin
+                            val measuredHeight = withContext(Dispatchers.Main){
+                                bkRelative.measuredHeight
+                            }
+                            val screenHeightIntSrc = measuredHeight - dialogMargin
                             if(screenHeightIntSrc <= 0) {
                                 delay(100)
                                 continue
@@ -2319,9 +2328,12 @@ class PromptWithListDialog(
                     it
                 }
                 val screenWidthInt =
-                    withContext(Dispatchers.Main) screenWidthInt@ {
+                    withContext(Dispatchers.IO) screenWidthInt@ {
                         for(i in 1..5) {
-                            val screenWidthIntSrc = bkRelative.measuredWidth - dialogMargin
+                            val measuredWidth = withContext(Dispatchers.Main){
+                                bkRelative.measuredWidth
+                            }
+                            val screenWidthIntSrc = measuredWidth - dialogMargin
                             if(screenWidthIntSrc <= 0) {
                                 delay(100)
                                 continue
@@ -2593,9 +2605,12 @@ class PromptWithListDialog(
                 ) ?: return@withContext
 
                 val dialogMargin = 200
-                val screenHeightInt = withContext(Dispatchers.Main) screenHeightInt@ {
+                val screenHeightInt = withContext(Dispatchers.IO) screenHeightInt@ {
                     for(i in 1..5) {
-                        val screenHeightIntSrc = bkRelative.measuredHeight - dialogMargin
+                        val measuredHeight = withContext(Dispatchers.Main){
+                            bkRelative.measuredHeight
+                        }
+                        val screenHeightIntSrc = measuredHeight - dialogMargin
                         if(screenHeightIntSrc <= 0) {
                             delay(100)
                             continue
@@ -2607,9 +2622,12 @@ class PromptWithListDialog(
                     if(it <= 0) return@withContext
                     it
                 }
-                val screenWidthInt = withContext(Dispatchers.Main) screenWidthInt@ {
+                val screenWidthInt = withContext(Dispatchers.IO) screenWidthInt@ {
                     for(i in 1..5) {
-                        val screenWidthIntSrc = bkRelative.measuredWidth - dialogMargin
+                        val measuredWidth = withContext(Dispatchers.Main){
+                            bkRelative.measuredWidth
+                        }
+                        val screenWidthIntSrc = measuredWidth - dialogMargin
                         if(screenWidthIntSrc <= 0) {
                             delay(100)
                             continue

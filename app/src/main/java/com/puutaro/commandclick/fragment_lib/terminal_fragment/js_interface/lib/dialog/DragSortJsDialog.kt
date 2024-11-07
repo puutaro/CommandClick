@@ -475,7 +475,7 @@ class DragSortJsDialog(
                     dragSortFilePath
                 )
             }
-            val dragSortRecyclerAdapter = withContext(Dispatchers.Main) {
+            val dragSortRecyclerAdapter = withContext(Dispatchers.IO) {
                 DragSortRecyclerAdapter(
                     context,
                     dragSortList.toMutableList(),
