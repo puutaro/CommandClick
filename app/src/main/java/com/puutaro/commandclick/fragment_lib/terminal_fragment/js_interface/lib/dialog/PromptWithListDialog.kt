@@ -657,7 +657,7 @@ class PromptWithListDialog(
                     editTextVisible,
                 )
             }
-            val promptListAdapter = withContext(Dispatchers.Main) {
+            val promptListAdapter = withContext(Dispatchers.IO) {
                 PromptListAdapter(
                     context,
                     promptList,
@@ -681,7 +681,7 @@ class PromptWithListDialog(
                 }
             }
             withContext(Dispatchers.Main) {
-                promptListView?.apply {
+                promptListView.apply {
                     isVisible = listVisible
                     adapter = promptListAdapter
                     layoutManager = PreLoadLayoutManager(

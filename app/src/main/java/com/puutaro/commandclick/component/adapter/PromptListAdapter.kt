@@ -16,6 +16,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
@@ -59,31 +60,33 @@ class PromptListAdapter(
         //return super.getItemViewType(position)
         return position
     }
+//
+//    private val defaultUrlCapBitmap = AssetsFileManager.assetsByteArray(
+//        context,
+//        AssetsFileManager.firstUrlCapPngPath
+//    )?.let {
+//        BitmapFactory.decodeByteArray(it, 0, it.size)
+//    }
 
-    private val defaultUrlCapBitmap = AssetsFileManager.assetsByteArray(
-        context,
-        AssetsFileManager.firstUrlCapPngPath
-    )?.let {
-        BitmapFactory.decodeByteArray(it, 0, it.size)
-    }
-
-    private val centerWhiteColor = when(isWhiteBackgrond) {
-        true -> null
-        else -> "#ffffff"
-    }
+//    private val centerWhiteColor = when(isWhiteBackgrond) {
+//        true -> null
+//        else -> "#ffffff"
+//    }
     private val rotateList = listOf(45, 135, 225, 315)
 
-    private val thumbnailByteArray =
-        runBlocking {
-            ButtonImageCreator.ExecButtonImageCreator.create(
-                context,
-                ButtonAssetsImage.cPingPath,
-                makeCapturePartPngDirPathList(),
-                defaultUrlCapBitmap,
-                centerWhiteColor,
-                BitmapTool.GradientBitmap.GradOrient.DIAGONAL,
-            )
-        }
+    private val thumbnailByteArray = ExecSetToolbarButtonImage.getImageFile(
+            CmdClickIcons.CC.assetsPath
+        ).let {
+            BitmapTool.convertFileToByteArray(it.absolutePath)
+    }
+//        ButtonImageCreator.ExecButtonImageCreator.create(
+//        context,
+//        ButtonAssetsImage.cPingPath,
+//        makeCapturePartPngDirPathList(),
+//        defaultUrlCapBitmap,
+//        centerWhiteColor,
+//        BitmapTool.GradientBitmap.GradOrient.DIAGONAL,
+//    )
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -179,14 +182,19 @@ class PromptListAdapter(
                     when (true) {
                         (icon != null)
                             -> {
-                            ButtonImageCreator.ExecButtonImageCreator.create(
-                                context,
-                                icon.assetsPath,
-                                makeCapturePartPngDirPathList(),
-                                defaultUrlCapBitmap,
-                                centerWhiteColor,
-                                BitmapTool.GradientBitmap.GradOrient.DIAGONAL,
-                            )
+                            ExecSetToolbarButtonImage.getImageFile(
+                                icon.assetsPath
+                            ).let {
+                                BitmapTool.convertFileToByteArray(it.absolutePath)
+                            }
+//                            ButtonImageCreator.ExecButtonImageCreator.create(
+//                                context,
+//                                icon.assetsPath,
+//                                makeCapturePartPngDirPathList(),
+//                                defaultUrlCapBitmap,
+//                                centerWhiteColor,
+//                                BitmapTool.GradientBitmap.GradOrient.DIAGONAL,
+//                            )
                         }
                         (!iconStr.isNullOrEmpty() && File(iconStr).isFile)
                             -> BitmapTool.convertFileToByteArray(iconStr)

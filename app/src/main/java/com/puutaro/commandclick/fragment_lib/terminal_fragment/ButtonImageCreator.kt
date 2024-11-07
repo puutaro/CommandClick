@@ -159,7 +159,7 @@ object ButtonImageCreator {
     }
 
     object ExecButtonImageCreator{
-        suspend fun create(
+        fun create(
             context: Context?,
             assetsPath: String,
             capturePartPngDirPathList: List<String>,
@@ -312,7 +312,7 @@ object ButtonImageCreator {
         }
     }
 
-    private suspend fun cropImage(
+    private fun cropImage(
         context: Context?,
         maskAssetsPath: String,
         originalImagePath: String?,
@@ -320,8 +320,7 @@ object ButtonImageCreator {
         centerColorStr: String?,
         gradOrient: BitmapTool.GradientBitmap.GradOrient,
     ): ByteArray? {
-        val original = withContext(Dispatchers.IO) {
-            when(originalImagePath.isNullOrEmpty()){
+        val original = when(originalImagePath.isNullOrEmpty()){
                 true -> defaultUrlCapBitmap
                 else -> BitmapTool.convertFileToBitmap(
                     originalImagePath
@@ -333,36 +332,29 @@ object ButtonImageCreator {
                         300.0
                     )
                 )
-            }
-        } ?: return null
-        val maskByteArray = withContext(Dispatchers.IO) {
-            AssetsFileManager.assetsByteArray(
+            } ?: return null
+        val maskByteArray = AssetsFileManager.assetsByteArray(
                 context,
                 maskAssetsPath
-            )
-        }?: return null
-        val src = withContext(Dispatchers.IO) {
-            BitmapFactory.decodeByteArray(
+            ) ?: return null
+        val src = BitmapFactory.decodeByteArray(
                 maskByteArray,
                 0,
                 maskByteArray.size
             )
-        }
-        val output = withContext(Dispatchers.IO) {
-            Bitmap.createBitmap(
+        val output = Bitmap.createBitmap(
                 src.width,
                 src.height,
                 Bitmap.Config.ARGB_8888
             )
-        }
-        val outBitmap = withContext(Dispatchers.IO) {
+        val outBitmap = let {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
             val canvas = Canvas(output)
             canvas.drawBitmap(original, 0f, 0f, null)
             paint.color = -0x1000000
             canvas.drawBitmap(src, 0f, 0f, paint)
-            return@withContext output
+            return@let output
         }
         val cornerDips = (2..8).random()
         val colorIntArray = listOf(

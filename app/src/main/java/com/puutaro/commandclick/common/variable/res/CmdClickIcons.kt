@@ -11,6 +11,7 @@ enum class CmdClickIcons(
     ABOUT("about", R.drawable.icons8_about, ButtonAssetsImage.aboutPingPath),
     BACK("back", R.drawable.back, ButtonAssetsImage.backPingPath),
     CANCEL("cancel", R.drawable.icons8_cancel, ButtonAssetsImage.cancelPingPath),
+    CC("cc", R.drawable.cc, ButtonAssetsImage.cPingPath),
     COPY("copy", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha, ButtonAssetsImage.copyPingPath),
     DOWN("down", R.drawable.ic_down_allow, ButtonAssetsImage.downPingPath),
     DOWNLOAD("download", android.R.drawable.stat_sys_download, ButtonAssetsImage.downloadDonePingPath),
