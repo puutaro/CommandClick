@@ -585,11 +585,11 @@ class PromptWithListDialog(
                 listLimit,
             )
 //        val promptWindowSetStart = LocalDateTime.now()
-        val bkImageView = promptDialogObj?.findViewById<AppCompatImageView>(
-            R.id.prompt_list_dialog_list_bk_image
-        ) ?: return Unit.also {
-            simpleExitDialog()
-        }
+//        val bkImageView = promptDialogObj?.findViewById<AppCompatImageView>(
+//            R.id.prompt_list_dialog_list_bk_image
+//        ) ?: return Unit.also {
+//            simpleExitDialog()
+//        }
         promptDialogObj?.window?.apply {
             setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -615,39 +615,39 @@ class PromptWithListDialog(
 //                "promptWindowSetEnd: ${promptWindowSetEnd}",
 //            ).joinToString("\n")
 //        )
-        CoroutineScope(Dispatchers.Main).launch{
-            when (
-                isWhiteBackground
-            ) {
-                true -> bkImageView.setImageDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.white_floor)
-                )
-                else -> {
-                    val bitmap = withContext(Dispatchers.IO) {
-                        val colorStrList = CmdClickColorStr.entries.map { it.str }
-                        val colorIntArray = listOf(
-                            colorStrList.random(),
-                            colorStrList.random(),
-                            colorStrList.random()
-                        ).map {
-                            Color.parseColor(it)
-                        }.toIntArray()
-                        BitmapTool.GradientBitmap.makeGradientBitmap2(
-                            600,
-                            1200,
-                            colorIntArray,
-                            BitmapTool.GradientBitmap.GradOrient.BOTH
-                        )
-                    }
-                    bkImageView.apply {
-                        setImageBitmap(bitmap)
-                    }
-                }
-            }
-            originalDimmEffect(
-                bkImageView
-            )
-        }
+//        CoroutineScope(Dispatchers.Main).launch{
+//            when (
+//                isWhiteBackground
+//            ) {
+//                true -> bkImageView.setImageDrawable(
+//                    AppCompatResources.getDrawable(context, R.drawable.white_floor)
+//                )
+//                else -> {
+//                    val bitmap = withContext(Dispatchers.IO) {
+//                        val colorStrList = CmdClickColorStr.entries.map { it.str }
+//                        val colorIntArray = listOf(
+//                            colorStrList.random(),
+//                            colorStrList.random(),
+//                            colorStrList.random()
+//                        ).map {
+//                            Color.parseColor(it)
+//                        }.toIntArray()
+//                        BitmapTool.GradientBitmap.makeGradientBitmap2(
+//                            600,
+//                            1200,
+//                            colorIntArray,
+//                            BitmapTool.GradientBitmap.GradOrient.BOTH
+//                        )
+//                    }
+//                    bkImageView.apply {
+//                        setImageBitmap(bitmap)
+//                    }
+//                }
+//            }
+////            originalDimmEffect(
+////                bkImageView
+////            )
+//        }
         CoroutineScope(Dispatchers.Main).launch {
             val promptEditText = withContext(Dispatchers.Main) {
                 EditTextMakerForPromptList.make(
@@ -926,26 +926,26 @@ class PromptWithListDialog(
 //        promptListView?.scrollToPosition(promptListAdapter.itemCount - 1)
 //    }
 
-    private fun originalDimmEffect(
-        imageView: AppCompatImageView?
-    ){
-        val goalAlpha = 0.8f
-        val loopTimes = 2
-        val plusAlpha = goalAlpha / loopTimes
-        imageView?.apply {
-            alpha = 0f
-            CoroutineScope(Dispatchers.IO).launch {
-                for (i in 1..loopTimes) {
-                    withContext(Dispatchers.IO) {
-                        delay(200)
-                    }
-                    withContext(Dispatchers.Main) {
-                        alpha += plusAlpha
-                    }
-                }
-            }
-        }
-    }
+//    private fun originalDimmEffect(
+//        imageView: AppCompatImageView?
+//    ){
+//        val goalAlpha = 0.8f
+//        val loopTimes = 2
+//        val plusAlpha = goalAlpha / loopTimes
+//        imageView?.apply {
+//            alpha = 0f
+//            CoroutineScope(Dispatchers.IO).launch {
+//                for (i in 1..loopTimes) {
+//                    withContext(Dispatchers.IO) {
+//                        delay(200)
+//                    }
+//                    withContext(Dispatchers.Main) {
+//                        alpha += plusAlpha
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private fun makePromptTitle(
         promptDialogObj: Dialog?,
