@@ -138,7 +138,7 @@ class WebViewJsDialog(
         val context = terminalFragment?.context
         val webViewDialog = Dialog(
             context as Context,
-            R.style.BottomSheetDialogTheme,
+            R.style.FullScreenRoundCornerDialogTheme,
             )
         webViewDialog.setContentView(
             R.layout.dialog_webview_layout,
@@ -188,10 +188,10 @@ class WebViewJsDialog(
             terminalFragment,
             pocketWebViewSrc
         )
-        toolbarHideShow(
-            terminalFragment,
-            pocketWebViewSrc
-        )
+//        toolbarHideShow(
+//            terminalFragment,
+//            pocketWebViewSrc
+//        )
         webViewSetting(
             terminalFragment,
             pocketWebViewSrc
