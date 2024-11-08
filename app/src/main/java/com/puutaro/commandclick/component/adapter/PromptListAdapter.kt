@@ -136,7 +136,7 @@ class PromptListAdapter(
             withContext(Dispatchers.Main){
                 val promptListAdapterTitle = holder.promptListAdapterTitle
                 promptListAdapterTitle.setFillColor(R.color.ao)
-                promptListAdapterTitle.outlineWidthSrc = 2
+                promptListAdapterTitle.outlineWidthSrc = 3
                 promptListAdapterTitle.text = title
             }
             holder.itemMap = lineMap

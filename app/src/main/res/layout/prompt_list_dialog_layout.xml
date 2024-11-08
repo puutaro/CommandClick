@@ -22,7 +22,7 @@
         android:src="@drawable/white_floor"
         android:scaleType="centerCrop"
         android:layout_gravity="center"
-        android:alpha="0.8"
+        android:alpha="0.9"
         />
     <FrameLayout
         android:id="@+id/prompt_list_dialog_list_extra_bk_container"
