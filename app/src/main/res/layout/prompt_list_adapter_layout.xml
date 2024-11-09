@@ -96,6 +96,7 @@
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="1"
+        android:letterSpacing="0.1"
         />
     <!--    android:drawableStart="@drawable/icons8_edit"-->
     <!--    android:drawablePadding="20dp"-->

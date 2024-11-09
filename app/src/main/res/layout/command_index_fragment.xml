@@ -61,6 +61,7 @@
                 android:layout_gravity="center"
                 android:gravity="top"
                 android:text="Search"
+                android:letterSpacing="0.1"
                 />
             <com.puutaro.commandclick.custom_view.OutlineTextView
                 android:id="@+id/cmdindex_selection_search_cur_text"
@@ -76,6 +77,7 @@
                 android:gravity="bottom"
                 android:visibility="gone"
                 android:alpha="0.9"
+                android:letterSpacing="0.1"
                 />
         </androidx.cardview.widget.CardView>
         <androidx.appcompat.widget.LinearLayoutCompat

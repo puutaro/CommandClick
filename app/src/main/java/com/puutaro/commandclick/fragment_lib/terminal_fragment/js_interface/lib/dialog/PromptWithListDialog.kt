@@ -54,7 +54,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.FannelIcons
@@ -775,12 +774,12 @@ class PromptWithListDialog(
     }
 
     private fun firstTitleGradColorStrList(
-        isWhiteBackgrond: Boolean
+        isWhiteBackground: Boolean
     ): List<String> {
         val whiteColorStr = "#ffffff"
         val colorList = listOf(
             CmdClickColorStr.LIGHT_GREEN.str,
-            CmdClickColorStr.THICK_AO.str,
+//            CmdClickColorStr.THICK_AO.str,
             CmdClickColorStr.BLUE.str,
             CmdClickColorStr.SKERLET.str,
             CmdClickColorStr.YELLOW.str,
@@ -798,7 +797,7 @@ class PromptWithListDialog(
         alreadyColorList.add(color1)
         val color2 = let {
             if(
-                !isWhiteBackgrond
+                !isWhiteBackground
             ) return@let whiteColorStr
             colorList.filter{
                 it != color1
@@ -810,11 +809,26 @@ class PromptWithListDialog(
                 !alreadyColorList.contains(it)
             }.random()
         }
-        return listOf(
+        val aoColorStr = "#007F89"
+        val useTitleColorListSrc = listOf(
             color1,
             color2,
+            color3,
+        )
+        val useTitleColorList = useTitleColorListSrc.contains(aoColorStr).let {
+            isUseAo ->
+            if(
+                isUseAo
+            ) return@let useTitleColorListSrc
+            val plusAoList =
+                useTitleColorListSrc.shuffled().take(2) + listOf(aoColorStr)
+            plusAoList.shuffled()
+        }
+        return listOf(
+            useTitleColorList.get(0),
+            useTitleColorList.get(1),
             whiteColorStr,
-            color3
+            useTitleColorList.get(2),
         ) // Define your gradient colors
     }
 
@@ -984,7 +998,7 @@ class PromptWithListDialog(
         } ?: Integer.MAX_VALUE
         val title = when(titleSrc.length <= 3){
             true -> "Select"
-            else -> titleSrc
+            else -> titleSrc.trim()
         }
         return promptDialogObj?.findViewById<OutlineTextView>(
             R.id.prompt_list_dialog_list_title
@@ -1023,11 +1037,11 @@ class PromptWithListDialog(
             setStrokeColor(CmdClickColor.WHITE.id)
             outlineWidthSrc = 3
             maxLines = maxLinesInt
-                viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     // Remove listener because we don't want this called before _every_ frame
                     viewTreeObserver?.removeOnPreDrawListener(this)
-                    minHeight = height + lineHeight
+                    minHeight = height + lineHeight + (lineHeight * 0.1f).toInt()
                     return true // true because we don't want to skip this frame
                 }
             })

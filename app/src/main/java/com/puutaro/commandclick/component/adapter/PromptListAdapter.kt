@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -134,10 +135,19 @@ class PromptListAdapter(
                 )
             }
             withContext(Dispatchers.Main){
-                val promptListAdapterTitle = holder.promptListAdapterTitle
-                promptListAdapterTitle.setFillColor(R.color.ao)
-                promptListAdapterTitle.outlineWidthSrc = 3
-                promptListAdapterTitle.text = title
+                holder.promptListAdapterTitle.apply {
+                    setFillColor(R.color.ao)
+                    outlineWidthSrc = 3
+                    text = title
+//                    viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+//                        override fun onPreDraw(): Boolean {
+//                            // Remove listener because we don't want this called before _every_ frame
+//                            viewTreeObserver?.removeOnPreDrawListener(this)
+//                            minWidth = width + (width * 0.1f).toInt()
+//                            return true // true because we don't want to skip this frame
+//                        }
+//                    })
+                }
             }
             holder.itemMap = lineMap
             withContext(Dispatchers.Main){
