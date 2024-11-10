@@ -13,6 +13,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DragSortJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GridJsDialogV2
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsConfirmV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.MultiSelectGridViewJsDialog
@@ -36,7 +37,7 @@ class JsDialog(
         terminalFragmentRef
     )
 
-    private val jsConfirm = JsConfirm(
+    private val jsConfirm = JsConfirmV2(
         terminalFragmentRef
     )
 
@@ -433,14 +434,24 @@ class JsDialog(
     @JavascriptInterface
     fun confirm(
         title: String,
-        body: String,
     ): Boolean {
         val isOk = jsConfirm.create(
             title,
-            body,
         )
         return isOk
     }
+
+//    @JavascriptInterface
+//    fun confirmOld(
+//        title: String,
+//        body: String,
+//    ): Boolean {
+//        val isOk = jsConfirm.create(
+//            title,
+//            body,
+//        )
+//        return isOk
+//    }
 
     @JavascriptInterface
     fun dAlert(

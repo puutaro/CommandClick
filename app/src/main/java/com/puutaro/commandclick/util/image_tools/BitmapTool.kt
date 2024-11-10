@@ -1177,6 +1177,33 @@ object BitmapTool {
             return resultBitmap
         }
 
+        fun exchangeWhiteToBlack(
+            originalBitmap: Bitmap,
+        ): Bitmap {
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+
+            // Create a mutable copy of the bitmap
+            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = resultBitmap.getPixel(x, y)
+                    val red = Color.red(pixel)
+                    val green = Color.green(pixel)
+                    val blue = Color.blue(pixel)
+
+                    // Check if the pixel is white or close to white
+                    if (red > 240 && green > 240 && blue > 240) {
+                        // Set the pixel to fully transparent
+                        resultBitmap.setPixel(x, y, Color.BLACK)
+                    }
+                }
+            }
+
+            return resultBitmap
+        }
+
 
         fun adjustOpacity(
             bitmap: Bitmap,
