@@ -1612,7 +1612,7 @@ class PromptWithListDialog(
 //                    CmdClickColorStr.THICK_GREEN.str,
                     CmdClickColorStr.DARK_GREEN.str,
 //                    CmdClickColorStr.GOLD_YELLOW.str,
-                    CmdClickColorStr.THICK_AO.str,
+//                    CmdClickColorStr.THICK_AO.str,
 //                    CmdClickColorStr.BLACK_AO.str,
                     CmdClickColorStr.BLUE.str,
                     CmdClickColorStr.BLUE_DARK_PURPLE.str,
