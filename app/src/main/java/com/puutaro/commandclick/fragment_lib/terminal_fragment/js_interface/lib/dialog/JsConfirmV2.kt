@@ -127,6 +127,16 @@ class JsConfirmV2(
                 if(titleLength >= baseTitleLength) return@let screenWidth
                 (screenWidth * titleLength) / baseTitleLength
             }
+            val fontSize = let {
+                val baseWidth = 720f
+                val minSize = 100f
+                val incline = (150f - minSize) / (1080f - baseWidth)
+                val culcSize = incline  * (screenWidth - baseWidth) + minSize
+                if(
+                    culcSize <= minSize
+                ) return@let minSize
+                culcSize
+            }
             val centerConstraintX = constraintWidth / 2
             val constraintHeight = let {
                 val quotient = titleLength / baseTitleLength
@@ -145,7 +155,7 @@ class JsConfirmV2(
                     constraintWidth.toFloat(),
                     constraintHeight.toFloat(),
                     Color.TRANSPARENT,
-                    150f,
+                    fontSize,
                     Color.WHITE,
                     Color.WHITE,
                     2f,
