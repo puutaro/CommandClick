@@ -1,12 +1,18 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog
 
+import android.animation.Animator
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -107,30 +113,38 @@ class JsConfirmV2(
                 .asDrawable()
                 .sizeMultiplier(0.1f)
         val leftRightBitmapChannel = Channel<Pair<Int, Bitmap?>>(2)
+        val screenWidth = ScreenSizeCalculator.pxWidth(
+                terminalFragment
+            )
         CoroutineScope(Dispatchers.IO).launch {
 //            val screenHeight = ScreenSizeCalculator.pxHeight(terminalFragment)
-            val screenWidth = withContext(Dispatchers.Main) {
-                ScreenSizeCalculator.pxWidth(
-                    terminalFragment
-                )
-            }
-            val titleLength = title.length
-            val baseTitleLength = let {
-                val quotient = screenWidth / 90
-                val threshold = 8
-                if(
-                    quotient <= threshold
-                    ) return@let threshold
-                quotient
-            }
-            val constraintWidth = let {
-                if(titleLength >= baseTitleLength) return@let screenWidth
-                (screenWidth * titleLength) / baseTitleLength
-            }
+//            val titleLength = title.length
+//            val baseTitleLength = let {
+//                val baseLength = 10f
+//                val minLength = 6f
+//                val incline = (150f - minLength) / (1080f - baseLength)
+//                val culcSize = incline  * (screenWidth - baseLength) + minLength
+//                if(
+//                    culcSize <= minLength
+//                ) return@let minLength
+//                culcSize
+//
+//                val quotient = screenWidth / 90
+//                val threshold = 8
+//                if(
+//                    quotient <= threshold
+//                    ) return@let threshold
+//                quotient
+//            }
+            val constraintWidth = screenWidth
+//            let {
+//                if(titleLength >= baseTitleLength) return@let screenWidth
+//                (screenWidth * titleLength) / baseTitleLength
+//            }
             val fontSize = let {
                 val baseWidth = 720f
-                val minSize = 100f
-                val incline = (150f - minSize) / (1080f - baseWidth)
+                val minSize = 110f
+                val incline = (160f - minSize) / (1080f - baseWidth)
                 val culcSize = incline  * (screenWidth - baseWidth) + minSize
                 if(
                     culcSize <= minSize
@@ -138,16 +152,27 @@ class JsConfirmV2(
                 culcSize
             }
             val centerConstraintX = constraintWidth / 2
-            val constraintHeight = let {
-                val quotient = titleLength / baseTitleLength
-                val oneLineHeight = constraintWidth / 3
-                return@let when(
-                    quotient
-                ) {
-                    0 -> oneLineHeight
-                    1, 2 -> oneLineHeight * (quotient + 1)
-                    else -> screenWidth
-                }
+            val constraintHeight = screenWidth
+//            let {
+//                val quotient = titleLength / baseTitleLength
+//                val oneLineHeight = constraintWidth / 3
+//                return@let when(
+//                    quotient
+//                ) {
+//                    0 -> oneLineHeight
+//                    1, 2 -> oneLineHeight * (quotient + 1)
+//                    else -> screenWidth
+//                }
+//            }
+            val strokeSize = let {
+                val baseWidth = 720f
+                val minSize = 7f
+                val incline = (10f - minSize) / (1080f - baseWidth)
+                val culcSize = incline  * (screenWidth - baseWidth) + minSize
+                if(
+                    culcSize <= minSize
+                ) return@let minSize
+                culcSize
             }
             val srcTitleWhiteBitmap = withContext(Dispatchers.IO) {
                 BitmapTool.DrawText.drawTextToBitmap(
@@ -156,10 +181,13 @@ class JsConfirmV2(
                     constraintHeight.toFloat(),
                     Color.TRANSPARENT,
                     fontSize,
+                    Color.TRANSPARENT,
                     Color.WHITE,
-                    Color.WHITE,
-                    2f,
+                    strokeSize,
                     1.5f,
+                    0.05f,
+                    Typeface.BOLD_ITALIC,
+                    innerWidthRate = 0.95f
                 )
             }
 
@@ -223,21 +251,45 @@ class JsConfirmV2(
                 false,
             )
         }
-        val leftForeImage =
-            confirmDialogObj?.findViewById<AppCompatImageView>(
-                R.id.confirm_dialog_v2_left_fore_image
+        val leftForeImageFrame =
+            confirmDialogObj?.findViewById<FrameLayout>(
+                R.id.confirm_dialog_v2_left_fore_image_frame
             )
-        val rightForeImage =
-            confirmDialogObj?.findViewById<AppCompatImageView>(
-                R.id.confirm_dialog_v2_right_fore_image
+        val rightForeImageFrame =
+            confirmDialogObj?.findViewById<FrameLayout>(
+                R.id.confirm_dialog_v2_right_fore_image_frame
             )
-        val confirmLeftTitleView =
+        val leftForeImage1 =
             confirmDialogObj?.findViewById<AppCompatImageView>(
-                R.id.confirm_dialog_v2_cancel
+                R.id.confirm_dialog_v2_left_fore_image1
             )
-        val confirmRightTitleView =
+        val leftForeImage2 =
             confirmDialogObj?.findViewById<AppCompatImageView>(
-                R.id.confirm_dialog_v2_ok
+                R.id.confirm_dialog_v2_left_fore_image2
+            )
+        val rightForeImage1 =
+            confirmDialogObj?.findViewById<AppCompatImageView>(
+                R.id.confirm_dialog_v2_right_fore_image1
+            )
+        val rightForeImage2 =
+            confirmDialogObj?.findViewById<AppCompatImageView>(
+                R.id.confirm_dialog_v2_right_fore_image2
+            )
+        val confirmLeftTitleView1 =
+            confirmDialogObj?.findViewById<AppCompatImageView>(
+                R.id.confirm_dialog_v2_cancel1
+            )
+        val confirmLeftTitleView2 =
+            confirmDialogObj?.findViewById<AppCompatImageView>(
+                R.id.confirm_dialog_v2_cancel2
+            )
+        val confirmRightTitleView1 =
+            confirmDialogObj?.findViewById<AppCompatImageView>(
+                R.id.confirm_dialog_v2_ok1
+            )
+        val confirmRightTitleView2 =
+            confirmDialogObj?.findViewById<AppCompatImageView>(
+                R.id.confirm_dialog_v2_ok2
             )
         val leftFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
             R.id.confirm_dialog_v2_left_frame,
@@ -247,9 +299,9 @@ class JsConfirmV2(
         )
         listOf(
             leftFrameLayout to false,
-            confirmLeftTitleView to false,
+            confirmLeftTitleView1 to false,
             rightFrameLayout to true,
-            confirmRightTitleView to true,
+            confirmRightTitleView1 to true,
         ).forEach {
             viewToBool ->
             val view = viewToBool.first
@@ -268,14 +320,21 @@ class JsConfirmV2(
             for (orderToBitmap in leftRightBitmapChannel) {
                 val order = orderToBitmap.first
                 val bitmap = orderToBitmap.second
-                val imageView = withContext(Dispatchers.IO) {
+                val imageView1 = withContext(Dispatchers.IO) {
                     when (order) {
-                        1 -> confirmLeftTitleView
-                        else ->confirmRightTitleView
+                        1 -> confirmLeftTitleView1
+                        else ->confirmRightTitleView1
+                    }
+                } ?: return@launch
+                val imageView2 = withContext(Dispatchers.IO) {
+                    when (order) {
+                        1 -> confirmLeftTitleView2
+                        else ->confirmRightTitleView2
                     }
                 } ?: return@launch
                 withContext(Dispatchers.Main) {
-                    imageView.setImageBitmap(bitmap)
+                    imageView1.setImageBitmap(bitmap)
+                    imageView2.setImageBitmap(bitmap)
                 }
 //                withContext(Dispatchers.Main) {
 //                    Glide
@@ -289,11 +348,7 @@ class JsConfirmV2(
 //                }
             }
         }
-        val animationPair = listOf(
-            Techniques.SlideInRight to Techniques.SlideInLeft,
-//            Techniques.SlideInDown to Techniques.SlideInUp,
-//            null to null,
-        ).random()
+        val moveDirection = MoveDirection.entries.random()
 //        val rippleDelayPair = listOf(
 //            0L,
 //            100L
@@ -313,13 +368,33 @@ class JsConfirmV2(
             redPurple,
             redAiIro,
             red,
+//            CmdClickColorStr.THICK_GREEN.str,
+//            CmdClickColorStr.DARK_GREEN.str,
+//            CmdClickColorStr.CARKI.str,
+//            CmdClickColorStr.GOLD_YELLOW.str,
+//            CmdClickColorStr.BLUE.str,
+//            CmdClickColorStr.BLACK_AO.str,
+//            CmdClickColorStr.BLUE_DARK_PURPLE.str,
+//            CmdClickColorStr.NAVY.str,
+//            CmdClickColorStr.PURPLE.str,
+//            CmdClickColorStr.BLUE.str,
+//            CmdClickColorStr.DARK_BROWN.str,
         ).random()
         val okImageColorStr = listOf(
-            aoColorStr,
-            blueGreen,
-            CmdClickColorStr.GREEN.str,
-            CmdClickColorStr.BLUE.str,
-            CmdClickColorStr.PURPLE.str,
+            CmdClickColorStr.WATER_BLUE.str,
+            CmdClickColorStr.LIGHT_GREEN.str,
+            CmdClickColorStr.ANDROID_GREEN.str,
+            CmdClickColorStr.YELLOW.str,
+            CmdClickColorStr.YELLOW_GREEN.str,
+//            CmdClickColorStr.GREEN.str,
+//            CmdClickColorStr.WHITE_BLUE.str,
+//            CmdClickColorStr.WHITE_GREEN.str,
+//            CmdClickColorStr.WHITE_BLUE_PURPLE.str,
+//            aoColorStr,
+//            blueGreen,
+//            CmdClickColorStr.GREEN.str,
+//            CmdClickColorStr.BLUE.str,
+//            CmdClickColorStr.PURPLE.str,
         ).random()
         CoroutineScope(Dispatchers.Main).launch {
             val byteArrayPair = withContext(Dispatchers.IO) {
@@ -331,7 +406,19 @@ class JsConfirmV2(
                     AssetsFileManager.oPngPath
                 )
             }
-
+//            val transParentBitmap = withContext(Dispatchers.IO) {
+//                BitmapTool.ImageTransformer.makeRect(
+//                    "#00000000",
+//                    50,
+//                    50
+//                )
+//            }
+            val slideMultiplePair = listOf(-1, 1).shuffled().let {
+                Pair(
+                    it.first(),
+                    it.last()
+                )
+            }
             withContext(Dispatchers.Main) {
                 val jobList = (1..2).map {
                     async {
@@ -339,29 +426,181 @@ class JsConfirmV2(
                             1 -> byteArrayPair.first
                             else -> byteArrayPair.second
                         }
-                        val imageView = when (it) {
-                            1 -> leftForeImage
-                            else -> rightForeImage
+                        val imageViewFrame = when (it) {
+                            1 -> leftForeImageFrame
+                            else -> rightForeImageFrame
+                        } ?: return@async
+                        val imageView1 = when (it) {
+                            1 -> leftForeImage1
+                            else -> rightForeImage1
+                        } ?: return@async
+                        val imageView2 = when (it) {
+                            1 -> leftForeImage2
+                            else -> rightForeImage2
+                        } ?: return@async
+                        val titleImageView2 = withContext(Dispatchers.IO) {
+                            when (it) {
+                                1 -> confirmLeftTitleView2
+                                else ->confirmRightTitleView2
+                            }
                         } ?: return@async
                         val colorStr = when (it) {
                             1 -> cancelImageColorStr
                             else -> okImageColorStr
                         }
-                        imageView.setColorFilter(Color.parseColor(colorStr))
+//                        val bkColorStr = when (it) {
+//                            1 -> okImageColorStr
+//                            else -> cancelImageColorStr
+//                        }
+                        val techniquesPair = moveDirection.directionPair
+                        val techniques = when (it) {
+                            1 -> techniquesPair.first
+                            else -> techniquesPair.second
+                        }
+                        val firstMultiple = slideMultiplePair.first
+                        val secondMultiple = slideMultiplePair.second
+                        val absImageSlideX = when(
+                            moveDirection
+                        ){
+                            MoveDirection.HORIZON -> let {
+                                val baseWidth = 720f
+                                val minDistance = 7f
+                                val incline = (10f - minDistance) / (1080f - baseWidth)
+                                val culcDistance = incline  * (screenWidth - baseWidth) + minDistance
+                                if(
+                                    culcDistance <= minDistance
+                                ) return@let minDistance
+                                culcDistance
+                            }.toInt()
+                            MoveDirection.VERTICAL -> 0
+                        }
+                        val absImageSlideY = when(
+                            moveDirection
+                        ){
+                            MoveDirection.HORIZON -> 0
+                            MoveDirection.VERTICAL -> let {
+                                val baseWidth = 720f
+                                val minDistance = 25f
+                                val incline = (30f - minDistance) / (1080f - baseWidth)
+                                val culcDistance = incline  * (screenWidth - baseWidth) + minDistance
+                                if(
+                                    culcDistance <= minDistance
+                                ) return@let minDistance
+                                culcDistance
+                            }.toInt()
+                        }
+                        val slideXyPair = when (it) {
+                            1 -> Pair(absImageSlideX * firstMultiple, absImageSlideY * firstMultiple)
+                            else -> Pair(absImageSlideX * secondMultiple, absImageSlideY * secondMultiple)
+                        }
+                        val absTitleSlideX = when(
+                            moveDirection
+                        ){
+                            MoveDirection.HORIZON -> 2
+                            MoveDirection.VERTICAL -> 0
+                        }
+                        val absTitleSlideY = when(
+                            moveDirection
+                        ){
+                            MoveDirection.HORIZON -> 0
+                            MoveDirection.VERTICAL -> 2
+                        }
+                        val titleSlideXyPair = when (it) {
+                            1 -> Pair(absTitleSlideX * firstMultiple, absTitleSlideY * firstMultiple) // -5
+                            else -> Pair(absTitleSlideX * secondMultiple, absTitleSlideY * secondMultiple) // 5
+                        }
+//                        val bitmap = BitmapFactory.decodeByteArray(
+//                            byteArray,
+//                            0,
+//                            byteArray?.size ?: 0
+//                        )
+//                        val bitmapList2 = listOf(
+//                            bitmap,
+//                            transParentBitmap,
+//                            bitmap,
+//                            transParentBitmap,
+//                        )
+//                        val bitmapList3 = listOf(
+//                            transParentBitmap,
+//                            bitmap,
+//                            transParentBitmap,
+//                            bitmap,
+//                        )
+                        imageView1.setColorFilter(Color.parseColor(colorStr))
                         Glide
                             .with(context)
                             .load(byteArray)
                             .skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .thumbnail(requestBuilder)
-                            .into(imageView)
-                        val techniques = when (it) {
-                            1 -> animationPair.first
-                            else -> animationPair.second
-                        }
+                            .into(imageView1)
+                        Glide
+                            .with(context)
+                            .load(byteArray)
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .thumbnail(requestBuilder)
+                            .into(imageView2)
+                        val durationRndList = (800..1500)
+                        val duration = 50
+//                        setAnimationDrawable(
+//                            context,
+//                            imageView2,
+//                            bitmapList2,
+//                            duration,
+//                        )
+//                        setAnimationDrawable(
+//                            context,
+//                            imageView3,
+//                            bitmapList3,
+//                            duration,
+//                        )
                         YoYo.with(techniques)
                             .duration(100)
-                            .playOn(imageView)
+//                            .playOn(imageViewFrame)
+                            .interpolate(AccelerateDecelerateInterpolator()).withListener(
+                                object : Animator.AnimatorListener {
+                                    override fun onAnimationStart(animation: Animator) {}
+
+                                    override fun onAnimationEnd(animation: Animator) {
+                                        CoroutineScope(Dispatchers.Main).launch{
+                                            withContext(Dispatchers.Main) {
+                                                val jobList = (1..2).map {
+                                                    async {
+                                                        when (it) {
+                                                            1 -> imageView2.animate()
+                                                                .translationX(imageView2.x + slideXyPair.first)
+                                                                .translationY(imageView2.y+ slideXyPair.second)
+                                                                .setDuration(200)
+
+                                                            else -> titleImageView2.animate()
+                                                                .translationX(imageView2.x + titleSlideXyPair.first)
+                                                                .translationY(imageView2.y+ titleSlideXyPair.second)
+                                                                .setDuration(200)
+                                                        }
+                                                    }
+                                                }
+                                                jobList.forEach { it.await() }
+                                            }
+                                        }
+//                                        CoroutineScope(Dispatchers.Main).launch {
+//                                            imageView.apply {
+//                                                background?.setHotspot(
+//                                                    hotSpotXyPair.first,
+//                                                    hotSpotXyPair.second
+//                                                )
+//                                                withContext(Dispatchers.IO) {
+//                                                    delay(delayTime)
+//                                                }
+//                                                isPressed = true
+//                                                // For a quick ripple, you can immediately set false.
+//                                                isPressed = false
+//                                            }
+//                                        }
+                                    }
+                                    override fun onAnimationCancel(animation: Animator) {}
+                                    override fun onAnimationRepeat(animation: Animator) {}
+                            }).playOn(imageViewFrame)
                     }
                 }
                 jobList.forEach { it.await() }
@@ -384,6 +623,25 @@ class JsConfirmV2(
         confirmDialogObj?.show()
     }
 
+    private fun setAnimationDrawable(
+        context: Context,
+        imageView: AppCompatImageView,
+        bitmapList1: List<Bitmap?>,
+        duration: Int,
+    ){
+        val animationDrawable = AnimationDrawable()
+        bitmapList1.forEach {
+            if(it == null) return@forEach
+            animationDrawable.addFrame(
+                BitmapDrawable(context.resources, it),
+                duration
+            )
+        }
+        animationDrawable.isOneShot = false
+        imageView.setImageDrawable(animationDrawable)
+        animationDrawable.start()
+    }
+
     private fun dismissProcess(
         confirmConstraint: ConstraintLayout?,
         leftRightBitmapChannel: Channel<Pair<Int, Bitmap?>>?,
@@ -399,5 +657,22 @@ class JsConfirmV2(
         confirmDialogObj?.dismiss()
         confirmDialogObj = null
         onDialog = false
+    }
+
+    private enum class MoveDirection(
+        val directionPair: Pair<Techniques, Techniques>
+    ) {
+        HORIZON(
+            Pair(
+                Techniques.SlideInRight,
+                Techniques.SlideInLeft
+            )
+        ),
+        VERTICAL(
+            Pair(
+                Techniques.SlideInDown,
+                Techniques.SlideInUp
+            )
+        ),
     }
 }

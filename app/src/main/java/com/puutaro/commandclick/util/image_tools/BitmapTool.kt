@@ -358,6 +358,9 @@ object BitmapTool {
             strokeColorInt: Int?,
             strokeSize: Float?,
             firstCharRate: Float?,
+            letterSpacing: Float?,
+            typeFace: Int?,
+            innerWidthRate: Float = 1f,
         ): Bitmap {
 //            val imgWidth = 200f     // 画像幅
 //            val imgHeight = 200f    // 画像高さ
@@ -397,33 +400,44 @@ object BitmapTool {
 //                            ) return@let spacintMultiSrc
 //                    baseMulti
 //                }
-
             val staticLayoutForStroke = makeStaticsLayout(
                 text,
-                imageWidth,
+                imageWidth * innerWidthRate,
                 fontSize,
                 strokeSize ?: 8f,
                 strokeColorInt ?: Color.WHITE,
                 Paint.Style.STROKE,
                 spacingMilti,
-                firstCharRate
+                firstCharRate,
+                letterSpacing,
+                typeFace,
             )
+            val transX = ((canvas.width / 2f) - (staticLayoutForStroke.width / 2f)).let {
+                if(it <= 0) return@let 0f
+                it
+            }
+            val transY =  ((canvas.height / 2f) - ((staticLayoutForStroke.height / 2f))).let {
+                if(it <= 0) return@let 0f
+                it
+            }
             canvas.translate(
-                ((canvas.width / 2) - (staticLayoutForStroke.width / 2)).toFloat(),
-                ((canvas.height / 2) - ((staticLayoutForStroke.height / 2))).toFloat(),
+                transX,
+                transY,
             )
             staticLayoutForStroke.draw(canvas)
 
 
             val staticLayout = makeStaticsLayout(
                 text,
-                imageWidth,
+                imageWidth * innerWidthRate,
                 fontSize,
                 0f,
                 fillColorInt,
                 Paint.Style.FILL,
                 spacingMilti,
-                firstCharRate
+                firstCharRate,
+                letterSpacing,
+                typeFace,
             )
 //                builder.build()
 //            canvas.translate(x, y)
@@ -446,9 +460,11 @@ object BitmapTool {
             fontSize: Float?,
             strokeSize: Float?,
             fillColorInt: Int?,
-            paintStyle: Paint. Style,
+            paintStyle: Paint.Style,
             spacingMulti: Float?,
             firstCharRate: Float?,
+            letterSpacing: Float?,
+            typeFace: Int?,
         ): StaticLayout {
             // 文字列描画
             val textPaint = TextPaint()
@@ -456,9 +472,12 @@ object BitmapTool {
             textPaint.style = paintStyle
             textPaint.strokeWidth = strokeSize ?: 2f
             textPaint.textSize = fontSize ?: 30f
+            letterSpacing?.let {
+                textPaint.letterSpacing = it
+            }
 //            textPaint.setLea(lineSpacingMultiplier * paint.getFontSpacing());
 //            textPaint.textAlign = Paint.Align.CENTER
-            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, typeFace ?: Typeface.BOLD))
 //            textPaint.isAntiAlias = true
 
             val alignment = Layout.Alignment.ALIGN_CENTER
