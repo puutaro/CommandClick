@@ -198,7 +198,7 @@ class JsConfirmV2(
                     Color.TRANSPARENT,
                     Color.WHITE,
                     strokeSize,
-                    messageStrokeSize = strokeSize * 0.45f,
+                    messageStrokeSize = strokeSize * 0.47f,
                     1.5f,
                     0.05f, //0.085f
                     null,
