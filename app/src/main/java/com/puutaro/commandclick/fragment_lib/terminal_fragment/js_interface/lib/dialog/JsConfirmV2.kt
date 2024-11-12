@@ -16,6 +16,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -45,11 +46,10 @@ class JsConfirmV2(
     private var confirmDialogObj: Dialog? = null
     private var returnBool = false
     private var onDialog = false
-//    private var leftWhiteTitleBitmap: Bitmap? = null
-//    private var rightTitleBlackBitmap: Bitmap? = null
 
     fun create(
         title: String,
+        message: String,
     ): Boolean {
         onDialog = true
         runBlocking {
@@ -57,6 +57,7 @@ class JsConfirmV2(
                 try {
                     execCreate(
                         title,
+                        message,
                     )
                 } catch (e: Exception){
                     LogSystems.stdErr(
@@ -84,6 +85,7 @@ class JsConfirmV2(
 
     private fun execCreate(
         title: String,
+        message: String,
     ) {
         val terminalFragment = terminalFragmentRef.get()
             ?: return
@@ -152,7 +154,7 @@ class JsConfirmV2(
                 culcSize
             }
             val centerConstraintX = constraintWidth / 2
-            val constraintHeight = screenWidth
+            val constraintHeight = (14 * screenWidth) / 10
 //            let {
 //                val quotient = titleLength / baseTitleLength
 //                val oneLineHeight = constraintWidth / 3
@@ -174,9 +176,21 @@ class JsConfirmV2(
                 ) return@let minSize
                 culcSize
             }
+            val messageMarginTop = let {
+                val baseWidth = 720f
+                val minMargin = 30f
+                val incline = (100f - minMargin) / (1080f - baseWidth)
+                val culcMargin = incline  * (screenWidth - baseWidth) + minMargin
+                if(
+                    culcMargin <= minMargin
+                ) return@let minMargin
+                culcMargin
+            }
             val srcTitleWhiteBitmap = withContext(Dispatchers.IO) {
-                BitmapTool.DrawText.drawTextToBitmap(
+
+                BitmapTool.DrawText.drawTextToBitmapWithMessage(
                     title,
+                    message,
                     constraintWidth.toFloat(),
                     constraintHeight.toFloat(),
                     Color.TRANSPARENT,
@@ -184,10 +198,18 @@ class JsConfirmV2(
                     Color.TRANSPARENT,
                     Color.WHITE,
                     strokeSize,
+                    messageStrokeSize = strokeSize * 0.45f,
                     1.5f,
-                    0.05f,
-                    Typeface.BOLD_ITALIC,
-                    innerWidthRate = 0.95f
+                    0.05f, //0.085f
+                    null,
+                    titleSpacingMulti = 1f,
+                    innerWidthRate = 0.95f,
+                    titleFont = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD_ITALIC), //Typeface.SANS_SERIF
+                    messageFont = Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC),
+                    messageMarginTop = messageMarginTop,
+                    messageWidthRate = 0.75f,
+                    isAntiAlias = true,
+                    maxLines = 8
                 )
             }
 
@@ -236,9 +258,6 @@ class JsConfirmV2(
         confirmDialogObj?.setContentView(
             R.layout.confirm_dialog_v2_layout
         )
-//        val titleRight = confirmDialogObj?.findViewById<AppCompatTextView>(
-//            R.id.confirm_dialog_v2_title_right
-//        )
 
         val confirmConstraint =
             confirmDialogObj?.findViewById<ConstraintLayout>(
@@ -275,6 +294,37 @@ class JsConfirmV2(
             confirmDialogObj?.findViewById<AppCompatImageView>(
                 R.id.confirm_dialog_v2_right_fore_image2
             )
+        val leftFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+            R.id.confirm_dialog_v2_left_frame,
+        )
+        val rightFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+            R.id.confirm_dialog_v2_right_frame,
+        )
+        val cancelFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+            R.id.confirm_dialog_v2_cancel_frame,
+        )
+        val okFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+            R.id.confirm_dialog_v2_ok_frame,
+        )
+        listOf(
+            leftFrameLayout to false,
+            rightFrameLayout to true,
+            cancelFrameLayout to false,
+            okFrameLayout to true,
+        ).forEach {
+            viewToBool ->
+            val view = viewToBool.first
+            val bool = viewToBool.second
+            view?.apply {
+                setOnClickListener {
+                    dismissProcess(
+                        confirmConstraint,
+                        leftRightBitmapChannel,
+                        bool,
+                    )
+                }
+            }
+        }
         val confirmLeftTitleView1 =
             confirmDialogObj?.findViewById<AppCompatImageView>(
                 R.id.confirm_dialog_v2_cancel1
@@ -291,31 +341,6 @@ class JsConfirmV2(
             confirmDialogObj?.findViewById<AppCompatImageView>(
                 R.id.confirm_dialog_v2_ok2
             )
-        val leftFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-            R.id.confirm_dialog_v2_left_frame,
-        )
-        val rightFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-            R.id.confirm_dialog_v2_right_frame,
-        )
-        listOf(
-            leftFrameLayout to false,
-            confirmLeftTitleView1 to false,
-            rightFrameLayout to true,
-            confirmRightTitleView1 to true,
-        ).forEach {
-            viewToBool ->
-            val view = viewToBool.first
-            val bool = viewToBool.second
-            view?.apply {
-                setOnClickListener {
-                    dismissProcess(
-                        confirmConstraint,
-                        leftRightBitmapChannel,
-                        bool,
-                    )
-                }
-            }
-        }
         CoroutineScope(Dispatchers.IO).launch {
             for (orderToBitmap in leftRightBitmapChannel) {
                 val order = orderToBitmap.first

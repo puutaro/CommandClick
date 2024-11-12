@@ -434,9 +434,11 @@ class JsDialog(
     @JavascriptInterface
     fun confirm(
         title: String,
+        message: String,
     ): Boolean {
         val isOk = jsConfirm.create(
             title,
+            message,
         )
         return isOk
     }

@@ -8,7 +8,7 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.webkit.ValueCallback
 import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -38,7 +38,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lon
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
-import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
@@ -574,7 +573,7 @@ object FannelHistoryButtonEvent {
                         settingSectionEnd
                     )
                 val switchOn = FannelSettingMap.switchOn
-                val menuNameToEnableList = LongPressMenuName.values().map {
+                val menuNameToEnableList = LongPressMenuName.entries.map {
                     val menuSettingPathSrc = menuNameToMenuPathMap.get(it)
                         ?: String()
                     val menuSettingPath = ScriptPreWordReplacer.replace(
@@ -753,8 +752,6 @@ object FannelHistoryButtonEvent {
 
     private object DeleteConfirmDialog {
 
-        private var deleteConfirmDialog: Dialog? = null
-
         fun launch(
             fragment: Fragment,
             fannelName: String,
@@ -792,74 +789,44 @@ object FannelHistoryButtonEvent {
         ){
             val context = fragment.context
                 ?: return
-            deleteConfirmDialog = Dialog(
-                context
-            )
-            deleteConfirmDialog?.setContentView(
-                R.layout.confirm_text_dialog
-            )
-            val confirmTitleTextView =
-                deleteConfirmDialog?.findViewById<AppCompatTextView>(
-                    R.id.confirm_text_dialog_title
+            val terminalFragment = when(fragment){
+                is TerminalFragment -> fragment
+                else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                    fragment.activity,
                 )
+            } ?: return
             val confirmTitle = when(
                 PreInstallFannel.isPreinstallFannel(fannelName)
             ){
                 false -> "Delete ok?"
                 else -> "Init ok?"
             }
-            confirmTitleTextView?.text = confirmTitle
-            val confirmContentTextView =
-                deleteConfirmDialog?.findViewById<AppCompatTextView>(
-                    R.id.confirm_text_dialog_text_view
-                )
-            confirmContentTextView?.text =
-                SystemFannel.convertDisplayNameToFannelName(fannelName)
-            val confirmCancelButton =
-                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
-                    R.id.confirm_text_dialog_cancel
-                )
-            confirmCancelButton?.setOnClickListener {
-                deleteConfirmDialog?.dismiss()
-                deleteConfirmDialog = null
-                cancelProcess(
-                    recyclerView,
-                    position,
-                )
-            }
-            deleteConfirmDialog?.setOnCancelListener {
-                deleteConfirmDialog?.dismiss()
-                deleteConfirmDialog = null
-                cancelProcess(
-                    recyclerView,
-                    position,
-                )
-            }
-            val confirmOkButton =
-                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
-                    R.id.confirm_text_dialog_ok
-                )
-            confirmOkButton?.setOnClickListener {
-                deleteConfirmDialog?.dismiss()
-                deleteConfirmDialog = null
-                execDeleteFannel(
-                    context,
-                    fannelName,
-                    fannelManageAdapter,
-                    position,
-                    searchText,
-                    pinImageView,
-                    pinImageCaption
-                )
-            }
-            deleteConfirmDialog?.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            deleteConfirmDialog?.window?.setGravity(
-                Gravity.CENTER
-            )
-            deleteConfirmDialog?.show()
+            val message = SystemFannel.convertDisplayNameToFannelName(fannelName)
+            val confirmScript = """
+                jsDialog.confirm(
+                    "$confirmTitle",
+                    "$message",
+                );
+            """.trimIndent()
+            terminalFragment.binding.terminalWebView.evaluateJavascript(
+                confirmScript,
+            ValueCallback<String> { isDelete ->
+                when(isDelete){
+                    true.toString() ->  execDeleteFannel(
+                        context,
+                        fannelName,
+                        fannelManageAdapter,
+                        position,
+                        searchText,
+                        pinImageView,
+                        pinImageCaption
+                    )
+                    else -> cancelProcess(
+                        recyclerView,
+                        position,
+                    )
+                }
+            })
         }
 
         private fun cancelProcess(
@@ -1096,7 +1063,7 @@ private object LongPressManageListDialog {
                 it.first == selectedMenuNameStrWithPrefix
             } ?: return@setOnItemClickListener
             val menuNameStr = menuNameToExist.first
-            val longPressMenuName = LongPressMenuName.values().firstOrNull {
+            val longPressMenuName = LongPressMenuName.entries.firstOrNull {
                 menuNameStr.split(" ").filterIndexed {
                         index, _ -> index > 0
                 }.joinToString(

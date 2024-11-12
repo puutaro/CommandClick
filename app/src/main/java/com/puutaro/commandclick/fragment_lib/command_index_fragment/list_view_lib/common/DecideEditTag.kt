@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.state.FragmentTagManager

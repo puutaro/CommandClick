@@ -2,17 +2,13 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.app.Dialog
 import android.content.Context
-import android.view.Gravity
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
+import android.webkit.ValueCallback
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -250,7 +246,7 @@ object PinFannelBarManager {
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
                     execLaunch(
-                        fragment.context,
+                        fragment,
                         fannelName,
                         recyclerView,
                         pinFannelAdapter,
@@ -260,73 +256,101 @@ object PinFannelBarManager {
             }
         }
         private fun execLaunch(
-            context: Context?,
+            fragment: Fragment,
             fannelName: String,
             recyclerView: RecyclerView,
             pinFannelAdapter: PinFannelAdapter,
             position: Int,
         ){
-            if(
-                context == null
-            ) return
-            deleteConfirmDialog = Dialog(
-                context
-            )
-            deleteConfirmDialog?.setContentView(
-                R.layout.confirm_text_dialog
-            )
-            val confirmTitleTextView =
-                deleteConfirmDialog?.findViewById<AppCompatTextView>(
-                    R.id.confirm_text_dialog_title
+            val context = fragment.context ?: return
+
+            val terminalFragment = when(fragment){
+                is TerminalFragment -> fragment
+                else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                    fragment.activity,
                 )
-            val confirmTitle = "Delete pin ok?"
-            confirmTitleTextView?.text = confirmTitle
-            val confirmContentTextView =
-                deleteConfirmDialog?.findViewById<AppCompatTextView>(
-                    R.id.confirm_text_dialog_text_view
-                )
-            confirmContentTextView?.text =
-                SystemFannel.convertDisplayNameToFannelName(fannelName)
-            val confirmCancelButton =
-                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
-                    R.id.confirm_text_dialog_cancel
-                )
-            confirmCancelButton?.setOnClickListener {
-                deleteConfirmDialog?.dismiss()
-                deleteConfirmDialog = null
-                cancelProcess(
-                    recyclerView,
-                    position,
-                )
-            }
-            deleteConfirmDialog?.setOnCancelListener {
-                deleteConfirmDialog?.dismiss()
-                deleteConfirmDialog = null
-                cancelProcess(
-                    recyclerView,
-                    position,
-                )
-            }
-            val confirmOkButton =
-                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
-                    R.id.confirm_text_dialog_ok
-                )
-            confirmOkButton?.setOnClickListener {
-                deleteConfirmDialog?.dismiss()
-                deleteConfirmDialog = null
-                execDeleteFannel(
-                    pinFannelAdapter,
-                    position,
-                )
-            }
-            deleteConfirmDialog?.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            deleteConfirmDialog?.window?.setGravity(
-                Gravity.CENTER
-            )
-            deleteConfirmDialog?.show()
+            } ?: return
+            val message = SystemFannel.convertDisplayNameToFannelName(fannelName)
+            val confirmScript = """
+                jsDialog.confirm(
+                    "Delete pin ok?",
+                    "${message}",
+                );
+            """.trimIndent()
+            terminalFragment.binding.terminalWebView.evaluateJavascript(
+                confirmScript,
+                ValueCallback<String> { isDelete ->
+                    when(isDelete){
+                        true.toString() -> execDeleteFannel(
+                            pinFannelAdapter,
+                            position,
+                        )
+                        else -> cancelProcess(
+                            recyclerView,
+                            position,
+                        )
+                    }
+                })
+
+
+//            deleteConfirmDialog = Dialog(
+//                context
+//            )
+//            deleteConfirmDialog?.setContentView(
+//                R.layout.confirm_text_dialog
+//            )
+//            val confirmTitleTextView =
+//                deleteConfirmDialog?.findViewById<AppCompatTextView>(
+//                    R.id.confirm_text_dialog_title
+//                )
+//            val confirmTitle = "Delete pin ok?"
+//            confirmTitleTextView?.text = confirmTitle
+//            val confirmContentTextView =
+//                deleteConfirmDialog?.findViewById<AppCompatTextView>(
+//                    R.id.confirm_text_dialog_text_view
+//                )
+//            confirmContentTextView?.text =
+//                SystemFannel.convertDisplayNameToFannelName(fannelName)
+//            val confirmCancelButton =
+//                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+//                    R.id.confirm_text_dialog_cancel
+//                )
+//            confirmCancelButton?.setOnClickListener {
+//                deleteConfirmDialog?.dismiss()
+//                deleteConfirmDialog = null
+//                cancelProcess(
+//                    recyclerView,
+//                    position,
+//                )
+//            }
+//            deleteConfirmDialog?.setOnCancelListener {
+//                deleteConfirmDialog?.dismiss()
+//                deleteConfirmDialog = null
+//                cancelProcess(
+//                    recyclerView,
+//                    position,
+//                )
+//            }
+//            val confirmOkButton =
+//                deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+//                    R.id.confirm_text_dialog_ok
+//                )
+//            confirmOkButton?.setOnClickListener {
+//                deleteConfirmDialog?.dismiss()
+//                deleteConfirmDialog = null
+//                execDeleteFannel(
+//                    pinFannelAdapter,
+//                    position,
+//                )
+//            }
+//            deleteConfirmDialog?.window?.setLayout(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            deleteConfirmDialog?.window?.setGravity(
+//                Gravity.CENTER
+//            )
+//            deleteConfirmDialog?.show()
         }
 
         private fun cancelProcess(

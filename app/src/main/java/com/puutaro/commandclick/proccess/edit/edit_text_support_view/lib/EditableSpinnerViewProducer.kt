@@ -9,7 +9,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 
 object EditableSpinnerViewProducer {
 //    fun make (

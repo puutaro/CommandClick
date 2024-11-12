@@ -23,6 +23,7 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
         >
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/confirm_dialog_v2_left_bk_image"
@@ -78,6 +79,7 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
         >
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/confirm_dialog_v2_right_bk_image"
@@ -120,79 +122,73 @@
         </FrameLayout>
 <!--         app:tint="@color/ao"-->
     </FrameLayout>
-
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/confirm_dialog_v2_cancel2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
+    <FrameLayout
+        android:id="@+id/confirm_dialog_v2_cancel_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/confirm_dialog_v2_ok1"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_dialog_v2_ok_frame"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:tint="@color/file_dark_green_color"
-        android:background="@color/trans"
-        android:backgroundTint="@null"
         android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/confirm_dialog_v2_cancel1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/confirm_dialog_v2_ok1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:tint="@color/white"
         android:background="@color/trans"
-        android:backgroundTint="@null"
+        android:backgroundTint="@null">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/confirm_dialog_v2_cancel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            app:tint="@color/file_dark_green_color"
+            android:background="@color/trans"
+            android:backgroundTint="@null"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/confirm_dialog_v2_cancel1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            app:tint="@color/white"
+            android:background="@color/trans"
+            android:backgroundTint="@null"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/confirm_dialog_v2_ok_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:scaleType="fitCenter"
-        />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/confirm_dialog_v2_ok2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/confirm_dialog_v2_cancel1"
+        app:layout_constraintStart_toEndOf="@+id/confirm_dialog_v2_cancel_frame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:tint="@color/white"
         android:background="@color/trans"
-        android:backgroundTint="@null"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/confirm_dialog_v2_ok1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/confirm_dialog_v2_cancel1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:tint="@color/file_dark_green_color"
-        android:background="@color/trans"
-        android:backgroundTint="@null"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:scaleType="fitCenter"
-        />
+        android:backgroundTint="@null">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/confirm_dialog_v2_ok2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="@color/white"
+            android:background="@color/trans"
+            android:backgroundTint="@null"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/confirm_dialog_v2_ok1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="@color/file_dark_green_color"
+            android:background="@color/trans"
+            android:backgroundTint="@null"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

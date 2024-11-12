@@ -19,7 +19,6 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Exe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSaverByTag
 import com.puutaro.commandclick.proccess.edit.lib.ListPathGetterForDragSort
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler

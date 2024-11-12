@@ -1,16 +1,15 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.app.Dialog
-import android.view.Gravity
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
+import android.webkit.ValueCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -156,66 +155,97 @@ object ExecSimpleDelete {
         ){
             val context = fragment.context
                 ?: return
-            delteConfirmDialog = Dialog(
-                context
-            )
-            delteConfirmDialog?.setContentView(
-                com.puutaro.commandclick.R.layout.confirm_text_dialog
-            )
-            val confirmTitleTextView =
-                delteConfirmDialog?.findViewById<AppCompatTextView>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_title
+            val terminalFragment = when(fragment){
+                is TerminalFragment -> fragment
+                else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                    fragment.activity,
                 )
-            confirmTitleTextView?.text = "Delete ok?"
-            val confirmContentTextView =
-                delteConfirmDialog?.findViewById<AppCompatTextView>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
-                )
-            confirmContentTextView?.text = selectedItemMap.get(
+            } ?: return
+            val message = selectedItemMap.get(
                 ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
-            )
-            val confirmCancelButton =
-                delteConfirmDialog?.findViewById<AppCompatImageButton>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
-                )
-            confirmCancelButton?.setOnClickListener {
-                delteConfirmDialog?.dismiss()
-                delteConfirmDialog = null
-                cancelProcess(
-                    recyclerView,
-                    listIndexPosition,
-                )
-            }
-            delteConfirmDialog?.setOnCancelListener {
-                delteConfirmDialog?.dismiss()
-                delteConfirmDialog = null
-                cancelProcess(
-                    recyclerView,
-                    listIndexPosition,
-                )
-            }
-            val confirmOkButton =
-                delteConfirmDialog?.findViewById<AppCompatImageButton>(
-                    com.puutaro.commandclick.R.id.confirm_text_dialog_ok
-                )
-            confirmOkButton?.setOnClickListener {
-                delteConfirmDialog?.dismiss()
-                delteConfirmDialog = null
-                removeItem(
-                    fragment,
-                    editComponentListAdapter,
-                    selectedItemMap,
-                    listIndexPosition,
-                )
-            }
-            delteConfirmDialog?.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            delteConfirmDialog?.window?.setGravity(
-                Gravity.CENTER
-            )
-            delteConfirmDialog?.show()
+            ) ?: String()
+            val confirmScript = """
+                jsDialog.confirm(
+                    "Delete ok?",
+                    "$message",
+                );
+            """.trimIndent()
+            terminalFragment.binding.terminalWebView.evaluateJavascript(
+                confirmScript,
+                ValueCallback<String> { isDelete ->
+                    when(isDelete){
+                        true.toString() ->  removeItem(
+                            fragment,
+                            editComponentListAdapter,
+                            selectedItemMap,
+                            listIndexPosition,
+                        )
+                        else -> cancelProcess(
+                            recyclerView,
+                            listIndexPosition,
+                        )
+                    }
+                })
+//            delteConfirmDialog = Dialog(
+//                context
+//            )
+//            delteConfirmDialog?.setContentView(
+//                com.puutaro.commandclick.R.layout.confirm_text_dialog
+//            )
+//            val confirmTitleTextView =
+//                delteConfirmDialog?.findViewById<AppCompatTextView>(
+//                    com.puutaro.commandclick.R.id.confirm_text_dialog_title
+//                )
+//            confirmTitleTextView?.text = "Delete ok?"
+//            val confirmContentTextView =
+//                delteConfirmDialog?.findViewById<AppCompatTextView>(
+//                    com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+//                )
+//            confirmContentTextView?.text = selectedItemMap.get(
+//                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+//            )
+//            val confirmCancelButton =
+//                delteConfirmDialog?.findViewById<AppCompatImageButton>(
+//                    com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+//                )
+//            confirmCancelButton?.setOnClickListener {
+//                delteConfirmDialog?.dismiss()
+//                delteConfirmDialog = null
+//                cancelProcess(
+//                    recyclerView,
+//                    listIndexPosition,
+//                )
+//            }
+//            delteConfirmDialog?.setOnCancelListener {
+//                delteConfirmDialog?.dismiss()
+//                delteConfirmDialog = null
+//                cancelProcess(
+//                    recyclerView,
+//                    listIndexPosition,
+//                )
+//            }
+//            val confirmOkButton =
+//                delteConfirmDialog?.findViewById<AppCompatImageButton>(
+//                    com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+//                )
+//            confirmOkButton?.setOnClickListener {
+//                delteConfirmDialog?.dismiss()
+//                delteConfirmDialog = null
+//                removeItem(
+//                    fragment,
+//                    editComponentListAdapter,
+//                    selectedItemMap,
+//                    listIndexPosition,
+//                )
+//            }
+//            delteConfirmDialog?.window?.setLayout(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            delteConfirmDialog?.window?.setGravity(
+//                Gravity.CENTER
+//            )
+//            delteConfirmDialog?.show()
         }
 
         private fun cancelProcess(

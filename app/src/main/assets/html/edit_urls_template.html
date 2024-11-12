@@ -340,7 +340,7 @@
             .replace(/^file:\/\//, '')
             .replace(/^\/\/*/, '/');
       itemTitle = item.querySelector(".url-launch").textContent
-      var result = window.confirm("delete ok?\n\t" + itemTitle);
+      var result = jsDialog.confirm("delete ok?", itemTitle);
       if(!result) {
          location.reload()
          return

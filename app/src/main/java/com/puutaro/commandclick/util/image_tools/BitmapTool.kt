@@ -52,38 +52,6 @@ import kotlin.random.Random
 
 object BitmapTool {
 
-//    val ccDeepColorList = listOf(
-//        CmdClickColorStr.DARK_GREEN.str,
-//        CmdClickColorStr.GREEN.str,
-//        CmdClickColorStr.THICK_AO.str,
-//        CmdClickColorStr.BLUE.str,
-//        CmdClickColorStr.BLACK_AO.str,
-//        CmdClickColorStr.PURPLE.str,
-//        CmdClickColorStr.NAVY.str,
-//        CmdClickColorStr.BLUE_DARK_PURPLE.str,
-//        CmdClickColorStr.CARKI.str,
-//    )
-//    val ccColorList = listOf(
-//        "#67ebdb", // light green
-//        "#c5f0eb", // white green
-//        "#8cf59f", // yellow green
-//        "#042b13", // dark green
-//        "#75eb9e", // android green
-//        "#417037", // thick green
-//        "#1a9618", // green
-////        "#5e704a", // carki
-//        "#175759", // thick ao
-//        "#1926e3", // blue
-//        "#075769", // black ao
-//        "#2bccf0", // water blue
-//        "#ebf7ff", // white blue
-//        "#e6eafc", // white blue purple
-//        "#4332c7", // purple
-//        "#21140c",  // brown
-//        "#826e19", // gold yellow
-//        "#061245", // navy
-//    )
-
     fun hash(
         bitmap: Bitmap
     ): String {
@@ -120,7 +88,7 @@ object BitmapTool {
     fun concatByHorizon(
         c: Bitmap,
         s: Bitmap
-    ): Bitmap? { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+    ): Bitmap { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
         var cs: Bitmap? = null
         val width = c.width + s.width
         val height = when(c.height > s.height) {
@@ -353,7 +321,7 @@ object BitmapTool {
             imageWidth: Float,
             imageHeight: Float,
             bkColor: Int?,
-            fontSize: Float?,
+            fontSizeSrc: Float?,
             fillColorInt: Int?,
             strokeColorInt: Int?,
             strokeSize: Float?,
@@ -361,6 +329,7 @@ object BitmapTool {
             letterSpacing: Float?,
             typeFace: Int?,
             innerWidthRate: Float = 1f,
+            font: Typeface = Typeface.DEFAULT,
         ): Bitmap {
 //            val imgWidth = 200f     // 画像幅
 //            val imgHeight = 200f    // 画像高さ
@@ -400,6 +369,7 @@ object BitmapTool {
 //                            ) return@let spacintMultiSrc
 //                    baseMulti
 //                }
+            val fontSize = fontSizeSrc ?: 30f
             val staticLayoutForStroke = makeStaticsLayout(
                 text,
                 imageWidth * innerWidthRate,
@@ -410,7 +380,7 @@ object BitmapTool {
                 spacingMilti,
                 firstCharRate,
                 letterSpacing,
-                typeFace,
+                font = font,
             )
             val transX = ((canvas.width / 2f) - (staticLayoutForStroke.width / 2f)).let {
                 if(it <= 0) return@let 0f
@@ -437,7 +407,7 @@ object BitmapTool {
                 spacingMilti,
                 firstCharRate,
                 letterSpacing,
-                typeFace,
+                font = font,
             )
 //                builder.build()
 //            canvas.translate(x, y)
@@ -454,39 +424,202 @@ object BitmapTool {
             return bmp
         }
 
+        fun drawTextToBitmapWithMessage(
+            title: String,
+            message: String,
+            imageWidth: Float,
+            imageHeight: Float,
+            bkColor: Int?,
+            fontSizeSrc: Float?,
+            fillColorInt: Int?,
+            strokeColorInt: Int?,
+            titleStrokeSize: Float?,
+            messageStrokeSize: Float?,
+            firstCharRate: Float = 1.5f,
+            titleLetterSpacing: Float? = null,
+            messageLetterSpacing: Float? = null,
+            titleSpacingMulti: Float = 0.85f,
+            messageSpacingMulti: Float = 0.85f,
+            innerWidthRate: Float = 1f,
+            titleFont: Typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD),
+            messageFont: Typeface =  Typeface.create(Typeface.DEFAULT, Typeface.NORMAL),
+            messageMarginTop: Float = 100f,
+            messageWidthRate: Float = 0.8f,
+            isAntiAlias: Boolean = false,
+            maxLines: Int? = null,
+        ): Bitmap {
+            val bmp = Bitmap.createBitmap(imageWidth.toInt(), imageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+            val paint = Paint()
+
+            // 全体を塗りつぶし
+            paint.color = bkColor ?: Color.TRANSPARENT
+            paint.style = Paint.Style.FILL
+
+            canvas.drawRect(
+                0f,
+                0f,
+                imageWidth,
+                imageHeight,
+                paint
+            )
+            val fontSize = fontSizeSrc ?: 30f
+            val staticLayoutForStroke = makeStaticsLayout(
+                title,
+                imageWidth * innerWidthRate,
+                fontSize,
+                titleStrokeSize ?: 8f,
+                strokeColorInt ?: Color.WHITE,
+                Paint.Style.STROKE,
+                titleSpacingMulti,
+                firstCharRate,
+                titleLetterSpacing,
+                font = titleFont,
+                isAntiAlias = isAntiAlias,
+            )
+
+            val staticLayout = makeStaticsLayout(
+                title,
+                imageWidth * innerWidthRate,
+                fontSize,
+                0f,
+                fillColorInt,
+                Paint.Style.FILL,
+                titleSpacingMulti,
+                firstCharRate,
+                titleLetterSpacing,
+                font = titleFont,
+                isAntiAlias = isAntiAlias
+            )
+
+
+            val messageRate = 0.6f
+            val staticLayoutForMessage = when(message.isEmpty()) {
+                true -> null
+                else -> {
+                    makeStaticsLayout(
+                        message,
+                        imageWidth * innerWidthRate * messageWidthRate,
+                        fontSize * messageRate,
+                        messageStrokeSize ?: 8f,
+                        strokeColorInt ?: Color.WHITE,
+                        Paint.Style.STROKE,
+                        messageSpacingMulti,
+                        1f,
+                        messageLetterSpacing ?: 0f,
+                        isFirstCharUpper = false,
+                        font = messageFont,
+                        isAntiAlias = isAntiAlias,
+                        maxLines,
+                        (canvas.height - staticLayoutForStroke.height - messageMarginTop - 10).toInt()
+                    )
+                }
+            }
+            val canvasWidth = canvas.width
+            val staticLayoutForStrokeHeight = staticLayoutForStroke.height
+
+            let translateForTitle@ {
+                val titleWidth = (canvasWidth - staticLayoutForStroke.width) / 2f
+                val transXForTitle =
+                    if (titleWidth <= 0)  0f
+                    else titleWidth
+                val transYForTitle = let culcTransY@ {
+                    val canvasHeight = canvas.height
+                    val staticLayoutForMessageHeightWithMargin = when(staticLayoutForMessage == null) {
+                        true -> 0f
+                        else -> staticLayoutForMessage.height + messageMarginTop
+                    }
+                    val titlePlusMessageHeight =
+                        staticLayoutForStrokeHeight + staticLayoutForMessageHeightWithMargin
+                    val drawHeight = (canvasHeight - titlePlusMessageHeight) / 2
+                    if (drawHeight <= 0) return@culcTransY 0f
+                    drawHeight
+                }
+                canvas.translate(
+                    transXForTitle,
+                    transYForTitle,
+                )
+            }
+            staticLayoutForStroke.draw(canvas)
+            staticLayout.draw(canvas)
+
+            if(staticLayoutForMessage != null) {
+                let translateForMessage@{
+                    val messageWidth =
+                        (canvasWidth - staticLayoutForMessage.width) / 2f
+                    val transXForMessage =
+                        if (messageWidth <= 0) 0f
+                        else messageWidth
+                    val messageHeight = staticLayoutForStrokeHeight + messageMarginTop
+                    val transYForMessage =
+                        if (messageHeight <= 0) 0f
+                        else messageHeight
+                    canvas.translate(
+                        transXForMessage,
+                        transYForMessage
+                    )
+//                    val bgPaint = Paint().apply {
+//                        color = Color.parseColor("#0fffffff") // 半透明の緑色
+//                    }
+//                    canvas.drawRect(
+//                        0f,
+//                        0f,
+//                        staticLayoutForMessage.width.toFloat(),
+//                        staticLayoutForMessage.height.toFloat(),
+//                        bgPaint
+//                    )
+                }
+                staticLayoutForMessage.draw(canvas)
+            }
+            return bmp
+        }
+
         private fun makeStaticsLayout(
             text: String,
             imageWidth: Float,
-            fontSize: Float?,
+            fontSize: Float,
             strokeSize: Float?,
             fillColorInt: Int?,
             paintStyle: Paint.Style,
             spacingMulti: Float?,
             firstCharRate: Float?,
             letterSpacing: Float?,
-            typeFace: Int?,
+            isFirstCharUpper: Boolean? = true,
+            font: Typeface,
+            isAntiAlias: Boolean = false,
+            maxLinesSrc: Int? = null,
+            rectHeight: Int? = null,
         ): StaticLayout {
             // 文字列描画
             val textPaint = TextPaint()
             textPaint.color = fillColorInt ?: Color.BLACK
             textPaint.style = paintStyle
             textPaint.strokeWidth = strokeSize ?: 2f
-            textPaint.textSize = fontSize ?: 30f
+            textPaint.textSize = fontSize
             letterSpacing?.let {
                 textPaint.letterSpacing = it
             }
 //            textPaint.setLea(lineSpacingMultiplier * paint.getFontSpacing());
 //            textPaint.textAlign = Paint.Align.CENTER
-            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, typeFace ?: Typeface.BOLD))
-//            textPaint.isAntiAlias = true
+            textPaint.setTypeface(font)
+            textPaint.isAntiAlias = isAntiAlias
 
             val alignment = Layout.Alignment.ALIGN_CENTER
 //            val spacingAdd = 4f
 //            val spacingMulti = 1.1f
-//            val maxLines = (rectHeight / (textPaint.getFontMetrics(null) * spacingMulti + spacingAdd)).toInt()
+            val maxLines = let {
+                if(
+                    maxLinesSrc == null
+                    || rectHeight == null
+                    ) return@let null
+                    (rectHeight / (textPaint.getFontMetrics(null) * (spacingMulti ?: 1f))).toInt()
+            }
 
             //Change first character to capital letter
-            val tempStr = text.first().uppercase(Locale.getDefault()) + text.substring(1)
+            val tempStr = when(isFirstCharUpper) {
+                false -> text
+                else -> text.first().uppercase(Locale.getDefault()) + text.substring(1)
+            }
 
 
 //Change font size of the first character. You can change 2f as you want
@@ -508,7 +641,10 @@ object BitmapTool {
                 .setAlignment(alignment)
 //                .setMaxLines(2)
                 .setLineSpacing(0f, spacingMulti ?: 0.5f)
-                .setEllipsize(TextUtils.TruncateAt.END)
+                .setEllipsize(TextUtils.TruncateAt.END).apply {
+                    if(maxLines == null) return@apply
+                    setMaxLines(maxLines)
+                }
             return builder.build()
         }
 

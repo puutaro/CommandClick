@@ -46,7 +46,7 @@ object ExecItemDelete {
 
     object DeleteAfterConfirm{
 
-        private var confirmDialog: Dialog? = null
+//        private var confirmDialog: Dialog? = null
 
 //        fun execDeleteByDialog(
 //            editFragment: EditFragment,
