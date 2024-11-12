@@ -200,7 +200,7 @@ class JsConfirmV2(
                     strokeSize,
                     messageStrokeSize = strokeSize * 0.47f,
                     1.5f,
-                    0.05f, //0.085f
+                    0.142f, //0.085f
                     null,
                     titleSpacingMulti = 1f,
                     innerWidthRate = 0.95f,
