@@ -287,4 +287,16 @@ object CcPathTool {
                 || fannelName == CommandClickScriptVariable.EMPTY_STRING
 
     }
+
+    fun makeSummaryPath(
+        path: String,
+    ): String {
+        val pathList = path.split("/")
+        if(
+            pathList.size <= 2
+        ) return pathList.joinToString("/")
+        val firstPath = pathList.get(pathList.lastIndex - 1)
+        val lastPath = pathList.last()
+        return "../${firstPath}/${lastPath}"
+    }
 }

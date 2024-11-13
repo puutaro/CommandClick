@@ -3,21 +3,18 @@ package com.puutaro.commandclick.proccess.qr
 import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
-import com.puutaro.commandclick.util.Intent.CurlManager
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.url.SiteUrl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
 
 object QrDecodedTitle {
 
-    private val displayTitleTextLimit = 50
+    private const val displayTitleTextLimit = 30
     private val jsDescSeparator = QrSeparator.sepalator.str
 
-    suspend fun makeTitle(
+    suspend fun makeQrDecodeMap(
         context: Context?,
         scanConWithNewline: String
-    ): String{
+    ): Map<QrDecodeKey, String> {
         val scanCon = scanConWithNewline.replace("\n", "")
         return when(true){
             scanCon.startsWith(QrLaunchType.Http.prefix),
@@ -27,138 +24,272 @@ object QrDecodedTitle {
                 scanCon
             )
             scanCon.startsWith(QrLaunchType.Javascript.prefix) -> {
-                scanCon.take(
+                val registerTitle = scanCon.take(
                     displayTitleTextLimit
                 )
+                execMakeQrDecodeMap(
+                    "Exec js",
+                    scanCon,
+                    registerTitle,
+                    scanCon
+                )
+
             }
             scanCon.startsWith(QrLaunchType.CpFile.prefix) -> {
-                createCopyFileTitle(scanCon)
+                createCopyFileDecodeMap(scanCon)
             }
             scanCon.startsWith(QrLaunchType.ScpDir.prefix)
-            -> createScpDirTitle(scanCon)
+            -> createScpDirDecodeMap(scanCon)
             scanCon.startsWith(QrLaunchType.JsDesc.prefix)
-            -> extractTitleForJsDesc(scanCon)
+            -> extractDecodeMapForJsDesc(scanCon)
             scanCon.startsWith(QrLaunchType.WIFI.prefix),
             scanCon.startsWith(QrLaunchType.WIFI.prefix.uppercase())
-            -> createWifiTitle(scanCon)
+            -> createWifiDecodeMap(scanCon)
             scanCon.startsWith(QrLaunchType.SMS.prefix),
             scanCon.startsWith(QrLaunchType.SMS.prefix.uppercase())
-            -> createSmsTitle(scanCon)
+            -> createSmsDecodeMap(scanCon)
             scanCon.startsWith(QrLaunchType.MAIL.prefix),
             scanCon.startsWith(QrLaunchType.MAIL.prefix.uppercase()),
             scanCon.startsWith(QrLaunchType.MAIL2.prefix),
             scanCon.startsWith(QrLaunchType.MAIL2.prefix.uppercase()),
-            ->  createGmailTitle(scanCon)
+            ->  createGmailDecodeMap(scanCon)
             scanCon.startsWith(QrLaunchType.G_CALENDAR.prefix),
             scanCon.startsWith(QrLaunchType.G_CALENDAR.prefix.uppercase())
-            -> createGcalendarTitle(scanCon)
+            -> createGcalendarDecodeMap(scanCon)
             scanCon.startsWith(QrLaunchType.ON_GIT.prefix)
-            -> createOnGitTitle(scanCon)
-            else -> "Copy ok?: $scanCon"
+            -> createOnGitDecodeMap(scanCon)
+            else -> {
+                execMakeQrDecodeMap(
+                    "Copy",
+                    scanCon,
+                    "Copy ok?: $scanCon",
+                    scanCon
+
+                )
+
+            }
         }
     }
 
-    private fun createCopyFileTitle(
+    private fun createCopyFileDecodeMap(
         scanCon: String
-    ): String {
+    ): Map<QrDecodeKey, String> {
         val cpFileMap = QrMapper.convertScanConToMap(scanCon)
-        val filePath = cpFileMap.get(CpFileKey.PATH.key)
-        if(
-            filePath.isNullOrEmpty()
-        ){
-            return scanCon.take(displayTitleTextLimit)
+        val displayTitle = "Cp from other ok?"
+        val displayBody = let {
+            val filePath = cpFileMap.get(CpFileKey.PATH.key)?.let makeFilePath@ {
+               CcPathTool.makeSummaryPath(it)
+            }
+            if (
+                filePath.isNullOrEmpty()
+            ) {
+                return@let scanCon
+            }
+            return@let "Copy path: ${filePath} ${scanCon}"
         }
-        return "Copy from phone ok?: path: ${filePath}".take(
+
+        val registerTitle = displayBody.take(
             displayTitleTextLimit
+        )
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
         )
     }
 
-    private fun createScpDirTitle(
+    private fun createScpDirDecodeMap(
         scanCon: String
-    ): String {
+    ): Map<QrDecodeKey, String> {
         val scpDirMap = QrMapper.convertScanConToMap(scanCon)
-        val dirPath = scpDirMap.get(ScpDirKey.DIR_PATH.key)
-        if(
-            dirPath.isNullOrEmpty()
-        ){
-            return scanCon.take(displayTitleTextLimit)
+        val displayTitle = "Copy by SSH"
+        val displayBody = let {
+            val dirPath = scpDirMap.get(ScpDirKey.DIR_PATH.key)?.let makePath@ {
+                CcPathTool.makeSummaryPath(it)
+            }
+            if (
+                dirPath.isNullOrEmpty()
+            ) {
+                return@let scanCon
+            }
+            "Scp path: ${dirPath}"
         }
-        return "Scp from phone ok?: path: ${dirPath}".take(
+        val registerTitle = displayBody.take(
             displayTitleTextLimit
         )
-    }
-
-
-    private fun createWifiTitle(
-        scanCon: String
-    ): String {
-        return QrMapper.getWifiWpaSsidAndPinPair(scanCon).let {
-            "WIFI ssid: ${it.first} pin: ${it.second}"
-        }.take(displayTitleTextLimit)
-    }
-    private fun createSmsTitle(
-        scanCon: String
-    ): String {
-        return QrMapper.getSmsNumAndBody(scanCon).let {
-            "SMS tel: ${it.first} body: ${it.second}"
-        }.take(displayTitleTextLimit)
-    }
-
-    private fun createGmailTitle(
-        scanCon: String,
-    ): String {
-        val gmailMap = QrMapper.makeGmailMap(scanCon)
-        val subject = gmailMap?.get(GmailKey.SUBJECT.key)
-        if(
-            !subject.isNullOrEmpty()
-        ) return "Gmail: $subject"
-        val mailAd = gmailMap?.get(
-            GmailKey.MAIL_AD.key
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
         )
-        val body = gmailMap?.get(GmailKey.BODY.key)
-        return "Ad ${mailAd} Body: ${body}"
-            .take(displayTitleTextLimit)
     }
 
-    private fun createGcalendarTitle(scanCon: String): String {
-        val gcalendarMap = QrMapper.convertScanConToMap(scanCon)
-        val title = gcalendarMap.get(GCalendarKey.TITLE.key)
-            ?: return scanCon.take(displayTitleTextLimit)
-        return "calendar: $title".take(displayTitleTextLimit)
-    }
 
-    private fun createOnGitTitle(
+    private fun createWifiDecodeMap(
         scanCon: String
-    ): String {
-        val onGitMap = QrMapper.convertScanConToMap(scanCon)
-        val title = onGitMap.get(OnGitKey.NAME.key)
-            ?: return scanCon.take(displayTitleTextLimit)
-        return "Git download: $title".take(displayTitleTextLimit)
+    ): Map<QrDecodeKey, String> {
+        val displayTitle = "Connect WIFI"
+        val displayBody = QrMapper.getWifiWpaSsidAndPinPair(scanCon).let {
+            "WIFI ssid: ${it.first} pin: ${it.second}"
+        }
+        val registerTitle = displayBody.take(displayTitleTextLimit)
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
+    }
+    private fun createSmsDecodeMap(
+        scanCon: String
+    ): Map<QrDecodeKey, String> {
+        val displayTitle = "Send SMS"
+        val displayBody = QrMapper.getSmsNumAndBody(scanCon).let {
+            "SMS tel: ${it.first} body: ${it.second}"
+        }
+        val registerTitle = displayBody.take(displayTitleTextLimit)
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
     }
 
-    private fun extractTitleForJsDesc(scanCon: String): String {
-        return scanCon
+    private fun createGmailDecodeMap(
+        scanCon: String,
+    ): Map<QrDecodeKey, String> {
+        val displayTitle = "Gmail"
+        val gmailMap = QrMapper.makeGmailMap(scanCon)
+        val displayBody = let {
+            val subject = gmailMap?.get(GmailKey.SUBJECT.key)
+            if (
+                !subject.isNullOrEmpty()
+            ) return@let "Gmail: $subject"
+            val mailAd = gmailMap?.get(
+                GmailKey.MAIL_AD.key
+            )
+            val body = gmailMap?.get(GmailKey.BODY.key)
+            return@let "Ad ${mailAd}\nBody: ${body}"
+        }
+        val registerTitle = displayBody.take(displayTitleTextLimit)
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
+    }
+
+    private fun createGcalendarDecodeMap(scanCon: String): Map<QrDecodeKey, String> {
+        val gcalendarMap = QrMapper.convertScanConToMap(scanCon)
+        val displayTitle = "Register calendar"
+        val registerTitle = let {
+            val titleSrc = gcalendarMap.get(GCalendarKey.TITLE.key)
+                ?: return@let scanCon.take(displayTitleTextLimit)
+            return@let "calendar: $titleSrc".take(displayTitleTextLimit)
+        }
+        val displayBody = scanCon
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
+    }
+
+    private fun createOnGitDecodeMap(
+        scanCon: String
+    ): Map<QrDecodeKey, String> {
+        val onGitMap = QrMapper.convertScanConToMap(scanCon)
+        val displayTitle = "Git download, ok?"
+        val displayBody = let {
+            val registerTitleSrc = onGitMap.get(OnGitKey.NAME.key)
+                ?: return@let scanCon
+            registerTitleSrc
+        }
+        val registerTitle = displayBody.take(displayTitleTextLimit)
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
+    }
+
+    private fun extractDecodeMapForJsDesc(scanCon: String): Map<QrDecodeKey, String> {
+        val displayTitle = "Exec js, ok?"
+        val displayBody = scanCon
             .split(jsDescSeparator)
             .firstOrNull()?.trim()
             ?.removePrefix(QrLaunchType.JsDesc.prefix)
             ?.trim()
-            ?: scanCon.take(
-                displayTitleTextLimit
-            )
+            ?: scanCon
+        val registerTitle = displayBody.take(
+            displayTitleTextLimit
+        )
+        val registerBody = scanCon
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
     }
 
     private suspend fun makeDocFromUrl(
         context: Context?,
         targetUrl: String
-    ): String {
+    ): Map<QrDecodeKey, String> {
+        val displayTitle = "Load url, ok?"
         val titleSrc = SiteUrl.getTitle(
             context,
             targetUrl
         )
-        if(
+        val displayBody = targetUrl
+        val registerTitle = when(
             titleSrc.isEmpty()
-        ) return "Url: ${targetUrl}"
-        return "Url title: ${titleSrc}"
+        ) {
+            true -> "Url: ${targetUrl}"
+            else -> "Url title: ${titleSrc}"
+        }
+        val registerBody = targetUrl
+        return execMakeQrDecodeMap(
+            displayTitle,
+            displayBody,
+            registerTitle,
+            registerBody,
+        )
     }
 
+    private fun execMakeQrDecodeMap(
+        displayTitle: String,
+        displayBody: String,
+        registerTitle: String,
+        registerBody: String,
+    ): Map<QrDecodeKey, String> {
+        return mapOf(
+            QrDecodeKey.DISPLAY_TITLE to displayTitle,
+            QrDecodeKey.DISPLAY_BODY to displayBody,
+            QrDecodeKey.REGISTER_TITLE to registerTitle,
+            QrDecodeKey.REGISTER_BODY to registerBody,
+        )
+    }
+
+    enum class QrDecodeKey{
+        DISPLAY_TITLE,
+        DISPLAY_BODY,
+        REGISTER_TITLE,
+        REGISTER_BODY,
+
+    }
 }

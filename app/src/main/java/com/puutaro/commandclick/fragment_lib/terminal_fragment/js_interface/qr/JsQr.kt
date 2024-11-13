@@ -122,7 +122,7 @@ class JsQr(
                 terminalFragment,
                 null,
 //                terminalFragment.currentAppDirPath,
-                QrDecodedTitle.makeTitle(
+                QrDecodedTitle.makeQrDecodeMap(
                     context,
                     decodedText
                 ),

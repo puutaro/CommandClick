@@ -612,7 +612,11 @@ object BitmapTool {
                     maxLinesSrc == null
                     || rectHeight == null
                     ) return@let null
-                    (rectHeight / (textPaint.getFontMetrics(null) * (spacingMulti ?: 1f))).toInt()
+                val maxLinesEntry = (rectHeight / (textPaint.getFontMetrics(null) * (spacingMulti ?: 1f))).toInt()
+                when(maxLinesEntry >= 2){
+                    false -> 1
+                    else -> maxLinesEntry - 1
+                }
             }
 
             //Change first character to capital letter

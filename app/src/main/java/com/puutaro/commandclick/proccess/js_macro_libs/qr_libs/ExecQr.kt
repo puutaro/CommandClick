@@ -2,13 +2,10 @@ package com.puutaro.commandclick.proccess.js_macro_libs.qr_libs
 
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.ActionToolForQr
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +58,7 @@ object ExecQr {
                     fragment,
                     null,
 //                    useAppDirPath,
-                    QrDecodedTitle.makeTitle(
+                    QrDecodedTitle.makeQrDecodeMap(
                         context,
                         contents
                     ),

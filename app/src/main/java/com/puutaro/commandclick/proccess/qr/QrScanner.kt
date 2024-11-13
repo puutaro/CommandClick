@@ -485,7 +485,7 @@ object QrScanner{
         decodeText: String,
     ){
         val fragContext = fragment.context
-        val title = QrDecodedTitle.makeTitle(
+        val title = QrDecodedTitle.makeQrDecodeMap(
             fragContext,
             decodeText
         )

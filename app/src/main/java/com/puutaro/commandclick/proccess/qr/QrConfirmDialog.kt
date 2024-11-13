@@ -21,14 +21,13 @@ object QrConfirmDialog {
         fragment: Fragment,
         codeScanner: CodeScanner?,
 //    private val currentAppDirPath: String,
-        title: String,
-        body: String,
+        qrDecodeMap: Map<QrDecodedTitle.QrDecodeKey, String>,
         isMoveCurrentDir: String? = null
     ){
         val context = fragment.context
             ?: return
         if(
-            body.isEmpty()
+            qrDecodeMap.isEmpty()
         ) return
 
         val terminalFragment = when(fragment){
@@ -37,10 +36,16 @@ object QrConfirmDialog {
                 fragment.activity,
             )
         } ?: return
+        val displayTitle = qrDecodeMap.get(
+            QrDecodedTitle.QrDecodeKey.DISPLAY_TITLE
+        ) ?: return
+        val displayBody = qrDecodeMap.get(
+            QrDecodedTitle.QrDecodeKey.DISPLAY_BODY
+        ) ?: return
         val confirmScript = """
                 jsDialog.confirm(
-                    "$title",
-                    "${body.take(displayUriTextLimit)}",
+                    "$displayTitle",
+                    "${displayBody}",
                 );
             """.trimIndent()
         terminalFragment.binding.terminalWebView.evaluateJavascript(
@@ -51,20 +56,26 @@ object QrConfirmDialog {
                         QrScanner.qrDialogDismiss()
                         confirmDialogObj?.dismiss()
                         confirmDialogObj = null
+                        val registerBody = qrDecodeMap.get(
+                            QrDecodedTitle.QrDecodeKey.REGISTER_BODY
+                        ) ?: return@ValueCallback
                         CoroutineScope(Dispatchers.Main).launch {
                             withContext(Dispatchers.Main) {
                                 QrUriHandler.handle(
                                     fragment,
 //                        currentAppDirPath,
-                                    body,
+                                    registerBody,
                                     isMoveCurrentDir
                                 )
                             }
                         }
+                        val registerTitle = qrDecodeMap.get(
+                            QrDecodedTitle.QrDecodeKey.REGISTER_TITLE
+                        ) ?: return@ValueCallback
                         QrHistoryManager.registerQrUriToHistory(
 //                currentAppDirPath,
-                            title,
-                            body,
+                            registerTitle,
+                            registerBody,
                         )
                     }
                     else -> {
