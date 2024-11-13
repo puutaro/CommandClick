@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:background="@color/file_dark_green_color"
             android:layout_gravity="center"
-            android:alpha="0.8"
+            android:alpha="0.85"
             android:scaleType="fitXY"
             />
         <FrameLayout
@@ -85,7 +85,7 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:layout_gravity="center"
-            android:alpha="0.8"
+            android:alpha="0.85"
             android:scaleType="fitXY"
             />
         <FrameLayout
