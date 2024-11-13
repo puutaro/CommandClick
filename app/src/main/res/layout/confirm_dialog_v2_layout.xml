@@ -20,9 +20,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="1"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
         >
         <androidx.appcompat.widget.AppCompatImageView
@@ -74,9 +71,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
         >
         <androidx.appcompat.widget.AppCompatImageView
@@ -187,4 +181,37 @@
             android:scaleType="fitCenter"
             />
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/confirm_dialog_v2_click_left_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_dialog_v2_click_right_frame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintDimensionRatio="h, 1:3"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        />
+    <FrameLayout
+        android:id="@+id/confirm_dialog_v2_click_right_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@+id/confirm_dialog_v2_click_left_frame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintDimensionRatio="h, 1:3"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

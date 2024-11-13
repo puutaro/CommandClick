@@ -295,23 +295,31 @@ class JsConfirmV2(
             confirmDialogObj?.findViewById<AppCompatImageView>(
                 R.id.confirm_dialog_v2_right_fore_image2
             )
-        val leftFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-            R.id.confirm_dialog_v2_left_frame,
+//        val leftFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+//            R.id.confirm_dialog_v2_left_frame,
+//        )
+//        val rightFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+//            R.id.confirm_dialog_v2_right_frame,
+//        )
+//        val cancelFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+//            R.id.confirm_dialog_v2_cancel_frame,
+//        )
+//        val okFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+//            R.id.confirm_dialog_v2_ok_frame,
+//        )
+        val cancelClickFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+            R.id.confirm_dialog_v2_click_left_frame,
         )
-        val rightFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-            R.id.confirm_dialog_v2_right_frame,
-        )
-        val cancelFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-            R.id.confirm_dialog_v2_cancel_frame,
-        )
-        val okFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-            R.id.confirm_dialog_v2_ok_frame,
+        val okClickFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
+            R.id.confirm_dialog_v2_click_right_frame,
         )
         listOf(
-            leftFrameLayout to false,
-            rightFrameLayout to true,
-            cancelFrameLayout to false,
-            okFrameLayout to true,
+//            leftFrameLayout to false,
+//            rightFrameLayout to true,
+//            cancelFrameLayout to false,
+//            okFrameLayout to true,
+            cancelClickFrameLayout to false,
+            okClickFrameLayout to true,
         ).forEach {
             viewToBool ->
             val view = viewToBool.first
