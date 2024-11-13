@@ -195,8 +195,8 @@
         android:focusable="true"
         android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="40dp"
         />
     <FrameLayout
         android:id="@+id/confirm_dialog_v2_click_right_frame"
@@ -211,7 +211,7 @@
         android:focusable="true"
         android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
