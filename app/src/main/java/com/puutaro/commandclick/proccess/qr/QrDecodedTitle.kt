@@ -262,7 +262,12 @@ object QrDecodedTitle {
             true -> "Url: ${targetUrl}"
             else -> "Url title: ${titleSrc}"
         }
-        val registerBody = targetUrl
+        val registerBody = when(
+            titleSrc.isEmpty()
+        ) {
+            true -> targetUrl
+            else -> "Title: ${titleSrc}"
+        }
         return execMakeQrDecodeMap(
             displayTitle,
             displayBody,
