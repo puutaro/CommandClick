@@ -369,10 +369,10 @@ class JsConfirmV2(
         val yellowGreen2 = "#9fff5e"
         val blueGreen2 = "#32fab7"
         val okImageColorStr = listOf(
-//            yellowGreen2,
-//            lightGreen2,
+            yellowGreen2,
+            lightGreen2,
             waterBlue2,
-//            blueGreen2,
+            blueGreen2,
         ).random()
         CoroutineScope(Dispatchers.Main).launch {
             val byteArrayPair = withContext(Dispatchers.IO) {
