@@ -2,7 +2,7 @@ package com.puutaro.commandclick.util.file
 
 object ConfirmDialogAssets {
 
-    const val confirmDialogDirPath = "${AssetsFileManager.resPngDirPath}/confirm_dialog"
+    private const val confirmDialogDirPath = "${AssetsFileManager.resPngDirPath}/confirm_dialog"
 
     val xOPairPngToMakeTypeList = listOf(
         Pair(

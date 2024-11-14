@@ -68,6 +68,7 @@ object FannelHistoryButtonEvent {
     private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
     private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
+    private val escapePrefix = '_'
 
     fun invoke(
        fragment: Fragment
@@ -233,8 +234,10 @@ object FannelHistoryButtonEvent {
             FileSystems.sortedFiles(
                 cmdclickDefaultAppDirPath
             ).filter {
+                val isNotEscapeFannel = !it.startsWith(escapePrefix)
                 val isNotMask = !maskListForFannelManageList.contains(it)
                 isNotMask
+                        && isNotEscapeFannel
                         && it.endsWith(jsFileSuffix)
             }
 //            FileSystems.filterSuffixShellOrJsFiles(

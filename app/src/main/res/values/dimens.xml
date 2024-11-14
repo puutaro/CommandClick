@@ -18,4 +18,5 @@
     <dimen name="grid_dialog_max_elevation">10dp</dimen>
     <dimen name="grid_dialog_middle_elevation">5dp</dimen>
     <dimen name="grid_dialog_min_elevation">2dp</dimen>
+    <dimen name="twenty_dp">20dp</dimen>
 </resources>

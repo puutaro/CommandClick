@@ -41,6 +41,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
+import androidx.core.view.marginEnd
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -92,6 +94,7 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 import java.io.File
 import java.lang.ref.WeakReference
 import java.time.LocalDateTime
+import java.util.Locale
 
 
 class PromptWithListDialog(
@@ -573,6 +576,7 @@ class PromptWithListDialog(
             true -> String()
             else -> defaultText ?: String()
         }
+        val isTitleCenter = !editTextVisible && !listVisible
 //        val promptlistStart = LocalDateTime.now()
         val promptList: MutableList<Map<String, String?>> = //mutableListOf()
             PromptMapList.makePromptMapList(
@@ -729,11 +733,12 @@ class PromptWithListDialog(
                 )
             }
             CoroutineScope(Dispatchers.Main).launch {
-                autoHideTitleByYPosi(
+                TitleLayoutHandler.handle(
                     promptListView,
                     promptListAdapter,
                     promptListTitleView,
-                    title,
+                    isTitleCenter,
+                    title
                 )
             }
 //            withContext(Dispatchers.Main){
@@ -832,70 +837,122 @@ class PromptWithListDialog(
         ) // Define your gradient colors
     }
 
-    private fun autoHideTitleByYPosi(
-        promptListView: RecyclerView?,
-        promptListAdapter: PromptListAdapter,
-        promptListTitleView: OutlineTextView?,
-        title: String,
-    ){
-        if(
-            promptListView == null
-            || promptListTitleView == null
-        ) return
+    object TitleLayoutHandler {
+
+        fun handle(
+            promptListView: RecyclerView?,
+            promptListAdapter: PromptListAdapter,
+            promptListTitleView: OutlineTextView?,
+            isTitleCenter: Boolean,
+            title: String,
+        ){
+            when(isTitleCenter){
+                true -> putCenter(
+                    promptListTitleView,
+                )
+                else -> autoHideByYPosi(
+                    promptListView,
+                    promptListAdapter,
+                    promptListTitleView,
+                    title,
+                )
+            }
+        }
+
+        private fun putCenter(
+            promptListTitleView: OutlineTextView?,
+        ){
+            val context = promptListTitleView?.context
+                ?: return
+            val constraintLayout = promptListTitleView.layoutParams as? ConstraintLayout.LayoutParams
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
+                    constraintLayout?.apply {
+                        topToTop = ConstraintSet.PARENT_ID
+                        startToStart = ConstraintSet.PARENT_ID
+                        endToEnd = ConstraintSet.PARENT_ID
+                        bottomToBottom = ConstraintSet.PARENT_ID
+                        topMargin = 0
+//                bottomMargin = searchCardViewVerticalMarginKeyOpenDp
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    promptListTitleView.apply {
+                        layoutParams = constraintLayout
+                        val horizonMargin =
+                            (context.resources.getDimension(R.dimen.twenty_dp) * 1.5).toInt()
+                        setPadding(horizonMargin, 0, horizonMargin, 0)
+                    }
+                }
+            }
+        }
+
+        private fun autoHideByYPosi(
+            promptListView: RecyclerView?,
+            promptListAdapter: PromptListAdapter,
+            promptListTitleView: OutlineTextView?,
+            title: String,
+        ) {
+            if (
+                promptListView == null
+                || promptListTitleView == null
+            ) return
 //            val promptListAdapter = promptListView.adapter as? PromptListAdapter
 //            promptListAdapter?.prompMapList?.firstOrNull()
 //                ?: return@launch
-        val layoutLastIndex = promptListAdapter.prompMapList.lastIndex
-        promptListView.viewTreeObserver?.addOnGlobalLayoutListener(object :
-            OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val viewTreeObserver = this
-                CoroutineScope(Dispatchers.Main).launch ajustPosition@ {
-                    withContext(Dispatchers.Main) {
-                        promptListView.viewTreeObserver.removeOnGlobalLayoutListener(
-                            viewTreeObserver
-                        )
-                    }
-                    val holder = withContext(Dispatchers.IO) {
-                        for (i in 1..10) {
-                            val holderSrc =
-                                promptListView.findViewHolderForAdapterPosition(layoutLastIndex) as? PromptListAdapter.PromptListViewHolder
-                            if(
-                                holderSrc != null
-                            ) return@withContext holderSrc
-                            delay(200)
-                            continue
+            val layoutLastIndex = promptListAdapter.prompMapList.lastIndex
+            promptListView.viewTreeObserver?.addOnGlobalLayoutListener(object :
+                OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    val viewTreeObserver = this
+                    CoroutineScope(Dispatchers.Main).launch ajustPosition@{
+                        withContext(Dispatchers.Main) {
+                            promptListView.viewTreeObserver.removeOnGlobalLayoutListener(
+                                viewTreeObserver
+                            )
                         }
-                        null
-                    } ?: return@ajustPosition
-                    holder.itemView.viewTreeObserver.addOnGlobalLayoutListener(object :
-                        OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
-                            val listener = this
-                            CoroutineScope(Dispatchers.Main).launch execAjustPosition@ {
+                        val holder = withContext(Dispatchers.IO) {
+                            for (i in 1..10) {
+                                val holderSrc =
+                                    promptListView.findViewHolderForAdapterPosition(layoutLastIndex) as? PromptListAdapter.PromptListViewHolder
+                                if (
+                                    holderSrc != null
+                                ) return@withContext holderSrc
+                                delay(200)
+                                continue
+                            }
+                            null
+                        } ?: return@ajustPosition
+                        holder.itemView.viewTreeObserver.addOnGlobalLayoutListener(object :
+                            OnGlobalLayoutListener {
+                            override fun onGlobalLayout() {
+                                val listener = this
+                                CoroutineScope(Dispatchers.Main).launch execAjustPosition@{
 //                                withContext(Dispatchers.IO){
 //                                    delay(200)
 //                                }
-                                withContext(Dispatchers.Main) {
-                                    holder.itemView.viewTreeObserver.removeOnGlobalLayoutListener(
-                                        listener
-                                    )
-                                }
-                                val windowLocation = withContext(Dispatchers.IO) {
-                                    val windowLocationSrc = IntArray(2)
-                                    holder.promptListAdapterLinear.getLocationInWindow(windowLocationSrc)
-                                    windowLocationSrc
-                                }
+                                    withContext(Dispatchers.Main) {
+                                        holder.itemView.viewTreeObserver.removeOnGlobalLayoutListener(
+                                            listener
+                                        )
+                                    }
+                                    val windowLocation = withContext(Dispatchers.IO) {
+                                        val windowLocationSrc = IntArray(2)
+                                        holder.promptListAdapterLinear.getLocationInWindow(
+                                            windowLocationSrc
+                                        )
+                                        windowLocationSrc
+                                    }
 
-                                val recyclerLastYPosition = withContext(Dispatchers.IO) {
-                                    windowLocation[1]
-                                }
-                                val textY = withContext(Dispatchers.IO) {
-                                    promptListTitleView.y + promptListTitleView.measuredHeight
-                                }
-                                if(
-                                    recyclerLastYPosition > textY
-                                ) return@execAjustPosition
+                                    val recyclerLastYPosition = withContext(Dispatchers.IO) {
+                                        windowLocation[1]
+                                    }
+                                    val textY = withContext(Dispatchers.IO) {
+                                        promptListTitleView.y + promptListTitleView.measuredHeight
+                                    }
+                                    if (
+                                        recyclerLastYPosition > textY
+                                    ) return@execAjustPosition
 //                                    Unit.also {
 //                                        FileSystems.writeFile(
 //                                            File(
@@ -914,25 +971,25 @@ class PromptWithListDialog(
 //                                        )
 //                                    }
 
-                                val searchCardView = withContext(Dispatchers.Main) {
-                                    promptDialogObj?.findViewById<MaterialCardView>(
-                                        R.id.prompt_list_dialog_search_edit_cardview
-                                    )
-                                }
+                                    val searchCardView = withContext(Dispatchers.Main) {
+                                        promptDialogObj?.findViewById<MaterialCardView>(
+                                            R.id.prompt_list_dialog_search_edit_cardview
+                                        )
+                                    }
 //                                    val searchCardViewVerticalMarginKeyOpenDp = withContext(Dispatchers.IO){
 //                                        context.resources.getDimension(
 //                                            R.dimen.prompt_list_dialog_vertical_search_cardview_key_open_margin
 //                                        ).toInt()
 //                                    }
-                                withContext(Dispatchers.Main) {
-                                    promptListView.setAutofillHints(onSystemkeyOpenModeStr)
-                                    KeyboardHandler.setToKeyOpen(
-                                        promptListTitleView,
-                                        promptListView,
+                                    withContext(Dispatchers.Main) {
+                                        promptListView.setAutofillHints(onSystemkeyOpenModeStr)
+                                        KeyboardHandler.setToKeyOpen(
+                                            promptListTitleView,
+                                            promptListView,
 //                                            searchCardViewVerticalMarginKeyOpenDp,
-                                        searchCardView
-                                    )
-                                }
+                                            searchCardView
+                                        )
+                                    }
 //                                    FileSystems.writeFile(
 //                                        File(
 //                                            UsePath.cmdclickDefaultAppDirPath,
@@ -944,12 +1001,13 @@ class PromptWithListDialog(
 //                                            "textY: ${promptListTitleView.y + promptListTitleView.height}"
 //                                        ).joinToString("\n")
 //                                    )
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
 //    private suspend fun scrollToBottom(
@@ -996,9 +1054,17 @@ class PromptWithListDialog(
                 null
             }
         } ?: Integer.MAX_VALUE
-        val title = when(titleSrc.length <= 3){
+        val title = when(titleSrc.length <= 3) {
             true -> "Select"
             else -> titleSrc.trim()
+        }.let {
+            if(
+                it.isEmpty()
+                ) return@let it
+            if(
+                it.length <= 1
+                ) return@let it.first().uppercase()
+            it.first().uppercase(Locale.getDefault()) + it.substring(1)
         }
         return promptDialogObj?.findViewById<OutlineTextView>(
             R.id.prompt_list_dialog_list_title

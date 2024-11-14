@@ -25,6 +25,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TitleJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.str.QuoteTool
 import java.lang.ref.WeakReference
@@ -507,6 +508,16 @@ class JsDialog(
             title,
             listIconTsvCon,
             promptConfigMapCon,
+        )
+    }
+
+    @JavascriptInterface
+    fun title(
+        title: String,
+    ){
+        TitleJsDialog.launch(
+            promptWithListDialog,
+            title,
         )
     }
 
