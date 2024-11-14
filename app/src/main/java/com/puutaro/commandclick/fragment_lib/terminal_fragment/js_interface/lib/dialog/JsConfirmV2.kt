@@ -361,14 +361,18 @@ class JsConfirmV2(
             CmdClickColorStr.BROWN.str,
         ).random()
         val waterBlue2 = "#48ecf7"
+        //"#82f8ff"
+        //"#69f6ff"
+        // "#56f2fc"
+        //"#48ecf7"
         val lightGreen2 = "#2dfa82"
         val yellowGreen2 = "#9fff5e"
         val blueGreen2 = "#32fab7"
         val okImageColorStr = listOf(
-            yellowGreen2,
-            lightGreen2,
+//            yellowGreen2,
+//            lightGreen2,
             waterBlue2,
-            blueGreen2,
+//            blueGreen2,
         ).random()
         CoroutineScope(Dispatchers.Main).launch {
             val byteArrayPair = withContext(Dispatchers.IO) {
