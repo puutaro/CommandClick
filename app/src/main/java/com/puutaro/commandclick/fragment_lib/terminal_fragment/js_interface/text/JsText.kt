@@ -151,6 +151,39 @@ class JsText(
     }
 
     @JavascriptInterface
+    fun shuffle(
+        con: String,
+        separator: String,
+    ): String{
+
+        /*
+        ## Description
+
+        Shuffle element
+        */
+
+
+        return con.split(separator).shuffled().joinToString(separator)
+    }
+
+    @JavascriptInterface
+    fun getElement(
+        con: String,
+        index: Int,
+        separator: String,
+    ): String{
+
+        /*
+        ## Description
+
+        Get element
+        */
+
+
+        return con.split(separator).getOrNull(index) ?: String()
+    }
+
+    @JavascriptInterface
     fun trans(
         tsvStr: String
     ): String {

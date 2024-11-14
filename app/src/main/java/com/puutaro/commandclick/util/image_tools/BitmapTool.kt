@@ -438,8 +438,8 @@ object BitmapTool {
             firstCharRate: Float = 1.5f,
             titleLetterSpacing: Float? = null,
             messageLetterSpacing: Float? = null,
-            titleSpacingMulti: Float = 0.85f,
-            messageSpacingMulti: Float = 0.85f,
+            titleSpacingMulti: Float = 1f,
+            messageSpacingMulti: Float = 1f,
             innerWidthRate: Float = 1f,
             titleFont: Typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD),
             messageFont: Typeface =  Typeface.create(Typeface.DEFAULT, Typeface.NORMAL),
@@ -502,8 +502,8 @@ object BitmapTool {
                         imageWidth * innerWidthRate * messageWidthRate,
                         fontSize * messageRate,
                         messageStrokeSize ?: 8f,
-                        strokeColorInt ?: Color.WHITE,
-                        Paint.Style.STROKE,
+                        fillColorInt ?: Color.WHITE,
+                        Paint.Style.FILL,
                         messageSpacingMulti,
                         1f,
                         messageLetterSpacing ?: 0f,
@@ -615,7 +615,7 @@ object BitmapTool {
                 val maxLinesEntry = (rectHeight / (textPaint.getFontMetrics(null) * (spacingMulti ?: 1f))).toInt()
                 when(maxLinesEntry >= 2){
                     false -> 1
-                    else -> maxLinesEntry - 1
+                    else -> maxLinesEntry
                 }
             }
 

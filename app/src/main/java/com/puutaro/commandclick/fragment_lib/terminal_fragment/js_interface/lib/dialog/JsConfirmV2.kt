@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
@@ -16,8 +17,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.res.ResourcesCompat
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -28,6 +27,7 @@ import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.ConfirmDialogAssets
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.CoroutineScope
@@ -119,35 +119,16 @@ class JsConfirmV2(
         val screenWidth = ScreenSizeCalculator.pxWidth(
                 terminalFragment
             )
+        val xOPairToMakeType = ConfirmDialogAssets.xOPairPngToMakeTypeList.random()
+        val xOPair = xOPairToMakeType.first
+        val makeType = xOPairToMakeType.second
         CoroutineScope(Dispatchers.IO).launch {
-//            val screenHeight = ScreenSizeCalculator.pxHeight(terminalFragment)
-//            val titleLength = title.length
-//            val baseTitleLength = let {
-//                val baseLength = 10f
-//                val minLength = 6f
-//                val incline = (150f - minLength) / (1080f - baseLength)
-//                val culcSize = incline  * (screenWidth - baseLength) + minLength
-//                if(
-//                    culcSize <= minLength
-//                ) return@let minLength
-//                culcSize
-//
-//                val quotient = screenWidth / 90
-//                val threshold = 8
-//                if(
-//                    quotient <= threshold
-//                    ) return@let threshold
-//                quotient
-//            }
             val constraintWidth = screenWidth
-//            let {
-//                if(titleLength >= baseTitleLength) return@let screenWidth
-//                (screenWidth * titleLength) / baseTitleLength
-//            }
             val fontSize = let {
                 val baseWidth = 720f
                 val minSize = 110f
-                val incline = (160f - minSize) / (1080f - baseWidth)
+                val maxSize = 160f
+                val incline = (maxSize - minSize) / (1080f - baseWidth)
                 val culcSize = incline  * (screenWidth - baseWidth) + minSize
                 if(
                     culcSize <= minSize
@@ -156,21 +137,14 @@ class JsConfirmV2(
             }
             val centerConstraintX = constraintWidth / 2
             val constraintHeight = (14 * screenWidth) / 10
-//            let {
-//                val quotient = titleLength / baseTitleLength
-//                val oneLineHeight = constraintWidth / 3
-//                return@let when(
-//                    quotient
-//                ) {
-//                    0 -> oneLineHeight
-//                    1, 2 -> oneLineHeight * (quotient + 1)
-//                    else -> screenWidth
-//                }
-//            }
             val strokeSize = let {
+                if(
+                    makeType == ConfirmDialogAssets.ImageMakingType.OPACITY
+                ) return@let 0f
                 val baseWidth = 720f
-                val minSize = 7f
-                val incline = (10f - minSize) / (1080f - baseWidth)
+                val minSize = 2f //7f
+                val maxSize = 5f //10f
+                val incline = (maxSize - minSize) / (1080f - baseWidth)
                 val culcSize = incline  * (screenWidth - baseWidth) + minSize
                 if(
                     culcSize <= minSize
@@ -187,8 +161,16 @@ class JsConfirmV2(
                 ) return@let minMargin
                 culcMargin
             }
-            val srcTitleWhiteBitmap = withContext(Dispatchers.IO) {
 
+            val srcTitleWhiteBitmap = withContext(Dispatchers.IO) {
+                val titleFont = when(makeType){
+                    ConfirmDialogAssets.ImageMakingType.PLANE -> Typeface.create(Typeface.MONOSPACE, Typeface.BOLD_ITALIC)
+                    ConfirmDialogAssets.ImageMakingType.OPACITY -> Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC)
+                }
+                val messageFont = when(makeType){
+                    ConfirmDialogAssets.ImageMakingType.PLANE -> Typeface.create(Typeface.MONOSPACE, Typeface.BOLD_ITALIC)
+                    ConfirmDialogAssets.ImageMakingType.OPACITY -> Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC)
+                }
                 BitmapTool.DrawText.drawTextToBitmapWithMessage(
                     title,
                     message,
@@ -196,17 +178,17 @@ class JsConfirmV2(
                     constraintHeight.toFloat(),
                     Color.TRANSPARENT,
                     fontSize,
-                    Color.TRANSPARENT,
+                    Color.WHITE,
                     Color.WHITE,
                     strokeSize,
                     messageStrokeSize = strokeSize * 0.47f,
                     1.5f,
-                    0.142f, //0.085f
+                    0f, //0.142f,
                     null,
-                    titleSpacingMulti = 1f,
+                    titleSpacingMulti = 1f, //1f,
                     innerWidthRate = 0.95f,
-                    titleFont = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD_ITALIC), //Typeface.SANS_SERIF
-                    messageFont = Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC),
+                    titleFont = titleFont, //Typeface.SANS_SERIF
+                    messageFont = messageFont,
                     messageMarginTop = messageMarginTop,
                     messageWidthRate = 0.75f,
                     isAntiAlias = true,
@@ -295,18 +277,6 @@ class JsConfirmV2(
             confirmDialogObj?.findViewById<AppCompatImageView>(
                 R.id.confirm_dialog_v2_right_fore_image2
             )
-//        val leftFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-//            R.id.confirm_dialog_v2_left_frame,
-//        )
-//        val rightFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-//            R.id.confirm_dialog_v2_right_frame,
-//        )
-//        val cancelFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-//            R.id.confirm_dialog_v2_cancel_frame,
-//        )
-//        val okFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
-//            R.id.confirm_dialog_v2_ok_frame,
-//        )
         val cancelClickFrameLayout = confirmDialogObj?.findViewById<FrameLayout>(
             R.id.confirm_dialog_v2_click_left_frame,
         )
@@ -314,10 +284,6 @@ class JsConfirmV2(
             R.id.confirm_dialog_v2_click_right_frame,
         )
         listOf(
-//            leftFrameLayout to false,
-//            rightFrameLayout to true,
-//            cancelFrameLayout to false,
-//            okFrameLayout to true,
             cancelClickFrameLayout to false,
             okClickFrameLayout to true,
         ).forEach {
@@ -373,83 +339,72 @@ class JsConfirmV2(
                     imageView1.setImageBitmap(bitmap)
                     imageView2.setImageBitmap(bitmap)
                 }
-//                withContext(Dispatchers.Main) {
-//                    Glide
-//                        .with(context)
-//                        .load(bitmap)
-//                        .transition(DrawableTransitionOptions.withCrossFade())
-//                        .skipMemoryCache(true)
-//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                        .thumbnail(requestBuilder)
-//                        .into(imageView)
-//                }
             }
         }
         val moveDirection = MoveDirection.entries.random()
-//        val rippleDelayPair = listOf(
-//            0L,
-//            100L
-//        ).shuffled().let {
-//            it.first() to it.last()
-//        }
         val aoColorStr = "#007F89"
         val redPurple = "#BB86FC"
-        val redAiIro = "#b305f7"
+        val redAiIro = "#6c0096"
+        val enji = "#78013d"
+        //"#b305f7"
         val blueGreen = "#298072"
         //""#2f9c8b"
         //"#32b39f"
         //""#25cfb5"
-        val red = "#FF0000"
+        val littlrDarkRed = "#ab0000"
+        val red = "#fc3232"
+        //"#FF0000"
         val cancelImageColorStr = listOf(
-            CmdClickColorStr.SKERLET.str,
-            redPurple,
+            littlrDarkRed,
+//            redPurple,
+            enji,
             redAiIro,
-            red,
-//            CmdClickColorStr.THICK_GREEN.str,
-//            CmdClickColorStr.DARK_GREEN.str,
-//            CmdClickColorStr.CARKI.str,
-//            CmdClickColorStr.GOLD_YELLOW.str,
-//            CmdClickColorStr.BLUE.str,
-//            CmdClickColorStr.BLACK_AO.str,
-//            CmdClickColorStr.BLUE_DARK_PURPLE.str,
-//            CmdClickColorStr.NAVY.str,
-//            CmdClickColorStr.PURPLE.str,
-//            CmdClickColorStr.BLUE.str,
-//            CmdClickColorStr.DARK_BROWN.str,
+            CmdClickColorStr.BROWN.str,
+//            red,
         ).random()
+        val waterBlue2 = "#48ecf7"
+        val lightGreen2 = "#2dfa82"
+        val yellowGreen2 = "#9fff5e"
+        val blueGreen2 = "#32fab7"
         val okImageColorStr = listOf(
-            CmdClickColorStr.WATER_BLUE.str,
-            CmdClickColorStr.LIGHT_GREEN.str,
-            CmdClickColorStr.ANDROID_GREEN.str,
-            CmdClickColorStr.YELLOW.str,
-            CmdClickColorStr.YELLOW_GREEN.str,
-//            CmdClickColorStr.GREEN.str,
-//            CmdClickColorStr.WHITE_BLUE.str,
-//            CmdClickColorStr.WHITE_GREEN.str,
-//            CmdClickColorStr.WHITE_BLUE_PURPLE.str,
-//            aoColorStr,
-//            blueGreen,
-//            CmdClickColorStr.GREEN.str,
-//            CmdClickColorStr.BLUE.str,
-//            CmdClickColorStr.PURPLE.str,
+            yellowGreen2,
+            lightGreen2,
+            waterBlue2,
+            blueGreen2,
         ).random()
         CoroutineScope(Dispatchers.Main).launch {
             val byteArrayPair = withContext(Dispatchers.IO) {
-                AssetsFileManager.assetsByteArray(
-                    context,
-                    AssetsFileManager.xPngPath
-                ) to AssetsFileManager.assetsByteArray(
-                    context,
-                    AssetsFileManager.oPngPath
-                )
+                listOf(
+                    xOPair.first,
+                    xOPair.second
+                ).map {
+                    AssetsFileManager.assetsByteArray(
+                        context,
+                        it
+                    )?.let {
+                        val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                        val opacity = when(
+                            makeType
+                        ) {
+                            ConfirmDialogAssets.ImageMakingType.PLANE -> return@let bitmap //215 //200 kusumu
+                            ConfirmDialogAssets.ImageMakingType.OPACITY -> 50
+                        }
+                        BitmapTool.ImageTransformer.adjustOpacity(
+                            bitmap,
+                            opacity //130 //50
+                        )
+                    }
+                //                    ?.let {
+//                        val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+//                        BitmapTool.ImageTransformer.adjustOpacity(
+//                            bitmap,
+//                            opacity //130 //50
+//                        )
+//                    }
+                }.let {
+                    it.first() to it.last()
+                }
             }
-//            val transParentBitmap = withContext(Dispatchers.IO) {
-//                BitmapTool.ImageTransformer.makeRect(
-//                    "#00000000",
-//                    50,
-//                    50
-//                )
-//            }
             val slideMultiplePair = listOf(-1, 1).shuffled().let {
                 Pair(
                     it.first(),
@@ -485,10 +440,6 @@ class JsConfirmV2(
                             1 -> cancelImageColorStr
                             else -> okImageColorStr
                         }
-//                        val bkColorStr = when (it) {
-//                            1 -> okImageColorStr
-//                            else -> cancelImageColorStr
-//                        }
                         val techniquesPair = moveDirection.directionPair
                         val techniques = when (it) {
                             1 -> techniquesPair.first
@@ -546,23 +497,6 @@ class JsConfirmV2(
                             1 -> Pair(absTitleSlideX * firstMultiple, absTitleSlideY * firstMultiple) // -5
                             else -> Pair(absTitleSlideX * secondMultiple, absTitleSlideY * secondMultiple) // 5
                         }
-//                        val bitmap = BitmapFactory.decodeByteArray(
-//                            byteArray,
-//                            0,
-//                            byteArray?.size ?: 0
-//                        )
-//                        val bitmapList2 = listOf(
-//                            bitmap,
-//                            transParentBitmap,
-//                            bitmap,
-//                            transParentBitmap,
-//                        )
-//                        val bitmapList3 = listOf(
-//                            transParentBitmap,
-//                            bitmap,
-//                            transParentBitmap,
-//                            bitmap,
-//                        )
                         imageView1.setColorFilter(Color.parseColor(colorStr))
                         Glide
                             .with(context)
@@ -578,23 +512,8 @@ class JsConfirmV2(
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .thumbnail(requestBuilder)
                             .into(imageView2)
-                        val durationRndList = (800..1500)
-                        val duration = 50
-//                        setAnimationDrawable(
-//                            context,
-//                            imageView2,
-//                            bitmapList2,
-//                            duration,
-//                        )
-//                        setAnimationDrawable(
-//                            context,
-//                            imageView3,
-//                            bitmapList3,
-//                            duration,
-//                        )
                         YoYo.with(techniques)
                             .duration(100)
-//                            .playOn(imageViewFrame)
                             .interpolate(AccelerateDecelerateInterpolator()).withListener(
                                 object : Animator.AnimatorListener {
                                     override fun onAnimationStart(animation: Animator) {}
@@ -607,33 +526,19 @@ class JsConfirmV2(
                                                         when (it) {
                                                             1 -> imageView2.animate()
                                                                 .translationX(imageView2.x + slideXyPair.first)
-                                                                .translationY(imageView2.y+ slideXyPair.second)
-                                                                .setDuration(200)
+                                                                .translationY(imageView2.y + slideXyPair.second)
+                                                                .setDuration(300)
 
                                                             else -> titleImageView2.animate()
                                                                 .translationX(imageView2.x + titleSlideXyPair.first)
-                                                                .translationY(imageView2.y+ titleSlideXyPair.second)
-                                                                .setDuration(200)
+                                                                .translationY(imageView2.y + titleSlideXyPair.second)
+                                                                .setDuration(300)
                                                         }
                                                     }
                                                 }
                                                 jobList.forEach { it.await() }
                                             }
                                         }
-//                                        CoroutineScope(Dispatchers.Main).launch {
-//                                            imageView.apply {
-//                                                background?.setHotspot(
-//                                                    hotSpotXyPair.first,
-//                                                    hotSpotXyPair.second
-//                                                )
-//                                                withContext(Dispatchers.IO) {
-//                                                    delay(delayTime)
-//                                                }
-//                                                isPressed = true
-//                                                // For a quick ripple, you can immediately set false.
-//                                                isPressed = false
-//                                            }
-//                                        }
                                     }
                                     override fun onAnimationCancel(animation: Animator) {}
                                     override fun onAnimationRepeat(animation: Animator) {}
