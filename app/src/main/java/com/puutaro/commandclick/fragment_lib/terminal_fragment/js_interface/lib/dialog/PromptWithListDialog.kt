@@ -1072,7 +1072,8 @@ class PromptWithListDialog(
             val titleStr = title.map {
                 "${it}"
             }.joinToString(" ")
-            val ss1 = SpannableString(titleStr)
+            letterSpacing = 0.2f
+            val ss1 = SpannableString(title)
             ss1.setSpan(
                 RelativeSizeSpan(2f),
                 0,
@@ -1237,7 +1238,10 @@ class PromptWithListDialog(
 //            searchCardViewVerticalMarginKeyOpenDp: Int,
             searchCardView: MaterialCardView?,
         ){
-            promptListTitleView?.alpha = 0.4f
+            promptListTitleView?.apply {
+                alpha = 0.4f
+                maxLines = 1
+            }
             val constraintLayout = promptListView?.layoutParams as? ConstraintLayout.LayoutParams
             constraintLayout?.apply {
                 topToTop = ConstraintSet.PARENT_ID
@@ -1824,8 +1828,8 @@ class PromptWithListDialog(
                             }
                             withContext(Dispatchers.Main) {
                                 val plusAlpha = when(i){
-                                    1 -> 0.2f
-                                    else -> 0.3f
+                                    1 -> 0.11f //0.2f
+                                    else -> 0.11f //0.3f
                                 }
                                 alpha += plusAlpha
                             }
@@ -2228,7 +2232,8 @@ class PromptWithListDialog(
                     text to (startInt..endInt)
                 }.toMap()
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (100..300)
+                val alphaRndList = (80..120)
+                //(100..300)
 //                    (100..400)
                 val repeatTimes = (7..10).random()
                 val textSizeEnd = 11
@@ -2318,8 +2323,6 @@ class PromptWithListDialog(
                                         context,
                                         R.color.black
                                     )
-                                    setImageBitmap(bitmap)
-
                                     Glide
                                         .with(context)
                                         .load(bitmap)
@@ -2388,7 +2391,7 @@ class PromptWithListDialog(
                             addRule(RelativeLayout.ALIGN_PARENT_END)
                         }
                         layoutParams = relativeParam
-                        alpha = 0.7f
+                        alpha = 0.3f
                     }
                     bkFrameLayout.addView(shuujiImageWhiteShadow2)
                     bkFrameLayout.addView(shuujiImageWhiteShadow3)
@@ -2566,7 +2569,7 @@ class PromptWithListDialog(
                     text to (startInt..endInt)
                 }.toMap()
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (100..300)
+                val alphaRndList = (80..120)
                     //(100..400)
                 val repeatTimes = (5..10).random()
                 val textSizeEnd = 30
@@ -2800,7 +2803,7 @@ class PromptWithListDialog(
                 val oneSideLengthRndList = (300..(7 * screenWidthInt) / 4)
                 val holeRadiasHolePercentRndList = (0..75)
                 val rotateAngleRndList = (-270..270)
-                val alphaRndList = (100..200) //(100..400)
+                val alphaRndList = (80..120) // (100..200)
                 val repeatTimes = (10..15).random()
                 val animationTriggerEndNum = 8
                 val animationTriggerRndList = (1..animationTriggerEndNum)
