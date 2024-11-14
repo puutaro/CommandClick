@@ -2391,7 +2391,7 @@ class PromptWithListDialog(
                             addRule(RelativeLayout.ALIGN_PARENT_END)
                         }
                         layoutParams = relativeParam
-                        alpha = 0.3f
+                        alpha = 0.3f //0.7f
                     }
                     bkFrameLayout.addView(shuujiImageWhiteShadow2)
                     bkFrameLayout.addView(shuujiImageWhiteShadow3)

@@ -351,16 +351,14 @@ class JsConfirmV2(
         //""#2f9c8b"
         //"#32b39f"
         //""#25cfb5"
-        val littlrDarkRed = "#ab0000"
+        val littleDarkRed = "#ab0000"
         val red = "#fc3232"
         //"#FF0000"
         val cancelImageColorStr = listOf(
-            littlrDarkRed,
-//            redPurple,
+            littleDarkRed,
             enji,
             redAiIro,
             CmdClickColorStr.BROWN.str,
-//            red,
         ).random()
         val waterBlue2 = "#48ecf7"
         val lightGreen2 = "#2dfa82"
