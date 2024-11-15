@@ -25,6 +25,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TextJsDialogV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TitleJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -91,6 +92,10 @@ class JsDialog(
 //    )
 
     private val qrScanJsDialog = QrScanJsDialog(
+        terminalFragmentRef
+    )
+
+    private val textJsDialog = TextJsDialogV2(
         terminalFragmentRef
     )
 
@@ -177,6 +182,25 @@ class JsDialog(
             contents,
             scrollBottom
         )
+    }
+
+    @JavascriptInterface
+    fun text(
+        fannelPath: String,
+        title: String,
+        con: String,
+        configMapCon: String,
+    ): String {
+        if(
+            con.isEmpty()
+        ) return String()
+        val conArg = textJsDialog.create(
+            fannelPath,
+            title,
+            con,
+            configMapCon,
+        )
+        return conArg
     }
 
     @JavascriptInterface
