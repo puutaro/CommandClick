@@ -182,8 +182,8 @@ private fun setWebView(
             webView.loadDataWithBaseURL(
                 "",
                 TxtHtmlDescriber.make(
+                    terminalFragment,
                     launchUrl,
-                    terminalFragment
                 ),
                 "text/html",
                 "utf-8",

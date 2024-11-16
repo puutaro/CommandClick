@@ -5,6 +5,8 @@ import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TextJsDialogV2.BodyTextViewMaker.separatorList
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -18,7 +20,10 @@ object TxtHtmlDescriber {
 
     private val indexDirName = "index"
     val searchQuerySuffix = "?q="
-    private val qerySeparator = '&'
+    val qerySeparator = '&'
+    private val switchOn = "ON"
+    private val switchOff = "OFF"
+
 
     fun makeTxtHtmlUrl(
         txtPath: String,
@@ -35,11 +40,11 @@ object TxtHtmlDescriber {
         ).joinToString(String())
     }
     fun make(
-        urlStr: String,
-        terminalFragment: TerminalFragment
+        terminalFragment: TerminalFragment,
+        savePath: String,
     ): String {
         FileSystems.createDirs(UsePath.cmdclickScrollPosiDirPath)
-        val basePath = urlStr.removePrefix(
+        val basePath = savePath.removePrefix(
             WebUrlVariables.filePrefix
         )
         val pathAndQueryMapCon = basePath.split(searchQuerySuffix)
@@ -51,17 +56,6 @@ object TxtHtmlDescriber {
             qerySeparator
         ).toMap()
         val disableScroll = DisableScroll.how(queryMap)
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "txtHtml.txt").absolutePath,
-//            listOf(
-//                "basePath: ${basePath}",
-//                "pathAndQueryMapCon: ${pathAndQueryMapCon}",
-//                "filePath: ${filePath}",
-//                "queryMapCon: ${queryMapCon}",
-//                "queryMap: ${queryMap}",
-//                "disableScroll: ${disableScroll}"
-//            ).joinToString("\n\n")
-//        )
         val contents = ReadText(
             filePath
         ).readText()
@@ -70,9 +64,43 @@ object TxtHtmlDescriber {
         FileSystems.createDirs(currentFannelHtmlPosiDirPath)
         val fileObj = File(filePath)
         val fileName = fileObj.name
-        val htmlPosiFilePath =
-            "${currentFannelHtmlPosiDirPath}/${fileName}"
-        val insertContents = contents
+        val saveTag = queryMap.get(
+            TxtHtmlQueryKey.SAVE_TAG.key
+        )?.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        }
+        val fannelPath = queryMap.get(
+            TxtHtmlQueryKey.FANNEL_PATH.key
+        )?.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        }
+        val htmlPosiFilePath = when(
+            saveTag.isNullOrEmpty()
+                    || fannelPath.isNullOrEmpty()
+        ) {
+            true -> "${currentFannelHtmlPosiDirPath}/${fileName}"
+            else -> makeCurrentFannelHtmlPosiDirPath(
+                terminalFragment.activity,
+                FannelInfoTool.makeFannelInfoMapByString(
+                    File(fannelPath).name
+                )
+            ).let {
+                File(
+                    it,
+                    UsePath.compExtend(saveTag, ".txt")
+                )
+            }
+        }
+        val onFormat = queryMap.get(
+            TxtHtmlQueryKey.ON_FORMAT.key
+        )?.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        } != switchOff
+        val insertContents = when(onFormat) {
+            false -> contents
+            else -> TextFormater.format(contents)
+        }
+
 //                .replace("<", "&lt;")
 //                .replace(">", "&gt;")
 //                .replace(" ", "&nbsp;")
@@ -93,6 +121,11 @@ object TxtHtmlDescriber {
             #background-color: yellow;
         }
         pre {
+            font-family: "sans-serif";
+            font-size: 20px;
+            color: #1e2e1c;
+            letter-spacing: 0.1em;
+            line-height: 1.7em;
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow: auto;
@@ -103,9 +136,7 @@ object TxtHtmlDescriber {
         <body>
         <div id="monitorText">
         <p>---</p>
-        <pre>
-        ${insertContents}
-        </pre>
+        <pre>${insertContents}</pre>
         </div>
         </body>
         <script>
@@ -146,7 +177,10 @@ object TxtHtmlDescriber {
     enum class TxtHtmlQueryKey(
         val key: String
     ) {
-        DISABLE_SCROLL("disableScroll")
+        ON_FORMAT("onFormat"),
+        DISABLE_SCROLL("disableScroll"),
+        FANNEL_PATH("fannelPath"),
+        SAVE_TAG("saveTag"),
     }
 
     object DisableScroll {
@@ -168,20 +202,71 @@ object TxtHtmlDescriber {
         fannelInfoMap: Map<String, String>? = null
     ): String {
         val sharePref = FannelInfoTool.getSharePref(activity)
-        val fannelRawName = when(fannelInfoMap.isNullOrEmpty()) {
+        val fannelDirName = when(fannelInfoMap.isNullOrEmpty()) {
             true -> FannelInfoTool.getStringFromFannelInfo(
                 sharePref,
                 FannelInfoSetting.current_fannel_name
             )
             else -> FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         }.let {
-            CcPathTool.trimAllExtend(it)
+            val fannelDirNameSrc = CcPathTool.makeFannelDirName(it)
+            when(
+                fannelDirNameSrc.isEmpty()
+            ) {
+                true -> File(UsePath.fannelSystemDirPath).name
+                else -> fannelDirNameSrc
+            }
         }
-        return when(
-            fannelRawName.isEmpty()
-        ) {
-            true -> indexDirName
-            else -> "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}"
+        return listOf(
+                UsePath.cmdclickDefaultAppDirPath,
+                fannelDirName,
+                UsePath.fannelSystemScrollPosiDirName,
+            ).joinToString("/").replace(
+            Regex("[/]+"),
+            "/"
+        )
+//    "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}"
+    }
+
+    private object TextFormater {
+        fun format(
+            bodySrc: String
+        ): String {
+            return bodySrc.replace(
+                Regex("\n[ 　]*"),
+                "\n",
+            ).replace(
+                Regex("[\n]+"),
+                "\n",
+            ).split("\n").map { line ->
+                var repLine = line.trim()
+                separatorList.forEach {
+                    repLine = repLine.replace(
+                        it,
+                        "${it}\n",
+                    )
+                }
+                val splitSentenceNum = 3
+                val sentenceList =
+                    repLine.trim('\n').split("\n").chunked(splitSentenceNum)
+                        .map chunk@{ sentenceList ->
+                            val sentence = sentenceList.filter {
+                                it.trim().isNotEmpty()
+                            }.joinToString(String()).trim('\n') + "\n\n"
+                            if(sentence.isEmpty()) return String()
+                            val firstString = sentence.first().uppercase()
+                                .replace("<", "&lt;")
+                                .replace(">", "&gt;")
+                                .let {
+                                    "<span style=\"font-size: 200%;\">${it}</span>"
+                                }
+                            val afterString = sentence.substring(1)
+                            firstString + afterString
+                        }
+                sentenceList.joinToString(String())
+//                TextUtils.concat(*sentenceList.toTypedArray())
+            }.joinToString(String())
+//                TextUtils.concat(*it.toTypedArray())
         }
     }
 

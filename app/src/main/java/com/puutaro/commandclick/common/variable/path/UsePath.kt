@@ -170,7 +170,9 @@ object UsePath {
     val ignoreHistoryPathsConfig = "ignoreHistoryPaths.js"
     val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
     val fannelSettingsDirPath = "${cmdclickDefaultAppDirPath}/\${001}/settings"
-    val fannelSystemDirPath = "${cmdclickDefaultAppDirPath}/\${001}/system"
+    const val fannelSystemDirName = "system"
+    val fannelSystemDirPath = "${cmdclickDefaultAppDirPath}/\${001}/${fannelSystemDirName}"
+    const val fannelSystemScrollPosiDirName = "${fannelSystemDirName}/yScrollPosi"
 //    val homeFannelsFilePath =
 //        "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
     val settingImagesDirName = "settingImages"
@@ -184,7 +186,6 @@ object UsePath {
     val saveGmailConDialogFannelName = "saveGmailConDialog.js"
     val fannelReadmeName = "README.md"
     val fannelReadmePath = "${cmdclickDefaultAppDirPath}/\${001}/${fannelReadmeName}"
-
 
     const val cmdclickAppDirSystemFannelName = "system"
     private const val cmdclickSystemDirName = "${cmdclickAppDirSystemFannelName}Dir"

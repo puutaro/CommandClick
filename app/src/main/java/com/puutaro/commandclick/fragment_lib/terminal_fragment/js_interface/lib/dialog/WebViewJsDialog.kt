@@ -354,8 +354,8 @@ class WebViewJsDialog(
                 pocketWebView?.loadDataWithBaseURL(
                     textUrl,
                     TxtHtmlDescriber.make(
+                        terminalFragment,
                         removePrefixCon,
-                        terminalFragment
                     ),
                     "text/html",
                     "utf-8",

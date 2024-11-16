@@ -15,8 +15,8 @@ object TxtHtmlLauncher {
         binding.terminalWebView.loadDataWithBaseURL(
             "",
             TxtHtmlDescriber.make(
+                terminalFragment,
                 urlStr,
-                terminalFragment
             ),
             "text/html",
             "utf-8",

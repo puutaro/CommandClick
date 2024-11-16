@@ -5,15 +5,24 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.RelativeSizeSpan
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.ScrollView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,6 +32,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
+import java.time.LocalDateTime
 
 class TextJsDialogV2(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
@@ -32,7 +42,7 @@ class TextJsDialogV2(
 
     companion object {
         private var titleShowJob: Job? = null
-        private val titleOridnalyMaxLines = 1
+        private const val titleOridnalyMaxLines = 1
 
         private const val sectionSeparator = ','
         private const val keySeparator = '|'
@@ -43,13 +53,20 @@ class TextJsDialogV2(
         enum class TextDialogSection(
             val section: String
         ){
-            BODY("body")
+            BODY("body"),
+            Y_SCROLL("yScroll"),
+        }
+
+        enum class YScroll(
+            val key: String
+        ){
+            SAVE_TAG("saveTag")
         }
 
         enum class BodyKey(
             val key: String
         ){
-            ON_FORMAT("onFormat")
+            ON_FORMAT("onFormat"),
         }
     }
 
@@ -61,7 +78,6 @@ class TextJsDialogV2(
     ): String {
         val terminalFragment = terminalFragmentRef.get()
             ?: return String()
-        val context = terminalFragment.context
         val fannelFile = File(fannelPath)
         if(
             !fannelFile.isFile
@@ -83,6 +99,7 @@ class TextJsDialogV2(
             withContext(Dispatchers.Main) {
                 try {
                     execCreate(
+                        fannelPath,
                         title,
                         body,
                         configMapCon,
@@ -104,6 +121,7 @@ class TextJsDialogV2(
     }
 
     private fun execCreate(
+        fannelPath: String,
         title: String,
         body: String,
         configMapCon: String,
@@ -134,21 +152,31 @@ class TextJsDialogV2(
         textDialogObj?.setContentView(
             R.layout.text_dialog_v2_layout
         )
+        val scrollView = textDialogObj?.findViewById<ScrollView>(
+            R.id.text_dialog_v2_scroll
+        ) ?: return
         val titleTextView =
             textDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_dialog_v2_title
             )?.apply {
                 val titleTextViewSrc = this@apply
-                setOnClickListener {
-                    titleShowJob?.cancel()
-                    titleShowJob = CoroutineScope(Dispatchers.Main).launch {
-                        titleTextViewSrc.maxLines = Integer.MAX_VALUE
-                    }
-                }
-            }
+//                setOnClickListener {
+//                    titleShowJob?.cancel()
+//                    titleShowJob = CoroutineScope(Dispatchers.Main).launch {
+//                        titleTextViewSrc.maxLines = Integer.MAX_VALUE
+//                    }
+//                }
+            } ?: return
+        val titleTextViewShadow =
+            textDialogObj?.findViewById<View>(
+                R.id.text_dialog_v2_title_shadow
+            ) ?: return
         when(title.isEmpty()){
-            true -> titleTextView?.isVisible = false
-            else -> titleTextView?.text = title
+            true -> {
+                titleTextView.isVisible = false
+                titleTextViewShadow.isVisible = false
+            }
+            else -> titleTextView.text = title
         }
         val bodyMap = configMap.get(TextDialogSection.BODY.section)?.let {
             CmdClickMap.createMap(
@@ -160,8 +188,152 @@ class TextJsDialogV2(
             textDialogObj,
             body,
             bodyMap,
-            titleTextView,
-        )
+        ) ?: return
+        scrollView?.apply {
+
+            val scrollViewSrc = this@apply
+            if(!titleTextView.isVisible) {
+                val constraintLayoutParams =
+                    scrollViewSrc.layoutParams as ConstraintLayout.LayoutParams
+                constraintLayoutParams.apply setConstraint@{
+                    topMargin = context.resources.getDimension(R.dimen.twenty_dp).let {
+                        it * (3f / 4f)
+                    }.toInt()
+                }
+            }
+            val yScrollMap = configMap.get(TextDialogSection.Y_SCROLL.section)?.let {
+                CmdClickMap.createMap(
+                    it,
+                    keySeparator
+                ).toMap()
+            }
+            val saveTag = yScrollMap?.get(
+                YScroll.SAVE_TAG.key
+            )
+            val scrollPosiSaveFile = when(saveTag.isNullOrEmpty()) {
+                true -> null
+                else -> TxtHtmlDescriber.makeCurrentFannelHtmlPosiDirPath(
+                    terminalFragment.activity,
+                    FannelInfoTool.makeFannelInfoMapByString(
+                        File(fannelPath).name
+                    )
+                ).let {
+                    File(
+                        it,
+                        UsePath.compExtend(saveTag, ".txt")
+                    )
+                }
+            }
+//            viewTreeObserver?.addOnDrawListener(object : ViewTreeObserver.OnDrawListener {
+//                override fun onDraw() {
+//                    ToastUtils.showShort("aa")
+//                }
+//            })
+
+            viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    // Remove listener because we don't want this called before _every_ frame
+                    viewTreeObserver?.removeOnPreDrawListener(this)
+                    if(
+                        scrollPosiSaveFile == null
+                        ) return false
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val yPosi = withContext(Dispatchers.IO) {
+                            ReadText(
+                                scrollPosiSaveFile.absolutePath,
+                            ).readText().let {
+                                try {
+                                    it.toInt()
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
+                        }?: return@launch
+                        withContext(Dispatchers.Main) {
+                            scrollViewSrc.scrollY = yPosi
+                        }
+                    }
+                    return true // true because we don't want to skip this frame
+                }
+            })
+            viewTreeObserver?.addOnScrollChangedListener(object: ViewTreeObserver.OnScrollChangedListener {
+                var oldPositionY = 0
+                private var beforeTime = LocalDateTime.parse("2020-02-15T21:30:50")
+                override fun onScrollChanged() {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val curScrollPosiY = withContext(Dispatchers.Main) {
+                            scrollViewSrc.scrollY
+                        }
+                        val currentDateTime = LocalDateTime.now()
+                        if(
+                            LocalDatetimeTool.getDurationMiliSec(beforeTime, currentDateTime) < 200
+                        ) return@launch
+                        beforeTime = currentDateTime
+                        withContext(Dispatchers.IO){
+                            if(
+                                scrollPosiSaveFile == null
+                            ) return@withContext
+                            FileSystems.writeFile(
+                                scrollPosiSaveFile.absolutePath,
+                                curScrollPosiY.toString()
+                            )
+                        }
+                        val diffYPosi = withContext(Dispatchers.IO) {
+                            oldPositionY - curScrollPosiY
+                        }
+                        oldPositionY = curScrollPosiY
+                        if(diffYPosi < -10 && !titleTextView.isVisible) {
+                            withContext(Dispatchers.Main) {
+                                titleTextView.isVisible = true
+//                                CoroutineScope(Dispatchers.Main).launch {
+//                                    withContext(Dispatchers.IO){
+//                                        delay(100)
+//                                    }
+//                                    withContext(Dispatchers.Main){
+//                                        scrollViewSrc.parent.requestDisallowInterceptTouchEvent(false)
+//                                    }
+//                                }
+//                                val constraintLayoutParams = scrollView.layoutParams as ConstraintLayout.LayoutParams
+//                                constraintLayoutParams.apply setConstraint@ {
+//                                    topToBottom = ConstraintLayout.LayoutParams.UNSET
+//                                    topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+//                                }
+//                                scrollView.layoutParams = constraintLayoutParams
+                            }
+
+                            return@launch
+                        }
+
+                        if(diffYPosi > 100) {
+                            withContext(Dispatchers.Main) {
+                                if (titleTextView.isVisible) {
+                                    titleTextView.isVisible = false
+//                                    CoroutineScope(Dispatchers.Main).launch {
+//                                        withContext(Dispatchers.IO){
+//                                            delay(100)
+//                                        }
+//                                        withContext(Dispatchers.Main){
+//                                            scrollViewSrc.parent.requestDisallowInterceptTouchEvent(false)
+//                                        }
+//                                    }
+//                                    val constraintLayoutParams = scrollView.layoutParams as ConstraintLayout.LayoutParams
+//                                    constraintLayoutParams.apply setConstraint@ {
+//                                        topToBottom = R.id.text_dialog_v2_title
+//                                        topToTop = ConstraintLayout.LayoutParams.UNSET
+//                                    }
+//                                    scrollView.layoutParams = constraintLayoutParams
+                                }
+                                if (titleTextView.maxLines != titleOridnalyMaxLines) {
+                                    titleTextView.maxLines = titleOridnalyMaxLines
+                                }
+                            }
+                            return@launch
+                        }
+
+                    }
+                }
+            })
+        }
 
         textDialogObj?.setOnCancelListener {
             dismissProcess()
@@ -192,7 +364,6 @@ class TextJsDialogV2(
             textDialogObj: Dialog?,
             bodySrc: String,
             titleMap: Map<String, String>?,
-            titleTextView: AppCompatTextView?,
         ): AppCompatTextView? {
             val onFormat = titleMap?.get(
                 BodyKey.ON_FORMAT.key
@@ -246,15 +417,6 @@ class TextJsDialogV2(
                         return true
                     }
                 })
-                setOnTouchListener { v, _ ->
-                    if(
-                        titleTextView?.maxLines == titleOridnalyMaxLines
-                        ) return@setOnTouchListener false
-                    v.performClick()
-                    titleShowJob?.cancel()
-                    titleTextView?.maxLines = titleOridnalyMaxLines
-                    true
-                }
             }
         }
     }

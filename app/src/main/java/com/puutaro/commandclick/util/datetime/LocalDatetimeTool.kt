@@ -29,6 +29,15 @@ object LocalDatetimeTool {
         return summerVacationDuration.seconds
     }
 
+    fun getDurationMiliSec(
+        start: LocalDateTime,
+        end: LocalDateTime,
+    ): Long {
+        val summerVacationDuration: Duration =
+            Duration.between(start, end) // 期間分の時間を取得する
+        return summerVacationDuration.toMillis()
+    }
+
     fun convertStrToLocalDatetime(
         datetimeStr: String
     ): LocalDateTime {
