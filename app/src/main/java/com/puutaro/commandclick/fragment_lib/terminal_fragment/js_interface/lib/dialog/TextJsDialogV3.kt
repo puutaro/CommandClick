@@ -14,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -39,7 +40,6 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.lang.ref.WeakReference
-import java.time.LocalDateTime
 
 object TextJsDialogV3{
 
@@ -124,10 +124,10 @@ object TextJsDialogV3{
         webViewDialogInstance?.setContentView(
             R.layout.text_dialog_v3_layout,
         )
-        webViewDialogInstance?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
+        val constraintLayout =
+            webViewDialogInstance?.findViewById<ConstraintLayout>(
+                R.id.text_dialog_v3_constraint
+            )
         val titleTextView =
             webViewDialogInstance?.findViewById<AppCompatTextView>(
                 R.id.text_dialog_v3_title
@@ -178,7 +178,10 @@ object TextJsDialogV3{
             pocketWebViewSrc
         }
         webViewDialogInstance?.setOnCancelListener {
-            stopWebView(pocketWebView)
+            stopWebView(
+                constraintLayout,
+                pocketWebView
+            )
         }
         val saveTag = configMap.get(
             TextJsDialogKey.SAVE_TAG.key
@@ -210,6 +213,10 @@ object TextJsDialogV3{
             isLaunch ->
             if(!isLaunch) return
         }
+        webViewDialogInstance?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         webViewDialogInstance?.show()
     }
 
@@ -259,6 +266,7 @@ object TextJsDialogV3{
 
 
     fun stopWebView(
+        constraintLayout: ConstraintLayout?,
         pocketWebView: WebView?,
     ){
         CoroutineScope(Dispatchers.Main).launch {
@@ -270,6 +278,7 @@ object TextJsDialogV3{
                 pocketWebView?.clearCache(true)
                 pocketWebView?.removeAllViews()
                 pocketWebView?.destroy()
+                constraintLayout?.removeAllViews()
                 webViewDialogInstance?.dismiss()
                 webViewDialogInstance = null
             }
