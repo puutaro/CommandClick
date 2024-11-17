@@ -43,7 +43,7 @@ object ListJsDialogV2Script {
             defaultSearchTextKeyValue,
             ).filter {
                 it.trim().isNotEmpty()
-        }.joinToString(String()) {
+        }.joinToString(ListJsDialogV2.listJsDialogMapSeparator.toString()) {
             it.trim()
         }
         val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
