@@ -154,10 +154,6 @@ object TextJsDialogV3{
             val pocketWebViewSrc = webViewDialogInstance?.findViewById<WebView>(
                 R.id.text_dialog_v3_webview
             )
-//        toolbarHideShow(
-//            terminalFragment,
-//            pocketWebViewSrc
-//        )
             HideShow.exec(
                 titleTextView,
                 pocketWebViewSrc,

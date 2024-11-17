@@ -5,7 +5,6 @@ import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TextJsDialogV2.BodyTextViewMaker.separatorList
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
 import com.puutaro.commandclick.util.CcPathTool
@@ -100,6 +99,15 @@ object TxtHtmlDescriber {
             false -> contents
             else -> TextFormater.format(contents)
         }
+        val compHyphen = when(
+            insertContents
+                .replace("\n", String())
+                .trim()
+                .isEmpty()
+        ){
+            true -> "<p>---</p>"
+            else -> String()
+        }
 
 //                .replace("<", "&lt;")
 //                .replace(">", "&gt;")
@@ -135,7 +143,7 @@ object TxtHtmlDescriber {
         </style>
         <body>
         <div id="monitorText">
-        <p>---</p>
+        ${compHyphen}
         <pre>${insertContents}</pre>
         </div>
         </body>
