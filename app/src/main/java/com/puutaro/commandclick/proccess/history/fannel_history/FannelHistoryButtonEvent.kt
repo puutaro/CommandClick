@@ -32,8 +32,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.PreInstallFannel
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2Script
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog.Companion.PromptMapList
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
@@ -987,26 +986,15 @@ private object LongPressManageListDialog {
             ValidFannelNameGetterForTerm.get(
                 terminalFragment
             )
-        val listConfigCon = """
-                ${ListJsDialogV2.ListJsDialogKey.SAVE_TAG.key}=FannelCenterLongPressSetting,
-                ${ListJsDialogV2.ListJsDialogKey.SEARCH_VISIBLE.key}=OFF,
-            """.trimIndent().split("\n").joinToString(String()) {
-            it.trim()
-        }
-        val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-            JsDialog::class.java.simpleName
-        )
         val longPressSelectList = makeLongPressSelectList(
             longPressMenuToIsExistList,
         )
-        val selectLongPressJs = """
-             ${jsDialogStr}.list(
-                  "${File(UsePath.cmdclickDefaultAppDirPath, currentValidFannelName).absolutePath}",
-                  "Select",
-                  `${longPressSelectList}`,
-                  `${listConfigCon}`,
-            );
-        """.trimIndent()
+        val selectLongPressJs = ListJsDialogV2Script.make(
+            currentValidFannelName,
+            "Select",
+            longPressSelectList,
+            saveTag = "FannelCenterLongPressSetting",
+        )
 
         terminalFragment.binding.terminalWebView.evaluateJavascript(
             selectLongPressJs,
@@ -1096,7 +1084,7 @@ private object LongPressManageListDialog {
 
     private fun makeLongPressSelectList(
         longPressMenuToIsExistList: List<Pair<String, Boolean?>>,
-    ): String {
+    ): List<String> {
         val zeroIconName = "zero"
         return longPressMenuToIsExistList.map {
             val menuName = it.first
@@ -1112,8 +1100,8 @@ private object LongPressManageListDialog {
         }.map {
             val menuName = it.first
             val iconStr = it.second
-            "${menuName}${PromptMapList.promptListSeparator}${iconStr}"
-        }.joinToString(PromptWithListDialog.valueSeparator.toString())
+            "${menuName}${PromptMapList.promptListNameToIconSeparator}${iconStr}"
+        }
     }
 }
 

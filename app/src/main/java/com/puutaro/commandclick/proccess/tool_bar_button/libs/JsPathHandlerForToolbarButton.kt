@@ -146,7 +146,7 @@ object JsPathHandlerForToolbarButton {
             -> AppProcessManager.killDialog(
                 fragment,
 //                cmdclickDefaultAppDirPath,
-                currentFannelName
+//                currentFannelName
             )
             MacroForToolbarButton.Macro.USAGE
             -> UsageDialog.launch(

@@ -76,7 +76,7 @@ object LongPressMenuTool {
             val concatListCon = menuList.map {
                 val menuTitle = it.first
                 val menuIconStr = it.second
-                "${menuTitle}${PromptMapList.promptListSeparator}${menuIconStr}"
+                "${menuTitle}${PromptMapList.promptListNameToIconSeparator}${menuIconStr}"
             }.joinToString(PromptWithListDialog.valueSeparator.toString())
             val promptConfigCon = """
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.title.name}=

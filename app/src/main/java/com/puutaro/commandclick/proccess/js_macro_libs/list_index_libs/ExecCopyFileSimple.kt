@@ -1,24 +1,20 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import android.app.Dialog
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ListView
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.isVisible
+import android.webkit.ValueCallback
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2Script
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +25,8 @@ import java.io.File
 object ExecCopyFileSimple {
 
     const val extraMapSeparator = '|'
+    const val nameToIconSeparator =
+        PromptWithListDialog.Companion.PromptMapList.promptListNameToIconSeparator.toString()
 
     fun copy(
         fragment: Fragment,
@@ -66,8 +64,6 @@ object ExecCopyFileSimple {
                 ExtraMapKey.WITH_FILE.key
             ) == withFileOnValue
         }
-
-
     }
 
     private enum class ExtraMapKey(
@@ -88,8 +84,8 @@ object ExecSimpleCopy {
     }
 
     private val dirOrTsvTypePairList = listOf(
-        DirOrTsvType.DIR.type to CmdClickIcons.FOLDA.id,
-        DirOrTsvType.TSV.type to CmdClickIcons.FILE.id,
+        DirOrTsvType.DIR.type to CmdClickIcons.FOLDA.str,
+        DirOrTsvType.TSV.type to CmdClickIcons.FILE.str,
     )
 
     fun execCopy(
@@ -121,6 +117,7 @@ object ExecSimpleCopy {
         if(copyDirOrTsvList.size == 1){
             val selectedDirOrTsvName =
                 makeSelectedDirOrTsvName(copyDirOrTsvList)
+                    ?: return
             ExecCopyToOther.exec(
                 copyDirOrTsvList,
                 selectedDirOrTsvName,
@@ -143,47 +140,47 @@ object ExecSimpleCopy {
     }
 
     private fun makeSelectedDirOrTsvName(
-        copyDirOrTsvList:  List<Pair<String, Int>>
-    ): String {
+        copyDirOrTsvList:  List<String>
+    ): String? {
         val selectedDirOrTsvPath =
-            copyDirOrTsvList.first().first
+            copyDirOrTsvList.first()
+                .split(ExecCopyFileSimple.nameToIconSeparator)
+                .firstOrNull()
+                ?: return null
         return File(selectedDirOrTsvPath).name
     }
 
-    private fun getCurrentItem(
-        editFragment: EditFragment,
-        selectedItem: String,
-    ): String? {
-        return selectedItem
-//        val type = ListIndexEditConfig.getListIndexType(
-//            editFragment
-//        )
-//        return when(type){
-////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-////            -> null
-//            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-//            -> selectedItem
-//            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-//            -> {
-//                val listDirPath = FilePrefixGetter.get(
-//                    editFragment,
-//                    ListIndexAdapter.indexListMap,
-//                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-//                )
-//                File(listDirPath, selectedItem).absolutePath
-//            }
-//        }
-    }
+//    private fun getCurrentItem(
+//        editFragment: EditFragment,
+//        selectedItem: String,
+//    ): String? {
+//        return selectedItem
+////        val type = ListIndexEditConfig.getListIndexType(
+////            editFragment
+////        )
+////        return when(type){
+//////            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+//////            -> null
+////            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+////            -> selectedItem
+////            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+////            -> {
+////                val listDirPath = FilePrefixGetter.get(
+////                    editFragment,
+////                    ListIndexAdapter.indexListMap,
+////                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+////                )
+////                File(listDirPath, selectedItem).absolutePath
+////            }
+////        }
+//    }
     private fun makeCopyDirOrTsvList(
-//        fragment: Fragment,
         copyDirOrTsvPathToTypeCon: String,
-    ): List<Pair<String, Int>> {
-        val defaultDirOrTsvType =
-            makeDefaultDirOrTsvType(
-//                fragment
-            )
+    ): List<String> {
+        val defaultDirOrTsvType = makeDefaultDirOrTsvType()
+        val nameToIconSeparator = ExecCopyFileSimple.nameToIconSeparator
         return copyDirOrTsvPathToTypeCon.split("\n").map {
-            val dirOrTsvPathAndTypeList = it.split("\t")
+            val dirOrTsvPathAndTypeList = it.split(nameToIconSeparator)
             val dirOrTsvPath = dirOrTsvPathAndTypeList.firstOrNull()
                 ?: String()
             val dirOrTsvTypeName =
@@ -193,10 +190,10 @@ object ExecSimpleCopy {
                 dirOrTsvTypeName,
                 defaultDirOrTsvType
             )
-            val iconId = dirOrTsvTypePairList.firstOrNull {
+            val iconStr = dirOrTsvTypePairList.firstOrNull {
                 val type = it.first
                 type == dirOrTsvType
-            }?.second ?: -1
+            }?.second ?: String()
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "copy.txt").absolutePath,
 //                listOf(
@@ -208,10 +205,12 @@ object ExecSimpleCopy {
 //                    "dirOrTsvType: ${dirOrTsvType}",
 //                ).joinToString("\n\n\n")
 //            )
-            dirOrTsvPath to iconId
+            dirOrTsvPath to iconStr
         }.filter {
-            val iconId = it.second
-            iconId > 0
+            val iconStr = it.second
+            iconStr.isNotEmpty()
+        }.map {
+            "${it.first}${nameToIconSeparator}${it.second}"
         }
     }
 
@@ -219,7 +218,7 @@ object ExecSimpleCopy {
         dirOrTsvTypeName: String,
         defaultDirOrTsvType: String
     ): String {
-        return DirOrTsvType.values().firstOrNull {
+        return DirOrTsvType.entries.firstOrNull {
             it.type == dirOrTsvTypeName
         }?.type ?: defaultDirOrTsvType
     }
@@ -241,140 +240,178 @@ object ExecSimpleCopy {
 //        }
     }
 }
-object CopyListDialog {
+private object CopyListDialog {
 
-    private var copyListDialog: Dialog? = null
+//    private var copyListDialog: Dialog? = null
 
     fun launch(
         fragment: Fragment,
-        copyDirOrTsvList: List<Pair<String, Int>>,
+        copyDirOrTsvList: List<String>,
         srcItem: String,
         onWithFile: Boolean,
     ) {
-        val context = fragment.context
-            ?: return
-        copyListDialog = Dialog(
-            context
-        )
-        copyListDialog?.setContentView(
-            R.layout.list_dialog_layout
-        )
-        val title = "Select copy path"
-        copyListDialog?.findViewById<AppCompatTextView>(
-            R.id.list_dialog_title
-        )?.text = title
-        copyListDialog?.findViewById<AppCompatTextView>(
-            R.id.list_dialog_message
-        )?.isVisible = false
-        copyListDialog?.findViewById<AppCompatEditText>(
-            R.id.list_dialog_search_edit_text
-        )?.isVisible = false
-        setListView(
-            fragment,
+        val terminalFragment = when(fragment){
+            is TerminalFragment -> fragment
+            else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                fragment.activity,
+            )
+        } ?: return
+        val currentValidFannelName =
+            ValidFannelNameGetterForTerm.get(
+                terminalFragment
+            )
+        val selectLongPressJs = ListJsDialogV2Script.make(
+            currentValidFannelName,
+            "Select copy path",
             copyDirOrTsvList,
-            srcItem,
-            onWithFile,
+            saveTag = "ExecCopyFileSimple",
         )
-        setCancelListener()
-        copyListDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        copyListDialog
-            ?.window
-            ?.setGravity(Gravity.BOTTOM)
-        copyListDialog?.show()
+
+        terminalFragment.binding.terminalWebView.evaluateJavascript(
+            selectLongPressJs,
+            ValueCallback<String> { selectedDirOrTsvNameSrc ->
+                val selectedDirOrTsvName = QuoteTool.trimBothEdgeQuote(
+                    selectedDirOrTsvNameSrc
+                )
+                if(
+                    selectedDirOrTsvName.isEmpty()
+                ) return@ValueCallback
+                ExecCopyToOther.exec(
+                    copyDirOrTsvList,
+                    selectedDirOrTsvName,
+                    srcItem,
+                    onWithFile,
+                )
+            })
+
+//        copyListDialog = Dialog(
+//            context
+//        )
+//        copyListDialog?.setContentView(
+//            R.layout.list_dialog_layout
+//        )
+//        val title = "Select copy path"
+//        copyListDialog?.findViewById<AppCompatTextView>(
+//            R.id.list_dialog_title
+//        )?.text = title
+//        copyListDialog?.findViewById<AppCompatTextView>(
+//            R.id.list_dialog_message
+//        )?.isVisible = false
+//        copyListDialog?.findViewById<AppCompatEditText>(
+//            R.id.list_dialog_search_edit_text
+//        )?.isVisible = false
+//        setListView(
+//            fragment,
+//            copyDirOrTsvList,
+//            srcItem,
+//            onWithFile,
+//        )
+//        setCancelListener()
+//        copyListDialog?.window?.setLayout(
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+//        copyListDialog
+//            ?.window
+//            ?.setGravity(Gravity.BOTTOM)
+//        copyListDialog?.show()
 
     }
 
-    private fun setCancelListener(
-    ) {
-        val cancelImageButton =
-            copyListDialog?.findViewById<ImageButton>(
-                R.id.list_dialog_cancel
-            )
-        cancelImageButton?.setOnClickListener {
-            copyListDialog?.dismiss()
-            copyListDialog = null
-        }
-        copyListDialog?.setOnCancelListener {
-            copyListDialog?.dismiss()
-            copyListDialog = null
-        }
-    }
+//    private fun setCancelListener(
+//    ) {
+//        val cancelImageButton =
+//            copyListDialog?.findViewById<ImageButton>(
+//                R.id.list_dialog_cancel
+//            )
+//        cancelImageButton?.setOnClickListener {
+//            copyListDialog?.dismiss()
+//            copyListDialog = null
+//        }
+//        copyListDialog?.setOnCancelListener {
+//            copyListDialog?.dismiss()
+//            copyListDialog = null
+//        }
+//    }
 
-    private fun setListView(
-        fragment: Fragment,
-        copyDirOrTsvList: List<Pair<String, Int>>,
-        srcItem: String,
-        onWithFile: Boolean,
-    ) {
-        val context = fragment.context
-            ?: return
-        val copyListView =
-            copyListDialog?.findViewById<ListView>(
-                R.id.list_dialog_list_view
-            )
-        val copyDirOrTsvNameList = copyDirOrTsvList.map {
-            val dirOrTsvPath = it.first
-            val iconId = it.second
-            File(dirOrTsvPath).name to iconId
-        }
-        val copyListAdapter = SubMenuAdapter(
-            context,
-            copyDirOrTsvNameList.toMutableList()
-        )
-        copyListView?.adapter = copyListAdapter
-        copyListItemClickListener(
-            copyListView,
-            srcItem,
-            copyDirOrTsvList,
-            onWithFile,
-        )
-    }
+//    private fun setListView(
+//        fragment: Fragment,
+//        copyDirOrTsvList: List<Pair<String, Int>>,
+//        srcItem: String,
+//        onWithFile: Boolean,
+//    ) {
+//        val context = fragment.context
+//            ?: return
+//        val copyListView =
+//            copyListDialog?.findViewById<ListView>(
+//                R.id.list_dialog_list_view
+//            )
+//        val copyDirOrTsvNameList = copyDirOrTsvList.map {
+//            val dirOrTsvPath = it.first
+//            val iconId = it.second
+//            File(dirOrTsvPath).name to iconId
+//        }
+//        val copyListAdapter = SubMenuAdapter(
+//            context,
+//            copyDirOrTsvNameList.toMutableList()
+//        )
+//        copyListView?.adapter = copyListAdapter
+//        copyListItemClickListener(
+//            copyListView,
+//            srcItem,
+//            copyDirOrTsvList,
+//            onWithFile,
+//        )
+//    }
 
-    private fun copyListItemClickListener(
-        copyListView: ListView?,
-        srcItem: String,
-        copyDirOrTsvList: List<Pair<String, Int>>,
-        onWithFile: Boolean,
-    ) {
-        copyListView?.setOnItemClickListener { parent, view, position, id ->
-            copyListDialog?.dismiss()
-            copyListDialog = null
-            val copyListAdapter = copyListView.adapter as SubMenuAdapter
-            val selectedDirOrTsvName = copyListAdapter.getItem(position)
-                ?: return@setOnItemClickListener
-            ExecCopyToOther.exec(
-                copyDirOrTsvList,
-                selectedDirOrTsvName,
-                srcItem,
-                onWithFile,
-            )
-        }
-    }
+//    private fun copyListItemClickListener(
+//        copyListView: ListView?,
+//        srcItem: String,
+//        copyDirOrTsvList: List<Pair<String, Int>>,
+//        onWithFile: Boolean,
+//    ) {
+//        copyListView?.setOnItemClickListener { parent, view, position, id ->
+//            copyListDialog?.dismiss()
+//            copyListDialog = null
+//            val copyListAdapter = copyListView.adapter as SubMenuAdapter
+//            val selectedDirOrTsvName = copyListAdapter.getItem(position)
+//                ?: return@setOnItemClickListener
+//            ExecCopyToOther.exec(
+//                copyDirOrTsvList,
+//                selectedDirOrTsvName,
+//                srcItem,
+//                onWithFile,
+//            )
+//        }
+//    }
 }
 
 private object ExecCopyToOther {
     fun exec(
-        copyDirOrTsvList: List<Pair<String, Int>>,
+        copyDirOrTsvList: List<String>,
         selectedDirOrTsvName: String,
         srcItem: String,
         onWithFile: Boolean,
     ){
+        val nameToIconSeparator = ExecCopyFileSimple.nameToIconSeparator
         val copyDirOrTsvPathToIconId = copyDirOrTsvList.firstOrNull {
-            val selectedDirOrTsvPath = it.first
+            val selectedDirOrTsvPathToIconStr = it.split(nameToIconSeparator)
+            val selectedDirOrTsvPath = selectedDirOrTsvPathToIconStr.first()
             val isHit =
                 File(selectedDirOrTsvPath).name == selectedDirOrTsvName
             isHit
         }
-        val selectedDirOrTsvPath = copyDirOrTsvPathToIconId?.first
+        val copyDirOrTsvPathToIconIdToIconStr = copyDirOrTsvPathToIconId?.split(nameToIconSeparator)
+        val selectedDirOrTsvPath =
+            copyDirOrTsvPathToIconIdToIconStr
+                ?.firstOrNull()
+                ?: return
+        val iconStr = copyDirOrTsvPathToIconIdToIconStr.getOrNull(1)
             ?: return
-        val iconId = copyDirOrTsvPathToIconId.second
-        val foldaId = CmdClickIcons.FOLDA.id
-        val tsvId = CmdClickIcons.FILE.id
-        when(iconId){
-            foldaId
+        val foldaStr = CmdClickIcons.FOLDA.str
+        val tsvId = CmdClickIcons.FILE.str
+        when(iconStr){
+            foldaStr
             -> copyFileToDir(
                 srcItem,
                 selectedDirOrTsvPath,

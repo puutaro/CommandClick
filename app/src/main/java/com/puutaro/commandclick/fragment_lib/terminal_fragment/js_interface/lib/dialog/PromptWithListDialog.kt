@@ -169,7 +169,7 @@ class PromptWithListDialog(
 
         object PromptMapList {
 
-            const val promptListSeparator = '\t'
+            const val promptListNameToIconSeparator = '\t'
 
             enum class PromptListKey(
                 val key: String
@@ -333,7 +333,7 @@ class PromptWithListDialog(
             }
 
             private fun makeMap(line: String): Map<String, String?> {
-                val titleToIconList = line.split(promptListSeparator)
+                val titleToIconList = line.split(promptListNameToIconSeparator)
                 if(
                     titleToIconList.isEmpty()
                 ) return emptyMap()
@@ -3023,7 +3023,7 @@ class PromptWithListDialog(
                listOf(
                    title,
                    iconStr
-               ).joinToString(PromptMapList.promptListSeparator.toString())
+               ).joinToString(PromptMapList.promptListNameToIconSeparator.toString())
            }.joinToString("\n")
             FileSystems.writeFile(
                 promptListFile.absolutePath,
@@ -3044,7 +3044,7 @@ class PromptWithListDialog(
                     promptListFile.absolutePath
                 ).textToList().map { titleToIconStr ->
                     val titleToIconStrList = titleToIconStr.split(
-                        PromptMapList.promptListSeparator,
+                        PromptMapList.promptListNameToIconSeparator,
                     )
                     val curTitle = titleToIconStrList.firstOrNull() ?: String()
                     val curConStr = titleToIconStrList.getOrNull(1) ?: String()

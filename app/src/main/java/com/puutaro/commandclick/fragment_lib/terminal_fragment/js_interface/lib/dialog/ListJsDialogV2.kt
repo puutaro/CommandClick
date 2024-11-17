@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import com.puutaro.commandclick.util.map.CmdClickMap
 
-    object ListJsDialogV2 {
+object ListJsDialogV2 {
 
     const val listJsDialogMapSeparator = ','
 
@@ -85,4 +85,5 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 //        BACKGROUND_TYPE("backgroundType"),
 //        ON_KEY_OPEN_MODE(PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name),
     }
+
 }

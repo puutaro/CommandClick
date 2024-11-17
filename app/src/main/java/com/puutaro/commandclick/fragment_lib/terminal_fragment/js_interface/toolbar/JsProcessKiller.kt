@@ -32,7 +32,7 @@ class JsProcessKiller(
         AppProcessManager.killDialog(
             terminalFragment,
 //            currentAppDirPath,
-            fannelName
+//            fannelName
         )
     }
 }
