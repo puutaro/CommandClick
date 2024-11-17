@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.history.libs
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.LogSystems

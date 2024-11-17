@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -164,8 +166,11 @@ object ExecSimpleDelete {
             val message = selectedItemMap.get(
                 ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
             ) ?: String()
+            val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                JsDialog::class.java.simpleName
+            )
             val confirmScript = """
-                jsDialog.confirm(
+                ${jsDialogStr}.confirm(
                     "Delete ok?",
                     "$message",
                 );

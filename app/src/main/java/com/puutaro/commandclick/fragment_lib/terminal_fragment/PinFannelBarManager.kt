@@ -14,6 +14,8 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.PinFannelAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
 import com.puutaro.commandclick.util.FactFannel
@@ -271,8 +273,11 @@ object PinFannelBarManager {
                 )
             } ?: return
             val message = SystemFannel.convertDisplayNameToFannelName(fannelName)
+            val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                JsDialog::class.java.simpleName
+            )
             val confirmScript = """
-                jsDialog.confirm(
+                ${jsDialogStr}.confirm(
                     "Delete pin ok?",
                     "${message}",
                 );

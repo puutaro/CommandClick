@@ -38,8 +38,9 @@ import java.io.File
 class PromptListAdapter(
     val context: Context?,
     var prompMapList: MutableList<Map<String, String?>>,
-    private val isWhiteBackgrond: Boolean,
     private val focusItemTitleList: List<String>?,
+    private val isWhiteBackgrond: Boolean,
+    private val disableIconRotate: Boolean,
 ): RecyclerView.Adapter<PromptListAdapter.PromptListViewHolder>() {
 
     class PromptListViewHolder(val view: View): RecyclerView.ViewHolder(view) {
@@ -182,10 +183,14 @@ class PromptListAdapter(
 
                     val nextRotate = rotateList.random().toFloat()
                     val curRotation = holder.promptListAdapterTitleBk.rotation
-                    val nextRotaionAngle = when(curRotation % 45f == 0f){
-                        true -> nextRotate
-                        else -> 45f + nextRotate
-                    }
+                    val nextRotaionAngle =
+                        when(disableIconRotate) {
+                            false -> 0f
+                            else -> {
+                                if (curRotation % 45f == 0f) nextRotate
+                                else 45f + nextRotate
+                            }
+                        }
                     holder.promptListAdapterTitleBk.rotation = nextRotaionAngle
                 }
                 val byteArray = withContext(Dispatchers.IO) {
@@ -214,10 +219,14 @@ class PromptListAdapter(
                 val promptListAdapterThumbnail = holder.promptListAdapterThumnail
                 val curRotation = promptListAdapterThumbnail.rotation
                 val nextRotate = rotateList.random().toFloat()
-                when(curRotation % 45f == 0f){
-                    true -> promptListAdapterThumbnail.rotation = nextRotate
-                    else -> promptListAdapterThumbnail.rotation = 45f + nextRotate
+                val nextRotaionAngle = when(disableIconRotate) {
+                    false -> 0f
+                    else -> {
+                        if (curRotation % 45f == 0f) nextRotate
+                        else 45f + nextRotate
+                    }
                 }
+                promptListAdapterThumbnail.rotation = nextRotaionAngle
                 val logoViewContext = promptListAdapterThumbnail.context
                 val requestBuilder: RequestBuilder<Drawable> =
                     Glide.with(logoViewContext)

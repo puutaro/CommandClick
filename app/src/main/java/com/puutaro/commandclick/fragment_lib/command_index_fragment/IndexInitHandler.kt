@@ -9,7 +9,6 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigF
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.UrlLaunchIntentAction
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool

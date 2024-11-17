@@ -9,11 +9,8 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.webkit.ValueCallback
-import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,15 +22,21 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelManageAdapter
-import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.PreInstallFannel
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog.Companion.PromptMapList
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.HistoryCaptureTool
@@ -51,6 +54,7 @@ import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.FannelSettingMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -182,7 +186,7 @@ object FannelHistoryButtonEvent {
             fannelManageListAdapter,
         )
         setFannelManageListViewOnLongPressItemClickListener(
-            context,
+            fragment,
             fannelManageListAdapter,
         )
     }
@@ -546,9 +550,11 @@ object FannelHistoryButtonEvent {
     }
 
     private fun setFannelManageListViewOnLongPressItemClickListener(
-        context: Context?,
+        fragment: Fragment,
         fannelManageListAdapter: FannelManageAdapter,
     ) {
+        val context = fragment.context
+            ?: return
         fannelManageListAdapter.longPressItemClickListener = object: FannelManageAdapter.OnLongPressItemClickListener {
             override fun onItemClick(holder: FannelManageAdapter.FannelManageViewHolder) {
                 val position = holder.bindingAdapterPosition
@@ -607,7 +613,7 @@ object FannelHistoryButtonEvent {
                     it.second != null
                 }
                 LongPressManageListDialog.handle(
-                    context,
+                    fragment,
                     fannelName,
                     menuNameToEnableList,
 
@@ -805,8 +811,11 @@ object FannelHistoryButtonEvent {
                 else -> "Init ok?"
             }
             val message = SystemFannel.convertDisplayNameToFannelName(fannelName)
+            val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                JsDialog::class.java.simpleName
+            )
             val confirmScript = """
-                jsDialog.confirm(
+                ${jsDialogStr}.confirm(
                     "$confirmTitle",
                     "$message",
                 );
@@ -945,7 +954,6 @@ object FannelHistoryButtonEvent {
                 settingImageDirPath,
             )
         }
-
     }
 
 
@@ -963,168 +971,149 @@ object FannelHistoryButtonEvent {
 
 private object LongPressManageListDialog {
 
-    private var longPressMenuManageDialog: Dialog? = null
+//    private var longPressMenuManageDialog: Dialog? = null
     fun handle(
-        context: Context?,
+        fragment: Fragment?,
         fannelName: String,
         longPressMenuToIsExistList: List<Pair<String, Boolean?>>
     ){
-        if(context == null)  return
-
-        longPressMenuManageDialog = Dialog(
-            context,
-        )
-        longPressMenuManageDialog?.setContentView(
-            R.layout.list_dialog_layout
-        )
-        val listDialogTitle = longPressMenuManageDialog?.findViewById<AppCompatTextView>(
-            R.id.list_dialog_title
-        )
-        listDialogTitle?.text = "Select"
-        val listDialogMessage = longPressMenuManageDialog?.findViewById<AppCompatTextView>(
-            R.id.list_dialog_message
-        )
-        listDialogMessage?.isVisible = false
-        val listDialogSearchEditText = longPressMenuManageDialog?.findViewById<AppCompatEditText>(
-            R.id.list_dialog_search_edit_text
-        )
-        listDialogSearchEditText?.isVisible = false
-        val cancelButton = longPressMenuManageDialog?.findViewById<AppCompatImageButton>(
-            R.id.list_dialog_cancel
-        )
-        cancelButton?.setOnClickListener {
-            longPressMenuManageDialog?.dismiss()
-            longPressMenuManageDialog = null
+        val terminalFragment = when(fragment){
+            is TerminalFragment -> fragment
+            else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                fragment?.activity,
+            )
+        } ?: return
+        val currentValidFannelName =
+            ValidFannelNameGetterForTerm.get(
+                terminalFragment
+            )
+        val listConfigCon = """
+                ${ListJsDialogV2.ListJsDialogKey.SAVE_TAG.key}=FannelCenterLongPressSetting,
+                ${ListJsDialogV2.ListJsDialogKey.SEARCH_VISIBLE.key}=OFF,
+            """.trimIndent().split("\n").joinToString(String()) {
+            it.trim()
         }
-        setListView(
-            context,
-            fannelName,
-            longPressMenuToIsExistList
+        val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+            JsDialog::class.java.simpleName
         )
+        val longPressSelectList = makeLongPressSelectList(
+            longPressMenuToIsExistList,
+        )
+        val selectLongPressJs = """
+             ${jsDialogStr}.list(
+                  "${File(UsePath.cmdclickDefaultAppDirPath, currentValidFannelName).absolutePath}",
+                  "Select",
+                  `${longPressSelectList}`,
+                  `${listConfigCon}`,
+            );
+        """.trimIndent()
 
-        longPressMenuManageDialog?.setOnCancelListener {
-            longPressMenuManageDialog?.dismiss()
-            longPressMenuManageDialog = null
-        }
-        longPressMenuManageDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        longPressMenuManageDialog?.window?.setGravity(Gravity.BOTTOM)
-        longPressMenuManageDialog?.show()
+        terminalFragment.binding.terminalWebView.evaluateJavascript(
+            selectLongPressJs,
+            ValueCallback<String> { selectedMenuNameStrWithPrefixSrc ->
+                val selectedMenuNameStrWithPrefix = QuoteTool.trimBothEdgeQuote(
+                    selectedMenuNameStrWithPrefixSrc
+                )
+                if(
+                    selectedMenuNameStrWithPrefix.isEmpty()
+                ) return@ValueCallback
+                val updateLongPressMenuToIsExistList = makeUpdateLongPressMenuToIsExistList(
+                    fannelName,
+                    selectedMenuNameStrWithPrefix,
+                    longPressMenuToIsExistList,
+                ) ?: return@ValueCallback
+                handle(
+                    fragment,
+                    fannelName,
+                    updateLongPressMenuToIsExistList,
+                )
+            })
     }
 
-    private fun setListView(
-        context: Context,
+    fun makeUpdateLongPressMenuToIsExistList(
         fannelName: String,
-        longPressMenuToIsExistList: List<Pair<String, Boolean?>>,
-    ) {
+        selectedMenuNameStrWithPrefix: String,
+        longPressMenuToIsExistList: List<Pair<String, Boolean?>>
+    ): List<Pair<String, Boolean?>>? {
+        val menuNameToExist = longPressMenuToIsExistList.firstOrNull {
+            it.first == selectedMenuNameStrWithPrefix
+        } ?: return null
+        val menuNameStr = menuNameToExist.first
+        val longPressMenuName = LongPressMenuName.entries.firstOrNull {
+            menuNameStr.split(" ").filterIndexed {
+                    index, _ -> index > 0
+            }.joinToString(
+                " "
+            ) == it.menu
+        }
+        val menuPathSrc = menuNameToMenuPathMap.get(longPressMenuName)
+            ?: return null
+        val menuPath = ScriptPreWordReplacer.replace(
+            menuPathSrc,
+            SystemFannel.preference,
+        )
+        val menuConList = ReadText(menuPath).textToList()
+        val updateLongPressMenuToIsExistList = when(menuNameToExist.second){
+            null -> longPressMenuToIsExistList
+            true -> {
+                val removedLongPressMenuList = menuConList.filter {
+                    it != fannelName
+                }
+                FileSystems.writeFile(
+                    menuPath,
+                    removedLongPressMenuList.joinToString("\n")
+                )
+                longPressMenuToIsExistList.map {
+                    val curMenuNameStr = it.first
+                    if(
+                        curMenuNameStr != menuNameStr
+                    ) return@map it
+                    val add = LongPressMenuPrefix.ADD
+                    add.prefix + longPressMenuName?.menu to false
+                }
+            }
+            else -> {
+                val addedLongPressMenuList = listOf(fannelName) + menuConList.filter {
+                    it != fannelName
+                }
+                FileSystems.writeFile(
+                    menuPath,
+                    addedLongPressMenuList.joinToString("\n")
+                )
+                longPressMenuToIsExistList.map {
+                    val curMenuNameStr = it.first
+                    if(
+                        curMenuNameStr != menuNameStr
+                    ) return@map it
+                    val remove = LongPressMenuPrefix.REMOVE
+                    remove.prefix + longPressMenuName?.menu to true
+                }
+            }
+        }
+        return updateLongPressMenuToIsExistList
+    }
 
-        val subMenuListView =
-            longPressMenuManageDialog?.findViewById<ListView>(
-                R.id.list_dialog_list_view
-            ) ?: return
-        val zeroIcon = R.drawable.icons8_wheel
-        val longPressMenuList = longPressMenuToIsExistList.map {
+
+    private fun makeLongPressSelectList(
+        longPressMenuToIsExistList: List<Pair<String, Boolean?>>,
+    ): String {
+        val zeroIconName = "zero"
+        return longPressMenuToIsExistList.map {
             val menuName = it.first
             val isExist = it.second
-            val icon = when(isExist){
-                null -> LongPressMenuPrefix.ZERO.simbol
-                true -> LongPressMenuPrefix.REMOVE.simbol
-                false -> LongPressMenuPrefix.ADD.simbol
+            val iconStr = when(isExist){
+                null -> zeroIconName
+                true -> CmdClickIcons.MINUS.str
+                false -> CmdClickIcons.PLUS.str
             }
-            menuName to icon
+            menuName to iconStr
         }.filter {
-            it.second != zeroIcon
-        }
-        val subMenuAdapter = SubMenuAdapter(
-            context,
-            longPressMenuList.toMutableList()
-        )
-        subMenuListView.adapter = subMenuAdapter
-        invokeItemSetClickListenerForLanguageType(
-            context,
-            subMenuListView,
-            fannelName,
-            longPressMenuToIsExistList
-        )
-    }
-
-    private fun invokeItemSetClickListenerForLanguageType(
-        context: Context,
-        subMenuListView: ListView,
-        fannelName: String,
-        longPressMenuToIsExistList: List<Pair<String, Boolean?>>,
-    ){
-        subMenuListView.setOnItemClickListener {
-                parent, View, pos, id
-            ->
-            val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
-            val selectedMenuNameStrWithPrefix = menuListAdapter.getItem(pos)
-                ?: return@setOnItemClickListener
-            val menuNameToExist = longPressMenuToIsExistList.firstOrNull {
-                it.first == selectedMenuNameStrWithPrefix
-            } ?: return@setOnItemClickListener
-            val menuNameStr = menuNameToExist.first
-            val longPressMenuName = LongPressMenuName.entries.firstOrNull {
-                menuNameStr.split(" ").filterIndexed {
-                        index, _ -> index > 0
-                }.joinToString(
-                    " "
-                ) == it.menu
-            }
-            val menuPathSrc = menuNameToMenuPathMap.get(longPressMenuName)
-                ?: return@setOnItemClickListener
-            val menuPath = ScriptPreWordReplacer.replace(
-                menuPathSrc,
-                SystemFannel.preference,
-            )
-            val menuConList = ReadText(menuPath).textToList()
-            val updateLongPressMenuToIsExistList = when(menuNameToExist.second){
-                null -> longPressMenuToIsExistList
-                true -> {
-                    val removedLongPressMenuList = menuConList.filter {
-                        it != fannelName
-                    }
-                    FileSystems.writeFile(
-                        menuPath,
-                        removedLongPressMenuList.joinToString("\n")
-                    )
-                    longPressMenuToIsExistList.map {
-                        val curMenuNameStr = it.first
-                        if(
-                            curMenuNameStr != menuNameStr
-                        ) return@map it
-                        val add = LongPressMenuPrefix.ADD
-                        add.prefix + longPressMenuName?.menu to false
-                    }
-                }
-                else -> {
-                    val addedLongPressMenuList = listOf(fannelName) + menuConList.filter {
-                        it != fannelName
-                    }
-                    FileSystems.writeFile(
-                        menuPath,
-                        addedLongPressMenuList.joinToString("\n")
-                    )
-                    longPressMenuToIsExistList.map {
-                        val curMenuNameStr = it.first
-                        if(
-                            curMenuNameStr != menuNameStr
-                        ) return@map it
-                        val remove = LongPressMenuPrefix.REMOVE
-                        remove.prefix + longPressMenuName?.menu to true
-                    }
-                }
-            }
-            longPressMenuManageDialog?.dismiss()
-            longPressMenuManageDialog = null
-            handle(
-                context,
-                fannelName,
-                updateLongPressMenuToIsExistList,
-            )
-        }
+            it.second != zeroIconName
+        }.map {
+            val menuName = it.first
+            val iconStr = it.second
+            "${menuName}${PromptMapList.promptListSeparator}${iconStr}"
+        }.joinToString(PromptWithListDialog.valueSeparator.toString())
     }
 }
 

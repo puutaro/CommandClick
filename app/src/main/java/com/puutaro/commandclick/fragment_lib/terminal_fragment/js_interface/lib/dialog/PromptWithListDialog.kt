@@ -41,8 +41,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
-import androidx.core.view.marginEnd
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -150,6 +148,7 @@ class PromptWithListDialog(
             limit,
             disableUpdate,
             focusItemTitles,
+            onIconRotate,
         }
 
         enum class PromptExtraKey {
@@ -661,11 +660,15 @@ class PromptWithListDialog(
                 )
             }
             val promptListAdapter = withContext(Dispatchers.IO) {
+                val onIconRotate = promptListMap.get(
+                    PromptListVars.onIconRotate.name
+                ) == switchOn
                 PromptListAdapter(
                     context,
                     promptList,
-                    isWhiteBackground,
                     focusItemTitlesList,
+                    isWhiteBackground,
+                    onIconRotate
                 )
             }
             withContext(Dispatchers.Main) {

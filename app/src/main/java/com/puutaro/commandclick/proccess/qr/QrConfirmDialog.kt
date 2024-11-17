@@ -5,6 +5,8 @@ import android.webkit.ValueCallback
 import androidx.fragment.app.Fragment
 import com.budiyev.android.codescanner.CodeScanner
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,8 +44,11 @@ object QrConfirmDialog {
         val displayBody = qrDecodeMap.get(
             QrDecodedTitle.QrDecodeKey.DISPLAY_BODY
         ) ?: return
+        val jsDialogStr = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+            JsDialog::class.java.simpleName
+        )
         val confirmScript = """
-                jsDialog.confirm(
+                ${jsDialogStr}.confirm(
                     "$displayTitle",
                     "${displayBody}",
                 );
