@@ -1,30 +1,19 @@
 package com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.res.CmdClickColor
-import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
-import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import java.io.File
 
 

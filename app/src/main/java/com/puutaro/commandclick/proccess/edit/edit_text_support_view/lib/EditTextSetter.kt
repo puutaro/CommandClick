@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.text.InputType
 import android.util.TypedValue
 import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,7 +11,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -173,7 +172,7 @@ private object EditTextMaker {
         val extraRepValMap = repValMap + mapOf(
             "\${currentVariableValue}"
                     to (currentVariableValue ?: String()),
-            SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText
+            SearchBoxSettingsForEditList.backstackCountMarkForInsertEditText
                     to TitleImageAndViewSetter.makeBackstackCount(fragment).toString()
         )
         val busyboxExecutor = when(fragment){

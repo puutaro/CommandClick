@@ -6,7 +6,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.file.MapListFileRenamer
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -47,7 +47,7 @@ object EditTextAndMapListForTerm {
         ) {
             val editComponentListAdapter =
                 editListRecyclerView.adapter as EditComponentListAdapter
-            val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
+            val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator
             val selectedLineMap =
                 editComponentListAdapter.lineMapList.getOrNull(
                     listIndexPosition
@@ -56,7 +56,7 @@ object EditTextAndMapListForTerm {
                 editComponentListAdapter.fannelInfoMap,
                 editComponentListAdapter.setReplaceVariableMap,
                 editComponentListAdapter.editListMap,
-                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
+                ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             ) ?: String()
             val isExist = ReadText(
                 mapListPath

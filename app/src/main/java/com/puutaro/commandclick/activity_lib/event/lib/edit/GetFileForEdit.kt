@@ -7,11 +7,11 @@ import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variant.RequestCode
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
@@ -206,8 +206,8 @@ class GetFileForEdit(
         val sourceScriptFilePathObj = File(sourceFilePath)
         val sourceScriptName = sourceScriptFilePathObj.name
         val insertLineMap = mapOf(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to sourceScriptName,
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to sourceFilePath,
+            ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key to sourceScriptName,
+            ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key to sourceFilePath,
         )
         ExecAddForEditListAdapter.execAddForEditList(
             fragment.context,

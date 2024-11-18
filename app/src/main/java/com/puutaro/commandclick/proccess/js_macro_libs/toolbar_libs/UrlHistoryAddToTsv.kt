@@ -11,13 +11,13 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
@@ -184,8 +184,8 @@ object UrlHistoryAddToTsv {
                 val title = titleAndConList.firstOrNull() ?: return@setOnItemClickListener
                 val con = titleAndConList.getOrNull(1) ?: return@setOnItemClickListener
                 mapOf(
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to title,
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to con
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key to title,
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key to con
                 )
             } ?: return@setOnItemClickListener
             ExecAddForEditListAdapter.execAddForEditList(

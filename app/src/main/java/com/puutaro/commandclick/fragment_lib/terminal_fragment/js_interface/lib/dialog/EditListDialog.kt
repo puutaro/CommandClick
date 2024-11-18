@@ -33,12 +33,12 @@ class EditListDialog(
 ) {
     fun create(
         fannelInfoCon: String,
-        listIndexConfigPath: String,
+        editListConfigPath: String,
     ){
         CoroutineScope(Dispatchers.Main).launch {
             execCreate(
                 fannelInfoCon,
-                listIndexConfigPath,
+                editListConfigPath,
             )
         }
 
@@ -46,7 +46,7 @@ class EditListDialog(
 
     fun execCreate(
         fannelInfoCon: String,
-        listIndexConfigPath: String,
+        editListConfigPath: String,
     ){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
@@ -109,14 +109,14 @@ class EditListDialog(
             settingVariableList,
             mainFannelFile.name
         )
-        val virtualSettingValsListForListIndex = listOf(
+        val virtualSettingValsListForEditList = listOf(
             CommandClickScriptVariable.SETTING_SEC_START,
-            "${CommandClickScriptVariable.LIST_INDEX_CONFIG}=${EditSettings.filePrefix}${listIndexConfigPath}",
+            "${CommandClickScriptVariable.EDIT_LIST_CONFIG}=${EditSettings.filePrefix}${editListConfigPath}",
             CommandClickScriptVariable.SETTING_SEC_END,
         )
-        val listIndexConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
-            CommandClickScriptVariable.LIST_INDEX_CONFIG,
-            virtualSettingValsListForListIndex,
+        val editListConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            CommandClickScriptVariable.EDIT_LIST_CONFIG,
+            virtualSettingValsListForEditList,
             fannelInfoMap,
             setReplaceVariableMap,
             String()
@@ -126,7 +126,7 @@ class EditListDialog(
             fannelInfoMap,
             setReplaceVariableMap,
             terminalFragment.busyboxExecutor,
-            listIndexConfigMap,
+            editListConfigMap,
             editListTitleView,
             editListTitleImage,
             editListRecyclerView,

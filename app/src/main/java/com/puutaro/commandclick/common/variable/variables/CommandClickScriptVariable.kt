@@ -59,7 +59,7 @@ object CommandClickScriptVariable {
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
     val EXTRA_BUTTON_CONFIG = "extraButtonConfig"
-    val LIST_INDEX_CONFIG = "listIndexConfig"
+    val EDIT_LIST_CONFIG = "editListConfig"
 //    val QR_DIALOG_CONFIG = "qrDialogConfig"
 //    val HIDE_SETTING_VARIABLES = "hideSettingVariables"
 //    val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
@@ -123,7 +123,7 @@ object CommandClickScriptVariable {
         EDIT_BUTTON_CONFIG,
         EXTRA_BUTTON_CONFIG,
         SETTING_BUTTON_CONFIG,
-        LIST_INDEX_CONFIG,
+        EDIT_LIST_CONFIG,
 //        QR_DIALOG_CONFIG,
 //        NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,

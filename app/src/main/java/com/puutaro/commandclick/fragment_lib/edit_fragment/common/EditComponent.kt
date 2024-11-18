@@ -42,7 +42,7 @@ object EditComponent {
                                         SrcReplaceHolders.SRC_IMAGE.key,
                                         srcImage
                                 ).replace(
-                                        SrcReplaceHolders.LIST_INDEX_POSITION.key,
+                                        SrcReplaceHolders.EDIT_LIST_POSITION.key,
                                         srcPosition.toString()
                                 )
 
@@ -53,7 +53,7 @@ object EditComponent {
                                 SRC_TITLE("\${SRC_TITLE}"),
                                 SRC_CON("\${SRC_CON}"),
                                 SRC_IMAGE("\${SRC_IMAGE}"),
-                                LIST_INDEX_POSITION("\${LIST_INDEX_POSITION}"),
+                                EDIT_LIST_POSITION("\${EDIT_LIST_POSITION}"),
                                 SRC_STR("\${SRC_STR}"),
                                 SETTING_VALUE("\${SETTING_VALUE}"),
                         }

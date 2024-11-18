@@ -71,8 +71,8 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.EDIT_EXECUTE,
             CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
         )
-        editFragment.listIndexConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
-            CommandClickScriptVariable.LIST_INDEX_CONFIG,
+        editFragment.editListConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            CommandClickScriptVariable.EDIT_LIST_CONFIG,
             settingVariableList,
             fannelInfoMap,
             setReplaceVariableMap,

@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecReWriteForListIndexAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecReWriteForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListIndexDuplicate
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.CcPathTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +80,7 @@ object MapListFileRenamer {
 //            TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                ?: return
         val fileNameOrSrcTitle = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
         )
 //            titleFileNameAndPathConPair.first
 
@@ -150,7 +150,7 @@ object MapListFileRenamer {
 //            val titleFileNameAndPathConPair =
 //                TitleFileNameAndPathConPairForListIndexAdapter.get(lineMap)
 //                    ?: return
-            val srcTitleKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            val srcTitleKey = ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
             val fileNameOrTitle = lineMap.get(
                 srcTitleKey
             ) ?: String()
@@ -163,7 +163,7 @@ object MapListFileRenamer {
             if (
                 fileNameOrTitle == renamedFileNameOrTitle
             ) return
-            val srcConKey = ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+            val srcConKey = ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
             val filePathOrCon = lineMap.get(
                 srcConKey
             ) ?: String()
@@ -188,7 +188,7 @@ object MapListFileRenamer {
                     isDetect
                 ) return
             }
-            val viewLayoutPathKey = ListSettingsForListIndex.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
+            val viewLayoutPathKey = ListSettingsForEditList.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
             val renameLineMap = mapOf(
                 srcTitleKey to renamedFileNameOrTitle,
                 srcConKey to renameFilePathOrCon,

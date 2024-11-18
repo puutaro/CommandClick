@@ -1,10 +1,5 @@
 package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
-import com.puutaro.commandclick.proccess.qr.QrDialogConfig
-import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.ClickSettingsForQrDialog
-
 object QrDialogClickHandler {
 //    fun handle(
 //        isLongClick: Boolean,

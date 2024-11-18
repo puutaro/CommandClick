@@ -22,10 +22,10 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
-import com.puutaro.commandclick.proccess.list_index_for_edit.EditFrameMaker
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.EditListConfig
+import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
@@ -49,12 +49,12 @@ class EditComponentListAdapter(
     private val fragment: Fragment?,
     val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
-    val listIndexConfigMap: Map<String, String>?,
+    val editListConfigMap: Map<String, String>?,
     val busyboxExecutor: BusyboxExecutor?,
     val editListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
     var fannelContentsList: List<String>?,
-): RecyclerView.Adapter<EditComponentListAdapter.ListIndexListViewHolder>()
+): RecyclerView.Adapter<EditComponentListAdapter.EditListViewHolder>()
 {
     private val context = fragment?.context
     private val maxTakeSize = 150
@@ -81,11 +81,11 @@ class EditComponentListAdapter(
 //    private val clickConfigMap = ClickSettingsForListIndex.makeClickConfigMap(
 //        listIndexConfigMap
 //    )
-    private val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
-        listIndexConfigMap
+    private val layoutConfigMap = LayoutSettingsForEditList.getLayoutConfigMap(
+        editListConfigMap
     )
     private val layoutMargin = layoutConfigMap.get(
-        LayoutSettingsForListIndex.LayoutSettingKey.MARGIN.key
+        LayoutSettingsForEditList.LayoutSettingKey.MARGIN.key
     ).let {
         try{
             it?.toInt()?.let {
@@ -99,7 +99,7 @@ class EditComponentListAdapter(
         }
     }
     private val layoutElevation = layoutConfigMap.get(
-        LayoutSettingsForListIndex.LayoutSettingKey.ELEVATION.key
+        LayoutSettingsForEditList.LayoutSettingKey.ELEVATION.key
     ).let {
         try{
             it?.toFloat()?.let {
@@ -129,13 +129,13 @@ class EditComponentListAdapter(
         val totalSettingValsMap = curSettingValsMap + curCmdValsMap
         return totalSettingValsMap.get(settingValName)
     }
-    private val viewLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
+    private val viewLayoutPath = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutPath(
         fannelInfoMap,
         setReplaceVariableMap,
         editListMap,
-        ListSettingsForListIndex.ListSettingKey.VIEW_LAYOUT_PATH.key,
+        ListSettingsForEditList.ListSettingKey.VIEW_LAYOUT_PATH.key,
     )
-    private val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
+    private val frameMapListToLinearMapList = ListSettingsForEditList.ViewLayoutPathManager.parse(
         fannelInfoMap,
         setReplaceVariableMap,
         viewLayoutPath
@@ -153,7 +153,7 @@ class EditComponentListAdapter(
         }
     }
 
-    class ListIndexListViewHolder(
+    class EditListViewHolder(
         val view: View
     ): RecyclerView.ViewHolder(view) {
         val materialCardView =
@@ -174,14 +174,14 @@ class EditComponentListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ListIndexListViewHolder {
+    ): EditListViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(
             com.puutaro.commandclick.R.layout.list_index_edit_adapter_layout,
             parent,
             false
         )
-        return ListIndexListViewHolder(
+        return EditListViewHolder(
             itemView
         )
     }
@@ -204,34 +204,34 @@ class EditComponentListAdapter(
     }
 
     override fun onBindViewHolder(
-        holder: ListIndexListViewHolder,
-        listIndexPosition: Int
+        holder: EditListViewHolder,
+        editListPosition: Int
     ) {
         if(
             context == null
         ) return
         if(
-            listIndexPosition > listLimitSize
+            editListPosition > listLimitSize
         ) return
-        initListProperty(listIndexPosition)
-        val lineMap = lineMapList[listIndexPosition]
+        initListProperty(editListPosition)
+        val lineMap = lineMapList[editListPosition]
         holder.srcTitle = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+            ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
         ) ?: String()
         holder.srcCon = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+            ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
         ) ?: String()
         holder.srcImage = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_IMAGE.key
+            ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
         ) ?: String()
         val frameTag = lineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
+            ListSettingsForEditList.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
         ).let {
             if(
                 !it.isNullOrEmpty()
             ) return@let it
             editListMap.get(
-                ListSettingsForListIndex.ListSettingKey.DEFAULT_FRAME_TAG.key
+                ListSettingsForEditList.ListSettingKey.DEFAULT_FRAME_TAG.key
             )
         }
         if(
@@ -342,7 +342,7 @@ class EditComponentListAdapter(
                                             editAdapterTouchDownListener?.onEditAdapterTouchDown(
                                                 frameFrameLayout,
                                                 holder,
-                                                listIndexPosition
+                                                editListPosition
                                             )
                                         }
                                         android.view.MotionEvent.ACTION_UP,
@@ -351,7 +351,7 @@ class EditComponentListAdapter(
                                             editAdapterTouchUpListener?.onEditAdapterTouchUp(
                                                 frameFrameLayout,
                                                 holder,
-                                                listIndexPosition
+                                                editListPosition
                                             )
                                             v.performClick()
                                         }
@@ -363,7 +363,7 @@ class EditComponentListAdapter(
                                 editAdapterClickListener?.onEditAdapterClick(
                                     frameFrameLayout,
                                     holder,
-                                    listIndexPosition,
+                                    editListPosition,
                                 )
                             }
                         }
@@ -482,7 +482,7 @@ class EditComponentListAdapter(
                                                             editAdapterTouchDownListener?.onEditAdapterTouchDown(
                                                                 linearFrameLayout,
                                                                 holder,
-                                                                listIndexPosition
+                                                                editListPosition
                                                             )
                                                         }
                                                         android.view.MotionEvent.ACTION_UP,
@@ -491,7 +491,7 @@ class EditComponentListAdapter(
                                                             editAdapterTouchUpListener?.onEditAdapterTouchUp(
                                                                 linearFrameLayout,
                                                                 holder,
-                                                                listIndexPosition
+                                                                editListPosition
                                                             )
                                                             v.performClick()
                                                         }
@@ -503,7 +503,7 @@ class EditComponentListAdapter(
                                             editAdapterClickListener?.onEditAdapterClick(
                                                 linearFrameLayout,
                                                 holder,
-                                                listIndexPosition,
+                                                editListPosition,
                                             )
                                         }
                                 }
@@ -523,7 +523,7 @@ class EditComponentListAdapter(
                     editAdapterClickListener?.onEditAdapterClick(
                         itemView,
                         holder,
-                        listIndexPosition,
+                        editListPosition,
                     )
                 }
             }
@@ -535,8 +535,8 @@ class EditComponentListAdapter(
     interface OnEditAdapterClickListener {
         fun onEditAdapterClick(
             itemView: View,
-            holder: ListIndexListViewHolder,
-            listIndexPosition: Int,
+            holder: EditListViewHolder,
+            editListPosition: Int,
         )
     }
 
@@ -544,8 +544,8 @@ class EditComponentListAdapter(
     interface OnEditAdapterTouchDownListener {
         fun onEditAdapterTouchDown(
             itemView: View,
-            holder: ListIndexListViewHolder,
-            listIndexPosition: Int,
+            holder: EditListViewHolder,
+            editListPosition: Int,
         )
     }
 
@@ -553,8 +553,8 @@ class EditComponentListAdapter(
     interface OnEditAdapterTouchUpListener {
         fun onEditAdapterTouchUp(
             itemView: View,
-            holder: ListIndexListViewHolder,
-            listIndexPosition: Int,
+            holder: EditListViewHolder,
+            editListPosition: Int,
         )
     }
 
@@ -598,7 +598,7 @@ class EditComponentListAdapter(
                 || fragment == null
             ) return
             val enableClickUpdate =
-                LayoutSettingsForListIndex.howClickUpdate(
+                LayoutSettingsForEditList.howClickUpdate(
                     fannelInfoMap,
                     setReplaceVariableMap,
                     layoutConfigMap
@@ -634,17 +634,17 @@ class EditComponentListAdapter(
 //            lineMapList: List<Map<String, String>>,
             bindingAdapterPosition: Int,
         ) {
-            val sortType = ListSettingsForListIndex.getSortType(
+            val sortType = ListSettingsForEditList.getSortType(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 indexListMap
             )
             when (sortType) {
-                ListSettingsForListIndex.SortByKey.SORT,
-                ListSettingsForListIndex.SortByKey.REVERSE
+                ListSettingsForEditList.SortByKey.SORT,
+                ListSettingsForEditList.SortByKey.REVERSE
                 -> return
 
-                ListSettingsForListIndex.SortByKey.LAST_UPDATE,
+                ListSettingsForEditList.SortByKey.LAST_UPDATE,
                 -> {
                 }
             }
@@ -657,7 +657,7 @@ class EditComponentListAdapter(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 indexListMap,
-                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
+                ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             )
             MapListFileTool.insertMapFileInFirst(
                 mapListPath,
@@ -832,7 +832,7 @@ class EditComponentListAdapter(
         fileName: String,
     ): List<String> {
         if (
-            listIndexConfigMap.isNullOrEmpty()
+            editListConfigMap.isNullOrEmpty()
         ) return emptyList()
         return emptyList()
 //        if(
@@ -849,14 +849,14 @@ class EditComponentListAdapter(
         fileNameOrInstallFannelLine: String,
         fileCon: String,
     ){
-        val makeFileDescArgsMaker = ListIndexEditConfig.MakeFileDescArgsMaker(
+        val makeFileDescArgsMaker = EditListConfig.MakeFileDescArgsMaker(
 //            filterDir,
             fileNameOrInstallFannelLine,
             fileCon,
-            listIndexConfigMap,
+            editListConfigMap,
             busyboxExecutor,
         )
-        val descCon = ListIndexEditConfig.makeFileDesc(
+        val descCon = EditListConfig.makeFileDesc(
             makeFileDescArgsMaker,
         )
         withContext(Dispatchers.Main) {
@@ -878,23 +878,10 @@ class EditComponentListAdapter(
         if(
             editExecuteValueForInstallFannel == editExecuteAlways
         ) return com.puutaro.commandclick.R.color.terminal_color
-//        val languageType =
-//            CommandClickVariables.judgeJsOrShellFromSuffix(fileName)
-
-//        val languageTypeToSectionHolderMap =
-//            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-//        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-//        ) as String
-//        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-//            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-//        ) as String
         val settingVariableList = CommandClickVariables.extractValListFromHolder(
             fileConList,
             CommandClickScriptVariable.SETTING_SEC_START,
             CommandClickScriptVariable.SETTING_SEC_END,
-//            settingSectionStart,
-//            settingSectionEnd
         )
         val editExecuteValue = SettingVariableReader.getStrValue(
             settingVariableList,
@@ -908,54 +895,11 @@ class EditComponentListAdapter(
         return com.puutaro.commandclick.R.color.fannel_icon_color
     }
 
-//    private suspend fun qrLogoSetHandler(
-//        holder: ListIndexListViewHolder,
-//        recentAppDirPath: String,
-//    ){
-//        val itemName = holder.fileName.split("\t").lastOrNull() ?: String()
-//        val okSetIcon = QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.set(
-//            context,
-////            filterDir,
-////            listIndexTypeKey,
-//            itemName,
-//            holder.fileContentsQrLogoView,
-//            holder.fileContentsQrLogoLinearLayout,
-//            qrLogoConfigMap,
-//            iconConfigMap,
-//            itemNameToNameColorConfigMap,
-//            textImagePngBitMap
-//        )
-//        if(okSetIcon) return
-//        val qrMode = QrModeSettingKeysForQrDialog.getQrMode(qrDialogConfigMap)
-//        when(qrMode){
-//            QrModeSettingKeysForQrDialog.QrMode.TSV_EDIT -> {}
-//            QrModeSettingKeysForQrDialog.QrMode.NORMAL,
-//            QrModeSettingKeysForQrDialog.QrMode.FANNEL_REPO -> {
-//                val qrLogoHandlerArgsMaker = withContext(Dispatchers.IO) {
-//                    QrDialogConfig.QrLogoHandlerArgsMaker(
-////                        editFragmentRef.get(),
-//                        recentAppDirPath,
-//                        qrLogoConfigMap,
-////                        filterDir,
-//                        holder.fileName,
-//                        holder.fileContentsQrLogoView,
-//                    )
-//                }
-//                withContext(Dispatchers.Main) {
-//                    QrLogoSettingsForQrDialog.setQrLogoHandler(
-//                        context,
-//                        qrLogoHandlerArgsMaker
-//                    )
-//                }
-//            }
-//        }
-//    }
-
     private fun initListProperty(
-        listIndexPosition: Int,
+        editListPosition: Int,
     ){
         if(
-            listIndexPosition != 0
+            editListPosition != 0
         ) return
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "layout.txt").absolutePath,
@@ -970,49 +914,23 @@ class EditComponentListAdapter(
 
     private fun setListProperty(){
         recentAppDirPath = UsePath.cmdclickDefaultAppDirPath
-//        performMap = PerformSettingForListIndex.makePerformMap(
-//            listIndexConfigMap
-//        )
-//        indexListMap = ListIndexEditConfig.getConfigKeyMap(
-//            listIndexConfigMap,
-//            ListIndexEditConfig.ListIndexConfigKey.LIST.key
-//        )
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "getfile_index_list.txt").absolutePath,
-//            listOf(
-//                "listIndexConfigMap: ${listIndexConfigMap}",
-//                "indexListMap: ${indexListMap}",
-//            ).joinToString("\n\n\n")
-//        )
-        deleteConfigMap = ListIndexEditConfig.getConfigKeyMap(
-            listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.DELETE.key
+        deleteConfigMap = EditListConfig.getConfigKeyMap(
+            editListConfigMap,
+            EditListConfig.EditListConfigKey.DELETE.key
         )
-//        listIndexTypeKey = editFragmentRef.get()?.let {
-//            ListIndexEditConfig.getListIndexType(
-//                it
-//            )
-//        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-//        filterDir = editFragmentRef.get()?.let {
-//            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-//                it,
-//                indexListMap,
-////                listIndexTypeKey
-//            )
-//        } ?: String()
         filterPrefix =
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 editListMap,
-                ListSettingsForListIndex.ListSettingKey.PREFIX.key
+                ListSettingsForEditList.ListSettingKey.PREFIX.key
             ) ?: String()
         filterSuffix =
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 editListMap,
-                ListSettingsForListIndex.ListSettingKey.SUFFIX.key
+                ListSettingsForEditList.ListSettingKey.SUFFIX.key
             ) ?: String()
     }
     fun getLayoutConfigMap(): Map<String, String> {

@@ -17,21 +17,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForListIndexAdapter
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.EditFrameMaker
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.BkImageSettingsForEditList
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.EditListConfig
+import com.puutaro.commandclick.proccess.edit_list.config_settings.BkImageSettingsForEditList
+import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
+import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
@@ -76,7 +76,7 @@ object WithEditComponentListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        listIndexConfigMap: Map<String, String>?,
+        editListConfigMap: Map<String, String>?,
         editTextView: AppCompatTextView,
         editTitleImage: AppCompatImageView,
         editListRecyclerView: RecyclerView,
@@ -90,8 +90,8 @@ object WithEditComponentListView{
         val context = fragment.context ?: return
 
         CoroutineScope(Dispatchers.Main).launch{
-            val titleSettingPath = listIndexConfigMap?.get(
-                ListIndexEditConfig.ListIndexConfigKey.TITLE_LAYOUT_PATH.key
+            val titleSettingPath = editListConfigMap?.get(
+                EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
             ) ?: String()
             val titleSettingMap = withContext(Dispatchers.IO){
                 ListSettingVariableListMaker.makeFromSettingPath(
@@ -110,9 +110,9 @@ object WithEditComponentListView{
                 titleSettingMap
             )
         }
-        val editListBkPairs = ListIndexEditConfig.getConfigKeyConList(
-            listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.BK.key
+        val editListBkPairs = EditListConfig.getConfigKeyConList(
+            editListConfigMap,
+            EditListConfig.EditListConfigKey.BK.key
         )
         CoroutineScope(Dispatchers.Main).launch {
 //            withContext(Dispatchers.Main) {
@@ -134,9 +134,9 @@ object WithEditComponentListView{
                 editListBkFrame.addView(bkFrameLayout)
             }
         }
-        val indexListMap = ListIndexEditConfig.getConfigKeyMap(
-            listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.LIST.key
+        val indexListMap = EditListConfig.getConfigKeyMap(
+            editListConfigMap,
+            EditListConfig.EditListConfigKey.LIST.key
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "glistWith.txt").absolutePath,
@@ -147,7 +147,7 @@ object WithEditComponentListView{
 //                "listIndexTypeKey: ${listIndexTypeKey.key}",
 //            ).joinToString("\n\n")
 //        )
-        val lineMapList = ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+        val lineMapList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
             fannelInfoMap,
             setReplaceVariableMap,
             indexListMap,
@@ -168,16 +168,16 @@ object WithEditComponentListView{
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
-            listIndexConfigMap,
+            editListConfigMap,
             busyboxExecutor,
             indexListMap,
             lineMapList,
             fannelContentsList
         )
-        val layoutConfigMap = LayoutSettingsForListIndex.getLayoutConfigMap(
-            listIndexConfigMap,
+        val layoutConfigMap = LayoutSettingsForEditList.getLayoutConfigMap(
+            editListConfigMap,
         )
-        ItemTouchHelperCallbackForListIndexAdapter.set(
+        ItemTouchHelperCallbackForEditListAdapter.set(
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
@@ -188,12 +188,12 @@ object WithEditComponentListView{
 
         editListRecyclerView.adapter = editComponentListAdapter
 
-        val isReverseLayout = LayoutSettingsForListIndex.howReverseLayout(
+        val isReverseLayout = LayoutSettingsForEditList.howReverseLayout(
             fannelInfoMap,
             setReplaceVariableMap,
             layoutConfigMap
         )
-        LayoutSettingsForListIndex.setLayout(
+        LayoutSettingsForEditList.setLayout(
             context,
             editComponentListAdapter.getLayoutConfigMap(),
             editListRecyclerView,
@@ -208,7 +208,7 @@ object WithEditComponentListView{
                 editListRecyclerView,
                 editToolbarLinearLayout,
                 fannelCenterButtonLayout,
-                listIndexConfigMap,
+                editListConfigMap,
             )
         }
         CoroutineScope(Dispatchers.Main).launch {
@@ -219,7 +219,7 @@ object WithEditComponentListView{
                 busyboxExecutor,
                 editFooterLinearlayout,
                 editListRecyclerView,
-                listIndexConfigMap,
+                editListConfigMap,
             )
         }
         invokeItemSetClickListenerForFileList(
@@ -241,7 +241,7 @@ object WithEditComponentListView{
             fannelInfoMap,
             editComponentListAdapter,
             editListSearchEditText,
-            listIndexConfigMap
+            editListConfigMap
         )
     }
 
@@ -252,7 +252,7 @@ object WithEditComponentListView{
         busyboxExecutor: BusyboxExecutor?,
         editFooterLinearlayout: LinearLayoutCompat,
         editListRecyclerView: RecyclerView,
-        listIndexConfigMap: Map<String, String>?,
+        editListConfigMap: Map<String, String>?,
     ){
         setFooterOrToolbar(
             fragment,
@@ -263,7 +263,7 @@ object WithEditComponentListView{
             editListRecyclerView,
             null,
             null,
-            listIndexConfigMap,
+            editListConfigMap,
         )
     }
 
@@ -276,7 +276,7 @@ object WithEditComponentListView{
         editListRecyclerView: RecyclerView,
         editToolbarLinearLayout: LinearLayoutCompat?,
         fannelCentrButtonLayout: FrameLayout?,
-        listIndexConfigMap: Map<String, String>?,
+        editListConfigMap: Map<String, String>?,
     ){
         setFooterOrToolbar(
             fragment,
@@ -287,7 +287,7 @@ object WithEditComponentListView{
             editListRecyclerView,
             editToolbarLinearLayout,
             fannelCentrButtonLayout,
-            listIndexConfigMap,
+            editListConfigMap,
         )
     }
 
@@ -300,30 +300,30 @@ object WithEditComponentListView{
         editListRecyclerView: RecyclerView,
         editToolbarLinearLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
-        listIndexConfigMap: Map<String, String>?,
+        editListConfigMap: Map<String, String>?,
 
-    ) {
+        ) {
         val context = fragment.context
             ?: return
         val isEditToolbar = editToolbarLinearLayout != null
         val layoutKey = when(isEditToolbar){
-            true -> ListIndexEditConfig.ListIndexConfigKey.TOOLBAR_LAYOUT_PATH
-            else -> ListIndexEditConfig.ListIndexConfigKey.FOOTER_LAYOUT_PATH
+            true -> EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH
+            else -> EditListConfig.EditListConfigKey.FOOTER_LAYOUT_PATH
         }.key
-        val footerOrToolbarLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
+        val footerOrToolbarLayoutPath = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutPath(
             fannelInfoMap,
             setReplaceVariableMap,
-            listIndexConfigMap,
+            editListConfigMap,
             layoutKey,
         )
         val frameMapListToLinearMapList = when(footerOrToolbarLayoutPath) {
-            ListIndexEditConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macro
-                -> ListSettingsForListIndex.ViewLayoutPathManager.parseFromList(
+            EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
+                -> ListSettingsForEditList.ViewLayoutPathManager.parseFromList(
                 fannelInfoMap,
                 setReplaceVariableMap,
-                ListIndexEditConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
+                EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
                     )
-            else -> ListSettingsForListIndex.ViewLayoutPathManager.parse(
+            else -> ListSettingsForEditList.ViewLayoutPathManager.parse(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 footerOrToolbarLayoutPath
@@ -555,8 +555,8 @@ object WithEditComponentListView{
             object: EditComponentListAdapter.OnEditAdapterClickListener {
                 override fun onEditAdapterClick(
                     itemView: View,
-                    holder: EditComponentListAdapter.ListIndexListViewHolder,
-                    listIndexPosition: Int,
+                    holder: EditComponentListAdapter.EditListViewHolder,
+                    editListPosition: Int,
                 ) {
                     val frameLayout = itemView as FrameLayout
                     val tag = frameLayout.tag as String?
@@ -580,7 +580,7 @@ object WithEditComponentListView{
                         holder.srcTitle,
                         holder.srcCon,
                         holder.srcImage,
-                        listIndexPosition,
+                        editListPosition,
                     ) ?: return
                     frameLayout.children.firstOrNull{
                         it is OutlineTextView
@@ -601,11 +601,11 @@ object WithEditComponentListView{
                             editListRecyclerView,
                             tag,
                             curSettingValue,
-                            listIndexPosition,
+                            editListPosition,
                             frameOrLinearCon
                         )
                     }
-                    ListIndexEditConfig.handle(
+                    EditListConfig.handle(
                         fragment,
                         fannelInfoMap,
                         setReplaceVariableMap,
@@ -614,7 +614,7 @@ object WithEditComponentListView{
 //                        false,
                         selectedItemLineMap,
                         frameOrLinearCon,
-                        listIndexPosition
+                        editListPosition
                     )
                 }
             }
@@ -635,8 +635,8 @@ object WithEditComponentListView{
         editComponentListAdapter.editAdapterTouchUpListener = object: EditComponentListAdapter.OnEditAdapterTouchUpListener {
             override fun onEditAdapterTouchUp(
                 itemView: View,
-                holder: EditComponentListAdapter.ListIndexListViewHolder,
-                listIndexPosition: Int
+                holder: EditComponentListAdapter.EditListViewHolder,
+                editListPosition: Int
             ) {
                 execTouchJob?.cancel()
                 consecutiveJob?.cancel()
@@ -647,8 +647,8 @@ object WithEditComponentListView{
         editComponentListAdapter.editAdapterTouchDownListener = object: EditComponentListAdapter.OnEditAdapterTouchDownListener {
             override fun onEditAdapterTouchDown(
                 itemView: View,
-                holder: EditComponentListAdapter.ListIndexListViewHolder,
-                listIndexPosition: Int
+                holder: EditComponentListAdapter.EditListViewHolder,
+                editListPosition: Int
             ) {
                 val frameLayout = itemView as FrameLayout
                 val tag = itemView.tag as String?
@@ -682,10 +682,10 @@ object WithEditComponentListView{
                                     editListRecyclerView,
                                     tag,
                                     curSettingValue,
-                                    listIndexPosition,
+                                    editListPosition,
                                     frameOrLinearCon
                                 )
-                                ListIndexEditConfig.handle(
+                                EditListConfig.handle(
                                     fragment,
                                     fannelInfoMap,
                                     setReplaceVariableMap,
@@ -694,7 +694,7 @@ object WithEditComponentListView{
 //                                    true,
                                     selectedItemLineMap,
                                     frameOrLinearCon,
-                                    listIndexPosition
+                                    editListPosition
                                 )
                             }
                         }
@@ -718,25 +718,25 @@ object WithEditComponentListView{
         fannelInfoMap: Map<String, String>,
         editComponentListAdapter: EditComponentListAdapter,
         searchText: AppCompatEditText,
-        listIndexConfigMap: Map<String, String>?
+        editListConfigMap: Map<String, String>?
     ) {
-        val searchBoxMap = ListIndexEditConfig.getConfigKeyMap(
-            listIndexConfigMap,
-            ListIndexEditConfig.ListIndexConfigKey.SEARCH_BOX.key
+        val searchBoxMap = EditListConfig.getConfigKeyMap(
+            editListConfigMap,
+            EditListConfig.EditListConfigKey.SEARCH_BOX.key
         )
         val inVisible =
             searchBoxMap.get(
-                SearchBoxSettingsForListIndex.SearchBoxSettingKey.VISIBLE.key
-            ) == SearchBoxSettingsForListIndex.SearchBoxVisibleKey.OFF.name
+                SearchBoxSettingsForEditList.SearchBoxSettingKey.VISIBLE.key
+            ) == SearchBoxSettingsForEditList.SearchBoxVisibleKey.OFF.name
         if(inVisible){
             searchText.isVisible = false
             return
         }
         searchText.hint = searchBoxMap.get(
-            SearchBoxSettingsForListIndex.SearchBoxSettingKey.HINT.key
+            SearchBoxSettingsForEditList.SearchBoxSettingKey.HINT.key
         ).let {
             when(it.isNullOrEmpty()) {
-                false -> SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
+                false -> SearchBoxSettingsForEditList.makeCurrentVariableValueInEditText(
                     fragment,
                     fannelInfoMap,
                     it
@@ -753,7 +753,7 @@ object WithEditComponentListView{
 
             override fun afterTextChanged(s: Editable?) {
                 if(!searchText.hasFocus()) return
-                val filteredUrlHistoryList = ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+                val filteredUrlHistoryList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                     editComponentListAdapter.fannelInfoMap,
                     editComponentListAdapter.setReplaceVariableMap,
                     editComponentListAdapter.editListMap,
@@ -761,7 +761,7 @@ object WithEditComponentListView{
                 ).filter {
                     lineMap ->
                     val title = lineMap.get(
-                        ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                        ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
                     ) ?: String()
                     Regex(
                         searchText.text.toString()
@@ -771,7 +771,7 @@ object WithEditComponentListView{
                         title.lowercase()
                     )
                 }
-                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+                ListViewToolForEditListAdapter.editListUpdateFileList(
                     editComponentListAdapter,
                     filteredUrlHistoryList,
                 )

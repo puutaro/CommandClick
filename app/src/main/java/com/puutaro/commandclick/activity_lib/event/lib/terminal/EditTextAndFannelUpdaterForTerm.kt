@@ -11,7 +11,7 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
@@ -50,7 +50,7 @@ object EditTextAndFannelUpdaterForTerm {
         if(editListIndex is Int) {
             val holder = editListRecyclerView.findViewHolderForAdapterPosition(
                 editListIndex
-            ) as EditComponentListAdapter.ListIndexListViewHolder
+            ) as EditComponentListAdapter.EditListViewHolder
             val materialCardView = holder.materialCardView
             val frameLayout = materialCardView.findViewWithTag<FrameLayout>(
                 tagName
@@ -61,13 +61,13 @@ object EditTextAndFannelUpdaterForTerm {
             } as? OutlineTextView
             val lineMap = editComponentListAdapter.lineMapList.get(editListIndex)
             holder.srcTitle = lineMap.get(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key
+                ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
             ) ?: String()
             holder.srcCon = lineMap.get(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+                ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
             ) ?: String()
             holder.srcImage = lineMap.get(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_IMAGE.key
+                ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
             ) ?: String()
 
             UpdateAndSaveMainFannel.updateAndSave(

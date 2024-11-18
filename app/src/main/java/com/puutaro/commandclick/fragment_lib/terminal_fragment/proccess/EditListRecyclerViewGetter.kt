@@ -14,7 +14,7 @@ object EditListRecyclerViewGetter {
         terminalFragment: TerminalFragment?,
         srcFragStr: String
     ): RecyclerView? {
-        val recyclerViewFrag = RecyclerViewFragment.values().firstOrNull {
+        val recyclerViewFrag = RecyclerViewFragment.entries.firstOrNull {
             it.frag == srcFragStr
         }
         if(recyclerViewFrag == null){

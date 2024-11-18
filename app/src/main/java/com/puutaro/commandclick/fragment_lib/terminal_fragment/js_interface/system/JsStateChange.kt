@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -93,7 +93,7 @@ class JsStateChange(
                 listDirValueKey,
             ) ?: return
             val listDirKey =
-                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key
+                ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key
             TsvTool.updateTsvByKey(
                 listDirTsvPath,
                 listOf("${listDirKey}\t${listDirValue}")
@@ -164,7 +164,7 @@ class JsStateChange(
                     listDirTsvPathKey
                 ) ?: return null
             val listDirKey =
-                ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key
+                ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key
             val saveListDirPath = TsvTool.getKeyValue(
                 listDirTsvPath,
                 listDirKey,

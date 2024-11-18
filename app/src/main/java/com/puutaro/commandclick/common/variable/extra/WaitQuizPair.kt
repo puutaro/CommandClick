@@ -81,12 +81,12 @@ object WaitQuizPair {
             "-> Trigger from config",
         ),
         Pair(
-            "What's ${CommandClickScriptVariable.LIST_INDEX_CONFIG}?",
+            "What's ${CommandClickScriptVariable.EDIT_LIST_CONFIG}?",
             "-> List config in fannel",
         ),
         Pair(
-            "How to specify ${CommandClickScriptVariable.LIST_INDEX_CONFIG}?",
-            "-> Use ${CommandClickScriptVariable.LIST_INDEX_CONFIG} in setting vars",
+            "How to specify ${CommandClickScriptVariable.EDIT_LIST_CONFIG}?",
+            "-> Use ${CommandClickScriptVariable.EDIT_LIST_CONFIG} in setting vars",
         ),
 //        Pair(
 //            "What's ${CommandClickScriptVariable.QR_DIALOG_CONFIG}?",

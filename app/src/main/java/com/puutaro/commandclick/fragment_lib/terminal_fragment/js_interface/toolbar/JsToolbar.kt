@@ -4,11 +4,11 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddForEditListAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
@@ -52,7 +52,7 @@ class JsToolbar(
             editFragment.fannelInfoMap,
             editFragment.setReplaceVariableMap,
             editComponentListAdapter.editListMap,
-            ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
+            ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
         )
         return listKeyCon
     }
@@ -169,8 +169,8 @@ class JsToolbar(
                 urlString
             }
             val insertLineMap = mapOf(
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to siteTitle,
-                ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to urlString,
+                ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key to siteTitle,
+                ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key to urlString,
             )
             withContext(Dispatchers.Main) {
                 val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
@@ -188,7 +188,7 @@ class JsToolbar(
                         editFragment.fannelInfoMap,
                         editFragment.setReplaceVariableMap,
                         editComponentListAdapter.editListMap,
-                        ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key,
+                        ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
                     )  ?: String()
                 ListIndexDuplicate.isTsvDetect(
                     tsvPath,
@@ -288,8 +288,8 @@ class JsToolbar(
         ) ?: return
         val editContext = editFragment.context ?: return
         val insertLine = mapOf(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_TITLE.key to fileName,
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key to File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
+            ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key to fileName,
+            ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key to File(UsePath.cmdclickDefaultAppDirPath, fileName).absolutePath
         )
         ExecAddForEditListAdapter.execAddForEditList(
             editContext,

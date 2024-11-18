@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util.file
 
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
@@ -43,7 +43,7 @@ object MapListFileTool {
             !mapListPathObj.isFile
         ) return
         val mapListSeparator =
-            ListSettingsForListIndex.MapListPathManager.mapListSeparator
+            ListSettingsForEditList.MapListPathManager.mapListSeparator
         val srcMapList = when (curLineMapList.isNullOrEmpty()) {
             false -> curLineMapList
             else -> ReadText(mapListPath).textToList().map {
@@ -78,7 +78,7 @@ object MapListFileTool {
         ) return
         val tsvPathObj = File(mapListPath)
         if (!tsvPathObj.isFile) return
-        val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator
         val srcLineMapList = ReadText(mapListPath).textToList().map {
             CmdClickMap.createMap(
                 it,
@@ -117,7 +117,7 @@ object MapListFileTool {
         ) return
         val tsvPathObj = File(tsvPath)
         if(!tsvPathObj.isFile) return
-        val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator
         val removeTsvCon = ReadText(tsvPath).textToList().map{
             CmdClickMap.createMap(
                 it,
@@ -151,7 +151,7 @@ object MapListFileTool {
         mapListPath: String,
         insertLineMap: Map<String, String>,
     ){
-        val mapListSeparator = ListSettingsForListIndex.MapListPathManager.mapListSeparator
+        val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator
         val insertLine = convertLineMapToLine(
             insertLineMap,
             mapListSeparator

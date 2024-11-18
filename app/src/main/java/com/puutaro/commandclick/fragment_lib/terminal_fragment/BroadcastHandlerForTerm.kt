@@ -9,7 +9,7 @@ import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLau
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLoadUrlExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
@@ -18,7 +18,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewLancher
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object BroadcastHandlerForTerm {
@@ -116,9 +116,9 @@ object BroadcastHandlerForTerm {
                 if(editListSearchEditText?.isVisible == true) {
                     editListSearchEditText.setText(String())
                 }
-                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+                ListViewToolForEditListAdapter.editListUpdateFileList(
                     editComponentListAdapter,
-                    ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+                    ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                         editComponentListAdapter.fannelInfoMap,
                         editComponentListAdapter.setReplaceVariableMap,
                         editComponentListAdapter.editListMap,

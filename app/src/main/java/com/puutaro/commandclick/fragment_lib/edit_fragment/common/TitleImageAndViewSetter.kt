@@ -9,7 +9,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
@@ -242,7 +242,7 @@ private object EditTextMaker {
         )
         return when(shellConText.isNullOrEmpty()) {
             false -> shellConText
-            else -> SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
+            else -> SearchBoxSettingsForEditList.makeCurrentVariableValueInEditText(
                 fragment,
                 fannelInfoMap,
                 defaultEditBoxTitle
@@ -300,7 +300,7 @@ private object EditTextMaker {
             currentVariableValue
         )
         val backstackCountKey =
-            SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText
+            SearchBoxSettingsForEditList.backstackCountMarkForInsertEditText
         val backstackCountMap = mapOf(
             backstackCountKey to execMakeBackstackCount(
                 fragment
@@ -338,7 +338,7 @@ private object EditTextMaker {
             "\${defaultEditBoxTitle}",
             currentVariableValue ?: String(),
         ).let {
-            SearchBoxSettingsForListIndex.backStackMarkReplace(
+            SearchBoxSettingsForEditList.backStackMarkReplace(
                 fragment,
                 it
             )

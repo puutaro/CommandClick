@@ -1,30 +1,5 @@
 package com.puutaro.commandclick.util.tsv
 
-import android.app.Dialog
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecReWriteForListIndexAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexDuplicate
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.MapListFileTool
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-
 //object TsvLineRenamer {
 //
 //    private var renamePromptDialog: Dialog? = null

@@ -5,18 +5,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexMenuLauncher
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFile
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileHere
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileSimple
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyPath
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemCat
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecRenameFile
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecShowDescription
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleEditItem
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecWriteItem
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.libs.ListIndexMenuLauncher
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecCopyFile
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecCopyFileHere
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecCopyFileSimple
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecCopyPath
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecItemCat
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecRenameFile
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecShowDescription
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecSimpleDelete
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecSimpleEditItem
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecWriteItem
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 
 object ExecMacroHandlerForListIndex {
@@ -103,7 +103,7 @@ object ExecMacroHandlerForListIndex {
                 )
             JsPathMacroForListIndex.COPY_FILE_SIMPLE -> {
                 val selectedSrcPath = selectedItemLineMap.get(
-                    ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
                 ) ?: return
                 ExecCopyFileSimple.copy(
                     fragment,

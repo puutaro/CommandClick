@@ -4,8 +4,8 @@ import android.content.Context
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.JsAcAlterIfTool
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
+import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
@@ -94,7 +94,7 @@ object ShellMacroHandler {
             FANNEL_PATH("fannelPath"),
             CORE_TITLE("coreTitle"),
             EXTRA_TITLE("extraTitle"),
-            BACKSTACK_COUNT(SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText),
+            BACKSTACK_COUNT(SearchBoxSettingsForEditList.backstackCountMarkForInsertEditText),
         }
 
         fun get(
@@ -219,7 +219,7 @@ object ShellMacroHandler {
         private enum class JudgeTsvKey(
             val str: String
         ){
-            LIST_DIR(ListSettingsForListIndex.ListSettingKey.MAP_LIST_PATH.key)
+            LIST_DIR(ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key)
         }
 
         fun getStrByListDirValue(

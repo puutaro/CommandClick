@@ -8,7 +8,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.FormJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ImageJsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsConfirm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DebugJsAlert
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.DragSortJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
@@ -25,7 +24,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TextJsDialogV2
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TextJsDialogV3
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TitleJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
@@ -521,11 +519,11 @@ class JsDialog(
     @JavascriptInterface
     fun editList(
         fannelInfoCon: String,
-        listIndexConfigPath: String
+        editListConfigPath: String
     ){
         editListDialog.create(
             fannelInfoCon,
-            listIndexConfigPath,
+            editListConfigPath,
         )
     }
 

@@ -4,9 +4,9 @@ import android.content.Intent
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 
 object BroadcastReceiveHandlerForEdit {
     fun handle(
@@ -24,9 +24,9 @@ object BroadcastReceiveHandlerForEdit {
                 if(editListSearchEditText.isVisible) {
                     editListSearchEditText.setText(String())
                 }
-                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+                ListViewToolForEditListAdapter.editListUpdateFileList(
                     editComponentListAdapter,
-                    ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+                    ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                         editFragment.fannelInfoMap,
                         editFragment.setReplaceVariableMap,
                         editComponentListAdapter.editListMap,

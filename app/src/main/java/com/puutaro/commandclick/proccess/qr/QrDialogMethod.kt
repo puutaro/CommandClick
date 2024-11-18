@@ -19,10 +19,10 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.image_tools.BitmapTool
@@ -306,9 +306,9 @@ object QrDialogMethod {
                     }
                     is EditFragment -> {
                         val editComponentListAdapter = fragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
-                        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+                        ListViewToolForEditListAdapter.editListUpdateFileList(
                             editComponentListAdapter,
-                            ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+                            ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
                                 editComponentListAdapter.editListMap,
@@ -390,9 +390,9 @@ object QrDialogMethod {
                     is EditFragment -> {
                         val editComponentListAdapter =
                             fragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
-                        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+                        ListViewToolForEditListAdapter.editListUpdateFileList(
                             editComponentListAdapter,
-                            ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+                            ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
                                 editComponentListAdapter.editListMap,

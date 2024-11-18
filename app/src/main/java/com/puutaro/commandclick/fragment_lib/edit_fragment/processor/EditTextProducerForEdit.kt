@@ -1,16 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
+import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 object EditTextProducerForEdit {
 
@@ -62,12 +65,29 @@ object EditTextProducerForEdit {
             }
         }
 
+        val isOnlyCmdValEdit = !editFragment.enableEditExecute
+        if(isOnlyCmdValEdit) {
+            val toolbarLayoutMap = mapOf(
+                EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH.key to
+                        EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name,
+            )
+            editFragment.editListConfigMap = editFragment.editListConfigMap?.let {
+                it + toolbarLayoutMap
+            } ?: toolbarLayoutMap
+        }
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
+            listOf(
+                "editFragment.editListConfigMap: ${editFragment.editListConfigMap}"
+            ).joinToString("\n")
+        )
+
         WithEditComponentListView.create(
             editFragment,
             editFragment.fannelInfoMap,
             editFragment.setReplaceVariableMap,
             editFragment.busyboxExecutor,
-            editFragment.listIndexConfigMap,
+            editFragment.editListConfigMap,
             binding.editTextView,
             binding.editTitleImage,
             binding.editListRecyclerView,

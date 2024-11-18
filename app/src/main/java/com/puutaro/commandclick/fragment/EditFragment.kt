@@ -19,7 +19,7 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -31,8 +31,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.CurrentFannelConListMaker
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.DirectoryAndCopyGetter
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.DirectoryAndCopyGetter
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
@@ -86,7 +86,7 @@ class EditFragment: Fragment() {
 //    var existIndexList: Boolean = false
 //    var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
-    var listIndexConfigMap: Map<String, String>? = null
+    var editListConfigMap: Map<String, String>? = null
 //    var qrDialogConfig: Map<String, String>? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
@@ -359,9 +359,9 @@ class EditFragment: Fragment() {
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
             val editComponentListAdapter = binding.editListRecyclerView.adapter as EditComponentListAdapter
-            ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+            ListViewToolForEditListAdapter.editListUpdateFileList(
                 editComponentListAdapter,
-                ListSettingsForListIndex.ListIndexListMaker.makeLineMapListHandler(
+                ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                     this@EditFragment.fannelInfoMap,
                     this@EditFragment.setReplaceVariableMap,
                     editComponentListAdapter.editListMap,

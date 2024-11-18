@@ -5,7 +5,7 @@ import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variant.RequestCode
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForEditListAdapter
+import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool

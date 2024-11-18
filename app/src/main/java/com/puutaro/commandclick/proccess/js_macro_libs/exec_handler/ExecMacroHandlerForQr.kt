@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsMacroForQr
 import com.puutaro.commandclick.proccess.js_macro_libs.qr_libs.ExecQr
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.dialog.DialogObject
 
 object ExecMacroHandlerForQr {
@@ -16,7 +16,7 @@ object ExecMacroHandlerForQr {
         val context = fragment.context
             ?: return
         val clickFileName =  selectedLineMap.get(
-            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
+            ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
         ) ?: return
         when(macroForQr) {
             JsMacroForQr.EXEC_QR
