@@ -993,7 +993,7 @@ private object LongPressManageListDialog {
             currentValidFannelName,
             "Select",
             longPressSelectList,
-            saveTag = "FannelCenterLongPressSetting",
+            saveTag = null,
         )
 
         terminalFragment.binding.terminalWebView.evaluateJavascript(

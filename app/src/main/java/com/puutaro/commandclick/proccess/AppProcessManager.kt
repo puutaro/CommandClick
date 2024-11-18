@@ -56,7 +56,7 @@ object AppProcessManager {
             currentValidFannelName,
             "Select kill type",
             killTypeList,
-            saveTag = "AppProcessManagerSelectKillType",
+            saveTag = null,
         )
         terminalFragment.binding.terminalWebView.evaluateJavascript(
             selectLongPressJs,
@@ -290,7 +290,7 @@ object AppProcessManager {
             currentValidFannelName,
             "Select Kill process",
             createProcessList(),
-            saveTag = "AppProcessManagerKillProcess",
+            saveTag = null,
         )
         terminalFragment.binding.terminalWebView.evaluateJavascript(
             selectLongPressJs,

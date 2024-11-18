@@ -32,6 +32,9 @@ object ListJsDialogV2 {
         val saveTag = listJsDialogMap.get(
             ListJsDialogKey.SAVE_TAG.key
         ) ?: String()
+        val listLimitNum = listJsDialogMap.get(
+            ListJsDialogKey.LIST_LIMIT_NUM.key
+        ) ?: String()
 //        val backgroundType = listJsDialogMap.get(
 //            ListJsDialogKey.BACKGROUND_TYPE.key
 //        ) ?: String()
@@ -58,12 +61,15 @@ object ListJsDialogV2 {
                     |${PromptWithListDialog.Companion.PromptListVars.onInsertByClick.name}=OFF
                     |${PromptWithListDialog.Companion.PromptListVars.visible.name}=ON
                     |${PromptWithListDialog.Companion.PromptListVars.onDismissByClick.name}=ON
-                    |${PromptWithListDialog.Companion.PromptListVars.disableUpdate.name}=ON,
+                    |${PromptWithListDialog.Companion.PromptListVars.disableUpdate.name}=ON
+                    |${PromptWithListDialog.Companion.PromptListVars.limit.name}=${listLimitNum},
                 ${PromptWithListDialog.Companion.PromptWithTextMapKey.editText.name}=
                     ${PromptWithListDialog.Companion.PromptEditTextKey.default.name}=${defaultSearchText}
                     |${PromptWithListDialog.Companion.PromptEditTextKey.hint.name}="${searchHint}"
                     |${PromptWithListDialog.Companion.PromptEditTextKey.visible.name}=${searchVisible},
-            """.trimIndent().split("\n").joinToString(String()) {
+            """.trimIndent().split("\n").filter {
+                it.isNotEmpty()
+        }.joinToString(String()) {
             it.trim()
         }
         return promptWithListDialog.create(
@@ -81,6 +87,7 @@ object ListJsDialogV2 {
         SEARCH_VISIBLE("searchVisible"),
         SEARCH_HINT("searchHint"),
         DEFAULT_SEARCH_TEXT("defaultSearchText"),
+        LIST_LIMIT_NUM("listLimitNum"),
 //        DISABLE_LIST_BIND_STR(PromptWithListDialog.Companion.PromptEditTextKey.disableListBind.name),
 //        BACKGROUND_TYPE("backgroundType"),
 //        ON_KEY_OPEN_MODE(PromptWithListDialog.Companion.PromptExtraKey.onKeyOpenMode.name),

@@ -264,7 +264,7 @@ private object CopyListDialog {
             currentValidFannelName,
             "Select copy path",
             copyDirOrTsvList,
-            saveTag = "ExecCopyFileSimple",
+            saveTag = null,
         )
 
         terminalFragment.binding.terminalWebView.evaluateJavascript(
