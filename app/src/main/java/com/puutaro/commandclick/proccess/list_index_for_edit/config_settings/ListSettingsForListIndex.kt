@@ -64,9 +64,6 @@ object ListSettingsForListIndex  {
                 Map<String, List< List<String> > >,
                 >?
         {
-            var curFrameTag = String()
-            val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
-            val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
             val viewLayoutPathObj = File(viewLayoutPath)
             if(
                 !viewLayoutPathObj.isFile
@@ -90,10 +87,56 @@ object ListSettingsForListIndex  {
 //                    "viewLayoutListSrc: ${viewLayoutListSrc.joinToString("####")}",
 //                ).joinToString("\n\n") + "\n\n-----------\n\n"
 //            )
+            return execParse(viewLayoutListSrc)
+        }
+
+        fun parseFromList(
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            viewLayoutConList: List<String>,
+        ):  Pair<
+                Map<String, String >,
+                Map<String, List< List<String> > >,
+                >?
+        {
+
+            val fannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
+            )
+            val viewLayoutListSrc = LayoutSettingFile.readFromList(
+                viewLayoutConList,
+                fannelName,
+                setReplaceVariableMap,
+            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
+//                listOf(
+////                    "indexListMap: ${indexListMap}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "File(viewLayoutPath).isFile: ${File(viewLayoutPath).isFile}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "viewLayoutListSrc: ${viewLayoutListSrc.joinToString("####")}",
+//                ).joinToString("\n\n") + "\n\n-----------\n\n"
+//            )
+            return execParse(
+                viewLayoutListSrc
+            )
+        }
+
+        private fun execParse(
+            viewLayoutListSrc: List<String>
+        ): Pair<
+                Map<String, String >,
+                Map<String, List< List<String> > >,
+                >?
+        {
             val typeSeparator = EditComponent.Template.typeSeparator
             val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
             val liearTypeName = EditComponent.Template.LayoutKey.LINEAR.key
             val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+            var curFrameTag = String()
+            val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
+            val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
             viewLayoutListSrc.forEachIndexed { index,
                                                smallLayoutMapCon ->
                 val smallLayoutMapConList = smallLayoutMapCon.split("=")

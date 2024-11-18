@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
@@ -54,19 +52,33 @@ object SettingFile {
     ): String {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
-        val scriptFileName = fannelPathObj.name
+        val fannelName = fannelPathObj.name
         val firstSettingCon = ReadText(
             settingFilePath
         ).textToList()
+        return readLayoutFromList(
+            firstSettingCon,
+            fannelName,
+            setReplaceVariableCompleteMap,
+            onImport
+        )
+    }
+
+    fun readLayoutFromList(
+        firstSettingConList: List<String>,
+        fannelName: String,
+        setReplaceVariableCompleteMap: Map<String, String>?,
+        onImport: Boolean = true
+    ): String {
         return settingConFormatter(
-            firstSettingCon
+            firstSettingConList
         ).map {
             if(
                 !onImport
             ) return@map it
             importLayoutSetting(
                 it,
-                scriptFileName,
+                fannelName,
                 setReplaceVariableCompleteMap
             )
         }.let {
@@ -75,8 +87,7 @@ object SettingFile {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableCompleteMap,
-//                recentAppDirPath,
-                scriptFileName
+                fannelName
             )
         }
     }

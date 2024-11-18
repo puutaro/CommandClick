@@ -35,7 +35,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Sea
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -311,17 +310,25 @@ object WithEditComponentListView{
             true -> ListIndexEditConfig.ListIndexConfigKey.TOOLBAR_LAYOUT_PATH
             else -> ListIndexEditConfig.ListIndexConfigKey.FOOTER_LAYOUT_PATH
         }.key
-        val footerLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
+        val footerOrToolbarLayoutPath = ListSettingsForListIndex.ViewLayoutPathManager.getViewLayoutPath(
             fannelInfoMap,
             setReplaceVariableMap,
             listIndexConfigMap,
             layoutKey,
         )
-        val frameMapListToLinearMapList = ListSettingsForListIndex.ViewLayoutPathManager.parse(
-            fannelInfoMap,
-            setReplaceVariableMap,
-            footerLayoutPath
-        )
+        val frameMapListToLinearMapList = when(footerOrToolbarLayoutPath) {
+            ListIndexEditConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macro
+                -> ListSettingsForListIndex.ViewLayoutPathManager.parseFromList(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                ListIndexEditConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
+                    )
+            else -> ListSettingsForListIndex.ViewLayoutPathManager.parse(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                footerOrToolbarLayoutPath
+            )
+        }
         val frameMap = frameMapListToLinearMapList?.first ?: emptyMap()
         val frameTagList = frameMap.keys
         val frameTagToLinearKeysListMap = frameMapListToLinearMapList?.second ?: emptyMap()

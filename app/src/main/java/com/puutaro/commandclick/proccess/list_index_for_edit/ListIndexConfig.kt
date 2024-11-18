@@ -437,4 +437,42 @@ object ListIndexEditConfig {
 //        PERFORM("perform"),
         DELETE("delete"),
     }
+
+    object ToolbarLayoutPath {
+        enum class ToolbarLayoutMacro(
+            val macro: String,
+            val macroConList: List<String>,
+        ){
+            FOR_ONLY_CMD_VAL_EDIT(
+                "forOnlyCmdValEdit",
+                toolbarLayoutForOnlyCmdValEdit,
+            ),
+        }
+    }
+
+
+    private val toolbarLayoutForOnlyCmdValEdit = """
+    --
+    frame=
+        |tag=okForCmdValEdit
+        ,
+    ---
+
+    linear=
+        |tag=ok
+        |text=
+            displayText=`${'$'}{SRC_STR}`
+            ?srcStr=`OK`
+        |textProperty=
+            ?maxLines=1
+        |image=
+            paths="ok"
+        |imageProperty=
+            ?scale=`fitCenter`
+        |onSave=ON
+        |isConsec=OFF
+        |var=runDisplayCurSettingValue
+            ?func=jsBackstack.exec
+        ,
+    """.trimIndent().split("\n")
 }

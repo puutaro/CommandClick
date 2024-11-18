@@ -31,5 +31,29 @@ object LayoutSettingFile {
         }
     }
 
+    fun readFromList(
+        firstSettingConList: List<String>,
+        fannelName: String,
+        setReplaceVariableCompleteMap: Map<String, String>?,
+        onImport: Boolean = true
+    ): List<String> {
+        return SettingFile.readLayoutFromList(
+            firstSettingConList,
+            fannelName,
+            setReplaceVariableCompleteMap,
+            onImport
+        ).let {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "layoutSettingFile.txt").absolutePath,
+//                listOf(
+//                    "settingFile: ${it}",
+//                ).joinToString("\n") + "\n------\n"
+//            )
+            QuoteTool.layoutSplitBySurroundedIgnore(
+                it,
+            )
+        }
+    }
+
 
 }

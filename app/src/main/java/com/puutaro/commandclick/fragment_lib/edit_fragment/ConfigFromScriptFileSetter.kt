@@ -44,31 +44,6 @@ object ConfigFromScriptFileSetter {
         )
         editFragment.settingFannelConList = settingVariableList
 
-//        editFragment.setVariableTypeList =
-//            SetVariableTypesSetterForEdit.set(
-//                editFragment,
-//                fannelInfoMap,
-//                settingVariableList,
-//            )
-//        editFragment.hideSettingVariableList =
-//            ListSettingVariableListMaker.makeFromSettingVariableList(
-//                CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-//                fannelInfoMap,
-//                editFragment.setReplaceVariableMap,
-//                settingVariableList
-//            )
-//        editFragment.recordNumToMapNameValueInSettingHolder =
-//            RecordNumToMapNameValueInHolderMaker.makeForSetting(editFragment)
-//        editFragment.recordNumToMapNameValueInCommandHolder =
-//            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(
-//                editFragment,
-//                mainFannelConList
-//            )
-//        editFragment.existIndexList =
-//            judgeExistListIndex(
-//                editFragment,
-//            )
-
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
             settingVariableList,
@@ -83,29 +58,12 @@ object ConfigFromScriptFileSetter {
                 setReplaceVariableMap
             )
         }
-//        val binding = editFragment.binding
-//        val editTextView = binding.editTextView
-//        TitleImageAndViewSetter.set(
-//            editFragment,
-//            editTextView,
-//            fannelInfoMap,
-//            setReplaceVariableMap,
-//            editFragment.busyboxExecutor,
-//            binding.editTitleImage,
-//            editFragment.editBoxTitleConfig
-//        )
-
-//        val isSettingEdit = !editFragment.enableCmdEdit
-//                || editFragment.passCmdVariableEdit ==
-//                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-
 
         setToolbarButtonConfigMapFromSettingValList(
             editFragment,
             editFragment.busyboxExecutor,
             settingVariableList,
             onShortcut,
-//            isSettingEdit,
         )
 
         editFragment.editExecuteValue = SettingVariableReader.getStrValue(
@@ -127,42 +85,12 @@ object ConfigFromScriptFileSetter {
                 setReplaceVariableMap
             )
         }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "getfile_index_list_config_in_init.txt").absolutePath,
-//            listOf(
-//                "",
-//                "listIndexConfigMap: ${editFragment.listIndexConfigMap}",
-//            ).joinToString("\n\n\n")
-//        )
-//        editFragment.qrDialogConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
-//            CommandClickScriptVariable.QR_DIALOG_CONFIG,
-//            settingVariableList,
-//            fannelInfoMap,
-//            setReplaceVariableMap,
-//            String(),
-//        ).let {
-//            AlterToolForSetValType.updateConfigMapByAlter(
-//                editFragment.context,
-//                it,
-//                editFragment.busyboxExecutor,
-//                setReplaceVariableMap
-//            )
-//        }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsAcAlter.txt").absolutePath,
-//            listOf(
-//                "qrDialogConfig: ${editFragment.qrDialogConfig}"
-//            ).joinToString("\n")
-//        )
-
 
         editFragment.enableEditExecute =
             (editFragment.editExecuteValue ==
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name
                     ) && onShortcut
         val isOnlyCmdEdit = !editFragment.enableEditExecute
-//        editFragment.enableCmdEdit
-//                && !editFragment.enableEditExecute
 
         if (
             !onShortcut
@@ -170,8 +98,6 @@ object ConfigFromScriptFileSetter {
             setButtonVisible(
                 editFragment,
                 editFragment.enableEditExecute,
-//                editFragment.enableCmdEdit,
-//                isSettingEdit,
                 isOnlyCmdEdit,
             )
             return
@@ -189,31 +115,6 @@ object ConfigFromScriptFileSetter {
             ),
         )
 
-//        editFragment.historySwitch = SettingVariableReader.getCbValue(
-//            settingVariableList,
-//            CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
-//            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
-//            SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
-//            CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
-//            listOf(
-//                SettingVariableSelects.HistorySwitchSelects.OFF.name,
-//                SettingVariableSelects.HistorySwitchSelects.ON.name
-//            ),
-//        )
-//
-//        editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
-//            settingVariableList,
-//            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-//            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
-//            SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
-//            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
-//            listOf(
-//                SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
-//                SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
-//            ),
-//        )
-        
-
         editFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,
@@ -227,79 +128,21 @@ object ConfigFromScriptFileSetter {
             "1"
         )
 
-//        editFragment.passCmdVariableEdit = SettingVariableReader.getStrValue(
-//            settingVariableList,
-//            CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT,
-//            String(),
-//        )
-
         editFragment.enableEditExecute =
             (editFragment.editExecuteValue ==
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name
                     ) && onShortcut
-//        val isSettingEditForOnShortcut = !editFragment.enableCmdEdit
-//                || editFragment.passCmdVariableEdit ==
-//                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
         val isOnlyCmdEditForShortcut = !editFragment.enableEditExecute
-//        editFragment.enableCmdEdit
-//                && !editFragment.enableEditExecute
 
         setButtonVisible(
             editFragment,
             editFragment.enableEditExecute,
-//            editFragment.enableCmdEdit,
-//            isSettingEditForOnShortcut,
             isOnlyCmdEditForShortcut,
         )
         setEditToolBarButtonIcon(
             editFragment,
-//            isSettingEditForOnShortcut,
             isOnlyCmdEditForShortcut,
         )
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "state.txt").absolutePath,
-//            listOf(
-//                "readSharePreferenceMap: ${readSharePreferenceMap}",
-//                "setReplaceVariableMap: ${setReplaceVariableMap}",
-//                "settingVariableList: ${settingVariableList}",
-//                "setVariableTypeList: ${SetVariableTypesSetterForEdit.set(
-//                    editFragment,
-//                    readSharePreferenceMap,
-//                    settingVariableList,
-//                )}",
-//                "hideSettingVariableList: ${editFragment.hideSettingVariableList}",
-//                "onShortcut: ${onShortcut}",
-//                "isToolbarBtnCustomInSettingSelects: ${editFragment.isToolbarBtnCustomInSettingSelects}",
-//                "enableEditExecute: ${editFragment.enableEditExecute}",
-//                "editFragment.enableCmdEdit: ${editFragment.enableCmdEdit}",
-//                "isSettingEditForOnShortcut: ${isSettingEditForOnShortcut}",
-//                "isOnlyCmdEditForShortcut: ${isOnlyCmdEditForShortcut}",
-//                "toolBarButtonVisibleMap: ${editFragment.toolBarButtonVisibleMap}",
-//                "toolBarButtonIconMap: ${editFragment.toolBarButtonIconMap}",
-//                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
-//            ).joinToString("\n\n")
-//        )
-
-//        val bottomScriptUrlList = makeListFromSettingPath(
-//            editFragment,
-//            settingVariableList,
-//            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH,
-//            UsePath.homeScriptUrlsFilePath,
-//        )
-//        if(
-//            bottomScriptUrlList.isNotEmpty()
-//        ) editFragment.bottomScriptUrlList = bottomScriptUrlList
-
-//
-//        val homeFannelHistoryNameList = makeListFromSettingPath(
-//            editFragment,
-//            settingVariableList,
-//            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH,
-//            UsePath.homeFannelsFilePath,
-//        )
-//        if(
-//            homeFannelHistoryNameList.isNotEmpty()
-//        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
         if(
             editFragment.tag?.startsWith(
@@ -313,70 +156,18 @@ object ConfigFromScriptFileSetter {
 
         )
 
-//        editFragment.onNoUrlSaveMenu = SettingVariableReader.getStrValue(
-//            settingVariableList,
-//            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS,
-//            String()
-//        ).isNotEmpty()
-
-        editFragment.onUpdateLastModify = !(
-                SettingVariableReader.getStrValue(
-                    settingVariableList,
-                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY,
-                    String()
-                ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
-                )
+        editFragment.onUpdateLastModify = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY,
+            String()
+        ) != SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
     }
-
-//    private fun judgeExistListIndex(
-//        editFragment: EditFragment,
-//    ): Boolean {
-//        val isSetting = !IsCmdEdit.judge(editFragment)
-//
-//        if(
-//            isSetting
-//        ) return false
-////        FileSystems.writeFile(
-////            File(UsePath.cmdclickDefaultAppDirPath, "setVal.txt").absolutePath,
-////           listOf(
-////               "recordNumToMapNameValueInSettingHolder: ${editFragment.recordNumToMapNameValueInSettingHolder}",
-////               "setVariableTypeList: ${editFragment.setVariableTypeList?.joinToString("\n")}"
-////           ).joinToString("\n\n")
-////        )
-//
-////        val setVariableTypeList =
-////            editFragment.setVariableTypeList
-////                ?: return false
-////        val setVariableTypeListCon =
-////            "\n" + setVariableTypeList.joinToString("\n")
-//        val listIndexNewlineRegex = Regex(
-//            "\n[a-zA-Z0-9]{1,}:${EditTextSupportViewName.LIST_INDEX.str}="
-//        )
-//        return listIndexNewlineRegex.containsMatchIn(setVariableTypeListCon)
-//    }
 
     private fun setButtonVisible(
         editFragment: EditFragment,
         enableEditExecute: Boolean,
-//        enableCmdEdit: Boolean,
-//        isSettingEdit: Boolean,
         isOnlyCmdEdit: Boolean,
     ){
-//        editFragment.enableEditExecute =
-//            (editFragment.editExecuteValue ==
-//                    SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-//                    ) && onShortcut
-
-//        val enableCmdEdit = editFragment.enableCmdEdit
-
-//        val isSettingEdit = !enableCmdEdit
-//                || editFragment.passCmdVariableEdit ==
-//                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-//        val isOnlyCmdEdit = enableCmdEdit
-//                && !enableEditExecute
-//        val isCmdEditExecute = enableEditExecute
-//        enableCmdEdit
-//                && enableEditExecute
         editFragment.toolBarButtonVisibleMap.put(
             ToolbarButtonBariantForEdit.HISTORY,
             enableEditExecute
@@ -387,7 +178,6 @@ object ConfigFromScriptFileSetter {
         editFragment.toolBarButtonVisibleMap.put(
             settingButtonVariant,
             when(true) {
-//                isSettingEdit -> false
                 isOnlyCmdEdit -> false
                 else -> {
                     val settingButtonConfigMap =
@@ -409,7 +199,6 @@ object ConfigFromScriptFileSetter {
         editFragment.toolBarButtonVisibleMap.put(
             editButtonVariant,
             when (true) {
-//                isSettingEdit -> false
                 isOnlyCmdEdit -> false
                 else -> {
                     val editButtonConfigMap =
@@ -431,7 +220,6 @@ object ConfigFromScriptFileSetter {
         editFragment.toolBarButtonVisibleMap.put(
             okButtonVariant,
             when(true) {
-//                isSettingEdit -> true
                 isOnlyCmdEdit -> true
                 else -> {
                     val okButtonConfigMap =
@@ -453,7 +241,6 @@ object ConfigFromScriptFileSetter {
         editFragment.toolBarButtonVisibleMap.put(
             extraButtonVariant,
             when(true) {
-//                isSettingEdit -> false
                 isOnlyCmdEdit -> false
                 else -> {
                     val settingButtonConfigMap =
@@ -478,7 +265,6 @@ object ConfigFromScriptFileSetter {
         busyboxExecutor: BusyboxExecutor?,
         settingVariableList: List<String>?,
         onShortcut: Boolean,
-//        isSettingEdit: Boolean,
     ){
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         editFragment.toolbarButtonConfigMap =
@@ -529,7 +315,6 @@ object ConfigFromScriptFileSetter {
                     editFragment,
                     settingVariableList,
                     onShortcut,
-//                    isSettingEdit,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
                         editFragment.context,
@@ -539,47 +324,19 @@ object ConfigFromScriptFileSetter {
                     )
                 }
             )
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "toolbarInInitMap.txt").absolutePath,
-//            listOf(
-//                "settingVariableList ${settingVariableList}",
-//                "${CommandClickScriptVariable.SETTING_BUTTON_CONFIG}: ${execMakeToolbarButtonConfigMap(
-//                    editFragment,
-//                    settingVariableList,
-//                    CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
-//                    String(),
-//                    onShortcut,
-//                )}",
-//                "toolbarButtonConfigMap: ${editFragment.toolbarButtonConfigMap}",
-//            ).joinToString("\n")
-//        )
     }
 
     private fun setEditToolBarButtonIcon(
         editFragment: EditFragment,
-//        isSettingEdit: Boolean,
         isOnlyCmdEdit: Boolean,
     ){
-//        editFragment.enableEditExecute =
-//            (editFragment.editExecuteValue ==
-//                    SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-//                    ) && onShortcut
-
-//        val enableCmdEdit = editFragment.enableCmdEdit
-
-//        val isSettingEdit = !enableCmdEdit
-//                || editFragment.passCmdVariableEdit ==
-//                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-//        val isOnlyCmdEdit = enableCmdEdit
-//                && !enableEditExecute
-        val iconNameIdPairList = CmdClickIcons.values()
+        val iconNameIdPairList = CmdClickIcons.entries.toTypedArray()
         val defaultIconId = R.drawable.icons8_setting
         val defaultSettingButtonIconIdToCaption =
             Pair(defaultIconId, "setting")
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.SETTING,
             when(true) {
-//                isSettingEdit,
                 isOnlyCmdEdit ->
                     defaultSettingButtonIconIdToCaption
                 else -> {
@@ -620,8 +377,6 @@ object ConfigFromScriptFileSetter {
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.OK,
             when(true) {
-//                isSettingEdit ->
-//                    defaultOkButtonIconIdToCaption
                 isOnlyCmdEdit ->
                     defaultOkButtonIconIdToCaption
                 else -> {
@@ -648,8 +403,6 @@ object ConfigFromScriptFileSetter {
         editFragment.toolBarButtonIconMap.put(
             ToolbarButtonBariantForEdit.EDIT,
             when(true) {
-//                isSettingEdit ->
-//                    defaultEditButtonIconIdToCaption
                 isOnlyCmdEdit ->
                     defaultEditButtonIconIdToCaption
                 else -> {
@@ -695,14 +448,10 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         settingVariableList: List<String>?,
         onShortcut: Boolean,
-//        isSettingEdit: Boolean,
     ): Map<String, String> {
         if(!onShortcut){
             return mapOf()
         }
-//        val isSettingEdit = !editFragment.enableCmdEdit
-//                || editFragment.passCmdVariableEdit ==
-//                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
         return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
             settingVariableList,
@@ -710,59 +459,7 @@ object ConfigFromScriptFileSetter {
             editFragment.setReplaceVariableMap,
             String(),
         )
-//        return when(isSettingEdit) {
-//            true -> mapOf(
-//                SettingButtonConfigMapKey.CLICK.key to
-//                        listOf(
-//                            JsActionKeyManager.JsActionsKey.JS_FUNC.key,
-//                            MacroForToolbarButton.Macro.OK.name
-//                        ).joinToString("=")
-//            )
-//            else -> {
-//                ListSettingVariableListMaker.makeConfigMapFromSettingValList(
-//                    CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
-//                    settingVariableList,
-//                    editFragment.fannelInfoMap,
-//                    editFragment.setReplaceVariableMap,
-//                    String(),
-//                )
-//            }
-//        }
     }
-
-//    private fun makeListFromSettingPath(
-//        editFragment: EditFragment,
-//        settingVariableList: List<String>?,
-//        settingValName: String,
-//        defaultPath: String,
-//    ): List<String> {
-//        val fannelInfoMap = editFragment.fannelInfoMap
-////        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-////            fannelInfoMap
-////        )
-//        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-//            fannelInfoMap
-//        )
-//        val bottomScriptUrlPath =  SettingVariableReader.getStrValue(
-//            settingVariableList,
-//            settingValName,
-//            defaultPath,
-//        ).let {
-//            val repPath = when(it.isEmpty()){
-//                true -> defaultPath
-//                else -> it
-//            }
-//            SetReplaceVariabler.execReplaceByReplaceVariables(
-//                repPath,
-//                editFragment.setReplaceVariableMap,
-////                currentAppDirPath,
-//                currentFannelName,
-//            )
-//        }
-//        return SettingVariableReader.setListFromPath(
-//            bottomScriptUrlPath
-//        )
-//    }
 }
 
 private object AlterToolForSetValType {
@@ -859,7 +556,6 @@ private object AlterToolForSetValType {
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             alterValue,
             replaceVariableMap,
-//            String(),
             String()
         ).let {
             CmdClickMap.createMap(
