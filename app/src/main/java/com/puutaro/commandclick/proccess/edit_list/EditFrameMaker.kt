@@ -18,12 +18,14 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
@@ -42,6 +44,8 @@ object EditFrameMaker {
     private val textKey = EditComponent.Template.EditComponentKey.TEXT.key
     private val textPropertyKey = EditComponent.Template.EditComponentKey.TEXT_PROPERTY.key
     private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
+    private val widthKey = EditComponent.Template.EditComponentKey.WIDTH.key
+    private val weightKey = EditComponent.Template.EditComponentKey.WEIGHT.key
 
 
     private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
@@ -95,14 +99,37 @@ object EditFrameMaker {
             } ?: ViewGroup.LayoutParams.MATCH_PARENT
 //                ,ScreenSizeCalculator.toDp(context, 50)
         }
+        val overrideWidth = withContext(Dispatchers.IO) {
+            PairListTool.getValue(
+                frameKeyPairList,
+                widthKey,
+            )?.let {
+                try {
+                    ScreenSizeCalculator.toDp(context, it.toInt())
+                } catch(e: Exception){
+                    null
+                }
+            } ?: width
+//                ,ScreenSizeCalculator.toDp(context, 50)
+        }
         tag?.let {
             buttonLayout.tag = it
         }
         val param = LinearLayoutCompat.LayoutParams(
-            width,
+            overrideWidth,
             height,
         )
-        weight?.let {
+        val overrideWeight = PairListTool.getValue(
+            frameKeyPairList,
+            weightKey
+        )?.let {
+            try{
+                it.toFloat()
+            } catch (e: Exception){
+                null
+            }
+        } ?: weight
+        overrideWeight?.let {
             param.weight = it
         }
         val marginDp = when(isMarginZero) {

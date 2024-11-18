@@ -140,6 +140,16 @@ class EditComponentListAdapter(
         setReplaceVariableMap,
         viewLayoutPath
     )
+//        .let {
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "eframeMapListToLinearMapList.txt").absolutePath,
+//            listOf(
+//                "lineMapList: ${lineMapList}",
+//                "eframeMapListToLinearMapList: ${it}",
+//            ).joinToString("\n\n")
+//        )
+//        it
+//    }
     private val frameMap = frameMapListToLinearMapList?.first ?: emptyMap()
     private val frameTagToLinearKeysListMap = frameMapListToLinearMapList?.second ?: emptyMap()
     var deleteConfigMap: Map<String, String> = mapOf()
@@ -193,6 +203,8 @@ class EditComponentListAdapter(
         private val typeSeparator = EditComponent.Template.typeSeparator
         private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
         private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
+        private val widthKey = EditComponent.Template.EditComponentKey.WIDTH.key
         fun makeLinearFrameKeyPairsList(
             linearFrameKeyPairsListCon: String?
         ): List<Pair<String, String>> {
@@ -234,6 +246,14 @@ class EditComponentListAdapter(
                 ListSettingsForEditList.ListSettingKey.DEFAULT_FRAME_TAG.key
             )
         }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "eframeMapListToLinearMapList_inBinder.txt").absolutePath,
+//            listOf(
+//                "frameMap: ${frameMap}",
+//                "lineMap: ${lineMap}",
+//                "frameTag: ${frameTag}",
+//            ).joinToString("\n\n")
+//        )
         if(
             frameTag.isNullOrEmpty()
         ) return
@@ -295,7 +315,7 @@ class EditComponentListAdapter(
                     totalSettingValMap,
 
                 )
-                val frameKeyList = JsActionKeyManager.JsActionsKey.values().map{
+                val frameKeyList = JsActionKeyManager.JsActionsKey.entries.map{
                     it.key
                 }
                 withContext(Dispatchers.IO) setClickOrTouch@ {
@@ -383,7 +403,7 @@ class EditComponentListAdapter(
                     orientation = LinearLayoutCompat.VERTICAL
                 }
                 frameTagToLinearKeysListMap.get(frameTag)?.forEach {
-                        linearKeys ->
+                        linearKeyValues ->
                     val linearParam = LinearLayoutCompat.LayoutParams(
                         LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                         LinearLayoutCompat.LayoutParams.WRAP_CONTENT
@@ -394,8 +414,8 @@ class EditComponentListAdapter(
                         weightSum = weightSumFloat
                         orientation = LinearLayoutCompat.HORIZONTAL
                     }
-                    val layoutWeight = weightSumFloat / linearKeys.size
-                    linearKeys.forEach setFrame@ { linearFrameKeyPairsListConSrc ->
+                    val layoutWeight = weightSumFloat / linearKeyValues.size
+                    linearKeyValues.forEach setFrame@ { linearFrameKeyPairsListConSrc ->
                         val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
                             EditComponent.Template.ReplaceHolder.replaceHolder(
                                 linearFrameKeyPairsListConSrc,
@@ -416,6 +436,16 @@ class EditComponentListAdapter(
                                 tagKey,
                             ) ?: String()
                         }
+                        if(linearFrameTag.startsWith(EditComponent.Template.TagManager.TagMacro.LINEAR_SETTING.name)){
+                            linearLayout.apply {
+                                layoutParams = EditComponent.Template.LinearLayoutUpdater.update(
+                                    linearFrameKeyPairsList
+                                )
+                                weightSum = weightSumFloat
+                                orientation = LinearLayoutCompat.HORIZONTAL
+                            }
+                            return@setFrame
+                        }
                         val linearFrameLayout = EditFrameMaker.make(
                             context,
                             fannelInfoMap,
@@ -428,7 +458,7 @@ class EditComponentListAdapter(
                             false,
                             totalSettingValMap
                         ) ?: return@setFrame
-                        val linearKeyList = JsActionKeyManager.JsActionsKey.values().map{
+                        val linearKeyList = JsActionKeyManager.JsActionsKey.entries.map{
                             it.key
                         }
                         withContext(Dispatchers.IO) {
@@ -453,6 +483,10 @@ class EditComponentListAdapter(
 //
 //                                        ).joinToString("\n")
 //                                )
+                                holder.keyPairListConMap.put(
+                                    linearFrameTag,
+                                    linearFrameKeyPairsListCon
+                                )
                                 if(
                                     !isJsAc
                                     && linearFrameLayout.tag != null
@@ -461,10 +495,6 @@ class EditComponentListAdapter(
                                     linearFrameLayout.isClickable = false
                                     return@let
                                 }
-                                holder.keyPairListConMap.put(
-                                    linearFrameTag,
-                                    linearFrameKeyPairsListCon
-                                )
                                 val outValue = TypedValue()
                                 context.theme.resolveAttribute(
                                     android.R.attr.selectableItemBackground,

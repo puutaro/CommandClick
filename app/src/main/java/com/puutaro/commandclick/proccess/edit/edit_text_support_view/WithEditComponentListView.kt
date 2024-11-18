@@ -316,9 +316,10 @@ object WithEditComponentListView{
             editListConfigMap,
             layoutKey,
         )
-        val frameMapListToLinearMapList = when(footerOrToolbarLayoutPath) {
-            EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
-                -> ListSettingsForEditList.ViewLayoutPathManager.parseFromList(
+        val isOnlyCmdValEdit =
+            footerOrToolbarLayoutPath == EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
+        val frameMapListToLinearMapList = when(isOnlyCmdValEdit) {
+            true -> ListSettingsForEditList.ViewLayoutPathManager.parseFromList(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
@@ -361,7 +362,7 @@ object WithEditComponentListView{
                             orientation = LinearLayoutCompat.HORIZONTAL
                         }
                     }
-                    val layoutWeight = when(isEditToolbar) {
+                    val layoutWeight = when(isEditToolbar && !isOnlyCmdValEdit) {
                         true -> weightSumFloat / (linearKeys.size + 1)
                         else -> weightSumFloat / linearKeys.size
                     }
@@ -396,6 +397,16 @@ object WithEditComponentListView{
                                 linearFrameKeyPairsList,
                                 tagKey,
                             ) ?: String()
+                        }
+                        if(linearFrameTag.startsWith(EditComponent.Template.TagManager.TagMacro.LINEAR_SETTING.name)){
+                            linearLayout?.apply {
+                                layoutParams = EditComponent.Template.LinearLayoutUpdater.update(
+                                    linearFrameKeyPairsList
+                                )
+                                weightSum = weightSumFloat
+                                orientation = LinearLayoutCompat.HORIZONTAL
+                            }
+                            return@setFrame
                         }
                         val editComponentListAdapter =
                             editListRecyclerView.adapter as? EditComponentListAdapter

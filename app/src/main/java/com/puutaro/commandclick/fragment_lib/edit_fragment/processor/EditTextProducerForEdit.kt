@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -55,32 +56,40 @@ object EditTextProducerForEdit {
         editFragment: EditFragment,
     ){
         val binding = editFragment.binding
-        CoroutineScope(Dispatchers.Main).launch {
-            ExecSetToolbarButtonImage.setImageButton(
-                binding.editToolbarFannelCenterButtonImage,
-                CmdClickIcons.HISTORY
-            )
-            binding.editToolbarFannelCenterButton.setOnClickListener {
-                FannelHistoryButtonEvent.invoke(editFragment)
+        val isOnlyCmdValEdit = !editFragment.enableEditExecute
+        when(isOnlyCmdValEdit) {
+            true -> {
+                val toolbarLayoutMap = mapOf(
+                    EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH.key to
+                            EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name,
+                )
+                editFragment.editListConfigMap = editFragment.editListConfigMap?.let {
+                    it + toolbarLayoutMap
+                } ?: toolbarLayoutMap
+            }
+            else -> {
+                CoroutineScope(Dispatchers.Main).launch {
+                    ExecSetToolbarButtonImage.setImageButton(
+                        binding.editToolbarFannelCenterButtonImage,
+                        CmdClickIcons.HISTORY
+                    )
+                    binding.editToolbarFannelCenterButton.setOnClickListener {
+                        FannelHistoryButtonEvent.invoke(editFragment)
+                    }
+                }
             }
         }
+        val editToolbarFannelCenterButton =
+            binding.editToolbarFannelCenterButton.apply {
+                isVisible = !isOnlyCmdValEdit
+            }
 
-        val isOnlyCmdValEdit = !editFragment.enableEditExecute
-        if(isOnlyCmdValEdit) {
-            val toolbarLayoutMap = mapOf(
-                EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH.key to
-                        EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name,
-            )
-            editFragment.editListConfigMap = editFragment.editListConfigMap?.let {
-                it + toolbarLayoutMap
-            } ?: toolbarLayoutMap
-        }
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
-            listOf(
-                "editFragment.editListConfigMap: ${editFragment.editListConfigMap}"
-            ).joinToString("\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
+//            listOf(
+//                "editFragment.editListConfigMap: ${editFragment.editListConfigMap}"
+//            ).joinToString("\n")
+//        )
 
         WithEditComponentListView.create(
             editFragment,
@@ -95,7 +104,7 @@ object EditTextProducerForEdit {
             binding.editListSearchEditText,
             binding.editFooterLinearlayout,
             binding.editToolBarLinearLayout,
-            binding.editToolbarFannelCenterButton,
+            editToolbarFannelCenterButton,
             editFragment.mainFannelConList,
         )
     }

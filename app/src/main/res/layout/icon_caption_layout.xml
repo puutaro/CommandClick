@@ -17,13 +17,14 @@
         android:id="@+id/icon_caption_layout_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/icons8_wheel"
+        android:src="@null"
         app:tint="@color/file_dark_green_color"
         android:scaleType="fitCenter"
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="0dp"
         />
+<!--    "@drawable/icons8_wheel"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
         android:id="@+id/icon_caption_layout_caption"
         android:layout_width="match_parent"

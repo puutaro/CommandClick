@@ -6,15 +6,18 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
+import java.io.File
 
 object EditTextAndFannelUpdaterForTerm {
     fun update(
@@ -69,7 +72,15 @@ object EditTextAndFannelUpdaterForTerm {
             holder.srcImage = lineMap.get(
                 ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
             ) ?: String()
-
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "editListIndex.txt").absolutePath,
+//                listOf(
+//                    "textView: ${textView?.text}",
+//                    "updateText: ${updateText}",
+//                    "holder.keyPairListConMap: ${holder.keyPairListConMap}",
+//                    "",
+//                ).joinToString("\n")
+//            )
             UpdateAndSaveMainFannel.updateAndSave(
                 editComponentListAdapter,
                 holder.keyPairListConMap,
@@ -88,7 +99,7 @@ object EditTextAndFannelUpdaterForTerm {
 //        val editToolbarTag = activity.getString(
 //            R.string.edit_toolbar_tag
 //        )
-        val srcFragmentEnum = EditListRecyclerViewGetter.RecyclerViewFragment.values().firstOrNull {
+        val srcFragmentEnum = EditListRecyclerViewGetter.RecyclerViewFragment.entries.firstOrNull {
             it.frag == srcFragmentStr
         } ?: return
         val linearLayout = when(srcFragmentEnum){
@@ -182,6 +193,19 @@ object EditTextAndFannelUpdaterForTerm {
                 textMap,
                 updateText
             )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "editListIndex_updateAndSave.txt").absolutePath,
+//                listOf(
+//                    "textView: ${textView?.text}",
+//                    "updateText: ${updateText}",
+//                    "updateText: ${text}",
+//                    "tagName: ${tagName}",
+//                    "keyPairListConMap: ${keyPairListConMap}",
+//                    "linearFrameKeyPairsListCon: ${linearFrameKeyPairsListCon}",
+//                    "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+//                    "textMap: ${textMap}",
+//                ).joinToString("\n\n")
+//            )
             textView?.text = text
             execUpdateAndSave(
                 textView,

@@ -11,6 +11,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.QuoteTool
 
 object EditComponent {
@@ -96,6 +97,8 @@ object EditComponent {
                         IS_CONSEC("isConsec"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
                         HEIGHT("height"),
+                        WIDTH("width"),
+                        WEIGHT("weight"),
                 }
 
 
@@ -149,6 +152,67 @@ object EditComponent {
                                 STROKE_WIDTH("strokeWidth"),
                                 ALPHA("alpha"),
 //                                DISABLE_TEXT_SELECT("disableTextSelect"),
+                        }
+                }
+
+                object TagManager {
+                        enum class TagMacro {
+                                LINEAR_SETTING
+                        }
+                }
+
+                object HeightManager {
+                        enum class HeightMacro(
+                                val macroInt: Int,
+                        ){
+                                WRAP(LinearLayoutCompat.LayoutParams.WRAP_CONTENT),
+                                MATCH(LinearLayoutCompat.LayoutParams.MATCH_PARENT),
+                        }
+                }
+
+                object WidthManager {
+                        enum class WidthMacro(
+                                val macroInt: Int,
+                        ){
+                                WRAP(LinearLayoutCompat.LayoutParams.WRAP_CONTENT),
+                                MATCH(LinearLayoutCompat.LayoutParams.MATCH_PARENT),
+                        }
+                }
+
+                object LinearLayoutUpdater {
+                        fun update(
+                                linearFrameKeyPairsList: List<Pair<String, String>>
+                        ): LinearLayoutCompat.LayoutParams {
+                                val width = PairListTool.getValue(
+                                        linearFrameKeyPairsList,
+                                        EditComponentKey.WIDTH.key,
+                                )?.let {
+                                                heightStr ->
+                                        EditComponent.Template.WidthManager.WidthMacro.entries.firstOrNull {
+                                                it.name == heightStr
+                                        }?.macroInt ?: try {
+                                                heightStr.toInt()
+                                        } catch (e: Exception){
+                                                null
+                                        }
+                                }?: LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                                val height = PairListTool.getValue(
+                                        linearFrameKeyPairsList,
+                                        EditComponentKey.HEIGHT.key,
+                                )?.let {
+                                                heightStr ->
+                                        EditComponent.Template.HeightManager.HeightMacro.entries.firstOrNull {
+                                                it.name == heightStr
+                                        }?.macroInt ?: try {
+                                                heightStr.toInt()
+                                        } catch (e: Exception){
+                                                null
+                                        }
+                                }?: LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                                return LinearLayoutCompat.LayoutParams(
+                                        width,
+                                        height
+                                )
                         }
                 }
 
