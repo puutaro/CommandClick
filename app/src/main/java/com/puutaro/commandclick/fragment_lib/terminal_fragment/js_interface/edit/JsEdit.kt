@@ -85,7 +85,7 @@ class JsEdit(
     ): String {
         val terminalFragment = terminalFragmentRef.get()
             ?: return String()
-
+        val context = terminalFragment.context
         val editListRecyclerView = EditListRecyclerViewGetter.get(
             terminalFragment,
             srcFragment
@@ -93,6 +93,7 @@ class JsEdit(
         val editComponentListAdapter =
             editListRecyclerView.adapter as EditComponentListAdapter
         return editComponentListAdapter.getCurrentSettingVals(
+            context,
             targetVariableName
         )?.let {
             QuoteTool.trimBothEdgeQuote(it)

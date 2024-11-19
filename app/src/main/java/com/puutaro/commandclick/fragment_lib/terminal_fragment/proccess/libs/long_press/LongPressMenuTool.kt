@@ -190,10 +190,10 @@ object LongPressMenuTool {
                                     ).let {
                                         val longPressInfoMapCon =
                                             SettingFile.read(
+                                                context,
                                                 it,
                                                 curLongPressFannelPath,
                                                 setReplaceVariables,
-                                                false,
                                             )
 //                                            SetReplaceVariabler.execReplaceByReplaceVariables(
 //                                                ReadText(it).readText(),
@@ -236,10 +236,10 @@ object LongPressMenuTool {
                                     val longPressInfoMapSrc = let {
                                         val longPressInfoMapCon =
                                             SettingFile.read(
+                                                context,
                                                 fannelNameOrOriginalLongPressInfoPath,
                                                 curLongPressFannelPath,
                                                 setReplaceVariables,
-                                                false,
                                             )
 //                                            SetReplaceVariabler.execReplaceByReplaceVariables(
 //                                                ReadText(fannelNameOrOriginalLongPressInfoPath).readText(),

@@ -356,6 +356,7 @@ object UbuntuBroadcastHandler {
             ).split("\n")
         }
         FannelHistoryAdminEvent.register(
+            context,
             sharePref,
             fannelName,
             mainFannelSettingConList,

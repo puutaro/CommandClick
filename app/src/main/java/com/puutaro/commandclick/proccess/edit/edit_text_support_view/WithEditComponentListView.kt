@@ -95,6 +95,7 @@ object WithEditComponentListView{
             ) ?: String()
             val titleSettingMap = withContext(Dispatchers.IO){
                 ListSettingVariableListMaker.makeFromSettingPath(
+                    context,
                     titleSettingPath,
                     fannelInfoMap,
                     setReplaceVariableMap,
@@ -320,11 +321,13 @@ object WithEditComponentListView{
             footerOrToolbarLayoutPath == EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
         val frameMapListToLinearMapList = when(isOnlyCmdValEdit) {
             true -> ListSettingsForEditList.ViewLayoutPathManager.parseFromList(
+                context,
                 fannelInfoMap,
                 setReplaceVariableMap,
                 EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
                     )
             else -> ListSettingsForEditList.ViewLayoutPathManager.parse(
+                context,
                 fannelInfoMap,
                 setReplaceVariableMap,
                 footerOrToolbarLayoutPath

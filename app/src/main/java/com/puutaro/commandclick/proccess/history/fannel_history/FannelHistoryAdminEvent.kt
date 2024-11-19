@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.history.fannel_history
 
+import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -14,6 +15,7 @@ import java.io.File
 
 object FannelHistoryAdminEvent {
     fun register(
+        context: Context?,
         sharedPref: FannelInfoTool.FannelInfoSharePref?,
         selectedFannelName: String,
         mainFannelSettingConList: List<String>,
@@ -54,7 +56,7 @@ object FannelHistoryAdminEvent {
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         }
         val fannelState = FannelStateManager.getState(
-//            selectedAppDirPath,
+            context,
             selectedFannelName,
             mainFannelSettingConList,
             setReplaceVariableMap,

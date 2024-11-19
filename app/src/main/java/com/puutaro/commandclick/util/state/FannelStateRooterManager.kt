@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.state
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
@@ -16,6 +17,7 @@ object FannelStateRooterManager {
         "default"
 
     fun makeSettingVariableList(
+        context: Context?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingSectionStart: String,
@@ -37,6 +39,7 @@ object FannelStateRooterManager {
             settingSectionEnd,
         )
         val importDisableValList = ListSettingVariableListMaker.makeFromSettingVariableList(
+            context,
             CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST,
             fannelInfoMap,
             setReplaceVariableMap,

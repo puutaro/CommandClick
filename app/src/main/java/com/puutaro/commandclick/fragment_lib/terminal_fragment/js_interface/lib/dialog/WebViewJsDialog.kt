@@ -1254,6 +1254,7 @@ class WebViewJsDialog(
         ) {
             val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
                 debugPath,
+                onFormat = TxtHtmlDescriber.switchOff,
             )
             val extraStrPairList = listOf(
                 PocketWebviewLoadUrlExtra.url.schema

@@ -196,6 +196,7 @@ class EditFragment: Fragment() {
             settingFannelPath,
         )
         FannelStateManager.updateState(
+            context,
             currentFannelState,
             fannelInfoMap,
             setReplaceVariableMap,

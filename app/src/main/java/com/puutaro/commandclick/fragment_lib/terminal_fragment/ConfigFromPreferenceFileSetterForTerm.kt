@@ -217,6 +217,7 @@ object ConfigFromPreferenceFileSetterForTerm {
                 CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
             )
             terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
+                context,
                 CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
                 terminalFragment.fannelInfoMap,
                 terminalFragment.setReplaceVariableMap,
@@ -349,6 +350,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
         )
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
+            context,
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             terminalFragment.fannelInfoMap,
             terminalFragment.setReplaceVariableMap,
@@ -545,6 +547,7 @@ private fun makeSettingVariableListForTerm(
         settingSectionEnd
     )
     return FannelStateRooterManager.makeSettingVariableList(
+        terminalFragment.context,
         terminalFragment.fannelInfoMap,
         terminalFragment.setReplaceVariableMap,
         settingSectionStart,

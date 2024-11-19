@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit_list.config_settings
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
@@ -56,6 +57,7 @@ object ListSettingsForEditList  {
         }
 
         fun parse(
+            context: Context?,
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutPath: String,
@@ -73,6 +75,7 @@ object ListSettingsForEditList  {
             )
             val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
             val viewLayoutListSrc = LayoutSettingFile.read(
+                context,
                 viewLayoutPathObj.absolutePath,
                 fannelPath,
                 setReplaceVariableMap,
@@ -91,6 +94,7 @@ object ListSettingsForEditList  {
         }
 
         fun parseFromList(
+            context: Context?,
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutConList: List<String>,
@@ -104,6 +108,7 @@ object ListSettingsForEditList  {
                 fannelInfoMap
             )
             val viewLayoutListSrc = LayoutSettingFile.readFromList(
+                context,
                 viewLayoutConList,
                 fannelName,
                 setReplaceVariableMap,

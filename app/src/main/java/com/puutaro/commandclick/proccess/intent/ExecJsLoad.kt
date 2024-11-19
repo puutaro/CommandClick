@@ -278,6 +278,7 @@ object ExecJsLoad {
             setReplaceVariableMap
         )
         val settingSectionVariableList = FannelStateRooterManager.makeSettingVariableList(
+            context,
             fannelInfoMap,
             setReplaceVariableMap,
             settingSectionStart,

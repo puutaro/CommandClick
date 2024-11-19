@@ -21,20 +21,36 @@ object TxtHtmlDescriber {
     val searchQuerySuffix = "?q="
     val qerySeparator = '&'
     private val switchOn = "ON"
-    private val switchOff = "OFF"
+    val switchOff = "OFF"
 
 
     fun makeTxtHtmlUrl(
         txtPath: String,
-        queryConWithNewline: String? = null,
+        onFormat: String = switchOn,
+        disableScroll: String = switchOff,
+        fannelPath: String? = null,
+        saveTag: String? = null,
     ): String {
-        val queryParameter = when(queryConWithNewline.isNullOrEmpty()){
-            true -> String()
-            else -> searchQuerySuffix + queryConWithNewline.replace("\n", qerySeparator.toString())
-        }
+        val queryParameter = listOf(
+            "${TxtHtmlQueryKey.ON_FORMAT.key}=${onFormat}",
+            "${TxtHtmlQueryKey.DISABLE_SCROLL.key}=${disableScroll}",
+            fannelPath?.let {
+                "${TxtHtmlQueryKey.FANNEL_PATH.key}=${it}"
+            } ?: String(),
+            saveTag?.let {
+                "${TxtHtmlQueryKey.SAVE_TAG.key}=${it}"
+            } ?: String(),
+        ).filter {
+            it.isNotEmpty()
+        }.joinToString(qerySeparator.toString())
+//        val queryParameter = when(queryConWithNewline.isNullOrEmpty()){
+//            true -> String()
+//            else -> searchQuerySuffix + queryConWithNewline.replace("\n", qerySeparator.toString())
+//        }
         return listOf(
             WevViewDialogUriPrefix.TEXT_CON.prefix,
             txtPath,
+            searchQuerySuffix,
             queryParameter,
         ).joinToString(String())
     }

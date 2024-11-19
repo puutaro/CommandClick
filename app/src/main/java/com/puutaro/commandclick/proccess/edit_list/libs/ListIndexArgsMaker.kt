@@ -65,6 +65,7 @@ class ListIndexArgsMaker(
                 }
             val settingMenuMapCon = when (isSettingMenuSettingFilePath) {
                 true -> SettingFile.read(
+                    fragment.context,
                     settingMenuSettingFilePathObj.absolutePath,
                     File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,

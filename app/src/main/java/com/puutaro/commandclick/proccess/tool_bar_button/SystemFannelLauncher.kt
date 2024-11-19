@@ -55,7 +55,7 @@ object SystemFannelLauncher {
         }
 
         val fannelState = FannelStateManager.getState(
-//            parentDirPath,
+            context,
             fannelName,
             mainFannelSettingConList,
             setReplaceVariableMap,
@@ -109,7 +109,7 @@ object SystemFannelLauncher {
         }
 
         val fannelState = FannelStateManager.getState(
-//            appDirPath,
+            activity,
             fannelName,
             mainFannelSettingConList,
             setReplaceVariableMap

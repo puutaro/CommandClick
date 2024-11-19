@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
+import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -114,6 +115,7 @@ class EditComponentListAdapter(
     }
 
     fun getCurrentSettingVals(
+        context: Context?,
         settingValName: String,
     ): String? {
         val curSettingValsMap = RecordNumToMapNameValueInHolder.parse(
@@ -136,6 +138,7 @@ class EditComponentListAdapter(
         ListSettingsForEditList.ListSettingKey.VIEW_LAYOUT_PATH.key,
     )
     private val frameMapListToLinearMapList = ListSettingsForEditList.ViewLayoutPathManager.parse(
+        context,
         fannelInfoMap,
         setReplaceVariableMap,
         viewLayoutPath

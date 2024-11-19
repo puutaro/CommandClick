@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
@@ -127,9 +126,11 @@ object EditExecuteOrElse {
             fragment is CommandIndexFragment
                     || isIndexTerminal(fragment)
         val isEditTrans = isIndex && isNotHome
+        val context = fragment.context
         when(isEditTrans) {
             true -> {
                 val fannelState = FannelStateManager.getState(
+                    context,
                     fannelName,
                     mainFannelSettingConList,
                     setReplaceVariableMap,
@@ -149,6 +150,7 @@ object EditExecuteOrElse {
              else -> {
                  val sharePref = FannelInfoTool.getSharePref(fragment.context)
                  FannelHistoryAdminEvent.register(
+                     context,
                      sharePref,
                      fannelName,
                      mainFannelSettingConList,
@@ -187,6 +189,7 @@ object EditExecuteOrElse {
             fannelName
         )
         val fannelState = FannelStateManager.getState(
+            context,
             fannelName,
             mainFannelSettingConList,
             setReplaceVariableMap

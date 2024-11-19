@@ -28,6 +28,8 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         mainFannelConList: List<String>
     ){
+        val context = editFragment.context
+            ?: return
         val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
         val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
         val fannelInfoMap = editFragment.fannelInfoMap
@@ -36,6 +38,7 @@ object ConfigFromScriptFileSetter {
             fannelInfoMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
+            context,
             fannelInfoMap,
             setReplaceVariableMap,
             settingSectionStart,
@@ -45,6 +48,7 @@ object ConfigFromScriptFileSetter {
         editFragment.settingFannelConList = settingVariableList
 
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
             settingVariableList,
             fannelInfoMap,
@@ -72,6 +76,7 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
         )
         editFragment.editListConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             CommandClickScriptVariable.EDIT_LIST_CONFIG,
             settingVariableList,
             fannelInfoMap,
@@ -435,7 +440,9 @@ object ConfigFromScriptFileSetter {
         if(
             !onShortcut
         ) return mapOf()
+        val context = editFragment.context
         return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             targetSettingConfigValName,
             settingVariableList,
             editFragment.fannelInfoMap,
@@ -452,7 +459,9 @@ object ConfigFromScriptFileSetter {
         if(!onShortcut){
             return mapOf()
         }
+        val context = editFragment.context
         return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
             settingVariableList,
             editFragment.fannelInfoMap,

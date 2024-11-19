@@ -127,6 +127,7 @@ object AutoExecFireManager {
                 )
             else ->
                 FannelStateRooterManager.makeSettingVariableList(
+                    terminalFragment.context,
                     terminalFragment.fannelInfoMap,
                     terminalFragment.setReplaceVariableMap,
                     settingSectionStart,

@@ -115,6 +115,7 @@ class EditListDialog(
             CommandClickScriptVariable.SETTING_SEC_END,
         )
         val editListConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             CommandClickScriptVariable.EDIT_LIST_CONFIG,
             virtualSettingValsListForEditList,
             fannelInfoMap,

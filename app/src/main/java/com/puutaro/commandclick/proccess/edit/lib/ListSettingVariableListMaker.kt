@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
@@ -17,6 +18,7 @@ object ListSettingVariableListMaker {
         CommandClickScriptVariable.SET_REPLACE_VARIABLE
 
     fun makeConfigMapFromSettingValList(
+        context: Context?,
         targetSettingConfigValName: String,
         settingVariableList: List<String>?,
         fannelInfoMap: Map<String, String>,
@@ -25,6 +27,7 @@ object ListSettingVariableListMaker {
     ): Map<String, String> {
         val settingButtonConfigMapStr =
             makeFromSettingVariableList(
+                context,
                 targetSettingConfigValName,
                 fannelInfoMap,
                 setReplaceVariableMap,
@@ -44,11 +47,11 @@ object ListSettingVariableListMaker {
         )
     }
     fun makeFromSettingVariableList(
+        context: Context?,
         settingVariableName: String,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingVariablesList: List<String>?,
-        onImport: Boolean = true
     ): List<String> {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap
@@ -79,10 +82,10 @@ object ListSettingVariableListMaker {
                             currentFannelName
                         )
                     SettingFile.read(
+                        context,
                         listSettingVariablePath,
                         File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                         setReplaceVariableMap,
-                        onImport
                     )
                 }
             }.let {
@@ -108,16 +111,17 @@ object ListSettingVariableListMaker {
     }
 
     fun makeFromSettingPath(
+        context: Context?,
         settingPath: String,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): Map<String, String> {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         val configMapStr = SettingFile.read(
+            context,
             settingPath,
             File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
-            true
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "ltitleSetting.txt").absolutePath,

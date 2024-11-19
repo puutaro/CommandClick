@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.map
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -13,6 +14,7 @@ object ConfigMapTool {
 
     val filePrefix = EditSettings.filePrefix
     fun create(
+        context: Context?,
         configPath: String,
         defaultConfigMapStr: String,
         fannelInfoMap: Map<String, String>,
@@ -34,6 +36,7 @@ object ConfigMapTool {
         return when (settingMenuSettingFilePathObj.isFile) {
             true -> {
                 SettingFile.read(
+                    context,
                     settingMenuSettingFilePathObj.absolutePath,
                     File(UsePath.cmdclickDefaultAppDirPath, currentScriptFileName).absolutePath,
                     setReplaceVariableMap,

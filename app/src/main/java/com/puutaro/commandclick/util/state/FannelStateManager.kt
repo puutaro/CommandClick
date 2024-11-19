@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.state
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
@@ -16,7 +17,7 @@ object FannelStateManager {
     private val fannelStateKey = FannelStateTsvKey.FANNEL_STATE.key
 
     fun getState(
-//        currentAppDirPath: String,
+        context: Context?,
         currentFannelName: String,
         mainFannelSettingConList: List<String>?,
         setReplaceVariableMap: Map<String, String>?
@@ -25,12 +26,11 @@ object FannelStateManager {
             mainFannelSettingConList.isNullOrEmpty()
         ) {
             true -> return execGetState(
-//                currentAppDirPath,
                 currentFannelName,
                 setReplaceVariableMap,
             )
             else -> execGetFirstState(
-//                currentAppDirPath,
+                context,
                 currentFannelName,
                 mainFannelSettingConList,
                 setReplaceVariableMap,
@@ -50,6 +50,7 @@ object FannelStateManager {
     }
 
     fun updateState(
+        context: Context?,
         updateFannelState: String,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
@@ -74,6 +75,7 @@ object FannelStateManager {
         )
 
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             CommandClickScriptVariable.FANNEL_STATE_CONFIG,
             mainFannelSettingConList,
             fannelInfoMap,
@@ -100,7 +102,7 @@ object FannelStateManager {
     }
 
     private fun execGetFirstState(
-//        currentAppDirPath: String,
+        context: Context?,
         currentFannelName: String,
         mainFannelSettingConList: List<String>,
         setReplaceVariableMap: Map<String, String>?,
@@ -110,6 +112,7 @@ object FannelStateManager {
             currentFannelName
         )
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            context,
             CommandClickScriptVariable.FANNEL_STATE_CONFIG,
             mainFannelSettingConList,
             fannelInfoMap,

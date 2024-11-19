@@ -53,11 +53,11 @@ object JsDebugger {
             context == null
         ) return
         val notiLevel =
-            BroadCastIntentExtraForJsDebug.NotiLevelType.values().firstOrNull {
+            BroadCastIntentExtraForJsDebug.NotiLevelType.entries.firstOrNull {
                 it.level == notiLevelStr
             } ?: BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH
         val debugNotiJanre =
-            BroadCastIntentExtraForJsDebug.DebugGenre.values().firstOrNull {
+            BroadCastIntentExtraForJsDebug.DebugGenre.entries.firstOrNull {
                 it.type == debugNotiJanreStr
             } ?: BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR
         val notiDatetime = LocalDateTime.now().toString()
@@ -154,11 +154,11 @@ object JsDebugger {
         val debugGenreStr = intent.getStringExtra(
             BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme
         )
-        val debugGenre = BroadCastIntentExtraForJsDebug.DebugGenre.values().firstOrNull {
+        val debugGenre = BroadCastIntentExtraForJsDebug.DebugGenre.entries.firstOrNull {
             it.type == debugGenreStr
         } ?: BroadCastIntentExtraForJsDebug.DebugGenre.ERR
         val debugLevel =
-            BroadCastIntentExtraForJsDebug.NotiLevelType.values().firstOrNull {
+            BroadCastIntentExtraForJsDebug.NotiLevelType.entries.firstOrNull {
                 it.level == debugLevelStr
             } ?: BroadCastIntentExtraForJsDebug.NotiLevelType.LOW
         val notificationIdToImportance = when(debugLevel){
@@ -236,6 +236,7 @@ object JsDebugger {
                 CheckTool.FinalSaver.saveJsConDebugReport()
                 val launchUrlCon = TxtHtmlDescriber.makeTxtHtmlUrl(
                     UsePath.jsDebugReportPath,
+                    onFormat = TxtHtmlDescriber.switchOff
                 )
                 launchLogDialog(
                     terminalFragment,
@@ -257,9 +258,13 @@ object JsDebugger {
             editDebugLogPath,
             sysOrErrLogCon
         )
-        val launchUrlCon = makeTxtHtmlUrlForDebug(
+        val launchUrlCon = TxtHtmlDescriber.makeTxtHtmlUrl(
             editDebugLogPath,
+            onFormat = TxtHtmlDescriber.switchOff
         )
+//        makeTxtHtmlUrlForDebug(
+//            editDebugLogPath,
+//        )
         launchLogDialog(
             terminalFragment,
             launchUrlCon
@@ -269,9 +274,15 @@ object JsDebugger {
     private fun makeTxtHtmlUrlForDebug(
         logPath: String,
     ): String {
-        return WevViewDialogUriPrefix.TEXT_CON.prefix +
-                logPath +
-                TxtHtmlDescriber.searchQuerySuffix
+        val queryParameter = listOf(
+            "${TxtHtmlDescriber.TxtHtmlQueryKey.ON_FORMAT}=${TxtHtmlDescriber.switchOff}"
+        ).joinToString(TxtHtmlDescriber.qerySeparator.toString())
+        return listOf(
+            WevViewDialogUriPrefix.TEXT_CON.prefix,
+            logPath,
+            TxtHtmlDescriber.searchQuerySuffix,
+            queryParameter,
+        ).joinToString(String())
 //                listOf(
 //                    TxtHtmlDescriber.TxtHtmlQueryKey.DISABLE_SCROLL.key,
 //                    TxtHtmlDescriber.DisableScroll.disableScrollMemoryOn
@@ -289,6 +300,7 @@ object JsDebugger {
         )
         val launchUrl = TxtHtmlDescriber.makeTxtHtmlUrl(
             UsePath.jsSrcAcDebugReportPath,
+            onFormat = TxtHtmlDescriber.switchOff,
         )
         val sectionSeparator = WebViewJsDialog.sectionSeparator.toString()
         val typeSeparator = WebViewJsDialog.typeSeparator.toString()

@@ -202,10 +202,10 @@ object PinFannelManager {
             ).let {
                 pinInfoMapPath ->
             val pinInfoMapCon = SettingFile.read(
+                context,
                 pinInfoMapPath,
                 fannelPath,
                 setReplaceVariables,
-                false
             )
             val pinInfoMapSrc = CmdClickMap.createMap(
                 pinInfoMapCon,

@@ -20,7 +20,6 @@ object SetReplaceVariabler {
     fun makeSetReplaceVariableMap(
         context: Context?,
         settingVariableList: List<String>?,
-//        currentAppDirPath: String,
         currentScriptFileName: String,
     ): Map<String, String>? {
         if(
@@ -28,7 +27,6 @@ object SetReplaceVariabler {
         ) return null
 
         val fannelInfoMap = mapOf(
-//            FannelInfoSetting.current_app_dir.name to currentAppDirPath,
             FannelInfoSetting.current_fannel_name.name to currentScriptFileName,
         )
         val noImportRepValMap = execMakeSetReplaceVariableMap(
@@ -36,7 +34,6 @@ object SetReplaceVariabler {
             settingVariableList,
             fannelInfoMap,
             null,
-            false
         )
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsRepval.txt").absolutePath,
@@ -63,7 +60,6 @@ object SetReplaceVariabler {
             settingVariableList,
             fannelInfoMap,
             noImportRepValMap,
-            true
         )
     }
 
@@ -72,17 +68,16 @@ object SetReplaceVariabler {
         settingVariableList: List<String>?,
         fannelInfoMap: Map<String, String>,
         noImportRepValMap: Map<String, String>?,
-        onImport: Boolean
     ): Map<String, String>? {
         if(
             settingVariableList.isNullOrEmpty()
         ) return null
         val setReplaceVariableMapBeforeRecursiveReplace = ListSettingVariableListMaker.makeFromSettingVariableList(
+            context,
             CommandClickScriptVariable.SET_REPLACE_VARIABLE,
             fannelInfoMap,
             noImportRepValMap,
             settingVariableList,
-            onImport
         ).joinToString(",")
             .let {
                 convertReplaceVariableConToMap(

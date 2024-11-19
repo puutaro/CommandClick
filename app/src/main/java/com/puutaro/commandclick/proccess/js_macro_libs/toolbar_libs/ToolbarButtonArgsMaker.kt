@@ -135,6 +135,7 @@ class ToolbarButtonArgsMaker(
             val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
             val settingMenuMapCon = when(isSettingMenuSettingFilePath){
                 true -> SettingFile.read(
+                    editFragment.context,
                     settingMenuSettingFilePathObj.absolutePath,
                     File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -61,7 +62,7 @@ object JsActionTool {
                 isNotExistJsAcShiban
             ) return JsType.NORMAL_JS
             val shibanPrefix = shiban.split("/").lastOrNull()
-            return JsType.values().firstOrNull {
+            return JsType.entries.firstOrNull {
                 it.key == shibanPrefix
             } ?: JsType.NORMAL_JS
         }
@@ -206,6 +207,7 @@ object JsActionTool {
             null
         )
         val keyToSubMapTypeMapToKeyToSubKeyConListByValidKey = createKeyToSubMapTypeMap(
+            fragment.context,
             fannelInfoMap,
             keyToSubKeyConWithReflectRepValDefalt,
             setReplaceVariableMap,
@@ -609,6 +611,7 @@ object JsActionTool {
     }
 
     private fun createKeyToSubMapTypeMap(
+        context: Context?,
         fannelInfoMap: Map<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMap: Map<String, String>?,
@@ -617,6 +620,7 @@ object JsActionTool {
             List<Pair<String, String>>
             >? {
         val keyToSubKeyMapListToKeyToSubKeyConListByValidKey = KeyToSubKeyMapListMaker.make(
+            context,
             keyToSubKeyCon,
             fannelInfoMap,
             setReplaceVariableMap,
@@ -849,11 +853,12 @@ private object KeyToSubKeyMapListMaker {
 
     private const val keySeparator = '|'
     val jsActionsKeyPlusList =
-        JsActionKeyManager.JsActionsKey.values().map {
+        JsActionKeyManager.JsActionsKey.entries.map {
             it.key
         }
 
     fun make(
+        context: Context?,
         keyToSubKeyCon: String?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
@@ -886,7 +891,7 @@ private object KeyToSubKeyMapListMaker {
                 ) return@map listOf(keyToSubKeyPair)
                 val putKeyToSubKeyConToErrType =
                     ActionImportPutter.put(
-//                        currentAppDirPath,
+                        context,
                         currentFannelName,
                         setReplaceVariableMap,
                         keyToSubKeyPair
@@ -975,86 +980,86 @@ private object KeyToSubKeyMapListMaker {
 }
 
 
-private object ImportMapMaker {
-    fun comp(
-        subKeyCon: String,
-        firstSubKeyWithEqualPrefix: String,
-    ): Map<String, String> {
-        val subKeySeparator = '?'
-        val subKeyConList = subKeyCon.split(subKeySeparator)
-        val importPathKeyCon = subKeyConList.firstOrNull()
-            ?: String()
-        val endsQuote = extractEndsQuote(
-            importPathKeyCon.removePrefix(firstSubKeyWithEqualPrefix),
-        )
-        if (
-            endsQuote.isNullOrEmpty()
-        ) {
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeActionImportMap1.txt").absolutePath,
-//                listOf(
-//                    "subKeyCon: ${subKeyCon}",
-//                    "importPathKeyCon: ${importPathKeyCon}",
-//                ).joinToString("\n\n")
-//            )
-            return CmdClickMap.createMap(
-                subKeyCon,
-                subKeySeparator
-            ).toMap()
-        }
-        val otherKeyCon = subKeyConList.filterIndexed { index, _ ->
-            index > 0
-        }.joinToString(subKeySeparator.toString())
-        val compImportPathKeyCon = listOf(
-            firstSubKeyWithEqualPrefix,
-            endsQuote,
-            importPathKeyCon.removePrefix(firstSubKeyWithEqualPrefix),
-        ).joinToString(String())
-        val compOtherKeyCon = listOf(
-            otherKeyCon,
-            endsQuote
-        ).joinToString(String())
-        val compQuoteSubKeyCon = listOf(
-            compImportPathKeyCon,
-            subKeySeparator.toString(),
-            compOtherKeyCon
-        ).joinToString(String())
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeActionImportMap2.txt").absolutePath,
-//            listOf(
-//                "subKeyCon: ${subKeyCon}",
-//                "importPathKeyCon: ${importPathKeyCon}",
-//                "compImportPathKeyCon: ${compImportPathKeyCon}",
-//                "importPathKeyPrefix: ${importPathKeyPrefix}",
-//                "otherKeyCon: ${otherKeyCon}",
-//                "compOtherKeyCon: ${compOtherKeyCon}",
-//                "compQuoteSubKeyCon: ${compQuoteSubKeyCon}",
-//                "map: ${CmdClickMap.createMap(
-//                    compQuoteSubKeyCon,
-//                    subKeySeparator
-//                ).toMap()}"
-//            ).joinToString("\n\n")
+//private object ImportMapMaker {
+//    fun comp(
+//        subKeyCon: String,
+//        firstSubKeyWithEqualPrefix: String,
+//    ): Map<String, String> {
+//        val subKeySeparator = '?'
+//        val subKeyConList = subKeyCon.split(subKeySeparator)
+//        val importPathKeyCon = subKeyConList.firstOrNull()
+//            ?: String()
+//        val endsQuote = extractEndsQuote(
+//            importPathKeyCon.removePrefix(firstSubKeyWithEqualPrefix),
 //        )
-        return CmdClickMap.createMap(
-            compQuoteSubKeyCon,
-            subKeySeparator
-        ).toMap()
-    }
-
-    private fun extractEndsQuote(
-        importPathKeyCon: String,
-    ): String? {
-        val quoteList = listOf("`", "\"")
-        quoteList.forEach {
-            val isOnlyEndQuote = importPathKeyCon.endsWith(it)
-                    && !importPathKeyCon.startsWith(it)
-            if(
-                isOnlyEndQuote
-            ) return it
-        }
-        return null
-    }
-}
+//        if (
+//            endsQuote.isNullOrEmpty()
+//        ) {
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeActionImportMap1.txt").absolutePath,
+////                listOf(
+////                    "subKeyCon: ${subKeyCon}",
+////                    "importPathKeyCon: ${importPathKeyCon}",
+////                ).joinToString("\n\n")
+////            )
+//            return CmdClickMap.createMap(
+//                subKeyCon,
+//                subKeySeparator
+//            ).toMap()
+//        }
+//        val otherKeyCon = subKeyConList.filterIndexed { index, _ ->
+//            index > 0
+//        }.joinToString(subKeySeparator.toString())
+//        val compImportPathKeyCon = listOf(
+//            firstSubKeyWithEqualPrefix,
+//            endsQuote,
+//            importPathKeyCon.removePrefix(firstSubKeyWithEqualPrefix),
+//        ).joinToString(String())
+//        val compOtherKeyCon = listOf(
+//            otherKeyCon,
+//            endsQuote
+//        ).joinToString(String())
+//        val compQuoteSubKeyCon = listOf(
+//            compImportPathKeyCon,
+//            subKeySeparator.toString(),
+//            compOtherKeyCon
+//        ).joinToString(String())
+////        FileSystems.updateFile(
+////            File(UsePath.cmdclickDefaultAppDirPath, "jsAc_makeActionImportMap2.txt").absolutePath,
+////            listOf(
+////                "subKeyCon: ${subKeyCon}",
+////                "importPathKeyCon: ${importPathKeyCon}",
+////                "compImportPathKeyCon: ${compImportPathKeyCon}",
+////                "importPathKeyPrefix: ${importPathKeyPrefix}",
+////                "otherKeyCon: ${otherKeyCon}",
+////                "compOtherKeyCon: ${compOtherKeyCon}",
+////                "compQuoteSubKeyCon: ${compQuoteSubKeyCon}",
+////                "map: ${CmdClickMap.createMap(
+////                    compQuoteSubKeyCon,
+////                    subKeySeparator
+////                ).toMap()}"
+////            ).joinToString("\n\n")
+////        )
+//        return CmdClickMap.createMap(
+//            compQuoteSubKeyCon,
+//            subKeySeparator
+//        ).toMap()
+//    }
+//
+//    private fun extractEndsQuote(
+//        importPathKeyCon: String,
+//    ): String? {
+//        val quoteList = listOf("`", "\"")
+//        quoteList.forEach {
+//            val isOnlyEndQuote = importPathKeyCon.endsWith(it)
+//                    && !importPathKeyCon.startsWith(it)
+//            if(
+//                isOnlyEndQuote
+//            ) return it
+//        }
+//        return null
+//    }
+//}
 private object ActionImportPutter {
 
     private val jsMainKey = JsActionKeyManager.JsActionsKey.JS.key
@@ -1101,7 +1106,7 @@ private object ActionImportPutter {
         }.joinToString("\n") + "\n"
     }
     fun put(
-//        currentAppDirPath: String,
+        context: Context?,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyPair: Pair<String, String>,
@@ -1156,6 +1161,7 @@ private object ActionImportPutter {
                 "${jsMainKey}=?${actionImportVirtualSubKey}=${pathNotRegisterInRepValErrSignal}" to ErrSignal.NO_ERR
             else -> {
                 val importConListToErrType = makeImportConSrcToErrType(
+                    context,
                     actionImportMap,
                     importPath,
 //                    currentAppDirPath,
@@ -1193,6 +1199,7 @@ private object ActionImportPutter {
     }
 
     private fun makeImportConSrcToErrType(
+        context: Context?,
         actionImportMap: Map<String, String>,
         importPath: String,
 //        currentAppDirPath: String,
@@ -1200,6 +1207,7 @@ private object ActionImportPutter {
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<List<String>, ErrSignal> {
         val importSrcConBeforeReplace = makeActionImportSrcCon(
+            context,
             importPath,
 //            currentAppDirPath,
             currentFannelName,
@@ -1588,6 +1596,7 @@ private object ActionImportPutter {
     }
 
     private fun makeActionImportSrcCon(
+        context: Context?,
         importPath: String,
 //        currentAppDirPath: String,
         currentFannelName: String,
@@ -1607,6 +1616,7 @@ private object ActionImportPutter {
 //            ).joinToString("\n\n") + "\n-----\n"
 //        )
         val actionImportSrcCon = SettingFile.read(
+            context,
             importPath,
             File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
@@ -1641,7 +1651,7 @@ private object ActionImportPutter {
                     trimLine.isEmpty()
                 ) return@mapIndexed String()
                 "|${trimLine}".replace(
-                    Regex("^[|]{2,}"),
+                    Regex("^[${mainKeySeparator}]{2,}"),
                     mainKeySeparator.toString()
                 )
             }.map {
@@ -1668,7 +1678,7 @@ private object PairToMapInList {
         return keyToSubKeyConListByValidKey.mapIndexed { index, el ->
             val mainJsKeyName = el.first
             val mapConSrc = el.second
-            val mainKey = JsActionKeyManager.JsActionsKey.values().firstOrNull {
+            val mainKey = JsActionKeyManager.JsActionsKey.entries.firstOrNull {
                 it.key == mainJsKeyName
             } ?: return@mapIndexed String() to emptyMap()
 //            FileSystems.updateFile(
@@ -2211,7 +2221,7 @@ private object VarShortSyntaxToJsFunc {
 //                        "subKeyName: ${subKeyName}",
 //                    ).joinToString("\n\n") + "\n-------\n\n"
 //                )
-                val useKeyForAfterJsConForVar = JsActionKeyManager.OnlySubKeyMapForShortSyntax.UseKeyForAfterJsConForVar.values().firstOrNull {
+                val useKeyForAfterJsConForVar = JsActionKeyManager.OnlySubKeyMapForShortSyntax.UseKeyForAfterJsConForVar.entries.firstOrNull {
                     it.key == subKeyName
                 }
                 if(
@@ -3173,13 +3183,13 @@ private fun howMacroFunc(
 }
 
 private val macroValueList =
-    MacroForToolbarButton.Macro.values()
+    MacroForToolbarButton.Macro.entries
         .map {
             it.name
-} + JsPathMacroForListIndex.values()
+} + JsPathMacroForListIndex.entries
         .map {
             it.name
-} + JsMacroForQr.values()
+} + JsMacroForQr.entries
         .map {
             it.name
         }
