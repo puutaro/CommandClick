@@ -380,6 +380,7 @@ object SettingFile {
         private fun trimImportSrcCon(jsList: List<String>): String {
             return (listOf("\n") + jsList).joinToString("\n")
                 .replace("\n[ 　\t]*".toRegex(), "\n")
+                .replace("\n//[^\n]+".toRegex(), "\n")
         }
 
         private object ImportTool {
