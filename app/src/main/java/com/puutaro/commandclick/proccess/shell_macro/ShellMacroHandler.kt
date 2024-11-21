@@ -23,7 +23,7 @@ object ShellMacroHandler {
         setReplaceVariableMap: Map<String, String>?,
         extraRepValMap: Map<String, String>?,
     ): String {
-        val macro = ShellMacro.values().firstOrNull {
+        val macro = ShellMacro.entries.firstOrNull {
             it.name == shellPathOrMacro
         } ?: return getOutputByShell(
             busyboxExecutor,
@@ -124,7 +124,7 @@ object ShellMacroHandler {
                 concatRepValMap.get(ArgsKey.BACKSTACK_COUNT.key)
                     ?: String()
             return listOf(
-                "(${backstackCount})",
+                backstackCount,
                 "${coreTitle}:",
                 extraTitle,
             ).joinToString(" ")

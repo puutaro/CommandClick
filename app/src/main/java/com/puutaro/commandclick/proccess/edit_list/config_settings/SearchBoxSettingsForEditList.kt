@@ -48,7 +48,7 @@ object SearchBoxSettingsForEditList {
                         TitleImageAndViewSetter.makeBackstackCount(fragment)
                     currentVariableValue.replace(
                         backstackCountMarkForInsertEditText,
-                        backstackNum.toString(),
+                        backstackNum,
                     )
                 }
                 else -> currentVariableValue
@@ -78,7 +78,7 @@ object SearchBoxSettingsForEditList {
             TitleImageAndViewSetter.makeBackstackCount(fragment)
         return currentVariableValue.replace(
             backstackCountMarkForInsertEditText,
-            backstackNum.toString(),
+            backstackNum,
         )
     }
 }

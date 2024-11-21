@@ -173,7 +173,7 @@ private object EditTextMaker {
             "\${currentVariableValue}"
                     to (currentVariableValue ?: String()),
             SearchBoxSettingsForEditList.backstackCountMarkForInsertEditText
-                    to TitleImageAndViewSetter.makeBackstackCount(fragment).toString()
+                    to TitleImageAndViewSetter.makeBackstackCount(fragment)
         )
         val busyboxExecutor = when(fragment){
             is EditFragment -> fragment.busyboxExecutor

@@ -112,7 +112,7 @@ object TitleImageAndViewSetter {
             fragment
         )
         return listOf(
-            "(${backstackOrder})",
+            backstackOrder,
             makeCompressFannelPath(
 //                currentAppDirPath,
                 currentFannelName
@@ -131,7 +131,7 @@ object TitleImageAndViewSetter {
 
     fun makeBackstackCount(
         fragment: Fragment
-    ): Int {
+    ): String {
         return execMakeBackstackCount(
             fragment
         )
@@ -304,7 +304,7 @@ private object EditTextMaker {
         val backstackCountMap = mapOf(
             backstackCountKey to execMakeBackstackCount(
                 fragment
-            ).toString()
+            )
         )
         val updateRepValMap = repValMap + backstackCountMap
         return ShellMacroHandler.handle(
@@ -355,12 +355,28 @@ private object EditTextMaker {
 
 private fun execMakeBackstackCount(
     fragment: Fragment
-): Int {
-    return fragment
+): String {
+    val numberStrMap = mapOf(
+        0.toString() to "0\uFE0F⃣",
+        1.toString() to "1\uFE0F⃣",
+        2.toString() to "2\uFE0F⃣",
+        3.toString() to "3\uFE0F⃣",
+        4.toString() to "4\uFE0F⃣",
+        5.toString() to "5\uFE0F⃣",
+        6.toString() to "6\uFE0F⃣",
+        7.toString() to "7\uFE0F⃣",
+        8.toString() to "8\uFE0F⃣",
+        9.toString() to "9\uFE0F⃣",
+    )
+    val backstackCount = fragment
         .activity
         ?.supportFragmentManager
         ?.backStackEntryCount
         ?: 0
+    return backstackCount.toString().map {
+        c ->
+        numberStrMap.get(c.toString()) ?: "0"
+    }.joinToString(String())
 }
 
 private enum class EditBoxTitleKey(

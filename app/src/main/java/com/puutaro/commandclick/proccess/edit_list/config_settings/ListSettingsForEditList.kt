@@ -341,7 +341,7 @@ object ListSettingsForEditList  {
             indexListMap,
             ListSettingKey.SORT_TYPE.key
         )
-        return SortByKey.values().firstOrNull {
+        return SortByKey.entries.firstOrNull {
             it.key == sortByKeyStr
         }  ?: SortByKey.LAST_UPDATE
     }
