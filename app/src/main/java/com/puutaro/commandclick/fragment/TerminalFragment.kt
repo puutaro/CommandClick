@@ -381,7 +381,7 @@ class TerminalFragment:
         fun onTextViewAndFannelForTermFragment(
             indexOrParentTagName: String,
             srcFragment: String,
-            tagName: String,
+            tagNameList: List<String>,
             updateText: String,
             isSave: Boolean,
         )

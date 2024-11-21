@@ -9,6 +9,7 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndEditList
@@ -443,34 +444,105 @@ object EditListConfig {
             val macroConList: List<String>,
         ){
             FOR_ONLY_CMD_VAL_EDIT(
-                toolbarLayoutForOnlyCmdValEdit,
+                ToolbarLayoutForOnlyCmdValEdit.toolbarLayoutForOnlyCmdValEdit,
             ),
         }
     }
 
+    private object ToolbarLayoutForOnlyCmdValEdit {
 
-    private val toolbarLayoutForOnlyCmdValEdit = """
+        private val typeSeparator = EditComponent.Template.typeSeparator
+        private val keySeparator = EditComponent.Template.keySeparator
+        private val sectionSeparator = EditComponent.Template.sectionSeparator
+
+        private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+        private val marginTopKey = EditComponent.Template.EditComponentKey.MARGIN_TOP.key
+        private val marginBottomKey = EditComponent.Template.EditComponentKey.MARGIN_BOTTOM.key
+        private val marginStartKey = EditComponent.Template.EditComponentKey.MARGIN_START.key
+        private val marginEndKey = EditComponent.Template.EditComponentKey.MARGIN_END.key
+        private val paddingTopKey = EditComponent.Template.EditComponentKey.PADDING_TOP.key
+        private val paddingBottomKey = EditComponent.Template.EditComponentKey.PADDING_BOTTOM.key
+        private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
+        private val paddingEndKey = EditComponent.Template.EditComponentKey.PADDING_END.key
+        private val onSaveKey = EditComponent.Template.EditComponentKey.ON_SAVE.key
+        private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
+
+        private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
+        private val imagePropertyKey = EditComponent.Template.EditComponentKey.IMAGE_PROPERTY.key
+        private val textKey = EditComponent.Template.EditComponentKey.TEXT.key
+        private val textPropertyKey = EditComponent.Template.EditComponentKey.TEXT_PROPERTY.key
+        private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
+        private val widthKey = EditComponent.Template.EditComponentKey.WIDTH.key
+        private val weightKey = EditComponent.Template.EditComponentKey.WEIGHT.key
+
+        private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
+        private val imageDelayKey = EditComponent.Template.ImageManager.ImageKey.DELAY.key
+        private val imageTagKey = EditComponent.Template.ImagePropertyManager.PropertyKey.TAG.key
+        private val imageColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.COLOR.key
+        private val imageAlphaKey = EditComponent.Template.ImagePropertyManager.PropertyKey.ALPHA.key
+        private val imageScaleKey = EditComponent.Template.ImagePropertyManager.PropertyKey.SCALE.key
+        private val imageWidthKey = EditComponent.Template.ImagePropertyManager.PropertyKey.WIDTH.key
+        private val imageHeightKey = EditComponent.Template.ImagePropertyManager.PropertyKey.HEIGHT.key
+        private val imageMarginTopKey = EditComponent.Template.ImagePropertyManager.PropertyKey.MARGIN_TOP.key
+        private val imageMarginStartKey = EditComponent.Template.ImagePropertyManager.PropertyKey.MARGIN_START.key
+        private val imageMarginEndKey = EditComponent.Template.ImagePropertyManager.PropertyKey.MARGIN_END.key
+        private val imageMarginBottomKey = EditComponent.Template.ImagePropertyManager.PropertyKey.MARGIN_BOTTOM.key
+        private val imagePaddingTopKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_TOP.key
+        private val imagePaddingStartKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_START.key
+        private val imagePaddingEndKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_END.key
+        private val imagePaddingBottomKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_BOTTOM.key
+
+        private val displayTextKey = EditComponent.Template.TextManager.TextKey.DISPLAY_TEXT.key
+        private val srcStrKey = EditComponent.Template.TextManager.TextKey.SRC_STR.key
+
+
+        private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
+        private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
+        private val textColorKey = EditComponent.Template.TextPropertyManager.Property.COLOR.key
+        private val strokeColorKey = EditComponent.Template.TextPropertyManager.Property.STROKE_COLOR.key
+        private val strokeWidthKey = EditComponent.Template.TextPropertyManager.Property.STROKE_WIDTH.key
+        private val textAlphaKey = EditComponent.Template.TextPropertyManager.Property.ALPHA.key
+        private val textMaxLinesKey = EditComponent.Template.TextPropertyManager.Property.MAX_LINES.key
+        private val textMarginTopKey = EditComponent.Template.TextPropertyManager.Property.MARGIN_TOP.key
+        private val textMarginStartKey = EditComponent.Template.TextPropertyManager.Property.MARGIN_START.key
+        private val textMarginEndKey = EditComponent.Template.TextPropertyManager.Property.MARGIN_END.key
+        private val textMarginBottomKey = EditComponent.Template.TextPropertyManager.Property.MARGIN_BOTTOM.key
+        private val textPaddingTopKey = EditComponent.Template.TextPropertyManager.Property.PADDING_TOP.key
+        private val textPaddingStartKey = EditComponent.Template.TextPropertyManager.Property.PADDING_START.key
+        private val textPaddingEndKey = EditComponent.Template.TextPropertyManager.Property.PADDING_END.key
+        private val textPaddingBottomKey = EditComponent.Template.TextPropertyManager.Property.PADDING_BOTTOM.key
+
+        private val srcStrHolder = EditComponent.Template.ReplaceHolder.SrcReplaceHolders.SRC_STR.key
+        private val fitCenterImageScale = EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER.scale
+        val toolbarLayoutForOnlyCmdValEdit = """
     --
-    frame=
-        |tag=okForCmdValEdit
-        ,
+    ${EditComponent.Template.LayoutKey.FRAME.key}=
+        ${typeSeparator}${tagKey}=okForCmdValEdit
+        ${sectionSeparator}
     ---
-
-    linear=
-        |tag=ok
-        |text=
-            displayText=`${'$'}{SRC_STR}`
-            ?srcStr=`OK`
-        |textProperty=
-            ?maxLines=1
-        |image=
-            paths="ok"
-        |imageProperty=
-            ?scale=`fitCenter`
-        |onSave=ON
-        |isConsec=OFF
-        |var=runDisplayCurSettingValue
+    
+    ${EditComponent.Template.LayoutKey.VERTICAL.key}=
+        ${typeSeparator}${tagKey}=vertical1
+        ${sectionSeparator}
+    
+    ---
+    ${EditComponent.Template.LayoutKey.HORIZON.key}=
+        ${typeSeparator}${tagKey}=ok
+        ${typeSeparator}${textKey}=
+            ${displayTextKey}=`${srcStrHolder}`
+            ${keySeparator}${srcStrKey}=`OK`
+        ${typeSeparator}${textPropertyKey}=
+            ${keySeparator}${textMaxLinesKey}=1
+        ${typeSeparator}${imageKey}=
+            ${imagePathsKey}="ok"
+        ${typeSeparator}${textPropertyKey}=
+            ${keySeparator}${imageScaleKey}=`${fitCenterImageScale}`
+        ${typeSeparator}${onSaveKey}=ON
+        ${typeSeparator}${isConsecKey}=OFF
+        ${typeSeparator}var=runDisplayCurSettingValue
             ?func=jsBackstack.exec
-        ,
+        ${sectionSeparator}
     """.trimIndent().split("\n")
+    }
 }

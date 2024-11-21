@@ -61,8 +61,9 @@ object ListSettingsForEditList  {
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutPath: String,
-        ):  Pair<
+        ):  Triple<
                 Map<String, String >,
+                List<Pair<String, String>>,
                 Map<String, List< List<String> > >,
                 >?
         {
@@ -98,8 +99,9 @@ object ListSettingsForEditList  {
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutConList: List<String>,
-        ):  Pair<
+        ):  Triple<
                 Map<String, String >,
+                List<Pair<String, String>>,
                 Map<String, List< List<String> > >,
                 >?
         {
@@ -130,17 +132,21 @@ object ListSettingsForEditList  {
 
         private fun execParse(
             viewLayoutListSrc: List<String>
-        ): Pair<
+        ): Triple<
                 Map<String, String >,
+                List<Pair<String, String>>,
                 Map<String, List< List<String> > >,
                 >?
         {
             val typeSeparator = EditComponent.Template.typeSeparator
             val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
-            val liearTypeName = EditComponent.Template.LayoutKey.LINEAR.key
+            val verticalTypeName = EditComponent.Template.LayoutKey.VERTICAL.key
+            val horizonTypeName = EditComponent.Template.LayoutKey.HORIZON.key
             val tagKey = EditComponent.Template.EditComponentKey.TAG.key
             var curFrameTag = String()
+            var curVerticalTag = String()
             val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
+            val verticalPairsConList: MutableList< Pair<String, String > > = mutableListOf()
             val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
             viewLayoutListSrc.forEachIndexed { index,
                                                smallLayoutMapCon ->
@@ -195,10 +201,37 @@ object ListSettingsForEditList  {
                         ) return@forEachIndexed
                         framePairsConList.add(frameTagToCon)
                     }
-
-                    (layoutKey == liearTypeName) -> {
-                        val frameTagToLinearKeyPairCon = Pair(
+                    (layoutKey == verticalTypeName) -> {
+                        val verticalLayoutKeyPairListCon =
+                            layoutTypePairConList.firstOrNull()
+                                ?: String()
+                        val tag =
+                            CmdClickMap.createMap(
+                                verticalLayoutKeyPairListCon,
+                                typeSeparator
+                            ).firstOrNull {
+                                val key = it.first
+                                key == tagKey
+                            }?.second.let {
+                                QuoteTool.trimBothEdgeQuote(it)
+                            }
+                        curVerticalTag = EditComponent.Template.TagManager.makeVerticalTag(
                             curFrameTag,
+                            tag,
+                        )
+                        val verticalTagToCon = Pair(
+                            curFrameTag,
+                            verticalLayoutKeyPairListCon
+                        )
+                        if (
+                            verticalTagToCon.first.isEmpty()
+                        ) return@forEachIndexed
+                        verticalPairsConList.add(verticalTagToCon)
+                    }
+
+                    (layoutKey == horizonTypeName) -> {
+                        val frameTagToLinearKeyPairCon = Pair(
+                            curVerticalTag,
                             layoutTypePairConList
                         )
                         if (
@@ -239,8 +272,9 @@ object ListSettingsForEditList  {
 //                    )}"
 //                ).joinToString("\n") + "\n----\n"
 //            )
-            return Pair(
+            return Triple(
                 framePairsConList.toMap(),
+                verticalPairsConList,
                 frameTagToLinearPairConListMap,
             )
         }

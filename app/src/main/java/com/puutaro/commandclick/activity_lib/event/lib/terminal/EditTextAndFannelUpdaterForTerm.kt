@@ -6,31 +6,28 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
-import java.io.File
 
 object EditTextAndFannelUpdaterForTerm {
     fun update(
         activity: MainActivity,
         indexOrParentTagName: String,
         srcFragmentStr: String,
-        tagName: String,
+        tagNameList: List<String>,
         updateText: String,
         isSave: Boolean,
     ) {
         if(
            indexOrParentTagName.isEmpty()
-           || tagName.isEmpty()
+           || tagNameList.isEmpty()
         ) return
         val editListIndex = try {
             val editListSrc = indexOrParentTagName.toInt()
@@ -55,23 +52,30 @@ object EditTextAndFannelUpdaterForTerm {
                 editListIndex
             ) as EditComponentListAdapter.EditListViewHolder
             val materialCardView = holder.materialCardView
-            val frameLayout = materialCardView.findViewWithTag<FrameLayout>(
-                tagName
-            )
-            val textView = frameLayout.children.firstOrNull {
-                view ->
-                view is OutlineTextView
-            } as? OutlineTextView
-            val lineMap = editComponentListAdapter.lineMapList.get(editListIndex)
-            holder.srcTitle = lineMap.get(
-                ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
-            ) ?: String()
-            holder.srcCon = lineMap.get(
-                ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
-            ) ?: String()
-            holder.srcImage = lineMap.get(
-                ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
-            ) ?: String()
+            val tagNameToFrameLayoutList = tagNameList.map {
+                tagName ->
+                tagName to materialCardView.findViewWithTag<FrameLayout>(
+                    tagName
+                )
+            }
+            tagNameToFrameLayoutList.forEach {
+                    tagNameToFrameLayout ->
+                val tagName = tagNameToFrameLayout.first
+                val frameLayout = tagNameToFrameLayout.second
+                val textView = frameLayout.children.firstOrNull { view ->
+                    view is OutlineTextView
+                } as? OutlineTextView
+
+                val lineMap = editComponentListAdapter.lineMapList.get(editListIndex)
+                holder.srcTitle = lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
+                ) ?: String()
+                holder.srcCon = lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
+                ) ?: String()
+                holder.srcImage = lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
+                ) ?: String()
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "editListIndex.txt").absolutePath,
 //                listOf(
@@ -81,18 +85,19 @@ object EditTextAndFannelUpdaterForTerm {
 //                    "",
 //                ).joinToString("\n")
 //            )
-            UpdateAndSaveMainFannel.updateAndSave(
-                editComponentListAdapter,
-                holder.keyPairListConMap,
-                tagName,
-                holder.srcTitle,
-                holder.srcCon,
-                holder.srcImage,
-                editListIndex,
-                updateText,
-                textView,
-                isSave,
-            )
+                UpdateAndSaveMainFannel.updateAndSave(
+                    editComponentListAdapter,
+                    holder.keyPairListConMap,
+                    tagName,
+                    holder.srcTitle,
+                    holder.srcCon,
+                    holder.srcImage,
+                    editListIndex,
+                    updateText,
+                    textView,
+                    isSave,
+                )
+            }
             return
         }
 
@@ -130,25 +135,30 @@ object EditTextAndFannelUpdaterForTerm {
             }
         }
         val noSignIndex = -1
-        val frameLayout = linearLayout?.findViewWithTag<FrameLayout>(
-            tagName
-        )
-        val textView = frameLayout?.children?.firstOrNull {
-                view ->
-            view is OutlineTextView
-        } as? OutlineTextView
-        UpdateAndSaveMainFannel.updateAndSave(
-            editComponentListAdapter,
-            editComponentListAdapter.footerKeyPairListConMap,
-            tagName,
-            tagName,
-            tagName,
-            tagName,
-            noSignIndex,
-            updateText,
-            textView,
-            isSave,
-        )
+        val frameLayoutList = tagNameList.map {
+            tagName ->
+            linearLayout?.findViewWithTag<FrameLayout>(
+                tagName
+            )
+        }
+        frameLayoutList.forEach {
+            frameLayout ->
+            val textView = frameLayout?.children?.firstOrNull { view ->
+                view is OutlineTextView
+            } as? OutlineTextView
+            UpdateAndSaveMainFannel.updateAndSave(
+                editComponentListAdapter,
+                editComponentListAdapter.footerKeyPairListConMap,
+                String(),
+                String(),
+                String(),
+                String(),
+                noSignIndex,
+                updateText,
+                textView,
+                isSave,
+            )
+        }
     }
 
     object UpdateAndSaveMainFannel {

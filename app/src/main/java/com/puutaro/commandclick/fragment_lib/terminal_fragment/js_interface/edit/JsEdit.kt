@@ -61,10 +61,11 @@ class JsEdit(
     fun updateTextViewAndFannel_S(
         indexOrParentTagName: String,
         srcFragment: String,
-        tagName: String,
+        tagNameListCon: String,
         updateText: String,
         isSave: Boolean,
     ){
+        val tagNameSeparator = '&'
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val context = terminalFragment.context ?: return
@@ -72,7 +73,7 @@ class JsEdit(
         listener.onTextViewAndFannelForTermFragment(
             indexOrParentTagName,
             srcFragment,
-            tagName,
+            tagNameListCon.split(tagNameSeparator.toString()),
             updateText,
             isSave,
         )
