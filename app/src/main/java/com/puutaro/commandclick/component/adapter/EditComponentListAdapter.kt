@@ -118,6 +118,21 @@ class EditComponentListAdapter(
         }
     }
 
+    private val layoutRadius = layoutConfigMap.get(
+        LayoutSettingsForEditList.LayoutSettingKey.RADIUS.key
+    ).let {
+        try{
+            it?.toFloat()?.let {
+                ScreenSizeCalculator.toDpForFloat(
+                    context,
+                    it,
+                )
+            }
+        } catch (e: Exception){
+            null
+        }
+    }
+
     fun getCurrentSettingVals(
         context: Context?,
         settingValName: String,
@@ -161,7 +176,7 @@ class EditComponentListAdapter(
         frameMapToFrameTagAndVerticalKeysListToLinearMapList?.first ?: emptyMap()
     private val frameTagToVerticalKeysCon =
         frameMapToFrameTagAndVerticalKeysListToLinearMapList?.second ?: emptyList()
-    private val frameTagToLinearKeysListMap =
+    private val verticalTagToLinearKeysListMap =
         frameMapToFrameTagAndVerticalKeysListToLinearMapList?.third ?: emptyMap()
     var deleteConfigMap: Map<String, String> = mapOf()
     private var recentAppDirPath = String()
@@ -299,6 +314,9 @@ class EditComponentListAdapter(
                     layoutElevation?.let {
                         elevation = it
                     }
+                    layoutRadius?.let {
+                        radius = it
+                    }
                 }
             }
 //            GridLayoutManager
@@ -433,7 +451,7 @@ class EditComponentListAdapter(
                         verticalLinerWeight,
                         verticalTag,
                     )
-                    frameTagToLinearKeysListMap.get(verticalTag)?.forEach {
+                    verticalTagToLinearKeysListMap.get(verticalTag)?.forEach {
                             linearKeyValues ->
                         val linearParam = LinearLayoutCompat.LayoutParams(
                             LinearLayoutCompat.LayoutParams.MATCH_PARENT,

@@ -18,6 +18,7 @@ object LayoutSettingsForEditList {
         EDIT_BY_DRAG("editByDrag"),
         MARGIN("margin"),
         ELEVATION("elevation"),
+        RADIUS("radius"),
         ON_CLICK_UPDATE("onClickUpdate"),
 //        TO_TOP("toTop")
     }
