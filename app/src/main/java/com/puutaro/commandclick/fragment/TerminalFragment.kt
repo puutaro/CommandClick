@@ -387,6 +387,16 @@ class TerminalFragment:
         )
     }
 
+    interface OnImageViewUpdateListenerForTerm {
+        fun onImageViewUpdateForTerm(
+            indexOrParentTagName: String,
+            srcFragment: String,
+            tagNameList: List<String>,
+            imageMap: Map<String, String>,
+            imagePropertyMap: Map<String, String>,
+        )
+    }
+
     interface OnTextViewAndMapListUpdateListenerForTerm {
         fun onTextViewAndMapListUpdateForTerm(
             editListIndex: Int,

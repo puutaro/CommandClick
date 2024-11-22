@@ -6,7 +6,7 @@ enum class CmdClickColor(
     val str: String,
     val id: Int,
 ) {
-    LIGTH_BLUE("ligthBlue", R.color.ligthBlue),
+    LIGTH_BLUE("lightBlue", R.color.ligthBlue),
     BLUE("blue", R.color.web_icon_color),
     NABY("navy", R.color.navy),
     GRAY("gray", R.color.gray_out),
@@ -20,6 +20,7 @@ enum class CmdClickColor(
     LIGHT_ORANGE("ligthOrange", R.color.light_orange),
     BROWN("brown", R.color.brown),
     WHITE("white", R.color.white),
+    TRANSPARENT("trans", R.color.trans),
     YELLOW("yellow", R.color.yellow),
     BLACK("black", R.color.black),
 }

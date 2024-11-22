@@ -16,7 +16,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
 
-object EditTextAndFannelUpdaterForTerm {
+object TextViewAndFannelUpdaterForTerm {
     fun update(
         activity: MainActivity,
         indexOrParentTagName: String,

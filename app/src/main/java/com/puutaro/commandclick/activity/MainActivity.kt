@@ -6,7 +6,6 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -90,6 +89,7 @@ class MainActivity:
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
     TerminalFragment.OnTextViewAndFannelUpdateListenerForTerm,
+    TerminalFragment.OnImageViewUpdateListenerForTerm,
     TerminalFragment.OnTextViewAndMapListUpdateListenerForTerm,
 //    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
@@ -608,13 +608,32 @@ class MainActivity:
         isSave: Boolean,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
-            EditTextAndFannelUpdaterForTerm.update(
+            TextViewAndFannelUpdaterForTerm.update(
                 this@MainActivity,
                 indexOrParentTagName,
                 srcFragment,
                 tagNameList,
                 updateText,
                 isSave
+            )
+        }
+    }
+
+    override fun onImageViewUpdateForTerm(
+        indexOrParentTagName: String,
+        srcFragment: String,
+        tagNameList: List<String>,
+        imageMap: Map<String, String>,
+        imagePropertyMap: Map<String, String>
+    ) {
+        CoroutineScope(Dispatchers.Main).launch {
+            ImageViewAndFannelUpdaterForTerm.update(
+                this@MainActivity,
+                indexOrParentTagName,
+                srcFragment,
+                tagNameList,
+                imageMap,
+                imagePropertyMap
             )
         }
     }

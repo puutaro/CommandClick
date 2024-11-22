@@ -162,8 +162,22 @@ class JsText(
         Shuffle element
         */
 
-
         return con.split(separator).shuffled().joinToString(separator)
+    }
+
+    @JavascriptInterface
+    fun random(
+        con: String,
+        separator: String,
+    ): String {
+
+        /*
+        ## Description
+
+        Get element randomly
+        */
+
+        return con.split(separator).shuffled().first()
     }
 
     @JavascriptInterface

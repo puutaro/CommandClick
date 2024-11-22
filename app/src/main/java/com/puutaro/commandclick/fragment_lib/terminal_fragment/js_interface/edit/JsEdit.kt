@@ -3,9 +3,11 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 import java.lang.ref.WeakReference
 
@@ -76,6 +78,38 @@ class JsEdit(
             tagNameListCon.split(tagNameSeparator.toString()),
             updateText,
             isSave,
+        )
+    }
+
+    @JavascriptInterface
+    fun updateImageView_S(
+        indexOrParentTagName: String,
+        srcFragment: String,
+        tagNameListCon: String,
+        imageMapCon: String,
+        imagePropertyMapCon: String,
+    ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+            ?: return
+        val keySeparator = EditComponent.Template.keySeparator
+        val imageMap = CmdClickMap.createMap(
+            imageMapCon,
+            keySeparator
+        ).toMap()
+        val imagePropertyMap = CmdClickMap.createMap(
+            imagePropertyMapCon,
+            keySeparator
+        ).toMap()
+        val listener = context as TerminalFragment.OnImageViewUpdateListenerForTerm
+        val tagNameSeparator = '&'
+        listener.onImageViewUpdateForTerm(
+            indexOrParentTagName,
+            srcFragment,
+            tagNameListCon.split(tagNameSeparator.toString()),
+            imageMap,
+            imagePropertyMap,
         )
     }
 
