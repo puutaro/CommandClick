@@ -1559,6 +1559,24 @@ object BitmapTool {
             return overlayBitmap
         }
 
+        fun overlayOnBkBitmapByPivot(
+            bitmapBackground: Bitmap,
+            bitmapImage: Bitmap,
+            pivotX: Float,
+            pivotY: Float,
+        ): Bitmap {
+            val bitmapWidth = bitmapBackground.width
+            val bitmapHeight = bitmapBackground.height
+            val bitmap2Width = bitmapImage.width
+            val bitmap2Height = bitmapImage.height
+            val overlayBitmap =
+                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bitmapBackground.config)
+            val canvas = Canvas(overlayBitmap)
+            canvas.drawBitmap(bitmapBackground, Matrix(), null)
+            canvas.drawBitmap(bitmapImage, pivotX, pivotY, null)
+            return overlayBitmap
+        }
+
     }
 
     object Base64Tool {

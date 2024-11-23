@@ -65,18 +65,25 @@ class JsEdit(
         srcFragment: String,
         tagNameListCon: String,
         updateText: String,
+        textPropertyMapCon: String,
         isSave: Boolean,
     ){
         val tagNameSeparator = '&'
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val context = terminalFragment.context ?: return
+        val keySeparator = EditComponent.Template.keySeparator
+        val textPropertyMap = CmdClickMap.createMap(
+            textPropertyMapCon,
+            keySeparator
+        ).toMap()
         val listener = context as TerminalFragment.OnTextViewAndFannelUpdateListenerForTerm
         listener.onTextViewAndFannelForTermFragment(
             indexOrParentTagName,
             srcFragment,
             tagNameListCon.split(tagNameSeparator.toString()),
             updateText,
+            textPropertyMap,
             isSave,
         )
     }

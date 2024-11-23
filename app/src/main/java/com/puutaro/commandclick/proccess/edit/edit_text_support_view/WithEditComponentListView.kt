@@ -15,6 +15,7 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
@@ -78,7 +79,8 @@ object WithEditComponentListView{
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListConfigMap: Map<String, String>?,
-        editTextView: AppCompatTextView,
+        editBackstackCountView: ShapeableImageView,
+        editTextView: OutlineTextView,
         editTitleImage: AppCompatImageView,
         editListRecyclerView: RecyclerView,
         editListBkFrame: FrameLayout,
@@ -104,6 +106,7 @@ object WithEditComponentListView{
             }
             TitleImageAndViewSetter.set(
                 fragment,
+                editBackstackCountView,
                 editTextView,
                 fannelInfoMap,
                 setReplaceVariableMap,
@@ -805,6 +808,7 @@ object WithEditComponentListView{
                 else -> TitleImageAndViewSetter.makeDefaultTitle(
                     fragment,
                     fannelInfoMap,
+                    false,
                 )
             }
         }

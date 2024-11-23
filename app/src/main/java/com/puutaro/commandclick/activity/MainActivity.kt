@@ -605,6 +605,7 @@ class MainActivity:
         srcFragment: String,
         tagNameList: List<String>,
         updateText: String,
+        textPropertyMap: Map< String, String>?,
         isSave: Boolean,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -614,6 +615,7 @@ class MainActivity:
                 srcFragment,
                 tagNameList,
                 updateText,
+                textPropertyMap,
                 isSave
             )
         }

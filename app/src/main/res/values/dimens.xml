@@ -20,4 +20,5 @@
     <dimen name="grid_dialog_min_elevation">2dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
     <dimen name="text_size_16">16sp</dimen>
+    <dimen name="edit_title_height">55dp</dimen>
 </resources>

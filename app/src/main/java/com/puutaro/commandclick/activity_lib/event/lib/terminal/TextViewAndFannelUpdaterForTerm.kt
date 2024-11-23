@@ -11,10 +11,14 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
+import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object TextViewAndFannelUpdaterForTerm {
     fun update(
@@ -23,6 +27,7 @@ object TextViewAndFannelUpdaterForTerm {
         srcFragmentStr: String,
         tagNameList: List<String>,
         updateText: String,
+        textPropertyMap: Map< String, String>?,
         isSave: Boolean,
     ) {
         if(
@@ -94,6 +99,7 @@ object TextViewAndFannelUpdaterForTerm {
                     holder.srcImage,
                     editListIndex,
                     updateText,
+                    textPropertyMap,
                     textView,
                     isSave,
                 )
@@ -155,6 +161,7 @@ object TextViewAndFannelUpdaterForTerm {
                 String(),
                 noSignIndex,
                 updateText,
+                textPropertyMap,
                 textView,
                 isSave,
             )
@@ -171,6 +178,7 @@ object TextViewAndFannelUpdaterForTerm {
             srcImage: String,
             editListIndex: Int,
             updateText: String,
+            textPropertyMap: Map< String, String>?,
             textView: OutlineTextView?,
             isSave: Boolean,
         ) {
@@ -216,7 +224,16 @@ object TextViewAndFannelUpdaterForTerm {
 //                    "textMap: ${textMap}",
 //                ).joinToString("\n\n")
 //            )
-            textView?.text = text
+            textView?.let {
+                CoroutineScope(Dispatchers.Main).launch {
+                    EditFrameMaker.setCaptionByDynamic(
+                        it,
+                        textPropertyMap,
+                        text,
+                    )
+                }
+            }
+//            textView?.text = text
             execUpdateAndSave(
                 textView,
                 editComponentListAdapter,

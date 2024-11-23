@@ -97,6 +97,7 @@ object EditTextProducerForEdit {
             editFragment.setReplaceVariableMap,
             editFragment.busyboxExecutor,
             editFragment.editListConfigMap,
+            binding.editBackstackCount,
             binding.editTextView,
             binding.editTitleImage,
             binding.editListRecyclerView,

@@ -29,11 +29,19 @@ class OutlineTextView : AppCompatTextView {
     private val densityForOutline = context.resources.displayMetrics.density
 
     fun setStrokeColor(id: Int){
-        strokeColor = context.getColor(id)
+        strokeColor = try {
+            context.getColor(id)
+        } catch (e: Exception){
+            id
+        }
     }
 
     fun setFillColor(id: Int){
-        fillColor = context.getColor(id)
+        fillColor = try {
+            context.getColor(id)
+        } catch (e: Exception){
+            id
+        }
     }
     override fun onDraw(canvas: Canvas) {
         setTextColor(strokeColor)

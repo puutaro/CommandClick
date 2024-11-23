@@ -383,6 +383,7 @@ class TerminalFragment:
             srcFragment: String,
             tagNameList: List<String>,
             updateText: String,
+            textPropertyMap: Map< String, String>?,
             isSave: Boolean,
         )
     }

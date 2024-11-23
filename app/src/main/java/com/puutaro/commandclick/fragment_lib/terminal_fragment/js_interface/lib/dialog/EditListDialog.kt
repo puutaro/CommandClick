@@ -9,10 +9,12 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditComponentListView
@@ -61,8 +63,12 @@ class EditListDialog(
             terminalFragment.editListDialog?.findViewById<ConstraintLayout>(
                 R.id.edit_list_dialog_constraint_layout
             ) ?: return
+        val editBackstackCountView =
+            terminalFragment.editListDialog?.findViewById<ShapeableImageView>(
+                R.id.edit_list_dialog_backstack_count
+            ) ?: return
         val editListTitleView =
-            terminalFragment.editListDialog?.findViewById<AppCompatTextView>(
+            terminalFragment.editListDialog?.findViewById<OutlineTextView>(
                 R.id.edit_list_dialog_title_view
             ) ?: return
         val editListTitleImage =
@@ -128,6 +134,7 @@ class EditListDialog(
             setReplaceVariableMap,
             terminalFragment.busyboxExecutor,
             editListConfigMap,
+            editBackstackCountView,
             editListTitleView,
             editListTitleImage,
             editListRecyclerView,

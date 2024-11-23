@@ -45,7 +45,10 @@ object SearchBoxSettingsForEditList {
             ){
                 true -> {
                     val backstackNum =
-                        TitleImageAndViewSetter.makeBackstackCount(fragment)
+                        TitleImageAndViewSetter.makeBackstackCount(
+                            fragment,
+                            false,
+                        )
                     currentVariableValue.replace(
                         backstackCountMarkForInsertEditText,
                         backstackNum,
@@ -75,7 +78,10 @@ object SearchBoxSettingsForEditList {
         currentVariableValue: String,
     ): String {
         val backstackNum =
-            TitleImageAndViewSetter.makeBackstackCount(fragment)
+            TitleImageAndViewSetter.makeBackstackCount(
+                fragment,
+                false,
+            )
         return currentVariableValue.replace(
             backstackCountMarkForInsertEditText,
             backstackNum,

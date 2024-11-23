@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.EditText
@@ -193,6 +194,8 @@ object EditComponent {
                                 TAG("tag"),
                                 MAX_LINES("maxLines"),
                                 SIZE("size"),
+                                STYLE("style"),
+                                FONT("font"),
                                 COLOR("color"),
                                 STROKE_COLOR("strokeColor"),
                                 STROKE_WIDTH("strokeWidth"),
@@ -210,6 +213,26 @@ object EditComponent {
                                 MARGIN_END("marginEnd"),
                                 BK_COLOR("bkColor"),
 //                                DISABLE_TEXT_SELECT("disableTextSelect"),
+                        }
+
+                        enum class TextStyle(
+                                val key: String,
+                                val style: Int,
+                        ){
+                                NORMAL("normal", Typeface.NORMAL),
+                                BOLD("bold", Typeface.BOLD),
+                                BOLD_ITALIC("boldItalic", Typeface.BOLD_ITALIC),
+                                ITALIC("bold", Typeface.ITALIC),
+                        }
+
+                        enum class Font(
+                                val key: String,
+                                val typeface: Typeface,
+                        ){
+                                DEFAULT("monospace", Typeface.DEFAULT),
+                                MONOSPACE("monospace", Typeface.MONOSPACE),
+                                SANS_SERIF("sansSerif", Typeface.SANS_SERIF),
+                                SERIF("serif", Typeface.SERIF),
                         }
                 }
 
@@ -385,7 +408,6 @@ object EditComponent {
                                 SETTING_VALUE("settingValue"),
                                 LENGTH("length"),
                         }
-
 
                         fun createTextMap(
                                 textMapCon: String?,

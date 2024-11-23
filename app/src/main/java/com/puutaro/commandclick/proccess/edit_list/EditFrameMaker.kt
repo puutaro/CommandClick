@@ -76,6 +76,8 @@ object EditFrameMaker {
 
     private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
     private val textBkColorKey = EditComponent.Template.TextPropertyManager.Property.BK_COLOR.key
+    private val textStyleKey = EditComponent.Template.TextPropertyManager.Property.STYLE.key
+    private val textFontKey = EditComponent.Template.TextPropertyManager.Property.FONT.key
     private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
     private val textGravityKey = EditComponent.Template.TextPropertyManager.Property.GRAVITI.key
     private val textWidthKey = EditComponent.Template.TextPropertyManager.Property.WIDTH.key
@@ -927,7 +929,7 @@ object EditFrameMaker {
                 setFillColor(textColor?.id ?: R.color.fill_gray)
                 val textBkColor = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
-                        imageBkColorKey,
+                        textBkColorKey,
                     )?.let {
                             colorStr ->
                         CmdClickColor.entries.firstOrNull {
@@ -993,6 +995,192 @@ object EditFrameMaker {
                     }
                 }
                 alpha = textAlpha ?: 1f
+                val overrideTextStyle = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textStyleKey,
+                    )?.let {
+                            textStyleStr ->
+                        EditComponent.Template.TextPropertyManager.TextStyle.entries.firstOrNull {
+                            it.key == textStyleStr
+                        }
+                    }
+                } ?: EditComponent.Template.TextPropertyManager.TextStyle.NORMAL
+                val overrideFont = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textFontKey,
+                    )?.let {
+                            textFontStr ->
+                        EditComponent.Template.TextPropertyManager.Font.entries.firstOrNull {
+                            it.key == textFontStr
+                        }
+                    }
+                } ?: EditComponent.Template.TextPropertyManager.Font.DEFAULT
+                setTypeface(overrideFont.typeface, overrideTextStyle.style)
+            }
+        }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lcapt.txt").absolutePath,
+//            listOf(
+//                "textMap: ${textMap}",
+//                "textPropertyMap: ${textPropertyMap}",
+//                "strokeWidth: ${strokeWidth}",
+//                "captionTextView.outlineWidthSrc: ${captionTextView.outlineWidthSrc}",
+//
+//            ).joinToString("\n")
+//        )
+    }
+
+    suspend fun setCaptionByDynamic(
+        captionTextView: OutlineTextView,
+        textPropertyMap: Map<String, String>?,
+        overrideText: String?,
+    ) {
+//        val enableTextSelect = withContext(Dispatchers.IO){
+//            textPropertyMap?.get(
+//                disableTextSelectKey
+//            ) != switchOn
+//        }
+        val textViewContext = captionTextView.context
+        withContext(Dispatchers.Main) {
+            captionTextView.apply {
+                val lp = layoutParams as FrameLayout.LayoutParams
+                lp.apply {
+                    val overrideGravity = textPropertyMap?.get(
+                        textGravityKey,
+                    )?.let {
+                            gravityStr ->
+                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                            it.key == gravityStr
+                        }?.gravity
+                    }
+                    overrideGravity?.let {
+                        gravity = it
+                    }
+                }
+//        captionTextView.autofillHints?.firstOrNull(0)
+//        captionTextView.hint = settingValue
+                overrideText?.let {
+                    text = it
+                }
+                val overrideMaxLines = withContext(Dispatchers.IO){
+                    textPropertyMap?.get(
+                        textMaxLinesKey
+                    )?.let {
+                        try {
+                            it.toInt()
+                        }catch (e: Exception){
+                            null
+                        }
+                    }
+                }
+                overrideMaxLines?.let {
+                    maxLines = it
+                }
+                val textColor = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textColorKey,
+                    )?.let {
+                            colorStr ->
+                        CmdClickColor.entries.firstOrNull {
+                            it.str == colorStr
+                        }
+                    }
+                }
+                textColor?.let {
+                    setFillColor(it.id)
+                }
+                val textBkColor = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textBkColorKey,
+                    )?.let {
+                            colorStr ->
+                        CmdClickColor.entries.firstOrNull {
+                            it.str == colorStr
+                        }
+                    }
+                }
+                textBkColor?.let {
+                    background =
+                        AppCompatResources.getDrawable(
+                            textViewContext,
+                            it.id
+                        )
+
+                }
+                //            captionTextView.setTextIsSelectable(enableTextSelect)
+                val strokeColorStr = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        strokeColorKey,
+                    )
+                }
+                CmdClickColor.entries.firstOrNull {
+                    it.str == strokeColorStr
+                }?.let {
+                    setStrokeColor(it.id)
+                }
+                val strokeWidth = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        strokeWidthKey,
+                    )?.let {
+                        try {
+                            it.toInt()
+                        } catch(e: Exception){
+                            null
+                        }
+                    }
+                }
+                strokeWidth?.let {
+                    outlineWidthSrc = it
+                }
+                val overrideTextSize = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textSizeKey,
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    }
+                }
+                overrideTextSize?.let {
+                    textSize = it
+                }
+                val textAlpha = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textAlphaKey,
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    }
+                }
+                textAlpha?.let {
+                    alpha = it
+                }
+                val overrideTextStyle = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textStyleKey,
+                    )?.let {
+                            textStyleStr ->
+                        EditComponent.Template.TextPropertyManager.TextStyle.entries.firstOrNull {
+                            it.key == textStyleStr
+                        }?.style
+                    }
+                } ?: typeface.style
+                val overrideFont = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textFontKey,
+                    )?.let {
+                            textFontStr ->
+                        EditComponent.Template.TextPropertyManager.Font.entries.firstOrNull {
+                            it.key == textFontStr
+                        }?.typeface
+                    }
+                } ?: typeface
+                setTypeface(overrideFont, overrideTextStyle)
             }
         }
 //        FileSystems.updateFile(

@@ -176,7 +176,7 @@ object EditListConfig {
             if(
                 typeName.isNullOrEmpty()
             ) return@let defaultType
-            CheckItemSettingsForEditList.CheckType.values().firstOrNull {
+            CheckItemSettingsForEditList.CheckType.entries.firstOrNull {
                 it.type == typeName
             } ?: defaultType
         }
@@ -201,7 +201,7 @@ object EditListConfig {
             if(
                 fetchIconName.isNullOrEmpty()
             ) return@let defaultIconId
-            CmdClickIcons.values().firstOrNull {
+            CmdClickIcons.entries.firstOrNull {
                 it.str == fetchIconName
             }?.id ?:defaultIconId
         }
@@ -498,6 +498,7 @@ object EditListConfig {
 
 
         private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
+        private val textStyleKey = EditComponent.Template.TextPropertyManager.Property.STYLE.key
         private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
         private val textColorKey = EditComponent.Template.TextPropertyManager.Property.COLOR.key
         private val strokeColorKey = EditComponent.Template.TextPropertyManager.Property.STROKE_COLOR.key
@@ -515,6 +516,7 @@ object EditListConfig {
 
         private val srcStrHolder = EditComponent.Template.ReplaceHolder.SrcReplaceHolders.SRC_STR.key
         private val fitCenterImageScale = EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER.scale
+        private val textBoldStyle = EditComponent.Template.TextPropertyManager.TextStyle.BOLD.key
         val toolbarLayoutForOnlyCmdValEdit = """
     --
     ${EditComponent.Template.LayoutKey.FRAME.key}=
@@ -533,10 +535,11 @@ object EditListConfig {
             ${displayTextKey}=`${srcStrHolder}`
             ${keySeparator}${srcStrKey}=`OK`
         ${typeSeparator}${textPropertyKey}=
+            ${keySeparator}${textStyleKey}=`${textBoldStyle}`
             ${keySeparator}${textMaxLinesKey}=1
         ${typeSeparator}${imageKey}=
             ${imagePathsKey}="ok"
-        ${typeSeparator}${textPropertyKey}=
+        ${typeSeparator}${imagePropertyKey}=
             ${keySeparator}${imageScaleKey}=`${fitCenterImageScale}`
         ${typeSeparator}${onSaveKey}=ON
         ${typeSeparator}${isConsecKey}=OFF
