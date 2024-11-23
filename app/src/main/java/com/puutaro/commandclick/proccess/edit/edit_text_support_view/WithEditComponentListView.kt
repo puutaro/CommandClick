@@ -79,6 +79,7 @@ object WithEditComponentListView{
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListConfigMap: Map<String, String>?,
+        editBackstackCountFrame: FrameLayout,
         editBackstackCountView: ShapeableImageView,
         editTextView: OutlineTextView,
         editTitleImage: AppCompatImageView,
@@ -106,6 +107,7 @@ object WithEditComponentListView{
             }
             TitleImageAndViewSetter.set(
                 fragment,
+                editBackstackCountFrame,
                 editBackstackCountView,
                 editTextView,
                 fannelInfoMap,

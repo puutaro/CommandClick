@@ -18,7 +18,7 @@
         android:scaleType="centerCrop"
         />
     <FrameLayout
-        android:id="@+id/edit_list_dialog_count_frame"
+        android:id="@+id/edit_list_dialog_backstack_count_frame"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/edit_title_height"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/edit_title_height"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/edit_list_dialog_count_frame"
+        app:layout_constraintStart_toEndOf="@+id/edit_list_dialog_backstack_count_frame"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
         android:layout_gravity="center_vertical"

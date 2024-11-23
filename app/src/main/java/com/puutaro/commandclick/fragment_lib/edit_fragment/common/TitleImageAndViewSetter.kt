@@ -5,8 +5,10 @@ import android.graphics.BlendModeColorFilter
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -42,6 +44,7 @@ object TitleImageAndViewSetter {
     private const val keySeparator = '|'
     fun set(
         fragment: Fragment,
+        editBackstackCountFrame: FrameLayout,
         editBackstackCountView: ShapeableImageView,
         editTextView: OutlineTextView,
         fannelInfoMap: Map<String, String>,
@@ -72,6 +75,8 @@ object TitleImageAndViewSetter {
            val onTitleSwitch =
                it != switchOff
            if (onTitleSwitch) return@let
+            editBackstackCountFrame.isVisible = false
+            editTextView.isVisible = false
 //           editFragment.binding.editTitleLinearlayout.isVisible = false
            return
        }

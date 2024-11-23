@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -62,6 +61,10 @@ class EditListDialog(
         val constraintLayout =
             terminalFragment.editListDialog?.findViewById<ConstraintLayout>(
                 R.id.edit_list_dialog_constraint_layout
+            ) ?: return
+        val editBackstackCountFrame =
+            terminalFragment.editListDialog?.findViewById<FrameLayout>(
+                R.id.edit_list_dialog_backstack_count_frame
             ) ?: return
         val editBackstackCountView =
             terminalFragment.editListDialog?.findViewById<ShapeableImageView>(
@@ -134,6 +137,7 @@ class EditListDialog(
             setReplaceVariableMap,
             terminalFragment.busyboxExecutor,
             editListConfigMap,
+            editBackstackCountFrame,
             editBackstackCountView,
             editListTitleView,
             editListTitleImage,
