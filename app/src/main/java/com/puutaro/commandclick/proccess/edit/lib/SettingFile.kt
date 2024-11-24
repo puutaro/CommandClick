@@ -52,12 +52,24 @@ object SettingFile {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
         val fannelName = fannelPathObj.name
-        val firstSettingCon = ReadText(
+        val firstSettingConList = ReadText(
             settingFilePath
         ).textToList()
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "settingFile.txt").absolutePath,
+//            listOf(
+//                "firstSettingCon: ${firstSettingConList.joinToString("\n")}",
+//                "readLayoutFromList: ${readLayoutFromList(
+//                    context,
+//                    firstSettingConList,
+//                    fannelName,
+//                    setReplaceVariableCompleteMap,
+//                )}"
+//            ).joinToString("\n\n\n") + "\n\n--------------\n\n"
+//        )
         return readLayoutFromList(
             context,
-            firstSettingCon,
+            firstSettingConList,
             fannelName,
             setReplaceVariableCompleteMap,
         )
@@ -144,153 +156,15 @@ object SettingFile {
         }.joinToString("")
     }
 
-//    private fun importLayoutSetting(
-//        context: Context?,
-//        row: String,
-//        scriptFileName: String,
-//        setReplaceVariableCompleteMap: Map<String, String>?
-//    ): String {
-//        if (
-//            !row.contains(importPreWord)
-//        ) return row
-//        val trimRowSrc = row
-//            .trim()
-//            .trim(';')
-//            .trim(',')
-//        val prefixLayoutSeparator =  Regex("(^[-]+)").find(
-//            trimRowSrc
-//        )?.value ?: String()
-//
-//        val suffixLayoutSeparator =  Regex("([-]+)$").find(
-//            trimRowSrc
-//        )?.value ?: String()
-//        val trimRow = trimRowSrc
-//            .removePrefix(prefixLayoutSeparator)
-//            .removeSuffix(suffixLayoutSeparator)
-////        FileSystems.updateFile(
-////            File(UsePath.cmdclickDefaultAppDirPath, "lImport00.txt").absolutePath,
-////            listOf(
-////                "row: ${row}",
-////                "trimRowSrc: ${trimRowSrc}",
-////                "prefixLayoutSeparator: ${prefixLayoutSeparator}",
-////                "suffixLayoutSeparator: ${suffixLayoutSeparator}",
-////                "trimRow: ${trimRow}"
-////            ).joinToString("\n")
-////        )
-////        FileSystems.updateFile(
-////            File(UsePath.cmdclickDefaultAppDirPath, "lImport.txt").absolutePath,
-////            listOf(
-////                "row: ${row}",
-////                "trimRowSrc: ${trimRowSrc}",
-////                "trimRow: ${trimRow}"
-////            ).joinToString("\n")
-////        )
-//        return trimRow
-//            .replace("${importPreWord}=", "")
-//            .trim()
-//            .let {
-//                SetReplaceVariabler.execReplaceByReplaceVariables(
-//                    it,
-//                    setReplaceVariableCompleteMap,
-////                    recentAppDirPath,
-//                    scriptFileName
-//                )
-//            }.let {
-//                QuoteTool.trimBothEdgeQuote(it)
-//            }.let {
-//                importKeyAndSubKeyCon ->
-//                val importMap = ImportTool.makeImportMap(
-//                    importKeyAndSubKeyCon
-//                )
-//                val importPath = ImportTool.getImportPath(
-//                    importMap
-//                )
-//                val importContents = importPath?.let {
-//                    val importConSrc = catImportContents(it)
-//                    val replaceMap = ImportTool.getRepMap(
-//                        importMap
-//                    )
-//                    CmdClickMap.replaceHolderForJsAction(
-//                        importConSrc,
-//                        replaceMap
-//                    )
-//                } ?: String()
-//                prefixLayoutSeparator + importContents + suffixLayoutSeparator
-//            }
-//    }
-
-//    private fun importSetting(
-//        context: Context?,
-//        row: String,
-//        scriptFileName: String,
-//        setReplaceVariableCompleteMap: Map<String, String>?
-//    ): String {
-//        if (
-//            !row.contains(importPreWord)
-//        ) return row
-//        val trimRow = row
-//            .trim()
-//            .trim(';')
-//            .trim(',')
-//        return trimRow
-//            .replace("${importPreWord}=", "")
-//            .trim()
-//            .let {
-//                SetReplaceVariabler.execReplaceByReplaceVariables(
-//                    it,
-//                    setReplaceVariableCompleteMap,
-//                    scriptFileName
-//                )
-//            }.let {
-//                QuoteTool.trimBothEdgeQuote(it)
-//            }.let {
-//                importKeyAndSubKeyCon ->
-//                val importMap = ImportTool.makeImportMap(
-//                    importKeyAndSubKeyCon
-//                )
-//                val importPath = ImportTool.getImportPath(
-//                    context,
-//                    importMap
-//                )
-//                val importContents = importPath?.let {
-//                    val importConSrc = catImportContents(it)
-//                    val replaceMap = ImportTool.getRepMap(
-//                        importMap
-//                    )
-//                    CmdClickMap.replaceHolderForJsAction(
-//                        importConSrc,
-//                        replaceMap
-//                    )
-//                } ?: String()
-//                importContents
-////                catImportContents(
-////                    it
-////                )
-//            }
-//    }
-
-//    private fun catImportContents(
-//        importPath: String,
-//    ): String {
-//        val readPathObj = File(importPath)
-//        if (
-//            !readPathObj.isFile
-//        ) return String()
-//        return formSettingContents(
-//            ReadText(
-//                readPathObj.absolutePath
-//            ).textToList()
-//        )
-//    }
-
-
     private object ImportManager {
 
         private const val importPreWord = SettingFileVariables.importPreWord
 
+        private val importEndSeparator = ".impEND"
+        private const val settingSeparators = "|?&"
         private val importRegexStr =
-            "\n[ \t]*${importPreWord}=[^,]+"
-        val importRegex = importRegexStr.toRegex()
+            "\n[ \t]*[${settingSeparators}]*${importPreWord}=.+?\\${importEndSeparator}"
+        private val importRegex = importRegexStr.toRegex(RegexOption.DOT_MATCHES_ALL)
 
         fun import(
             context: Context?,
@@ -303,7 +177,7 @@ object SettingFile {
                 setReplaceVariableCompleteMap,
                 fannelName
             )
-            var settingCon =  settingConBeforeImport
+            var settingCon = settingConBeforeImport
             for(i in 1..5) {
                 val result = importRegex.findAll(settingCon)
                 if(
@@ -321,6 +195,12 @@ object SettingFile {
                     trimImportSrcCon(it.split("\n"))
                 }
             }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "sInImpoetsettingCon.txt").absolutePath,
+//                listOf(
+//                    "settingCon: ${settingCon}",
+//                ).joinToString("\n\n=====================\n\n")
+//            )
             return settingCon
         }
 
@@ -329,11 +209,30 @@ object SettingFile {
             settingConBeforeImport: String,
             result: Sequence<MatchResult>,
             setReplaceVariableCompleteMap: Map<String, String>?,
-            fanneName: String,
+            fannelName: String,
         ): String {
             var settingCon = settingConBeforeImport
             result.forEach {
-                val importSrcCon = it.value
+                val importRawSrcCon = it.value
+                val importSrcConWithPrefix = importRawSrcCon
+                    .trim('\n')
+                    .trim()
+                val separatorPrefix =
+                    Regex("^[${settingSeparators}]*").find(importSrcConWithPrefix)?.value
+                val importSrcCon =
+                    when(separatorPrefix == null) {
+                        true -> importSrcConWithPrefix
+                        else -> importSrcConWithPrefix.removePrefix(separatorPrefix.toString())
+                    }.removeSuffix(importEndSeparator)
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sInImpoet.txt").absolutePath,
+//                    listOf(
+//                        "importRawSrcCon: ${importRawSrcCon}",
+//                        "importSrcConWithPrefix: ${importSrcConWithPrefix}",
+//                        "separatorPrefix: ${separatorPrefix}",
+//                        "importSrcCon: ${importSrcCon}",
+//                    ).joinToString("\n\n=====================\n\n")
+//                )
                 if (
                     importSrcCon.isEmpty()
                 ) return@forEach
@@ -351,6 +250,10 @@ object SettingFile {
                         context,
                         "Import path not found: ${importPath}"
                     )
+                    settingCon = settingCon.replace(
+                        importRawSrcCon,
+                        String(),
+                    )
                     return@forEach
                 }
                 val repValMap = ImportTool.getRepMap(
@@ -363,13 +266,13 @@ object SettingFile {
                     )
                 }
                 settingCon = settingCon.replace(
-                    importSrcCon,
-                    importCon
+                    importRawSrcCon,
+                    "${separatorPrefix}${importCon}"
                 ).let {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it,
                         setReplaceVariableCompleteMap,
-                        fanneName,
+                        fannelName,
                     )
                 }
             }
@@ -378,7 +281,7 @@ object SettingFile {
 
 
         private fun trimImportSrcCon(jsList: List<String>): String {
-            return (listOf("\n") + jsList).joinToString("\n")
+            return "\n" + jsList.joinToString("\n")
                 .replace("\n[ 　\t]*".toRegex(), "\n")
                 .replace("\n//[^\n]+".toRegex(), "\n")
         }
