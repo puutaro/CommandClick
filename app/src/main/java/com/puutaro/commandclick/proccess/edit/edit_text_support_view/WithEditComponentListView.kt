@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
+import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -9,7 +10,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -20,6 +20,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
+import com.puutaro.commandclick.custom_manager.PreLoadGridLayoutManager
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
@@ -37,6 +38,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSett
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -206,6 +208,37 @@ object WithEditComponentListView{
             editListRecyclerView,
             isReverseLayout,
         )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                var prevYposi = 0f
+                for(i in 1..10){
+                    val curYPosi = withContext(Dispatchers.Main){
+                        editListRecyclerView.y
+                    }
+                    if(
+                        prevYposi != 0f
+                        && prevYposi == curYPosi
+                    ) break
+                    prevYposi = curYPosi
+//                    val isVisibleComp = withContext(Dispatchers.Main){
+//                        isRecyclerViewFullyVisible(editListRecyclerView)
+//                    }
+//                    //gridLayout.findLastCompletelyVisibleItemPosition()
+//                    if(isVisibleComp){
+//                        break
+//                    }
+//                    if(
+//                        isVisibleComp == lastItemIndex
+//                    ) {
+//                        break
+//                    }
+                    delay(100)
+                }
+            }
+            withContext(Dispatchers.Main) {
+                editListRecyclerView.scrollToPosition(0)
+            }
+        }
         CoroutineScope(Dispatchers.Main).launch {
             setToolbar(
                 fragment,
@@ -272,6 +305,16 @@ object WithEditComponentListView{
             null,
             editListConfigMap,
         )
+    }
+
+    private fun isRecyclerViewFullyVisible(
+        recyclerView: RecyclerView
+    ): Boolean {
+        if (!recyclerView.isAttachedToWindow) return false
+        val rect = Rect()
+        val isVisibleRecyclerView = recyclerView.getGlobalVisibleRect(rect)
+        if (!isVisibleRecyclerView) return false
+        return (rect.bottom - rect.top) >= recyclerView.height
     }
 
 
@@ -365,6 +408,7 @@ object WithEditComponentListView{
                         true -> null
                         else -> EditComponent.AdapterSetter.makeVerticalLinear(
                             context,
+                            null,
                             verticalKeyPairs,
                             verticalLinerWeight,
                             verticalTag,

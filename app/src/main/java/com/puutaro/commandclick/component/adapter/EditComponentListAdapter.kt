@@ -196,6 +196,12 @@ class EditComponentListAdapter(
             view.findViewById<MaterialCardView>(
                 R.id.edit_component_adapter_mterial_card_view
             )
+        val totalLinearLayout = view.findViewById<LinearLayoutCompat>(
+            R.id.edit_component_adapter_total_linear,
+        )
+//        val firstVerticalLinerLayout = view.findViewById<LinearLayoutCompat>(
+//            R.id.edit_component_first_vertical_linear
+//        )
         var keyPairListConMap: MutableMap<String, String?> = mutableMapOf()
         var srcTitle = String()
         var srcCon = String()
@@ -423,34 +429,44 @@ class EditComponentListAdapter(
                     frameTagToVerticalKeysCon,
                 )
             }
-            val totalLinearLayout = withContext(Dispatchers.Main){
-                LinearLayoutCompat(context).apply {
-                    val totalLinearParam = LinearLayoutCompat.LayoutParams(
-                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                    ).apply {
-                        tag =
-                            setMargins(ScreenSizeCalculator.toDp(context,10))
-                        weight = weightSumFloat
-                    }
-                    layoutParams = totalLinearParam
-                    orientation = LinearLayoutCompat.HORIZONTAL
-                    gravity = Gravity.CENTER
+            val totalLinearLayout = withContext(Dispatchers.Main) {
+                holder.totalLinearLayout.apply {
+                    removeAllViews()
                 }
             }
+//                withContext(Dispatchers.Main){
+//                LinearLayoutCompat(context).apply {
+//                    val totalLinearParam = LinearLayoutCompat.LayoutParams(
+//                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//                    ).apply {
+//                        tag =
+//                            setMargins(ScreenSizeCalculator.toDp(context,10))
+//                        weight = weightSumFloat
+//                    }
+//                    layoutParams = totalLinearParam
+//                    orientation = LinearLayoutCompat.HORIZONTAL
+//                    gravity = Gravity.CENTER
+//                }
+//            }
             val verticalLinerWeight = weightSumFloat / verticalTagToKeyPairsList.size
             withContext(Dispatchers.Main) {
-                verticalTagToKeyPairsList.forEach {
-                        verticalTagToKeyPairs ->
+                verticalTagToKeyPairsList.forEachIndexed {
+                        verticalIndex, verticalTagToKeyPairs ->
                     val verticalTag = verticalTagToKeyPairs.first
                     val verticalKeyPairs = verticalTagToKeyPairs.second
 //                ,ScreenSizeCalculator.toDp(context, 50)
+//                    val verticalLinearLayoutSrc = when(verticalIndex == 0) {
+//                        true -> holder.firstVerticalLinerLayout
+//                        else -> null
+//                    }
                     val verticalLinearLayout = EditComponent.AdapterSetter.makeVerticalLinear(
-                        context,
-                        verticalKeyPairs,
-                        verticalLinerWeight,
-                        verticalTag,
-                    )
+                            context,
+                            null,
+                            verticalKeyPairs,
+                            verticalLinerWeight,
+                            verticalTag,
+                        )
                     verticalTagToLinearKeysListMap.get(verticalTag)?.forEach {
                             linearKeyValues ->
                         val linearParam = LinearLayoutCompat.LayoutParams(
@@ -592,7 +608,9 @@ class EditComponentListAdapter(
                         }
                         verticalLinearLayout.addView(horizonLinearLayout)
                     }
-                    totalLinearLayout.addView(verticalLinearLayout)
+//                    if(verticalIndex != 0) {
+                        totalLinearLayout.addView(verticalLinearLayout)
+//                    }
                 }
                 materialCardView.addView(totalLinearLayout)
             }

@@ -682,11 +682,15 @@ object EditComponent {
                 }
                 suspend fun makeVerticalLinear(
                         context: Context,
+                        verticalLinearLayoutSrc: LinearLayoutCompat?,
                         verticalKeyPairs: List<Pair<String, String>>,
                         verticalLinerWeight: Float,
                         verticalTag: String,
                 ): LinearLayoutCompat {
-                        return LinearLayoutCompat(context).apply {
+                        return when(verticalLinearLayoutSrc == null) {
+                                false -> verticalLinearLayoutSrc
+                                else -> LinearLayoutCompat(context)
+                        }.apply {
                                 val verticalWidth =
                                         PairListTool.getValue(
                                                 verticalKeyPairs,
