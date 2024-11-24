@@ -27,16 +27,5 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:weightSum="1">
-<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--            android:id="@+id/edit_component_first_vertical_linear"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:layout_margin="10dp"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_weight="1"-->
-<!--            android:weightSum="1">-->
-
-<!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
     </androidx.appcompat.widget.LinearLayoutCompat>
 </com.google.android.material.card.MaterialCardView>
