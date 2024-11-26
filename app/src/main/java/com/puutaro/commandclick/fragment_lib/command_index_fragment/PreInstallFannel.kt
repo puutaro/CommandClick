@@ -541,7 +541,7 @@ object PreInstallFannel {
                         ?.trim()
                     ?: String()
                 val urlsVersion = relativePathAndVersion.getOrNull(1)
-                val curVersion = TsvTool.getKeyValue(
+                val curVersion = TsvTool.getKeyValueFromFile(
                     curEscapeTsvPath,
                     relativePath
                 ).let { QuoteTool.trimBothEdgeQuote(it) }

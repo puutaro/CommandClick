@@ -1,21 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import java.io.File
 
 object CmdClickSystemFannelManager {
 
@@ -215,7 +203,7 @@ object CmdClickSystemFannelManager {
                 ?.trim()
                 ?: String()
             val assetsVersion = relativePathAndVersion.getOrNull(1)
-            val curVersion = TsvTool.getKeyValue(
+            val curVersion = TsvTool.getKeyValueFromFile(
                 curEscapeTsvPath,
                 relativePath
             ).let { QuoteTool.trimBothEdgeQuote(it) }

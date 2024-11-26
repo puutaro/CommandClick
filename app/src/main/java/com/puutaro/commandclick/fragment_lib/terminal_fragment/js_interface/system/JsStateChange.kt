@@ -165,7 +165,7 @@ class JsStateChange(
                 ) ?: return null
             val listDirKey =
                 ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key
-            val saveListDirPath = TsvTool.getKeyValue(
+            val saveListDirPath = TsvTool.getKeyValueFromFile(
                 listDirTsvPath,
                 listDirKey,
             )

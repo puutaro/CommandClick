@@ -272,7 +272,7 @@ object ShellMacroHandler {
 //                ).joinToString("\n\n") + "\n--------\n"
 //            )
             val currentValue = QuoteTool.trimBothEdgeQuote(
-                TsvTool.getKeyValue(
+                TsvTool.getKeyValueFromFile(
                     tsvPath,
                     tsvKey
                 )

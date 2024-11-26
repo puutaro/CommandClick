@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text
 
 import android.webkit.JavascriptInterface
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -9,12 +8,9 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.RegexTool
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -375,7 +371,7 @@ class JsToListFilter(
         ): Boolean {
             val linesMatchType = FilterAndMapModule.LinesMatchType.values().firstOrNull {
                 it.type == linesMatchTypeStr
-            } ?: FilterAndMapModule.LinesMatchType.NORMAL
+            } ?: FilterAndMapModule.LinesMatchType.EQUAL
             val matchInLines = judgeMatchLines(
                 srcLine,
                 matchLineList,
@@ -387,7 +383,7 @@ class JsToListFilter(
             } ?: FilterAndMapModule.MatchConditionType.AND
             val matchRegexMatchType = FilterAndMapModule.MatchRegexMatchType.values().firstOrNull {
                 it.type == matchRegexMatchTypeStr
-            } ?: FilterAndMapModule.MatchRegexMatchType.NORMAL
+            } ?: FilterAndMapModule.MatchRegexMatchType.EQUAL
             val matchRegexListResult = judgeMatchRegexListResult(
                 matchRegexList,
                 matchRegexMatchType,
@@ -406,9 +402,9 @@ class JsToListFilter(
             val isEmptyMatchLineList =
                 matchLineList.filter { it.isNotEmpty() }.isEmpty()
             return when(linesMatchType){
-                FilterAndMapModule.LinesMatchType.NORMAL ->
+                FilterAndMapModule.LinesMatchType.EQUAL ->
                     matchLineList.contains(srcLine)
-                FilterAndMapModule.LinesMatchType.DENY ->
+                FilterAndMapModule.LinesMatchType.NOT_EQUAL ->
                     !matchLineList.contains(srcLine)
             } || isEmptyMatchLineList
         }
@@ -432,9 +428,9 @@ class JsToListFilter(
                 }
             }
             return when(matchRegexMatchType){
-                FilterAndMapModule.MatchRegexMatchType.NORMAL
+                FilterAndMapModule.MatchRegexMatchType.EQUAL
                 -> matchRegexListResultSrc
-                FilterAndMapModule.MatchRegexMatchType.DENY
+                FilterAndMapModule.MatchRegexMatchType.NOT_EQUAL
                 -> !matchRegexListResultSrc
             }
         }

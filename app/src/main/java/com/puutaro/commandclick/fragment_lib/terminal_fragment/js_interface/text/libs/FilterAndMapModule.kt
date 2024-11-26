@@ -1,12 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.RegexTool
-import java.io.File
-import java.time.LocalDateTime
 
 object FilterAndMapModule {
 
@@ -40,15 +36,15 @@ object FilterAndMapModule {
     enum class LinesMatchType(
         val type: String,
     ) {
-        NORMAL("normal"),
-        DENY("deny"),
+        EQUAL("equal"),
+        NOT_EQUAL("notEqual"),
     }
 
     enum class MatchRegexMatchType(
         val type: String,
     ) {
-        NORMAL("normal"),
-        DENY("deny"),
+        EQUAL("equal"),
+        NOT_EQUAL("notEqual"),
     }
 
     fun applyRemoveRegex(

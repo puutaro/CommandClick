@@ -17,7 +17,6 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
-import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerBroadcastHandler
 import com.puutaro.commandclick.service.lib.music_player.NotiSetter
 import com.puutaro.commandclick.service.lib.music_player.PlayerExit
@@ -77,7 +76,7 @@ class MusicPlayerService: Service() {
             }
         )
         notificationManager = NotificationManagerCompat.from(applicationContext)
-        val importance = TsvTool.getKeyValue(
+        val importance = TsvTool.getKeyValueFromFile(
            UsePath.mediaPlayerServiceConfigPath,
            MusicPlayerIntentExtra.IMPORTANCE.scheme
         )

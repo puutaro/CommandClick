@@ -422,6 +422,7 @@ object EditListConfig {
     enum class EditListConfigKey(
         val key: String,
     ) {
+        SETTING_ACTION("settingAction"),
         TYPE("type"),
         LAYOUT("layout"),
         FOOTER_LAYOUT_PATH("footerLayoutPath"),

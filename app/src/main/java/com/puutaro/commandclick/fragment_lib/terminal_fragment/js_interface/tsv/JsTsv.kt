@@ -115,7 +115,7 @@ class JsTsv(
         path: String,
         key: String,
     ): String {
-        val firstKeyValue = TsvTool.getKeyValue(
+        val firstKeyValue = TsvTool.getKeyValueFromFile(
             path,
             key,
         )

@@ -160,9 +160,9 @@ object SettingFile {
 
         private const val importPreWord = SettingFileVariables.importPreWord
 
-        private val importEndSeparator = ".impEND"
+        private const val importEndSeparator = ".impEND"
         private const val settingSeparators = "|?&"
-        private val importRegexStr =
+        private const val importRegexStr =
             "\n[ \t]*[${settingSeparators}]*${importPreWord}=.+?\\${importEndSeparator}"
         private val importRegex = importRegexStr.toRegex(RegexOption.DOT_MATCHES_ALL)
 

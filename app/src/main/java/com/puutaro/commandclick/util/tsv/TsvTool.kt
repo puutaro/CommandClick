@@ -264,6 +264,20 @@ object TsvTool {
     }
 
     fun getKeyValue(
+        tsvCon: String,
+        key: String,
+    ): String {
+        return filterByColumnNum(
+            tsvCon.split("\n"),
+            twoColumnNum
+        ).firstOrNull {
+            it.startsWith("${key}\t")
+        }?.split("\t")
+            ?.lastOrNull()
+            ?: String()
+    }
+
+    fun getKeyValueFromFile(
         path: String,
         key: String,
     ): String {

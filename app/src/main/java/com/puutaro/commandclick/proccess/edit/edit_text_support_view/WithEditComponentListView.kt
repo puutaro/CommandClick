@@ -20,13 +20,13 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
-import com.puutaro.commandclick.custom_manager.PreLoadGridLayoutManager
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
@@ -35,10 +35,10 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.BkImageSettin
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
+import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingActionForEditList
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -80,7 +80,7 @@ object WithEditComponentListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListConfigMap: Map<String, String>?,
+        editListConfigMapSrc: Map<String, String>?,
         editBackstackCountFrame: FrameLayout,
         editBackstackCountView: ShapeableImageView,
         editTextView: OutlineTextView,
@@ -94,6 +94,14 @@ object WithEditComponentListView{
         fannelContentsList: List<String>?,
     ) {
         val context = fragment.context ?: return
+
+        val editListConfigMap = replaceEditConfigMapBySettingAction(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            editListConfigMapSrc,
+        )
 
         CoroutineScope(Dispatchers.Main).launch{
             val titleSettingPath = editListConfigMap?.get(
@@ -283,6 +291,40 @@ object WithEditComponentListView{
             editListSearchEditText,
             editListConfigMap
         )
+    }
+
+    private fun replaceEditConfigMapBySettingAction(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListConfigMapSrc: Map<String, String>?,
+    ): Map<String, String>? {
+        val keyToSubKeyConList = SettingActionForEditList.getSettingConfigMap(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            editListConfigMapSrc,
+        )
+        val settingActionManager = SettingActionManager()
+        val varNameToValueMap = settingActionManager.exec(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            keyToSubKeyConList,
+        )
+        return editListConfigMapSrc?.map {
+            val key = CmdClickMap.replace(
+                it.key,
+                varNameToValueMap
+            )
+            val value = CmdClickMap.replace(
+                it.value,
+                varNameToValueMap
+            )
+            key to value
+        }?.toMap()
     }
 
     private suspend fun setFooter(
