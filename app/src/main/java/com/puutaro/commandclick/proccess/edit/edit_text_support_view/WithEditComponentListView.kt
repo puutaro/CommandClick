@@ -39,6 +39,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -78,7 +79,7 @@ object WithEditComponentListView{
     fun create(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
+        setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListConfigMapSrc: Map<String, String>?,
         editBackstackCountFrame: FrameLayout,
@@ -94,14 +95,38 @@ object WithEditComponentListView{
         fannelContentsList: List<String>?,
     ) {
         val context = fragment.context ?: return
-
-        val editListConfigMap = replaceEditConfigMapBySettingAction(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            busyboxExecutor,
-            editListConfigMapSrc,
+        val varNameToValueMap = let {
+            SettingActionForEditList.getSettingConfigCon(
+                editListConfigMapSrc,
+            ).let {
+                val settingActionManager = SettingActionManager()
+                settingActionManager.exec(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMapSrc,
+                    busyboxExecutor,
+                    it,
+                )
+            }
+        }
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "varNameToValueMap.txt").absolutePath,
+            listOf(
+                "varNameToValueMap: ${varNameToValueMap}"
+            ).joinToString("\n")
         )
+        val setReplaceVariableMap = (setReplaceVariableMapSrc ?: emptyMap()) + varNameToValueMap
+        val editListConfigMap = editListConfigMapSrc?.map {
+            val key = CmdClickMap.replace(
+                it.key,
+                varNameToValueMap
+            )
+            val value = CmdClickMap.replace(
+                it.value,
+                varNameToValueMap
+            )
+            key to value
+        }?.toMap()
 
         CoroutineScope(Dispatchers.Main).launch{
             val titleSettingPath = editListConfigMap?.get(
@@ -184,7 +209,7 @@ object WithEditComponentListView{
         val editComponentListAdapter = EditComponentListAdapter(
             fragment,
             fannelInfoMap,
-            setReplaceVariableMap,
+            setReplaceVariableMap + varNameToValueMap,
             editListConfigMap,
             busyboxExecutor,
             indexListMap,
@@ -291,40 +316,6 @@ object WithEditComponentListView{
             editListSearchEditText,
             editListConfigMap
         )
-    }
-
-    private fun replaceEditConfigMapBySettingAction(
-        fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
-        busyboxExecutor: BusyboxExecutor?,
-        editListConfigMapSrc: Map<String, String>?,
-    ): Map<String, String>? {
-        val keyToSubKeyConList = SettingActionForEditList.getSettingConfigMap(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            editListConfigMapSrc,
-        )
-        val settingActionManager = SettingActionManager()
-        val varNameToValueMap = settingActionManager.exec(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            busyboxExecutor,
-            keyToSubKeyConList,
-        )
-        return editListConfigMapSrc?.map {
-            val key = CmdClickMap.replace(
-                it.key,
-                varNameToValueMap
-            )
-            val value = CmdClickMap.replace(
-                it.value,
-                varNameToValueMap
-            )
-            key to value
-        }?.toMap()
     }
 
     private suspend fun setFooter(

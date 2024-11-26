@@ -6,22 +6,11 @@ import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 
 object SettingActionForEditList {
 
-    fun getSettingConfigMap(
-        fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
-        setReplaceVariableMapSrc: Map<String, String>?,
+    fun getSettingConfigCon(
         editListConfigMap: Map<String, String>?,
-    ): List<Pair<String, String>>? {
+    ): String? {
         return editListConfigMap?.get(
             EditListConfig.EditListConfigKey.SETTING_ACTION.key,
-        ).let {
-            keyToSubKeyCon ->
-            SettingActionManager.makeSettingActionKeyToSubKeyList(
-                fragment,
-                fannelInfoMap,
-                keyToSubKeyCon,
-                setReplaceVariableMapSrc,
-            )
-        }
+        )
     }
 }

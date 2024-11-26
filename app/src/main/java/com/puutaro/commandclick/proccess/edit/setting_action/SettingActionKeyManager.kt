@@ -1,5 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action
 
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager.CommonPathKey
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager.JsSubKey
+
 object SettingActionKeyManager {
 
     val landSeparator = ','
@@ -12,13 +15,13 @@ object SettingActionKeyManager {
     ) {
 //        SETTING_ACTION("sAc"),
         SETTING_VAR("sVar"),
-        SETTING_INNER_VAR("sInVar"),
+//        SETTING_INNER_VAR("sInVar"),
 //        SETTING_IF("sIf"),
 //        SETTING_TSV_VARS("sTsvVars"),
         SETTING_ACTION_VAR("sAcVar"),
     }
 
-    enum class CommonPathKey(
+    private enum class CommonPathKey(
         val key: String
     ) {
         IMPORT_PATH("importPath"),
@@ -35,11 +38,22 @@ object SettingActionKeyManager {
         VALUE("value"),
     }
 
-    enum class OnlyVarSubKey(
-        val key: String
-    ){
-        EXIT("exit"),
-        VAR_RETURN("varReturn"),
+    object ActionImportManager {
+
+        enum class ActionImportKey(
+            val key: String,
+        ) {
+            IMPORT_PATH(CommonPathKey.IMPORT_PATH.key),
+            REPLACE("replace"),
+            S_IF("sIf"),
+            ARGS(SettingSubKey.ARGS.key),
+
+            INVALID_AFTER_IN_AC_IMPORT("INVALID_AFTER_IN_AC_IMPORT"),
+            MISS_LAST_USE_VAR_KEY("MISS_LAST_USE_VAR_KEY"),
+            MISS_LAST_VAR_KEY("MISS_LAST_VAR_KEY"),
+            MISS_LAST_RETURN_KEY("MISS_LAST_RETURN_KEY"),
+            MISS_IMPORT_PATH("MISS_IMPORT_PATH"),
+        }
     }
 
     enum class VirtualSubKey(
