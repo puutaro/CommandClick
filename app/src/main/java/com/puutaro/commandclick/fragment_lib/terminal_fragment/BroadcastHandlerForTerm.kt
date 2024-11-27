@@ -12,6 +12,7 @@ import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.ErrLogBroadcastManagerForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorBroadcastManager
@@ -130,6 +131,12 @@ object BroadcastHandlerForTerm {
             BroadCastIntentSchemeTerm.SETING_ACTION_FUNC -> {
                 SettingActionFuncBroadcastManager.handle(
                     intent
+                )
+            }
+            BroadCastIntentSchemeTerm.ERR_LOG -> {
+                ErrLogBroadcastManagerForTerm.handle(
+                    terminalFragment.context,
+                    intent,
                 )
             }
         }

@@ -62,10 +62,14 @@ enum class BroadCastIntentSchemeTerm(
     ),
     EDIT_INDEX_LIST_UPDATE(
     "com.puutaro.commandclick.edit_index_list.update",
-    String()
+        String()
     ),
     SETING_ACTION_FUNC(
     "com.puutaro.commandclick.setting_action.func",
-    String()
-    )
+        String()
+    ),
+    ERR_LOG(
+    "com.puutaro.commandclick.err_log",
+        String()
+    ),
 }

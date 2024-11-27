@@ -21,6 +21,7 @@ object CheckTool {
     const val separator = "----------"
     const val errMark = "ERROR"
     const val errRedCode = "#ff0000"
+    const val ligthBlue = "#0cadf2"
 
     enum class JsOrActionMark(
         val mark: String

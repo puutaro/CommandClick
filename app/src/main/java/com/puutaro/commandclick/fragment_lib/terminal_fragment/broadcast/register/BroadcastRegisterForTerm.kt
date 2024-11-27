@@ -27,6 +27,7 @@ object BroadcastRegisterForTerm {
                 BroadCastIntentSchemeTerm.FANNEL_PIN_BAR_UPDATE.action,
                 BroadCastIntentSchemeTerm.EDIT_INDEX_LIST_UPDATE.action,
                 BroadCastIntentSchemeTerm.SETING_ACTION_FUNC.action,
+                BroadCastIntentSchemeTerm.ERR_LOG.action,
             )
         )
     }

@@ -97,13 +97,15 @@ object WithEditComponentListView{
     ) {
         val context = fragment.context ?: return
         runBlocking {
-            SettingActionManager.Companion.GlobalEditManager.init()
+//            SettingActionManager.Companion.GlobalExitManager.init()
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
         }
         val varNameToValueMap = let {
+
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
+                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val settingActionManager = SettingActionManager()
                 runBlocking {
                     settingActionManager.exec(
@@ -112,6 +114,7 @@ object WithEditComponentListView{
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         it,
+                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}",
                     )
                 }
             }
@@ -120,6 +123,7 @@ object WithEditComponentListView{
             editListConfigMapSrc?.get(
                 EditListConfig.EditListConfigKey.SETTING_ACTION2.key,
             ).let {
+                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val settingActionManager = SettingActionManager()
                 runBlocking {
                     settingActionManager.exec(
@@ -128,6 +132,7 @@ object WithEditComponentListView{
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         it,
+                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}"
                     )
                 }
             }
@@ -136,6 +141,7 @@ object WithEditComponentListView{
             editListConfigMapSrc?.get(
                 EditListConfig.EditListConfigKey.SETTING_ACTION3.key,
             ).let {
+                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val settingActionManager = SettingActionManager()
                 runBlocking {
                     settingActionManager.exec(
@@ -144,6 +150,7 @@ object WithEditComponentListView{
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         it,
+                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}"
                     )
                 }
             }
@@ -319,7 +326,7 @@ object WithEditComponentListView{
             }
             withContext(Dispatchers.IO){
                 SettingActionManager.Companion.BeforeActionImportMapManager.init()
-                SettingActionManager.Companion.GlobalEditManager.init()
+//                SettingActionManager.Companion.GlobalExitManager.init()
             }
         }
         CoroutineScope(Dispatchers.Main).launch {

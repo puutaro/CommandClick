@@ -56,7 +56,7 @@ object LogSystems {
         }
     }
 
-    fun stdErr(
+    fun     stdErr(
         context: Context?,
         errContents: String,
         debugNotiJanre: String = BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR.type,

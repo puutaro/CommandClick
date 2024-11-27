@@ -2,7 +2,11 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.broadcast.extra.ErrLogExtraForTerm
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncManager
@@ -14,8 +18,9 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.QuoteTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -26,9 +31,11 @@ class SettingActionManager {
 
     companion object {
 
+        val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
+
         object BeforeActionImportMapManager {
             private val beforeActionImportMap = mutableMapOf<String, String>()
-
+            private val mutex = Mutex()
             suspend fun get(
                 importPath: String
             ): String? {
@@ -36,7 +43,6 @@ class SettingActionManager {
                     return beforeActionImportMap.get(importPath)
                 }
             }
-            private val mutex = Mutex()
             suspend fun put(
                 importPath: String,
                 importCon: String
@@ -53,29 +59,69 @@ class SettingActionManager {
             }
         }
 
-        object GlobalEditManager {
-            private var globalEdit = false
+        private fun sendErLog(
+            context: Context?,
+            errMessage: String,
+            keyToSubKeyConWhere: String,
+        ){
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeTerm.ERR_LOG.action,
+                listOf(
+                    ErrLogExtraForTerm.ERR_CONTENTS.schema to
+                            "$errMessage about ${keyToSubKeyConWhere}"
+                )
+            )
+        }
 
-            suspend fun get(
-            ): Boolean {
-                mutex.withLock {
-                    return globalEdit
+        private fun makeSettingKeyToVarNameList(
+            keyToSubKeyConList: List<Pair<String, String>>,
+        ): List<Pair<String, String>> {
+            val defaultReturnPair = String() to String()
+            val subKeySeparator = SettingActionKeyManager.subKeySepartor
+            val settingKeyList =
+                SettingActionKeyManager.SettingActionsKey.entries.map {
+                    it.key
                 }
-            }
-            private val mutex = Mutex()
-            suspend fun exit(
-            ) {
-                mutex.withLock {
-                    globalEdit = true
-                }
-            }
-
-            suspend fun init() {
-                mutex.withLock {
-                    globalEdit = false
-                }
+            return keyToSubKeyConList.map {
+                    keyToSubKeyCon ->
+                val settingKey = keyToSubKeyCon.first
+                if(
+                    !settingKeyList.contains(settingKey)
+                ) return@map defaultReturnPair
+                val varName = keyToSubKeyCon.second.split(subKeySeparator).firstOrNull()?.let {
+                    QuoteTool.trimBothEdgeQuote(it)
+                } ?: return@map defaultReturnPair
+                settingKey to varName
+            }.filter {
+                it.first.isNotEmpty()
+                        && it.second.isNotEmpty()
             }
         }
+
+//        object GlobalExitManager {
+//            private var globalEdit = false
+//
+//            suspend fun get(
+//            ): Boolean {
+//                mutex.withLock {
+//                    return globalEdit
+//                }
+//            }
+//            private val mutex = Mutex()
+//            suspend fun exit(
+//            ) {
+//                mutex.withLock {
+//                    globalEdit = true
+//                }
+//            }
+//
+//            suspend fun init() {
+//                mutex.withLock {
+//                    globalEdit = false
+//                }
+//            }
+//        }
     }
 
     suspend fun exec(
@@ -84,6 +130,7 @@ class SettingActionManager {
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         keyToSubKeyCon: String?,
+        keyToSubKeyConWhere: String,
     ): Map<String, String> {
         val keyToSubKeyConList = makeSettingActionKeyToSubKeyList(
             fragment,
@@ -101,6 +148,7 @@ class SettingActionManager {
         settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
             keyToSubKeyConList,
             SettingActionExecutor.mapRoopKeyUnit,
+            keyToSubKeyConWhere,
             null,
         )
         return settingActionExecutor.getResultLoopKeyToVarNameValueMap()
@@ -175,6 +223,7 @@ class SettingActionManager {
         private val loopKeyToVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
         private val innerLoopKeyVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
         private var exitSignal = false
+        private val escapeRunPrefix = SettingVar.escapeRunPrefix
 
         companion object {
             const val mapRoopKeyUnit = "loop"
@@ -208,6 +257,7 @@ class SettingActionManager {
         suspend fun makeResultLoopKeyToVarNameValueMap(
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
+            keyToSubKeyConWhere: String,
             renewalVarName: String?
         ) {
             val context = fragmentRef.get()?.context
@@ -217,14 +267,48 @@ class SettingActionManager {
             if(
                 keyToSubKeyConList.isNullOrEmpty()
                 ) return
-            val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
+            VarErrManager.isNotUseVarErr(
+                context,
+                keyToSubKeyConList,
+                keyToSubKeyConWhere,
+            ).let {
+                isNotUseVarErr ->
+                if(isNotUseVarErr) return
+            }
+            VarErrManager.isRunPrefixUseErr(
+                context,
+                keyToSubKeyConList,
+                keyToSubKeyConWhere,
+            ).let {
+                    isRunPrefixUseErr ->
+                if(isRunPrefixUseErr) return
+            }
+            VarErrManager.isSameVarNameErr(
+                context,
+                makeSettingKeyToVarNameList(keyToSubKeyConList),
+                keyToSubKeyConWhere,
+            ).let {
+                    isSameVarNameErr ->
+                if(isSameVarNameErr) return
+            }
             keyToSubKeyConList.forEach {
                 keyToSubKeyConSrc ->
-                val globalEdit = GlobalEditManager.get()
+//                val globalEdit = GlobalExitManager.get()
+//                globalEdit
+//                    ||
                 if(
-                    globalEdit
-                    || exitSignal
+                    exitSignal
                 ) return
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,
+//                    listOf(
+//                        "curMapLoopKey: ${curMapLoopKey}",
+//                        "renewalVarName: ${renewalVarName}",
+//                        "keyToSubKeyConSrc: ${keyToSubKeyConSrc}",
+//                        "loopKeyToVarNameValueMap: ${loopKeyToVarNameValueMap}",
+//                        "innerLoopKeyVarNameValueMap: ${innerLoopKeyVarNameValueMap}",
+//                    ).joinToString("\n\n") + "\n\n=============\n\n"
+//                )
                 val keyToSubKeyCon = let {
                     val repMap =
                         (setReplaceVariableMapSrc ?: emptyMap()) +
@@ -245,32 +329,114 @@ class SettingActionManager {
                     it.key == curSettingActionKeyStr
                 } ?: return@forEach
                 val subKeyCon = keyToSubKeyCon.second
+                VarErrManager.isNotReplaceVarErr(
+                    context,
+                    subKeyCon,
+                    keyToSubKeyConWhere,
+                ).let {
+                        isNotReplaceVarErr ->
+                    if(isNotReplaceVarErr) return
+                }
                 when(
                     curSettingActionKey
                 ){
                     SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR -> {
-                        val renewalVarNameToImportedKeyToSubKeyConList = SettingImport.import(
+                        val importPathAndRenewalVarNameToImportCon = SettingImport.makeImportPathAndRenewalVarNameToImportCon(
                             context,
                             fannelInfoMap,
                             setReplaceVariableMapSrc,
                             keyToSubKeyCon,
+                            keyToSubKeyConWhere
                         )
+                        val importPath = importPathAndRenewalVarNameToImportCon.first
+                        if(
+                            importPath.isEmpty()
+                        ) return@forEach
+                        val renewalVarNameToImportCon = importPathAndRenewalVarNameToImportCon.second
                         val renewalVarNameSrc =
-                            renewalVarNameToImportedKeyToSubKeyConList.first
+                            renewalVarNameToImportCon.first
+                        if(
+                            renewalVarNameSrc.isEmpty()
+                        ) return@forEach
                         val importedKeyToSubKeyConList =
-                            renewalVarNameToImportedKeyToSubKeyConList.second
+                            renewalVarNameToImportCon.second
+                        if(
+                            importedKeyToSubKeyConList.isEmpty()
+                        ) return@forEach
 //                        FileSystems.updateFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "sImport.txt").absolutePath,
 //                            listOf(
+//                                "addLoopKey(curMapLoopKey): ${addLoopKey(curMapLoopKey)}",
 //                                "renewalVarNameSrc: ${renewalVarNameSrc}",
+//                                "importPath: ${importPath}",
 //                                "importedKeyToSubKeyConList: ${importedKeyToSubKeyConList}",
 //                            ).joinToString("\n") + "\n\n=============\n\n"
 //                        )
                         makeResultLoopKeyToVarNameValueMap(
                             importedKeyToSubKeyConList,
                             addLoopKey(curMapLoopKey),
+                            "${importPath} by imported",
                             renewalVarNameSrc,
                         )
+                        if(
+                            renewalVarName.isNullOrEmpty()
+                        ) return@forEach
+                        val isNotRunPrefix = !renewalVarName.startsWith(escapeRunPrefix)
+                        val removedLoopKey = removeLoopKey(curMapLoopKey)
+                        val proposalRenewalVarNameSrcInnnerMapValue = innerLoopKeyVarNameValueMap.get(
+                            addLoopKey((curMapLoopKey))
+                        )?.get(
+                            renewalVarNameSrc
+                        )
+                        if(
+                            isNotRunPrefix
+                            && !proposalRenewalVarNameSrcInnnerMapValue.isNullOrEmpty()
+                            ){
+                            innerLoopKeyVarNameValueMap.get(
+                                removedLoopKey
+                            ).let {
+                                    curInnerMapLoopKeyVarNameValueMap ->
+                                when(curInnerMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                    false -> curInnerMapLoopKeyVarNameValueMap.put(
+                                        renewalVarName,
+                                        proposalRenewalVarNameSrcInnnerMapValue
+                                    )
+                                    else -> innerLoopKeyVarNameValueMap.put(
+                                        removedLoopKey,
+                                        mutableMapOf(
+                                            renewalVarName to proposalRenewalVarNameSrcInnnerMapValue
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                        val proposalRenewalVarNameSrcMapValue = loopKeyToVarNameValueMap.get(
+                            addLoopKey((curMapLoopKey))
+                        )?.get(
+                            renewalVarNameSrc
+                        )
+                        if(
+                            isNotRunPrefix
+                            && !proposalRenewalVarNameSrcMapValue.isNullOrEmpty()
+                        ) {
+                            loopKeyToVarNameValueMap.get(
+                                removedLoopKey
+                            ).let {
+                                    curMapLoopKeyVarNameValueMap ->
+                                when(curMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                    false -> curMapLoopKeyVarNameValueMap.put(
+                                        renewalVarName,
+                                        proposalRenewalVarNameSrcMapValue
+                                    )
+                                    else -> loopKeyToVarNameValueMap.put(
+                                        removedLoopKey,
+                                        mutableMapOf(
+                                            renewalVarName to proposalRenewalVarNameSrcMapValue
+                                        )
+                                    )
+                                }
+                            }
+                        }
                     }
                     SettingActionKeyManager.SettingActionsKey.SETTING_VAR -> {
                         SettingVar().exec(
@@ -278,6 +444,8 @@ class SettingActionManager {
                             curSettingActionKey.key,
                             subKeyCon,
                             busyboxExecutor,
+                            renewalVarName,
+                            keyToSubKeyConWhere,
                         )?.let {
                             val varValue = it.second
                             if(
@@ -293,7 +461,6 @@ class SettingActionManager {
                                 return
                             }
                             val varName = it.first
-                            val isGlobal = globalVarNameRegex.matches(varName)
                             innerLoopKeyVarNameValueMap.get(
                                 curMapLoopKey
                             ).let {
@@ -306,9 +473,42 @@ class SettingActionManager {
                                     )
                                 }
                             }
-                            if(isGlobal) {
-//                                val beforeLoopKeyToVarNameValueMap = loopKeyToVarNameValueMap.toString()
-                                val removedLoopKey = removeLoopKey(curMapLoopKey)
+
+                            val isGlobalForRawVar = globalVarNameRegex.matches(varName)
+                            val isNotRunPrefix =
+                                !renewalVarName.isNullOrEmpty()
+                                        && !renewalVarName.startsWith(escapeRunPrefix)
+                            val isRegisterToTopForInner = isGlobalForRawVar && isNotRunPrefix
+                            val removedLoopKey = removeLoopKey(curMapLoopKey)
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "sinnerLoopKeyVarNameValueMap.txt").absolutePath,
+//                                listOf(
+//                                    "varName: ${varName}",
+//                                    "isNotRunPrefix: ${isNotRunPrefix}",
+//                                    "isRegisterToTopForInner: ${isRegisterToTopForInner}",
+//                                    "removedLoopKey: ${removedLoopKey}",
+//                                    "renewalVarName: ${renewalVarName}",
+//                                    "varValue: ${varValue}",
+//                                    "innerLoopKeyVarNameValueMap: ${innerLoopKeyVarNameValueMap}",
+//                                ).joinToString("\n\n") + "\n\n=============\n\n"
+//                            )
+                            if(isRegisterToTopForInner && !renewalVarName.isNullOrEmpty()){
+                                innerLoopKeyVarNameValueMap.get(
+                                    removedLoopKey
+                                ).let {
+                                        curInnerMapLoopKeyVarNameValueMap ->
+                                    when(curInnerMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                        false -> curInnerMapLoopKeyVarNameValueMap.put(renewalVarName, varValue)
+                                        else -> innerLoopKeyVarNameValueMap.put(
+                                            removedLoopKey,
+                                            mutableMapOf(renewalVarName to varValue)
+                                        )
+                                    }
+                                }
+                            }
+
+                            val isGlobalRegister = isGlobalForRawVar
+                            if(isGlobalRegister) {
                                 val varNameForPut = renewalVarName ?: varName
                                 loopKeyToVarNameValueMap.get(
                                     removedLoopKey
@@ -329,13 +529,478 @@ class SettingActionManager {
 //                                        "removedLoopKey: ${removedLoopKey}",
 //                                        "varName: ${varName}",
 //                                        "varNameForPut: ${varNameForPut}",
-//                                        "beforeLoopKeyToVarNameValueMap: ${beforeLoopKeyToVarNameValueMap}",
+//                                        "isGlobalRegister: ${isGlobalRegister}",
+//                                        "innerLoopKeyVarNameValueMap: ${innerLoopKeyVarNameValueMap}",
 //                                        "loopKeyToVarNameValueMap: ${loopKeyToVarNameValueMap}",
 //                                    ).joinToString("\n") + "\n\n==========\n\n"
 //                                )
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private object ImportErrManager {
+
+            private val escapeRunPrefix = SettingVar.escapeRunPrefix
+            private val sAdVarKeyName =
+                SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
+
+            fun isNotExist(
+                context: Context?,
+                importPath: String,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                if(
+                    File(importPath).isFile
+                ) {
+                    return false
+                }
+                val spanSAdVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sAdVarKeyName
+                    )
+                val spanImportPath =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        importPath
+                    )
+                sendErLog(
+                    context,
+                    "import path not exist in ${spanSAdVarKeyName}: ${spanImportPath}",
+                    keyToSubKeyConWhere,
+                )
+                return true
+            }
+
+            fun isGlobalVarNameExistErrWithRunPrefix(
+                context: Context?,
+                settingKeyToVarNameList: List<Pair<String, String>>,
+                renewalVarName: String,
+                keyToSubKeyConWhere: String
+            ): Boolean {
+                if(
+                    !renewalVarName.startsWith(escapeRunPrefix)
+                ) return false
+                val settingKeyToGlobalVarNameList = settingKeyToVarNameList.filter {
+                        settingKeyToVarName ->
+                    settingKeyToVarName.second.matches(globalVarNameRegex)
+                }
+                val isGlobalVarNameExistErr = settingKeyToGlobalVarNameList.isNotEmpty()
+                if(
+                    !isGlobalVarNameExistErr
+                ) return false
+                val spanSAdVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sAdVarKeyName
+                    )
+                val spanGlobalVarNameListCon =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        settingKeyToGlobalVarNameList.map {
+                            it.second
+                        }.joinToString(". ")
+                    )
+                sendErLog(
+                    context,
+                    "With ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
+                            "global (uppercase) var name must not exist: ${spanGlobalVarNameListCon}",
+                    keyToSubKeyConWhere
+                )
+                return true
+            }
+
+            fun isGlobalVarNameMultipleErrWithoutRunPrefix(
+                context: Context?,
+                settingKeyToVarNameList: List<Pair<String, String>>,
+                renewalVarName: String,
+                keyToSubKeyConWhere: String
+            ): Boolean {
+                if(
+                    renewalVarName.startsWith(escapeRunPrefix)
+                ) return false
+                val settingKeyToGlobalVarNameList = settingKeyToVarNameList.filter {
+                        settingKeyToVarName ->
+                    settingKeyToVarName.second.matches(globalVarNameRegex)
+                }
+                val isMultipleGlobalVarNameErr = settingKeyToGlobalVarNameList.size > 1
+                if(
+                    !isMultipleGlobalVarNameErr
+                ) return false
+                val spanSAdVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sAdVarKeyName
+                    )
+                val spanGlobalVarNameListCon =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        settingKeyToGlobalVarNameList.map {
+                            it.second
+                        }.joinToString(", ")
+                    )
+                sendErLog(
+                    context,
+                    "In ${spanSAdVarKeyName}, global (uppercase) var name must be one: ${spanGlobalVarNameListCon}",
+                    keyToSubKeyConWhere
+                )
+                return true
+
+            }
+
+            fun isGlobalVarNameNotLastErrWithoutRunPrefix(
+                context: Context?,
+                settingKeyToVarNameList: List<Pair<String, String>>,
+                renewalVarName: String,
+                keyToSubKeyConWhere: String
+            ): Boolean {
+                if(
+                    renewalVarName.startsWith(escapeRunPrefix)
+                ) return false
+                val lastSettingKeyToSubKeyCon = settingKeyToVarNameList.lastOrNull()
+                    ?: return false
+                val varName = lastSettingKeyToSubKeyCon.second
+                val isGlobalVarName = globalVarNameRegex.matches(varName)
+                if (
+                    isGlobalVarName
+                ) return false
+                val spanSAdVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sAdVarKeyName
+                    )
+                val spanGlobalVarName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        varName
+                    )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sisGlobalVarNameNotLastErrWithoutRunPrefix.txt").absolutePath,
+//                    listOf(
+//                        "settingKeyToVarNameList: ${settingKeyToVarNameList}",
+//                        "lastSettingKeyToSubKeyCon: ${lastSettingKeyToSubKeyCon}",
+//                    ).joinToString("\n")
+//                )
+                sendErLog(
+                    context,
+                    "Without ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
+                            "imported last var name must be global (uppercase): ${spanGlobalVarName}",
+                    keyToSubKeyConWhere
+                )
+                return true
+            }
+        }
+
+        private object VarErrManager {
+
+            private val mainKeySeparator = SettingActionKeyManager.mainKeySeparator
+            private val escapeRunPrefix = SettingVar.escapeRunPrefix
+
+            private fun makeKeyToSubKeyListCon(
+                keyToSubKeyConList: List<Pair<String, String>>,
+            ): String {
+                return keyToSubKeyConList.map {
+                        keyToSubKeyCon ->
+                    val key = keyToSubKeyCon.first
+                    val subKeyCon = keyToSubKeyCon.second
+                    "${mainKeySeparator}${key}=${subKeyCon}"
+                }.joinToString("\n")
+            }
+
+            fun isSameVarNameErr(
+                context: Context?,
+                settingKeyToVarNameList: List<Pair<String, String>>,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val varNameList = settingKeyToVarNameList.map {
+                    it.second
+                }
+                val duplicateVarNameMap =
+                    varNameList.groupingBy { it }.eachCount().filterValues { it > 1 }
+                val duplicateVarNameList = duplicateVarNameMap.keys
+                val isDuplicate = duplicateVarNameList.isNotEmpty()
+                if(
+                    !isDuplicate
+                ) return false
+                val spanVarNameListCon =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        duplicateVarNameList.joinToString(". ")
+                    )
+                sendErLog(
+                    context,
+                    "Var name must be unique: ${spanVarNameListCon}",
+                    keyToSubKeyConWhere,
+                )
+                return true
+
+            }
+
+            fun isGlobalVarFuncNullResultErr(
+                context: Context?,
+                varName: String,
+                returnValue: String?,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                if(
+                    returnValue != null
+                ) return false
+                val isGlobal = globalVarNameRegex.matches(varName)
+                if(
+                    !isGlobal
+                ) return false
+                sendErLog(
+                    context,
+                    "In global (uppercase), func result must be exist: ${varName}",
+                    keyToSubKeyConWhere,
+                )
+                return true
+
+            }
+
+            fun isRunPrefixUseErr(
+                context: Context?,
+                keyToSubKeyConList: List<Pair<String, String>>,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val settingKeyToRunVarNameList = makeSettingKeyToInnerRunVarNameList(
+                    keyToSubKeyConList
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sContetn00.txt").absolutePath,
+//                    listOf(
+//                        "settingKeyToRunVarNameList: ${settingKeyToRunVarNameList}",
+//                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                    ).joinToString("\n\n") + "\n\n=============\n\n"
+//                )
+                val keyToSubKeyListCon = makeKeyToSubKeyListCon(
+                    keyToSubKeyConList,
+                )
+                settingKeyToRunVarNameList.forEach {
+                        settingKeyToVarName ->
+                    val runVarName = settingKeyToVarName.second
+                    val varNameWithDoll = "${'$'}{${runVarName}}"
+                    val isContain = keyToSubKeyListCon.contains(varNameWithDoll)
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "sContetn.txt").absolutePath,
+//                        listOf(
+//                            "settingKeyToRunVarNameList: ${settingKeyToRunVarNameList}",
+//                            "varNameWithDoll: ${varNameWithDoll}",
+//                            "keyToSubKeyListCon: ${keyToSubKeyListCon}",
+//                            "isContain: ${isContain}",
+//                        ).joinToString("\n\n") + "\n\n=============\n\n"
+//                    )
+                    if(
+                        !isContain
+                    ) return@forEach
+                    val settingKeyName = settingKeyToVarName.first
+                    val spanSettingKeyName =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            settingKeyName
+                        )
+                    val spanRunVarName =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            runVarName
+                        )
+                    sendErLog(
+                        context,
+                        "Forbidden to use run prefix var as variable:  ${spanSettingKeyName}: ${spanRunVarName}",
+                        keyToSubKeyConWhere,
+                    )
+                    return true
+                }
+                return false
+            }
+
+            fun isNotUseVarErr(
+                context: Context?,
+                keyToSubKeyConList: List<Pair<String, String>>,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val settingKeyToVarNameList = makeSettingKeyToInnerVarNameList(
+                    keyToSubKeyConList
+                )
+                val keyToSubKeyListCon = makeKeyToSubKeyListCon(
+                    keyToSubKeyConList,
+                )
+                execIsNotUseVarErr(
+                    context,
+                    settingKeyToVarNameList,
+                    keyToSubKeyListCon,
+                    keyToSubKeyConWhere,
+                ).let {
+                    isNotUseVarErr ->
+                    if(isNotUseVarErr) return true
+                }
+                return false
+            }
+
+            fun isNotReplaceVarErr(
+                context: Context?,
+                subKeyListCon: String,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                execIsNotReplaceVarErr(
+                    context,
+                    subKeyListCon,
+                    keyToSubKeyConWhere,
+                ).let {
+                        isNotReplaceVar ->
+                    if(isNotReplaceVar) return true
+                }
+                return false
+            }
+
+            private fun execIsNotReplaceVarErr(
+                context: Context?,
+                subKeyListCon: String,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val replaceKeyToSubKeyListCon = subKeyListCon.replace(
+                    "${'$'}{${SettingVar.itPronoun}}",
+                    String()
+                )
+//                varNameList.forEach {
+//                        varName ->
+//                    if(
+//                        varName.startsWith(escapeRunPrefix)
+//                    ) return@forEach
+//                    val varNameWithDoll = "${'$'}{${varName}}"
+//                    replaceKeyToSubKeyListCon = replaceKeyToSubKeyListCon.replace(
+//                        varNameWithDoll,
+//                        String()
+//                    )
+//                }
+                val dolVarMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
+                val noReplaceVar = dolVarMarkRegex.find(replaceKeyToSubKeyListCon)?.value
+                if(
+                    noReplaceVar.isNullOrEmpty()
+                    || noReplaceVar.startsWith("${'$'}{${escapeRunPrefix}")
+                ) return false
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sexecIsNotReplaceVarErr.txt").absolutePath,
+//                    listOf(
+//                        "subKeyListCon: ${subKeyListCon}",
+//                        "replaceKeyToSubKeyListCon: ${replaceKeyToSubKeyListCon}",
+//                        "noReplaceVar: ${noReplaceVar}",
+//                    ).joinToString("\n")
+//                )
+                val spanNoReplaceVar =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        noReplaceVar
+                    )
+                sendErLog(
+                    context,
+                    "Not replace var: ${spanNoReplaceVar}",
+                    keyToSubKeyConWhere,
+                )
+                return true
+            }
+
+            private fun execIsNotUseVarErr(
+                context: Context?,
+                settingKeyToVarNameList: List<Pair<String, String>>,
+                keyToSubKeyListCon: String,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                settingKeyToVarNameList.forEach {
+                        settingKeyToVarName ->
+                    val varName = settingKeyToVarName.second
+                    if(
+                        varName.startsWith(escapeRunPrefix)
+                    ) return@forEach
+                    val varNameWithDoll = "${'$'}{${varName}}"
+                    val isContain = keyToSubKeyListCon.contains(varNameWithDoll)
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "sLog.txt").absolutePath,
+//                        listOf(
+//                            "varNameRegex: ${varNameWithDoll}",
+//                            "keyToSubKeyListCon: ${keyToSubKeyListCon}"
+//                        ).joinToString("\n\n") + "\n\n===========n\n\n"
+//                    )
+                    if(isContain) return@forEach
+                    val settingKeyName = settingKeyToVarName.first
+                    val spanSettingKeyName =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            settingKeyName
+                        )
+                    val spanVarName =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            varName
+                        )
+                    sendErLog(
+                        context,
+                        "Not use inner ${spanSettingKeyName}: ${spanVarName}",
+                        keyToSubKeyConWhere,
+                    )
+                    return true
+                }
+                return false
+            }
+
+            private fun makeSettingKeyToInnerVarNameList(
+                keyToSubKeyConList: List<Pair<String, String>>,
+            ): List<Pair<String, String>> {
+                val defaultReturnPair = String() to String()
+                val subKeySeparator = SettingActionKeyManager.subKeySepartor
+                val settingKeyList =
+                    SettingActionKeyManager.SettingActionsKey.entries.map {
+                        it.key
+                    }
+                return keyToSubKeyConList.map {
+                        keyToSubKeyCon ->
+                    val settingKey = keyToSubKeyCon.first
+                    if(
+                        !settingKeyList.contains(settingKey)
+                    ) return@map defaultReturnPair
+                    val varName = keyToSubKeyCon.second.split(subKeySeparator).firstOrNull()?.let {
+                        QuoteTool.trimBothEdgeQuote(it)
+                    } ?: return@map defaultReturnPair
+                    val isInnerVarName = !globalVarNameRegex.matches(varName)
+                    when(isInnerVarName){
+                        false -> String() to String()
+                        else -> settingKey to varName
+                    }
+                }.filter {
+                    it.first.isNotEmpty()
+                            && it.second.isNotEmpty()
+                }
+            }
+
+            private fun makeSettingKeyToInnerRunVarNameList(
+                keyToSubKeyConList: List<Pair<String, String>>,
+            ): List<Pair<String, String>> {
+                val defaultReturnPair = String() to String()
+                val subKeySeparator = SettingActionKeyManager.subKeySepartor
+                val settingKeyList =
+                    SettingActionKeyManager.SettingActionsKey.entries.map {
+                        it.key
+                    }
+                return keyToSubKeyConList.map {
+                        keyToSubKeyCon ->
+                    val settingKey = keyToSubKeyCon.first
+                    if(
+                        !settingKeyList.contains(settingKey)
+                    ) return@map defaultReturnPair
+                    val varName = keyToSubKeyCon.second.split(subKeySeparator).firstOrNull()?.let {
+                        QuoteTool.trimBothEdgeQuote(it)
+                    } ?: return@map defaultReturnPair
+                    val isRunVar = varName.startsWith(escapeRunPrefix)
+                    when(isRunVar){
+                        false -> String() to String()
+                        else -> settingKey to varName
+                    }
+                }.filter {
+                    it.first.isNotEmpty()
+                            && it.second.isNotEmpty()
                 }
             }
         }
@@ -367,12 +1032,15 @@ class SettingActionManager {
             }
 
 
-            suspend fun import(
+            suspend fun makeImportPathAndRenewalVarNameToImportCon(
                 context: Context?,
                 fannelInfoMap: Map<String, String>,
                 setReplaceVariableMap: Map<String, String>?,
                 keyToSubKeyCon: Pair<String, String>?,
-            ): Pair<String, List<Pair<String, String>>> {
+                keyToSubKeyConWhere: String,
+            ): Pair<String,
+                    Pair< String, List<Pair<String, String>> >
+                    > {
                 val keyToSubKeyContents = listOf(
                     settingActionVarKey,
                     keyToSubKeyCon?.second ?: String()
@@ -404,14 +1072,23 @@ class SettingActionManager {
                         argsPairList
                     )
                 }
+                val blankReturnValue = String() to Pair(String(), emptyList<Pair<String, String>>())
                 if(
                     isImport != true
-                ) return String() to emptyList()
+                ) return blankReturnValue
                 val importPathSrc = QuoteTool.trimBothEdgeQuote(
                     actionImportMap.get(
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
                     )
                 )
+                ImportErrManager.isNotExist(
+                    context,
+                    importPathSrc,
+                    keyToSubKeyConWhere
+                ).let {
+                    isNotExist ->
+                    if(isNotExist) return blankReturnValue
+                }
                 val importSrcConBeforeReplace = makeActionImportSrcCon(
                     context,
                     importPathSrc,
@@ -427,8 +1104,48 @@ class SettingActionManager {
                     importSrcConBeforeReplace,
                     repMap
                 )
-                return renewalVarName to KeyToSubKeyMapListMaker.make(
-                    importSrcCon,
+                val importedKeyToSubKeyConList = KeyToSubKeyMapListMaker.make(importSrcCon)
+                val settingKeyToVarNameList = makeSettingKeyToVarNameList(
+                    importedKeyToSubKeyConList
+                )
+                ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
+                    context,
+                    settingKeyToVarNameList,
+                    renewalVarName,
+                    keyToSubKeyConWhere
+                ).let {
+                    isGlobalVarNameErrWithRunPrefix ->
+                    if(isGlobalVarNameErrWithRunPrefix) return blankReturnValue
+                }
+                ImportErrManager.isGlobalVarNameMultipleErrWithoutRunPrefix(
+                    context,
+                    settingKeyToVarNameList,
+                    renewalVarName,
+                    keyToSubKeyConWhere
+                ).let {
+                        isGlobalVarNameMultipleExistErrWithoutRunPrefix ->
+                    if(isGlobalVarNameMultipleExistErrWithoutRunPrefix) return blankReturnValue
+                }
+                ImportErrManager.isGlobalVarNameNotLastErrWithoutRunPrefix(
+                    context,
+                    settingKeyToVarNameList,
+                    renewalVarName,
+                    keyToSubKeyConWhere
+                ).let {
+                        isGlobalVarNameNotLastErrWithoutRunPrefix ->
+                    if(isGlobalVarNameNotLastErrWithoutRunPrefix) return blankReturnValue
+                }
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "smakeImportPathAndRenewalVarNameToImportCon.txt").absolutePath,
+//                    listOf(
+//                        "renewalVarNameSrc: ${renewalVarName}",
+//                        "importSrcCon: ${importSrcCon}",
+//                        "importedKeyToSubKeyConList: ${importedKeyToSubKeyConList}",
+//                    ).joinToString("\n\n") + "\n\n=============\n\n"
+//                )
+                return importPathSrc to Pair(
+                    renewalVarName,
+                    importedKeyToSubKeyConList
                 )
             }
 
@@ -484,7 +1201,7 @@ class SettingActionManager {
                     File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,
                 )
-                withContext(Dispatchers.IO) {
+                CoroutineScope(Dispatchers.IO).launch {
                     BeforeActionImportMapManager.put(
                         importPath,
                         actionImportSrcCon,
@@ -496,8 +1213,10 @@ class SettingActionManager {
 
         private class SettingVar {
 
-            private val escapeRunPrefix = "run"
-            private val itPronoun = "it"
+            companion object {
+                val escapeRunPrefix = "run"
+                val itPronoun = "it"
+            }
             private val itReplaceVarStr = "${'$'}{${itPronoun}}"
             private var itPronounValue = String()
             private var isNext = true
@@ -508,6 +1227,8 @@ class SettingActionManager {
                 settingVarKey: String,
                 subKeyCon: String,
                 busyboxExecutor: BusyboxExecutor?,
+                renewalVarName: String?,
+                keyToSubKeyConWhere: String,
             ): Pair<String, String>? {
                 val mainSubKeyPairList = makeMainSubKeyPairList(
                     settingVarKey,
@@ -560,12 +1281,24 @@ class SettingActionManager {
                                 ),
                                 valueSeparator
                             )
-                            itPronounValue = SettingFuncManager.handle(
+                            val result = SettingFuncManager.handle(
                                 context,
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor
-                            ) ?: String()
+                            )
+                            VarErrManager.isGlobalVarFuncNullResultErr(
+                                context,
+                            renewalVarName ?: settingVarName,
+                                result,
+                                keyToSubKeyConWhere,
+                            ).let {
+                                isGlobalVarFuncNullResultErr ->
+                                if(
+                                    isGlobalVarFuncNullResultErr
+                                ) return null
+                            }
+                            itPronounValue = result ?: String()
                         }
                         SettingActionKeyManager.SettingSubKey.S_IF -> {
                             if(!isNext) {
