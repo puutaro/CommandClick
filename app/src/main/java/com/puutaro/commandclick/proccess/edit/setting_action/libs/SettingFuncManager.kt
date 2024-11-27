@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
+import android.content.Context
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
@@ -14,6 +15,7 @@ object SettingFuncManager {
     private const val funcTypeAndMethodSeparatorDot = "."
 
     fun handle(
+        context: Context?,
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?
@@ -34,6 +36,7 @@ object SettingFuncManager {
                 )
             FuncType.TOAST -> {
                 ToastForSetting.handle(
+                    context,
                     methodName,
                     baseArgsPairList,
                 )

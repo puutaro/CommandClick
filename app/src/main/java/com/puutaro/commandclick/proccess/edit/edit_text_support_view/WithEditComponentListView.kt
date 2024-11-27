@@ -48,6 +48,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -95,27 +96,72 @@ object WithEditComponentListView{
         fannelContentsList: List<String>?,
     ) {
         val context = fragment.context ?: return
+        runBlocking {
+            SettingActionManager.Companion.GlobalEditManager.init()
+            SettingActionManager.Companion.BeforeActionImportMapManager.init()
+        }
         val varNameToValueMap = let {
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
                 val settingActionManager = SettingActionManager()
-                settingActionManager.exec(
-                    fragment,
-                    fannelInfoMap,
-                    setReplaceVariableMapSrc,
-                    busyboxExecutor,
-                    it,
-                )
+                runBlocking {
+                    settingActionManager.exec(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        it,
+                    )
+                }
             }
         }
+        val varNameToValueMap2 = let {
+            editListConfigMapSrc?.get(
+                EditListConfig.EditListConfigKey.SETTING_ACTION2.key,
+            ).let {
+                val settingActionManager = SettingActionManager()
+                runBlocking {
+                    settingActionManager.exec(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        it,
+                    )
+                }
+            }
+        }
+        val varNameToValueMap3 = let {
+            editListConfigMapSrc?.get(
+                EditListConfig.EditListConfigKey.SETTING_ACTION3.key,
+            ).let {
+                val settingActionManager = SettingActionManager()
+                runBlocking {
+                    settingActionManager.exec(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        it,
+                    )
+                }
+            }
+        }
+        runBlocking {
+            SettingActionManager.Companion.BeforeActionImportMapManager.init()
+        }
         FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "varNameToValueMap.txt").absolutePath,
+            File(UsePath.cmdclickDefaultAppDirPath, "svarNameToValueMap.txt").absolutePath,
             listOf(
-                "varNameToValueMap: ${varNameToValueMap}"
+                "varNameToValueMap: ${varNameToValueMap}\n",
+                "varNameToValueMap2: ${varNameToValueMap2}\n",
+                "varNameToValueMap3: ${varNameToValueMap3}\n",
             ).joinToString("\n")
         )
-        val setReplaceVariableMap = (setReplaceVariableMapSrc ?: emptyMap()) + varNameToValueMap
+        val setReplaceVariableMap =
+            (setReplaceVariableMapSrc ?: emptyMap()) +
+                    varNameToValueMap
         val editListConfigMap = editListConfigMapSrc?.map {
             val key = CmdClickMap.replace(
                 it.key,
@@ -270,6 +316,10 @@ object WithEditComponentListView{
             }
             withContext(Dispatchers.Main) {
                 editListRecyclerView.scrollToPosition(0)
+            }
+            withContext(Dispatchers.IO){
+                SettingActionManager.Companion.BeforeActionImportMapManager.init()
+                SettingActionManager.Companion.GlobalEditManager.init()
             }
         }
         CoroutineScope(Dispatchers.Main).launch {

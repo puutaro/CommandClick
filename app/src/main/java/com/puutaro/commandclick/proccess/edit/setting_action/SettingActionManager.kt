@@ -9,75 +9,76 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.QuoteTool
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 class SettingActionManager {
 
     companion object {
-        private fun makeSetRepValMap(
-            fragment: Fragment,
-            fannelInfoMap: Map<String, String>,
-            extraRepValMap: Map<String, String>?
-        ): Map<String, String>? {
-            val virtualSubFannelPath = VirtualSubFannel.makePath(
-                fannelInfoMap
-            )
-            val setReplaceVariableMapSrc = FannelInfoTool.getReplaceVariableMap(
-                fragment,
-                virtualSubFannelPath
-            )
-            val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
-                virtualSubFannelPath,
-                setReplaceVariableMapSrc
-            )
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "repVal.txt").absolutePath,
-//            listOf(
-//                "virtualSubFannelPath: ${virtualSubFannelPath}",
-//                "jsRepValMapBeforeConcat: ${jsRepValMapBeforeConcat}",
-//                "jsRepValMap: ${CmdClickMap.concatRepValMap(
-//                    jsRepValMapBeforeConcat,
-//                    extraRepValMap
-//                )}",
-//            ).joinToString("\n")
-//        )
-            return CmdClickMap.concatRepValMap(
-                jsRepValMapBeforeConcat,
-                extraRepValMap
-            )
+
+        object BeforeActionImportMapManager {
+            private val beforeActionImportMap = mutableMapOf<String, String>()
+
+            suspend fun get(
+                importPath: String
+            ): String? {
+                mutex.withLock {
+                    return beforeActionImportMap.get(importPath)
+                }
+            }
+            private val mutex = Mutex()
+            suspend fun put(
+                importPath: String,
+                importCon: String
+            ) {
+                mutex.withLock {
+                    beforeActionImportMap.put(importPath, importCon)
+                }
+            }
+
+            suspend fun init() {
+                mutex.withLock {
+                    beforeActionImportMap.clear()
+                }
+            }
         }
 
-        private fun makeSettingActionKeyToSubKeyList(
-            fragment: Fragment,
-            fannelInfoMap: Map<String, String>,
-            keyToSubKeyCon: String?,
-            setReplaceVariableMapSrc: Map<String, String>?,
-            repValsMap: Map<String, String>?
-        ): List<Pair<String, String>>? {
-            val setReplaceVariableMap = makeSetRepValMap(
-                fragment,
-                fannelInfoMap,
-                setReplaceVariableMapSrc
-            )
-            val keyToSubKeyConWithReflectRepValDefalt = CmdClickMap.replaceHolderForJsAction(
-                keyToSubKeyCon ?: String(),
-                repValsMap
-            )
-            val keyToSubKeyConList = KeyToSubKeyMapListMaker.make(
-                keyToSubKeyConWithReflectRepValDefalt,
-            )
-            if (
-                keyToSubKeyConList.isEmpty()
-            ) return null
-            return keyToSubKeyConList
+        object GlobalEditManager {
+            private var globalEdit = false
+
+            suspend fun get(
+            ): Boolean {
+                mutex.withLock {
+                    return globalEdit
+                }
+            }
+            private val mutex = Mutex()
+            suspend fun exit(
+            ) {
+                mutex.withLock {
+                    globalEdit = true
+                }
+            }
+
+            suspend fun init() {
+                mutex.withLock {
+                    globalEdit = false
+                }
+            }
         }
     }
 
-    fun exec(
+    suspend fun exec(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
@@ -91,28 +92,95 @@ class SettingActionManager {
             setReplaceVariableMapSrc,
             null,
         )
-        SettingActionExecutor.initBeforeActionImportMap(
-            setReplaceVariableMapSrc
-        )
-        SettingActionExecutor.makeResultLoopKeyToVarNameValueMap(
-            fragment,
+        val settingActionExecutor = SettingActionExecutor(
+            WeakReference(fragment),
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
+        )
+        settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
             keyToSubKeyConList,
             SettingActionExecutor.mapRoopKeyUnit,
             null,
         )
-        return SettingActionExecutor.getResultLoopKeyToVarNameValueMap()
+        return settingActionExecutor.getResultLoopKeyToVarNameValueMap()
+    }
+
+    private fun makeSetRepValMap(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        extraRepValMap: Map<String, String>?
+    ): Map<String, String>? {
+        val virtualSubFannelPath = VirtualSubFannel.makePath(
+            fannelInfoMap
+        )
+        val setReplaceVariableMapSrc = FannelInfoTool.getReplaceVariableMap(
+            fragment,
+            virtualSubFannelPath
+        )
+        val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
+            virtualSubFannelPath,
+            setReplaceVariableMapSrc
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "repVal.txt").absolutePath,
+//            listOf(
+//                "virtualSubFannelPath: ${virtualSubFannelPath}",
+//                "jsRepValMapBeforeConcat: ${jsRepValMapBeforeConcat}",
+//                "jsRepValMap: ${CmdClickMap.concatRepValMap(
+//                    jsRepValMapBeforeConcat,
+//                    extraRepValMap
+//                )}",
+//            ).joinToString("\n")
+//        )
+        return CmdClickMap.concatRepValMap(
+            jsRepValMapBeforeConcat,
+            extraRepValMap
+        )
+    }
+
+    private fun makeSettingActionKeyToSubKeyList(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        keyToSubKeyCon: String?,
+        setReplaceVariableMapSrc: Map<String, String>?,
+        repValsMap: Map<String, String>?
+    ): List<Pair<String, String>>? {
+        val setReplaceVariableMap = makeSetRepValMap(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMapSrc
+        )
+        val keyToSubKeyConWithReflectRepValDefalt = CmdClickMap.replaceHolderForJsAction(
+            keyToSubKeyCon ?: String(),
+            repValsMap
+        )
+        val keyToSubKeyConList = KeyToSubKeyMapListMaker.make(
+            keyToSubKeyConWithReflectRepValDefalt,
+        )
+        if (
+            keyToSubKeyConList.isEmpty()
+        ) return null
+        return keyToSubKeyConList
     }
 
 
-    object SettingActionExecutor {
+    class SettingActionExecutor(
+        private val fragmentRef: WeakReference<Fragment>,
+        private val fannelInfoMap: Map<String, String>,
+        private val setReplaceVariableMapSrc: Map<String, String>?,
+        private val busyboxExecutor: BusyboxExecutor?,
+    ) {
 
         private val loopKeyToVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
         private val innerLoopKeyVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
-        const val mapRoopKeyUnit = "loop"
-        private const val mapLoopKeySeparator = "___"
+        private var exitSignal = false
+
+        companion object {
+            const val mapRoopKeyUnit = "loop"
+            private const val mapLoopKeySeparator = "___"
+        }
+
 
         private fun addLoopKey(
             curMapLoopKey: String
@@ -137,16 +205,13 @@ class SettingActionManager {
         }
 
 
-        fun makeResultLoopKeyToVarNameValueMap(
-            fragment: Fragment,
-            fannelInfoMap: Map<String, String>,
-            setReplaceVariableMapSrc: Map<String, String>?,
-            busyboxExecutor: BusyboxExecutor?,
+        suspend fun makeResultLoopKeyToVarNameValueMap(
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
             renewalVarName: String?
         ) {
-            val context = fragment.context
+            val context = fragmentRef.get()?.context
+                ?: return
             loopKeyToVarNameValueMap.get(curMapLoopKey)?.clear()
             innerLoopKeyVarNameValueMap.get(curMapLoopKey)?.clear()
             if(
@@ -155,6 +220,11 @@ class SettingActionManager {
             val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
             keyToSubKeyConList.forEach {
                 keyToSubKeyConSrc ->
+                val globalEdit = GlobalEditManager.get()
+                if(
+                    globalEdit
+                    || exitSignal
+                ) return
                 val keyToSubKeyCon = let {
                     val repMap =
                         (setReplaceVariableMapSrc ?: emptyMap()) +
@@ -197,17 +267,14 @@ class SettingActionManager {
 //                            ).joinToString("\n") + "\n\n=============\n\n"
 //                        )
                         makeResultLoopKeyToVarNameValueMap(
-                            fragment,
-                            fannelInfoMap,
-                            setReplaceVariableMapSrc,
-                            busyboxExecutor,
                             importedKeyToSubKeyConList,
                             addLoopKey(curMapLoopKey),
                             renewalVarNameSrc,
                         )
                     }
                     SettingActionKeyManager.SettingActionsKey.SETTING_VAR -> {
-                        SettingVar.exec(
+                        SettingVar().exec(
+                            context,
                             curSettingActionKey.key,
                             subKeyCon,
                             busyboxExecutor,
@@ -216,28 +283,44 @@ class SettingActionManager {
                             if(
                                 varValue == SettingActionKeyManager.CommandMacro.EXIT_SIGNAL.name
                             ){
+                                exitSignal = true
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "sExit.txt").absolutePath,
+//                                    listOf(
+//                                        "exitSignal: ${exitSignal}",
+//                                    ).joinToString("\n") + "\n\n==========\n\n"
+//                                )
                                 return
                             }
                             val varName = it.first
                             val isGlobal = globalVarNameRegex.matches(varName)
                             innerLoopKeyVarNameValueMap.get(
                                 curMapLoopKey
-                            )?.put(varName, varValue) ?: let {
-                                innerLoopKeyVarNameValueMap.put (
-                                    curMapLoopKey,
-                                    mutableMapOf(varName to varValue)
-                                )
+                            ).let {
+                                curInnerMapLoopKeyVarNameValueMap ->
+                                when(curInnerMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                    false -> curInnerMapLoopKeyVarNameValueMap.put(varName, varValue)
+                                    else -> innerLoopKeyVarNameValueMap.put(
+                                        curMapLoopKey,
+                                        mutableMapOf(varName to varValue)
+                                    )
+                                }
                             }
                             if(isGlobal) {
+//                                val beforeLoopKeyToVarNameValueMap = loopKeyToVarNameValueMap.toString()
                                 val removedLoopKey = removeLoopKey(curMapLoopKey)
                                 val varNameForPut = renewalVarName ?: varName
                                 loopKeyToVarNameValueMap.get(
                                     removedLoopKey
-                                )?.put(varNameForPut, varValue) ?: let {
-                                    loopKeyToVarNameValueMap.put (
-                                        removedLoopKey,
-                                        mutableMapOf(varNameForPut to varValue)
-                                    )
+                                ).let {
+                                        curMapLoopKeyVarNameValueMap ->
+                                    when(curMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                        false -> curMapLoopKeyVarNameValueMap.put(varNameForPut, varValue)
+                                        else -> loopKeyToVarNameValueMap.put(
+                                            removedLoopKey,
+                                            mutableMapOf(varNameForPut to varValue)
+                                        )
+                                    }
                                 }
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultAppDirPath, "sloopKeyToVarNameValueMap.txt").absolutePath,
@@ -246,6 +329,7 @@ class SettingActionManager {
 //                                        "removedLoopKey: ${removedLoopKey}",
 //                                        "varName: ${varName}",
 //                                        "varNameForPut: ${varNameForPut}",
+//                                        "beforeLoopKeyToVarNameValueMap: ${beforeLoopKeyToVarNameValueMap}",
 //                                        "loopKeyToVarNameValueMap: ${loopKeyToVarNameValueMap}",
 //                                    ).joinToString("\n") + "\n\n==========\n\n"
 //                                )
@@ -256,28 +340,20 @@ class SettingActionManager {
             }
         }
 
-        fun initBeforeActionImportMap(
-            setReplaceVariableMap: Map<String, String>?
-        ){
-            SettingImport.initBeforeActionImportMap(
-                setReplaceVariableMap
-            )
-        }
 
         private object SettingImport {
 
             private val valueSeparator = SettingActionKeyManager.valueSeparator
             private val settingActionVarKey = SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
-            private val beforeActionImportMap = mutableMapOf<String, String>()
-            private var replaceVariableMapCon = String()
+//            private var replaceVariableMapCon = String()
 
-            fun initBeforeActionImportMap(
-                setReplaceVariableMap: Map<String, String>?
-            ){
-                beforeActionImportMap.clear()
-                replaceVariableMapCon =
-                    makeSetRepValeMapCon(setReplaceVariableMap)
-            }
+//            fun initBeforeActionImportMap(
+//                setReplaceVariableMap: Map<String, String>?
+//            ){
+////                beforeActionImportMap.clear()
+//                replaceVariableMapCon =
+//                    makeSetRepValeMapCon(setReplaceVariableMap)
+//            }
 
             private fun makeSetRepValeMapCon(
                 setReplaceVariableMap: Map<String, String>?
@@ -291,7 +367,7 @@ class SettingActionManager {
             }
 
 
-            fun import(
+            suspend fun import(
                 context: Context?,
                 fannelInfoMap: Map<String, String>,
                 setReplaceVariableMap: Map<String, String>?,
@@ -372,17 +448,26 @@ class SettingActionManager {
                 ).toMap().filterKeys { it.isNotEmpty() }
             }
 
-            private fun makeActionImportSrcCon(
+            private suspend fun makeActionImportSrcCon(
                 context: Context?,
                 importPath: String,
 //        currentAppDirPath: String,
                 fannelInfoMap: Map<String, String>,
                 setReplaceVariableMap: Map<String, String>?,
             ): String {
-                val beforeActionImportSrcCon = beforeActionImportMap.get(importPath)
+                val beforeActionImportSrcCon = withContext(Dispatchers.IO) {
+                    BeforeActionImportMapManager.get(importPath)
+                }
                 if(
                     !beforeActionImportSrcCon.isNullOrEmpty()
                 ) {
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath,"jsAcImport_first_makeActionImportSrcCon.txt").absolutePath,
+//                        listOf(
+//                            "importPath: ${importPath}",
+//                            "beforeActionImportSrcCon: ${beforeActionImportSrcCon}",
+//                        ).joinToString("\n\n") + "\n\n========\n\n"
+//                    )
                     return beforeActionImportSrcCon
                 }
 //        FileSystems.updateFile(
@@ -399,24 +484,27 @@ class SettingActionManager {
                     File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                     setReplaceVariableMap,
                 )
-                beforeActionImportMap.put(
-                    importPath,
-                    actionImportSrcCon,
-                )
+                withContext(Dispatchers.IO) {
+                    BeforeActionImportMapManager.put(
+                        importPath,
+                        actionImportSrcCon,
+                    )
+                }
                 return actionImportSrcCon
             }
         }
 
-        private object SettingVar {
+        private class SettingVar {
 
-            private const val escapeRunPrefix = "run"
-            private const val itPronoun = "it"
-            private const val itReplaceVarStr = "${'$'}{${itPronoun}}"
+            private val escapeRunPrefix = "run"
+            private val itPronoun = "it"
+            private val itReplaceVarStr = "${'$'}{${itPronoun}}"
             private var itPronounValue = String()
             private var isNext = true
             private val valueSeparator = SettingActionKeyManager.valueSeparator
 
             fun exec(
+                context: Context?,
                 settingVarKey: String,
                 subKeyCon: String,
                 busyboxExecutor: BusyboxExecutor?,
@@ -447,9 +535,8 @@ class SettingActionManager {
                                 isNext = true
                                 return@forEach
                             }
-                            mainSubKeyMap.get(mainSubKey)?.let {
-                                itPronounValue = it
-                            }
+                            itPronounValue = mainSubKeyMap.get(mainSubKey)
+                                ?: String()
                             isNext = true
                         }
                         SettingActionKeyManager.SettingSubKey.RETURN -> {
@@ -473,13 +560,12 @@ class SettingActionManager {
                                 ),
                                 valueSeparator
                             )
-                            SettingFuncManager.handle(
+                            itPronounValue = SettingFuncManager.handle(
+                                context,
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor
-                            )?.let{
-                                itPronounValue = it
-                            }
+                            ) ?: String()
                         }
                         SettingActionKeyManager.SettingSubKey.S_IF -> {
                             if(!isNext) {
@@ -506,7 +592,10 @@ class SettingActionManager {
                         isNext = true
                     }
                 }
-                return when(settingVarName.startsWith(escapeRunPrefix)){
+                val isEscape =
+                    settingVarName.startsWith(escapeRunPrefix)
+                            && itPronounValue != SettingActionKeyManager.CommandMacro.EXIT_SIGNAL.name
+                return when(isEscape){
                     true -> null
                     else -> settingVarName to itPronounValue
                 }

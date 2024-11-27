@@ -18,6 +18,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewLancher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.SettingActionFuncBroadcastManager
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
@@ -124,6 +125,11 @@ object BroadcastHandlerForTerm {
                         editComponentListAdapter.editListMap,
                         editComponentListAdapter.busyboxExecutor,
                     )
+                )
+            }
+            BroadCastIntentSchemeTerm.SETING_ACTION_FUNC -> {
+                SettingActionFuncBroadcastManager.handle(
+                    intent
                 )
             }
         }

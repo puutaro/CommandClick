@@ -423,6 +423,8 @@ object EditListConfig {
         val key: String,
     ) {
         SETTING_ACTION("settingAction"),
+        SETTING_ACTION2("settingAction2"),
+        SETTING_ACTION3("settingAction3"),
         TYPE("type"),
         LAYOUT("layout"),
         FOOTER_LAYOUT_PATH("footerLayoutPath"),
