@@ -138,11 +138,12 @@ object TitleImageAndViewSetter {
             busyboxExecutor,
             titleTextMap
         )
-        val bkCountAndOverrideTextList = bkCountAndOverrideText.split(" ")
+        val space = " "
+        val bkCountAndOverrideTextList = bkCountAndOverrideText.split(space)
         val bkCount = bkCountAndOverrideTextList.first()
         val overrideText = bkCountAndOverrideTextList.filterIndexed { index, _ ->
             index > 0
-        }.joinToString(String()).trim()
+        }.joinToString(space).trim()
 //        val fillColorStr = fillColorStrList.random()
         val whiteColorStr = convertWhiteColor()
         editBackstackCountView.apply {
