@@ -290,7 +290,7 @@ class SettingActionManager {
     ) {
 
         private val loopKeyToVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
-        private val innerLoopKeyVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
+        private val privateLoopKeyVarNameValueMap = mutableMapOf<String, MutableMap<String, String>>()
         private var exitSignal = false
         private val escapeRunPrefix = SettingVar.escapeRunPrefix
 
@@ -332,7 +332,7 @@ class SettingActionManager {
             val context = fragmentRef.get()?.context
                 ?: return
             loopKeyToVarNameValueMap.get(curMapLoopKey)?.clear()
-            innerLoopKeyVarNameValueMap.get(curMapLoopKey)?.clear()
+            privateLoopKeyVarNameValueMap.get(curMapLoopKey)?.clear()
             if(
                 keyToSubKeyConList.isNullOrEmpty()
                 ) return
@@ -382,7 +382,7 @@ class SettingActionManager {
                     val repMap =
                         (setReplaceVariableMapSrc ?: emptyMap()) +
                                 (loopKeyToVarNameValueMap.get(curMapLoopKey) ?: emptyMap()) +
-                                (innerLoopKeyVarNameValueMap.get(curMapLoopKey) ?: emptyMap())
+                                (privateLoopKeyVarNameValueMap.get(curMapLoopKey) ?: emptyMap())
                     val firstCon = CmdClickMap.replace(
                         keyToSubKeyConSrc.first,
                         repMap
@@ -452,7 +452,7 @@ class SettingActionManager {
                         ) return@forEach
                         val isNotRunPrefix = !renewalVarName.startsWith(escapeRunPrefix)
                         val removedLoopKey = removeLoopKey(curMapLoopKey)
-                        val proposalRenewalVarNameSrcInnnerMapValue = innerLoopKeyVarNameValueMap.get(
+                        val proposalRenewalVarNameSrcInnnerMapValue = privateLoopKeyVarNameValueMap.get(
                             addLoopKey((curMapLoopKey))
                         )?.get(
                             renewalVarNameSrc
@@ -461,16 +461,16 @@ class SettingActionManager {
                             isNotRunPrefix
                             && !proposalRenewalVarNameSrcInnnerMapValue.isNullOrEmpty()
                             ){
-                            innerLoopKeyVarNameValueMap.get(
+                            privateLoopKeyVarNameValueMap.get(
                                 removedLoopKey
                             ).let {
-                                    curInnerMapLoopKeyVarNameValueMap ->
-                                when(curInnerMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
-                                    false -> curInnerMapLoopKeyVarNameValueMap.put(
+                                    curPrivateMapLoopKeyVarNameValueMap ->
+                                when(curPrivateMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                    false -> curPrivateMapLoopKeyVarNameValueMap.put(
                                         renewalVarName,
                                         proposalRenewalVarNameSrcInnnerMapValue
                                     )
-                                    else -> innerLoopKeyVarNameValueMap.put(
+                                    else -> privateLoopKeyVarNameValueMap.put(
                                         removedLoopKey,
                                         mutableMapOf(
                                             renewalVarName to proposalRenewalVarNameSrcInnnerMapValue
@@ -530,13 +530,13 @@ class SettingActionManager {
                                 return
                             }
                             val varName = it.first
-                            innerLoopKeyVarNameValueMap.get(
+                            privateLoopKeyVarNameValueMap.get(
                                 curMapLoopKey
                             ).let {
-                                curInnerMapLoopKeyVarNameValueMap ->
-                                when(curInnerMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
-                                    false -> curInnerMapLoopKeyVarNameValueMap.put(varName, varValue)
-                                    else -> innerLoopKeyVarNameValueMap.put(
+                                curPrivateMapLoopKeyVarNameValueMap ->
+                                when(curPrivateMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                    false -> curPrivateMapLoopKeyVarNameValueMap.put(varName, varValue)
+                                    else -> privateLoopKeyVarNameValueMap.put(
                                         curMapLoopKey,
                                         mutableMapOf(varName to varValue)
                                     )
@@ -547,7 +547,7 @@ class SettingActionManager {
                             val isNotRunPrefix =
                                 !renewalVarName.isNullOrEmpty()
                                         && !renewalVarName.startsWith(escapeRunPrefix)
-                            val isRegisterToTopForInner = isGlobalForRawVar && isNotRunPrefix
+                            val isRegisterToTopForPrivate = isGlobalForRawVar && isNotRunPrefix
                             val removedLoopKey = removeLoopKey(curMapLoopKey)
 //                            FileSystems.updateFile(
 //                                File(UsePath.cmdclickDefaultAppDirPath, "sinnerLoopKeyVarNameValueMap.txt").absolutePath,
@@ -561,14 +561,14 @@ class SettingActionManager {
 //                                    "innerLoopKeyVarNameValueMap: ${innerLoopKeyVarNameValueMap}",
 //                                ).joinToString("\n\n") + "\n\n=============\n\n"
 //                            )
-                            if(isRegisterToTopForInner && !renewalVarName.isNullOrEmpty()){
-                                innerLoopKeyVarNameValueMap.get(
+                            if(isRegisterToTopForPrivate && !renewalVarName.isNullOrEmpty()){
+                                privateLoopKeyVarNameValueMap.get(
                                     removedLoopKey
                                 ).let {
-                                        curInnerMapLoopKeyVarNameValueMap ->
-                                    when(curInnerMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
-                                        false -> curInnerMapLoopKeyVarNameValueMap.put(renewalVarName, varValue)
-                                        else -> innerLoopKeyVarNameValueMap.put(
+                                        curPrivateMapLoopKeyVarNameValueMap ->
+                                    when(curPrivateMapLoopKeyVarNameValueMap.isNullOrEmpty()) {
+                                        false -> curPrivateMapLoopKeyVarNameValueMap.put(renewalVarName, varValue)
+                                        else -> privateLoopKeyVarNameValueMap.put(
                                             removedLoopKey,
                                             mutableMapOf(renewalVarName to varValue)
                                         )
@@ -858,7 +858,7 @@ class SettingActionManager {
                 keyToSubKeyConList: List<Pair<String, String>>,
                 keyToSubKeyConWhere: String,
             ): Boolean {
-                val settingKeyToRunVarNameList = makeSettingKeyToInnerRunVarNameList(
+                val settingKeyToRunVarNameList = makeSettingKeyToPrivateRunVarNameList(
                     keyToSubKeyConList
                 )
 //                FileSystems.updateFile(
@@ -917,7 +917,7 @@ class SettingActionManager {
                 keyToSubKeyConList: List<Pair<String, String>>,
                 keyToSubKeyConWhere: String,
             ): Boolean {
-                val settingKeyToVarNameList = makeSettingKeyToInnerVarNameList(
+                val settingKeyToVarNameList = makeSettingKeyToPrivateVarNameList(
                     keyToSubKeyConList
                 )
                 val keyToSubKeyListCon = makeKeyToSubKeyListCon(
@@ -1038,7 +1038,7 @@ class SettingActionManager {
                         ErrLogger.sendErrLog(
                             context,
                             ErrLogger.SettingActionErrType.S_VAR,
-                            "Not use inner ${spanSettingKeyName}: ${spanVarName}",
+                            "Not use private ${spanSettingKeyName}: ${spanVarName}",
                             keyToSubKeyConWhere,
                         )
                     }
@@ -1047,7 +1047,7 @@ class SettingActionManager {
                 return false
             }
 
-            private fun makeSettingKeyToInnerVarNameList(
+            private fun makeSettingKeyToPrivateVarNameList(
                 keyToSubKeyConList: List<Pair<String, String>>,
             ): List<Pair<String, String>> {
                 val defaultReturnPair = String() to String()
@@ -1065,8 +1065,8 @@ class SettingActionManager {
                     val varName = keyToSubKeyCon.second.split(subKeySeparator).firstOrNull()?.let {
                         QuoteTool.trimBothEdgeQuote(it)
                     } ?: return@map defaultReturnPair
-                    val isInnerVarName = !globalVarNameRegex.matches(varName)
-                    when(isInnerVarName){
+                    val isPrivateVarName = !globalVarNameRegex.matches(varName)
+                    when(isPrivateVarName){
                         false -> String() to String()
                         else -> settingKey to varName
                     }
@@ -1076,7 +1076,7 @@ class SettingActionManager {
                 }
             }
 
-            private fun makeSettingKeyToInnerRunVarNameList(
+            private fun makeSettingKeyToPrivateRunVarNameList(
                 keyToSubKeyConList: List<Pair<String, String>>,
             ): List<Pair<String, String>> {
                 val defaultReturnPair = String() to String()
@@ -1346,10 +1346,10 @@ class SettingActionManager {
                     val mainSubKeyMap = mainSubKeyPair.second.map {
                         replaceItPronoun(it.key) to replaceItPronoun(it.value)
                     }.toMap()
-                    val innerSubKeyClass = SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
+                    val privateSubKeyClass = SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
                         it.key == mainSubKey
                     } ?: return@forEach
-                    when(innerSubKeyClass) {
+                    when(privateSubKeyClass) {
                         SettingActionKeyManager.SettingSubKey.SETTING_VAR,
                         SettingActionKeyManager.SettingSubKey.ARGS -> {}
                         SettingActionKeyManager.SettingSubKey.VALUE -> {
@@ -1436,7 +1436,7 @@ class SettingActionManager {
                             }
                         }
                     }
-                    if(innerSubKeyClass != SettingActionKeyManager.SettingSubKey.S_IF){
+                    if(privateSubKeyClass != SettingActionKeyManager.SettingSubKey.S_IF){
                         isNext = true
                     }
                 }

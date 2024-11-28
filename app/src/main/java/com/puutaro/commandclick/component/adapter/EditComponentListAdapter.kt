@@ -45,6 +45,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
+import com.puutaro.commandclick.util.str.SnakeCamelTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -173,6 +174,11 @@ class EditComponentListAdapter(
 //        )
 //        it
 //    }
+    private val plusKeyToSubKeyConWhere =
+        fannelInfoMap.map {
+            val key = SnakeCamelTool.snakeToCamel(it.key)
+            "${key}: ${it.value}" 
+        }.joinToString(", ")
     private val frameMap =
         frameMapToFrameTagAndVerticalKeysListToLinearMapList?.first ?: emptyMap()
     private val frameTagToVerticalKeysCon =
@@ -314,7 +320,7 @@ class EditComponentListAdapter(
                         setReplaceVariableMap,
                         busyboxExecutor,
                         frameKeyPairsConSrc,
-                        "frameTag: ${frameTag}, mapListElInfo: ${mapListElInfo}",
+                        "frameTag: ${frameTag}, mapListElInfo: ${mapListElInfo}, ${plusKeyToSubKeyConWhere}",
                     )
                     CmdClickMap.replace(
                         frameKeyPairsConSrc,
@@ -554,7 +560,7 @@ class EditComponentListAdapter(
                                         linearFrameKeyPairsListConSrc,
                                         verticalVarNameToValueMap
                                     ),
-                                    "linearFrameTag: ${linearFrameTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}",
+                                    "linearFrameTag: ${linearFrameTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}: ${plusKeyToSubKeyConWhere}",
                                 )
                                 CmdClickMap.replace(
                                     linearFrameKeyPairsListConSrc,

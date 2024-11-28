@@ -42,6 +42,7 @@ import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
+import com.puutaro.commandclick.util.str.SnakeCamelTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -104,16 +105,20 @@ object WithEditComponentListView{
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
-                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
                 val settingActionManager = SettingActionManager()
                 runBlocking {
+                    val keyToSubKeyConWhere =
+                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
+                            val key = SnakeCamelTool.snakeToCamel(it.key)
+                            "${key}: ${it.value}"
+                        }.joinToString(", ")}"
                     settingActionManager.exec(
                         fragment,
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         it,
-                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}",
+                        keyToSubKeyConWhere,
                     )
                 }
             }
@@ -441,9 +446,14 @@ object WithEditComponentListView{
         fannelCenterButtonLayout: FrameLayout?,
         editListConfigMap: Map<String, String>?,
 
-        ) {
+    ) {
         val context = fragment.context
             ?: return
+        val plusKeyToSubKeyConWhere =
+            fannelInfoMap.map {
+                val key = SnakeCamelTool.snakeToCamel(it.key)
+                "${key}: ${it.value}"
+            }.joinToString(", ")
         val isEditToolbar = editToolbarLinearLayout != null
         val layoutKey = when(isEditToolbar){
             true -> EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH
@@ -593,7 +603,7 @@ object WithEditComponentListView{
                                             linearFrameKeyPairsListConSrc,
                                             verticalVarNameValueMap,
                                         ),
-                                        "${verticalTag}: ${debugWhere} frameTag: ${frameTag}",
+                                        "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                                     )
                                     CmdClickMap.replace(
                                         linearFrameKeyPairsListConSrc,
