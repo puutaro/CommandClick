@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.broadcast.extra.ErrLogExtraForTerm
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.ErrLogBroadcastManagerForTerm.LogDatetime
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -26,6 +25,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 import java.io.File
 import java.lang.ref.WeakReference
 import java.time.LocalDateTime
@@ -66,6 +66,12 @@ class SettingActionManager {
 
             private val durationSec = 5
 
+            enum class SettingActionErrType {
+                S_VAR,
+                S_AC_VAR,
+                FUNC,
+            }
+
             object LogDatetime {
                 private var beforeOutputTime = LocalDateTime.parse("2020-02-15T21:30:50")
                 private val mutex = Mutex()
@@ -87,6 +93,7 @@ class SettingActionManager {
 
             suspend fun sendErrLog(
                 context: Context?,
+                errType: SettingActionErrType,
                 errMessage: String,
                 keyToSubKeyConWhere: String,
             ) {
@@ -114,10 +121,20 @@ class SettingActionManager {
                     )
                 BroadcastSender.normalSend(
                     context,
+                    BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
+                    listOf(
+                        Pair(
+                            BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme,
+                            Jsoup.parse(errMessage).text()
+                        )
+                    )
+                )
+                BroadcastSender.normalSend(
+                    context,
                     BroadCastIntentSchemeTerm.ERR_LOG.action,
                     listOf(
                         ErrLogExtraForTerm.ERR_CONTENTS.schema to
-                                "$errMessage about ${spanKeyToSubKeyConWhere}"
+                                "[SETTING ACTION] (${errType.name}) $errMessage about ${spanKeyToSubKeyConWhere}"
                     )
                 )
             }
@@ -622,6 +639,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_AC_VAR,
                         "import path not exist in ${spanSAdVarKeyName}: ${spanImportPath}",
                         keyToSubKeyConWhere,
                     )
@@ -661,6 +679,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_AC_VAR,
                         "With ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
                                 "global (uppercase) var name must not exist: ${spanGlobalVarNameListCon}",
                         keyToSubKeyConWhere
@@ -701,6 +720,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_AC_VAR,
                         "In ${spanSAdVarKeyName}, global (uppercase) var name must be one: ${spanGlobalVarNameListCon}",
                         keyToSubKeyConWhere
                     )
@@ -745,6 +765,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_AC_VAR,
                         "Without ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
                                 "imported last var name must be global (uppercase): ${spanGlobalVarName}",
                         keyToSubKeyConWhere
@@ -793,6 +814,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_VAR,
                         "Var name must be unique: ${spanVarNameListCon}",
                         keyToSubKeyConWhere,
                     )
@@ -822,6 +844,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_VAR,
                         "In global (uppercase), func result must be exist: ${spanVarName}",
                         keyToSubKeyConWhere,
                     )
@@ -879,6 +902,7 @@ class SettingActionManager {
                     runBlocking {
                         ErrLogger.sendErrLog(
                             context,
+                            ErrLogger.SettingActionErrType.S_VAR,
                             "Forbidden to use run prefix var as variable:  ${spanSettingKeyName}: ${spanRunVarName}",
                             keyToSubKeyConWhere,
                         )
@@ -969,6 +993,7 @@ class SettingActionManager {
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
+                        ErrLogger.SettingActionErrType.S_VAR,
                         "Not replace var: ${spanNoReplaceVar}",
                         keyToSubKeyConWhere,
                     )
@@ -1012,6 +1037,7 @@ class SettingActionManager {
                     runBlocking {
                         ErrLogger.sendErrLog(
                             context,
+                            ErrLogger.SettingActionErrType.S_VAR,
                             "Not use inner ${spanSettingKeyName}: ${spanVarName}",
                             keyToSubKeyConWhere,
                         )
@@ -1356,16 +1382,30 @@ class SettingActionManager {
                                 ),
                                 valueSeparator
                             )
-                            val result = SettingFuncManager.handle(
+                            val resultStrToCheckErr = SettingFuncManager.handle(
                                 context,
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor
                             )
+                            val checkErr = resultStrToCheckErr.second
+                            if(checkErr != null){
+                                runBlocking {
+                                    ErrLogger.sendErrLog(
+                                        context,
+                                        ErrLogger.SettingActionErrType.FUNC,
+                                        checkErr.errMessage,
+                                        keyToSubKeyConWhere,
+                                    )
+                                }
+                                itPronounValue = String()
+                                return@forEach
+                            }
+                            val resultStr = resultStrToCheckErr.first
                             VarErrManager.isGlobalVarFuncNullResultErr(
                                 context,
                             renewalVarName ?: settingVarName,
-                                result,
+                                resultStr,
                                 keyToSubKeyConWhere,
                             ).let {
                                 isGlobalVarFuncNullResultErr ->
@@ -1373,7 +1413,7 @@ class SettingActionManager {
                                     isGlobalVarFuncNullResultErr
                                 ) return null
                             }
-                            itPronounValue = result ?: String()
+                            itPronounValue = resultStr ?: String()
                         }
                         SettingActionKeyManager.SettingSubKey.S_IF -> {
                             if(!isNext) {

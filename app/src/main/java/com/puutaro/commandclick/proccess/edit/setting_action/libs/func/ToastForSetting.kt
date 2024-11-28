@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import android.content.Context
-import com.blankj.utilcode.util.ToastUtils
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.broadcast.SettingActionFuncExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.SettingActionFuncBroadcastManager
@@ -11,17 +11,31 @@ object ToastForSetting {
 
     fun handle(
         context: Context?,
+        funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>
-    ) {
+    ): FuncCheckerForSetting.FuncCheckErr? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
-        } ?: return
-        val isErr = ArgsChecker.checkArgs(
+        }  ?: let {
+            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                funcName
+            )
+            val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                methodNameStr
+            )
+            return FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+        }
+        FuncCheckerForSetting.checkArgs(
+            funcName,
             methodNameClass.readArgsNameList,
             argsPairList
-        )
-        if(isErr) return
+        )?.let {
+                argsCheckErr ->
+            return argsCheckErr
+        }
         val argsList = argsPairList.map {
             it.second
         }
@@ -36,6 +50,7 @@ object ToastForSetting {
                 ),
             )
         )
+        return null
 //        when(methodNameClass){
 //            MethodNameClass.SHORT -> {
 //                val firstArg = argsList.get(0)

@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.broadcast.SettingActionFuncExtra
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.libs.ToastForSettingForTerm
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ArgsChecker
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
 
 object SettingActionFuncBroadcastManager {
 
@@ -18,41 +18,45 @@ object SettingActionFuncBroadcastManager {
 
     fun handle(
         intent: Intent,
-    ){
+    ): FuncCheckerForSetting.FuncCheckErr? {
         val funcClassStr = intent.getStringExtra(
             SettingActionFuncExtra.FUNC_NAME.schema
         )
         if(
             funcClassStr.isNullOrEmpty()
-        ) return
+        ) return null
         val funcClass = FuncClass.entries.firstOrNull {
             it.str == funcClassStr
-        } ?: return
+        } ?: return null
         val methodName = intent.getStringExtra(
             SettingActionFuncExtra.METHOD_NAME.schema
         )
         if(
             methodName.isNullOrEmpty()
-        ) return
+        ) return null
         val argsPairList = intent.getStringExtra(
             SettingActionFuncExtra.ARGS.schema
         )?.let {
             makeArgsPairList(it)
         } ?: emptyList()
-        val isErr = ArgsChecker.checkArgs(
+        FuncCheckerForSetting.checkArgs(
+            funcClassStr,
             funcClass.argsList,
             argsPairList
-        )
-        if(isErr) return
+        )?.let {
+                argsCheckErr ->
+            return argsCheckErr
+        }
         when(funcClass){
             FuncClass.TOAST -> {
                 ToastForSettingForTerm.handle(
+                    funcClassStr,
                     methodName,
                     argsPairList
                 )
             }
         }
-
+        return null
     }
 
     private fun makeArgsPairList(

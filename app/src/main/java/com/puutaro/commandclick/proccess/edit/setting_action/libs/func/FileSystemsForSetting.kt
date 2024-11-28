@@ -1,28 +1,43 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 
 object FileSystemsForSettingHandler {
 
     fun handle(
+        funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>
-    ): String? {
+    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
-        } ?: return null
-        val isErr = ArgsChecker.checkArgs(
+        } ?: let {
+            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                funcName
+            )
+            val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                methodNameStr
+            )
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+        }
+        FuncCheckerForSetting.checkArgs(
+            funcName,
             methodNameClass.argsNameList,
             argsPairList
-        )
+        )?.let {
+            argsCheckErr ->
+            return null to argsCheckErr
+        }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "settingCheck.txt").absolutePath,
 //            listOf(
 //                "isErr: ${isErr}",
 //            ).joinToString("\n")
 //        )
-        if(isErr) return null
         val argsList = argsPairList.map {
             it.second
         }
@@ -65,7 +80,7 @@ object FileSystemsForSettingHandler {
                 )
                 null
             }
-        }
+        } to null
     }
 
     private enum class MethodNameClass(

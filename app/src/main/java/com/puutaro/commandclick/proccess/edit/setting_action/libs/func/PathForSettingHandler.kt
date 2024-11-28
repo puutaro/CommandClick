@@ -1,21 +1,36 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
 
 object PathForSettingHandler {
     fun handle(
+        funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>
-    ): String? {
+    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
-        } ?: return null
-        val isErr = ArgsChecker.checkArgs(
+        } ?: let {
+            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                funcName
+            )
+            val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                methodNameStr
+            )
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+        }
+        FuncCheckerForSetting.checkArgs(
+            funcName,
             methodNameClass.argsNameList,
             argsPairList
-        )
-        if(isErr) return null
+        )?.let {
+                argsCheckErr ->
+            return null to argsCheckErr
+        }
         val argsList = argsPairList.map {
             it.second
         }
@@ -60,7 +75,7 @@ object PathForSettingHandler {
                 val firstArg = argsList.get(0)
                 File(firstArg).isDirectory.toString()
             }
-        }
+        } to null
     }
 
     private enum class MethodNameClass(

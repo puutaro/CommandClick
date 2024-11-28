@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
@@ -19,50 +21,68 @@ object SettingFuncManager {
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?
-    ): String? {
+    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val funcTypeAndMethodList =
             funcTypeDotMethod.split(funcTypeAndMethodSeparatorDot)
         val funcTypeStr = funcTypeAndMethodList.first()
         val funcType = FuncType.entries.firstOrNull {
             it.key == funcTypeStr
-        } ?: return null
+        } ?: let {
+            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                funcTypeStr
+            )
+            return null to FuncCheckerForSetting.FuncCheckErr("Irregular func name: ${spanFuncTypeStr}")
+        }
         val methodName = funcTypeAndMethodList.getOrNull(1)
-            ?: return null
+            ?: let {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    funcTypeStr
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}")
+            }
         return when(funcType){
             FuncType.FILE_SYSTEMS ->
                 FileSystemsForSettingHandler.handle(
+                    funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
             FuncType.TOAST -> {
-                ToastForSetting.handle(
+                null to ToastForSetting.handle(
                     context,
+                    funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
-                null
             }
             FuncType.EXIT ->
                 ExitForSetting.handle(
+                    funcTypeStr,
                     methodName
                 )
             FuncType.PATH ->
                 PathForSettingHandler.handle(
+                    funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
             FuncType.LOCAL_DATETIME ->
                 LocalDatetimeForSetting.handle(
+                    funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
             FuncType.TSV_TOOL ->
                 TsvToolForSetting.handle(
+                    funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
             FuncType.SHELL -> {
                 ShellToolManagerForSetting.handle(
+                    funcTypeStr,
                     methodName,
                     baseArgsPairList,
                     busyboxExecutor
