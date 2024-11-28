@@ -26,6 +26,7 @@ object FileSystemsForSettingHandler {
         }
         FuncCheckerForSetting.checkArgs(
             funcName,
+            methodNameStr,
             methodNameClass.argsNameList,
             argsPairList
         )?.let {

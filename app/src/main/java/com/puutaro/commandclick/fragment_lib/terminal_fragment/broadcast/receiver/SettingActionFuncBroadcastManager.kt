@@ -41,6 +41,7 @@ object SettingActionFuncBroadcastManager {
         } ?: emptyList()
         FuncCheckerForSetting.checkArgs(
             funcClassStr,
+            methodName,
             funcClass.argsList,
             argsPairList
         )?.let {

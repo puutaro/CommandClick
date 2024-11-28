@@ -70,6 +70,7 @@ class SettingActionManager {
                 S_VAR,
                 S_AC_VAR,
                 FUNC,
+                S_IF,
             }
 
             object LogDatetime {
@@ -1166,14 +1167,25 @@ class SettingActionManager {
                     ),
                     valueSeparator
                 )
-                val isImport = when(judgeTargetStr.isEmpty()) {
-                    true -> true
+                val isImportToErrType = when(judgeTargetStr.isEmpty()) {
+                    true -> true to null
                     else -> SettingIfManager.handle(
                         judgeTargetStr,
                         argsPairList
                     )
                 }
                 val blankReturnValue = String() to Pair(String(), emptyList<Pair<String, String>>())
+                val errType = isImportToErrType.second
+                if(errType != null){
+                    ErrLogger.sendErrLog(
+                        context,
+                        ErrLogger.SettingActionErrType.S_IF,
+                        errType.errMessage,
+                        keyToSubKeyConWhere
+                    )
+                    return blankReturnValue
+                }
+                val isImport = isImportToErrType.first
                 if(
                     isImport != true
                 ) return blankReturnValue
@@ -1428,10 +1440,24 @@ class SettingActionManager {
                                 ),
                                 valueSeparator
                             )
-                            SettingIfManager.handle(
+                            val isImportToErrType = SettingIfManager.handle(
                                 judgeTargetStr,
                                 argsPairList
-                            )?.let {
+                            )
+                            val errType = isImportToErrType.second
+                            if(errType != null){
+                                runBlocking {
+                                    ErrLogger.sendErrLog(
+                                        context,
+                                        ErrLogger.SettingActionErrType.S_IF,
+                                        errType.errMessage,
+                                        keyToSubKeyConWhere
+                                    )
+                                }
+                                return@forEach
+                            }
+                            val isImport = isImportToErrType.first
+                            isImport?.let {
                                 isNext = it
                             }
                         }

@@ -11,6 +11,7 @@ object FuncCheckerForSetting {
 
     fun checkArgs(
         funcName: String,
+        methodName: String,
         baseArgsNameList: List<String>?,
         argsPairList: List<Pair<String, String>>
     ): FuncCheckErr? {
@@ -25,11 +26,18 @@ object FuncCheckerForSetting {
                         CheckTool.errBrown,
                         funcName
                     )
-                    val spanArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        argName
+                    val spanMethodName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        methodName
                     )
-                    return FuncCheckErr("Method args not exist: ${spanFuncName}.${spanArgName}")
+                    val spanBaseArgsNameListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        baseArgsNameList.joinToString(", ")
+                    )
+                    return FuncCheckErr(
+                        "Method all args not exist: ${spanFuncName}.${spanMethodName}: " +
+                                "args list: ${spanBaseArgsNameListCon}"
+                    )
                 }
             if(
                 argPair.first.isEmpty()
@@ -38,11 +46,21 @@ object FuncCheckerForSetting {
                     CheckTool.errBrown,
                     funcName
                 )
+                val spanMethodName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    methodName
+                )
                 val spanArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.errRedCode,
                     argName
                 )
-                return FuncCheckErr("Method args name must not be blank: ${spanFuncName}.${spanArgName}")
+                val spanArgIndex = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    (index + 1).toString()
+                )
+                return FuncCheckErr(
+                    "Method args not exist: ${spanFuncName}.${spanMethodName}: name: ${spanArgName}, index: ${spanArgIndex}"
+                )
             }
         }
         return null
