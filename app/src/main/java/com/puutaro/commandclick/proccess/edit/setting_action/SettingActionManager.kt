@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.broadcast.extra.ErrLogExtraForTerm
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.ErrLogBroadcastManagerForTerm.LogDatetime
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -13,7 +14,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -21,11 +22,13 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
+import java.time.LocalDateTime
 
 class SettingActionManager {
 
@@ -59,19 +62,65 @@ class SettingActionManager {
             }
         }
 
-        private fun sendErLog(
-            context: Context?,
-            errMessage: String,
-            keyToSubKeyConWhere: String,
-        ){
-            BroadcastSender.normalSend(
-                context,
-                BroadCastIntentSchemeTerm.ERR_LOG.action,
-                listOf(
-                    ErrLogExtraForTerm.ERR_CONTENTS.schema to
-                            "$errMessage about ${keyToSubKeyConWhere}"
+        private object ErrLogger {
+
+            private val durationSec = 5
+
+            object LogDatetime {
+                private var beforeOutputTime = LocalDateTime.parse("2020-02-15T21:30:50")
+                private val mutex = Mutex()
+
+                suspend fun update(
+                    datetime: LocalDateTime
+                ) {
+                    mutex.withLock {
+                        beforeOutputTime = datetime
+                    }
+                }
+
+                suspend fun get(): LocalDateTime {
+                    mutex.withLock {
+                        return beforeOutputTime
+                    }
+                }
+            }
+
+            suspend fun sendErrLog(
+                context: Context?,
+                errMessage: String,
+                keyToSubKeyConWhere: String,
+            ) {
+                val currentDatetime =
+                    withContext(Dispatchers.IO) {
+                    LocalDateTime.now()
+                }
+                val diffSec = withContext(Dispatchers.IO) {
+                    val beforeOutputTime = LogDatetime.get()
+                    LocalDatetimeTool.getDurationSec(
+                        beforeOutputTime,
+                        currentDatetime
+                    )
+                }
+                if(diffSec < durationSec) return
+                withContext(Dispatchers.IO) {
+                    LogDatetime.update(
+                        currentDatetime
+                    )
+                }
+                val spanKeyToSubKeyConWhere =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        keyToSubKeyConWhere
+                    )
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeTerm.ERR_LOG.action,
+                    listOf(
+                        ErrLogExtraForTerm.ERR_CONTENTS.schema to
+                                "$errMessage about ${spanKeyToSubKeyConWhere}"
+                    )
                 )
-            )
+            }
         }
 
         private fun makeSettingKeyToVarNameList(
@@ -567,11 +616,13 @@ class SettingActionManager {
                         CheckTool.errRedCode,
                         importPath
                     )
-                sendErLog(
-                    context,
-                    "import path not exist in ${spanSAdVarKeyName}: ${spanImportPath}",
-                    keyToSubKeyConWhere,
-                )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "import path not exist in ${spanSAdVarKeyName}: ${spanImportPath}",
+                        keyToSubKeyConWhere,
+                    )
+                }
                 return true
             }
 
@@ -604,12 +655,14 @@ class SettingActionManager {
                             it.second
                         }.joinToString(". ")
                     )
-                sendErLog(
-                    context,
-                    "With ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
-                            "global (uppercase) var name must not exist: ${spanGlobalVarNameListCon}",
-                    keyToSubKeyConWhere
-                )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "With ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
+                                "global (uppercase) var name must not exist: ${spanGlobalVarNameListCon}",
+                        keyToSubKeyConWhere
+                    )
+                }
                 return true
             }
 
@@ -642,11 +695,13 @@ class SettingActionManager {
                             it.second
                         }.joinToString(", ")
                     )
-                sendErLog(
-                    context,
-                    "In ${spanSAdVarKeyName}, global (uppercase) var name must be one: ${spanGlobalVarNameListCon}",
-                    keyToSubKeyConWhere
-                )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "In ${spanSAdVarKeyName}, global (uppercase) var name must be one: ${spanGlobalVarNameListCon}",
+                        keyToSubKeyConWhere
+                    )
+                }
                 return true
 
             }
@@ -684,12 +739,14 @@ class SettingActionManager {
 //                        "lastSettingKeyToSubKeyCon: ${lastSettingKeyToSubKeyCon}",
 //                    ).joinToString("\n")
 //                )
-                sendErLog(
-                    context,
-                    "Without ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
-                            "imported last var name must be global (uppercase): ${spanGlobalVarName}",
-                    keyToSubKeyConWhere
-                )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "Without ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
+                                "imported last var name must be global (uppercase): ${spanGlobalVarName}",
+                        keyToSubKeyConWhere
+                    )
+                }
                 return true
             }
         }
@@ -730,11 +787,13 @@ class SettingActionManager {
                         CheckTool.errRedCode,
                         duplicateVarNameList.joinToString(". ")
                     )
-                sendErLog(
-                    context,
-                    "Var name must be unique: ${spanVarNameListCon}",
-                    keyToSubKeyConWhere,
-                )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "Var name must be unique: ${spanVarNameListCon}",
+                        keyToSubKeyConWhere,
+                    )
+                }
                 return true
 
             }
@@ -752,11 +811,18 @@ class SettingActionManager {
                 if(
                     !isGlobal
                 ) return false
-                sendErLog(
-                    context,
-                    "In global (uppercase), func result must be exist: ${varName}",
-                    keyToSubKeyConWhere,
-                )
+                val spanVarName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        varName
+                    )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "In global (uppercase), func result must be exist: ${spanVarName}",
+                        keyToSubKeyConWhere,
+                    )
+                }
                 return true
 
             }
@@ -807,11 +873,13 @@ class SettingActionManager {
                             CheckTool.errRedCode,
                             runVarName
                         )
-                    sendErLog(
-                        context,
-                        "Forbidden to use run prefix var as variable:  ${spanSettingKeyName}: ${spanRunVarName}",
-                        keyToSubKeyConWhere,
-                    )
+                    runBlocking {
+                        ErrLogger.sendErrLog(
+                            context,
+                            "Forbidden to use run prefix var as variable:  ${spanSettingKeyName}: ${spanRunVarName}",
+                            keyToSubKeyConWhere,
+                        )
+                    }
                     return true
                 }
                 return false
@@ -895,11 +963,13 @@ class SettingActionManager {
                         CheckTool.errRedCode,
                         noReplaceVar
                     )
-                sendErLog(
-                    context,
-                    "Not replace var: ${spanNoReplaceVar}",
-                    keyToSubKeyConWhere,
-                )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        "Not replace var: ${spanNoReplaceVar}",
+                        keyToSubKeyConWhere,
+                    )
+                }
                 return true
             }
 
@@ -936,11 +1006,13 @@ class SettingActionManager {
                             CheckTool.errRedCode,
                             varName
                         )
-                    sendErLog(
-                        context,
-                        "Not use inner ${spanSettingKeyName}: ${spanVarName}",
-                        keyToSubKeyConWhere,
-                    )
+                    runBlocking {
+                        ErrLogger.sendErrLog(
+                            context,
+                            "Not use inner ${spanSettingKeyName}: ${spanVarName}",
+                            keyToSubKeyConWhere,
+                        )
+                    }
                     return true
                 }
                 return false

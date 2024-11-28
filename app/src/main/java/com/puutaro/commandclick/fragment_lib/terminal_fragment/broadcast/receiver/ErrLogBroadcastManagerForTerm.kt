@@ -73,7 +73,7 @@ object ErrLogBroadcastManagerForTerm {
                     currentDatetime
                 )
             }
-            if(diffSec < durationSec ) return@launch
+            if(diffSec < durationSec) return@launch
             withContext(Dispatchers.IO) {
                 LogDatetime.update(
                     currentDatetime
