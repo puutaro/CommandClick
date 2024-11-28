@@ -9,10 +9,12 @@ import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter.Companion.makeLinearFrameKeyPairsList
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -622,15 +624,73 @@ object EditComponent {
 
         object AdapterSetter {
 
-                fun makeVerticalTagToKeyPairsList(
+                suspend fun makeVerticalTagAndKeyPairsListToVarNameToValueMap(
+                        fragment: Fragment?,
+                        fannelInfoMap: Map<String, String>,
+                        setReplaceVariableMap: Map<String, String>?,
+                        busyboxExecutor: BusyboxExecutor?,
                         frameTag: String,
-                        frameTagToVerticalKeysCon: List<Pair<String, String>>
-                ): List<Pair<String, List<Pair<String, String>>>> {
-                        return frameTagToVerticalKeysCon.filter {
+                        frameTagToVerticalKeysConList: List<Pair<String, String>>,
+                        frameVarNameValueMap: Map<String, String>,
+                        srcTitle: String?,
+                        srcCon: String?,
+                        srcImage: String?,
+                        bindingAdapterPosition: Int?,
+                ): List<
+                        Pair<
+                                String,
+                                Pair<
+                                        List<Pair<String, String>>,
+                                        Map<String, String>
+                                        >
+                                >
+                        > {
+                        return frameTagToVerticalKeysConList.filter {
                                 val curFrameTag = it.first
                                 curFrameTag == frameTag
                         }.map {
-                                val verticalKeysCon = it.second
+                                frameTagToVerticalKeysCon ->
+                                val firstVerticalTag = frameTagToVerticalKeysCon.first
+                                val verticalKeysConToVarNameToValueMap = frameTagToVerticalKeysCon.second.let {
+                                                verticalKeysConSrcBeforeReplaceSrc ->
+                                        if(
+                                                verticalKeysConSrcBeforeReplaceSrc.isEmpty()
+                                        ) return@let String() to emptyMap()
+                                        val verticalKeysConSrcBeforeReplace = CmdClickMap.replace(
+                                                verticalKeysConSrcBeforeReplaceSrc,
+                                                frameVarNameValueMap,
+                                        )
+                                        val verticalKeysConSrc = Template.ReplaceHolder.replaceHolder(
+                                                verticalKeysConSrcBeforeReplace,
+                                                srcTitle ?: String(),
+                                                srcCon?: String(),
+                                                srcImage?: String(),
+                                                bindingAdapterPosition ?: -1,
+                                        ) ?: String()
+                                        val settingActionManager = SettingActionManager()
+                                        val mapListElInfo = listOf(
+                                                srcTitle?.let { "srcTitle: ${srcTitle}" } ?: String(),
+                                                srcCon?.let { "srcCon: ${srcCon}" } ?: String(),
+                                                srcImage?.let { "srcImage: ${srcImage}" } ?: String(),
+                                                bindingAdapterPosition?.let { "bindingAdapterPosition: ${bindingAdapterPosition}" } ?: String(),
+                                        ).filter {
+                                                it.isNotEmpty()
+                                        }.joinToString(" ")
+                                        val varNameToValueMap = settingActionManager.exec(
+                                                fragment,
+                                                fannelInfoMap,
+                                                setReplaceVariableMap,
+                                                busyboxExecutor,
+                                                verticalKeysConSrc,
+                                                "verticalTag: ${firstVerticalTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}",
+                                        )
+                                        CmdClickMap.replace(
+                                                verticalKeysConSrc,
+                                                varNameToValueMap
+                                        ) to varNameToValueMap
+                                }
+                                val verticalKeysCon = verticalKeysConToVarNameToValueMap.first
+                                val varNameToValueMap = verticalKeysConToVarNameToValueMap.second
                                 val verticalKeyPairs = makeLinearFrameKeyPairsList(
                                         verticalKeysCon
                                 )
@@ -644,7 +704,7 @@ object EditComponent {
                                                 partVerticalTag,
                                         )
                                 }
-                                verticalTag to verticalKeyPairs
+                                verticalTag to Pair(verticalKeyPairs, varNameToValueMap)
                         }
                 }
 
@@ -654,7 +714,11 @@ object EditComponent {
                         srcCon: String,
                         srcImage: String,
                         bindingAdapterPosition: Int,
-                ):  List<Triple<String, List<Pair<String, String>>, String?>> {
+                ):  List<Pair<
+                        String,
+//                        List<Pair<String, String>>,
+                        String?
+                        >> {
                         return linearKeyValues.map { linearFrameKeyPairsListConSrc ->
                                 val linearFrameKeyPairsListCon =
                                         Template.ReplaceHolder.replaceHolder(
@@ -673,9 +737,9 @@ object EditComponent {
                                                 linearFrameKeyPairsList,
                                                 Template.EditComponentKey.TAG.key,
                                         ) ?: String()
-                                Triple(
+                                Pair(
                                         linearFrameTag,
-                                        linearFrameKeyPairsList,
+//                                        linearFrameKeyPairsList,
                                         linearFrameKeyPairsListCon
                                 )
                         }

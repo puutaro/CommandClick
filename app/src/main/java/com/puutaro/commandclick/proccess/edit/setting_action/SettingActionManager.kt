@@ -174,13 +174,16 @@ class SettingActionManager {
     }
 
     suspend fun exec(
-        fragment: Fragment,
+        fragment: Fragment?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
     ): Map<String, String> {
+        if(
+            fragment == null
+        ) return emptyMap()
         val keyToSubKeyConList = makeSettingActionKeyToSubKeyList(
             fragment,
             fannelInfoMap,

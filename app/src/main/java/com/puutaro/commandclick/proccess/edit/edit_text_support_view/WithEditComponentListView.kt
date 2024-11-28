@@ -39,7 +39,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -119,53 +118,53 @@ object WithEditComponentListView{
                 }
             }
         }
-        val varNameToValueMap2 = let {
-            editListConfigMapSrc?.get(
-                EditListConfig.EditListConfigKey.SETTING_ACTION2.key,
-            ).let {
-                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
-                val settingActionManager = SettingActionManager()
-                runBlocking {
-                    settingActionManager.exec(
-                        fragment,
-                        fannelInfoMap,
-                        setReplaceVariableMapSrc,
-                        busyboxExecutor,
-                        it,
-                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}"
-                    )
-                }
-            }
-        }
-        val varNameToValueMap3 = let {
-            editListConfigMapSrc?.get(
-                EditListConfig.EditListConfigKey.SETTING_ACTION3.key,
-            ).let {
-                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
-                val settingActionManager = SettingActionManager()
-                runBlocking {
-                    settingActionManager.exec(
-                        fragment,
-                        fannelInfoMap,
-                        setReplaceVariableMapSrc,
-                        busyboxExecutor,
-                        it,
-                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}"
-                    )
-                }
-            }
-        }
+//        val varNameToValueMap2 = let {
+//            editListConfigMapSrc?.get(
+//                EditListConfig.EditListConfigKey.SETTING_ACTION2.key,
+//            ).let {
+//                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+//                val settingActionManager = SettingActionManager()
+//                runBlocking {
+//                    settingActionManager.exec(
+//                        fragment,
+//                        fannelInfoMap,
+//                        setReplaceVariableMapSrc,
+//                        busyboxExecutor,
+//                        it,
+//                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}"
+//                    )
+//                }
+//            }
+//        }
+//        val varNameToValueMap3 = let {
+//            editListConfigMapSrc?.get(
+//                EditListConfig.EditListConfigKey.SETTING_ACTION3.key,
+//            ).let {
+//                val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+//                val settingActionManager = SettingActionManager()
+//                runBlocking {
+//                    settingActionManager.exec(
+//                        fragment,
+//                        fannelInfoMap,
+//                        setReplaceVariableMapSrc,
+//                        busyboxExecutor,
+//                        it,
+//                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG} in ${fannelName}"
+//                    )
+//                }
+//            }
+//        }
         runBlocking {
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
         }
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "svarNameToValueMap.txt").absolutePath,
-            listOf(
-                "varNameToValueMap: ${varNameToValueMap}\n",
-                "varNameToValueMap2: ${varNameToValueMap2}\n",
-                "varNameToValueMap3: ${varNameToValueMap3}\n",
-            ).joinToString("\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "svarNameToValueMap.txt").absolutePath,
+//            listOf(
+//                "varNameToValueMap: ${varNameToValueMap}\n",
+//                "varNameToValueMap2: ${varNameToValueMap2}\n",
+//                "varNameToValueMap3: ${varNameToValueMap3}\n",
+//            ).joinToString("\n")
+//        )
         val setReplaceVariableMap =
             (setReplaceVariableMapSrc ?: emptyMap()) +
                     varNameToValueMap
@@ -483,17 +482,29 @@ object WithEditComponentListView{
         withContext(Dispatchers.Main) {
             val weightSumFloat = 1f
             frameTagList.forEach { frameTag ->
-                val verticalTagToKeyPairsList = withContext(Dispatchers.IO){
-                    EditComponent.AdapterSetter.makeVerticalTagToKeyPairsList(
+                val verticalTagToKeyPairsListToVarNameValueMapList = withContext(Dispatchers.IO){
+                    EditComponent.AdapterSetter.makeVerticalTagAndKeyPairsListToVarNameToValueMap(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
                         frameTag,
                         frameTagToVerticalKeysCon,
+                        emptyMap(),
+                        String(),
+                        String(),
+                        String(),
+                        null,
                     )
                 }
                 val noIndexSign = -1
-                val verticalLinerWeight = weightSumFloat / verticalTagToKeyPairsList.size
-                verticalTagToKeyPairsList.forEach { verticalTagToKeyPairs ->
-                    val verticalTag = verticalTagToKeyPairs.first
-                    val verticalKeyPairs = verticalTagToKeyPairs.second
+                val verticalLinerWeight = weightSumFloat / verticalTagToKeyPairsListToVarNameValueMapList.size
+                verticalTagToKeyPairsListToVarNameValueMapList.forEach {
+                    verticalTagToKeyPairsListToVarNameToValueMap ->
+                    val verticalTag = verticalTagToKeyPairsListToVarNameToValueMap.first
+                    val keyPairsListToVarNameToValueMap = verticalTagToKeyPairsListToVarNameToValueMap.second
+                    val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
+                    val verticalVarNameValueMap = keyPairsListToVarNameToValueMap.second
                     val verticalLinearLayout = when(editToolbarLinearLayout != null) {
                         true -> null
                         else -> EditComponent.AdapterSetter.makeVerticalLinear(
@@ -554,7 +565,8 @@ object WithEditComponentListView{
                                 fannelCenterButtonLayout?.layoutParams = layoutParam
                             }
                         }
-                        linearKeyValues.forEach setFrame@{ linearFrameKeyPairsListConSrc ->
+                        linearKeyValues.forEach setFrame@{
+                            linearFrameKeyPairsListConSrc ->
                             val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
                                 EditComponent.Template.ReplaceHolder.replaceHolder(
                                     linearFrameKeyPairsListConSrc,
@@ -562,7 +574,32 @@ object WithEditComponentListView{
                                     frameTag,
                                     frameTag,
                                     noIndexSign,
-                                )
+                                ).let {
+                                        linearFrameKeyPairsListConSrc ->
+                                    if(
+                                        linearFrameKeyPairsListConSrc.isNullOrEmpty()
+                                    ) return@let String()
+                                    val settingActionManager = SettingActionManager()
+                                    val debugWhere = when(isEditToolbar){
+                                        true -> "toolBar"
+                                        else -> "footer"
+                                    }
+                                    val varNameToValueMap = settingActionManager.exec(
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        CmdClickMap.replace(
+                                            linearFrameKeyPairsListConSrc,
+                                            verticalVarNameValueMap,
+                                        ),
+                                        "${verticalTag}: ${debugWhere} frameTag: ${frameTag}",
+                                    )
+                                    CmdClickMap.replace(
+                                        linearFrameKeyPairsListConSrc,
+                                        varNameToValueMap
+                                    )
+                                }
                             }
                             val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
                                 CmdClickMap.createMap(
@@ -588,7 +625,7 @@ object WithEditComponentListView{
                                 editListRecyclerView.adapter as? EditComponentListAdapter
                             editComponentListAdapter?.footerKeyPairListConMap?.put(
                                 linearFrameTag,
-                                linearFrameKeyPairsListConSrc
+                                linearFrameKeyPairsListCon
                             )
                             val linearFrameLayout = EditFrameMaker.make(
                                 context,
