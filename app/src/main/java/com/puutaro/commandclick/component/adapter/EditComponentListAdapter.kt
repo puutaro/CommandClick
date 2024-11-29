@@ -196,6 +196,7 @@ class EditComponentListAdapter(
         }
     }
 
+    private val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
     class EditListViewHolder(
         val view: View
     ): RecyclerView.ViewHolder(view) {
@@ -251,6 +252,14 @@ class EditComponentListAdapter(
         }
     }
 
+    private val switchOn = EditComponent.Template.switchOn
+    private val switchOff = EditComponent.Template.switchOff
+    private val linearSettingTagMacroStr =
+        EditComponent.Template.TagManager.TagMacro.LINEAR_SETTING.name
+    private val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map{
+        it.key
+    }
+
     override fun onBindViewHolder(
         holder: EditListViewHolder,
         editListPosition: Int
@@ -293,7 +302,7 @@ class EditComponentListAdapter(
         if(
             frameTag.isNullOrEmpty()
         ) return
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
                 val frameKeyPairsConSrc = frameMap.get(frameTag)
                 EditComponent.Template.ReplaceHolder.replaceHolder(
@@ -303,9 +312,9 @@ class EditComponentListAdapter(
                     holder.srcImage,
                     holder.bindingAdapterPosition,
                 ).let {
-                    frameKeyPairsConSrc ->
+                    innerFrameKeyPairsConSrc ->
                     if(
-                        frameKeyPairsConSrc.isNullOrEmpty()
+                        innerFrameKeyPairsConSrc.isNullOrEmpty()
                     ) return@let String() to emptyMap()
                     val settingActionManager = SettingActionManager()
                     val mapListElInfo = listOf(
@@ -319,12 +328,12 @@ class EditComponentListAdapter(
                         fannelInfoMap,
                         setReplaceVariableMap,
                         busyboxExecutor,
-                        frameKeyPairsConSrc,
+                        innerFrameKeyPairsConSrc,
                         "frameTag: ${frameTag}, mapListElInfo: ${mapListElInfo}, ${plusKeyToSubKeyConWhere}",
                         editComponentListAdapterArg = this@EditComponentListAdapter
                     )
                     CmdClickMap.replace(
-                        frameKeyPairsConSrc,
+                        innerFrameKeyPairsConSrc,
                         varNameToValueMap
                     ) to varNameToValueMap
                 }
@@ -375,12 +384,8 @@ class EditComponentListAdapter(
                     null,
                     frameTag,
                     totalSettingValMap,
-
                 )
-                val frameKeyList = JsActionKeyManager.JsActionsKey.entries.map{
-                    it.key
-                }
-                withContext(Dispatchers.IO) setClickOrTouch@ {
+                withContext(Dispatchers.Main) setClickOrTouch@ {
                     if(
                         frameFrameLayout == null
                     ) return@setClickOrTouch
@@ -388,26 +393,26 @@ class EditComponentListAdapter(
                         PairListTool.getValue(
                             frameKeyPairsList,
                             isConsecKey,
-                        ) == EditComponent.Template.switchOn
-                    frameKeyList.any {
+                        ) == switchOn
+                    val isJsAc = jsActionKeyList.any {
                         !PairListTool.getValue(
                             frameKeyPairsList,
                             it,
                         ).isNullOrEmpty()
-                    }.let {
-                            isJsAc ->
-                        if(
-                            !isJsAc
-                            && frameFrameLayout.tag != null
-                        ) {
-                            frameFrameLayout.setBackgroundResource(0)
-                            frameFrameLayout.isClickable = false
-                            return@let
-                        }
-                        holder.keyPairListConMap.put(
-                            frameTag,
-                            frameKeyPairsCon
-                        )
+                    }
+                    if(
+                        !isJsAc
+                        && frameFrameLayout.tag != null
+                    ) {
+                        frameFrameLayout.setBackgroundResource(0)
+                        frameFrameLayout.isClickable = false
+                        return@setClickOrTouch
+                    }
+                    holder.keyPairListConMap.put(
+                        frameTag,
+                        frameKeyPairsCon
+                    )
+                    withContext(Dispatchers.Main) {
                         val outValue = TypedValue()
                         context.theme.resolveAttribute(
                             android.R.attr.selectableItemBackground,
@@ -416,8 +421,8 @@ class EditComponentListAdapter(
                         )
                         frameFrameLayout.setBackgroundResource(outValue.resourceId)
                         frameFrameLayout.isClickable = true
-                        when(isConsec) {
-                            true -> with (frameFrameLayout) {
+                        when (isConsec) {
+                            true -> with(frameFrameLayout) {
                                 setOnTouchListener(android.view.View.OnTouchListener { v, event ->
                                     when (event.action) {
                                         android.view.MotionEvent.ACTION_DOWN -> {
@@ -427,9 +432,10 @@ class EditComponentListAdapter(
                                                 editListPosition
                                             )
                                         }
+
                                         android.view.MotionEvent.ACTION_UP,
                                         android.view.MotionEvent.ACTION_CANCEL,
-                                        -> {
+                                            -> {
                                             editAdapterTouchUpListener?.onEditAdapterTouchUp(
                                                 frameFrameLayout,
                                                 holder,
@@ -441,6 +447,7 @@ class EditComponentListAdapter(
                                     true
                                 })
                             }
+
                             else -> frameFrameLayout.setOnClickListener {
                                 editAdapterClickListener?.onEditAdapterClick(
                                     frameFrameLayout,
@@ -474,116 +481,135 @@ class EditComponentListAdapter(
                     removeAllViews()
                 }
             }
-//                withContext(Dispatchers.Main){
-//                LinearLayoutCompat(context).apply {
-//                    val totalLinearParam = LinearLayoutCompat.LayoutParams(
-//                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-//                    ).apply {
-//                        tag =
-//                            setMargins(ScreenSizeCalculator.toDp(context,10))
-//                        weight = weightSumFloat
-//                    }
-//                    layoutParams = totalLinearParam
-//                    orientation = LinearLayoutCompat.HORIZONTAL
-//                    gravity = Gravity.CENTER
-//                }
-//            }
-            val verticalLinerWeight = weightSumFloat / verticalTagToKeyPairsListToVarNameToValueMapList.size
-            withContext(Dispatchers.Main) {
-                verticalTagToKeyPairsListToVarNameToValueMapList.forEachIndexed {
-                        verticalIndex, verticalTagToKeyPairsListToVarNameToValueMap ->
-                    val verticalTag = verticalTagToKeyPairsListToVarNameToValueMap.first
-                    val keyPairsListToVarNameToValueMap = verticalTagToKeyPairsListToVarNameToValueMap.second
-                    val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
-                    val verticalVarNameToValueMap = keyPairsListToVarNameToValueMap.second + frameVarNameValueMap
-//                ,ScreenSizeCalculator.toDp(context, 50)
-//                    val verticalLinearLayoutSrc = when(verticalIndex == 0) {
-//                        true -> holder.firstVerticalLinerLayout
-//                        else -> null
-//                    }
-                    val verticalLinearLayout = EditComponent.AdapterSetter.makeVerticalLinear(
-                            context,
-                            null,
-                            verticalKeyPairs,
-                            verticalLinerWeight,
-                            verticalTag,
-                        )
-                    verticalTagToLinearKeysListMap.get(verticalTag)?.forEach {
-                            linearKeyValues ->
-                        val linearParam = LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                        )
-                        val horizonLinearLayout = LinearLayoutCompat(context).apply {
+//            val verticalLinerWeight = weightSumFloat / verticalTagToKeyPairsListToVarNameToValueMapList.size
+            val verticalLinerWeight = EditComponent.AdapterSetter.culcVerticalLinerWeight(
+                verticalTagToKeyPairsListToVarNameToValueMapList
+            )
+            verticalTagToKeyPairsListToVarNameToValueMapList.forEachIndexed setVertical@ {
+                    verticalIndex, verticalTagToKeyPairsListToVarNameToValueMap ->
+                val verticalTag = verticalTagToKeyPairsListToVarNameToValueMap.first
+                val keyPairsListToVarNameToValueMap = verticalTagToKeyPairsListToVarNameToValueMap.second
+                val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
+                val verticalVarNameToValueMap = keyPairsListToVarNameToValueMap.second + frameVarNameValueMap
+                val isVerticalEnable = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        verticalKeyPairs,
+                        enableKey,
+                    ).let { enableStr ->
+                        enableStr != switchOff
+                    }
+                }
+                if(
+                    !isVerticalEnable
+                ) return@setVertical
+                val verticalLinearLayout = withContext(Dispatchers.Main) {
+                    EditComponent.AdapterSetter.makeVerticalLinear(
+                        context,
+                        null,
+                        verticalKeyPairs,
+                        verticalLinerWeight,
+                        verticalTag,
+                    )
+                }
+                verticalTagToLinearKeysListMap.get(verticalTag)?.forEach setHorizon@ {
+                        linearKeyValues ->
+                    val horizonLinearLayout = withContext(Dispatchers.Main) {
+                        LinearLayoutCompat(context).apply {
+                            val linearParam = LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                            )
                             layoutParams = linearParam
                             weightSum = weightSumFloat
                             orientation = LinearLayoutCompat.HORIZONTAL
                             gravity = Gravity.CENTER
 //                            background = AppCompatResources.getDrawable(context, R.color.light_ao)
                         }
-                        val linearFrameTagToKeyPairsList = withContext(Dispatchers.IO) {
-                            EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
-                                linearKeyValues,
-                                holder.srcTitle,
-                                holder.srcCon,
-                                holder.srcImage,
-                                holder.bindingAdapterPosition,
-                            )
-                        }
-                        val linearSettingTagMacroStr =
-                            EditComponent.Template.TagManager.TagMacro.LINEAR_SETTING.name
-                        val linearKeyValueSize = linearFrameTagToKeyPairsList.filter {
+                    }
+                    val linearFrameTagToKeyPairsList = withContext(Dispatchers.IO) {
+                        EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
+                            linearKeyValues,
+                            holder.srcTitle,
+                            holder.srcCon,
+                            holder.srcImage,
+                            holder.bindingAdapterPosition,
+                        )
+                    }
+                    val linearKeyValueSize = withContext(Dispatchers.IO) {
+                        linearFrameTagToKeyPairsList.filter {
                             val tag = it.first
-                            !tag.startsWith(linearSettingTagMacroStr)
+                            val isFrameLayout =
+                                !tag.startsWith(linearSettingTagMacroStr)
+                            val isEnable = PairListTool.getValue(
+                                verticalKeyPairs,
+                                enableKey,
+                            ).let { enableStr ->
+                                enableStr != switchOff
+                            }
+                            isFrameLayout && isEnable
                         }.size
-                        val layoutWeight = weightSumFloat / linearKeyValueSize
-                        linearFrameTagToKeyPairsList.forEach setFrame@ { linearFrameTagToLinearFrameKeyPairs ->
-                            val linearFrameTag = linearFrameTagToLinearFrameKeyPairs.first
-                            val linearFrameKeyPairsListCon = linearFrameTagToLinearFrameKeyPairs.second.let {
-                                    linearFrameKeyPairsListConSrc ->
-                                if(
+                    }
+                    val layoutWeight = weightSumFloat / linearKeyValueSize
+                    linearFrameTagToKeyPairsList.forEach setFrame@ { linearFrameTagToLinearFrameKeyPairs ->
+                        val linearFrameTag = linearFrameTagToLinearFrameKeyPairs.first
+                        val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
+                            linearFrameTagToLinearFrameKeyPairs.second.let { linearFrameKeyPairsListConSrc ->
+                                if (
                                     linearFrameKeyPairsListConSrc.isNullOrEmpty()
                                 ) return@let String()
                                 val settingActionManager = SettingActionManager()
                                 val mapListElInfo = listOf(
-                                    "srcTitle: ${holder.srcTitle}",
-                                    "srcCon: ${holder.srcCon}",
-                                    "srcImage: ${holder.srcImage}",
-                                    "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
-                                ).joinToString(" ")
+                                        "srcTitle: ${holder.srcTitle}",
+                                        "srcCon: ${holder.srcCon}",
+                                        "srcImage: ${holder.srcImage}",
+                                        "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
+                                    ).joinToString(" ")
                                 val varNameToValueMap = settingActionManager.exec(
-                                    fragment,
-                                    fannelInfoMap,
-                                    setReplaceVariableMap,
-                                    busyboxExecutor,
-                                    CmdClickMap.replace(
-                                        linearFrameKeyPairsListConSrc,
-                                        verticalVarNameToValueMap
-                                    ),
-                                    "linearFrameTag: ${linearFrameTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}: ${plusKeyToSubKeyConWhere}",
-                                    editComponentListAdapterArg = this@EditComponentListAdapter
-                                )
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        CmdClickMap.replace(
+                                            linearFrameKeyPairsListConSrc,
+                                            verticalVarNameToValueMap
+                                        ),
+                                        "linearFrameTag: ${linearFrameTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}: ${plusKeyToSubKeyConWhere}",
+                                        editComponentListAdapterArg = this@EditComponentListAdapter
+                                    )
                                 CmdClickMap.replace(
                                     linearFrameKeyPairsListConSrc,
                                     varNameToValueMap
                                 )
                             }
-                            val linearFrameKeyPairsList = makeLinearFrameKeyPairsList(
+                        }
+                        val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
+                            makeLinearFrameKeyPairsList(
                                 linearFrameKeyPairsListCon
                             )
+                        }
 //                            val linearFrameKeyPairsListCon = linearFrameTagToLinearFrameKeyPairs.third
-                            if(
-                                linearFrameTag.startsWith(linearSettingTagMacroStr)
-                            ){
+                        if(
+                            linearFrameTag.startsWith(linearSettingTagMacroStr)
+                        ){
+                            PairListTool.getValue(
+                                verticalKeyPairs,
+                                enableKey,
+                            ).let {
+                                    enableStr ->
+                                if(enableStr != switchOff) return@let
+                                return@setHorizon
+                            }
+                            withContext(Dispatchers.Main) {
                                 EditComponent.AdapterSetter.setHorizonLinear(
                                     horizonLinearLayout,
                                     verticalKeyPairs,
                                     linearFrameKeyPairsList
                                 )
-                                return@setFrame
                             }
-                            val linearFrameLayout = EditFrameMaker.make(
+                            return@setFrame
+                        }
+                        val linearFrameLayout = withContext(Dispatchers.Main) {
+                            EditFrameMaker.make(
                                 context,
                                 fannelInfoMap,
                                 setReplaceVariableMap,
@@ -594,35 +620,37 @@ class EditComponentListAdapter(
                                 linearFrameTag,
 //                                false,
                                 totalSettingValMap
-                            ) ?: return@setFrame
-                            val linearKeyList = JsActionKeyManager.JsActionsKey.entries.map{
-                                it.key
+                            )
+                        } ?: return@setFrame
+                        val isConsec = withContext(Dispatchers.IO) {
+                            PairListTool.getValue(
+                                linearFrameKeyPairsList,
+                                isConsecKey,
+                                ) == EditComponent.Template.switchOn
                             }
-                            withContext(Dispatchers.IO) {
-                                val isConsec =
-                                    PairListTool.getValue(
-                                        linearFrameKeyPairsList,
-                                        isConsecKey,
-                                    ) == EditComponent.Template.switchOn
-                                linearKeyList.any {
-                                    !PairListTool.getValue(
-                                        linearFrameKeyPairsList,
-                                        it,
-                                    ).isNullOrEmpty()
-                                }.let {
-                                        isJsAc ->
-                                    holder.keyPairListConMap.put(
-                                        linearFrameTag,
-                                        linearFrameKeyPairsListCon
-                                    )
-                                    if(
-                                        !isJsAc
-                                        && linearFrameLayout.tag != null
-                                    ) {
+                            jsActionKeyList.any {
+                                jsActionKey ->
+                                !PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    jsActionKey,
+                                ).isNullOrEmpty()
+                            }.let {
+                                    isJsAc ->
+                                holder.keyPairListConMap.put(
+                                    linearFrameTag,
+                                    linearFrameKeyPairsListCon
+                                )
+                                if(
+                                    !isJsAc
+                                    && linearFrameLayout.tag != null
+                                ) {
+                                    withContext(Dispatchers.Main) {
                                         linearFrameLayout.setBackgroundResource(0)
                                         linearFrameLayout.isClickable = false
-                                        return@let
                                     }
+                                    return@let
+                                }
+                                withContext(Dispatchers.Main) {
                                     val outValue = TypedValue()
                                     context.theme.resolveAttribute(
                                         android.R.attr.selectableItemBackground,
@@ -633,13 +661,12 @@ class EditComponentListAdapter(
                                         it is OutlineTextView
                                                 || it is AppCompatImageView
                                     }
-                                    clickViewList.forEach {
-                                        clickView ->
+                                    clickViewList.forEach { clickView ->
                                         clickView.setBackgroundResource(outValue.resourceId)
                                         clickView.isClickable = true
-                                        when(isConsec) {
+                                        when (isConsec) {
                                             true ->
-                                                with (clickView) {
+                                                with(clickView) {
                                                     setOnTouchListener(android.view.View.OnTouchListener { v, event ->
                                                         when (event.action) {
                                                             android.view.MotionEvent.ACTION_DOWN -> {
@@ -649,6 +676,7 @@ class EditComponentListAdapter(
                                                                     editListPosition
                                                                 )
                                                             }
+
                                                             android.view.MotionEvent.ACTION_UP,
                                                             android.view.MotionEvent.ACTION_CANCEL,
                                                                 -> {
@@ -663,6 +691,7 @@ class EditComponentListAdapter(
                                                         true
                                                     })
                                                 }
+
                                             else -> clickView.setOnClickListener {
                                                 editAdapterClickListener?.onEditAdapterClick(
                                                     linearFrameLayout,
@@ -672,20 +701,17 @@ class EditComponentListAdapter(
                                             }
                                         }
                                     }
-
-
                                 }
                             }
-                            horizonLinearLayout.addView(linearFrameLayout)
-                        }
-                        verticalLinearLayout.addView(horizonLinearLayout)
+                        horizonLinearLayout.addView(linearFrameLayout)
                     }
-//                    if(verticalIndex != 0) {
-                        totalLinearLayout.addView(verticalLinearLayout)
-//                    }
+                    verticalLinearLayout.addView(horizonLinearLayout)
                 }
-                materialCardView.addView(totalLinearLayout)
+//                    if(verticalIndex != 0) {
+                    totalLinearLayout.addView(verticalLinearLayout)
+//                    }
             }
+            materialCardView.addView(totalLinearLayout)
             withContext(Dispatchers.Main) {
                 val itemView = holder.itemView
                 itemView.setOnClickListener {

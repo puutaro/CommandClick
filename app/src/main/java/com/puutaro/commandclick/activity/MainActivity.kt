@@ -605,6 +605,7 @@ class MainActivity:
         srcFragment: String,
         tagNameList: List<String>,
         updateText: String,
+        overrideTextMap: Map<String, String>?,
         textPropertyMap: Map< String, String>?,
         isSave: Boolean,
     ) {
@@ -615,6 +616,7 @@ class MainActivity:
                 srcFragment,
                 tagNameList,
                 updateText,
+                overrideTextMap,
                 textPropertyMap,
                 isSave
             )

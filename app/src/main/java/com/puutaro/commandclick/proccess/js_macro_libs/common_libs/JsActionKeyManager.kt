@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
@@ -305,6 +306,14 @@ object JsActionKeyManager {
         fun make(str: String): String {
             val noQuotePrefix =
                 ArgsManager.ArgsSetting.NO_QUOTE_PREFIX.str
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "snoQuote.txt").absolutePath,
+//                listOf(
+//                    "str.startsWith(noQuotePrefix) ${str.startsWith(noQuotePrefix)}",
+//                    "noQuotePrefix: ${noQuotePrefix}",
+//                    "str: ${str}"
+//                ).joinToString("\n")
+//            )
             return when(str.startsWith(noQuotePrefix)){
                 true -> str.removePrefix(noQuotePrefix)
                 else -> "`${str}`"
@@ -345,6 +354,8 @@ object JsActionKeyManager {
         private const val afterValSeprator = ":"
         private const val ifAfterPrefix = "${ifAfterMinnerKey}${afterValSeprator}"
         const val afterJsConSeparator = '&'
+        const val ampersand = '&'
+        const val afterjsConSignalSeparator = "AFTER_JS_CON_SIGNAL_SEPARATOR"
         enum class SignalPrefix(
             val signal: String
         ){
@@ -357,10 +368,25 @@ object JsActionKeyManager {
             val varNameToJsConPairCon = jsMap.get(
                 JsSubKey.AFTER_JS_CON.key
             )
+//            val bothQuoteChar = QuoteTool.extractBothQuote(varNameToJsConPairCon)
+//            val isFunc = let {
+//                aa
+//                Regex("^[a-zA-Z]+[.][a-zA-Z_][(]").containsMatchIn(
+//                    QuoteTool.trimBothEdgeQuote(varNameToJsConPairCon).trim()
+//                )
+//            }
+
             val varNameJsConPairList = CmdClickMap.createMap(
                 varNameToJsConPairCon,
                 afterJsConSeparator
-            )
+            ).map {
+                val varName = it.first
+                val varValue = it.second.replace(
+                    afterjsConSignalSeparator,
+                    ampersand.toString(),
+                )
+                varName to varValue
+            }
             val afterJsConList = varNameJsConPairList.mapIndexed {
                     index, jsConSrc ->
                 val last2IndexPairList =
@@ -373,6 +399,14 @@ object JsActionKeyManager {
                     last2IndexPairList,
                 )
             }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "afterJscon.txt").absolutePath,
+//                listOf(
+//                    "varNameToJsConPairCon: ${varNameToJsConPairCon}",
+//                    "varNameJsConPairList: ${varNameJsConPairList}",
+//                    "afterJsConList: ${afterJsConList}",
+//                ).joinToString("\n\n\n")
+//            )
             return afterJsConList.joinToString("\n")
         }
 

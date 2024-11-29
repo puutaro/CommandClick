@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter.Companion.makeLinearFrameKeyPairsList
@@ -35,6 +36,7 @@ object EditComponent {
                 const val valueSeparator = '&'
 
                 const val switchOn = "ON"
+                const val switchOff = "OFF"
 
                 object ReplaceHolder {
                         fun replaceHolder(
@@ -122,6 +124,8 @@ object EditComponent {
                         MARGIN_END("marginEnd"),
                         GRAVITI("gravity"),
                         BK_COLOR("bkColor"),
+                        VISIBLE("visible"),
+                        ENABLE("enable"),
                 }
 
                 object GravityManager {
@@ -180,6 +184,7 @@ object EditComponent {
                                 MARGIN_BOTTOM("marginBottom"),
                                 MARGIN_START("marginStart"),
                                 MARGIN_END("marginEnd"),
+                                VISIBLE("visible"),
                         }
                         enum class ImageScale(
                                 val str: String,
@@ -214,6 +219,7 @@ object EditComponent {
                                 MARGIN_START("marginStart"),
                                 MARGIN_END("marginEnd"),
                                 BK_COLOR("bkColor"),
+                                VISIBLE("visible"),
 //                                DISABLE_TEXT_SELECT("disableTextSelect"),
                         }
 
@@ -409,6 +415,7 @@ object EditComponent {
                                 SRC_STR("srcStr"),
                                 SETTING_VALUE("settingValue"),
                                 LENGTH("length"),
+                                ON_UPDATE("onUpdate"),
                         }
 
                         fun createTextMap(
@@ -623,6 +630,26 @@ object EditComponent {
         }
 
         object AdapterSetter {
+
+                fun culcVerticalLinerWeight(
+                        verticalTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>
+                ): Float {
+                        val switchOff = Template.switchOff
+                        val enableListSize = verticalTagToKeyPairsListToVarNameToValueMapList.filter { verticalTagToKeyPairsListToVarNameToValueMap ->
+                                val keyPairsListToVarNameToValueMap =
+                                        verticalTagToKeyPairsListToVarNameToValueMap.second
+                                val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
+                                PairListTool.getValue(
+                                        verticalKeyPairs,
+                                        Template.EditComponentKey.ENABLE.key,
+                                ).let {
+                                        enableStr ->
+                                        enableStr != switchOff
+                                }
+                        }.size
+                        return 1f / enableListSize
+                //verticalTagToKeyPairsListToVarNameToValueMapListSize.toFloat()
+                }
 
                 suspend fun makeVerticalTagAndKeyPairsListToVarNameToValueMap(
                         fragment: Fragment?,
@@ -872,6 +899,14 @@ object EditComponent {
                                         paddingData.paddingBottom,
                                 )
                                 orientation = LinearLayoutCompat.VERTICAL
+                                isVisible = PairListTool.getValue(
+                                        verticalKeyPairs,
+                                        Template.EditComponentKey.VISIBLE.key,
+                                ).let {
+                                                visibleStr ->
+                                        visibleStr != Template.switchOff
+                                }
+
                         }
                 }
 
@@ -968,6 +1003,13 @@ object EditComponent {
                                                 }?.gravity
                                         } ?: Gravity.CENTER
                                         gravity = overrideGravity
+                                        isVisible = PairListTool.getValue(
+                                                verticalKeyPairs,
+                                                Template.EditComponentKey.VISIBLE.key,
+                                        ).let {
+                                                        visibleStr ->
+                                                visibleStr != Template.switchOff
+                                        }
                                 }
                         }
                 }

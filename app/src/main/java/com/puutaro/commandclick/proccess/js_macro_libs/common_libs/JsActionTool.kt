@@ -19,6 +19,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -2204,6 +2205,10 @@ private object VarShortSyntaxToJsFunc {
         var index = 0
         val lastIndex = nextValueOrFuncOrIfConList.lastIndex
         val afterJsConList = mutableListOf<String>()
+        val ampersand =
+            JsActionKeyManager.AfterJsConMaker.ampersand.toString()
+        val afterjsConSignalSeparator =
+            JsActionKeyManager.AfterJsConMaker.afterjsConSignalSeparator
         run loop@ {
             nextValueOrFuncOrIfConList.indices.forEach {
                     _ ->
@@ -2237,7 +2242,10 @@ private object VarShortSyntaxToJsFunc {
                     nextValueOrFuncOrIfConList,
                     index,
                 )
-                val curAfterJsCon = curAfterJsConToIndex.first
+                val curAfterJsCon = curAfterJsConToIndex.first.replace(
+                    ampersand,
+                    afterjsConSignalSeparator
+                )
                 val futureIndex = curAfterJsConToIndex.second
                 index = futureIndex
 //                FileSystems.updateFile(
@@ -2462,6 +2470,13 @@ private object VarShortSyntaxToJsFunc {
                 argsOnlyJsMap,
                 argsSubKeyName
             )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "svarargsStr.txt").absolutePath,
+//            listOf(
+//                "argsOnlyJsMap: ${argsOnlyJsMap}",
+//                "varargsStr: ${varargsStr}"
+//            ).joinToString("\n")
+//        )
         return funcSentenceTemplate.format(varargsStr) to argsIndex + 1
     }
 

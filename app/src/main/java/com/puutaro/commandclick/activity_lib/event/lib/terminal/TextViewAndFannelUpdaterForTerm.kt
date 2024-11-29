@@ -6,6 +6,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
@@ -13,12 +14,14 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 object TextViewAndFannelUpdaterForTerm {
     fun update(
@@ -27,6 +30,7 @@ object TextViewAndFannelUpdaterForTerm {
         srcFragmentStr: String,
         tagNameList: List<String>,
         updateText: String,
+        overrideTextMap: Map<String, String>?,
         textPropertyMap: Map< String, String>?,
         isSave: Boolean,
     ) {
@@ -67,6 +71,7 @@ object TextViewAndFannelUpdaterForTerm {
                     tagNameToFrameLayout ->
                 val tagName = tagNameToFrameLayout.first
                 val frameLayout = tagNameToFrameLayout.second
+                    ?: return@forEach
                 val textView = frameLayout.children.firstOrNull { view ->
                     view is OutlineTextView
                 } as? OutlineTextView
@@ -99,6 +104,7 @@ object TextViewAndFannelUpdaterForTerm {
                     holder.srcImage,
                     editListIndex,
                     updateText,
+                    overrideTextMap,
                     textPropertyMap,
                     textView,
                     isSave,
@@ -149,7 +155,8 @@ object TextViewAndFannelUpdaterForTerm {
         }
         frameLayoutList.forEach {
             frameLayout ->
-            val textView = frameLayout?.children?.firstOrNull { view ->
+            if(frameLayout == null) return@forEach
+            val textView = frameLayout.children.firstOrNull { view ->
                 view is OutlineTextView
             } as? OutlineTextView
             UpdateAndSaveMainFannel.updateAndSave(
@@ -161,6 +168,7 @@ object TextViewAndFannelUpdaterForTerm {
                 String(),
                 noSignIndex,
                 updateText,
+                overrideTextMap,
                 textPropertyMap,
                 textView,
                 isSave,
@@ -178,6 +186,7 @@ object TextViewAndFannelUpdaterForTerm {
             srcImage: String,
             editListIndex: Int,
             updateText: String,
+            overrideTextMap: Map<String, String>?,
             textPropertyMap: Map< String, String>?,
             textView: OutlineTextView?,
             isSave: Boolean,
@@ -216,18 +225,21 @@ object TextViewAndFannelUpdaterForTerm {
 //                listOf(
 //                    "textView: ${textView?.text}",
 //                    "updateText: ${updateText}",
-//                    "updateText: ${text}",
+//                    "text: ${text}",
 //                    "tagName: ${tagName}",
 //                    "keyPairListConMap: ${keyPairListConMap}",
 //                    "linearFrameKeyPairsListCon: ${linearFrameKeyPairsListCon}",
 //                    "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
 //                    "textMap: ${textMap}",
+//                    "textPropertyMap: ${textPropertyMap}",
+//                    "overrideTextMap: ${overrideTextMap}"
 //                ).joinToString("\n\n")
 //            )
             textView?.let {
                 CoroutineScope(Dispatchers.Main).launch {
                     EditFrameMaker.setCaptionByDynamic(
                         it,
+                        overrideTextMap,
                         textPropertyMap,
                         text,
                     )

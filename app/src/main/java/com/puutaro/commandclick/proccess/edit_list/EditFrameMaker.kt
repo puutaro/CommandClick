@@ -19,12 +19,14 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +47,8 @@ object EditFrameMaker {
     private val paddingBottomKey = EditComponent.Template.EditComponentKey.PADDING_BOTTOM.key
     private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
     private val paddingEndKey = EditComponent.Template.EditComponentKey.PADDING_END.key
+    private val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+    private val visibleKey = EditComponent.Template.EditComponentKey.VISIBLE.key
 
     private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
     private val imagePropertyKey = EditComponent.Template.EditComponentKey.IMAGE_PROPERTY.key
@@ -73,7 +77,9 @@ object EditFrameMaker {
     private val imagePaddingStartKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_START.key
     private val imagePaddingEndKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_END.key
     private val imagePaddingBottomKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_BOTTOM.key
+    private val imageVisibleKey = EditComponent.Template.ImagePropertyManager.PropertyKey.VISIBLE.key
 
+    private val onUpdateKey = EditComponent.Template.TextManager.TextKey.ON_UPDATE.key
     private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
     private val textBkColorKey = EditComponent.Template.TextPropertyManager.Property.BK_COLOR.key
     private val textStyleKey = EditComponent.Template.TextPropertyManager.Property.STYLE.key
@@ -83,6 +89,7 @@ object EditFrameMaker {
     private val textWidthKey = EditComponent.Template.TextPropertyManager.Property.WIDTH.key
     private val textHeightKey = EditComponent.Template.TextPropertyManager.Property.HEIGHT.key
     private val textColorKey = EditComponent.Template.TextPropertyManager.Property.COLOR.key
+    private val textVisibleKey = EditComponent.Template.TextPropertyManager.Property.VISIBLE.key
     private val strokeColorKey = EditComponent.Template.TextPropertyManager.Property.STROKE_COLOR.key
     private val strokeWidthKey = EditComponent.Template.TextPropertyManager.Property.STROKE_WIDTH.key
     private val textAlphaKey = EditComponent.Template.TextPropertyManager.Property.ALPHA.key
@@ -98,6 +105,7 @@ object EditFrameMaker {
 //    private val disableTextSelectKey = EditComponent.Template.TextPropertyManager.Property.DISABLE_TEXT_SELECT.key
 
     private val switchOn = EditComponent.Template.switchOn
+    private val switchOff = EditComponent.Template.switchOff
 
     suspend fun make(
         context: Context?,
@@ -114,11 +122,27 @@ object EditFrameMaker {
         if(
             context == null
         ) return null
+        PairListTool.getValue(
+            frameKeyPairList,
+            enableKey,
+        ).let {
+            enableStr ->
+            if(
+                enableStr == switchOff
+            ) return null
+        }
         val inflater = LayoutInflater.from(context)
         val buttonLayout = inflater.inflate(
             R.layout.icon_caption_layout_for_edit_list,
             null
         ) as FrameLayout
+        PairListTool.getValue(
+            frameKeyPairList,
+            visibleKey,
+        ).let {
+                visibleStr ->
+            buttonLayout.isVisible = visibleStr != switchOff
+        }
         val height = withContext(Dispatchers.IO) {
             PairListTool.getValue(
                 frameKeyPairList,
@@ -215,6 +239,12 @@ object EditFrameMaker {
             gravity = Gravity.CENTER
         }
         buttonLayout.apply {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "soverrideTag.txt").absolutePath,
+//                listOf(
+//                    "overrideTag: ${overrideTag}"
+//                ).joinToString("\n")
+//            )
             tag = overrideTag
             setPadding(
                 paddingData.paddingStart,
@@ -465,6 +495,12 @@ object EditFrameMaker {
             tag = imageTag
             alpha = imageAlpha ?: 1f
             scaleType = imageScale.scale
+            imagePropertyMap?.get(
+                imageVisibleKey,
+            ).let {
+                    visibleStr ->
+                isVisible = visibleStr != switchOff
+            }
         }
 
         when(imagePathList.size == 1){
@@ -618,6 +654,12 @@ object EditFrameMaker {
             }
             imageScale?.let {
                 scaleType = it.scale
+            }
+            imagePropertyMap?.get(
+                imageVisibleKey,
+            ).let {
+                    visibleStr ->
+                isVisible = visibleStr != switchOff
             }
         }
 
@@ -1016,6 +1058,12 @@ object EditFrameMaker {
                     }
                 } ?: EditComponent.Template.TextPropertyManager.Font.DEFAULT
                 setTypeface(overrideFont.typeface, overrideTextStyle.style)
+                textPropertyMap?.get(
+                    textVisibleKey,
+                ).let {
+                        visibleStr ->
+                    isVisible = visibleStr != switchOff
+                }
             }
         }
 //        FileSystems.updateFile(
@@ -1032,6 +1080,7 @@ object EditFrameMaker {
 
     suspend fun setCaptionByDynamic(
         captionTextView: OutlineTextView,
+        textMap: Map<String, String>?,
         textPropertyMap: Map<String, String>?,
         overrideText: String?,
     ) {
@@ -1059,8 +1108,13 @@ object EditFrameMaker {
                 }
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue
-                overrideText?.let {
-                    text = it
+                val isUpdate = textMap?.get(
+                    onUpdateKey
+                ) != switchOff
+                if(isUpdate) {
+                    overrideText?.let {
+                        text = it
+                    }
                 }
                 val overrideMaxLines = withContext(Dispatchers.IO){
                     textPropertyMap?.get(
@@ -1181,6 +1235,12 @@ object EditFrameMaker {
                     }
                 } ?: typeface
                 setTypeface(overrideFont, overrideTextStyle)
+                textPropertyMap?.get(
+                    textVisibleKey,
+                ).let {
+                        visibleStr ->
+                    isVisible = visibleStr != switchOff
+                }
             }
         }
 //        FileSystems.updateFile(

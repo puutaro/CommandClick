@@ -57,6 +57,7 @@ object ImageViewAndFannelUpdaterForTerm {
             }
             frameLayoutList.forEach {
                     frameLayout ->
+                if(frameLayout == null) return@forEach
                 val imageView = frameLayout.children.firstOrNull { view ->
                     view is AppCompatImageView
                 } as? AppCompatImageView

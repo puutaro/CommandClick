@@ -66,6 +66,7 @@ class JsEdit(
         srcFragment: String,
         tagNameListCon: String,
         updateText: String,
+        overrideTextMapCon: String,
         textPropertyMapCon: String,
         isSave: Boolean,
     ){
@@ -74,6 +75,10 @@ class JsEdit(
             ?: return
         val context = terminalFragment.context ?: return
         val keySeparator = EditComponent.Template.keySeparator
+        val overrideTextMap = CmdClickMap.createMap(
+            overrideTextMapCon,
+            keySeparator
+        ).toMap()
         val textPropertyMap = CmdClickMap.createMap(
             textPropertyMapCon,
             keySeparator
@@ -84,6 +89,7 @@ class JsEdit(
             srcFragment,
             tagNameListCon.split(tagNameSeparator.toString()),
             updateText,
+            overrideTextMap,
             textPropertyMap,
             isSave,
         )
