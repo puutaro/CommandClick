@@ -1,7 +1,10 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
@@ -16,11 +19,12 @@ object SettingFuncManager {
 
     private const val funcTypeAndMethodSeparatorDot = "."
 
-    fun handle(
-        context: Context?,
+    suspend fun handle(
+        fragment: Fragment,
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
-        busyboxExecutor: BusyboxExecutor?
+        busyboxExecutor: BusyboxExecutor?,
+        editComponentListAdapterArg: EditComponentListAdapter?,
     ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val funcTypeAndMethodList =
             funcTypeDotMethod.split(funcTypeAndMethodSeparatorDot)
@@ -42,6 +46,7 @@ object SettingFuncManager {
                 )
                 return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}")
             }
+        val context = fragment.context
         return when(funcType){
             FuncType.FILE_SYSTEMS ->
                 FileSystemsForSettingHandler.handle(
@@ -88,6 +93,15 @@ object SettingFuncManager {
                     busyboxExecutor
                 )
             }
+            FuncType.EDIT -> {
+                EditForSetting.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    editComponentListAdapterArg,
+                )
+            }
         }
 
     }
@@ -102,6 +116,7 @@ object SettingFuncManager {
         EXIT("exit"),
         LOCAL_DATETIME("localDatetime"),
         SHELL("shell"),
+        EDIT("edit"),
     }
 
 }

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.broadcast.extra.ErrLogExtraForTerm
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -198,6 +199,7 @@ class SettingActionManager {
         busyboxExecutor: BusyboxExecutor?,
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
+        editComponentListAdapterArg: EditComponentListAdapter? = null,
     ): Map<String, String> {
         if(
             fragment == null
@@ -216,6 +218,7 @@ class SettingActionManager {
             busyboxExecutor,
         )
         settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
+            editComponentListAdapterArg,
             keyToSubKeyConList,
             SettingActionExecutor.mapRoopKeyUnit,
             keyToSubKeyConWhere,
@@ -325,12 +328,15 @@ class SettingActionManager {
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
+            editComponentListAdapterArg: EditComponentListAdapter?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
             keyToSubKeyConWhere: String,
             renewalVarName: String?
         ) {
-            val context = fragmentRef.get()?.context
+            val fragment = fragmentRef.get()
+                ?: return
+            val context = fragment.context
                 ?: return
             loopKeyToVarNameValueMap.get(curMapLoopKey)?.clear()
             privateLoopKeyVarNameValueMap.get(curMapLoopKey)?.clear()
@@ -443,6 +449,7 @@ class SettingActionManager {
 //                            ).joinToString("\n") + "\n\n=============\n\n"
 //                        )
                         makeResultLoopKeyToVarNameValueMap(
+                            editComponentListAdapterArg,
                             importedKeyToSubKeyConList,
                             addLoopKey(curMapLoopKey),
                             "${importPath} by imported",
@@ -510,10 +517,11 @@ class SettingActionManager {
                     }
                     SettingActionKeyManager.SettingActionsKey.SETTING_VAR -> {
                         SettingVar().exec(
-                            context,
+                            fragment,
                             curSettingActionKey.key,
                             subKeyCon,
                             busyboxExecutor,
+                            editComponentListAdapterArg,
                             renewalVarName,
                             keyToSubKeyConWhere,
                         )?.let {
@@ -1166,7 +1174,9 @@ class SettingActionManager {
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
                     ),
                     valueSeparator
-                )
+                ).filter {
+                    it.first.isNotEmpty()
+                }
                 val isImportToErrType = when(judgeTargetStr.isEmpty()) {
                     true -> true to null
                     else -> SettingIfManager.handle(
@@ -1335,14 +1345,16 @@ class SettingActionManager {
             private var isNext = true
             private val valueSeparator = SettingActionKeyManager.valueSeparator
 
-            fun exec(
-                context: Context?,
+            suspend fun exec(
+                fragment: Fragment,
                 settingVarKey: String,
                 subKeyCon: String,
                 busyboxExecutor: BusyboxExecutor?,
+                editComponentListAdapterArg: EditComponentListAdapter?,
                 renewalVarName: String?,
                 keyToSubKeyConWhere: String,
             ): Pair<String, String>? {
+                val context = fragment.context
                 val mainSubKeyPairList = makeMainSubKeyPairList(
                     settingVarKey,
                     subKeyCon,
@@ -1393,12 +1405,15 @@ class SettingActionManager {
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
                                 ),
                                 valueSeparator
-                            )
+                            ).filter {
+                                it.first.isNotEmpty()
+                            }
                             val resultStrToCheckErr = SettingFuncManager.handle(
-                                context,
+                                fragment,
                                 funcTypeDotMethod,
                                 argsPairList,
-                                busyboxExecutor
+                                busyboxExecutor,
+                                editComponentListAdapterArg,
                             )
                             val checkErr = resultStrToCheckErr.second
                             if(checkErr != null){
@@ -1439,7 +1454,9 @@ class SettingActionManager {
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
                                 ),
                                 valueSeparator
-                            )
+                            ).filter {
+                                it.first.isNotEmpty()
+                            }
                             val isImportToErrType = SettingIfManager.handle(
                                 judgeTargetStr,
                                 argsPairList

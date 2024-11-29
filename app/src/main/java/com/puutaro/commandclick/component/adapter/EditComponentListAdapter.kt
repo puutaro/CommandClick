@@ -321,6 +321,7 @@ class EditComponentListAdapter(
                         busyboxExecutor,
                         frameKeyPairsConSrc,
                         "frameTag: ${frameTag}, mapListElInfo: ${mapListElInfo}, ${plusKeyToSubKeyConWhere}",
+                        editComponentListAdapterArg = this@EditComponentListAdapter
                     )
                     CmdClickMap.replace(
                         frameKeyPairsConSrc,
@@ -561,6 +562,7 @@ class EditComponentListAdapter(
                                         verticalVarNameToValueMap
                                     ),
                                     "linearFrameTag: ${linearFrameTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}: ${plusKeyToSubKeyConWhere}",
+                                    editComponentListAdapterArg = this@EditComponentListAdapter
                                 )
                                 CmdClickMap.replace(
                                     linearFrameKeyPairsListConSrc,

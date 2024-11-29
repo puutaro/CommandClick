@@ -471,6 +471,8 @@ object WithEditComponentListView{
     ) {
         val context = fragment.context
             ?: return
+        val editComponentListAdapter =
+            editListRecyclerView.adapter as? EditComponentListAdapter
         val plusKeyToSubKeyConWhere =
             fannelInfoMap.map {
                 val key = SnakeCamelTool.snakeToCamel(it.key)
@@ -626,6 +628,7 @@ object WithEditComponentListView{
                                             verticalVarNameValueMap,
                                         ),
                                         "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
+                                        editComponentListAdapterArg = editComponentListAdapter
                                     )
                                     CmdClickMap.replace(
                                         linearFrameKeyPairsListConSrc,
@@ -653,8 +656,6 @@ object WithEditComponentListView{
                                 )
                                 return@setFrame
                             }
-                            val editComponentListAdapter =
-                                editListRecyclerView.adapter as? EditComponentListAdapter
                             editComponentListAdapter?.footerKeyPairListConMap?.put(
                                 linearFrameTag,
                                 linearFrameKeyPairsListCon

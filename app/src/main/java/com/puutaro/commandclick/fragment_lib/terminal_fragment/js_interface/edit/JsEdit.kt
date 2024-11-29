@@ -5,6 +5,7 @@ import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
+import com.puutaro.commandclick.proccess.edit.func.EditComponentFunc
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -127,6 +128,12 @@ class JsEdit(
     ): String {
         val terminalFragment = terminalFragmentRef.get()
             ?: return String()
+        EditComponentFunc.getSettingValue(
+            terminalFragment,
+            targetVariableName,
+            srcFragment,
+            null,
+        )
         val context = terminalFragment.context
         val editListRecyclerView = EditListRecyclerViewGetter.get(
             terminalFragment,
@@ -140,31 +147,6 @@ class JsEdit(
         )?.let {
             QuoteTool.trimBothEdgeQuote(it)
         } ?: String()
-
-//        val fannelInfoMap =
-//            terminalFragment.fannelInfoMap
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//            fannelInfoMap
-//        )
-//
-//        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-//            fannelInfoMap
-//        )
-//        val fannelState = FannelInfoTool.getCurrentStateName(
-//            fannelInfoMap
-//        )
-//        val activity = terminalFragment.activity
-//        val editFragment = TargetFragmentInstance.getCurrentEditFragmentFromFragment(
-//            activity,
-////            currentAppDirPath,
-//            currentFannelName,
-//            fannelState
-//        ) ?: return String()
-//        val targetEditTextCon = EditVariableName.getText(
-//            editFragment,
-//            targetVariableName
-//        )
-//        return targetEditTextCon
     }
 
 //    @JavascriptInterface
