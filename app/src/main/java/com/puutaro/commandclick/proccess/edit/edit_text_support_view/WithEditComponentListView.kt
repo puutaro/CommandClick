@@ -186,8 +186,9 @@ object WithEditComponentListView{
         }?.toMap()
 
         CoroutineScope(Dispatchers.Main).launch{
+            val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
             val titleSettingPath = editListConfigMap?.get(
-                EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
+                titleLayoutPathKey
             ) ?: String()
             val titleSettingMap = withContext(Dispatchers.IO){
                 ListSettingVariableListMaker.makeFromSettingPath(
@@ -195,7 +196,28 @@ object WithEditComponentListView{
                     titleSettingPath,
                     fannelInfoMap,
                     setReplaceVariableMap,
-                )
+                ).map {
+                    titleSettingMapSrc ->
+                    val titleSectionKey = titleSettingMapSrc.key
+                    val keyToSubKeyConSrc = titleSettingMapSrc.value
+                    val keyToSubKeyConWhere =
+                        "${titleLayoutPathKey} in ${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
+                            val key = SnakeCamelTool.snakeToCamel(it.key)
+                            "${key}: ${it.value}"
+                        }.joinToString(", ")}"
+                    val titleVarNameToValueMap = SettingActionManager().exec(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
+                        keyToSubKeyConSrc,
+                        keyToSubKeyConWhere
+                    )
+                    titleSectionKey to CmdClickMap.replace(
+                        keyToSubKeyConSrc,
+                        titleVarNameToValueMap
+                    )
+                }.toMap()
             }
             TitleImageAndViewSetter.set(
                 fragment,

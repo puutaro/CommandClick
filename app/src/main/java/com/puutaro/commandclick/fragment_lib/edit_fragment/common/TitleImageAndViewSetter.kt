@@ -218,65 +218,6 @@ object TitleImageAndViewSetter {
         }
     }
 
-    private fun makeFirstTitleGradColorStrList(
-        mustColor: String,
-    ): List<String> {
-//        val whiteColorStr = "#ffffff"
-        val colorList = listOf(
-            CmdClickColorStr.LIGHT_GREEN.str,
-//            CmdClickColorStr.THICK_AO.str,
-            CmdClickColorStr.BLUE.str,
-            CmdClickColorStr.SKERLET.str,
-            CmdClickColorStr.YELLOW.str,
-            CmdClickColorStr.WHITE_GREEN.str,
-            CmdClickColorStr.GREEN.str,
-            CmdClickColorStr.YELLOW_GREEN.str,
-            CmdClickColorStr.BLACK_AO.str,
-            CmdClickColorStr.WATER_BLUE.str,
-            CmdClickColorStr.PURPLE.str,
-            CmdClickColorStr.ORANGE.str,
-            CmdClickColorStr.BROWN.str,
-        )
-        val color1 = colorList.random()
-        val alreadyColorList: MutableList<String> = mutableListOf()
-        alreadyColorList.add(color1)
-        val color2 = let {
-//            if(
-//                !isWhiteBackground
-//            ) return@let whiteColorStr
-            colorList.filter{
-                it != color1
-            }.random()
-        }
-        alreadyColorList.add(color2)
-        val color3 = let {
-            colorList.filter {
-                !alreadyColorList.contains(it)
-            }.random()
-        }
-//        val aoColorStr = "#007F89"
-        val useTitleColorListSrc = listOf(
-            color1,
-            color2,
-            color3,
-        )
-        val useTitleColorList = useTitleColorListSrc.contains(mustColor).let {
-                isUseAo ->
-            if(
-                isUseAo
-            ) return@let useTitleColorListSrc
-            val plusAoList =
-                useTitleColorListSrc.shuffled().take(2) + listOf(mustColor)
-            plusAoList.shuffled()
-        }
-        return listOf(
-            useTitleColorList.get(0),
-            useTitleColorList.get(1),
-//            whiteColorStr,
-            useTitleColorList.get(2),
-        ) // Define your gradient colors
-    }
-
     private fun convertWhiteColor(
     ): String {
         val pink = "#faf0f9"

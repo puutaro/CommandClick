@@ -28,7 +28,7 @@ object SettingIfManager {
                 judgeBaseRegexStr
                     .replace("<", "＜")
                     .replace(">", "＞")
-                    .replace("%", "％")
+                    .replace("%", "％    ")
             )
             return null to IfCheckErr("Failure to compile 'if' method args regex: ${spanJudgeBaseRegexStr}")
         }
