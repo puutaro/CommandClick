@@ -551,14 +551,13 @@ class EditComponentListAdapter(
                     }
                     val layoutWeight = weightSumFloat / linearKeyValueSize
                     var horizonVarNameToValueMap = verticalVarNameToValueMap
-//                    var horizontalSettingActionExecCount = 0
-                    linearFrameTagToKeyPairsList.forEach setFrame@ { linearFrameTagToLinearFrameKeyPairs ->
+                    linearFrameTagToKeyPairsList.forEachIndexed setFrame@ { index, linearFrameTagToLinearFrameKeyPairs ->
                         val linearFrameTagSrc = linearFrameTagToLinearFrameKeyPairs.first
                         val linearFrameKeyPairsListConSrc = linearFrameTagToLinearFrameKeyPairs.second
-                        withContext(Dispatchers.IO) updateLinarKeyParsListCon@ {
+                        val varNameToValueMap = withContext(Dispatchers.IO) updateLinarKeyParsListCon@ {
                             if (
                                 linearFrameKeyPairsListConSrc.isNullOrEmpty()
-                            ) return@updateLinarKeyParsListCon
+                            ) return@updateLinarKeyParsListCon emptyMap()
                             val settingActionManager = SettingActionManager()
                             val mapListElInfo = listOf(
                                     "srcTitle: ${holder.srcTitle}",
@@ -580,8 +579,8 @@ class EditComponentListAdapter(
                             ).let updateVarNameToValueMap@ {
                                 if(
                                     it.isEmpty()
-                                ) return@updateVarNameToValueMap
-                                horizonVarNameToValueMap += it
+                                ) return@updateVarNameToValueMap emptyMap()
+                                it
                             }
 //                            horizontalSettingActionExecCount++
 //                                FileSystems.updateFile(
@@ -596,14 +595,24 @@ class EditComponentListAdapter(
 //                                    ).joinToString("\n")
 //                                )
                         }
+                        when(index == 0){
+                            true -> {
+                                horizonVarNameToValueMap += varNameToValueMap
+                            }
+                            else -> {}
+                        }
+                        val frameVarNameToValueMap = when(index == 0) {
+                            true -> horizonVarNameToValueMap
+                            else -> horizonVarNameToValueMap + varNameToValueMap
+                        }
                         val linearFrameTag = CmdClickMap.replace(
                             linearFrameTagSrc,
-                            horizonVarNameToValueMap
+                            frameVarNameToValueMap
                         )
                         val linearFrameKeyPairsListCon = linearFrameKeyPairsListConSrc?.let {
                             CmdClickMap.replace(
                                 it,
-                                horizonVarNameToValueMap
+                                frameVarNameToValueMap
                             )
                         }
                         val linearFrameKeyPairsList = withContext(Dispatchers.IO) {

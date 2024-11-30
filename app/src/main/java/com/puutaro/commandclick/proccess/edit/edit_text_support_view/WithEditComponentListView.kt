@@ -650,9 +650,10 @@ object WithEditComponentListView{
                                 }
                             }
                         }
-                        linearKeyValues.forEach setFrame@{
-                            linearFrameKeyPairsListConSrc ->
-                            val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
+                        var horizonVarNameToValueMap = verticalVarNameValueMap
+                        linearKeyValues.forEachIndexed setFrame@{
+                            index, linearFrameKeyPairsListConSrc ->
+                            val varNameToValueMap = withContext(Dispatchers.IO) {
                                 EditComponent.Template.ReplaceHolder.replaceHolder(
                                     linearFrameKeyPairsListConSrc,
                                     frameTag,
@@ -663,13 +664,13 @@ object WithEditComponentListView{
                                         linearFrameKeyPairsListConSrc ->
                                     if(
                                         linearFrameKeyPairsListConSrc.isNullOrEmpty()
-                                    ) return@let String()
+                                    ) return@let emptyMap()
                                     val settingActionManager = SettingActionManager()
                                     val debugWhere = when(isEditToolbar){
                                         true -> "toolBar"
                                         else -> "footer"
                                     }
-                                    val varNameToValueMap = settingActionManager.exec(
+                                    settingActionManager.exec(
                                         fragment,
                                         fannelInfoMap,
                                         setReplaceVariableMap,
@@ -680,13 +681,28 @@ object WithEditComponentListView{
                                         ),
                                         "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                                         editComponentListAdapterArg = editComponentListAdapter
-                                    )
-                                    CmdClickMap.replace(
-                                        linearFrameKeyPairsListConSrc,
-                                        varNameToValueMap
-                                    )
+                                    ).let updateVarNameToValueMap@ {
+                                        if(
+                                            it.isEmpty()
+                                        ) return@updateVarNameToValueMap emptyMap()
+                                        it
+                                    }
                                 }
                             }
+                            when(index == 0){
+                                true -> {
+                                    horizonVarNameToValueMap += varNameToValueMap
+                                }
+                                else -> {}
+                            }
+                            val frameVarNameToValueMap = when(index == 0) {
+                                true -> horizonVarNameToValueMap
+                                else -> horizonVarNameToValueMap + varNameToValueMap
+                            }
+                            val linearFrameKeyPairsListCon = CmdClickMap.replace(
+                                linearFrameKeyPairsListConSrc,
+                                frameVarNameToValueMap
+                            )
                             val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
                                 CmdClickMap.createMap(
                                     linearFrameKeyPairsListCon,
@@ -697,7 +713,12 @@ object WithEditComponentListView{
                                 PairListTool.getValue(
                                     linearFrameKeyPairsList,
                                     tagKey,
-                                ) ?: String()
+                                )?.let {
+                                    CmdClickMap.replace(
+                                        it,
+                                        frameVarNameToValueMap
+                                    )
+                                } ?: String()
                             }
                             if (linearFrameTag.startsWith(linearSettingTagMacroStr)) {
                                 PairListTool.getValue(
