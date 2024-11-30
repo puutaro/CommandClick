@@ -2206,9 +2206,11 @@ private object VarShortSyntaxToJsFunc {
         val lastIndex = nextValueOrFuncOrIfConList.lastIndex
         val afterJsConList = mutableListOf<String>()
         val ampersand =
-            JsActionKeyManager.AfterJsConMaker.ampersand.toString()
+            JsActionKeyManager.AfterJsConMaker.ampersand
         val afterjsConSignalSeparator =
             JsActionKeyManager.AfterJsConMaker.afterjsConSignalSeparator
+        val afterJsConInterSignalSeparator =
+            JsActionKeyManager.AfterJsConMaker.afterjsConInterSignalSeparator
         run loop@ {
             nextValueOrFuncOrIfConList.indices.forEach {
                     _ ->
@@ -2242,16 +2244,52 @@ private object VarShortSyntaxToJsFunc {
                     nextValueOrFuncOrIfConList,
                     index,
                 )
-                val curAfterJsCon = curAfterJsConToIndex.first.replace(
-                    ampersand,
-                    afterjsConSignalSeparator
-                )
+                val curAfterJsCon =curAfterJsConToIndex.first.let {
+                    curAfterJsConSrc ->
+                    val varNameAndJsCon = curAfterJsConSrc.split("=")
+                    val innerVarName = varNameAndJsCon.getOrNull(0) ?: String()
+                    if(innerVarName != ifSubKeyName) return@let curAfterJsConSrc.replace(
+                        ampersand.toString(),
+                        afterjsConSignalSeparator
+                    )
+                    val ifAndJsCon = QuoteTool.splitBySurroundedIgnore(
+                        curAfterJsConSrc,
+                        ampersand
+                    )
+                    val ifCon = ifAndJsCon.firstOrNull()?.replace(
+                        ampersand.toString(),
+                        afterjsConSignalSeparator
+                    )
+                    val jsCon = ifAndJsCon.filterIndexed { index, _ ->
+                        index > 0
+                    }.joinToString(ampersand.toString()).replace(
+                        ampersand.toString(),
+                        afterjsConSignalSeparator
+                    )
+                    val updateAfterJsCon = "${ifCon}${ampersand}${jsCon}"
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "jsAcVar_in.txt").absolutePath,
+//                        listOf(
+//                            "index: $index",
+//                            "varNameAndJsCon: ${varNameAndJsCon}",
+//                            "innerVarName: ${innerVarName}",
+//                            "ifAndJsCon: ${ifAndJsCon}",
+//                            "ifCon: ${ifCon}",
+//                            "jsCon: ${jsCon}",
+//                            "afterJsCon: ${updateAfterJsCon}"
+//                        ).joinToString("\n\n") + "\n------\n\n"
+//                    )
+                    updateAfterJsCon
+                }
                 val futureIndex = curAfterJsConToIndex.second
                 index = futureIndex
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "jsAcVar.txt").absolutePath,
 //                    listOf(
 //                        "index: $index",
+//                        "useKeyForAfterJsConForVar: ${useKeyForAfterJsConForVar}",
+//                        "keyToCon: ${keyToCon}",
+//                        "varName: ${varName}",
 //                        "curAfterJsCon: $curAfterJsCon",
 //                        "afterJsConList: ${afterJsConList}"
 //                    ).joinToString("\n\n") + "\n------\n\n"

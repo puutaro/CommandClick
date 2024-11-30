@@ -166,7 +166,7 @@ class EditComponentListAdapter(
     )
 //        .let {
 //        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "eframeMapListToLinearMapList.txt").absolutePath,
+//            File(UsePath.cmdclickDefaultAppDirPath, "seframeMapListToLinearMapList.txt").absolutePath,
 //            listOf(
 //                "lineMapList: ${lineMapList}",
 //                "eframeMapListToLinearMapList: ${it}",
@@ -550,37 +550,61 @@ class EditComponentListAdapter(
                         }.size
                     }
                     val layoutWeight = weightSumFloat / linearKeyValueSize
+                    var horizonVarNameToValueMap = verticalVarNameToValueMap
+//                    var horizontalSettingActionExecCount = 0
                     linearFrameTagToKeyPairsList.forEach setFrame@ { linearFrameTagToLinearFrameKeyPairs ->
-                        val linearFrameTag = linearFrameTagToLinearFrameKeyPairs.first
-                        val linearFrameKeyPairsListCon = withContext(Dispatchers.IO) {
-                            linearFrameTagToLinearFrameKeyPairs.second.let { linearFrameKeyPairsListConSrc ->
-                                if (
-                                    linearFrameKeyPairsListConSrc.isNullOrEmpty()
-                                ) return@let String()
-                                val settingActionManager = SettingActionManager()
-                                val mapListElInfo = listOf(
-                                        "srcTitle: ${holder.srcTitle}",
-                                        "srcCon: ${holder.srcCon}",
-                                        "srcImage: ${holder.srcImage}",
-                                        "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
-                                    ).joinToString(" ")
-                                val varNameToValueMap = settingActionManager.exec(
-                                        fragment,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        CmdClickMap.replace(
-                                            linearFrameKeyPairsListConSrc,
-                                            verticalVarNameToValueMap
-                                        ),
-                                        "linearFrameTag: ${linearFrameTag}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}: ${plusKeyToSubKeyConWhere}",
-                                        editComponentListAdapterArg = this@EditComponentListAdapter
-                                    )
+                        val linearFrameTagSrc = linearFrameTagToLinearFrameKeyPairs.first
+                        val linearFrameKeyPairsListConSrc = linearFrameTagToLinearFrameKeyPairs.second
+                        withContext(Dispatchers.IO) updateLinarKeyParsListCon@ {
+                            if (
+                                linearFrameKeyPairsListConSrc.isNullOrEmpty()
+                            ) return@updateLinarKeyParsListCon
+                            val settingActionManager = SettingActionManager()
+                            val mapListElInfo = listOf(
+                                    "srcTitle: ${holder.srcTitle}",
+                                    "srcCon: ${holder.srcCon}",
+                                    "srcImage: ${holder.srcImage}",
+                                    "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
+                                ).joinToString(" ")
+                            settingActionManager.exec(
+                                fragment,
+                                fannelInfoMap,
+                                setReplaceVariableMap,
+                                busyboxExecutor,
                                 CmdClickMap.replace(
                                     linearFrameKeyPairsListConSrc,
-                                    varNameToValueMap
-                                )
+                                    verticalVarNameToValueMap
+                                ),
+                                "linearFrameTag: ${linearFrameTagSrc}, frameTag: ${frameTag}, mapListInfo: ${mapListElInfo}: ${plusKeyToSubKeyConWhere}",
+                                editComponentListAdapterArg = this@EditComponentListAdapter
+                            ).let updateVarNameToValueMap@ {
+                                if(
+                                    it.isEmpty()
+                                ) return@updateVarNameToValueMap
+                                horizonVarNameToValueMap += it
                             }
+//                            horizontalSettingActionExecCount++
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "sGet_in.txt").absolutePath,
+//                                    listOf(
+//                                        "linearFrameKeyPairsListConSrc: ${linearFrameKeyPairsListConSrc}",
+//                                        "horizonVarNameToValueMap: ${horizonVarNameToValueMap}",
+//                                        "linearFrameKeyPairsListCon: ${CmdClickMap.replace(
+//                                            linearFrameKeyPairsListConSrc,
+//                                            horizonVarNameToValueMap
+//                                        )}",
+//                                    ).joinToString("\n")
+//                                )
+                        }
+                        val linearFrameTag = CmdClickMap.replace(
+                            linearFrameTagSrc,
+                            horizonVarNameToValueMap
+                        )
+                        val linearFrameKeyPairsListCon = linearFrameKeyPairsListConSrc?.let {
+                            CmdClickMap.replace(
+                                it,
+                                horizonVarNameToValueMap
+                            )
                         }
                         val linearFrameKeyPairsList = withContext(Dispatchers.IO) {
                             makeLinearFrameKeyPairsList(
@@ -596,15 +620,15 @@ class EditComponentListAdapter(
                                 enableKey,
                             ).let {
                                     enableStr ->
-                                FileSystems.updateFile(
-                                    File(UsePath.cmdclickDefaultAppDirPath, "sEnable.txt").absolutePath,
-                                    listOf(
-                                        "linearFrameTag: ${linearFrameTag}",
-                                        "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
-                                        "enableStr: ${enableStr}",
-                                        "bool: ${enableStr != switchOff}",
-                                    ).joinToString("\n\n")
-                                )
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "sEnable.txt").absolutePath,
+//                                    listOf(
+//                                        "linearFrameTag: ${linearFrameTag}",
+//                                        "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+//                                        "enableStr: ${enableStr}",
+//                                        "bool: ${enableStr != switchOff}",
+//                                    ).joinToString("\n\n")
+//                                )
                                 if(enableStr != switchOff) return@let
                                 return@setHorizon
                             }
@@ -617,6 +641,12 @@ class EditComponentListAdapter(
                             }
                             return@setFrame
                         }
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "sGet.txt").absolutePath,
+//                            listOf(
+//                                "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+//                            ).joinToString("\n")
+//                        )
                         val linearFrameLayout = withContext(Dispatchers.Main) {
                             EditFrameMaker.make(
                                 context,

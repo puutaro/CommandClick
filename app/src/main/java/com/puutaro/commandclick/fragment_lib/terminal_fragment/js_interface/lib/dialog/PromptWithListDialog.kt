@@ -54,6 +54,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.FannelIcons
@@ -353,6 +354,12 @@ class PromptWithListDialog(
         promptConfigMapConSrc: String,
     ): String {
         val fannelFile = File(fannelPath)
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "sList.txt").absolutePath,
+            listOf(
+                "fannelFile: ${fannelFile.absolutePath}"
+            ).joinToString("\n")
+        )
         if(
             !fannelFile.isFile
         ) {

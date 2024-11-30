@@ -203,6 +203,7 @@ class SettingActionManager {
     ): Map<String, String> {
         if(
             fragment == null
+            || keyToSubKeyCon.isNullOrEmpty()
         ) return emptyMap()
         val keyToSubKeyConList = makeSettingActionKeyToSubKeyList(
             fragment,
@@ -211,6 +212,9 @@ class SettingActionManager {
             setReplaceVariableMapSrc,
             null,
         )
+        if(
+            keyToSubKeyConList.isNullOrEmpty()
+        ) return emptyMap()
         val settingActionExecutor = SettingActionExecutor(
             WeakReference(fragment),
             fannelInfoMap,

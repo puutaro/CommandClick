@@ -3,13 +3,13 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 import android.content.Context
 import android.graphics.Typeface
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter.Companion.makeLinearFrameKeyPairsList
@@ -273,8 +273,8 @@ object EditComponent {
 
                 private fun convertStrToInt(
                         context: Context?,
-                        numStr: String?
-                ): Int {
+                        numStr: String?,
+                ): Int? {
                         return numStr?.let {
                                 try {
                                         ScreenSizeCalculator.toDp(
@@ -284,7 +284,7 @@ object EditComponent {
                                 } catch(e: Exception){
                                         null
                                 }
-                        } ?: 0
+                        }
                 }
                 object TagManager {
                         enum class TagMacro {
@@ -580,6 +580,25 @@ object EditComponent {
                                 )
                         }
                 }
+
+                object VisibleManager {
+                        private enum class VisibleType(
+                                val str: String,
+                                val visible: Int,
+                        ){
+                                GONE("gone", View.GONE),
+                                INVISIBLE("invisible", View.INVISIBLE),
+                                VISIBLE("visible", View.VISIBLE),
+                        }
+
+                        fun getVisible(visibleStr: String?): Int {
+                                return VisibleType.entries.firstOrNull {
+                                        it.str == visibleStr
+                                }?.visible ?: VisibleType.VISIBLE.visible
+
+                        }
+
+                }
         }
 
 
@@ -866,10 +885,10 @@ object EditComponent {
                                                         Template.EditComponentKey.MARGIN_END.key,
                                                 ),
                                         )
-                                        topMargin = marginData.marginTop
-                                        bottomMargin = marginData.marginBottom
-                                        marginStart = marginData.marginStart
-                                        marginEnd = marginData.marginBottom
+                                        topMargin = marginData.marginTop ?: 0
+                                        bottomMargin = marginData.marginBottom ?: 0
+                                        marginStart = marginData.marginStart ?: 0
+                                        marginEnd = marginData.marginBottom ?: 0
 //                            setMargins(ScreenSizeCalculator.toDp(context,10))
                                 }
                                 layoutParams = verticalLinearParam
@@ -893,18 +912,18 @@ object EditComponent {
                                         ),
                                 )
                                 setPadding(
-                                        paddingData.paddingStart,
-                                        paddingData.paddingTop,
-                                        paddingData.paddingEnd,
-                                        paddingData.paddingBottom,
+                                        paddingData.paddingStart ?: 0,
+                                        paddingData.paddingTop ?: 0,
+                                        paddingData.paddingEnd ?: 0,
+                                        paddingData.paddingBottom ?: 0,
                                 )
                                 orientation = LinearLayoutCompat.VERTICAL
-                                isVisible = PairListTool.getValue(
+                                visibility = PairListTool.getValue(
                                         verticalKeyPairs,
                                         Template.EditComponentKey.VISIBLE.key,
                                 ).let {
                                                 visibleStr ->
-                                        visibleStr != Template.switchOff
+                                        Template.VisibleManager.getVisible(visibleStr)
                                 }
 
                         }
@@ -946,10 +965,10 @@ object EditComponent {
                                                                 Template.EditComponentKey.MARGIN_END.key,
                                                         ),
                                                 )
-                                                topMargin = marginData.marginTop
-                                                bottomMargin = marginData.marginBottom
-                                                marginStart = marginData.marginStart
-                                                marginEnd = marginData.marginBottom
+                                                topMargin = marginData.marginTop  ?: 0
+                                                bottomMargin = marginData.marginBottom ?: 0
+                                                marginStart = marginData.marginStart ?: 0
+                                                marginEnd = marginData.marginBottom ?: 0
                                                 val bkColor = withContext(Dispatchers.IO) {
                                                         PairListTool.getValue(
                                                                 linearFrameKeyPairsList,
@@ -988,10 +1007,10 @@ object EditComponent {
                                                 ),
                                         )
                                         setPadding(
-                                                paddingData.paddingStart,
-                                                paddingData.paddingTop,
-                                                paddingData.paddingEnd,
-                                                paddingData.paddingBottom,
+                                                paddingData.paddingStart ?: 0,
+                                                paddingData.paddingTop ?: 0,
+                                                paddingData.paddingEnd ?: 0,
+                                                paddingData.paddingBottom ?: 0,
                                         )
                                         val overrideGravity = PairListTool.getValue(
                                                 linearFrameKeyPairsList,
@@ -1003,12 +1022,12 @@ object EditComponent {
                                                 }?.gravity
                                         } ?: Gravity.CENTER
                                         gravity = overrideGravity
-                                        isVisible = PairListTool.getValue(
+                                        visibility = PairListTool.getValue(
                                                 linearFrameKeyPairsList,
                                                 Template.EditComponentKey.VISIBLE.key,
                                         ).let {
                                                         visibleStr ->
-                                                visibleStr != Template.switchOff
+                                                Template.VisibleManager.getVisible(visibleStr)
                                         }
                                 }
                         }

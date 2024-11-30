@@ -116,17 +116,103 @@ object EditFrameMaker {
         width: Int,
         firstWeight: Float?,
         overrideTag: String?,
-//        isMarginZero: Boolean,
         totalSettingValMap: Map<String, String>?
     ): FrameLayout? {
         if(
             context == null
         ) return null
+        val buttonLayout = makeButtonFrameLayout(
+            context,
+            frameKeyPairList,
+            width,
+            firstWeight,
+            overrideTag,
+        ) ?: return null
+
+        buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)?.let {
+                imageButtonView ->
+            val imageMap = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    imageKey,
+                )?.let {
+                    EditComponent.Template.makeKeyMap(
+                        it,
+                    )
+                }
+            }
+            val imagePropertyMap = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    imagePropertyKey,
+                )?.let {
+                    EditComponent.Template.makeKeyMap(
+                        it,
+                    )
+                }
+            }
+            setImageView(
+                imageButtonView,
+                imageMap,
+                imagePropertyMap,
+            )
+        }
+        buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)?.let {
+                captionTextView ->
+            val textMap = withContext(Dispatchers.IO) {
+                PairListTool.getPair(
+                    frameKeyPairList,
+                    textKey,
+                )?.let {
+                    EditComponent.Template.TextManager.createTextMap(
+                        it.second,
+                        totalSettingValMap?.get(
+                            overrideTag
+                        )
+                    )
+                }
+            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "sGet_frameMaker.txt").absolutePath,
+//                listOf(
+//                    "totalSettingValMap: ${totalSettingValMap}",
+//                    "textMap: ${textMap}",
+//                ).joinToString("\n")
+//            )
+            val textPropertyMap = withContext(Dispatchers.IO) {
+                PairListTool.getPair(
+                    frameKeyPairList,
+                    textPropertyKey,
+                )?.let {
+                    EditComponent.Template.makeKeyMap(
+                        it.second,
+                    )
+                }
+            }
+            setCaption(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                captionTextView,
+                textMap,
+                textPropertyMap,
+            )
+        }
+        return buttonLayout
+    }
+
+    private suspend fun makeButtonFrameLayout(
+        context: Context?,
+        frameKeyPairList: List<Pair<String, String>>?,
+        width: Int,
+        firstWeight: Float?,
+        overrideTag: String?,
+    ):  FrameLayout? {
         PairListTool.getValue(
             frameKeyPairList,
             enableKey,
         ).let {
-            enableStr ->
+                enableStr ->
             if(
                 enableStr == switchOff
             ) return null
@@ -141,7 +227,11 @@ object EditFrameMaker {
             visibleKey,
         ).let {
                 visibleStr ->
-            buttonLayout.isVisible = visibleStr != switchOff
+            withContext(Dispatchers.Main) {
+                buttonLayout.visibility = EditComponent.Template.VisibleManager.getVisible(
+                    visibleStr
+                )
+            }
         }
         val height = withContext(Dispatchers.IO) {
             PairListTool.getValue(
@@ -232,10 +322,10 @@ object EditFrameMaker {
         )
         param.apply {
             weight = overrideWeight
-            topMargin = marginData.marginTop
-            marginStart = marginData.marginStart
-            marginEnd = marginData.marginEnd
-            bottomMargin = marginData.marginBottom
+            topMargin = marginData.marginTop ?: 0
+            marginStart = marginData.marginStart ?: 0
+            marginEnd = marginData.marginEnd ?: 0
+            bottomMargin = marginData.marginBottom ?: 0
             gravity = Gravity.CENTER
         }
         buttonLayout.apply {
@@ -247,78 +337,133 @@ object EditFrameMaker {
 //            )
             tag = overrideTag
             setPadding(
-                paddingData.paddingStart,
-                paddingData.paddingTop,
-                paddingData.paddingEnd,
-                paddingData.paddingBottom,
+                paddingData.paddingStart ?: 0,
+                paddingData.paddingTop ?: 0,
+                paddingData.paddingEnd ?: 0,
+                paddingData.paddingBottom ?: 0,
             )
             layoutParams = param
             foregroundGravity = Gravity.CENTER
         }
-
-        buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)?.let {
-                imageButtonView ->
-            val imageMap = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    imageKey,
-                )?.let {
-                    EditComponent.Template.makeKeyMap(
-                        it,
-                    )
-                }
-            }
-            val imagePropertyMap = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    imagePropertyKey,
-                )?.let {
-                    EditComponent.Template.makeKeyMap(
-                        it,
-                    )
-                }
-            }
-            setImageView(
-                imageButtonView,
-                imageMap,
-                imagePropertyMap,
-            )
-        }
-        buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)?.let {
-                captionTextView ->
-            val textMap = withContext(Dispatchers.IO) {
-                PairListTool.getPair(
-                    frameKeyPairList,
-                    textKey,
-                )?.let {
-                    EditComponent.Template.TextManager.createTextMap(
-                        it.second,
-                        totalSettingValMap?.get(
-                            overrideTag
-                        )
-                    )
-                }
-            }
-            val textPropertyMap = withContext(Dispatchers.IO) {
-                PairListTool.getPair(
-                    frameKeyPairList,
-                    textPropertyKey,
-                )?.let {
-                    EditComponent.Template.makeKeyMap(
-                        it.second,
-                    )
-                }
-            }
-            setCaption(
-                fannelInfoMap,
-                setReplaceVariableMap,
-                busyboxExecutor,
-                captionTextView,
-                textMap,
-                textPropertyMap,
-            )
-        }
         return buttonLayout
+    }
+
+    suspend fun setButtonFrameLayoutByDynamic(
+        context: Context?,
+        buttonFrameLayout: FrameLayout?,
+        frameKeyPairList: List<Pair<String, String>>?,
+    ) {
+        if(
+            buttonFrameLayout == null
+        ) return
+        PairListTool.getValue(
+            frameKeyPairList,
+            visibleKey,
+        )?.let {
+                visibleStr ->
+            withContext(Dispatchers.Main) {
+                buttonFrameLayout.visibility = EditComponent.Template.VisibleManager.getVisible(
+                    visibleStr
+                )
+            }
+        }
+
+        buttonFrameLayout.apply {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "soverrideTag.txt").absolutePath,
+//                listOf(
+//                    "overrideTag: ${overrideTag}"
+//                ).joinToString("\n")
+//            )
+            val paddingData = withContext(Dispatchers.IO) {
+                EditComponent.Template.PaddingData(
+                    context,
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingTopKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingBottomKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingStartKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingEndKey
+                    ),
+                )
+            }
+            withContext(Dispatchers.Main) {
+                setPadding(
+                    paddingData.paddingStart ?: paddingStart,
+                    paddingData.paddingTop ?: paddingTop,
+                    paddingData.paddingEnd ?: paddingEnd,
+                    paddingData.paddingBottom ?: paddingBottom,
+                )
+            }
+            val liearLayoutParam =
+                buttonFrameLayout.layoutParams as LinearLayoutCompat.LayoutParams
+            liearLayoutParam.apply {
+                val overrideWeight = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        weightKey
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    overrideWeight?.let {
+                        weight = it
+                    }
+                }
+                val marginData = withContext(Dispatchers.IO) {
+                    EditComponent.Template.MarginData(
+                        context,
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            marginTopKey,
+                        ),
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            marginBottomKey
+                        ),
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            marginStartKey
+                        ),
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            marginEndKey
+                        ),
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    marginData.marginTop?.let {
+                        topMargin = it
+                    }
+                    marginData.marginStart?.let {
+                        marginStart = it
+                    }
+                    marginData.marginEnd?.let {
+                        marginEnd = it
+                    }
+                    marginData.marginBottom?.let {
+                        bottomMargin = it
+                    }
+                }
+            }
+            withContext(Dispatchers.Main) {
+                layoutParams = liearLayoutParam
+            }
+        }
     }
 
     private suspend fun setImageView(
@@ -378,10 +523,18 @@ object EditFrameMaker {
                         imageMarginEndKey,
                     ),
                 )
-                topMargin = marginData.marginTop
-                bottomMargin = marginData.marginBottom
-                marginStart = marginData.marginStart
-                marginEnd = marginData.marginEnd
+                marginData.marginTop?.let {
+                    topMargin = it
+                }
+                marginData.marginBottom?.let {
+                    bottomMargin = it
+                }
+                marginData.marginStart?.let {
+                    marginStart = it
+                }
+                marginData.marginEnd?.let {
+                    marginEnd = it
+                }
             }
         }
 
@@ -414,10 +567,10 @@ object EditFrameMaker {
                 ),
             )
             setPadding(
-                paddingData.paddingStart,
-                paddingData.paddingTop,
-                paddingData.paddingEnd,
-                paddingData.paddingBottom,
+                paddingData.paddingStart ?: 0,
+                paddingData.paddingTop ?: 0,
+                paddingData.paddingEnd ?: 0,
+                paddingData.paddingBottom ?: 0,
             )
             isVisible = !imagePathList.isNullOrEmpty()
         }
@@ -499,7 +652,9 @@ object EditFrameMaker {
                 imageVisibleKey,
             ).let {
                     visibleStr ->
-                isVisible = visibleStr != switchOff
+                visibility = EditComponent.Template.VisibleManager.getVisible(
+                    visibleStr
+                )
             }
         }
 
@@ -659,7 +814,9 @@ object EditFrameMaker {
                 imageVisibleKey,
             ).let {
                     visibleStr ->
-                isVisible = visibleStr != switchOff
+                visibility = EditComponent.Template.VisibleManager.getVisible(
+                    visibleStr
+                )
             }
         }
 
@@ -898,10 +1055,10 @@ object EditFrameMaker {
                             textMarginEndKey,
                         ),
                     )
-                    topMargin = marginData.marginTop
-                    bottomMargin = marginData.marginBottom
-                    marginStart = marginData.marginStart
-                    marginEnd = marginData.marginEnd
+                    topMargin = marginData.marginTop ?: 0
+                    bottomMargin = marginData.marginBottom ?: 0
+                    marginStart = marginData.marginStart ?: 0
+                    marginEnd = marginData.marginEnd ?: 0
                 }
                 val paddingData = EditComponent.Template.PaddingData(
                     textViewContext,
@@ -919,10 +1076,10 @@ object EditFrameMaker {
                     ),
                 )
                 setPadding(
-                    paddingData.paddingStart,
-                    paddingData.paddingTop,
-                    paddingData.paddingEnd,
-                    paddingData.paddingBottom,
+                    paddingData.paddingStart ?: 0,
+                    paddingData.paddingTop ?: 0,
+                    paddingData.paddingEnd ?: 0,
+                    paddingData.paddingBottom ?: 0,
                 )
                 val textTag = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
@@ -1062,7 +1219,9 @@ object EditFrameMaker {
                     textVisibleKey,
                 ).let {
                         visibleStr ->
-                    isVisible = visibleStr != switchOff
+                    visibility = EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
+                    )
                 }
             }
         }
@@ -1239,7 +1398,9 @@ object EditFrameMaker {
                     textVisibleKey,
                 ).let {
                         visibleStr ->
-                    isVisible = visibleStr != switchOff
+                    visibility = EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
+                    )
                 }
             }
         }

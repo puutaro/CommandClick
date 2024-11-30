@@ -128,18 +128,38 @@ class JsEdit(
     }
 
     @JavascriptInterface
+    fun updateFrameLayout_S(
+        indexOrParentTagName: String,
+        srcFragment: String,
+        tagNameListCon: String,
+        frameKeyPairListCon: String,
+    ){
+        val terminalFragment = terminalFragmentRef.get()
+            ?: return
+        val context = terminalFragment.context
+            ?: return
+        val keySeparator = EditComponent.Template.keySeparator
+        val frameKeyPairList = CmdClickMap.createMap(
+            frameKeyPairListCon,
+            keySeparator
+        )
+        val listener = context as TerminalFragment.OnFrameLayoutUpdateListenerForTerm
+        val tagNameSeparator = '&'
+        listener.onFrameLayoutUpdateForTerm(
+            indexOrParentTagName,
+            srcFragment,
+            tagNameListCon.split(tagNameSeparator.toString()),
+            frameKeyPairList,
+        )
+    }
+
+    @JavascriptInterface
     fun getSettingValue(
         targetVariableName: String,
         srcFragment: String,
     ): String {
         val terminalFragment = terminalFragmentRef.get()
             ?: return String()
-        EditComponentFunc.getSettingValue(
-            terminalFragment,
-            targetVariableName,
-            srcFragment,
-            null,
-        )
         val context = terminalFragment.context
         val editListRecyclerView = EditListRecyclerViewGetter.get(
             terminalFragment,

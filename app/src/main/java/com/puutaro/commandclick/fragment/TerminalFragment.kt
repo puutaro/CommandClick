@@ -399,6 +399,15 @@ class TerminalFragment:
         )
     }
 
+    interface OnFrameLayoutUpdateListenerForTerm {
+        fun onFrameLayoutUpdateForTerm(
+            indexOrParentTagName: String,
+            srcFragment: String,
+            tagNameList: List<String>,
+            frameKeyPairList: List<Pair<String, String>>?
+        )
+    }
+
     interface OnTextViewAndMapListUpdateListenerForTerm {
         fun onTextViewAndMapListUpdateForTerm(
             editListIndex: Int,

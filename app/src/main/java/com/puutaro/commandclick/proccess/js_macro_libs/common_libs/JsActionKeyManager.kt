@@ -356,6 +356,7 @@ object JsActionKeyManager {
         const val afterJsConSeparator = '&'
         const val ampersand = '&'
         const val afterjsConSignalSeparator = "AFTER_JS_CON_SIGNAL_SEPARATOR"
+        const val afterjsConInterSignalSeparator = "AFTER_JS_CON_INTER_SIGNAL_SEPARATOR"
         enum class SignalPrefix(
             val signal: String
         ){
