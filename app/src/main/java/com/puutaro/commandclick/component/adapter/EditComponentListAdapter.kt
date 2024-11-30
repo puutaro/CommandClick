@@ -592,17 +592,26 @@ class EditComponentListAdapter(
                             linearFrameTag.startsWith(linearSettingTagMacroStr)
                         ){
                             PairListTool.getValue(
-                                verticalKeyPairs,
+                                linearFrameKeyPairsList,
                                 enableKey,
                             ).let {
                                     enableStr ->
+                                FileSystems.updateFile(
+                                    File(UsePath.cmdclickDefaultAppDirPath, "sEnable.txt").absolutePath,
+                                    listOf(
+                                        "linearFrameTag: ${linearFrameTag}",
+                                        "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+                                        "enableStr: ${enableStr}",
+                                        "bool: ${enableStr != switchOff}",
+                                    ).joinToString("\n\n")
+                                )
                                 if(enableStr != switchOff) return@let
                                 return@setHorizon
                             }
                             withContext(Dispatchers.Main) {
                                 EditComponent.AdapterSetter.setHorizonLinear(
                                     horizonLinearLayout,
-                                    verticalKeyPairs,
+//                                    verticalKeyPairs,
                                     linearFrameKeyPairsList
                                 )
                             }

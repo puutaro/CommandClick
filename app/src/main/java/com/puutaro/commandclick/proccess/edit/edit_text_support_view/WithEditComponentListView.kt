@@ -701,7 +701,7 @@ object WithEditComponentListView{
                             }
                             if (linearFrameTag.startsWith(linearSettingTagMacroStr)) {
                                 PairListTool.getValue(
-                                    verticalKeyPairs,
+                                    linearFrameKeyPairsList,
                                     enableKey,
                                 ).let {
                                         enableStr ->
@@ -711,7 +711,7 @@ object WithEditComponentListView{
                                 withContext(Dispatchers.Main) {
                                     EditComponent.AdapterSetter.setHorizonLinear(
                                         horizonLinearLayout,
-                                        verticalKeyPairs,
+//                                        verticalKeyPairs,
                                         linearFrameKeyPairsList
                                     )
                                 }

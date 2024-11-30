@@ -912,7 +912,7 @@ object EditComponent {
 
                 suspend fun setHorizonLinear(
                         horizonLinearLayout: LinearLayoutCompat?,
-                        verticalKeyPairs: List<Pair<String, String>>,
+//                        verticalKeyPairs: List<Pair<String, String>>,
                         linearFrameKeyPairsList: List<Pair<String, String>>
                 ){
                         withContext(Dispatchers.Main) {
@@ -930,19 +930,19 @@ object EditComponent {
                                                 val marginData = Template.MarginData(
                                                         context,
                                                         PairListTool.getValue(
-                                                                verticalKeyPairs,
+                                                                linearFrameKeyPairsList,
                                                                 Template.EditComponentKey.MARGIN_TOP.key,
                                                         ),
                                                         PairListTool.getValue(
-                                                                verticalKeyPairs,
+                                                                linearFrameKeyPairsList,
                                                                 Template.EditComponentKey.MARGIN_BOTTOM.key,
                                                         ),
                                                         PairListTool.getValue(
-                                                                verticalKeyPairs,
+                                                                linearFrameKeyPairsList,
                                                                 Template.EditComponentKey.MARGIN_START.key,
                                                         ),
                                                         PairListTool.getValue(
-                                                                verticalKeyPairs,
+                                                                linearFrameKeyPairsList,
                                                                 Template.EditComponentKey.MARGIN_END.key,
                                                         ),
                                                 )
@@ -952,7 +952,7 @@ object EditComponent {
                                                 marginEnd = marginData.marginBottom
                                                 val bkColor = withContext(Dispatchers.IO) {
                                                         PairListTool.getValue(
-                                                                verticalKeyPairs,
+                                                                linearFrameKeyPairsList,
                                                                 Template.EditComponentKey.BK_COLOR.key,
                                                         )?.let {
                                                                         colorStr ->
@@ -971,19 +971,19 @@ object EditComponent {
                                         val paddingData = Template.PaddingData(
                                                 context,
                                                 PairListTool.getValue(
-                                                        verticalKeyPairs,
+                                                        linearFrameKeyPairsList,
                                                         Template.EditComponentKey.PADDING_TOP.key,
                                                 ),
                                                 PairListTool.getValue(
-                                                        verticalKeyPairs,
+                                                        linearFrameKeyPairsList,
                                                         Template.EditComponentKey.PADDING_BOTTOM.key,
                                                 ),
                                                 PairListTool.getValue(
-                                                        verticalKeyPairs,
+                                                        linearFrameKeyPairsList,
                                                         Template.EditComponentKey.PADDING_START.key,
                                                 ),
                                                 PairListTool.getValue(
-                                                        verticalKeyPairs,
+                                                        linearFrameKeyPairsList,
                                                         Template.EditComponentKey.PADDING_END.key,
                                                 ),
                                         )
@@ -994,7 +994,7 @@ object EditComponent {
                                                 paddingData.paddingBottom,
                                         )
                                         val overrideGravity = PairListTool.getValue(
-                                                verticalKeyPairs,
+                                                linearFrameKeyPairsList,
                                                 Template.EditComponentKey.GRAVITI.key,
                                         )?.let {
                                                         gravityStr ->
@@ -1004,7 +1004,7 @@ object EditComponent {
                                         } ?: Gravity.CENTER
                                         gravity = overrideGravity
                                         isVisible = PairListTool.getValue(
-                                                verticalKeyPairs,
+                                                linearFrameKeyPairsList,
                                                 Template.EditComponentKey.VISIBLE.key,
                                         ).let {
                                                         visibleStr ->
