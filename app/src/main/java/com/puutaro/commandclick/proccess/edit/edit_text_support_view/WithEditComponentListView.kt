@@ -39,7 +39,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -498,7 +497,8 @@ object WithEditComponentListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
-                    )
+                "${EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name} in $plusKeyToSubKeyConWhere"
+                )
             else -> ListSettingsForEditList.ViewLayoutPathManager.parse(
                 context,
                 fannelInfoMap,
@@ -514,16 +514,28 @@ object WithEditComponentListView{
         val tagKey = EditComponent.Template.EditComponentKey.TAG.key
         val typeSeparator = EditComponent.Template.typeSeparator
         val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
-        val linearSettingTagMacroStr =
-            EditComponent.Template.TagManager.TagMacro.LINEAR_SETTING.name
         val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map {
             it.key
         }
         val switchOff = EditComponent.Template.switchOff
         val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+        val alreadyUseTagList = mutableListOf<String>()
+        val noIndexSign = -1
         withContext(Dispatchers.Main) {
             val weightSumFloat = 1f
             frameTagList.forEach { frameTag ->
+                withContext(Dispatchers.IO){
+                    EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                        context,
+                        EditComponent.Template.TagManager.TagGenre.FRAME_TAG,
+                        frameTag,
+                        alreadyUseTagList,
+                        String(),
+                        plusKeyToSubKeyConWhere,
+                    )?.let {
+                        alreadyUseTagList.add(it)
+                    }
+                }
                 val verticalTagToKeyPairsListToVarNameValueMapList = withContext(Dispatchers.IO){
                     EditComponent.AdapterSetter.makeVerticalTagAndKeyPairsListToVarNameToValueMap(
                         fragment,
@@ -539,7 +551,6 @@ object WithEditComponentListView{
                         null,
                     )
                 }
-                val noIndexSign = -1
                 val verticalLinerWeight = withContext(Dispatchers.IO) {
                     EditComponent.AdapterSetter.culcVerticalLinerWeight(
                         verticalTagToKeyPairsListToVarNameValueMapList
@@ -549,9 +560,21 @@ object WithEditComponentListView{
                 verticalTagToKeyPairsListToVarNameValueMapList.forEach setVertical@ {
                     verticalTagToKeyPairsListToVarNameToValueMap ->
                     val verticalTag = verticalTagToKeyPairsListToVarNameToValueMap.first
+                    withContext(Dispatchers.IO){
+                        EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                            context,
+                            EditComponent.Template.TagManager.TagGenre.VERTICAL_TAG,
+                            EditComponent.Template.TagManager.extractVerticalTag(verticalTag),
+                            alreadyUseTagList,
+                            String(),
+                            plusKeyToSubKeyConWhere,
+                        )?.let {
+                            alreadyUseTagList.add(it)
+                        }
+                    }
                     val keyPairsListToVarNameToValueMap = verticalTagToKeyPairsListToVarNameToValueMap.second
                     val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
-                    val verticalVarNameValueMap = keyPairsListToVarNameToValueMap.second
+                    val verticalVarNameToValueMap = keyPairsListToVarNameToValueMap.second
                     val isVerticalEnable = withContext(Dispatchers.IO) {
                         PairListTool.getValue(
                             verticalKeyPairs,
@@ -615,18 +638,10 @@ object WithEditComponentListView{
                             )
                         }
                         val linearKeyValueSize = withContext(Dispatchers.IO) {
-                            linearFrameTagToKeyPairsList.filter {
-                                val tag = it.first
-                                val isFrameLayout =
-                                    !tag.startsWith(linearSettingTagMacroStr)
-                                val isEnable = PairListTool.getValue(
-                                    verticalKeyPairs,
-                                    enableKey,
-                                ).let { enableStr ->
-                                    enableStr != switchOff
-                                }
-                                isFrameLayout && isEnable
-                            }.size
+                            EditComponent.AdapterSetter.culcLinearKeyValueSize(
+                                linearFrameTagToKeyPairsList,
+                                verticalKeyPairs,
+                            )
                         }
                         val layoutWeight = withContext(Dispatchers.IO) culcFrameLayoutWeight@ {
                             when (isEditToolbar && !isOnlyCmdValEdit) {
@@ -650,52 +665,38 @@ object WithEditComponentListView{
                                 }
                             }
                         }
-                        var horizonVarNameToValueMap = verticalVarNameValueMap
+                        var horizonVarNameToValueMap = verticalVarNameToValueMap
                         linearKeyValues.forEachIndexed setFrame@{
                             index, linearFrameKeyPairsListConSrc ->
-                            val varNameToValueMap = withContext(Dispatchers.IO) {
-                                EditComponent.Template.ReplaceHolder.replaceHolder(
+                            val isHorizonSetting =
+                                index == 0
+                            val varNameToValueMap = withContext(Dispatchers.IO) updateLinearKeyParsListCon@ {
+                                val debugWhere = when(isEditToolbar){
+                                    true -> "toolBar"
+                                    else -> "footer"
+                                }
+                                EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
+                                    fragment,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    editComponentListAdapter,
+                                    verticalVarNameToValueMap,
+                                    "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                                     linearFrameKeyPairsListConSrc,
                                     frameTag,
                                     frameTag,
                                     frameTag,
                                     noIndexSign,
-                                ).let {
-                                        linearFrameKeyPairsListConSrc ->
-                                    if(
-                                        linearFrameKeyPairsListConSrc.isNullOrEmpty()
-                                    ) return@let emptyMap()
-                                    val settingActionManager = SettingActionManager()
-                                    val debugWhere = when(isEditToolbar){
-                                        true -> "toolBar"
-                                        else -> "footer"
-                                    }
-                                    settingActionManager.exec(
-                                        fragment,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        CmdClickMap.replace(
-                                            linearFrameKeyPairsListConSrc,
-                                            verticalVarNameValueMap,
-                                        ),
-                                        "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
-                                        editComponentListAdapterArg = editComponentListAdapter
-                                    ).let updateVarNameToValueMap@ {
-                                        if(
-                                            it.isEmpty()
-                                        ) return@updateVarNameToValueMap emptyMap()
-                                        it
-                                    }
-                                }
+                                )
                             }
-                            when(index == 0){
+                            when(isHorizonSetting){
                                 true -> {
                                     horizonVarNameToValueMap += varNameToValueMap
                                 }
                                 else -> {}
                             }
-                            val frameVarNameToValueMap = when(index == 0) {
+                            val frameVarNameToValueMap = when(isHorizonSetting) {
                                 true -> horizonVarNameToValueMap
                                 else -> horizonVarNameToValueMap + varNameToValueMap
                             }
@@ -720,7 +721,32 @@ object WithEditComponentListView{
                                     )
                                 } ?: String()
                             }
-                            if (linearFrameTag.startsWith(linearSettingTagMacroStr)) {
+                            withContext(Dispatchers.IO){
+                                val tagGenre = when(index == 0){
+                                    true -> EditComponent.Template.TagManager.TagGenre.HORIZON_TAG
+                                    else -> EditComponent.Template.TagManager.TagGenre.EDIT_FRAME_TAG
+                                }
+                                EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                    context,
+                                    tagGenre,
+                                    linearFrameTag,
+                                    alreadyUseTagList,
+                                    String(),
+                                    plusKeyToSubKeyConWhere,
+                                )?.let {
+                                    alreadyUseTagList.add(it)
+                                }
+                            }
+                            if (isHorizonSetting && !isEditToolbar) {
+                                EditComponent.AdapterSetter.isNotHorizonKeyErr(
+                                    context,
+                                    linearFrameKeyPairsList,
+                                    String(),
+                                    plusKeyToSubKeyConWhere,
+                                ).let {
+                                        isNotHorizonKeyErr ->
+                                    if(isNotHorizonKeyErr) return@setHorizon
+                                }
                                 PairListTool.getValue(
                                     linearFrameKeyPairsList,
                                     enableKey,

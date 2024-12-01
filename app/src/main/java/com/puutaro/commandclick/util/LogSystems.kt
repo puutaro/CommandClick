@@ -3,13 +3,17 @@ package com.puutaro.commandclick.util
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.broadcast.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.broadcast.extra.ErrLogExtraForTerm
+import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 import java.io.File
 import java.time.LocalDateTime
 
@@ -56,7 +60,34 @@ object LogSystems {
         }
     }
 
-    fun     stdErr(
+    fun broadErrLog(
+        context: Context?,
+        toastMessage: String?,
+        errMessage: String,
+    ){
+        if(!toastMessage.isNullOrEmpty()) {
+            BroadcastSender.normalSend(
+                context,
+                BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
+                listOf(
+                    Pair(
+                        BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme,
+                        toastMessage
+                    )
+                )
+            )
+        }
+        BroadcastSender.normalSend(
+            context,
+            BroadCastIntentSchemeTerm.ERR_LOG.action,
+            listOf(
+                ErrLogExtraForTerm.ERR_CONTENTS.schema to
+                        errMessage
+            )
+        )
+    }
+
+    fun stdErr(
         context: Context?,
         errContents: String,
         debugNotiJanre: String = BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR.type,

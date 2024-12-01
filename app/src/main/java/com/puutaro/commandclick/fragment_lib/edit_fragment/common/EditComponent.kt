@@ -11,13 +11,18 @@ import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
+import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter.Companion.makeLinearFrameKeyPairsList
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList.LogErrLabel
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -26,6 +31,8 @@ import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
+import java.io.File
 
 object EditComponent {
         object Template {
@@ -126,6 +133,17 @@ object EditComponent {
                         BK_COLOR("bkColor"),
                         VISIBLE("visible"),
                         ENABLE("enable"),
+                }
+
+                object LinearManager {
+                        val linearNoSettingKey = listOf(
+                                EditComponentKey.TEXT.key,
+                                EditComponentKey.TEXT_PROPERTY.key,
+                                EditComponentKey.IMAGE.key,
+                                EditComponentKey.IMAGE_PROPERTY.key,
+                                EditComponentKey.ON_SAVE.key,
+                                EditComponentKey.IS_CONSEC.key,
+                        )
                 }
 
                 object GravityManager {
@@ -287,19 +305,32 @@ object EditComponent {
                         }
                 }
                 object TagManager {
-                        enum class TagMacro {
-                                LINEAR_SETTING
+
+                        private const val curFrameTagAndCurVerticalTagSeparator = "___"
+
+                        enum class TagGenre(val str: String){
+                                FRAME_TAG("frameTag"),
+                                VERTICAL_TAG("verticalTag"),
+                                HORIZON_TAG("horizonTag"),
+                                EDIT_FRAME_TAG("editFrameTag"),
                         }
 
                         fun makeVerticalTag(
                                 curFrameTag: String,
                                 partVerticalTag: String,
                         ): String {
-                                val curFrameTagAndCurVerticalTagSeparator = "__"
                                 return listOf(
                                         curFrameTag,
                                         partVerticalTag
                                 ).joinToString(curFrameTagAndCurVerticalTagSeparator)
+                        }
+
+                        fun extractVerticalTag(
+                                curVerticalTag: String,
+                        ): String {
+                                return curVerticalTag.split(
+                                        curFrameTagAndCurVerticalTagSeparator
+                                ).getOrNull(1) ?: String()
                         }
                 }
 
@@ -650,9 +681,55 @@ object EditComponent {
 
         object AdapterSetter {
 
+
+                fun tagDuplicateErrHandler(
+                        context: Context?,
+                        tagJanre: Template.TagManager.TagGenre,
+                        tagName: String,
+                        alreadyUseTagList: List<String>,
+                        mapListElInfo: String,
+                        plusKeyToSubKeyConWhere: String,
+                ): String? {
+                        FileSystems.updateFile(
+                                File(UsePath.cmdclickDefaultAppDirPath, "stagDup.txt").absolutePath,
+                                listOf(
+                                        "alreadyUseTagList: ${alreadyUseTagList}",
+                                        "tagName: ${tagName}",
+                                ).joinToString("\n")
+                        )
+                        if(
+                                !alreadyUseTagList.contains(tagName)
+                        ) return tagName
+                        val tagKeyName =
+                                Template.EditComponentKey.TAG.key
+                        val spanTagGenre = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.ligthBlue,
+                                tagJanre.str
+                        )
+                        val spanTagNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errRedCode,
+                                tagName
+                        )
+                        val spanWhereForLog = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errBrown,
+                                "${mapListElInfo} in ${plusKeyToSubKeyConWhere}"
+                        )
+                        val errSrcMessage =
+                                "Forbidden to duplicate ${tagKeyName}: ${spanTagGenre}: ${spanTagNameKey}"
+                        val errMessage =
+                                "[${LogErrLabel.VIEW_LAYOUT.label}] ${errSrcMessage} about ${spanWhereForLog}"
+                        LogSystems.broadErrLog(
+                                context,
+                                Jsoup.parse(errSrcMessage).text(),
+                                errMessage
+                        )
+                        return null
+                }
+
                 fun culcVerticalLinerWeight(
                         verticalTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>
                 ): Float {
+                        val enableKey = Template.EditComponentKey.ENABLE.key
                         val switchOff = Template.switchOff
                         val enableListSize = verticalTagToKeyPairsListToVarNameToValueMapList.filter { verticalTagToKeyPairsListToVarNameToValueMap ->
                                 val keyPairsListToVarNameToValueMap =
@@ -660,7 +737,7 @@ object EditComponent {
                                 val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
                                 PairListTool.getValue(
                                         verticalKeyPairs,
-                                        Template.EditComponentKey.ENABLE.key,
+                                        enableKey,
                                 ).let {
                                         enableStr ->
                                         enableStr != switchOff
@@ -668,6 +745,112 @@ object EditComponent {
                         }.size
                         return 1f / enableListSize
                 //verticalTagToKeyPairsListToVarNameToValueMapListSize.toFloat()
+                }
+
+                fun culcLinearKeyValueSize(
+                        linearFrameTagToKeyPairsList: List<Pair<String, String?>>,
+                        verticalKeyPairs: List<Pair<String, String>>,
+                ): Int {
+                        val enableKey = Template.EditComponentKey.ENABLE.key
+                        val switchOff = Template.switchOff
+                       return linearFrameTagToKeyPairsList.filterIndexed {
+                                                index, linearFrameTagToKeyPairs ->
+                                        val isFrameLayout =
+                                                index != 0
+                                        val isEnable = PairListTool.getValue(
+                                                verticalKeyPairs,
+                                                enableKey,
+                                        ).let { enableStr ->
+                                                enableStr != switchOff
+                                        }
+                                        isFrameLayout && isEnable
+                                }.size
+                        }
+
+                fun isNotHorizonKeyErr(
+                        context: Context?,
+                        linearFrameKeyPairsList: List<Pair<String, String>>,
+                        mapListElInfo: String,
+                        plusKeyToSubKeyConWhere: String,
+                ): Boolean {
+                        val horizonSettingKeyEntryList = linearFrameKeyPairsList.map {
+                                it.first
+                        }
+                        val irregularSettingKey = Template.LinearManager.linearNoSettingKey.firstOrNull {
+                                horizonSettingKeyEntryList.contains(it)
+                        }
+                        val isErr = !irregularSettingKey.isNullOrEmpty()
+                        if(
+                                !isErr
+                        ) return false
+                        val spanIrregularSettingKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errRedCode,
+                                irregularSettingKey ?: String()
+                        )
+                        val spanWhereForLog = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errBrown,
+                                "${mapListElInfo} in ${plusKeyToSubKeyConWhere}"
+                        )
+                        val errSrcMessage =
+                                "Irregular ${Template.LayoutKey.HORIZON.key} setting key: ${spanIrregularSettingKey}"
+                        val errMessage =
+                                "[${LogErrLabel.VIEW_LAYOUT.label}] ${errSrcMessage} about ${spanWhereForLog}"
+                        LogSystems.broadErrLog(
+                                context,
+                                Jsoup.parse(errSrcMessage).text(),
+                                errMessage
+                        )
+                        return true
+
+                }
+
+                suspend fun makeFrameVarNameToValueMap(
+                        fragment: Fragment?,
+                        fannelInfoMap: Map<String, String>,
+                        setReplaceVariableMap: Map<String, String>?,
+                        busyboxExecutor: BusyboxExecutor?,
+                        editComponentListAdapter: EditComponentListAdapter?,
+                        verticalVarNameValueMap: Map<String, String>,
+                        keyToSubKeyConWhere: String,
+                        linearFrameKeyPairsListConSrc: String?,
+                        srcTitle: String,
+                        srcCon: String,
+                        srcImage: String,
+                        srcPosition: Int,
+                ):  Map<String, String> {
+                        if (
+                                linearFrameKeyPairsListConSrc.isNullOrEmpty()
+                        ) return emptyMap()
+                        return Template.ReplaceHolder.replaceHolder(
+                                linearFrameKeyPairsListConSrc,
+                                srcTitle,
+                                srcCon,
+                                srcImage,
+                                srcPosition,
+                        ).let {
+                                        linearFrameKeyPairsListConSrcWithReplace ->
+                                if(
+                                        linearFrameKeyPairsListConSrcWithReplace.isNullOrEmpty()
+                                ) return@let emptyMap()
+                                val settingActionManager = SettingActionManager()
+                                settingActionManager.exec(
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        CmdClickMap.replace(
+                                                linearFrameKeyPairsListConSrcWithReplace,
+                                                verticalVarNameValueMap,
+                                        ),
+                                        keyToSubKeyConWhere,
+                                        editComponentListAdapterArg = editComponentListAdapter
+                                ).let updateVarNameToValueMap@ {
+                                        if(
+                                                it.isEmpty()
+                                        ) return@updateVarNameToValueMap emptyMap()
+                                        it
+                                }
+                        }
                 }
 
                 suspend fun makeVerticalTagAndKeyPairsListToVarNameToValueMap(
@@ -929,11 +1112,10 @@ object EditComponent {
                         }
                 }
 
-                suspend fun setHorizonLinear(
+                suspend  fun setHorizonLinear(
                         horizonLinearLayout: LinearLayoutCompat?,
-//                        verticalKeyPairs: List<Pair<String, String>>,
                         linearFrameKeyPairsList: List<Pair<String, String>>
-                ){
+                ) {
                         withContext(Dispatchers.Main) {
                                 horizonLinearLayout?.apply {
                                         val horizonLinearLayoutParam =

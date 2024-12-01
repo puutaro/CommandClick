@@ -3,17 +3,15 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.broadcast.extra.ErrLogExtraForTerm
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -121,23 +119,14 @@ class SettingActionManager {
                         CheckTool.errBrown,
                         keyToSubKeyConWhere
                     )
-                BroadcastSender.normalSend(
+                val errToastMessage =
+                    Jsoup.parse(errMessage).text()
+                val logErrMessage =
+                    "[SETTING ACTION] (${errType.name}) $errMessage about ${spanKeyToSubKeyConWhere}"
+                LogSystems.broadErrLog(
                     context,
-                    BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
-                    listOf(
-                        Pair(
-                            BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme,
-                            Jsoup.parse(errMessage).text()
-                        )
-                    )
-                )
-                BroadcastSender.normalSend(
-                    context,
-                    BroadCastIntentSchemeTerm.ERR_LOG.action,
-                    listOf(
-                        ErrLogExtraForTerm.ERR_CONTENTS.schema to
-                                "[SETTING ACTION] (${errType.name}) $errMessage about ${spanKeyToSubKeyConWhere}"
-                    )
+                    errToastMessage,
+                    logErrMessage,
                 )
             }
         }
@@ -347,6 +336,14 @@ class SettingActionManager {
             if(
                 keyToSubKeyConList.isNullOrEmpty()
                 ) return
+            VarErrManager.isBlankSVarOrSAcVArErr(
+                context,
+                keyToSubKeyConList,
+                keyToSubKeyConWhere,
+            ).let {
+                    isBlankSVarOrSAcVArErr ->
+                if(isBlankSVarOrSAcVArErr) return
+            }
             VarErrManager.isNotUseVarErr(
                 context,
                 keyToSubKeyConList,
@@ -948,6 +945,38 @@ class SettingActionManager {
                 return false
             }
 
+
+            fun isBlankSVarOrSAcVArErr(
+                context: Context?,
+                keyToSubKeyConList: List<Pair<String, String>>,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val settingKeyToVarNameList = makeSettingKeyToPrivateVarNameListWithBlank(
+                    keyToSubKeyConList
+                )
+                val settingKeyToBlankVarNamePair = settingKeyToVarNameList.firstOrNull {
+                    val varName = it.second
+                    varName.isEmpty()
+                }
+                if(
+                    settingKeyToBlankVarNamePair == null
+                ) return false
+                val spanBlankSettingKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        settingKeyToBlankVarNamePair.first
+                    )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        ErrLogger.SettingActionErrType.S_VAR,
+                        "${spanBlankSettingKeyName} must not blank",
+                        keyToSubKeyConWhere,
+                    )
+                }
+                return true
+            }
+
             fun isNotReplaceVarErr(
                 context: Context?,
                 subKeyListCon: String,
@@ -1086,6 +1115,30 @@ class SettingActionManager {
                 }.filter {
                     it.first.isNotEmpty()
                             && it.second.isNotEmpty()
+                }
+            }
+
+            private fun makeSettingKeyToPrivateVarNameListWithBlank(
+                keyToSubKeyConList: List<Pair<String, String>>,
+            ): List<Pair<String, String>> {
+                val defaultReturnPair = String() to String()
+                val subKeySeparator = SettingActionKeyManager.subKeySepartor
+                val settingKeyList =
+                    SettingActionKeyManager.SettingActionsKey.entries.map {
+                        it.key
+                    }
+                return keyToSubKeyConList.map {
+                        keyToSubKeyCon ->
+                    val settingKey = keyToSubKeyCon.first
+                    if(
+                        !settingKeyList.contains(settingKey)
+                    ) return@map defaultReturnPair
+                    val varName = keyToSubKeyCon.second.split(subKeySeparator).firstOrNull()?.let {
+                        QuoteTool.trimBothEdgeQuote(it)
+                    } ?: String()
+                    settingKey to varName
+                }.filter {
+                    it.first.isNotEmpty()
                 }
             }
 

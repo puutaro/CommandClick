@@ -61,7 +61,7 @@ object EditFrameMaker {
 
     private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
     private val imageDelayKey = EditComponent.Template.ImageManager.ImageKey.DELAY.key
-    private val imageTagKey = EditComponent.Template.ImagePropertyManager.PropertyKey.TAG.key
+//    private val imageTagKey = EditComponent.Template.ImagePropertyManager.PropertyKey.TAG.key
     private val imageColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.COLOR.key
     private val imageBkColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.BK_COLOR.key
     private val imageAlphaKey = EditComponent.Template.ImagePropertyManager.PropertyKey.ALPHA.key
@@ -84,7 +84,7 @@ object EditFrameMaker {
     private val textBkColorKey = EditComponent.Template.TextPropertyManager.Property.BK_COLOR.key
     private val textStyleKey = EditComponent.Template.TextPropertyManager.Property.STYLE.key
     private val textFontKey = EditComponent.Template.TextPropertyManager.Property.FONT.key
-    private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
+//    private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
     private val textGravityKey = EditComponent.Template.TextPropertyManager.Property.GRAVITI.key
     private val textWidthKey = EditComponent.Template.TextPropertyManager.Property.WIDTH.key
     private val textHeightKey = EditComponent.Template.TextPropertyManager.Property.HEIGHT.key
@@ -619,11 +619,11 @@ object EditFrameMaker {
                     it.id
                 )
             }
-            val imageTag = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageTagKey,
-                )
-            }
+//            val imageTag = withContext(Dispatchers.IO) {
+//                imagePropertyMap?.get(
+//                    imageTagKey,
+//                )
+//            }
             val imageAlpha = withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageAlphaKey,
@@ -645,7 +645,7 @@ object EditFrameMaker {
                     } ?: EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER
                 }
             }
-            tag = imageTag
+//            tag = imageTag
             alpha = imageAlpha ?: 1f
             scaleType = imageScale.scale
             imagePropertyMap?.get(
@@ -1081,12 +1081,12 @@ object EditFrameMaker {
                     paddingData.paddingEnd ?: 0,
                     paddingData.paddingBottom ?: 0,
                 )
-                val textTag = withContext(Dispatchers.IO) {
-                    textPropertyMap?.get(
-                        textTagKey,
-                    )
-                }
-                tag = textTag
+//                val textTag = withContext(Dispatchers.IO) {
+//                    textPropertyMap?.get(
+//                        textTagKey,
+//                    )
+//                }
+//                tag = textTag
                 val settingValue = textMap?.get(
                     EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
                 )

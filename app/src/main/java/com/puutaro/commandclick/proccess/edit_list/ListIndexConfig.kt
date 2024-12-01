@@ -533,6 +533,8 @@ object EditListConfig {
     
     ---
     ${EditComponent.Template.LayoutKey.HORIZON.key}=
+        ${typeSeparator}${tagKey}=horizonTag
+        ${sectionSeparator}
         ${typeSeparator}${tagKey}=ok
         ${typeSeparator}${textKey}=
             ${displayTextKey}=`${srcStrHolder}`

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit_list.config_settings
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
@@ -9,6 +10,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.file.ReadText
@@ -16,6 +18,8 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.SnakeCamelTool
+import org.jsoup.Jsoup
 import java.io.File
 
 object ListSettingsForEditList  {
@@ -24,6 +28,9 @@ object ListSettingsForEditList  {
     private val typeSeparator = EditComponent.Template.typeSeparator
     private val keySeparator = EditComponent.Template.keySeparator
     private val valueSeparator = EditComponent.Template.valueSeparator
+    enum class LogErrLabel(val label: String) {
+        VIEW_LAYOUT("View layout")
+    }
 
     enum class ListSettingKey(
         val key: String
@@ -91,7 +98,16 @@ object ListSettingsForEditList  {
 //                    "viewLayoutListSrc: ${viewLayoutListSrc.joinToString("####")}",
 //                ).joinToString("\n\n") + "\n\n-----------\n\n"
 //            )
-            return execParse(viewLayoutListSrc)
+            val plusKeyToSubKeyConWhere =
+                fannelInfoMap.map {
+                    val key = SnakeCamelTool.snakeToCamel(it.key)
+                    "${key}: ${it.value}"
+                }.joinToString(", ")
+            return execParse(
+                context,
+                viewLayoutListSrc,
+                plusKeyToSubKeyConWhere,
+            )
         }
 
         fun parseFromList(
@@ -99,6 +115,7 @@ object ListSettingsForEditList  {
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutConList: List<String>,
+            whereForLog: String,
         ):  Triple<
                 Map<String, String >,
                 List<Pair<String, String>>,
@@ -126,12 +143,16 @@ object ListSettingsForEditList  {
 //                ).joinToString("\n\n") + "\n\n-----------\n\n"
 //            )
             return execParse(
-                viewLayoutListSrc
+                context,
+                viewLayoutListSrc,
+                whereForLog,
             )
         }
 
         private fun execParse(
-            viewLayoutListSrc: List<String>
+            context: Context?,
+            viewLayoutListSrc: List<String>,
+            whereForLog: String,
         ): Triple<
                 Map<String, String >,
                 List<Pair<String, String>>,
@@ -189,6 +210,36 @@ object ListSettingsForEditList  {
                                 val key = it.first
                                 key == tagKey
                             }?.second.let {
+                                ViewLayoutCheck.isTagBlankErr(
+                                    context,
+                                    it,
+                                    whereForLog,
+                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.FRAME_TAG
+                                ).let {
+                                        isTagBlankErr ->
+                                    if(
+                                        isTagBlankErr
+                                    ) return Triple(
+                                        emptyMap(),
+                                        emptyList(),
+                                        emptyMap()
+                                    )
+                                }
+                                ViewLayoutCheck.isVariableUseErr(
+                                    context,
+                                    it,
+                                    whereForLog,
+                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.FRAME_TAG
+                                ).let {
+                                        isTagBlankErr ->
+                                    if(
+                                        isTagBlankErr
+                                    ) return Triple(
+                                        emptyMap(),
+                                        emptyList(),
+                                        emptyMap()
+                                    )
+                                }
                                 QuoteTool.trimBothEdgeQuote(it)
                             }
                         curFrameTag = tag
@@ -213,6 +264,61 @@ object ListSettingsForEditList  {
                                 val key = it.first
                                 key == tagKey
                             }?.second.let {
+                                if(it.isNullOrEmpty()) {
+                                    val spanVerticalTag =
+                                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                            CheckTool.errRedCode,
+                                            "Vertical tag"
+                                        )
+                                    val spanWhereForLog =
+                                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                            CheckTool.errBrown,
+                                            whereForLog
+                                        )
+                                    val errSrcMessage = "${spanVerticalTag} must specify"
+                                    val errMessage =
+                                        "[View layout] ${errSrcMessage} about ${spanWhereForLog}"
+                                    LogSystems.broadErrLog(
+                                        context,
+                                        Jsoup.parse(errSrcMessage).text(),
+                                        errMessage,
+                                    )
+                                    return Triple(
+                                        emptyMap(),
+                                        emptyList(),
+                                        emptyMap()
+                                    )
+                                }
+                                ViewLayoutCheck.isTagBlankErr(
+                                    context,
+                                    it,
+                                    whereForLog,
+                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.VERTICAL_TAG
+                                ).let {
+                                    isTagBlankErr ->
+                                    if(
+                                        isTagBlankErr
+                                    ) return Triple(
+                                        emptyMap(),
+                                        emptyList(),
+                                        emptyMap()
+                                    )
+                                }
+                                ViewLayoutCheck.isVariableUseErr(
+                                    context,
+                                    it,
+                                    whereForLog,
+                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.VERTICAL_TAG
+                                ).let {
+                                        isTagBlankErr ->
+                                    if(
+                                        isTagBlankErr
+                                    ) return Triple(
+                                        emptyMap(),
+                                        emptyList(),
+                                        emptyMap()
+                                    )
+                                }
                                 QuoteTool.trimBothEdgeQuote(it)
                             }
                         curVerticalTag = EditComponent.Template.TagManager.makeVerticalTag(
@@ -277,6 +383,79 @@ object ListSettingsForEditList  {
                 verticalPairsConList,
                 frameTagToLinearPairConListMap,
             )
+        }
+    }
+
+    object ViewLayoutCheck {
+
+        enum class TagErrGenre(
+            val genre: String,
+        ) {
+            FRAME_TAG("Frame tag"),
+            VERTICAL_TAG("Vertical tag")
+        }
+        fun isTagBlankErr(
+            context: Context?,
+            tagStr: String?,
+            whereForLog: String,
+            tagErrGenre: TagErrGenre,
+        ): Boolean {
+            if(
+                !tagStr.isNullOrEmpty()
+            ) return false
+            val spanVerticalTag =
+                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    tagErrGenre.genre
+                )
+            val spanWhereForLog =
+                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    whereForLog
+                )
+            val errSrcMessage = "${spanVerticalTag} must specify"
+            val errMessage =
+                "[View layout] ${errSrcMessage} about ${spanWhereForLog}"
+            LogSystems.broadErrLog(
+                context,
+                Jsoup.parse(errSrcMessage).text(),
+                errMessage,
+            )
+            return true
+        }
+
+        fun isVariableUseErr(
+            context: Context?,
+            tagStr: String?,
+            whereForLog: String,
+            tagErrGenre: TagErrGenre,
+        ): Boolean {
+            if(
+                tagStr.isNullOrEmpty()
+            ) return false
+            val variableRegex = Regex("[$][{][a-zA-Z0-9]+[}]")
+            if (
+                !variableRegex.matches(tagStr)
+            )  return false
+            val spanVerticalTag =
+                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    tagErrGenre.genre
+                )
+            val spanWhereForLog =
+                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    whereForLog
+                )
+            val errSrcMessage = "${spanVerticalTag} must not use variable"
+            val errMessage =
+                "[View layout] ${errSrcMessage} about ${spanWhereForLog}"
+            LogSystems.broadErrLog(
+                context,
+                Jsoup.parse(errSrcMessage).text(),
+                errMessage,
+            )
+            return true
         }
     }
 
@@ -373,101 +552,7 @@ object ListSettingsForEditList  {
                 indexListMap,
                 busyboxExecutor,
             )
-//            return when(listIndexTypeKey) {
-////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-////                -> makeFannelListForListView().toMutableList()
-//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-//                    makeTsvConList(
-//                        editFragment,
-//                        indexListMap,
-//                        busyboxExecutor,
-//                    )
-//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-//                -> makeFileList(
-//                    editFragment,
-//                    indexListMap,
-//                    listIndexTypeKey,
-//                )
-//            }
         }
-
-//        fun getFilterDir(
-//            editFragment: EditFragment,
-//            indexListMap: Map<String, String>?,
-//            listIndexType : TypeSettingsForListIndex.ListIndexTypeKey,
-//        ): String {
-//            return when(listIndexType){
-////                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-////                -> UsePath.cmdclickFannelItselfDirPath
-//                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-//                -> String()
-//                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL ->
-//                    FilePrefixGetter.get(
-//                        editFragment,
-//                        indexListMap,
-//                        ListSettingKey.LIST_DIR.key,
-//                    ) ?: String()
-//            }
-//        }
-
-//        private fun makeFileList(
-//            editFragment: EditFragment,
-//            indexListMap: Map<String, String>,
-////            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
-//        ): MutableList<String> {
-//            val busyboxExecutor = editFragment.busyboxExecutor
-//            val filterDir = String()
-////            getFilterDir(
-////                editFragment,
-////                indexListMap,
-////                listIndexTypeKey
-////            )
-//            FileSystems.createDirs(filterDir)
-//            val filterPrefixListCon = FilePrefixGetter.get(
-//                editFragment,
-//                indexListMap,
-//                ListSettingKey.PREFIX.key
-//            ) ?: String()
-//            val filterSuffixListCon = FilePrefixGetter.get(
-//                editFragment,
-//                indexListMap,
-//                ListSettingKey.SUFFIX.key
-//            ) ?: String()
-//            val currentFileList = FileSystems.sortedFiles(
-//                filterDir,
-//                "on"
-//            ).let {
-//                CompPathManager.concatByCompConWhenNormal(
-//                    editFragment,
-//                    indexListMap,
-//                    filterDir,
-//                    it
-//                )
-//            }
-//            val filterShellCon = getFilterShellCon(
-//                editFragment,
-//                indexListMap,
-//            )
-//            val fileListSource = makeFileListElement(
-//                currentFileList,
-//                busyboxExecutor,
-//                filterDir,
-//                filterPrefixListCon,
-//                filterSuffixListCon,
-//                filterShellCon,
-//            )
-//            if(
-//                fileListSource.isEmpty()
-//            ) return mutableListOf(throughMark)
-//            val sortType = getSortType(
-//                editFragment,
-//                indexListMap
-//            )
-//            return sortList(
-//                sortType,
-//                fileListSource,
-//            )
-//        }
 
         private fun filterMapList(
             lineMapList: List<Map<String, String>>,
@@ -608,195 +693,6 @@ object ListSettingsForEditList  {
             )
             return sortedLineMapList.toMutableList()
         }
-
-
-//        private fun makeTsvConList2(
-//            fannelInfoMap: Map<String, String>,
-//            setReplaceVariableMap: Map<String, String>?,
-//            indexListMap: Map<String, String>,
-//            busyboxExecutor: BusyboxExecutor?,
-//        ):  List<List<Pair<String, List<List<Pair<String, String>>>>>>
-////                List<
-////                List<
-////                        Pair<
-////                                String,
-////                                List<List<List<Pair<String, String>>>>
-////                                >
-////                        >
-////                >
-//        {
-////            val filterShellCon = getFilterShellCon(
-////                fannelInfoMap,
-////                setReplaceVariableMap,
-////                indexListMap,
-////            )
-//            val tsvFilePath = FilePrefixGetter.get(
-//                fannelInfoMap,
-//                setReplaceVariableMap,
-//                indexListMap,
-//                ListSettingKey.TSV_PATH.key,
-//            ) ?: String()
-//            val fannelName = FannelInfoTool.getCurrentFannelName(
-//                fannelInfoMap
-//            )
-//            val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
-//            val tsvFilePathObj = File(tsvFilePath)
-//            val blockLayoutKeyList = EditComponent.Template.blockLayoutKeyList
-//            val tsvConListSrc = LayoutSettingFile.read(
-//                tsvFilePathObj.absolutePath,
-//                fannelPath,
-//                setReplaceVariableMap,
-//            )
-//            val layoutList = mutableListOf<List< Pair<String, List< List<Pair<String, String>> >> >>()
-//            val smallLayoutList = mutableListOf< Pair<String, List< List<Pair<String, String>> >> >()
-//            val tsvConListSrcLastIndex = tsvConListSrc.lastIndex
-//            tsvConListSrc.forEachIndexed {
-//                    index,
-//                    smallLayoutMapCon ->
-//                val smallLayoutMapConList = smallLayoutMapCon.split("=")
-//                val layoutKey =
-//                    smallLayoutMapConList.firstOrNull()
-//                        ?: return@forEachIndexed
-//                val layoutTypePairList =
-//                    smallLayoutMapConList
-//                        .filterIndexed { innerIndex, _ ->  innerIndex > 0 }
-//                        .joinToString(String())
-//                        .let {
-//                            val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
-//                            val sectionConList = QuoteTool.splitBySurroundedIgnore(
-//                                trimSectionCon,
-//                                sectionSeparator
-//                            )
-//                            sectionConList.map {
-//                                CmdClickMap.createMap(
-//                                    trimSectionCon,
-//                                    typeSeparator
-//                                )
-//                            }
-//                        }
-//                val isBlockLayoutKey = blockLayoutKeyList.contains(layoutKey)
-//                when(true) {
-//                    isBlockLayoutKey -> {
-//                        if(
-//                            smallLayoutList.isNotEmpty()
-//                        ) {
-//                            layoutList.add(smallLayoutList)
-//                            smallLayoutList.clear()
-//                        }
-//                        smallLayoutList.add(
-//                            Pair(
-//                                layoutKey,
-//                                layoutTypePairList
-//                            )
-//                        )
-//                    }
-//                    else -> {
-//                        smallLayoutList.add(
-//                            Pair(
-//                                layoutKey,
-//                                layoutTypePairList
-//                            )
-//                        )
-//                        if(
-//                            index != tsvConListSrcLastIndex
-//                        ) return@forEachIndexed
-//                        layoutList.add(smallLayoutList)
-//                        smallLayoutList.clear()
-//                    }
-//                }
-//            }
-////            return layoutList
-////            val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
-////                fannelInfoMap,
-////                setReplaceVariableMap,
-////                indexListMap,
-////                tsvConListSrc
-////            )
-//            val sortType = getSortType(
-//                fannelInfoMap,
-//                setReplaceVariableMap,
-//                indexListMap
-//            )
-////            val sortTag = getSortTag(
-////                fannelInfoMap,
-////                setReplaceVariableMap,
-////                indexListMap,
-////            )
-//            val sortedTsvConList = sortList(
-//                sortType,
-//                layoutList,
-//            )
-//            updateTsv(
-//                sortType,
-//                tsvFilePathObj,
-//                sortedTsvConList,
-//            )
-//            return sortedTsvConList
-//        }
-
-//        private fun makeTsvConList2(
-//            fannelInfoMap: Map<String, String>,
-//            setReplaceVariableMap: Map<String, String>?,
-//            indexListMap: Map<String, String>,
-//            busyboxExecutor: BusyboxExecutor?,
-//        ): MutableList<String> {
-//            val filterShellCon = getFilterShellCon(
-//                fannelInfoMap: Map<String, String>,
-//            setReplaceVariableMap: Map<String, String>?,,
-//                indexListMap,
-//            )
-//            val tsvFilePath = FilePrefixGetter.get(
-//                fannelInfoMap,
-//                setReplaceVariableMap,
-//                indexListMap,
-//                ListSettingKey.LIST_DIR.key,
-//            ) ?: String()
-//            val tsvFilePathObj = File(tsvFilePath)
-//            val tsvConListSrc = ReadText(
-//                tsvFilePath
-//            ).textToList().let {
-//                TsvTool.filterByColumnNum(
-//                    it,
-//                    2
-//                )
-//            }.map {
-//                val titleAndConList = it.split("\t")
-//                val con = titleAndConList.last()
-//                val title = titleAndConList.first().let {
-//                    makeFilterShellCon(
-//                        it,
-//                        busyboxExecutor,
-//                        filterShellCon,
-//                    )
-//                }
-//                "${title}\t${con}"
-//            }.let {
-//                howExistPathForTsv(
-//                    editFragment,
-//                    indexListMap,
-//                    it,
-//                )
-//            }
-//            val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
-//                editFragment,
-//                indexListMap,
-//                tsvConListSrc
-//            )
-//            val sortType = getSortType(
-//                editFragment,
-//                indexListMap
-//            )
-//            val sortedTsvConList = sortList(
-//                sortType,
-//                tsvConList,
-//            )
-//            updateTsv(
-//                sortType,
-//                tsvFilePathObj,
-//                sortedTsvConList,
-//            )
-//            return sortedTsvConList
-//        }
 
         fun sortList(
             sortType: SortByKey,
@@ -991,45 +887,6 @@ object ListSettingsForEditList  {
 
 private object CompPathManager {
 
-//    fun concatByCompConWhenNormal(
-//        fannelInfoMap: Map<String, String>,
-//        setReplaceVariableMap: Map<String, String>?,
-//        indexListMap: Map<String, String>,
-//        parentDirPath: String,
-//        fileList: List<String>
-//    ): List<String> {
-//        val initFilePath = FilePrefixGetter.get(
-//            fannelInfoMap,
-//            setReplaceVariableMap,
-//            indexListMap,
-//            ListSettingsForListIndex.ListSettingKey.COMP_TSV_PATH.key
-//        )
-//        if(
-//            initFilePath.isNullOrEmpty()
-//        ) return fileList
-//        val initFilePathObj = File(initFilePath)
-//        val initConList = when(true){
-//            initFilePathObj.isFile ->
-//                makeInitConFromFile(
-//                    fannelInfoMap,
-//                    setReplaceVariableMap,
-//                    initFilePathObj,
-//                )
-//            initFilePathObj.isDirectory -> {
-//                val initFileConSrcDir = initFilePathObj.absolutePath
-//                FileSystems.sortedFiles(
-//                    initFileConSrcDir,
-//                    "on"
-//                )
-//            }
-//            else -> return fileList
-//        }
-//        return concatInitConAndConList(
-//            fileList,
-//            initConList,
-//            parentDirPath,
-//        )
-//    }
     fun concatByCompConWhenTsvEdit(
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
