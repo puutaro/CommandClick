@@ -767,8 +767,9 @@ object EditComponent {
                                 }.size
                         }
 
-                fun isNotHorizonKeyErr(
+                fun isNotLinearKeyErr(
                         context: Context?,
+                        horizonOrVerticalSettingKey: String,
                         linearFrameKeyPairsList: List<Pair<String, String>>,
                         mapListElInfo: String,
                         plusKeyToSubKeyConWhere: String,
@@ -792,7 +793,7 @@ object EditComponent {
                                 "${mapListElInfo} in ${plusKeyToSubKeyConWhere}"
                         )
                         val errSrcMessage =
-                                "Irregular ${Template.LayoutKey.HORIZON.key} setting key: ${spanIrregularSettingKey}"
+                                "Irregular ${horizonOrVerticalSettingKey} setting key: ${spanIrregularSettingKey}"
                         val errMessage =
                                 "[${LogErrLabel.VIEW_LAYOUT.label}] ${errSrcMessage} about ${spanWhereForLog}"
                         LogSystems.broadErrLog(

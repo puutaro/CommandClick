@@ -479,6 +479,10 @@ object WithEditComponentListView{
                 "${key}: ${it.value}"
             }.joinToString(", ")
         val isEditToolbar = editToolbarLinearLayout != null
+        val debugWhere = when(isEditToolbar){
+            true -> "toolBar"
+            else -> "footer"
+        }
         val layoutKey = when(isEditToolbar){
             true -> EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH
             else -> EditListConfig.EditListConfigKey.FOOTER_LAYOUT_PATH
@@ -530,7 +534,7 @@ object WithEditComponentListView{
                         EditComponent.Template.TagManager.TagGenre.FRAME_TAG,
                         frameTag,
                         alreadyUseTagList,
-                        String(),
+                        "${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                         plusKeyToSubKeyConWhere,
                     )?.let {
                         alreadyUseTagList.add(it)
@@ -566,7 +570,7 @@ object WithEditComponentListView{
                             EditComponent.Template.TagManager.TagGenre.VERTICAL_TAG,
                             EditComponent.Template.TagManager.extractVerticalTag(verticalTag),
                             alreadyUseTagList,
-                            String(),
+                            "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                             plusKeyToSubKeyConWhere,
                         )?.let {
                             alreadyUseTagList.add(it)
@@ -671,10 +675,6 @@ object WithEditComponentListView{
                             val isHorizonSetting =
                                 index == 0
                             val varNameToValueMap = withContext(Dispatchers.IO) updateLinearKeyParsListCon@ {
-                                val debugWhere = when(isEditToolbar){
-                                    true -> "toolBar"
-                                    else -> "footer"
-                                }
                                 EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
                                     fragment,
                                     fannelInfoMap,
@@ -710,6 +710,18 @@ object WithEditComponentListView{
                                     typeSeparator
                                 )
                             }
+                            withContext(Dispatchers.IO) {
+                                EditComponent.AdapterSetter.isNotLinearKeyErr(
+                                    context,
+                                    EditComponent.Template.LayoutKey.VERTICAL.key,
+                                    verticalKeyPairs,
+                                    "verticalTag: ${verticalTag}, ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
+                                    plusKeyToSubKeyConWhere,
+                                )
+                            }.let {
+                                    isNotHorizonKeyErr ->
+                                if(isNotHorizonKeyErr) return@setVertical
+                            }
                             val linearFrameTag = withContext(Dispatchers.IO) {
                                 PairListTool.getValue(
                                     linearFrameKeyPairsList,
@@ -722,7 +734,7 @@ object WithEditComponentListView{
                                 } ?: String()
                             }
                             withContext(Dispatchers.IO){
-                                val tagGenre = when(index == 0){
+                                val tagGenre = when(isHorizonSetting){
                                     true -> EditComponent.Template.TagManager.TagGenre.HORIZON_TAG
                                     else -> EditComponent.Template.TagManager.TagGenre.EDIT_FRAME_TAG
                                 }
@@ -731,28 +743,39 @@ object WithEditComponentListView{
                                     tagGenre,
                                     linearFrameTag,
                                     alreadyUseTagList,
-                                    String(),
+                                    "${verticalTag}: ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                                     plusKeyToSubKeyConWhere,
                                 )?.let {
                                     alreadyUseTagList.add(it)
                                 }
                             }
-                            if (isHorizonSetting && !isEditToolbar) {
-                                EditComponent.AdapterSetter.isNotHorizonKeyErr(
-                                    context,
-                                    linearFrameKeyPairsList,
-                                    String(),
-                                    plusKeyToSubKeyConWhere,
-                                ).let {
-                                        isNotHorizonKeyErr ->
-                                    if(isNotHorizonKeyErr) return@setHorizon
+                            let {
+                                if (!isHorizonSetting) return@let
+                                withContext(Dispatchers.IO) {
+                                    EditComponent.AdapterSetter.isNotLinearKeyErr(
+                                        context,
+                                        EditComponent.Template.LayoutKey.HORIZON.key,
+                                        linearFrameKeyPairsList,
+                                        "verticalTag: ${verticalTag}, ${debugWhere} frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
+                                        plusKeyToSubKeyConWhere,
+                                    )
+                                }.let {
+                                    isNotHorizonKeyErr ->
+                                    if (
+                                        isNotHorizonKeyErr
+                                    ) return@setHorizon
+                                }
+                                if (isEditToolbar){
+                                    return@setFrame
                                 }
                                 PairListTool.getValue(
                                     linearFrameKeyPairsList,
                                     enableKey,
-                                ).let {
+                                ).let enable@ {
                                         enableStr ->
-                                    if(enableStr != switchOff) return@let
+                                    if(
+                                        enableStr != switchOff
+                                    ) return@enable
                                     return@setHorizon
                                 }
                                 withContext(Dispatchers.Main) {
@@ -764,6 +787,7 @@ object WithEditComponentListView{
                                 }
                                 return@setFrame
                             }
+
                             editComponentListAdapter?.footerKeyPairListConMap?.put(
                                 linearFrameTag,
                                 linearFrameKeyPairsListCon

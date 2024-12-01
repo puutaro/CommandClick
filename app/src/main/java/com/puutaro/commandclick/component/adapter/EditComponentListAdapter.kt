@@ -495,13 +495,25 @@ class EditComponentListAdapter(
                         EditComponent.Template.TagManager.extractVerticalTag(verticalTag),
                         alreadyUseTagList,
                         mapListElInfo,
-                        plusKeyToSubKeyConWhere,
+                        "verticalTag: ${verticalTag}, ${plusKeyToSubKeyConWhere}",
                     )?.let {
                         alreadyUseTagList.add(it)
                     }
                 }
                 val keyPairsListToVarNameToValueMap = verticalTagToKeyPairsListToVarNameToValueMap.second
                 val verticalKeyPairs = keyPairsListToVarNameToValueMap.first
+                withContext(Dispatchers.IO) {
+                    EditComponent.AdapterSetter.isNotLinearKeyErr(
+                        context,
+                        EditComponent.Template.LayoutKey.VERTICAL.key,
+                        verticalKeyPairs,
+                        mapListElInfo,
+                        "verticalTag: ${verticalTag}, ${plusKeyToSubKeyConWhere}",
+                    )
+                }.let {
+                        isNotHorizonKeyErr ->
+                    if(isNotHorizonKeyErr) return@setVertical
+                }
                 val verticalVarNameToValueMap = keyPairsListToVarNameToValueMap.second + frameVarNameValueMap
                 val isVerticalEnable = withContext(Dispatchers.IO) {
                     PairListTool.getValue(
@@ -612,7 +624,7 @@ class EditComponentListAdapter(
                                 linearFrameTag,
                                 alreadyUseTagList,
                                 mapListElInfo,
-                                plusKeyToSubKeyConWhere,
+                                "verticalTag: ${verticalTag}, ${plusKeyToSubKeyConWhere}",
                             )?.let {
                                 alreadyUseTagList.add(it)
                             }
@@ -632,12 +644,15 @@ class EditComponentListAdapter(
                         if(
                             isHorizonSetting
                         ){
-                            EditComponent.AdapterSetter.isNotHorizonKeyErr(
-                                context,
-                                linearFrameKeyPairsList,
-                                mapListElInfo,
-                                plusKeyToSubKeyConWhere,
-                            ).let {
+                            withContext(Dispatchers.IO) {
+                                EditComponent.AdapterSetter.isNotLinearKeyErr(
+                                    context,
+                                    EditComponent.Template.LayoutKey.HORIZON.key,
+                                    linearFrameKeyPairsList,
+                                    mapListElInfo,
+                                    "verticalTag: ${verticalTag}, ${plusKeyToSubKeyConWhere}",
+                                )
+                            }.let {
                                 isNotHorizonKeyErr ->
                                 if(isNotHorizonKeyErr) return@setHorizon
                             }
