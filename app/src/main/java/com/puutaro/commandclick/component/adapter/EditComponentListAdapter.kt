@@ -778,9 +778,7 @@ class EditComponentListAdapter(
                     }
                     verticalLinearLayout.addView(horizonLinearLayout)
                 }
-//                    if(verticalIndex != 0) {
-                    totalLinearLayout.addView(verticalLinearLayout)
-//                    }
+                totalLinearLayout.addView(verticalLinearLayout)
             }
             materialCardView.addView(totalLinearLayout)
             withContext(Dispatchers.Main) {
