@@ -5,7 +5,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
