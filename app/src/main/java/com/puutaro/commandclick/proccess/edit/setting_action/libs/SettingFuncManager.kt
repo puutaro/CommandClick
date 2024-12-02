@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheck
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.MathCulcForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.PathForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ShellToolManagerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForSetting
@@ -102,6 +103,13 @@ object SettingFuncManager {
                     editComponentListAdapterArg,
                 )
             }
+            FuncType.CULC -> {
+                MathCulcForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
+            }
         }
 
     }
@@ -117,6 +125,7 @@ object SettingFuncManager {
         LOCAL_DATETIME("localDatetime"),
         SHELL("shell"),
         EDIT("edit"),
+        CULC("culc"),
     }
 
 }

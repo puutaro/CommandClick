@@ -6,6 +6,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsArgs
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsBroadcast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCsv
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCulc
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCurl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsDirSelect
@@ -211,6 +212,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsVar(terminalFragmentRef)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsCulc(terminalFragmentRef)
         )
         dialogAdder(
             terminalFragmentRef,
