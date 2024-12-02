@@ -150,18 +150,34 @@ class EditListDialog(
             mainFannelConList,
         )
         terminalFragment.editListDialog?.setOnCancelListener {
-            editListRecyclerView.removeAllViews()
-            editFooterLinearlayout.removeAllViews()
-            editListBkFrame.removeAllViews()
-            constraintLayout.removeAllViews()
-            terminalFragment.editListDialog?.dismiss()
-            terminalFragment.editListDialog = null
+            dismissForInner(
+                terminalFragment,
+                editListRecyclerView,
+                editFooterLinearlayout,
+                editListBkFrame,
+                constraintLayout,
+            )
         }
         terminalFragment.editListDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         terminalFragment.editListDialog?.show()
+    }
+
+    private fun dismissForInner(
+        terminalFragment: TerminalFragment?,
+        editListRecyclerView: RecyclerView?,
+        editFooterLinearlayout: LinearLayoutCompat?,
+        editListBkFrame: FrameLayout?,
+        constraintLayout: ConstraintLayout?,
+    ){
+        editListRecyclerView?.removeAllViews()
+        editFooterLinearlayout?.removeAllViews()
+        editListBkFrame?.removeAllViews()
+        constraintLayout?.removeAllViews()
+        terminalFragment?.editListDialog?.dismiss()
+        terminalFragment?.editListDialog = null
     }
 
     fun dismiss(){
@@ -181,12 +197,13 @@ class EditListDialog(
             terminalFragmentRef.get()?.editListDialog?.findViewById<LinearLayoutCompat>(
                 R.id.edit_list_dialog_footer_linearlayout
             )
-        editListRecyclerView?.removeAllViews()
-        editFooterLinearlayout?.removeAllViews()
-        editListBkFrame?.removeAllViews()
-        constraintLayout?.removeAllViews()
         val terminalFragment = terminalFragmentRef.get()
-        terminalFragment?.editListDialog?.dismiss()
-        terminalFragment?.editListDialog = null
+        dismissForInner(
+            terminalFragment,
+            editListRecyclerView,
+            editFooterLinearlayout,
+            editListBkFrame,
+            constraintLayout,
+        )
     }
 }

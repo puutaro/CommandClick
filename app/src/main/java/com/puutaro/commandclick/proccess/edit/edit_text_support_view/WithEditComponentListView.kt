@@ -517,7 +517,7 @@ object WithEditComponentListView{
 
         val tagKey = EditComponent.Template.EditComponentKey.TAG.key
         val typeSeparator = EditComponent.Template.typeSeparator
-        val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
         val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
         val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map {
             it.key
@@ -818,7 +818,7 @@ object WithEditComponentListView{
                                 val isConsec =
                                     PairListTool.getValue(
                                         linearFrameKeyPairsList,
-                                        isConsecKey,
+                                        onConsecKey,
                                     ) == EditComponent.Template.switchOn
                                 jsActionKeyList.any {
                                     jsActionKey ->

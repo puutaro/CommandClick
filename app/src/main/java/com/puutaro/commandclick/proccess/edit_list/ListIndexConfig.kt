@@ -468,7 +468,7 @@ object EditListConfig {
         private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
         private val paddingEndKey = EditComponent.Template.EditComponentKey.PADDING_END.key
         private val onSaveKey = EditComponent.Template.EditComponentKey.ON_SAVE.key
-        private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
         private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
 
         private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
@@ -547,7 +547,7 @@ object EditListConfig {
         ${typeSeparator}${imagePropertyKey}=
             ${keySeparator}${imageScaleKey}=`${fitCenterImageScale}`
         ${typeSeparator}${onSaveKey}=ON
-        ${typeSeparator}${isConsecKey}=OFF
+        ${typeSeparator}${onConsecKey}=OFF
         ${typeSeparator}var=runDisplayCurSettingValue
             ?func=jsBackstack.exec
         ${sectionSeparator}

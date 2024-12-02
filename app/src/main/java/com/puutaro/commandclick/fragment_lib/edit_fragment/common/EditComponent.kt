@@ -117,7 +117,7 @@ object EditComponent {
                         SET_SUGGEST_TO_BTN_TAGS("setSuggestToBtnTags"),
                         ON_CLICK("onClick"),
                         ON_SAVE("onSave"),
-                        IS_CONSEC("isConsec"),
+                        ON_CONSEC("onConsec"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
                         HEIGHT("height"),
                         WIDTH("width"),
@@ -144,7 +144,7 @@ object EditComponent {
                                 EditComponentKey.IMAGE.key,
                                 EditComponentKey.IMAGE_PROPERTY.key,
                                 EditComponentKey.ON_SAVE.key,
-                                EditComponentKey.IS_CONSEC.key,
+                                EditComponentKey.ON_CONSEC.key,
                         )
                 }
 

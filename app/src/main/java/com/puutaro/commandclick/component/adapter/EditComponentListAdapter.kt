@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -232,7 +230,7 @@ class EditComponentListAdapter(
     companion object {
 
         private val typeSeparator = EditComponent.Template.typeSeparator
-        private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
         private val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
         fun makeLinearFrameKeyPairsList(
             linearFrameKeyPairsListCon: String?
@@ -395,7 +393,7 @@ class EditComponentListAdapter(
                     val isConsec =
                         PairListTool.getValue(
                             frameKeyPairsList,
-                            isConsecKey,
+                            onConsecKey,
                         ) == switchOn
                     val isJsAc = jsActionKeyList.any {
                         !PairListTool.getValue(
@@ -729,7 +727,7 @@ class EditComponentListAdapter(
                         val isConsec = withContext(Dispatchers.IO) {
                             PairListTool.getValue(
                                 linearFrameKeyPairsList,
-                                isConsecKey,
+                                onConsecKey,
                                 ) == EditComponent.Template.switchOn
                             }
                             val onClick = PairListTool.getValue(
