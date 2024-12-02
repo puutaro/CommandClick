@@ -518,6 +518,7 @@ object WithEditComponentListView{
         val tagKey = EditComponent.Template.EditComponentKey.TAG.key
         val typeSeparator = EditComponent.Template.typeSeparator
         val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
         val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map {
             it.key
         }
@@ -810,6 +811,10 @@ object WithEditComponentListView{
                                 if (
                                     linearFrameKeyPairsListCon.isNullOrEmpty()
                                 ) return@execClick
+                                val onClick = PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    onClickKey,
+                                ) != switchOff
                                 val isConsec =
                                     PairListTool.getValue(
                                         linearFrameKeyPairsList,
@@ -822,9 +827,11 @@ object WithEditComponentListView{
                                         jsActionKey,
                                     ).isNullOrEmpty()
                                 }.let { isJsAc ->
+                                    val isJsAcClick = !isJsAc
+                                            && linearFrameLayout.tag != null
                                     if (
-                                        !isJsAc
-                                        && linearFrameLayout.tag != null
+                                        isJsAcClick
+                                        || !onClick
                                     ) {
 //                                        linearFrameLayout.setBackgroundResource(0)
 //                                        linearFrameLayout.isClickable = false

@@ -19,14 +19,12 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +47,9 @@ object EditFrameMaker {
     private val paddingEndKey = EditComponent.Template.EditComponentKey.PADDING_END.key
     private val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
     private val visibleKey = EditComponent.Template.EditComponentKey.VISIBLE.key
+    private val bkColorKey = EditComponent.Template.EditComponentKey.BK_COLOR.key
+    private val layoutGravityKey = EditComponent.Template.EditComponentKey.LAYOUT_GRAVITY.key
+    private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
 
     private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
     private val imagePropertyKey = EditComponent.Template.EditComponentKey.IMAGE_PROPERTY.key
@@ -66,6 +67,7 @@ object EditFrameMaker {
     private val imageBkColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.BK_COLOR.key
     private val imageAlphaKey = EditComponent.Template.ImagePropertyManager.PropertyKey.ALPHA.key
     private val imageScaleKey = EditComponent.Template.ImagePropertyManager.PropertyKey.SCALE.key
+    private val imageLayoutGravity = EditComponent.Template.ImagePropertyManager.PropertyKey.LAYOUT_GRAVITY.key
     private val imageGravityKey = EditComponent.Template.ImagePropertyManager.PropertyKey.GRAVITI.key
     private val imageWidthKey = EditComponent.Template.ImagePropertyManager.PropertyKey.WIDTH.key
     private val imageHeightKey = EditComponent.Template.ImagePropertyManager.PropertyKey.HEIGHT.key
@@ -85,6 +87,8 @@ object EditFrameMaker {
     private val textStyleKey = EditComponent.Template.TextPropertyManager.Property.STYLE.key
     private val textFontKey = EditComponent.Template.TextPropertyManager.Property.FONT.key
 //    private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
+    private val textLayoutGravityKey =
+        EditComponent.Template.TextPropertyManager.Property.LAYOUT_GRAVITY.key
     private val textGravityKey = EditComponent.Template.TextPropertyManager.Property.GRAVITI.key
     private val textWidthKey = EditComponent.Template.TextPropertyManager.Property.WIDTH.key
     private val textHeightKey = EditComponent.Template.TextPropertyManager.Property.HEIGHT.key
@@ -208,6 +212,9 @@ object EditFrameMaker {
         firstWeight: Float?,
         overrideTag: String?,
     ):  FrameLayout? {
+        if(
+            context == null
+        ) return null
         PairListTool.getValue(
             frameKeyPairList,
             enableKey,
@@ -274,14 +281,6 @@ object EditFrameMaker {
                 null
             }
         } ?: firstWeight ?: param.weight
-//        val marginDp = when(isMarginZero) {
-//            true -> 0
-//            else -> context.resources?.getDimension(R.dimen.toolbar_button_horizon_margin)?.toInt() ?: 0
-////            ScreenSizeCalculator.toDp(
-////                context,
-////                context.resources?.getDimension(R.dimen.toolbar_button_horizon_margin) ?: 0
-////            )
-//        }
         val marginData = EditComponent.Template.MarginData(
             context,
             PairListTool.getValue(
@@ -326,7 +325,16 @@ object EditFrameMaker {
             marginStart = marginData.marginStart ?: 0
             marginEnd = marginData.marginEnd ?: 0
             bottomMargin = marginData.marginBottom ?: 0
-            gravity = Gravity.CENTER
+            val overrideLayoutGravity = PairListTool.getValue(
+                frameKeyPairList,
+                layoutGravityKey
+            )?.let {
+                    gravityStr ->
+                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                    it.key == gravityStr
+                }?.gravity
+            } ?: Gravity.CENTER
+            gravity = overrideLayoutGravity
         }
         buttonLayout.apply {
 //            FileSystems.updateFile(
@@ -336,14 +344,40 @@ object EditFrameMaker {
 //                ).joinToString("\n")
 //            )
             tag = overrideTag
+            val overrideGravity = PairListTool.getValue(
+                frameKeyPairList,
+                gravityKey
+            )?.let {
+                    gravityStr ->
+                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                    it.key == gravityStr
+                }?.gravity
+            } ?: Gravity.CENTER
+            foregroundGravity = overrideGravity
             setPadding(
                 paddingData.paddingStart ?: 0,
                 paddingData.paddingTop ?: 0,
                 paddingData.paddingEnd ?: 0,
                 paddingData.paddingBottom ?: 0,
             )
+            val bkColor = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    bkColorKey,
+                )?.let {
+                        colorStr ->
+                    CmdClickColor.entries.firstOrNull {
+                        it.str == colorStr
+                    }
+                }
+            }
+            background = bkColor?.let {
+                AppCompatResources.getDrawable(
+                    context,
+                    it.id
+                )
+            }
             layoutParams = param
-            foregroundGravity = Gravity.CENTER
         }
         return buttonLayout
     }
@@ -354,7 +388,8 @@ object EditFrameMaker {
         frameKeyPairList: List<Pair<String, String>>?,
     ) {
         if(
-            buttonFrameLayout == null
+            context == null
+            || buttonFrameLayout == null
         ) return
         PairListTool.getValue(
             frameKeyPairList,
@@ -407,6 +442,18 @@ object EditFrameMaker {
             val liearLayoutParam =
                 buttonFrameLayout.layoutParams as LinearLayoutCompat.LayoutParams
             liearLayoutParam.apply {
+                val overrideLayoutGravity = PairListTool.getValue(
+                    frameKeyPairList,
+                    layoutGravityKey
+                )?.let {
+                        gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }
+                overrideLayoutGravity?.let {
+                    foregroundGravity = it
+                }
                 val overrideWeight = withContext(Dispatchers.IO) {
                     PairListTool.getValue(
                         frameKeyPairList,
@@ -463,6 +510,35 @@ object EditFrameMaker {
             withContext(Dispatchers.Main) {
                 layoutParams = liearLayoutParam
             }
+            val overrideGravity = PairListTool.getValue(
+                frameKeyPairList,
+                gravityKey
+            )?.let {
+                    gravityStr ->
+                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                    it.key == gravityStr
+                }?.gravity
+            }
+            overrideGravity?.let {
+                foregroundGravity = it
+            }
+            val bkColor = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    bkColorKey,
+                )?.let {
+                        colorStr ->
+                    CmdClickColor.entries.firstOrNull {
+                        it.str == colorStr
+                    }
+                }
+            }
+            bkColor?.let {
+                background = AppCompatResources.getDrawable(
+                    context,
+                    it.id
+                )
+            }
         }
     }
 
@@ -499,15 +575,15 @@ object EditFrameMaker {
                     }
                 }
                 height = overrideHeight
-                val overrideGravity = imagePropertyMap?.get(
-                    imageGravityKey,
+                val overrideLayoutGravity = imagePropertyMap?.get(
+                    imageLayoutGravity,
                 )?.let {
                         gravityStr ->
                     EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                         it.key == gravityStr
                     }?.gravity
                 } ?: Gravity.CENTER
-                gravity = overrideGravity
+                gravity = overrideLayoutGravity
                 val marginData = EditComponent.Template.MarginData(
                     context,
                     imagePropertyMap?.get(
@@ -587,6 +663,15 @@ object EditFrameMaker {
             return
         }
         imageView.apply {
+            val overrideGravity = imagePropertyMap?.get(
+                imageGravityKey,
+            )?.let {
+                    gravityStr ->
+                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                    it.key == gravityStr
+                }?.gravity
+            } ?: Gravity.CENTER
+            foregroundGravity = overrideGravity
             val imageColor = withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageColorKey,
@@ -723,15 +808,15 @@ object EditFrameMaker {
                 overrideHeight?.let {
                     height = it
                 }
-                val overrideGravity = imagePropertyMap?.get(
-                    imageGravityKey,
+                val overrideLayoutGravity = imagePropertyMap?.get(
+                    imageLayoutGravity,
                 )?.let {
                         gravityStr ->
                     EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                         it.key == gravityStr
                     }?.gravity
                 }
-                overrideGravity?.let {
+                overrideLayoutGravity?.let {
                     gravity = it
                 }
             }
@@ -750,6 +835,17 @@ object EditFrameMaker {
             )?.split(valueSeparator)
         }
         imageView.apply {
+            val overrideGravity = imagePropertyMap?.get(
+                imageGravityKey,
+            )?.let {
+                    gravityStr ->
+                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                    it.key == gravityStr
+                }?.gravity
+            }
+            overrideGravity?.let {
+                foregroundGravity = it
+            }
             val imageColor = withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageColorKey,
@@ -1007,15 +1103,15 @@ object EditFrameMaker {
             captionTextView.apply {
                 val lp = layoutParams as FrameLayout.LayoutParams
                 lp.apply {
-                    val overrideGravity = textPropertyMap?.get(
-                        textGravityKey,
+                    val overrideLayoutGravity = textPropertyMap?.get(
+                        textLayoutGravityKey,
                     )?.let {
                             gravityStr ->
                         EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                             it.key == gravityStr
                         }?.gravity
                     } ?: Gravity.CENTER
-                    gravity = overrideGravity
+                    gravity = overrideLayoutGravity
                     val overrideWidth = withContext(Dispatchers.IO) {
                         textPropertyMap?.get(
                             textWidthKey,
@@ -1060,6 +1156,15 @@ object EditFrameMaker {
                     marginStart = marginData.marginStart ?: 0
                     marginEnd = marginData.marginEnd ?: 0
                 }
+                val overrideGravity = textPropertyMap?.get(
+                    textGravityKey,
+                )?.let {
+                        gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                } ?: Gravity.CENTER
+                gravity = overrideGravity
                 val paddingData = EditComponent.Template.PaddingData(
                     textViewContext,
                     textPropertyMap?.get(
@@ -1213,7 +1318,7 @@ object EditFrameMaker {
                             it.key == textFontStr
                         }
                     }
-                } ?: EditComponent.Template.TextPropertyManager.Font.DEFAULT
+                } ?: EditComponent.Template.TextPropertyManager.Font.SANS_SERIF
                 setTypeface(overrideFont.typeface, overrideTextStyle.style)
                 textPropertyMap?.get(
                     textVisibleKey,
@@ -1253,17 +1358,29 @@ object EditFrameMaker {
             captionTextView.apply {
                 val lp = layoutParams as FrameLayout.LayoutParams
                 lp.apply {
-                    val overrideGravity = textPropertyMap?.get(
-                        textGravityKey,
+                    val overrideLayoutGravity = textPropertyMap?.get(
+                        textLayoutGravityKey,
                     )?.let {
                             gravityStr ->
                         EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                             it.key == gravityStr
                         }?.gravity
                     }
-                    overrideGravity?.let {
+                    overrideLayoutGravity?.let {
                         gravity = it
                     }
+                }
+                val overrideGravity = textPropertyMap?.get(
+                    textGravityKey,
+                )?.let {
+                        gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+
+                }
+                overrideGravity?.let {
+                    gravity
                 }
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue

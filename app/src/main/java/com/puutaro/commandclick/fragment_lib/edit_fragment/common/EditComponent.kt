@@ -115,6 +115,7 @@ object EditComponent {
                         SET_IMAGE_TO_BTN_TAGS("setImageToBtnTags"),
                         SET_TEXT_TO_BTN_TAGS("setTextToBtnTags"),
                         SET_SUGGEST_TO_BTN_TAGS("setSuggestToBtnTags"),
+                        ON_CLICK("onClick"),
                         ON_SAVE("onSave"),
                         IS_CONSEC("isConsec"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
@@ -130,6 +131,7 @@ object EditComponent {
                         MARGIN_START("marginStart"),
                         MARGIN_END("marginEnd"),
                         GRAVITI("gravity"),
+                        LAYOUT_GRAVITY("layoutGravity"),
                         BK_COLOR("bkColor"),
                         VISIBLE("visible"),
                         ENABLE("enable"),
@@ -193,6 +195,7 @@ object EditComponent {
                                 BK_COLOR("bkColor"),
                                 HEIGHT("height"),
                                 WIDTH("width"),
+                                LAYOUT_GRAVITY("layoutGravity"),
                                 GRAVITI("gravity"),
                                 PADDING_TOP("paddingTop"),
                                 PADDING_BOTTOM("paddingBottom"),
@@ -227,6 +230,7 @@ object EditComponent {
                                 ALPHA("alpha"),
                                 HEIGHT("height"),
                                 WIDTH("width"),
+                                LAYOUT_GRAVITY("layoutGravity"),
                                 GRAVITI("gravity"),
                                 PADDING_TOP("paddingTop"),
                                 PADDING_BOTTOM("paddingBottom"),
@@ -1023,16 +1027,16 @@ object EditComponent {
                                                 }
                                         } ?: verticalLinerWeight
                                         weight = overrideVerticalLinearWeight
-                                        val overrideGravity = PairListTool.getValue(
+                                        val overrideLayoutGravity = PairListTool.getValue(
                                                 verticalKeyPairs,
-                                                Template.EditComponentKey.GRAVITI.key,
+                                                Template.EditComponentKey.LAYOUT_GRAVITY.key,
                                         )?.let {
                                                         gravityStr ->
                                                 EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                                                         it.key == gravityStr
                                                 }?.gravity
                                         } ?: Gravity.CENTER
-                                        gravity = overrideGravity
+                                        gravity = overrideLayoutGravity
                                         val bkColor = withContext(Dispatchers.IO) {
                                                 PairListTool.getValue(
                                                         verticalKeyPairs,
@@ -1076,6 +1080,16 @@ object EditComponent {
 //                            setMargins(ScreenSizeCalculator.toDp(context,10))
                                 }
                                 layoutParams = verticalLinearParam
+                                val overrideGravity = PairListTool.getValue(
+                                        verticalKeyPairs,
+                                        Template.EditComponentKey.GRAVITI.key,
+                                )?.let {
+                                                gravityStr ->
+                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                it.key == gravityStr
+                                        }?.gravity
+                                } ?: Gravity.CENTER
+                                gravity = overrideGravity
                                 val paddingData = Template.PaddingData(
                                         context,
                                         PairListTool.getValue(
@@ -1129,6 +1143,16 @@ object EditComponent {
                                                 horizonLinearLayoutParam.height
                                         )
                                         layoutParams = horizonLinearLayoutParam.apply {
+                                                val overrideLayoutGravity = PairListTool.getValue(
+                                                        linearFrameKeyPairsList,
+                                                        Template.EditComponentKey.LAYOUT_GRAVITY.key,
+                                                )?.let {
+                                                                gravityStr ->
+                                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                                it.key == gravityStr
+                                                        }?.gravity
+                                                } ?: Gravity.CENTER
+                                                gravity = overrideLayoutGravity
                                                 val marginData = Template.MarginData(
                                                         context,
                                                         PairListTool.getValue(

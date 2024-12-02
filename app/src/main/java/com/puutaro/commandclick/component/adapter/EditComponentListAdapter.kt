@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -231,6 +233,7 @@ class EditComponentListAdapter(
 
         private val typeSeparator = EditComponent.Template.typeSeparator
         private val isConsecKey = EditComponent.Template.EditComponentKey.IS_CONSEC.key
+        private val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
         fun makeLinearFrameKeyPairsList(
             linearFrameKeyPairsListCon: String?
         ): List<Pair<String, String>> {
@@ -373,7 +376,7 @@ class EditComponentListAdapter(
                     cardLinearParams.setMargins(it)
                 }
             }
-            withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) execSetFrame@ {
                 val frameFrameLayout = EditFrameMaker.make(
                     context,
                     fannelInfoMap,
@@ -400,10 +403,36 @@ class EditComponentListAdapter(
                             it,
                         ).isNullOrEmpty()
                     }
+                    val onClick = PairListTool.getValue(
+                        frameKeyPairsList,
+                        onClickKey,
+                    ) != switchOff
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "sonClcck.txt").absolutePath,
+//                        listOf(
+//                            "isJsAc: ${isJsAc}",
+//                            "frameFrameLayout.tag: ${frameFrameLayout.tag}",
+//                            "onClick: ${onClick}",
+//                            "materialCardView.rippleColor: ${materialCardView.rippleColor}"
+//                        ).joinToString("\n")
+//                    )
+                    val isJsAcClick = !isJsAc
+                            && frameFrameLayout.tag != null
                     if(
-                        !isJsAc
-                        && frameFrameLayout.tag != null
+                        isJsAcClick
+                        || !onClick
                     ) {
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "sonClcck_in.txt").absolutePath,
+//                            listOf(
+//                                "isJsAc: ${isJsAc}",
+//                                "frameFrameLayout.tag: ${frameFrameLayout.tag}",
+//                                "onClick: ${onClick}",
+//                            ).joinToString("\n")
+//                        )
+//                        materialCardView.isFocusable = false
+//                        materialCardView.isClickable = false
+//                        materialCardView.rippleColor = ColorStateList.valueOf(Color.TRANSPARENT)
                         frameFrameLayout.setBackgroundResource(0)
                         frameFrameLayout.isClickable = false
                         return@setClickOrTouch
@@ -419,6 +448,9 @@ class EditComponentListAdapter(
                             outValue,
                             true
                         )
+//                        materialCardView.isFocusable = true
+//                        materialCardView.isClickable = true
+//                        materialCardView.rippleColor = ColorStateList.valueOf(Color.TRANSPARENT)
                         frameFrameLayout.setBackgroundResource(outValue.resourceId)
                         frameFrameLayout.isClickable = true
                         when (isConsec) {
@@ -693,12 +725,17 @@ class EditComponentListAdapter(
                                 totalSettingValMap
                             )
                         } ?: return@setFrame
+
                         val isConsec = withContext(Dispatchers.IO) {
                             PairListTool.getValue(
                                 linearFrameKeyPairsList,
                                 isConsecKey,
                                 ) == EditComponent.Template.switchOn
                             }
+                            val onClick = PairListTool.getValue(
+                                linearFrameKeyPairsList,
+                                onClickKey,
+                            ) != switchOff
                             jsActionKeyList.any {
                                 jsActionKey ->
                                 !PairListTool.getValue(
@@ -711,9 +748,11 @@ class EditComponentListAdapter(
                                     linearFrameTag,
                                     linearFrameKeyPairsListCon
                                 )
+                                val isJsAcClick = !isJsAc
+                                        && linearFrameLayout.tag != null
                                 if(
-                                    !isJsAc
-                                    && linearFrameLayout.tag != null
+                                    isJsAcClick
+                                    || !onClick
                                 ) {
                                     withContext(Dispatchers.Main) {
                                         linearFrameLayout.setBackgroundResource(0)
