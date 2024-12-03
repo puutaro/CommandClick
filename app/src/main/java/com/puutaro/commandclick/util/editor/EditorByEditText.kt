@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.editor
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
@@ -55,7 +56,7 @@ object EditorByEditText {
             )
         editorContentEditableView?.setText(firstCon)
         val textWatcher = UndoTextWatcher(
-            fragment,
+            fragment.context,
             editorDialog,
             firstCon
         )
@@ -227,12 +228,11 @@ private class EditEvent(// 置き換えられる文字列の開始位置
 }
 
 private class UndoTextWatcher(
-    fragment: Fragment,
+    private val context: Context?,
     editorDialog: Dialog?,
     firstCon: String,
 ) : TextWatcher {
 
-    val context = fragment.context
     var undoing = false // undo・redo実行中かどうか
     var previousCon = firstCon
     val undos = LinkedList<EditEvent>() // undoリスト
