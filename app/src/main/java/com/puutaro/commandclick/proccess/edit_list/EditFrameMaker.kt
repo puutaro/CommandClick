@@ -20,12 +20,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -1224,6 +1226,16 @@ object EditFrameMaker {
                         busyboxExecutor,
                         textMap,
                         settingValue
+                    )
+                }
+                if(!overrideText.isNullOrEmpty()) {
+                    FileSystems.updateFile(
+                        File(UsePath.cmdclickDefaultAppDirPath, "loverrideText.txt").absolutePath,
+                        listOf(
+                            "overrideText: ${overrideText}",
+                            "textMap: ${textMap}",
+                            "settingValue: ${settingValue}",
+                        ).joinToString("\n") + "\n\n============\n\n"
                     )
                 }
                 text = overrideText

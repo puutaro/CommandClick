@@ -95,6 +95,7 @@ object WithEditComponentListView{
         editListSearchEditText: AppCompatEditText,
         editFooterHorizonLayout: LinearLayoutCompat,
         verticalLinearListForFooter: List<LinearLayoutCompat?>,
+        indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>,
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
         fannelContentsList: List<String>?,
@@ -391,6 +392,7 @@ object WithEditComponentListView{
                 busyboxExecutor,
                 editFooterHorizonLayout,
                 verticalLinearListForFooter,
+                indexAndHorizonLinearListForFooter,
                 editListRecyclerView,
                 editListConfigMap,
             )
@@ -426,6 +428,7 @@ object WithEditComponentListView{
         busyboxExecutor: BusyboxExecutor?,
         editFooterHorizonLayout: LinearLayoutCompat,
         verticalLinearListForFooter: List<LinearLayoutCompat?>,
+        indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>,
         editListRecyclerView: RecyclerView,
         editListConfigMap: Map<String, String>?,
     ){
@@ -437,6 +440,7 @@ object WithEditComponentListView{
             busyboxExecutor,
             editFooterHorizonLayout,
             verticalLinearListForFooter,
+            indexAndHorizonLinearListForFooter,
             editListRecyclerView,
             null,
             null,
@@ -474,6 +478,7 @@ object WithEditComponentListView{
             busyboxExecutor,
             null,
             null,
+            null,
             editListRecyclerView,
             editToolbarHorizonLayout,
             fannelCentrButtonLayout,
@@ -489,6 +494,7 @@ object WithEditComponentListView{
         busyboxExecutor: BusyboxExecutor?,
         editFooterHorizonLayout: LinearLayoutCompat?,
         verticalLinearListForFooter: List<LinearLayoutCompat?>?,
+        indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>?,
         editListRecyclerView: RecyclerView,
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
@@ -663,20 +669,35 @@ object WithEditComponentListView{
                                 }
                             }
                     }
-                linearKeysList?.forEach setHorizon@ { linearKeyValues ->
+                val curHorizonLinearList = indexAndHorizonLinearListForFooter?.getOrNull(verticalIndex)
+                val horizonLayoutId = 55000
+                linearKeysList?.forEachIndexed setHorizon@ { horizonIndex, linearKeyValues ->
+                    val extractHorizonLayout = let {
+                        curHorizonLinearList?.getOrNull(horizonIndex)
+                            ?: verticalLinearLayout?.findViewById<LinearLayoutCompat>(
+                                horizonLayoutId
+                            )
+                    }
                     val horizonLinearLayout = withContext(Dispatchers.Main) {
                         when (isEditToolbar) {
                             true -> editToolbarHorizonLayout
-                            else -> LinearLayoutCompat(context).apply {
-                                tag = frameTag
-                                val linearParam = LinearLayoutCompat.LayoutParams(
-                                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                                )
-                                layoutParams = linearParam
-                                weightSum = weightSumFloat
-                                orientation = LinearLayoutCompat.HORIZONTAL
-                                gravity = Gravity.CENTER
+                            else -> {
+                                let {
+                                    extractHorizonLayout
+                                        ?: LinearLayoutCompat(context).apply {
+                                            id = horizonLayoutId
+                                        }
+                                }.apply {
+                                    tag = frameTag
+                                    val linearParam = LinearLayoutCompat.LayoutParams(
+                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                                    )
+                                    layoutParams = linearParam
+                                    weightSum = weightSumFloat
+                                    orientation = LinearLayoutCompat.HORIZONTAL
+                                    gravity = Gravity.CENTER
+                                }
                             }
                         }
                     }
@@ -826,12 +847,15 @@ object WithEditComponentListView{
                                 ) return@enable
                                 return@setHorizon
                             }
-                            withContext(Dispatchers.Main) {
+                            withContext(Dispatchers.Main) execSetHorizon@ {
                                 EditComponent.AdapterSetter.setHorizonLinear(
                                     horizonLinearLayout,
 //                                        verticalKeyPairs,
                                     linearFrameKeyPairsList
                                 )
+                                if(
+                                    extractHorizonLayout != null
+                                ) return@execSetHorizon
                                 verticalLinearLayout?.addView(horizonLinearLayout)
                             }
                             return@setFrame

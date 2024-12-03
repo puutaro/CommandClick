@@ -141,11 +141,11 @@
             >
             <include
                 android:id="@+id/vertical_linear1"
-                layout="@layout/edit_vertical_linear_layout"
+                layout="@layout/edit_vertical_linear_layout_for_binding"
                 />
             <include
                 android:id="@+id/vertical_linear2"
-                layout="@layout/edit_vertical_linear_layout"
+                layout="@layout/edit_vertical_linear_layout_for_binding"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.LinearLayoutCompat

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/edit_component_adapter_vertical_bind"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="0dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="visible">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/edit_component_adapter_horizon_bind1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="0dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone">
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/edit_component_adapter_horizon_bind2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="0dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone">
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
+
+

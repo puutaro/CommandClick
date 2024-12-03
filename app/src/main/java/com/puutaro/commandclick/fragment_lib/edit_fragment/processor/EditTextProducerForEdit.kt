@@ -4,18 +4,15 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 object EditTextProducerForEdit {
 
@@ -93,8 +90,19 @@ object EditTextProducerForEdit {
 //        )
         val verticalLinearListForFooter =
             listOf(
-                binding.verticalLinear1 as LinearLayoutCompat,
-                binding.verticalLinear2 as LinearLayoutCompat,
+                binding.verticalLinear1.editComponentAdapterVerticalBind as LinearLayoutCompat,
+                binding.verticalLinear2.editComponentAdapterVerticalBind as LinearLayoutCompat,
+            )
+        val varticalIndexAndHorizonLinearListForFooter =
+            listOf (
+                listOf(
+                    binding.verticalLinear1.editComponentAdapterHorizonBind1,
+                    binding.verticalLinear1.editComponentAdapterHorizonBind2,
+                ),
+                listOf(
+                    binding.verticalLinear2.editComponentAdapterHorizonBind1,
+                    binding.verticalLinear2.editComponentAdapterHorizonBind2,
+                )
             )
         WithEditComponentListView.create(
             editFragment,
@@ -111,6 +119,7 @@ object EditTextProducerForEdit {
             binding.editListSearchEditText,
             binding.editFooterHorizonLayout,
             verticalLinearListForFooter,
+            varticalIndexAndHorizonLinearListForFooter,
             binding.editToolBarHorizonLayout,
             editToolbarFannelCenterButton,
             editFragment.mainFannelConList,

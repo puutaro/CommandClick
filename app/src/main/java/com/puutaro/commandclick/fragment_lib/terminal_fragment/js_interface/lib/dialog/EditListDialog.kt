@@ -54,7 +54,10 @@ class EditListDialog(
         val context = terminalFragment.context
             ?: return
 
-        terminalFragment.editListDialog = Dialog(context)
+        terminalFragment.editListDialog = Dialog(
+            context,
+            R.style.FullScreenRoundCornerDialogTheme
+        )
         terminalFragment.editListDialog?.setContentView(
             R.layout.edit_list_dialog_layout
         ) ?: return
@@ -104,6 +107,16 @@ class EditListDialog(
                     R.id.vertical_linear2
                 )
             )
+        val horizonIdList = listOf(
+            R.id.edit_component_adapter_horizon1,
+            R.id.edit_component_adapter_horizon2,
+        )
+        val horizonLinearListForFooter = verticalLinearListForFooter.map {
+                vertical ->
+            horizonIdList.map {
+                vertical?.findViewById<LinearLayoutCompat>(it)
+            }
+        }
 
         val fannelInfoMap = CmdClickMap.createMap(
             fannelInfoCon,
@@ -155,6 +168,7 @@ class EditListDialog(
             editListSearchEditText,
             editFooterHorizonLayout,
             verticalLinearListForFooter,
+            horizonLinearListForFooter,
             null,
             null,
             mainFannelConList,
@@ -168,10 +182,12 @@ class EditListDialog(
                 constraintLayout,
             )
         }
-        terminalFragment.editListDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
+        terminalFragment.editListDialog?.window?.apply {
+            setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        }
         terminalFragment.editListDialog?.show()
     }
 

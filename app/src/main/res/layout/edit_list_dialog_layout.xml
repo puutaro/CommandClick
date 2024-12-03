@@ -4,7 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:backgroundTint="@null">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/edit_list_dialog_title_image"
@@ -16,6 +18,8 @@
         android:layout_gravity="center_vertical"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
+        android:background="@null"
+        android:backgroundTint="@null"
         />
     <FrameLayout
         android:id="@+id/edit_list_dialog_backstack_count_frame"
@@ -27,6 +31,8 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         android:foregroundGravity="center"
         android:layout_marginEnd="15dp"
+        android:background="@null"
+        android:backgroundTint="@null"
         >
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/edit_list_dialog_backstack_count"
@@ -62,8 +68,9 @@
         android:ellipsize="end"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:background="@null"
         android:fontFamily="sans-serif"
+        android:background="@null"
+        android:backgroundTint="@null"
         />
     <FrameLayout
         android:id="@+id/edit_list_dialog_frame_layout_view"
@@ -74,13 +81,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/edit_list_dialog_search_edit_text"
         android:foregroundGravity="center"
+        android:background="@null"
+        android:backgroundTint="@null"
         >
         <FrameLayout
             android:id="@+id/edit_list_bk_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:foregroundGravity="center"
-            android:background="@color/ligthBlue"
+            android:background="@null"
+            android:backgroundTint="@null"
             >
         </FrameLayout>
 
@@ -90,9 +100,10 @@
             android:layout_height="match_parent"
             android:textIsSelectable="true"
             android:scrollbars="vertical"
-            android:background="@null"
             android:fadeScrollbars="false"
             android:layout_gravity="center"
+            android:background="@null"
+            android:backgroundTint="@null"
             />
     </FrameLayout>
     <androidx.appcompat.widget.AppCompatEditText
@@ -108,7 +119,7 @@
         android:paddingBottom="10dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="#00000000"
+        android:background="@color/white"
         android:hint="search"
         android:textSize="20sp"
         android:autofillHints=""
@@ -121,9 +132,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@android:color/white"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
+        android:background="@null"
+        android:backgroundTint="@null"
         >
         <include
             android:id="@+id/vertical_linear1"

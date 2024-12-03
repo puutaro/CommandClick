@@ -9,6 +9,7 @@
     android:backgroundTint="@null"
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
+    android:layout_weight="1"
     >
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon_caption_for_edit_image"
