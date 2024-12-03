@@ -212,27 +212,6 @@ class EditComponentListAdapter(
             vertical1,
             vertical2,
         )
-//            .let {
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lreadyVertical00.txt").absolutePath,
-//                listOf(
-//                    "${vertical1 is LinearLayoutCompat}",
-//                    "${vertical2 is LinearLayoutCompat}",
-//                ).joinToString("======")
-//            )
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lreadyVertical01.txt").absolutePath,
-//                listOf(
-//                    "${vertical1.findViewById<LinearLayoutCompat>(
-//                        R.id.edit_component_adapter_vertical,
-//                    ) is LinearLayoutCompat}",
-//                    "${vertical2.findViewById<LinearLayoutCompat>(
-//                        R.id.edit_component_adapter_vertical,
-//                    ) is LinearLayoutCompat}",
-//                ).joinToString("======")
-//            )
-//            it
-//        }
 
         var keyPairListConMap: MutableMap<String, String?> = mutableMapOf()
         var srcTitle = String()
@@ -317,14 +296,6 @@ class EditComponentListAdapter(
                 ListSettingsForEditList.ListSettingKey.DEFAULT_FRAME_TAG.key
             )
         }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "eframeMapListToLinearMapList_inBinder.txt").absolutePath,
-//            listOf(
-//                "frameMap: ${frameMap}",
-//                "lineMap: ${lineMap}",
-//                "frameTag: ${frameTag}",
-//            ).joinToString("\n\n")
-//        )
         if(
             frameTag.isNullOrEmpty()
         ) return
@@ -790,112 +761,128 @@ class EditComponentListAdapter(
 //                            ).joinToString("\n")
 //                        )
                         val linearFrameLayout = withContext(Dispatchers.Main) {
+                            PairListTool.getValue(
+                                linearFrameKeyPairsList,
+                                enableKey,
+                            ).let {
+                                    enableStr ->
+                                if(
+                                    enableStr == switchOff
+                                ) return@withContext null
+                            }
                             val buttonFrameLayout = layoutInflater.inflate(
                                 R.layout.icon_caption_layout_for_edit_list,
                                 null
                             ) as FrameLayout
-                            EditFrameMaker.make(
-                                context,
-                                buttonFrameLayout,
-                                fannelInfoMap,
-                                setReplaceVariableMap,
-                                busyboxExecutor,
-                                linearFrameKeyPairsList,
-                                0,
-                                layoutWeight,
-                                linearFrameTag,
+                            horizonLinearLayout.addView(buttonFrameLayout)
+                            CoroutineScope(Dispatchers.Main).launch {
+                                EditFrameMaker.make(
+                                    context,
+                                    buttonFrameLayout,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    linearFrameKeyPairsList,
+                                    0,
+                                    layoutWeight,
+                                    linearFrameTag,
 //                                false,
-                                totalSettingValMap
-                            )
+                                    totalSettingValMap
+                                )
+                            }
+                            buttonFrameLayout
                         } ?: return@setFrame
-                        horizonLinearLayout.addView(linearFrameLayout)
-                        val isConsec = withContext(Dispatchers.IO) {
-                            PairListTool.getValue(
-                                linearFrameKeyPairsList,
-                                onConsecKey,
+
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val isConsec = withContext(Dispatchers.IO) {
+                                PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    onConsecKey,
                                 ) == EditComponent.Template.switchOn
                             }
-                            val onClick = PairListTool.getValue(
-                                linearFrameKeyPairsList,
-                                onClickKey,
-                            ) != switchOff
-                            jsActionKeyList.any {
-                                jsActionKey ->
-                                !PairListTool.getValue(
+                            val onClick = withContext(Dispatchers.IO) {
+                                PairListTool.getValue(
                                     linearFrameKeyPairsList,
-                                    jsActionKey,
-                                ).isNullOrEmpty()
-                            }.let {
-                                    isJsAc ->
+                                    onClickKey,
+                                ) != switchOff
+                            }
+                            val isJsAc = withContext(Dispatchers.IO) {
+                                jsActionKeyList.any { jsActionKey ->
+                                    !PairListTool.getValue(
+                                        linearFrameKeyPairsList,
+                                        jsActionKey,
+                                    ).isNullOrEmpty()
+                                }
+                            }
+                            withContext(Dispatchers.IO) {
                                 holder.keyPairListConMap.put(
                                     linearFrameTag,
                                     linearFrameKeyPairsListCon
                                 )
+                            }
+                            withContext(Dispatchers.Main) setClick@ {
                                 val isJsAcClick = !isJsAc
                                         && linearFrameLayout.tag != null
-                                if(
+                                if (
                                     isJsAcClick
                                     || !onClick
                                 ) {
-                                    withContext(Dispatchers.Main) {
-                                        linearFrameLayout.setBackgroundResource(0)
-                                        linearFrameLayout.isClickable = false
-                                    }
-                                    return@let
+                                    linearFrameLayout.setBackgroundResource(0)
+                                    linearFrameLayout.isClickable = false
+                                    return@setClick
                                 }
-                                withContext(Dispatchers.Main) {
-                                    val outValue = TypedValue()
-                                    context.theme.resolveAttribute(
-                                        android.R.attr.selectableItemBackground,
-                                        outValue,
-                                        true
-                                    )
-                                    val clickViewList = linearFrameLayout.children.filter {
-                                        it is OutlineTextView
-                                                || it is AppCompatImageView
-                                    }
-                                    clickViewList.forEach { clickView ->
-                                        clickView.setBackgroundResource(outValue.resourceId)
-                                        clickView.isClickable = true
-                                        when (isConsec) {
-                                            true ->
-                                                with(clickView) {
-                                                    setOnTouchListener(android.view.View.OnTouchListener { v, event ->
-                                                        when (event.action) {
-                                                            android.view.MotionEvent.ACTION_DOWN -> {
-                                                                editAdapterTouchDownListener?.onEditAdapterTouchDown(
-                                                                    linearFrameLayout,
-                                                                    holder,
-                                                                    editListPosition
-                                                                )
-                                                            }
-
-                                                            android.view.MotionEvent.ACTION_UP,
-                                                            android.view.MotionEvent.ACTION_CANCEL,
-                                                                -> {
-                                                                editAdapterTouchUpListener?.onEditAdapterTouchUp(
-                                                                    linearFrameLayout,
-                                                                    holder,
-                                                                    editListPosition
-                                                                )
-                                                                v.performClick()
-                                                            }
+                                val outValue = TypedValue()
+                                context.theme.resolveAttribute(
+                                    android.R.attr.selectableItemBackground,
+                                    outValue,
+                                    true
+                                )
+                                val clickViewList = linearFrameLayout.children.filter {
+                                    it is OutlineTextView
+                                            || it is AppCompatImageView
+                                }
+                                clickViewList.forEach { clickView ->
+                                    clickView.setBackgroundResource(outValue.resourceId)
+                                    clickView.isClickable = true
+                                    when (isConsec) {
+                                        true ->
+                                            with(clickView) {
+                                                setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                                                    when (event.action) {
+                                                        android.view.MotionEvent.ACTION_DOWN -> {
+                                                            editAdapterTouchDownListener?.onEditAdapterTouchDown(
+                                                                linearFrameLayout,
+                                                                holder,
+                                                                editListPosition
+                                                            )
                                                         }
-                                                        true
-                                                    })
-                                                }
 
-                                            else -> clickView.setOnClickListener {
-                                                editAdapterClickListener?.onEditAdapterClick(
-                                                    linearFrameLayout,
-                                                    holder,
-                                                    editListPosition,
-                                                )
+                                                        android.view.MotionEvent.ACTION_UP,
+                                                        android.view.MotionEvent.ACTION_CANCEL,
+                                                            -> {
+                                                            editAdapterTouchUpListener?.onEditAdapterTouchUp(
+                                                                linearFrameLayout,
+                                                                holder,
+                                                                editListPosition
+                                                            )
+                                                            v.performClick()
+                                                        }
+                                                    }
+                                                    true
+                                                })
                                             }
+
+                                        else -> clickView.setOnClickListener {
+                                            editAdapterClickListener?.onEditAdapterClick(
+                                                linearFrameLayout,
+                                                holder,
+                                                editListPosition,
+                                            )
                                         }
                                     }
                                 }
                             }
+                        }
 //                        horizonLinearLayout.addView(linearFrameLayout)
                     }
 //                    verticalLinearLayout.addView(horizonLinearLayout)

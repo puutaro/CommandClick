@@ -41,7 +41,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -842,127 +841,145 @@ object WithEditComponentListView{
                             linearFrameTag,
                             linearFrameKeyPairsListCon
                         )
-                        val linearFrameLayout = withContext(Dispatchers.Main) {
+                        val linearFrameLayout = withContext(Dispatchers.Main) setLinearFrameLayout@ {
+                            PairListTool.getValue(
+                                linearFrameKeyPairsList,
+                                enableKey,
+                            ).let {
+                                    enableStr ->
+                                if(
+                                    enableStr == switchOff
+                                ) return@setLinearFrameLayout null
+                            }
                             val buttonFrameLayout = layoutInflater.inflate(
                                 R.layout.icon_caption_layout_for_edit_list,
                                 null
                             ) as FrameLayout
-                            EditFrameMaker.make(
-                                context,
-                                buttonFrameLayout,
-                                fannelInfoMap,
-                                setReplaceVariableMap,
-                                busyboxExecutor,
-                                linearFrameKeyPairsList,
-                                0,
-                                layoutWeight,
-                                linearFrameTag,
+                            horizonLinearLayout?.addView(buttonFrameLayout)
+                            CoroutineScope(Dispatchers.Main).launch {
+                                EditFrameMaker.make(
+                                    context,
+                                    buttonFrameLayout,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    linearFrameKeyPairsList,
+                                    0,
+                                    layoutWeight,
+                                    linearFrameTag,
 //                                false,
-                                editComponentListAdapter?.totalSettingValMap,
-                            )
+                                    editComponentListAdapter?.totalSettingValMap,
+                                )
+                            }
+                            buttonFrameLayout
                         } ?: return@setFrame
-                        horizonLinearLayout?.addView(linearFrameLayout)
-                        withContext(Dispatchers.IO) execClick@{
+                        CoroutineScope(Dispatchers.IO).launch execClick@ {
                             if (
                                 linearFrameKeyPairsListCon.isNullOrEmpty()
                             ) return@execClick
-                            val onClick = PairListTool.getValue(
-                                linearFrameKeyPairsList,
-                                onClickKey,
-                            ) != switchOff
-                            val isConsec =
+                            val onClick = withContext(Dispatchers.IO) {
+                                PairListTool.getValue(
+                                    linearFrameKeyPairsList,
+                                    onClickKey,
+                                ) != switchOff
+                            }
+                            val isConsec = withContext(Dispatchers.IO) {
                                 PairListTool.getValue(
                                     linearFrameKeyPairsList,
                                     onConsecKey,
                                 ) == EditComponent.Template.switchOn
-                            jsActionKeyList.any {
-                                jsActionKey ->
-                                !PairListTool.getValue(
-                                    linearFrameKeyPairsList,
-                                    jsActionKey,
-                                ).isNullOrEmpty()
-                            }.let { isJsAc ->
-                                val isJsAcClick = !isJsAc
-                                        && linearFrameLayout.tag != null
-                                if (
+                            }
+                            val isNotClickSetting = withContext(Dispatchers.IO) {
+                                jsActionKeyList.any { jsActionKey ->
+                                    !PairListTool.getValue(
+                                        linearFrameKeyPairsList,
+                                        jsActionKey,
+                                    ).isNullOrEmpty()
+                                }.let { isJsAc ->
+                                    val isJsAcClick = !isJsAc
+                                            && linearFrameLayout.tag != null
+//                                    if (
                                     isJsAcClick
-                                    || !onClick
-                                ) {
+                                            || !onClick
+//                                    ) {
 //                                        linearFrameLayout.setBackgroundResource(0)
 //                                        linearFrameLayout.isClickable = false
-                                    return@let
+//                                        return@let
                                 }
-                                withContext(Dispatchers.Main) execExecClick@ {
-                                    val outValue = TypedValue()
-                                    context.theme.resolveAttribute(
-                                        android.R.attr.selectableItemBackground,
-                                        outValue,
-                                        true
-                                    )
-                                    val clickViewList = linearFrameLayout.children.filter {
-                                        it is OutlineTextView
-                                                || it is AppCompatImageView
+                            }
+                            if(
+                                isNotClickSetting
+                            ) return@execClick
+                            withContext(Dispatchers.Main) execExecClick@{
+                                val outValue = TypedValue()
+                                context.theme.resolveAttribute(
+                                    android.R.attr.selectableItemBackground,
+                                    outValue,
+                                    true
+                                )
+                                val clickViewList = linearFrameLayout.children.filter {
+                                    it is OutlineTextView
+                                            || it is AppCompatImageView
+                                }
+                                clickViewList.forEach { clickView ->
+                                    clickView.setBackgroundResource(outValue.resourceId)
+                                    clickView.isClickable = true
+                                    if (!isConsec) {
+                                        clickView.setOnClickListener {
+                                            execJsAction(
+                                                fragment,
+                                                fannelInfoMap,
+                                                setReplaceVariableMap,
+                                                editListRecyclerView,
+                                                linearFrameKeyPairsListCon
+                                            )
+                                        }
+                                        return@execExecClick
                                     }
-                                    clickViewList.forEach { clickView ->
-                                        clickView.setBackgroundResource(outValue.resourceId)
-                                        clickView.isClickable = true
-                                        if (!isConsec) {
-                                            clickView.setOnClickListener {
-                                                execJsAction(
-                                                    fragment,
-                                                    fannelInfoMap,
-                                                    setReplaceVariableMap,
-                                                    editListRecyclerView,
-                                                    linearFrameKeyPairsListCon
-                                                )
-                                            }
-                                            return@execExecClick
-                                        }
-                                        with(clickView) {
-                                            var consecutiveJob: Job? = null
-                                            setOnTouchListener(android.view.View.OnTouchListener { v, event ->
-                                                var execTouchJob: Job? = null
-                                                when (event.action) {
-                                                    MotionEvent.ACTION_DOWN -> {
-                                                        consecutiveJob?.cancel()
-                                                        consecutiveJob =
-                                                            CoroutineScope(Dispatchers.IO).launch {
-                                                                var roopTimes = 0
-                                                                while (true) {
-                                                                    execTouchJob =
-                                                                        CoroutineScope(
-                                                                            Dispatchers.Main
-                                                                        ).launch {
-                                                                            execJsAction(
-                                                                                fragment,
-                                                                                fannelInfoMap,
-                                                                                setReplaceVariableMap,
-                                                                                editListRecyclerView,
-                                                                                linearFrameKeyPairsListCon
-                                                                            )
-                                                                        }
-                                                                    withContext(Dispatchers.IO) {
-                                                                        if (
-                                                                            roopTimes == 0
-                                                                        ) delay(300)
-                                                                        else delay(60)
+                                    with(clickView) {
+                                        var consecutiveJob: Job? = null
+                                        setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                                            var execTouchJob: Job? = null
+                                            when (event.action) {
+                                                MotionEvent.ACTION_DOWN -> {
+                                                    consecutiveJob?.cancel()
+                                                    consecutiveJob =
+                                                        CoroutineScope(Dispatchers.IO).launch {
+                                                            var roopTimes = 0
+                                                            while (true) {
+                                                                execTouchJob =
+                                                                    CoroutineScope(
+                                                                        Dispatchers.Main
+                                                                    ).launch {
+                                                                        execJsAction(
+                                                                            fragment,
+                                                                            fannelInfoMap,
+                                                                            setReplaceVariableMap,
+                                                                            editListRecyclerView,
+                                                                            linearFrameKeyPairsListCon
+                                                                        )
                                                                     }
-                                                                    roopTimes++
+                                                                withContext(Dispatchers.IO) {
+                                                                    if (
+                                                                        roopTimes == 0
+                                                                    ) delay(300)
+                                                                    else delay(60)
                                                                 }
+                                                                roopTimes++
                                                             }
-                                                    }
-
-                                                    MotionEvent.ACTION_UP,
-                                                    MotionEvent.ACTION_CANCEL,
-                                                        -> {
-                                                        v.performClick()
-                                                        execTouchJob?.cancel()
-                                                        consecutiveJob?.cancel()
-                                                    }
+                                                        }
                                                 }
-                                                true
-                                            })
-                                        }
+
+                                                MotionEvent.ACTION_UP,
+                                                MotionEvent.ACTION_CANCEL,
+                                                    -> {
+                                                    v.performClick()
+                                                    execTouchJob?.cancel()
+                                                    consecutiveJob?.cancel()
+                                                }
+                                            }
+                                            true
+                                        })
                                     }
                                 }
                             }
