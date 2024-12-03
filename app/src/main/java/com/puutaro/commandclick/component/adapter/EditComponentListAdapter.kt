@@ -475,39 +475,74 @@ class EditComponentListAdapter(
                     cardLinearParams.setMargins(it)
                 }
             }
-            withContext(Dispatchers.Main) execSetFrame@ {
-                val frameFrameLayout = EditFrameMaker.make(
-                    context,
-                    holder.bkFrameLayout,
-                    fannelInfoMap,
-                    setReplaceVariableMap,
-                    busyboxExecutor,
-                    frameKeyPairsList,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    null,
-                    frameTag,
-                    totalSettingValMap,
-                    true,
-                )
-                let setClickOrTouch@ {
-                    if(
-                        frameFrameLayout == null
-                    ) return@setClickOrTouch
-                    val isConsec =
-                        PairListTool.getValue(
-                            frameKeyPairsList,
-                            onConsecKey,
-                        ) == switchOn
-                    val isJsAc = jsActionKeyList.any {
+            val isClickEnable = withContext(Dispatchers.IO) {
+                val isJsAcForFrame = withContext(Dispatchers.IO) {
+                    jsActionKeyList.any {
                         !PairListTool.getValue(
                             frameKeyPairsList,
                             it,
                         ).isNullOrEmpty()
                     }
-                    val onClick = PairListTool.getValue(
+                }
+                val onClickForFrame = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
                         frameKeyPairsList,
                         onClickKey,
                     ) != switchOff
+                }
+                isJsAcForFrame
+                        && onClickForFrame
+            }
+            withContext(Dispatchers.IO){
+                if(
+                    !isClickEnable
+                ) return@withContext
+                holder.keyPairListConMap.put(
+                    frameTag,
+                    frameKeyPairsCon
+                )
+            }
+            CoroutineScope(Dispatchers.IO).launch {
+                val frameFrameLayout = withContext(Dispatchers.Main) execSetFrame@{
+                    EditFrameMaker.make(
+                        context,
+                        holder.bkFrameLayout,
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
+                        frameKeyPairsList,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        null,
+                        frameTag,
+                        totalSettingValMap,
+                        true,
+                    )
+                }
+                let setClickOrTouch@{
+                    if (
+                        frameFrameLayout == null
+                    ) return@setClickOrTouch
+                    val isConsec =
+                        withContext(Dispatchers.IO) {
+                            PairListTool.getValue(
+                                frameKeyPairsList,
+                                onConsecKey,
+                            ) == switchOn
+                        }
+//                    val isJsAc = withContext(Dispatchers.IO) {
+//                        jsActionKeyList.any {
+//                            !PairListTool.getValue(
+//                                frameKeyPairsList,
+//                                it,
+//                            ).isNullOrEmpty()
+//                        }
+//                    }
+//                    val onClick = withContext(Dispatchers.IO) {
+//                        PairListTool.getValue(
+//                            frameKeyPairsList,
+//                            onClickKey,
+//                        ) != switchOff
+//                    }
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "sonClcck.txt").absolutePath,
 //                        listOf(
@@ -517,11 +552,8 @@ class EditComponentListAdapter(
 //                            "materialCardView.rippleColor: ${materialCardView.rippleColor}"
 //                        ).joinToString("\n")
 //                    )
-                    val isJsAcClick = !isJsAc
-                            && frameFrameLayout.tag != null
-                    if(
-                        isJsAcClick
-                        || !onClick
+                    if (
+                        !isClickEnable
                     ) {
 //                        FileSystems.updateFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "sonClcck_in.txt").absolutePath,
@@ -534,14 +566,12 @@ class EditComponentListAdapter(
 //                        materialCardView.isFocusable = false
 //                        materialCardView.isClickable = false
 //                        materialCardView.rippleColor = ColorStateList.valueOf(Color.TRANSPARENT)
-                        frameFrameLayout.setBackgroundResource(0)
-                        frameFrameLayout.isClickable = false
+                        withContext(Dispatchers.Main) {
+                            frameFrameLayout.setBackgroundResource(0)
+                            frameFrameLayout.isClickable = false
+                        }
                         return@setClickOrTouch
                     }
-                    holder.keyPairListConMap.put(
-                        frameTag,
-                        frameKeyPairsCon
-                    )
                     withContext(Dispatchers.Main) {
                         val outValue = TypedValue()
                         context.theme.resolveAttribute(
@@ -593,6 +623,7 @@ class EditComponentListAdapter(
                 }
             }
             val weightSumFloat = 1f
+
             val verticalTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO){
                 EditComponent.AdapterSetter.makeVerticalTagAndKeyPairsListToVarNameToValueMap(
                     fragment,
@@ -901,21 +932,21 @@ class EditComponentListAdapter(
 //                                    R.layout.icon_caption_layout_for_edit_list,
 //                                null
 //                            ) as FrameLayout
-                            FileSystems.updateFile(
-                                File(UsePath.cmdclickDefaultAppDirPath, "lreadyHorozontalLinear.txt").absolutePath,
-                                listOf(
-                                    "frameTag: ${frameTag}",
-                                    "verticalTag: ${verticalTag}",
-                                    "verticalIndex: ${verticalIndex}",
-                                    "horizonIndex: ${horizonIndex}",
-                                    "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
-                                    "isHorozonExtrat: ${extractHorizonLayout is LinearLayoutCompat}",
-//                                    "isextractButtonFrameLayout: ${extractButtonFrameLayout is FrameLayout}",
-                                    "isbuttonFrameLayout: ${buttonFrameLayout is FrameLayout}",
-                                    "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
-                                    "horizonLinearLayout.tag: ${horizonLinearLayout.tag}"
-                                ).joinToString("\n") + "\n\n============\n\n"
-                            )
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lreadyHorozontalLinear.txt").absolutePath,
+//                                listOf(
+//                                    "frameTag: ${frameTag}",
+//                                    "verticalTag: ${verticalTag}",
+//                                    "verticalIndex: ${verticalIndex}",
+//                                    "horizonIndex: ${horizonIndex}",
+//                                    "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
+//                                    "isHorozonExtrat: ${extractHorizonLayout is LinearLayoutCompat}",
+////                                    "isextractButtonFrameLayout: ${extractButtonFrameLayout is FrameLayout}",
+//                                    "isbuttonFrameLayout: ${buttonFrameLayout is FrameLayout}",
+//                                    "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+//                                    "horizonLinearLayout.tag: ${horizonLinearLayout.tag}"
+//                                ).joinToString("\n") + "\n\n============\n\n"
+//                            )
                             if(extractButtonFrameLayout == null) {
                                 horizonLinearLayout.addView(buttonFrameLayout)
                             }
