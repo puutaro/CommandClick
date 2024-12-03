@@ -19,8 +19,8 @@
         android:gravity="bottom"
         >
         <include
-            layout="@layout/page_search"
             android:id="@+id/page_search"
+            layout="@layout/page_search"
             />
 
         <androidx.cardview.widget.CardView

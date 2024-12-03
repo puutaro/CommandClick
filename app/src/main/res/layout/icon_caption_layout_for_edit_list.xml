@@ -32,7 +32,6 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_gravity="center"
-        android:text="sch"
         />
 </FrameLayout>
 

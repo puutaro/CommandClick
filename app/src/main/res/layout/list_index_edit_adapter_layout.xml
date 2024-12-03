@@ -20,6 +20,10 @@
     android:layout_gravity="center"
     android:gravity="center"
     >
+    <include
+        android:id="@+id/edit_component_adapter_bk_frame_layout"
+        layout="@layout/icon_caption_layout_for_edit_list"
+        />
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/edit_component_adapter_total_linear"
         android:layout_width="match_parent"
@@ -28,5 +32,13 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:weightSum="1">
+        <include
+            android:id="@+id/vertical_linear1"
+            layout="@layout/edit_vertical_linear_layout"
+            />
+        <include
+            android:id="@+id/vertical_linear2"
+            layout="@layout/edit_vertical_linear_layout"
+            />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </com.google.android.material.card.MaterialCardView>

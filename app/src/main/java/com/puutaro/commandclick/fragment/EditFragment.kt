@@ -384,7 +384,7 @@ class EditFragment: Fragment() {
 
     private fun destroyViews(){
         exitDialog(binding.editListRecyclerView)
-        binding.editToolBarLinearLayout.removeAllViews()
+        binding.editToolBarHorizonLayout.removeAllViews()
 //        binding.editListInnerTopLinearLayout.removeAllViews()
 //        binding.editListInnerBottomLinearLayout.removeAllViews()
 //        binding.editListLinearLayout.removeAllViews()

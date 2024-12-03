@@ -36,6 +36,7 @@ object BkImageSettingsForEditList {
 
     suspend fun makeBkFrame(
         context: Context?,
+        buttonFrameLayout: FrameLayout?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
@@ -49,6 +50,7 @@ object BkImageSettingsForEditList {
         }
         return EditFrameMaker.make(
             context,
+            buttonFrameLayout,
             fannelInfoMap,
             setReplaceVariableMap,
             busyboxExecutor,

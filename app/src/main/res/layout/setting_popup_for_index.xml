@@ -18,7 +18,7 @@
         android:orientation="vertical"
         android:descendantFocusability="blocksDescendants"
         android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:layout_above="@+id/edit_tool_bar_linear_layout"
+        android:layout_above="@+id/edit_tool_bar_horizon_layout"
         android:padding="10dp"
         >
         <androidx.appcompat.widget.LinearLayoutCompat

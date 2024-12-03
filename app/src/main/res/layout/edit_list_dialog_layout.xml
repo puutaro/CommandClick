@@ -101,7 +101,7 @@
         android:layout_height="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/edit_list_dialog_footer_linearlayout"
+        app:layout_constraintBottom_toTopOf="@+id/edit_list_dialog_footer_horizon_layout"
         android:imeOptions="actionDone"
         android:selectAllOnFocus="true"
         android:paddingTop="10dp"
@@ -115,7 +115,7 @@
         android:inputType="text"
         />
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/edit_list_dialog_footer_linearlayout"
+        android:id="@+id/edit_list_dialog_footer_horizon_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,6 +125,14 @@
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
         >
+        <include
+            android:id="@+id/vertical_linear1"
+            layout="@layout/edit_vertical_linear_layout"
+            />
+        <include
+            android:id="@+id/vertical_linear2"
+            layout="@layout/edit_vertical_linear_layout"
+            />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

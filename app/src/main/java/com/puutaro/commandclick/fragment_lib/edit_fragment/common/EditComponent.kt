@@ -980,15 +980,21 @@ object EditComponent {
                 }
                 suspend fun makeVerticalLinear(
                         context: Context,
-                        verticalLinearLayoutSrc: LinearLayoutCompat?,
+                        xmlVerticalLinearLayout: LinearLayoutCompat?,
+                        curExtraVerticalLinearId: Int?,
                         verticalKeyPairs: List<Pair<String, String>>,
                         verticalLinerWeight: Float,
                         verticalTag: String,
                 ): LinearLayoutCompat {
-                        return when(verticalLinearLayoutSrc == null) {
-                                false -> verticalLinearLayoutSrc
-                                else -> LinearLayoutCompat(context)
+                        return when(xmlVerticalLinearLayout == null) {
+                                false -> xmlVerticalLinearLayout
+                                else -> LinearLayoutCompat(context).apply {
+                                        curExtraVerticalLinearId?.let {
+                                                id = it
+                                        }
+                                }
                         }.apply {
+                                val verticalLayout = this
                                 val verticalWidth =
                                         PairListTool.getValue(
                                                 verticalKeyPairs,
@@ -1011,10 +1017,22 @@ object EditComponent {
                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
                                                 )
                                         }
-                                val verticalLinearParam = LinearLayoutCompat.LayoutParams(
-                                        verticalWidth,
-                                        verticalHeight
-                                ).apply {
+//                                LinearLayoutCompat.LayoutParams(
+//                                        verticalWidth,
+//                                        verticalHeight
+//                                )
+                                val verticalLinearParam = when(xmlVerticalLinearLayout == null) {
+                                        false -> xmlVerticalLinearLayout.layoutParams
+                                        else -> LinearLayoutCompat.LayoutParams(
+                                                verticalWidth,
+                                                verticalHeight
+                                        )
+                                }
+                                verticalLinearParam.apply {
+                                        if(xmlVerticalLinearLayout != null) {
+                                                width = verticalWidth
+                                                height = verticalHeight
+                                        }
                                         tag = verticalTag
                                         val overrideVerticalLinearWeight = PairListTool.getValue(
                                                 verticalKeyPairs,
@@ -1026,7 +1044,6 @@ object EditComponent {
                                                         null
                                                 }
                                         } ?: verticalLinerWeight
-                                        weight = overrideVerticalLinearWeight
                                         val overrideLayoutGravity = PairListTool.getValue(
                                                 verticalKeyPairs,
                                                 Template.EditComponentKey.LAYOUT_GRAVITY.key,
@@ -1041,8 +1058,7 @@ object EditComponent {
                                                 PairListTool.getValue(
                                                         verticalKeyPairs,
                                                         Template.EditComponentKey.BK_COLOR.key,
-                                                )?.let {
-                                                                colorStr ->
+                                                )?.let { colorStr ->
                                                         CmdClickColor.entries.firstOrNull {
                                                                 it.str == colorStr
                                                         }
@@ -1054,29 +1070,33 @@ object EditComponent {
                                                         it.id
                                                 )
                                         }
-                                        val marginData = Template.MarginData(
-                                                context,
-                                                PairListTool.getValue(
-                                                        verticalKeyPairs,
-                                                        Template.EditComponentKey.MARGIN_TOP.key,
-                                                ),
-                                                PairListTool.getValue(
-                                                        verticalKeyPairs,
-                                                        Template.EditComponentKey.MARGIN_BOTTOM.key,
-                                                ),
-                                                PairListTool.getValue(
-                                                        verticalKeyPairs,
-                                                        Template.EditComponentKey.MARGIN_START.key,
-                                                ),
-                                                PairListTool.getValue(
-                                                        verticalKeyPairs,
-                                                        Template.EditComponentKey.MARGIN_END.key,
-                                                ),
-                                        )
-                                        topMargin = marginData.marginTop ?: 0
-                                        bottomMargin = marginData.marginBottom ?: 0
-                                        marginStart = marginData.marginStart ?: 0
-                                        marginEnd = marginData.marginBottom ?: 0
+                                        val verticalLinear = this as LinearLayoutCompat.LayoutParams
+                                        verticalLinear.apply setLinear@ {
+                                                weight = overrideVerticalLinearWeight
+                                                val marginData = Template.MarginData(
+                                                        context,
+                                                        PairListTool.getValue(
+                                                                verticalKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_TOP.key,
+                                                        ),
+                                                        PairListTool.getValue(
+                                                                verticalKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_BOTTOM.key,
+                                                        ),
+                                                        PairListTool.getValue(
+                                                                verticalKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_START.key,
+                                                        ),
+                                                        PairListTool.getValue(
+                                                                verticalKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_END.key,
+                                                        ),
+                                                )
+                                                topMargin = marginData.marginTop ?: 0
+                                                bottomMargin = marginData.marginBottom ?: 0
+                                                marginStart = marginData.marginStart ?: 0
+                                                marginEnd = marginData.marginBottom ?: 0
+                                        }
 //                            setMargins(ScreenSizeCalculator.toDp(context,10))
                                 }
                                 layoutParams = verticalLinearParam

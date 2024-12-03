@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
@@ -113,6 +114,7 @@ object EditFrameMaker {
 
     suspend fun make(
         context: Context?,
+        buttonLayoutSrc: FrameLayout?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
@@ -120,17 +122,20 @@ object EditFrameMaker {
         width: Int,
         firstWeight: Float?,
         overrideTag: String?,
-        totalSettingValMap: Map<String, String>?
+        totalSettingValMap: Map<String, String>?,
+        isFrameLayoutParam: Boolean = false,
     ): FrameLayout? {
         if(
             context == null
         ) return null
         val buttonLayout = makeButtonFrameLayout(
             context,
+            buttonLayoutSrc,
             frameKeyPairList,
             width,
             firstWeight,
             overrideTag,
+            isFrameLayoutParam,
         ) ?: return null
 
         buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)?.let {
@@ -207,10 +212,12 @@ object EditFrameMaker {
 
     private suspend fun makeButtonFrameLayout(
         context: Context?,
+        buttonLayout: FrameLayout?,
         frameKeyPairList: List<Pair<String, String>>?,
         width: Int,
         firstWeight: Float?,
         overrideTag: String?,
+        isFrameLayoutParam: Boolean,
     ):  FrameLayout? {
         if(
             context == null
@@ -224,18 +231,13 @@ object EditFrameMaker {
                 enableStr == switchOff
             ) return null
         }
-        val inflater = LayoutInflater.from(context)
-        val buttonLayout = inflater.inflate(
-            R.layout.icon_caption_layout_for_edit_list,
-            null
-        ) as FrameLayout
         PairListTool.getValue(
             frameKeyPairList,
             visibleKey,
         ).let {
                 visibleStr ->
             withContext(Dispatchers.Main) {
-                buttonLayout.visibility = EditComponent.Template.VisibleManager.getVisible(
+                buttonLayout?.visibility = EditComponent.Template.VisibleManager.getVisible(
                     visibleStr
                 )
             }
@@ -267,39 +269,48 @@ object EditFrameMaker {
             }
 //                ,ScreenSizeCalculator.toDp(context, 50)
         }
-        val param = LinearLayoutCompat.LayoutParams(
+        FrameLayout.LayoutParams(
             overrideWidth,
             height,
         )
-        val overrideWeight = PairListTool.getValue(
-            frameKeyPairList,
-            weightKey
-        )?.let {
-            try{
-                it.toFloat()
-            } catch (e: Exception){
-                null
+
+        val param = let {
+            val overrideLayoutGravity = PairListTool.getValue(
+                frameKeyPairList,
+                layoutGravityKey
+            )?.let {
+                    gravityStr ->
+                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                    it.key == gravityStr
+                }?.gravity
+            } ?: Gravity.CENTER
+            when (isFrameLayoutParam) {
+                true -> FrameLayout.LayoutParams(
+                    overrideWidth,
+                    height,
+                ).apply {
+                    gravity = overrideLayoutGravity
+                }
+
+                else -> LinearLayoutCompat.LayoutParams(
+                    overrideWidth,
+                    height,
+                ).apply {
+                    val overrideWeight = PairListTool.getValue(
+                        frameKeyPairList,
+                        weightKey
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch (e: Exception) {
+                            null
+                        }
+                    } ?: firstWeight ?: this.weight
+                    weight = overrideWeight
+                    gravity = overrideLayoutGravity
+                }
             }
-        } ?: firstWeight ?: param.weight
-        val marginData = EditComponent.Template.MarginData(
-            context,
-            PairListTool.getValue(
-                frameKeyPairList,
-                marginTopKey
-            ),
-            PairListTool.getValue(
-                frameKeyPairList,
-                marginBottomKey
-            ),
-            PairListTool.getValue(
-                frameKeyPairList,
-                marginStartKey
-            ),
-            PairListTool.getValue(
-                frameKeyPairList,
-                marginEndKey
-            ),
-        )
+        }
         val paddingData = EditComponent.Template.PaddingData(
             context,
             PairListTool.getValue(
@@ -320,23 +331,31 @@ object EditFrameMaker {
             ),
         )
         param.apply {
-            weight = overrideWeight
+            val marginData = EditComponent.Template.MarginData(
+                context,
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    marginTopKey
+                ),
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    marginBottomKey
+                ),
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    marginStartKey
+                ),
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    marginEndKey
+                ),
+            )
             topMargin = marginData.marginTop ?: 0
             marginStart = marginData.marginStart ?: 0
             marginEnd = marginData.marginEnd ?: 0
             bottomMargin = marginData.marginBottom ?: 0
-            val overrideLayoutGravity = PairListTool.getValue(
-                frameKeyPairList,
-                layoutGravityKey
-            )?.let {
-                    gravityStr ->
-                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                    it.key == gravityStr
-                }?.gravity
-            } ?: Gravity.CENTER
-            gravity = overrideLayoutGravity
         }
-        buttonLayout.apply {
+        buttonLayout?.apply {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "soverrideTag.txt").absolutePath,
 //                listOf(

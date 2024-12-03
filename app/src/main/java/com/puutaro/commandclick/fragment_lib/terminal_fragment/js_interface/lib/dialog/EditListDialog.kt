@@ -91,10 +91,19 @@ class EditListDialog(
             terminalFragment.editListDialog?.findViewById<AppCompatEditText>(
                 R.id.edit_list_dialog_search_edit_text
             ) ?: return
-        val editFooterLinearlayout =
+        val editFooterHorizonLayout =
             terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
-                R.id.edit_list_dialog_footer_linearlayout
+                R.id.edit_list_dialog_footer_horizon_layout
             ) ?: return
+        val verticalLinearListForFooter =
+            listOf(
+                terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
+                    R.id.vertical_linear1
+                ),
+                terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
+                    R.id.vertical_linear2
+                )
+            )
 
         val fannelInfoMap = CmdClickMap.createMap(
             fannelInfoCon,
@@ -144,7 +153,8 @@ class EditListDialog(
             editListRecyclerView,
             editListBkFrame,
             editListSearchEditText,
-            editFooterLinearlayout,
+            editFooterHorizonLayout,
+            verticalLinearListForFooter,
             null,
             null,
             mainFannelConList,
@@ -153,7 +163,7 @@ class EditListDialog(
             dismissForInner(
                 terminalFragment,
                 editListRecyclerView,
-                editFooterLinearlayout,
+                editFooterHorizonLayout,
                 editListBkFrame,
                 constraintLayout,
             )
@@ -195,7 +205,7 @@ class EditListDialog(
             )
         val editFooterLinearlayout =
             terminalFragmentRef.get()?.editListDialog?.findViewById<LinearLayoutCompat>(
-                R.id.edit_list_dialog_footer_linearlayout
+                R.id.edit_list_dialog_footer_horizon_layout
             )
         val terminalFragment = terminalFragmentRef.get()
         dismissForInner(

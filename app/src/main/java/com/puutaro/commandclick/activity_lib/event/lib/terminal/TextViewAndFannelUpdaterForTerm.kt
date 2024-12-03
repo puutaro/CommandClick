@@ -6,7 +6,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
@@ -14,14 +13,12 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 object TextViewAndFannelUpdaterForTerm {
     fun update(
@@ -135,14 +132,14 @@ object TextViewAndFannelUpdaterForTerm {
                     ) return@let null
                     fragment
                 }
-                editFragment?.binding?.editFooterLinearlayout?.findViewWithTag<LinearLayoutCompat>(
+                editFragment?.binding?.editFooterHorizonLayout?.findViewWithTag<LinearLayoutCompat>(
                     indexOrParentTagName
                 )
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
             -> {
                 terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
-                    R.id.edit_list_dialog_footer_linearlayout
+                    R.id.edit_list_dialog_footer_horizon_layout
                 )
             }
         }

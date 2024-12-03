@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
@@ -90,7 +91,11 @@ object EditTextProducerForEdit {
 //                "editFragment.editListConfigMap: ${editFragment.editListConfigMap}"
 //            ).joinToString("\n")
 //        )
-
+        val verticalLinearListForFooter =
+            listOf(
+                binding.verticalLinear1 as LinearLayoutCompat,
+                binding.verticalLinear2 as LinearLayoutCompat,
+            )
         WithEditComponentListView.create(
             editFragment,
             editFragment.fannelInfoMap,
@@ -104,8 +109,9 @@ object EditTextProducerForEdit {
             binding.editListRecyclerView,
             binding.editListBkFrame,
             binding.editListSearchEditText,
-            binding.editFooterLinearlayout,
-            binding.editToolBarLinearLayout,
+            binding.editFooterHorizonLayout,
+            verticalLinearListForFooter,
+            binding.editToolBarHorizonLayout,
             editToolbarFannelCenterButton,
             editFragment.mainFannelConList,
         )

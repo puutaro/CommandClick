@@ -6,11 +6,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.children
-import androidx.core.view.isVisible
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,7 +20,6 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -36,7 +34,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsF
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
-import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.file.ReadText
@@ -51,10 +48,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 class EditComponentListAdapter(
-    private val fragment: Fragment?,
+    private val fragmentRef: WeakReference<Fragment>,
+    private val layoutInflater: LayoutInflater,
     val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     val editListConfigMap: Map<String, String>?,
@@ -64,9 +63,9 @@ class EditComponentListAdapter(
     var fannelContentsList: List<String>?,
 ): RecyclerView.Adapter<EditComponentListAdapter.EditListViewHolder>()
 {
-    private val context = fragment?.context
+//    private val context = fragment?.context
     private val listLimitSize = 300
-    private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+//    private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
     private val initSettingValMap = RecordNumToMapNameValueInHolder.parse(
         fannelContentsList,
         CommandClickScriptVariable.SETTING_SEC_START,
@@ -88,8 +87,9 @@ class EditComponentListAdapter(
     ).let {
         try{
             it?.toInt()?.let {
+
                 ScreenSizeCalculator.toDp(
-                    context,
+                    fragmentRef.get()?.context,
                     it,
                 )
             }
@@ -103,7 +103,7 @@ class EditComponentListAdapter(
         try{
             it?.toFloat()?.let {
                 ScreenSizeCalculator.toDpForFloat(
-                    context,
+                    fragmentRef.get()?.context,
                     it,
                 )
             }
@@ -118,7 +118,7 @@ class EditComponentListAdapter(
         try{
             it?.toFloat()?.let {
                 ScreenSizeCalculator.toDpForFloat(
-                    context,
+                    fragmentRef.get()?.context,
                     it,
                 )
             }
@@ -151,7 +151,7 @@ class EditComponentListAdapter(
         ListSettingsForEditList.ListSettingKey.VIEW_LAYOUT_PATH.key,
     )
     private val frameMapToFrameTagAndVerticalKeysListToLinearMapList = ListSettingsForEditList.ViewLayoutPathManager.parse(
-        context,
+        fragmentRef.get()?.context,
         fannelInfoMap,
         setReplaceVariableMap,
         viewLayoutPath
@@ -196,9 +196,44 @@ class EditComponentListAdapter(
             view.findViewById<MaterialCardView>(
                 R.id.edit_component_adapter_mterial_card_view
             )
-        val totalLinearLayout = view.findViewById<LinearLayoutCompat>(
+        val bkFrameLayout = materialCardView.findViewById<FrameLayout>(
+            R.id.edit_component_adapter_bk_frame_layout
+        )
+        val totalLinearLayout = materialCardView.findViewById<LinearLayoutCompat>(
             R.id.edit_component_adapter_total_linear,
         )
+        private val vertical1 = totalLinearLayout.findViewById<LinearLayoutCompat>(
+            R.id.vertical_linear1,
+        )
+        private val vertical2 = totalLinearLayout.findViewById<LinearLayoutCompat>(
+            R.id.vertical_linear2,
+        )
+        val readyVerticalLayoutList = listOf (
+            vertical1,
+            vertical2,
+        )
+//            .let {
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lreadyVertical00.txt").absolutePath,
+//                listOf(
+//                    "${vertical1 is LinearLayoutCompat}",
+//                    "${vertical2 is LinearLayoutCompat}",
+//                ).joinToString("======")
+//            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lreadyVertical01.txt").absolutePath,
+//                listOf(
+//                    "${vertical1.findViewById<LinearLayoutCompat>(
+//                        R.id.edit_component_adapter_vertical,
+//                    ) is LinearLayoutCompat}",
+//                    "${vertical2.findViewById<LinearLayoutCompat>(
+//                        R.id.edit_component_adapter_vertical,
+//                    ) is LinearLayoutCompat}",
+//                ).joinToString("======")
+//            )
+//            it
+//        }
+
         var keyPairListConMap: MutableMap<String, String?> = mutableMapOf()
         var srcTitle = String()
         var srcCon = String()
@@ -214,7 +249,7 @@ class EditComponentListAdapter(
         parent: ViewGroup,
         viewType: Int
     ): EditListViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
+//        val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(
             R.layout.list_index_edit_adapter_layout,
             parent,
@@ -247,14 +282,16 @@ class EditComponentListAdapter(
     private val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map{
         it.key
     }
+//    private val buttonFrameLayoutInflater = LayoutInflater.from(context)
 
     override fun onBindViewHolder(
         holder: EditListViewHolder,
         editListPosition: Int
     ) {
-        if(
-            context == null
-        ) return
+        val fragment = fragmentRef.get()
+            ?: return
+        val context = fragment.context
+            ?: return
         if(
             editListPosition > listLimitSize
         ) return
@@ -357,13 +394,21 @@ class EditComponentListAdapter(
 //            )
             val materialCardView = withContext(Dispatchers.Main) {
                 holder.materialCardView.apply {
-                    removeAllViews()
+//                    removeAllViews()
                     layoutElevation?.let {
                         elevation = it
                     }
                     layoutRadius?.let {
                         radius = it
                     }
+                }
+            }
+            withContext(Dispatchers.Main){
+                holder.readyVerticalLayoutList.forEach {
+                    it.children.forEach {
+                        it.visibility = View.GONE
+                    }
+                    it.visibility = View.GONE
                 }
             }
 //            GridLayoutManager
@@ -377,6 +422,7 @@ class EditComponentListAdapter(
             withContext(Dispatchers.Main) execSetFrame@ {
                 val frameFrameLayout = EditFrameMaker.make(
                     context,
+                    holder.bkFrameLayout,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
@@ -385,8 +431,9 @@ class EditComponentListAdapter(
                     null,
                     frameTag,
                     totalSettingValMap,
+                    true,
                 )
-                withContext(Dispatchers.Main) setClickOrTouch@ {
+                let setClickOrTouch@ {
                     if(
                         frameFrameLayout == null
                     ) return@setClickOrTouch
@@ -488,7 +535,6 @@ class EditComponentListAdapter(
                         }
                     }
                 }
-                materialCardView.addView(frameFrameLayout)
             }
             val weightSumFloat = 1f
             val verticalTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO){
@@ -506,17 +552,21 @@ class EditComponentListAdapter(
                     holder.bindingAdapterPosition,
                 )
             }
-            val totalLinearLayout = withContext(Dispatchers.Main) {
-                holder.totalLinearLayout.apply {
-                    removeAllViews()
-                }
-            }
+            val totalLinearLayout = holder.totalLinearLayout
+//            withContext(Dispatchers.Main) {
+//                holder.totalLinearLayout
+////                    .apply {
+////                    removeAllViews()
+////                }
+//            }
 //            val verticalLinerWeight = weightSumFloat / verticalTagToKeyPairsListToVarNameToValueMapList.size
             val verticalLinerWeight = EditComponent.AdapterSetter.culcVerticalLinerWeight(
                 verticalTagToKeyPairsListToVarNameToValueMapList
             )
+            val extraVerticalStartId = 40000
             verticalTagToKeyPairsListToVarNameToValueMapList.forEachIndexed setVertical@ {
                     verticalIndex, verticalTagToKeyPairsListToVarNameToValueMap ->
+                val curExtraVerticalLinearId = extraVerticalStartId + verticalIndex
                 val verticalTag = verticalTagToKeyPairsListToVarNameToValueMap.first
                 withContext(Dispatchers.IO){
                     EditComponent.AdapterSetter.tagDuplicateErrHandler(
@@ -544,7 +594,8 @@ class EditComponentListAdapter(
                         isNotHorizonKeyErr ->
                     if(isNotHorizonKeyErr) return@setVertical
                 }
-                val verticalVarNameToValueMap = keyPairsListToVarNameToValueMap.second + frameVarNameValueMap
+                val verticalVarNameToValueMap =
+                    keyPairsListToVarNameToValueMap.second + frameVarNameValueMap
                 val isVerticalEnable = withContext(Dispatchers.IO) {
                     PairListTool.getValue(
                         verticalKeyPairs,
@@ -556,14 +607,42 @@ class EditComponentListAdapter(
                 if(
                     !isVerticalEnable
                 ) return@setVertical
+                val readyVerticalLayout =
+                    holder.readyVerticalLayoutList.getOrNull(verticalIndex)
+                val extractVerticalLinear =
+                    readyVerticalLayout
+                        ?: let {
+                            totalLinearLayout.findViewById<LinearLayoutCompat>(
+                                curExtraVerticalLinearId
+                            )
+                        }
+                val curRegExtraVerticalLinearId =
+                    when (extractVerticalLinear == null) {
+                        false -> extractVerticalLinear.id
+                        else -> curExtraVerticalLinearId
+                    }
+
                 val verticalLinearLayout = withContext(Dispatchers.Main) {
                     EditComponent.AdapterSetter.makeVerticalLinear(
                         context,
-                        null,
+                        extractVerticalLinear,
+                        curRegExtraVerticalLinearId,
                         verticalKeyPairs,
                         verticalLinerWeight,
                         verticalTag,
                     )
+                }
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lreadyVerticalLinear.txt").absolutePath,
+//                    listOf(
+//                        "frameTag: ${frameTag}",
+//                        "verticalTag: ${verticalTag}",
+//                        "verticalIndex: ${verticalIndex}",
+//                        "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
+//                    ).joinToString("\n")
+//                )
+                if(extractVerticalLinear == null) {
+                    totalLinearLayout.addView(verticalLinearLayout)
                 }
                 verticalTagToLinearKeysListMap.get(verticalTag)?.forEach setHorizon@ {
                         linearKeyValues ->
@@ -700,6 +779,7 @@ class EditComponentListAdapter(
 //                                    verticalKeyPairs,
                                     linearFrameKeyPairsList
                                 )
+                                verticalLinearLayout.addView(horizonLinearLayout)
                             }
                             return@setFrame
                         }
@@ -710,8 +790,13 @@ class EditComponentListAdapter(
 //                            ).joinToString("\n")
 //                        )
                         val linearFrameLayout = withContext(Dispatchers.Main) {
+                            val buttonFrameLayout = layoutInflater.inflate(
+                                R.layout.icon_caption_layout_for_edit_list,
+                                null
+                            ) as FrameLayout
                             EditFrameMaker.make(
                                 context,
+                                buttonFrameLayout,
                                 fannelInfoMap,
                                 setReplaceVariableMap,
                                 busyboxExecutor,
@@ -723,7 +808,7 @@ class EditComponentListAdapter(
                                 totalSettingValMap
                             )
                         } ?: return@setFrame
-
+                        horizonLinearLayout.addView(linearFrameLayout)
                         val isConsec = withContext(Dispatchers.IO) {
                             PairListTool.getValue(
                                 linearFrameKeyPairsList,
@@ -811,13 +896,13 @@ class EditComponentListAdapter(
                                     }
                                 }
                             }
-                        horizonLinearLayout.addView(linearFrameLayout)
+//                        horizonLinearLayout.addView(linearFrameLayout)
                     }
-                    verticalLinearLayout.addView(horizonLinearLayout)
+//                    verticalLinearLayout.addView(horizonLinearLayout)
                 }
-                totalLinearLayout.addView(verticalLinearLayout)
+//                totalLinearLayout.addView(verticalLinearLayout)
             }
-            materialCardView.addView(totalLinearLayout)
+//            materialCardView.addView(totalLinearLayout)
             withContext(Dispatchers.Main) {
                 val itemView = holder.itemView
                 itemView.setOnClickListener {
@@ -859,6 +944,7 @@ class EditComponentListAdapter(
     }
 
     fun handleClickEvent(
+        fragment: Fragment,
         editListRecyclerView: RecyclerView,
         tag: String,
         settingValue: String?,
@@ -1095,65 +1181,65 @@ class EditComponentListAdapter(
         }
     }
 
-    private fun makeFileConList(
-        fileName: String,
-    ): List<String> {
-        if (
-            editListConfigMap.isNullOrEmpty()
-        ) return emptyList()
-        return emptyList()
-    }
-
-    private suspend fun setDescView(
-        fileDescTextView: AppCompatTextView,
-        fileNameOrInstallFannelLine: String,
-        fileCon: String,
-    ){
-        val makeFileDescArgsMaker = EditListConfig.MakeFileDescArgsMaker(
-//            filterDir,
-            fileNameOrInstallFannelLine,
-            fileCon,
-            editListConfigMap,
-            busyboxExecutor,
-        )
-        val descCon = EditListConfig.makeFileDesc(
-            makeFileDescArgsMaker,
-        )
-        withContext(Dispatchers.Main) {
-            when (descCon.isNullOrEmpty()) {
-                true -> fileDescTextView.isVisible = false
-                else -> fileDescTextView.text = descCon
-            }
-        }
-    }
-
-    private fun setFileContentsBackColor(
-        fileConList: List<String>,
+//    private fun makeFileConList(
 //        fileName: String,
-        editExecuteValueForInstallFannel: String,
-    ): Int {
-        if(
-            context == null
-        ) return R.color.fannel_icon_color
-        if(
-            editExecuteValueForInstallFannel == editExecuteAlways
-        ) return R.color.terminal_color
-        val settingVariableList = CommandClickVariables.extractValListFromHolder(
-            fileConList,
-            CommandClickScriptVariable.SETTING_SEC_START,
-            CommandClickScriptVariable.SETTING_SEC_END,
-        )
-        val editExecuteValue = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.EDIT_EXECUTE,
-            CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
-        )
-        if(
-            editExecuteValue
-            == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-        ) return R.color.terminal_color
-        return R.color.fannel_icon_color
-    }
+//    ): List<String> {
+//        if (
+//            editListConfigMap.isNullOrEmpty()
+//        ) return emptyList()
+//        return emptyList()
+//    }
+
+//    private suspend fun setDescView(
+//        fileDescTextView: AppCompatTextView,
+//        fileNameOrInstallFannelLine: String,
+//        fileCon: String,
+//    ){
+//        val makeFileDescArgsMaker = EditListConfig.MakeFileDescArgsMaker(
+////            filterDir,
+//            fileNameOrInstallFannelLine,
+//            fileCon,
+//            editListConfigMap,
+//            busyboxExecutor,
+//        )
+//        val descCon = EditListConfig.makeFileDesc(
+//            makeFileDescArgsMaker,
+//        )
+//        withContext(Dispatchers.Main) {
+//            when (descCon.isNullOrEmpty()) {
+//                true -> fileDescTextView.isVisible = false
+//                else -> fileDescTextView.text = descCon
+//            }
+//        }
+//    }
+
+//    private fun setFileContentsBackColor(
+//        fileConList: List<String>,
+////        fileName: String,
+//        editExecuteValueForInstallFannel: String,
+//    ): Int {
+//        if(
+//            context == null
+//        ) return R.color.fannel_icon_color
+//        if(
+//            editExecuteValueForInstallFannel == editExecuteAlways
+//        ) return R.color.terminal_color
+//        val settingVariableList = CommandClickVariables.extractValListFromHolder(
+//            fileConList,
+//            CommandClickScriptVariable.SETTING_SEC_START,
+//            CommandClickScriptVariable.SETTING_SEC_END,
+//        )
+//        val editExecuteValue = SettingVariableReader.getStrValue(
+//            settingVariableList,
+//            CommandClickScriptVariable.EDIT_EXECUTE,
+//            CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
+//        )
+//        if(
+//            editExecuteValue
+//            == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+//        ) return R.color.terminal_color
+//        return R.color.fannel_icon_color
+//    }
 
     private fun initListProperty(
         editListPosition: Int,

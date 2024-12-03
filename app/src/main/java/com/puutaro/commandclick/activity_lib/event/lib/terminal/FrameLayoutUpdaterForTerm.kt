@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import android.widget.FrameLayout
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
@@ -99,14 +97,14 @@ object FrameLayoutUpdaterForTerm {
                     ) return@let null
                     fragment
                 }
-                editFragment?.binding?.editFooterLinearlayout?.findViewWithTag<LinearLayoutCompat>(
+                editFragment?.binding?.editFooterHorizonLayout?.findViewWithTag<LinearLayoutCompat>(
                     indexOrParentTagName
                 )
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
                 -> {
                 terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
-                    R.id.edit_list_dialog_footer_linearlayout
+                    R.id.edit_list_dialog_footer_horizon_layout
                 )
             }
         }

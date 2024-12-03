@@ -104,14 +104,14 @@ object ImageViewAndFannelUpdaterForTerm {
                     ) return@let null
                     fragment
                 }
-                editFragment?.binding?.editFooterLinearlayout?.findViewWithTag<LinearLayoutCompat>(
+                editFragment?.binding?.editFooterHorizonLayout?.findViewWithTag<LinearLayoutCompat>(
                     indexOrParentTagName
                 )
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
                 -> {
                 terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
-                    R.id.edit_list_dialog_footer_linearlayout
+                    R.id.edit_list_dialog_footer_horizon_layout
                 )
             }
         }

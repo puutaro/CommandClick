@@ -114,7 +114,7 @@
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/edit_footer_linearlayout"
+            app:layout_constraintBottom_toTopOf="@+id/edit_footer_horizon_layout"
             android:imeOptions="actionDone"
             android:selectAllOnFocus="true"
             android:paddingTop="10dp"
@@ -128,20 +128,28 @@
             android:inputType="text"
             />
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/edit_footer_linearlayout"
+            android:id="@+id/edit_footer_horizon_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/edit_tool_bar_linear_layout"
+            app:layout_constraintBottom_toTopOf="@+id/edit_tool_bar_horizon_layout"
             android:background="@android:color/white"
             android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             android:weightSum="1"
             >
+            <include
+                android:id="@+id/vertical_linear1"
+                layout="@layout/edit_vertical_linear_layout"
+                />
+            <include
+                android:id="@+id/vertical_linear2"
+                layout="@layout/edit_vertical_linear_layout"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/edit_tool_bar_linear_layout"
+            android:id="@+id/edit_tool_bar_horizon_layout"
             android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_layout_height"
             app:layout_constraintStart_toStartOf="parent"
