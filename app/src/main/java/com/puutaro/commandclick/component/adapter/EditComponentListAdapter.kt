@@ -53,7 +53,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
-import java.time.LocalDateTime
 
 
 class EditComponentListAdapter(
@@ -217,10 +216,10 @@ class EditComponentListAdapter(
             R.id.edit_component_adapter_total_linear,
         )
         private val vertical1 = totalLinearLayout.findViewById<LinearLayoutCompat>(
-            R.id.vertical_linear1,
+            R.id.edit_component_adapter_vertical1,
         )
         private val vertical2 = totalLinearLayout.findViewById<LinearLayoutCompat>(
-            R.id.vertical_linear2,
+            R.id.edit_component_adapter_vertical2,
         )
         val readyVerticalLayoutList = listOf (
             vertical1,
@@ -230,13 +229,46 @@ class EditComponentListAdapter(
             R.id.edit_component_adapter_horizon1,
             R.id.edit_component_adapter_horizon2,
         )
-        val verticalIndexAndReadyHorizonLayoutList = readyVerticalLayoutList.map {
-                vertical ->
-                horizonIdList.map {
-                    vertical.findViewById<LinearLayoutCompat>(it)
-                }
-            }
-
+        val horizon11 = vertical1.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon11)
+        val horizon12 = vertical1.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon12)
+        val horizon21 = vertical2.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon21)
+        val horizon22 = vertical2.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon22)
+        val verticalIndexAndReadyHorizonLayoutList = listOf(
+            listOf(
+                horizon11,
+                horizon12
+            ),
+            listOf(
+                horizon21,
+                horizon22
+            )
+        )
+        val verticalIndexAndHorizonIndexAndReadyContentsLayoutList = listOf(
+            listOf(
+                listOf(
+                    horizon11.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout111),
+                    horizon11.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout112),
+                    horizon11.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout113),
+                ),
+                listOf(
+                    horizon12.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout121),
+                    horizon12.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout122),
+                    horizon12.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout123),
+                ),
+            ),
+            listOf(
+                listOf(
+                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout211),
+                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout212),
+                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout213),
+                ),
+                listOf(
+                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout221),
+                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout222),
+                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout223),
+                ),
+            ),
+        )
 //        private val buttonFrameIdListList = listOf(
 //            listOf(
 //                R.id.icon_caption_for_edit_layout11,
@@ -811,6 +843,8 @@ class EditComponentListAdapter(
                         "verticalTag: ${verticalTag}",
                         mapListElInfoForVertical
                     ).joinToString(", ")
+                val curHorizonIndexAndReadyContentsLayoutList =
+                    holder.verticalIndexAndHorizonIndexAndReadyContentsLayoutList.getOrNull(verticalIndex)
                 horizonTagToKeyPairsListToVarNameToValueMapList.forEachIndexed setHorizon@ {
                     horizonIndex, horizonTagToKeyPairsListToVarNameToValueMap ->
                     val curExtraHorizonLinearId = horizonLayoutStartId + horizonIndex
@@ -912,7 +946,7 @@ class EditComponentListAdapter(
 //                            "horizonTagToContentsKeysListMapWithReplace.get(horizonTag): ${horizonTagToContentsKeysListMapWithReplace.get(horizonTag)}",
 //                        ).joinToString("\n\n\n") + "\n\n======\n\n"
 //                    )
-
+                    val readyContentsLayoutList = curHorizonIndexAndReadyContentsLayoutList?.getOrNull(horizonIndex)
                     horizonTagToContentsKeysListMapWithReplace.get(horizonTag)?.forEachIndexed setContents@ {
                             contentsIndex, contentsKeyValues ->
                         val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
@@ -1027,53 +1061,109 @@ class EditComponentListAdapter(
                                         enableStr == switchOff
                                     ) return@withContext null
                                 }
-                                val extractButtonFrameLayout =
-                                    horizonLinearLayout.findViewById<FrameLayout>(curContentsLayoutId)
-                                val buttonFrameLayout =
-                                    extractButtonFrameLayout ?: layoutInflater.inflate(
-                                        R.layout.icon_caption_layout_for_edit_list,
-                                        null
-                                    ) as FrameLayout
+                                val extractContentsFrameLayout =
+                                    readyContentsLayoutList?.getOrNull(execSetContentsIndex)
+                                        ?: horizonLinearLayout.findViewById<FrameLayout>(curContentsLayoutId)
+                                val contentsFrameLayout = extractContentsFrameLayout
+                                    ?: let {
+                                        val dp50 =
+                                            context.resources.getDimension(R.dimen.toolbar_layout_height)
+                                        val contentsLayout = FrameLayout(context).apply {
+                                            layoutParams = LinearLayoutCompat.LayoutParams(
+                                                0,
+                                                dp50.toInt()
+                                            )
+                                        }
+                                        val imageView = AppCompatImageView(context).apply {
+                                            layoutParams = FrameLayout.LayoutParams(
+                                                FrameLayout.LayoutParams.MATCH_PARENT,
+                                                FrameLayout.LayoutParams.MATCH_PARENT
+                                            )
+                                        }
+                                        val textView = OutlineTextView(context).apply {
+                                            layoutParams =  FrameLayout.LayoutParams(
+                                                FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                FrameLayout.LayoutParams.WRAP_CONTENT
+                                            )
+                                        }
+                                        contentsLayout.addView(imageView)
+                                        contentsLayout.addView(textView)
+                                        contentsLayout
+                                    }
+//                                    extractContentsFrameLayout ?: (
+//                                            layoutInflater.inflate(
+//                                            R.layout.icon_caption_layout_for_edit_list,
+//                                            null
+//                                        ) as FrameLayout
+//                                            ).apply {
+//                                                id = curContentsLayoutId
+//                                        }
+//                                contentsFrameLayout.visibility = View.VISIBLE
+//                                contentsFrameLayout.children.forEach {
+//                                    val isTextView = it is OutlineTextView
+//                                    if(!isTextView) return@forEach
+//                                    val textView = it as OutlineTextView
+//                                    textView.text = "test"
+//                                }
 //                                extractButtonFrameLayout ?:
 //                                layoutInflater.inflate(
 //                                    R.layout.icon_caption_layout_for_edit_list,
 //                                null
 //                            ) as FrameLayout
-//                            FileSystems.updateFile(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lreadyHorozontalLinear.txt").absolutePath,
-//                                listOf(
-//                                    "frameTag: ${frameTag}",
-//                                    "verticalTag: ${verticalTag}",
-//                                    "verticalIndex: ${verticalIndex}",
-//                                    "horizonIndex: ${horizonIndex}",
-//                                    "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
-//                                    "isHorozonExtrat: ${extractHorizonLayout is LinearLayoutCompat}",
-////                                    "isextractButtonFrameLayout: ${extractButtonFrameLayout is FrameLayout}",
-//                                    "isbuttonFrameLayout: ${buttonFrameLayout is FrameLayout}",
-//                                    "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
-//                                    "horizonLinearLayout.tag: ${horizonLinearLayout.tag}"
-//                                ).joinToString("\n") + "\n\n============\n\n"
-//                            )
-                                if(extractButtonFrameLayout == null) {
-                                    horizonLinearLayout.addView(buttonFrameLayout)
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "lreadyHorozontalLinear.txt").absolutePath,
+//                                    listOf(
+//                                        "frameTag: ${frameTag}",
+//                                        "verticalTag: ${verticalTag}",
+//                                        "verticalIndex: ${verticalIndex}",
+//                                        "horizonIndex: ${horizonIndex}",
+//                                        "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
+//                                        "isHorozonExtrat: ${extractContentsFrameLayout is FrameLayout}",
+//    //                                    "isextractButtonFrameLayout: ${extractButtonFrameLayout is FrameLayout}",
+//                                        "isbuttonFrameLayout: ${contentsFrameLayout is FrameLayout}",
+//                                        "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
+//                                        "horizonLinearLayout.tag: ${horizonLinearLayout.tag}",
+//                                        "contentsFrameLayout.tag: ${contentsFrameLayout.tag}"
+//                                    ).joinToString("\n") + "\n\n============\n\n"
+//                                )
+                                if(extractContentsFrameLayout == null) {
+                                    horizonLinearLayout.addView(contentsFrameLayout)
                                 }
                                 CoroutineScope(Dispatchers.Main).launch {
-                                    EditFrameMaker.make(
-                                        context,
-                                        buttonFrameLayout,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        linearFrameKeyPairsList,
-                                        0,
-                                        layoutWeight,
-                                        contentsTag,
-                                        totalSettingValMap,
-                                        requestBuilderSrc,
+                                    withContext(Dispatchers.Main) {
+                                        EditFrameMaker.make(
+                                            context,
+                                            contentsFrameLayout,
+                                            fannelInfoMap,
+                                            setReplaceVariableMap,
+                                            busyboxExecutor,
+                                            linearFrameKeyPairsList,
+                                            0,
+                                            layoutWeight,
+                                            contentsTag,
+                                            totalSettingValMap,
+                                            requestBuilderSrc,
 
-                                    )
+                                            )
+                                    }
+//                                    FileSystems.updateFile(
+//                                        File(UsePath.cmdclickDefaultAppDirPath, "lreadyHorozontalMake.txt").absolutePath,
+//                                        listOf(
+//                                            "frameTag: ${frameTag}",
+//                                            "verticalTag: ${verticalTag}",
+//                                            "verticalIndex: ${verticalIndex}",
+//                                            "horizonIndex: ${horizonIndex}",
+//                                            "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
+//                                            "isHorozonExtrat: ${extractContentsFrameLayout is FrameLayout}",
+//                                            //                                    "isextractButtonFrameLayout: ${extractButtonFrameLayout is FrameLayout}",
+//                                            "isbuttonFrameLayout: ${contentsFrameLayout is FrameLayout}",
+//                                            "contentsFrameLayout.weight: ${(contentsFrameLayout.layoutParams as LinearLayoutCompat.LayoutParams).weight}",
+//                                            "contentsFrameLayout.tag: ${contentsFrameLayout.tag}",
+//                                            "contentsFrameLayout.id: ${contentsFrameLayout.id}",
+//                                        ).joinToString("\n") + "\n\n============\n\n"
+//                                    )
                                 }
-                                buttonFrameLayout
+                                contentsFrameLayout
                             } ?: return@execSetContents
 
                             CoroutineScope(Dispatchers.Main).launch {

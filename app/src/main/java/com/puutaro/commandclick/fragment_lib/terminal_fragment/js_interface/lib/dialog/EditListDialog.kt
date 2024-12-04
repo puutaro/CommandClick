@@ -26,6 +26,7 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -118,77 +119,97 @@ class EditListDialog(
             }
         }
 
-        val fannelInfoMap = CmdClickMap.createMap(
-            fannelInfoCon,
-            JsFannelInfo.fannelInfoMapSeparator
-        ).toMap()
-        val mainFannelFile = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap,
-        ).let {
-            File(UsePath.cmdclickDefaultAppDirPath, it)
+        CoroutineScope(Dispatchers.IO).launch {
+            val fannelInfoMap = withContext(Dispatchers.IO) {
+                CmdClickMap.createMap(
+                    fannelInfoCon,
+                    JsFannelInfo.fannelInfoMapSeparator
+                ).toMap()
+            }
+            val mainFannelFile = withContext(Dispatchers.IO) {
+                FannelInfoTool.getCurrentFannelName(
+                    fannelInfoMap,
+                ).let {
+                    File(UsePath.cmdclickDefaultAppDirPath, it)
+                }
+            }
+            val mainFannelConList = withContext(Dispatchers.IO) {
+                ReadText(
+                    mainFannelFile.absolutePath,
+                ).textToList()
+            }
+            val settingVariableList = withContext(Dispatchers.IO) {
+                CommandClickVariables.extractValListFromHolder(
+                    mainFannelConList,
+                    CommandClickScriptVariable.SETTING_SEC_START,
+                    CommandClickScriptVariable.SETTING_SEC_END,
+                )
+            }
+            val setReplaceVariableMap = withContext(Dispatchers.IO) {
+                SetReplaceVariabler.makeSetReplaceVariableMap(
+                    context,
+                    settingVariableList,
+                    mainFannelFile.name
+                )
+            }
+            val virtualSettingValsListForEditList = withContext(Dispatchers.IO) {
+                listOf(
+                    CommandClickScriptVariable.SETTING_SEC_START,
+                    "${CommandClickScriptVariable.EDIT_LIST_CONFIG}=${EditSettings.filePrefix}${editListConfigPath}",
+                    CommandClickScriptVariable.SETTING_SEC_END,
+                )
+            }
+            val editListConfigMap = withContext(Dispatchers.IO) {
+                ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+                    context,
+                    CommandClickScriptVariable.EDIT_LIST_CONFIG,
+                    virtualSettingValsListForEditList,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    String()
+                )
+            }
+            withContext(Dispatchers.Main) {
+                WithEditComponentListView.create(
+                    terminalFragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    terminalFragment.busyboxExecutor,
+                    editListConfigMap,
+                    editBackstackCountFrame,
+                    editBackstackCountView,
+                    editListTitleView,
+                    editListTitleImage,
+                    editListRecyclerView,
+                    editListBkFrame,
+                    editListSearchEditText,
+                    editFooterHorizonLayout,
+                    verticalLinearListForFooter,
+                    horizonLinearListForFooter,
+                    null,
+                    null,
+                    mainFannelConList,
+                )
+            }
+            withContext(Dispatchers.Main){
+                terminalFragment.editListDialog?.setOnCancelListener {
+                    dismissForInner(
+                        terminalFragment,
+                        editListRecyclerView,
+                        editFooterHorizonLayout,
+                        editListBkFrame,
+                        constraintLayout,
+                    )
+                }
+                terminalFragment.editListDialog?.window?.apply {
+                    setLayout(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                }
+                terminalFragment.editListDialog?.show()
+            }
         }
-        val mainFannelConList = ReadText(
-            mainFannelFile.absolutePath,
-        ).textToList()
-        val settingVariableList = CommandClickVariables.extractValListFromHolder(
-            mainFannelConList,
-            CommandClickScriptVariable.SETTING_SEC_START,
-            CommandClickScriptVariable.SETTING_SEC_END,
-        )
-        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
-            context,
-            settingVariableList,
-            mainFannelFile.name
-        )
-        val virtualSettingValsListForEditList = listOf(
-            CommandClickScriptVariable.SETTING_SEC_START,
-            "${CommandClickScriptVariable.EDIT_LIST_CONFIG}=${EditSettings.filePrefix}${editListConfigPath}",
-            CommandClickScriptVariable.SETTING_SEC_END,
-        )
-        val editListConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
-            context,
-            CommandClickScriptVariable.EDIT_LIST_CONFIG,
-            virtualSettingValsListForEditList,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            String()
-        )
-        WithEditComponentListView.create(
-            terminalFragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            terminalFragment.busyboxExecutor,
-            editListConfigMap,
-            editBackstackCountFrame,
-            editBackstackCountView,
-            editListTitleView,
-            editListTitleImage,
-            editListRecyclerView,
-            editListBkFrame,
-            editListSearchEditText,
-            editFooterHorizonLayout,
-            verticalLinearListForFooter,
-            horizonLinearListForFooter,
-            null,
-            null,
-            mainFannelConList,
-        )
-        terminalFragment.editListDialog?.setOnCancelListener {
-            dismissForInner(
-                terminalFragment,
-                editListRecyclerView,
-                editFooterHorizonLayout,
-                editListBkFrame,
-                constraintLayout,
-            )
-        }
-        terminalFragment.editListDialog?.window?.apply {
-            setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        }
-        terminalFragment.editListDialog?.show()
     }
 
     private fun dismissForInner(

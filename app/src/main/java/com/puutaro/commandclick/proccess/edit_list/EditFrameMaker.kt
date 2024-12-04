@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -143,55 +144,66 @@ object EditFrameMaker {
             isFrameLayoutParam,
         ) ?: return null
 
+
         CoroutineScope(Dispatchers.Main).launch {
-            buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)
-                ?.let { imageButtonView ->
-                    val imageMap = withContext(Dispatchers.IO) {
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            imageKey,
-                        )?.let {
-                            EditComponent.Template.makeKeyMap(
-                                it,
-                            )
-                        }
-                    }
-                    val imagePropertyMap = withContext(Dispatchers.IO) {
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            imagePropertyKey,
-                        )?.let {
-                            EditComponent.Template.makeKeyMap(
-                                it,
-                            )
-                        }
-                    }
-                    withContext(Dispatchers.Main) {
-                        setImageView(
-                            imageButtonView,
-                            imageMap,
-                            imagePropertyMap,
-                            requestBuilderSrc
+            val imageButtonView = withContext(Dispatchers.Main) {
+                buttonLayout.children.firstOrNull {
+                    it is AppCompatImageView
+                } as? AppCompatImageView
+            }?: return@launch
+//            buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)
+//                ?.let { imageButtonView ->
+                val imageMap = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        imageKey,
+                    )?.let {
+                        EditComponent.Template.makeKeyMap(
+                            it,
                         )
                     }
                 }
+                val imagePropertyMap = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        imagePropertyKey,
+                    )?.let {
+                        EditComponent.Template.makeKeyMap(
+                            it,
+                        )
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    setImageView(
+                        imageButtonView,
+                        imageMap,
+                        imagePropertyMap,
+                        requestBuilderSrc
+                    )
+                }
+//                }
         }
         CoroutineScope(Dispatchers.Main).launch {
-            buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)
-                ?.let { captionTextView ->
-                    val textMap = withContext(Dispatchers.IO) {
-                        PairListTool.getPair(
-                            frameKeyPairList,
-                            textKey,
-                        )?.let {
-                            EditComponent.Template.TextManager.createTextMap(
-                                it.second,
-                                totalSettingValMap?.get(
-                                    overrideTag
-                                )
+            val captionTextView = withContext(Dispatchers.Main) {
+                buttonLayout.children.firstOrNull {
+                    it is OutlineTextView
+                } as? OutlineTextView
+            }?: return@launch
+//            buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)
+//                ?.let { captionTextView ->
+                val textMap = withContext(Dispatchers.IO) {
+                    PairListTool.getPair(
+                        frameKeyPairList,
+                        textKey,
+                    )?.let {
+                        EditComponent.Template.TextManager.createTextMap(
+                            it.second,
+                            totalSettingValMap?.get(
+                                overrideTag
                             )
-                        }
+                        )
                     }
+                }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "sGet_frameMaker.txt").absolutePath,
 //                listOf(
@@ -199,27 +211,27 @@ object EditFrameMaker {
 //                    "textMap: ${textMap}",
 //                ).joinToString("\n")
 //            )
-                    val textPropertyMap = withContext(Dispatchers.IO) {
-                        PairListTool.getPair(
-                            frameKeyPairList,
-                            textPropertyKey,
-                        )?.let {
-                            EditComponent.Template.makeKeyMap(
-                                it.second,
-                            )
-                        }
-                    }
-                    withContext(Dispatchers.Main) {
-                        setCaption(
-                            fannelInfoMap,
-                            setReplaceVariableMap,
-                            busyboxExecutor,
-                            captionTextView,
-                            textMap,
-                            textPropertyMap,
+                val textPropertyMap = withContext(Dispatchers.IO) {
+                    PairListTool.getPair(
+                        frameKeyPairList,
+                        textPropertyKey,
+                    )?.let {
+                        EditComponent.Template.makeKeyMap(
+                            it.second,
                         )
                     }
                 }
+                withContext(Dispatchers.Main) {
+                    setCaption(
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
+                        captionTextView,
+                        textMap,
+                        textPropertyMap,
+                    )
+                }
+//                }
         }
         return buttonLayout
     }
@@ -1138,6 +1150,14 @@ object EditFrameMaker {
         val textViewContext = captionTextView.context
         withContext(Dispatchers.Main) {
             captionTextView.apply {
+                textPropertyMap?.get(
+                    textVisibleKey,
+                ).let {
+                        visibleStr ->
+                    visibility = EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
+                    )
+                }
                 val lp = layoutParams as FrameLayout.LayoutParams
                 lp.apply {
                     val overrideLayoutGravity = textPropertyMap?.get(
@@ -1235,26 +1255,6 @@ object EditFrameMaker {
                 setAutofillHints(settingValue)
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue
-                val overrideText = withContext(Dispatchers.IO) {
-                    EditComponent.Template.TextManager.makeText(
-                        fannelInfoMap,
-                        setReplaceVariableMap,
-                        busyboxExecutor,
-                        textMap,
-                        settingValue
-                    )
-                }
-                if(!overrideText.isNullOrEmpty()) {
-                    FileSystems.updateFile(
-                        File(UsePath.cmdclickDefaultAppDirPath, "loverrideText.txt").absolutePath,
-                        listOf(
-                            "overrideText: ${overrideText}",
-                            "textMap: ${textMap}",
-                            "settingValue: ${settingValue}",
-                        ).joinToString("\n") + "\n\n============\n\n"
-                    )
-                }
-                text = overrideText
                 val overrideMaxLines = withContext(Dispatchers.IO){
                     textPropertyMap?.get(
                         textMaxLinesKey
@@ -1278,6 +1278,16 @@ object EditFrameMaker {
                     }
                 }
                 setFillColor(textColor?.id ?: R.color.fill_gray)
+                val overrideText = withContext(Dispatchers.IO) {
+                    EditComponent.Template.TextManager.makeText(
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
+                        textMap,
+                        settingValue
+                    )
+                }
+                text = overrideText
                 val textBkColor = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textBkColorKey,
@@ -1367,14 +1377,6 @@ object EditFrameMaker {
                     }
                 } ?: EditComponent.Template.TextPropertyManager.Font.SANS_SERIF
                 setTypeface(overrideFont.typeface, overrideTextStyle.style)
-                textPropertyMap?.get(
-                    textVisibleKey,
-                ).let {
-                        visibleStr ->
-                    visibility = EditComponent.Template.VisibleManager.getVisible(
-                        visibleStr
-                    )
-                }
             }
         }
 //        FileSystems.updateFile(
@@ -1558,14 +1560,6 @@ object EditFrameMaker {
                     }
                 } ?: typeface
                 setTypeface(overrideFont, overrideTextStyle)
-                textPropertyMap?.get(
-                    textVisibleKey,
-                ).let {
-                        visibleStr ->
-                    visibility = EditComponent.Template.VisibleManager.getVisible(
-                        visibleStr
-                    )
-                }
             }
         }
 //        FileSystems.updateFile(
