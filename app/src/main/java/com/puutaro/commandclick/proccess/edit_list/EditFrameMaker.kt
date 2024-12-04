@@ -30,7 +30,9 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.str.PairListTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -140,49 +142,54 @@ object EditFrameMaker {
             isFrameLayoutParam,
         ) ?: return null
 
-        buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)?.let {
-                imageButtonView ->
-            val imageMap = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    imageKey,
-                )?.let {
-                    EditComponent.Template.makeKeyMap(
-                        it,
-                    )
-                }
-            }
-            val imagePropertyMap = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    imagePropertyKey,
-                )?.let {
-                    EditComponent.Template.makeKeyMap(
-                        it,
-                    )
-                }
-            }
-            setImageView(
-                imageButtonView,
-                imageMap,
-                imagePropertyMap,
-            )
-        }
-        buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)?.let {
-                captionTextView ->
-            val textMap = withContext(Dispatchers.IO) {
-                PairListTool.getPair(
-                    frameKeyPairList,
-                    textKey,
-                )?.let {
-                    EditComponent.Template.TextManager.createTextMap(
-                        it.second,
-                        totalSettingValMap?.get(
-                            overrideTag
+        CoroutineScope(Dispatchers.Main).launch {
+            buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)
+                ?.let { imageButtonView ->
+                    val imageMap = withContext(Dispatchers.IO) {
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            imageKey,
+                        )?.let {
+                            EditComponent.Template.makeKeyMap(
+                                it,
+                            )
+                        }
+                    }
+                    val imagePropertyMap = withContext(Dispatchers.IO) {
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            imagePropertyKey,
+                        )?.let {
+                            EditComponent.Template.makeKeyMap(
+                                it,
+                            )
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        setImageView(
+                            imageButtonView,
+                            imageMap,
+                            imagePropertyMap,
                         )
-                    )
+                    }
                 }
-            }
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)
+                ?.let { captionTextView ->
+                    val textMap = withContext(Dispatchers.IO) {
+                        PairListTool.getPair(
+                            frameKeyPairList,
+                            textKey,
+                        )?.let {
+                            EditComponent.Template.TextManager.createTextMap(
+                                it.second,
+                                totalSettingValMap?.get(
+                                    overrideTag
+                                )
+                            )
+                        }
+                    }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "sGet_frameMaker.txt").absolutePath,
 //                listOf(
@@ -190,24 +197,27 @@ object EditFrameMaker {
 //                    "textMap: ${textMap}",
 //                ).joinToString("\n")
 //            )
-            val textPropertyMap = withContext(Dispatchers.IO) {
-                PairListTool.getPair(
-                    frameKeyPairList,
-                    textPropertyKey,
-                )?.let {
-                    EditComponent.Template.makeKeyMap(
-                        it.second,
-                    )
+                    val textPropertyMap = withContext(Dispatchers.IO) {
+                        PairListTool.getPair(
+                            frameKeyPairList,
+                            textPropertyKey,
+                        )?.let {
+                            EditComponent.Template.makeKeyMap(
+                                it.second,
+                            )
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        setCaption(
+                            fannelInfoMap,
+                            setReplaceVariableMap,
+                            busyboxExecutor,
+                            captionTextView,
+                            textMap,
+                            textPropertyMap,
+                        )
+                    }
                 }
-            }
-            setCaption(
-                fannelInfoMap,
-                setReplaceVariableMap,
-                busyboxExecutor,
-                captionTextView,
-                textMap,
-                textPropertyMap,
-            )
         }
         return buttonLayout
     }

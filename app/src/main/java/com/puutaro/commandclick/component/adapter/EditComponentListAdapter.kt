@@ -766,6 +766,7 @@ class EditComponentListAdapter(
                             weightSum = weightSumFloat
                             orientation = LinearLayoutCompat.HORIZONTAL
                             gravity = Gravity.CENTER
+                            visibility = View.VISIBLE
 //                            background = AppCompatResources.getDrawable(context, R.color.light_ao)
                         }
                     }

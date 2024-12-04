@@ -995,6 +995,13 @@ object EditComponent {
                                 }
                         }.apply {
                                 val verticalLayout = this
+                                visibility = PairListTool.getValue(
+                                        verticalKeyPairs,
+                                        Template.EditComponentKey.VISIBLE.key,
+                                ).let {
+                                                visibleStr ->
+                                        Template.VisibleManager.getVisible(visibleStr)
+                                }
                                 val verticalWidth =
                                         PairListTool.getValue(
                                                 verticalKeyPairs,
@@ -1136,13 +1143,6 @@ object EditComponent {
                                         paddingData.paddingBottom ?: 0,
                                 )
                                 orientation = LinearLayoutCompat.VERTICAL
-                                visibility = PairListTool.getValue(
-                                        verticalKeyPairs,
-                                        Template.EditComponentKey.VISIBLE.key,
-                                ).let {
-                                                visibleStr ->
-                                        Template.VisibleManager.getVisible(visibleStr)
-                                }
 
                         }
                 }
@@ -1153,6 +1153,13 @@ object EditComponent {
                 ) {
                         withContext(Dispatchers.Main) {
                                 horizonLinearLayout?.apply {
+                                        visibility = PairListTool.getValue(
+                                                linearFrameKeyPairsList,
+                                                Template.EditComponentKey.VISIBLE.key,
+                                        ).let {
+                                                        visibleStr ->
+                                                Template.VisibleManager.getVisible(visibleStr)
+                                        }
                                         val horizonLinearLayoutParam =
                                                 layoutParams as LinearLayoutCompat.LayoutParams
                                         Template.LinearLayoutUpdater.update(
@@ -1249,13 +1256,6 @@ object EditComponent {
                                                 }?.gravity
                                         } ?: Gravity.CENTER
                                         gravity = overrideGravity
-                                        visibility = PairListTool.getValue(
-                                                linearFrameKeyPairsList,
-                                                Template.EditComponentKey.VISIBLE.key,
-                                        ).let {
-                                                        visibleStr ->
-                                                Template.VisibleManager.getVisible(visibleStr)
-                                        }
                                 }
                         }
                 }
