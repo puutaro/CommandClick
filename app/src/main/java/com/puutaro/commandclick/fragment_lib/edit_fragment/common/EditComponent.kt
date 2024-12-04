@@ -12,7 +12,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter.Companion.makeLinearFrameKeyPairsList
@@ -22,7 +21,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManage
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList.LogErrLabel
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -32,7 +30,6 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
-import java.io.File
 
 object EditComponent {
         object Template {
@@ -86,6 +83,7 @@ object EditComponent {
 //                        FOOTER("footer"),
                         VERTICAL("vertical"),
                         HORIZON("horizon"),
+                        CONTENTS("contents")
                 }
 
                 fun makeKeyMap(
@@ -316,7 +314,7 @@ object EditComponent {
                                 FRAME_TAG("frameTag"),
                                 VERTICAL_TAG("verticalTag"),
                                 HORIZON_TAG("horizonTag"),
-                                EDIT_FRAME_TAG("editFrameTag"),
+                                CONTENTS_TAG("contentsTag"),
                         }
 
                         fun makeVerticalTag(
@@ -335,6 +333,24 @@ object EditComponent {
                                 return curVerticalTag.split(
                                         curFrameTagAndCurVerticalTagSeparator
                                 ).getOrNull(1) ?: String()
+                        }
+
+                        fun makeHorizonTag(
+                                curVerticalTag: String,
+                                partHorizonTag: String,
+                        ): String {
+                                return listOf(
+                                        curVerticalTag,
+                                        partHorizonTag
+                                ).joinToString(curFrameTagAndCurVerticalTagSeparator)
+                        }
+
+                        fun extractHorizonTag(
+                                curHorizonTag: String,
+                        ): String {
+                                return curHorizonTag.split(
+                                        curFrameTagAndCurVerticalTagSeparator
+                                ).getOrNull(2) ?: String()
                         }
                 }
 
@@ -694,13 +710,13 @@ object EditComponent {
                         mapListElInfo: String,
                         plusKeyToSubKeyConWhere: String,
                 ): String? {
-                        FileSystems.updateFile(
-                                File(UsePath.cmdclickDefaultAppDirPath, "stagDup.txt").absolutePath,
-                                listOf(
-                                        "alreadyUseTagList: ${alreadyUseTagList}",
-                                        "tagName: ${tagName}",
-                                ).joinToString("\n")
-                        )
+//                        FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "stagDup.txt").absolutePath,
+//                                listOf(
+//                                        "alreadyUseTagList: ${alreadyUseTagList}",
+//                                        "tagName: ${tagName}",
+//                                ).joinToString("\n")
+//                        )
                         if(
                                 !alreadyUseTagList.contains(tagName)
                         ) return tagName
@@ -752,22 +768,25 @@ object EditComponent {
                 }
 
                 fun culcLinearKeyValueSize(
-                        linearFrameTagToKeyPairsList: List<Pair<String, String?>>,
-                        verticalKeyPairs: List<Pair<String, String>>,
+                        contentsTagToKeyPairsList: List<Pair<String, String?>>
                 ): Int {
+                        val typeSeparator = Template.typeSeparator
                         val enableKey = Template.EditComponentKey.ENABLE.key
                         val switchOff = Template.switchOff
-                       return linearFrameTagToKeyPairsList.filterIndexed {
-                                                index, linearFrameTagToKeyPairs ->
-                                        val isFrameLayout =
-                                                index != 0
+                       return contentsTagToKeyPairsList.filterIndexed {
+                                                index, tagTokeyValuesCon ->
+                               val keyValuesCon = tagTokeyValuesCon.second
+                               val keyValuePairList = CmdClickMap.createMap(
+                                       keyValuesCon,
+                                       typeSeparator
+                               )
                                         val isEnable = PairListTool.getValue(
-                                                verticalKeyPairs,
+                                                keyValuePairList,
                                                 enableKey,
                                         ).let { enableStr ->
                                                 enableStr != switchOff
                                         }
-                                        isFrameLayout && isEnable
+                                        isEnable
                                 }.size
                         }
 
@@ -858,7 +877,7 @@ object EditComponent {
                         }
                 }
 
-                suspend fun makeVerticalTagAndKeyPairsListToVarNameToValueMap(
+                suspend fun makeLinearTagAndKeyPairsListToVarNameToValueMap(
                         fragment: Fragment?,
                         fannelInfoMap: Map<String, String>,
                         setReplaceVariableMap: Map<String, String>?,
@@ -870,6 +889,7 @@ object EditComponent {
                         srcCon: String?,
                         srcImage: String?,
                         bindingAdapterPosition: Int?,
+                        mapListElInfo: String,
                 ): List<
                         Pair<
                                 String,
@@ -902,14 +922,6 @@ object EditComponent {
                                                 bindingAdapterPosition ?: -1,
                                         ) ?: String()
                                         val settingActionManager = SettingActionManager()
-                                        val mapListElInfo = listOf(
-                                                srcTitle?.let { "srcTitle: ${srcTitle}" } ?: String(),
-                                                srcCon?.let { "srcCon: ${srcCon}" } ?: String(),
-                                                srcImage?.let { "srcImage: ${srcImage}" } ?: String(),
-                                                bindingAdapterPosition?.let { "bindingAdapterPosition: ${bindingAdapterPosition}" } ?: String(),
-                                        ).filter {
-                                                it.isNotEmpty()
-                                        }.joinToString(" ")
                                         val varNameToValueMap = settingActionManager.exec(
                                                 fragment,
                                                 fannelInfoMap,
@@ -924,6 +936,12 @@ object EditComponent {
                                         ) to varNameToValueMap
                                 }
                                 val verticalKeysCon = verticalKeysConToVarNameToValueMap.first
+                                if(
+                                        verticalKeysCon.isEmpty()
+                                ) return@map String() to Pair(
+                                        emptyList(),
+                                        emptyMap()
+                                )
                                 val varNameToValueMap = verticalKeysConToVarNameToValueMap.second
                                 val verticalKeyPairs = makeLinearFrameKeyPairsList(
                                         verticalKeysCon
@@ -939,21 +957,28 @@ object EditComponent {
                                         )
                                 }
                                 verticalTag to Pair(verticalKeyPairs, varNameToValueMap)
+                        }.filter {
+                                it.first.isNotEmpty()
                         }
                 }
 
                 fun makeLinearFrameTagToKeyPairsList(
                         linearKeyValues: List<String>,
+                        horizonVarNameToValueMap: Map<String, String>?,
                         srcTitle: String,
                         srcCon: String,
                         srcImage: String,
                         bindingAdapterPosition: Int,
-                ):  List<Pair<
-                        String,
-//                        List<Pair<String, String>>,
-                        String?
-                        >> {
+                ):  List<
+                        Pair<
+                                String,
+                                String?
+                        >
+                        > {
                         return linearKeyValues.map { linearFrameKeyPairsListConSrc ->
+                                if(
+                                        linearFrameKeyPairsListConSrc.isEmpty()
+                                ) return@map Pair(String(), null)
                                 val linearFrameKeyPairsListCon =
                                         Template.ReplaceHolder.replaceHolder(
                                                 linearFrameKeyPairsListConSrc,
@@ -961,7 +986,12 @@ object EditComponent {
                                                 srcCon,
                                                 srcImage,
                                                 bindingAdapterPosition,
-                                        )
+                                        )?.let {
+                                                CmdClickMap.replace(
+                                                        it,
+                                                        horizonVarNameToValueMap,
+                                                )
+                                        }
                                 val linearFrameKeyPairsList =
                                         makeLinearFrameKeyPairsList(
                                                 linearFrameKeyPairsListCon,
@@ -976,6 +1006,9 @@ object EditComponent {
 //                                        linearFrameKeyPairsList,
                                         linearFrameKeyPairsListCon
                                 )
+                        }.filter {
+                                it.first.isNotEmpty()
+                                        && !it.second.isNullOrEmpty()
                         }
                 }
                 suspend fun makeVerticalLinear(
@@ -1143,6 +1176,163 @@ object EditComponent {
                                         paddingData.paddingBottom ?: 0,
                                 )
                                 orientation = LinearLayoutCompat.VERTICAL
+
+                        }
+                }
+
+
+                suspend fun makeHorizonLinear(
+                        context: Context,
+                        xmlHorizonLinearLayout: LinearLayoutCompat?,
+                        curExtraHorizonLinearId: Int?,
+                        horizonKeyPairs: List<Pair<String, String>>,
+                        horizonTag: String,
+                ): LinearLayoutCompat {
+                        return when(xmlHorizonLinearLayout == null) {
+                                false -> xmlHorizonLinearLayout
+                                else -> LinearLayoutCompat(context).apply {
+                                        curExtraHorizonLinearId?.let {
+                                                id = it
+                                        }
+                                }
+                        }.apply {
+                                visibility = PairListTool.getValue(
+                                        horizonKeyPairs,
+                                        Template.EditComponentKey.VISIBLE.key,
+                                ).let {
+                                                visibleStr ->
+                                        Template.VisibleManager.getVisible(visibleStr)
+                                }
+                                orientation = LinearLayoutCompat.HORIZONTAL
+                                val verticalWidth =
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.WIDTH.key,
+                                        ).let {
+                                                Template.LinearLayoutUpdater.convertWidth(
+                                                        context,
+                                                        it,
+                                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                                )
+                                        }
+                                val verticalHeight =
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.HEIGHT.key,
+                                        ).let {
+                                                Template.LinearLayoutUpdater.convertWidth(
+                                                        context,
+                                                        it,
+                                                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                )
+                                        }
+//                                LinearLayoutCompat.LayoutParams(
+//                                        verticalWidth,
+//                                        verticalHeight
+//                                )
+                                val verticalLinearParam = when(xmlHorizonLinearLayout == null) {
+                                        false -> xmlHorizonLinearLayout.layoutParams
+                                        else -> LinearLayoutCompat.LayoutParams(
+                                                verticalWidth,
+                                                verticalHeight
+                                        )
+                                }
+                                verticalLinearParam.apply {
+                                        if(xmlHorizonLinearLayout != null) {
+                                                width = verticalWidth
+                                                height = verticalHeight
+                                        }
+                                        tag = horizonTag
+                                        val overrideLayoutGravity = PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.LAYOUT_GRAVITY.key,
+                                        )?.let {
+                                                        gravityStr ->
+                                                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                        it.key == gravityStr
+                                                }?.gravity
+                                        } ?: Gravity.CENTER
+                                        gravity = overrideLayoutGravity
+                                        val bkColor = withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.BK_COLOR.key,
+                                                )?.let { colorStr ->
+                                                        CmdClickColor.entries.firstOrNull {
+                                                                it.str == colorStr
+                                                        }
+                                                }
+                                        }
+                                        background = bkColor?.let {
+                                                AppCompatResources.getDrawable(
+                                                        context,
+                                                        it.id
+                                                )
+                                        }
+                                        val verticalLinear = this as LinearLayoutCompat.LayoutParams
+                                        verticalLinear.apply setLinear@ {
+                                                val marginData = Template.MarginData(
+                                                        context,
+                                                        PairListTool.getValue(
+                                                                horizonKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_TOP.key,
+                                                        ),
+                                                        PairListTool.getValue(
+                                                                horizonKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_BOTTOM.key,
+                                                        ),
+                                                        PairListTool.getValue(
+                                                                horizonKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_START.key,
+                                                        ),
+                                                        PairListTool.getValue(
+                                                                horizonKeyPairs,
+                                                                Template.EditComponentKey.MARGIN_END.key,
+                                                        ),
+                                                )
+                                                topMargin = marginData.marginTop ?: 0
+                                                bottomMargin = marginData.marginBottom ?: 0
+                                                marginStart = marginData.marginStart ?: 0
+                                                marginEnd = marginData.marginBottom ?: 0
+                                        }
+//                            setMargins(ScreenSizeCalculator.toDp(context,10))
+                                }
+                                layoutParams = verticalLinearParam
+                                val overrideGravity = PairListTool.getValue(
+                                        horizonKeyPairs,
+                                        Template.EditComponentKey.GRAVITI.key,
+                                )?.let {
+                                                gravityStr ->
+                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                it.key == gravityStr
+                                        }?.gravity
+                                } ?: Gravity.CENTER
+                                gravity = overrideGravity
+                                val paddingData = Template.PaddingData(
+                                        context,
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.PADDING_TOP.key,
+                                        ),
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.PADDING_BOTTOM.key,
+                                        ),
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.PADDING_START.key,
+                                        ),
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.PADDING_END.key,
+                                        ),
+                                )
+                                setPadding(
+                                        paddingData.paddingStart ?: 0,
+                                        paddingData.paddingTop ?: 0,
+                                        paddingData.paddingEnd ?: 0,
+                                        paddingData.paddingBottom ?: 0,
+                                )
 
                         }
                 }

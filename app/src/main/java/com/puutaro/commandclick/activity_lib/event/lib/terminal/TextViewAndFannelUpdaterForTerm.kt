@@ -19,6 +19,7 @@ import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 object TextViewAndFannelUpdaterForTerm {
     fun update(
@@ -92,9 +93,12 @@ object TextViewAndFannelUpdaterForTerm {
 //                    "",
 //                ).joinToString("\n")
 //            )
+                val keyPairListConMap = runBlocking {
+                    holder.getKeyPairListConMap()
+                }
                 UpdateAndSaveMainFannel.updateAndSave(
                     editComponentListAdapter,
-                    holder.keyPairListConMap,
+                    keyPairListConMap,
                     tagName,
                     holder.srcTitle,
                     holder.srcCon,

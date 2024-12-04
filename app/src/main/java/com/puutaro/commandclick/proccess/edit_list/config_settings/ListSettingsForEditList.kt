@@ -68,10 +68,13 @@ object ListSettingsForEditList  {
             fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutPath: String,
-        ):  Triple<
+        ):  Pair<
                 Map<String, String >,
-                List<Pair<String, String>>,
-                Map<String, List< List<String> > >,
+                Triple<
+                    List<Pair<String, String>>,
+                    List<Pair<String, String>>,
+                    Map<String, List< List<String> > >,
+                        >,
                 >?
         {
             val viewLayoutPathObj = File(viewLayoutPath)
@@ -116,10 +119,13 @@ object ListSettingsForEditList  {
             setReplaceVariableMap: Map<String, String>?,
             viewLayoutConList: List<String>,
             whereForLog: String,
-        ):  Triple<
+        ):  Pair<
                 Map<String, String >,
-                List<Pair<String, String>>,
-                Map<String, List< List<String> > >,
+                Triple<
+                        List<Pair<String, String>>,
+                        List<Pair<String, String>>,
+                        Map<String, List< List<String> > >,
+                        >,
                 >?
         {
 
@@ -153,22 +159,28 @@ object ListSettingsForEditList  {
             context: Context?,
             viewLayoutListSrc: List<String>,
             whereForLog: String,
-        ): Triple<
+        ): Pair<
                 Map<String, String >,
-                List<Pair<String, String>>,
-                Map<String, List< List<String> > >,
-                >?
+                Triple<
+                        List<Pair<String, String>>,
+                        List<Pair<String, String>>,
+                        Map<String, List< List<String> > >,
+                        >,
+                >
         {
             val typeSeparator = EditComponent.Template.typeSeparator
             val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
             val verticalTypeName = EditComponent.Template.LayoutKey.VERTICAL.key
             val horizonTypeName = EditComponent.Template.LayoutKey.HORIZON.key
+            val contentsTypeName = EditComponent.Template.LayoutKey.CONTENTS.key
             val tagKey = EditComponent.Template.EditComponentKey.TAG.key
             var curFrameTag = String()
             var curVerticalTag = String()
+            var curHorizonTag = String()
             val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
             val verticalPairsConList: MutableList< Pair<String, String > > = mutableListOf()
-            val linearPairConList: MutableList< Pair<String, List<String> > > = mutableListOf()
+            val horizonPairsConList: MutableList< Pair<String, String > > = mutableListOf()
+            val horizonTagTocontentsPairsConList: MutableList< Pair<String, List<String> > > = mutableListOf()
             viewLayoutListSrc.forEachIndexed { index,
                                                smallLayoutMapCon ->
                 val smallLayoutMapConList = smallLayoutMapCon.split("=")
@@ -197,6 +209,22 @@ object ListSettingsForEditList  {
 //                        "linearPairConList: ${linearPairConList}",
 //                    ).joinToString("\n") + "\n----\n"
 //                )
+//                 Pair<
+//                Map<String, String >,
+//                Triple<
+//                        List<Pair<String, String>>,
+//                        List<Pair<String, String>>,
+//                        Map<String, List< List<String> > >,
+//                        >,
+//                >
+                val blankReturnValue = Pair(
+                    emptyMap<String, String>(),
+                    Triple(
+                        emptyList<Pair<String, String>>(),
+                        emptyList<Pair<String, String>>(),
+                        emptyMap<String, List< List<String> > >()
+                    )
+                )
                 when (true) {
                     (layoutKey == frameTypeName) -> {
                         val frameLayoutKeyPairListCon =
@@ -214,31 +242,23 @@ object ListSettingsForEditList  {
                                     context,
                                     it,
                                     whereForLog,
-                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.FRAME_TAG
+                                    EditComponent.Template.TagManager.TagGenre.FRAME_TAG
                                 ).let {
                                         isTagBlankErr ->
                                     if(
                                         isTagBlankErr
-                                    ) return Triple(
-                                        emptyMap(),
-                                        emptyList(),
-                                        emptyMap()
-                                    )
+                                    ) return blankReturnValue
                                 }
                                 ViewLayoutCheck.isVariableUseErr(
                                     context,
                                     it,
                                     whereForLog,
-                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.FRAME_TAG
+                                    EditComponent.Template.TagManager.TagGenre.FRAME_TAG
                                 ).let {
                                         isTagBlankErr ->
                                     if(
                                         isTagBlankErr
-                                    ) return Triple(
-                                        emptyMap(),
-                                        emptyList(),
-                                        emptyMap()
-                                    )
+                                    ) return blankReturnValue
                                 }
                                 QuoteTool.trimBothEdgeQuote(it)
                             }
@@ -264,60 +284,37 @@ object ListSettingsForEditList  {
                                 val key = it.first
                                 key == tagKey
                             }?.second.let {
-                                if(it.isNullOrEmpty()) {
-                                    val spanVerticalTag =
-                                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                            CheckTool.errRedCode,
-                                            "Vertical tag"
-                                        )
-                                    val spanWhereForLog =
-                                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                            CheckTool.errBrown,
-                                            whereForLog
-                                        )
-                                    val errSrcMessage = "${spanVerticalTag} must specify"
-                                    val errMessage =
-                                        "[View layout] ${errSrcMessage} about ${spanWhereForLog}"
-                                    LogSystems.broadErrLog(
-                                        context,
-                                        Jsoup.parse(errSrcMessage).text(),
-                                        errMessage,
-                                    )
-                                    return Triple(
-                                        emptyMap(),
-                                        emptyList(),
-                                        emptyMap()
-                                    )
-                                }
+//                                if(it.isNullOrEmpty()) {
+//                                    broadTagBlankErrMessage(
+//                                        context,
+//                                        ViewLayoutCheck.TagErrGenre.VERTICAL_TAG,
+//                                        whereForLog,
+//                                    )
+//                                    return blankReturnValue
+//                                }
+                                val verticalTagGenre =
+                                    EditComponent.Template.TagManager.TagGenre.VERTICAL_TAG
                                 ViewLayoutCheck.isTagBlankErr(
                                     context,
                                     it,
                                     whereForLog,
-                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.VERTICAL_TAG
+                                    verticalTagGenre
                                 ).let {
                                     isTagBlankErr ->
                                     if(
                                         isTagBlankErr
-                                    ) return Triple(
-                                        emptyMap(),
-                                        emptyList(),
-                                        emptyMap()
-                                    )
+                                    ) return blankReturnValue
                                 }
                                 ViewLayoutCheck.isVariableUseErr(
                                     context,
                                     it,
                                     whereForLog,
-                                    ListSettingsForEditList.ViewLayoutCheck.TagErrGenre.VERTICAL_TAG
+                                    verticalTagGenre
                                 ).let {
                                         isTagBlankErr ->
                                     if(
                                         isTagBlankErr
-                                    ) return Triple(
-                                        emptyMap(),
-                                        emptyList(),
-                                        emptyMap()
-                                    )
+                                    ) return blankReturnValue
                                 }
                                 QuoteTool.trimBothEdgeQuote(it)
                             }
@@ -325,43 +322,94 @@ object ListSettingsForEditList  {
                             curFrameTag,
                             tag,
                         )
-                        val verticalTagToCon = Pair(
+                        val frameTagToConForVertical = Pair(
                             curFrameTag,
                             verticalLayoutKeyPairListCon
                         )
                         if (
-                            verticalTagToCon.first.isEmpty()
+                            frameTagToConForVertical.first.isEmpty()
                         ) return@forEachIndexed
-                        verticalPairsConList.add(verticalTagToCon)
+                        verticalPairsConList.add(frameTagToConForVertical)
+                    }
+                    (layoutKey == horizonTypeName) -> {
+                        val horizonLayoutKeyPairListCon =
+                            layoutTypePairConList.firstOrNull()
+                                ?: String()
+                        val tag =
+                            CmdClickMap.createMap(
+                                horizonLayoutKeyPairListCon,
+                                typeSeparator
+                            ).firstOrNull {
+                                val key = it.first
+                                key == tagKey
+                            }?.second.let {
+                                val horizonTagGenre =
+                                    EditComponent.Template.TagManager.TagGenre.HORIZON_TAG
+                                ViewLayoutCheck.isTagBlankErr(
+                                    context,
+                                    it,
+                                    whereForLog,
+                                    horizonTagGenre
+                                ).let {
+                                        isTagBlankErr ->
+                                    if(
+                                        isTagBlankErr
+                                    ) return blankReturnValue
+                                }
+                                ViewLayoutCheck.isVariableUseErr(
+                                    context,
+                                    it,
+                                    whereForLog,
+                                    horizonTagGenre
+                                ).let {
+                                        isTagBlankErr ->
+                                    if(
+                                        isTagBlankErr
+                                    ) return blankReturnValue
+                                }
+                                QuoteTool.trimBothEdgeQuote(it)
+                            }
+                        curHorizonTag = EditComponent.Template.TagManager.makeHorizonTag(
+                            curVerticalTag,
+                            tag,
+                        )
+                        val horizonTagToConForHorizon = Pair(
+                            curVerticalTag,
+                            horizonLayoutKeyPairListCon
+                        )
+                        if (
+                            horizonTagToConForHorizon.first.isEmpty()
+                        ) return@forEachIndexed
+                        horizonPairsConList.add(horizonTagToConForHorizon)
                     }
 
-                    (layoutKey == horizonTypeName) -> {
-                        val frameTagToLinearKeyPairCon = Pair(
-                            curVerticalTag,
+                    (layoutKey == contentsTypeName) -> {
+                        val horizonTagToContentsKeyPairCon = Pair(
+                            curHorizonTag,
                             layoutTypePairConList
                         )
                         if (
-                            frameTagToLinearKeyPairCon.first.isEmpty()
+                            horizonTagToContentsKeyPairCon.first.isEmpty()
                         ) return@forEachIndexed
-                        linearPairConList.add(frameTagToLinearKeyPairCon)
+                        horizonTagTocontentsPairsConList.add(horizonTagToContentsKeyPairCon)
                     }
 
                     else -> {}
                 }
             }
 
-            val frameTagList = mutableListOf<String>()
-            linearPairConList.forEach {
-                val frameTag = it.first
+            val horizonTagList = mutableListOf<String>()
+            horizonTagTocontentsPairsConList.forEach {
+                val horizonTag = it.first
                 if(
-                    frameTag.isNotEmpty()
-                    && !frameTagList.contains(frameTag)
-                ) frameTagList.add(frameTag)
+                    horizonTag.isNotEmpty()
+                    && !horizonTagList.contains(horizonTag)
+                ) horizonTagList.add(horizonTag)
             }
-            val frameTagToLinearPairConListMap = frameTagList.map {
-                    frameTag ->
-                frameTag to linearPairConList.filter {
-                    it.first == frameTag
+            val horizonTagToLinearPairConListMap = horizonTagList.map {
+                    horizonTag ->
+                horizonTag to horizonTagTocontentsPairsConList.filter {
+                    it.first == horizonTag
                 }.map {
                     it.second
                 }
@@ -378,42 +426,52 @@ object ListSettingsForEditList  {
 //                    )}"
 //                ).joinToString("\n") + "\n----\n"
 //            )
-            return Triple(
+            return Pair(
                 framePairsConList.toMap(),
-                verticalPairsConList,
-                frameTagToLinearPairConListMap,
+                Triple (
+                    verticalPairsConList,
+                    horizonPairsConList,
+                    horizonTagToLinearPairConListMap,
+                )
             )
         }
     }
 
     object ViewLayoutCheck {
 
-        enum class TagErrGenre(
-            val genre: String,
-        ) {
-            FRAME_TAG("Frame tag"),
-            VERTICAL_TAG("Vertical tag")
-        }
         fun isTagBlankErr(
             context: Context?,
             tagStr: String?,
             whereForLog: String,
-            tagErrGenre: TagErrGenre,
+            tagErrGenre: EditComponent.Template.TagManager.TagGenre,
         ): Boolean {
             if(
                 !tagStr.isNullOrEmpty()
             ) return false
-            val spanVerticalTag =
+            broadTagBlankErrMessage(
+                context,
+                tagErrGenre,
+                whereForLog,
+            )
+            return true
+        }
+
+        fun broadTagBlankErrMessage(
+            context: Context?,
+            tagErrGenre: EditComponent.Template.TagManager.TagGenre,
+            whereForLog: String,
+        ){
+            val spanErrTag =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.errRedCode,
-                    tagErrGenre.genre
+                    tagErrGenre.str
                 )
             val spanWhereForLog =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.errBrown,
                     whereForLog
                 )
-            val errSrcMessage = "${spanVerticalTag} must specify"
+            val errSrcMessage = "${spanErrTag} must specify"
             val errMessage =
                 "[View layout] ${errSrcMessage} about ${spanWhereForLog}"
             LogSystems.broadErrLog(
@@ -421,14 +479,13 @@ object ListSettingsForEditList  {
                 Jsoup.parse(errSrcMessage).text(),
                 errMessage,
             )
-            return true
         }
 
         fun isVariableUseErr(
             context: Context?,
             tagStr: String?,
             whereForLog: String,
-            tagErrGenre: TagErrGenre,
+            tagErrGenre: EditComponent.Template.TagManager.TagGenre,
         ): Boolean {
             if(
                 tagStr.isNullOrEmpty()
@@ -440,7 +497,7 @@ object ListSettingsForEditList  {
             val spanVerticalTag =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.errRedCode,
-                    tagErrGenre.genre
+                    tagErrGenre.str
                 )
             val spanWhereForLog =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
