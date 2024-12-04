@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
@@ -355,6 +358,12 @@ class EditComponentListAdapter(
     private val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map{
         it.key
     }
+    private val requestBuilderSrc: RequestBuilder<Drawable>? =
+        fragmentRef.get()?.context?.let {
+            Glide.with(it)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        }
 //    private val buttonFrameLayoutInflater = LayoutInflater.from(context)
 
     override fun onBindViewHolder(
@@ -514,14 +523,14 @@ class EditComponentListAdapter(
                 }
                 materialCardView
             }
-            withContext(Dispatchers.Main){
-                holder.readyVerticalLayoutList.forEach {
-                    it.children.forEach {
-                        it.visibility = View.GONE
-                    }
-                    it.visibility = View.GONE
-                }
-            }
+//            withContext(Dispatchers.Main){
+//                holder.readyVerticalLayoutList.forEach {
+//                    it.children.forEach {
+//                        it.visibility = View.GONE
+//                    }
+//                    it.visibility = View.GONE
+//                }
+//            }
 //            GridLayoutManager
             withContext(Dispatchers.Main) {
                 val cardLinearParams =
@@ -531,20 +540,18 @@ class EditComponentListAdapter(
                 }
             }
             val isClickEnable = withContext(Dispatchers.IO) {
-                val isJsAcForFrame = withContext(Dispatchers.IO) {
+                val isJsAcForFrame =
                     jsActionKeyList.any {
                         !PairListTool.getValue(
                             frameKeyPairsList,
                             it,
                         ).isNullOrEmpty()
                     }
-                }
-                val onClickForFrame = withContext(Dispatchers.IO) {
+                val onClickForFrame =
                     PairListTool.getValue(
                         frameKeyPairsList,
                         onClickKey,
                     ) != switchOff
-                }
                 isJsAcForFrame
                         && onClickForFrame
             }
@@ -574,6 +581,7 @@ class EditComponentListAdapter(
                         null,
                         frameTag,
                         totalSettingValMap,
+                        requestBuilderSrc,
                         true,
                     )
                 }
@@ -663,9 +671,11 @@ class EditComponentListAdapter(
                 )
             }
             val totalLinearLayout = holder.totalLinearLayout
-            val verticalLinerWeight = EditComponent.AdapterSetter.culcVerticalLinerWeight(
-                verticalTagToKeyPairsListToVarNameToValueMapList
-            )
+            val verticalLinerWeight = withContext(Dispatchers.IO) {
+                EditComponent.AdapterSetter.culcVerticalLinerWeight(
+                    verticalTagToKeyPairsListToVarNameToValueMapList
+                )
+            }
             val mapListElInfoForVertical =
                 listOf(
                     "frameTag: ${frameTag}",
@@ -1006,10 +1016,12 @@ class EditComponentListAdapter(
                                 )
                             }
                             val linearFrameLayout = withContext(Dispatchers.Main) {
-                                PairListTool.getValue(
-                                    linearFrameKeyPairsList,
-                                    enableKey,
-                                ).let {
+                                withContext(Dispatchers.IO) {
+                                    PairListTool.getValue(
+                                        linearFrameKeyPairsList,
+                                        enableKey,
+                                    )
+                                }.let {
                                         enableStr ->
                                     if(
                                         enableStr == switchOff
@@ -1056,8 +1068,9 @@ class EditComponentListAdapter(
                                         0,
                                         layoutWeight,
                                         contentsTag,
-//                                false,
-                                        totalSettingValMap
+                                        totalSettingValMap,
+                                        requestBuilderSrc,
+
                                     )
                                 }
                                 buttonFrameLayout

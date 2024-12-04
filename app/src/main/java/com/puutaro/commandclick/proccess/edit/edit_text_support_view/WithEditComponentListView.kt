@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -15,6 +16,8 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -208,6 +211,12 @@ object WithEditComponentListView{
         val layoutInflater = LayoutInflater.from(
                 context
             )
+        val requestBuilderSrc: RequestBuilder<Drawable>? =
+            fragment.context?.let {
+                Glide.with(it)
+                    .asDrawable()
+                    .sizeMultiplier(0.1f)
+            }
         CoroutineScope(Dispatchers.Main).launch {
 //            withContext(Dispatchers.Main) {
 //                BkImageSettingsForEditList.makeBkImage(
@@ -227,6 +236,7 @@ object WithEditComponentListView{
                     setReplaceVariableMap,
                     busyboxExecutor,
                     editListBkPairs,
+                    requestBuilderSrc,
                 )
             }
             withContext(Dispatchers.Main) {
@@ -335,6 +345,7 @@ object WithEditComponentListView{
                 editToolbarHorizonLayout,
                 fannelCenterButtonLayout,
                 editListConfigMap,
+                requestBuilderSrc,
             )
         }
         CoroutineScope(Dispatchers.Main).launch {
@@ -350,6 +361,7 @@ object WithEditComponentListView{
                 indexAndHorizonLinearListForFooter,
                 editListRecyclerView,
                 editListConfigMap,
+                requestBuilderSrc,
             )
         }
         invokeItemSetClickListenerForFileList(
@@ -387,6 +399,7 @@ object WithEditComponentListView{
         indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>,
         editListRecyclerView: RecyclerView,
         editListConfigMap: Map<String, String>?,
+        requestBuilderSrc: RequestBuilder<Drawable>?
     ){
         setFooterOrToolbar(
             fragment,
@@ -402,6 +415,7 @@ object WithEditComponentListView{
             null,
             null,
             editListConfigMap,
+            requestBuilderSrc
         )
     }
 
@@ -427,6 +441,7 @@ object WithEditComponentListView{
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCentrButtonLayout: FrameLayout?,
         editListConfigMap: Map<String, String>?,
+        requestBuilderSrc: RequestBuilder<Drawable>?
     ){
         setFooterOrToolbar(
             fragment,
@@ -442,6 +457,7 @@ object WithEditComponentListView{
             editToolbarHorizonLayout,
             fannelCentrButtonLayout,
             editListConfigMap,
+            requestBuilderSrc,
         )
     }
 
@@ -459,7 +475,7 @@ object WithEditComponentListView{
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
         editListConfigMap: Map<String, String>?,
-
+        requestBuilderSrc: RequestBuilder<Drawable>?
         ) {
         val context = fragment.context
             ?: return
@@ -949,6 +965,7 @@ object WithEditComponentListView{
                                         layoutWeight,
                                         contentsTag,
                                         editComponentListAdapter?.totalSettingValMap,
+                                        requestBuilderSrc
                                     )
                                 }
                                 buttonFrameLayout

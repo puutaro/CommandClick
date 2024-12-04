@@ -1,8 +1,11 @@
 package com.puutaro.commandclick.proccess.edit_list.config_settings
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -41,6 +44,7 @@ object BkImageSettingsForEditList {
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListBkPairs: List<Pair<String, String>>?,
+        requestBuilderSrc: RequestBuilder<Drawable>?
     ): FrameLayout? {
         val tag =  withContext(Dispatchers.IO) {
             PairListTool.getValue(
@@ -59,7 +63,8 @@ object BkImageSettingsForEditList {
             null,
             tag,
 //            true,
-        null
+        null,
+            requestBuilderSrc,
         )
     }
 

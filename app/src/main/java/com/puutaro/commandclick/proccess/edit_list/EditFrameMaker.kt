@@ -127,6 +127,7 @@ object EditFrameMaker {
         firstWeight: Float?,
         overrideTag: String?,
         totalSettingValMap: Map<String, String>?,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
         isFrameLayoutParam: Boolean = false,
     ): FrameLayout? {
         if(
@@ -170,6 +171,7 @@ object EditFrameMaker {
                             imageButtonView,
                             imageMap,
                             imagePropertyMap,
+                            requestBuilderSrc
                         )
                     }
                 }
@@ -577,6 +579,7 @@ object EditFrameMaker {
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
+        requestBuilderSrc: RequestBuilder<Drawable>?
     ) {
         val context = imageView.context
         imageView.layoutParams = imageView.layoutParams.apply {
@@ -796,7 +799,8 @@ object EditFrameMaker {
             else -> {
                 execSetSingleImage(
                     imageView,
-                    imagePathList.firstOrNull()
+                    imagePathList.firstOrNull(),
+                    requestBuilderSrc
                 )
             }
         }
@@ -973,7 +977,8 @@ object EditFrameMaker {
             else -> {
                 execSetSingleImage(
                     imageView,
-                    imagePathList.firstOrNull()
+                    imagePathList.firstOrNull(),
+                    null
                 )
             }
         }
@@ -982,13 +987,14 @@ object EditFrameMaker {
     private suspend fun execSetSingleImage(
         imageView: AppCompatImageView,
         imagePathSrc: String?,
+        requestBuilderSrc: RequestBuilder<Drawable>?
     ){
         if(
             imagePathSrc.isNullOrEmpty()
         ) return
         val imageViewContext = imageView.context
         val requestBuilder: RequestBuilder<Drawable> =
-            Glide.with(imageViewContext)
+            requestBuilderSrc ?: Glide.with(imageViewContext)
                 .asDrawable()
                 .sizeMultiplier(0.1f)
         val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
