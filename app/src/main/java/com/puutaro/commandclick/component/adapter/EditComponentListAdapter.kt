@@ -377,7 +377,7 @@ class EditComponentListAdapter(
             editListPosition > listLimitSize
         ) return
         initListProperty(editListPosition)
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val lineMap = lineMapList[editListPosition]
             holder.srcTitle = withContext(Dispatchers.IO) {
                 lineMap.get(
@@ -482,15 +482,18 @@ class EditComponentListAdapter(
 //                    "linearMapList: ${frameTagToLinearKeysListMap}",
 //                ).joinToString("\n\n")
 //            )
-            val materialCardView = withContext(Dispatchers.Main) {
-                val materialCardView = holder.materialCardView
-                holder.materialCardView.apply {
-//                    removeAllViews()
+            withContext(Dispatchers.Main) {
+                val materialCardView = holder.materialCardView.apply {
                     layoutElevation?.let {
                         elevation = it
                     }
                     layoutRadius?.let {
                         radius = it
+                    }
+                    val cardLinearParams =
+                        layoutParams as GridLayoutManager.LayoutParams
+                    layoutMargin?.let {
+                        cardLinearParams.setMargins(it)
                     }
                 }
                 val totalLinearLayoutList = materialCardView.children.filter {
@@ -530,23 +533,6 @@ class EditComponentListAdapter(
                 frameLayoutList.forEach {
                     it.visibility = View.GONE
                 }
-                materialCardView
-            }
-//            withContext(Dispatchers.Main){
-//                holder.readyVerticalLayoutList.forEach {
-//                    it.children.forEach {
-//                        it.visibility = View.GONE
-//                    }
-//                    it.visibility = View.GONE
-//                }
-//            }
-//            GridLayoutManager
-            withContext(Dispatchers.Main) {
-                val cardLinearParams =
-                    materialCardView.layoutParams as GridLayoutManager.LayoutParams
-                layoutMargin?.let {
-                    cardLinearParams.setMargins(it)
-                }
             }
             val isClickEnable = withContext(Dispatchers.IO) {
                 val isJsAcForFrame =
@@ -564,18 +550,16 @@ class EditComponentListAdapter(
                 isJsAcForFrame
                         && onClickForFrame
             }
-            withContext(Dispatchers.IO){
-                if(
-                    !isClickEnable
-                ) return@withContext
-                holder.updateKeyPairListConMap(
-                    frameTag,
-                    frameKeyPairsCon,
-                )
-//                holder.keyPairListConMap.put(
-//                    frameTag,
-//                    frameKeyPairsCon
-//                )
+            CoroutineScope(Dispatchers.IO).launch{
+                withContext(Dispatchers.IO) {
+                    if (
+                        !isClickEnable
+                    ) return@withContext
+                    holder.updateKeyPairListConMap(
+                        frameTag,
+                        frameKeyPairsCon,
+                    )
+                }
             }
             CoroutineScope(Dispatchers.IO).launch {
                 val frameFrameLayout = withContext(Dispatchers.Main) execSetFrame@{
@@ -782,7 +766,9 @@ class EditComponentListAdapter(
 //                    ).joinToString("\n")
 //                )
                 if(extractVerticalLinear == null) {
-                    totalLinearLayout.addView(verticalLinearLayout)
+                    withContext(Dispatchers.Main) {
+                        totalLinearLayout.addView(verticalLinearLayout)
+                    }
                 }
 //                val horizonIndexAndReadyButtonFrameLayoutList =
 //                    holder.verticalIndexAndHorizonIndexAndReadyButtonFrameLayoutList.getOrNull(
@@ -904,7 +890,9 @@ class EditComponentListAdapter(
 //                        ).joinToString("\n\n\n") + "\n\n======\n\n"
 //                    )
                     if(extractHorizonLinear == null) {
-                        verticalLinearLayout.addView(horizonLinearLayout)
+                        withContext(Dispatchers.IO) {
+                            verticalLinearLayout.addView(horizonLinearLayout)
+                        }
                     }
 
                     val horizonTagToContentsKeysListMapWithReplace = horizonTagToContentsKeysListMap.map {
@@ -1107,7 +1095,9 @@ class EditComponentListAdapter(
 //                                    ).joinToString("\n") + "\n\n============\n\n"
 //                                )
                                 if(extractContentsFrameLayout == null) {
-                                    horizonLinearLayout.addView(contentsFrameLayout)
+                                    withContext(Dispatchers.Main) {
+                                        horizonLinearLayout.addView(contentsFrameLayout)
+                                    }
                                 }
                                 CoroutineScope(Dispatchers.Main).launch {
                                     withContext(Dispatchers.Main) {
@@ -1167,7 +1157,7 @@ class EditComponentListAdapter(
                                         ).isNullOrEmpty()
                                     }
                                 }
-                                withContext(Dispatchers.IO) {
+                                CoroutineScope(Dispatchers.IO).launch {
                                     holder.updateKeyPairListConMap(
                                         contentsTag,
                                         linearFrameKeyPairsListCon
