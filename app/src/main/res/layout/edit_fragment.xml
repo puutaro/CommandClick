@@ -126,6 +126,7 @@
             android:textSize="20sp"
             android:autofillHints=""
             android:inputType="text"
+            android:visibility="gone"
             />
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/edit_footer_horizon_layout"

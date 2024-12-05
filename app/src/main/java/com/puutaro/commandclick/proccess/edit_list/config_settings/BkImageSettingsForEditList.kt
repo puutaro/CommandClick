@@ -67,6 +67,7 @@ object BkImageSettingsForEditList {
         null,
             requestBuilderSrc,
             density,
+            true,
         )
     }
 

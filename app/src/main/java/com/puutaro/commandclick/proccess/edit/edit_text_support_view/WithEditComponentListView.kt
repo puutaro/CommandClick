@@ -225,33 +225,6 @@ object WithEditComponentListView{
                     .asDrawable()
                     .sizeMultiplier(0.1f)
             }
-        CoroutineScope(Dispatchers.Main).launch {
-//            withContext(Dispatchers.Main) {
-//                BkImageSettingsForEditList.makeBkImage(
-//                    editListBkImage,
-//                    editListBkPairs,
-//                )
-//            }
-            val bkFrameLayout = withContext(Dispatchers.Main){
-                val buttonFrameLayout = layoutInflater.inflate(
-                    R.layout.icon_caption_layout_for_edit_list,
-                    null
-                ) as FrameLayout?
-                BkImageSettingsForEditList.makeBkFrame(
-                    context,
-                    buttonFrameLayout,
-                    fannelInfoMap,
-                    setReplaceVariableMap,
-                    busyboxExecutor,
-                    editListBkPairs,
-                    requestBuilderSrc,
-                    density,
-                )
-            }
-            withContext(Dispatchers.Main) {
-                editListBkFrame.addView(bkFrameLayout)
-            }
-        }
         val indexListMap = EditListConfig.getConfigKeyMap(
             editListConfigMap,
             EditListConfig.EditListConfigKey.LIST.key
@@ -354,6 +327,33 @@ object WithEditComponentListView{
                 SettingActionManager.Companion.BeforeActionImportMapManager.init()
 //                SettingActionManager.Companion.GlobalExitManager.init()
             }
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+//            withContext(Dispatchers.Main) {
+//                BkImageSettingsForEditList.makeBkImage(
+//                    editListBkImage,
+//                    editListBkPairs,
+//                )
+//            }
+            val bkFrameLayout = withContext(Dispatchers.Main){
+//                val buttonFrameLayout = layoutInflater.inflate(
+//                    R.layout.icon_caption_layout_for_edit_list,
+//                    null
+//                ) as FrameLayout?
+                BkImageSettingsForEditList.makeBkFrame(
+                    context,
+                    editListBkFrame,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    editListBkPairs,
+                    requestBuilderSrc,
+                    density,
+                )
+            }
+//            withContext(Dispatchers.Main) {
+//                editListBkFrame.addView(bkFrameLayout)
+//            }
         }
         CoroutineScope(Dispatchers.Main).launch {
             setToolbar(
