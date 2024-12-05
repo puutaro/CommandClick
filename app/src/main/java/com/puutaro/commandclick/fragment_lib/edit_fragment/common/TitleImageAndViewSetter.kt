@@ -193,6 +193,7 @@ object TitleImageAndViewSetter {
                         .load(backstackCountBitmap)
                         .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .dontAnimate()
                         .thumbnail(requestBuilder)
                         .into(this@apply)
                 }
@@ -409,6 +410,7 @@ private object FannelLogoSetter {
                     .with(context)
                     .load(updatedRectBitmap)
                     .skipMemoryCache(true)
+                    .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .thumbnail(requestBuilder)
                     .into(titleImageView)

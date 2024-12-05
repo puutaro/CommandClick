@@ -1039,6 +1039,7 @@ object EditFrameMaker {
                 .load(imagePathSrc)
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .dontAnimate()
                 .thumbnail(requestBuilder)
                 .into(imageView)
             return

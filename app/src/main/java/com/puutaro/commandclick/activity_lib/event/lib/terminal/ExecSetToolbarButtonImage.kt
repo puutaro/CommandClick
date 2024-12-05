@@ -447,6 +447,7 @@ object ExecSetToolbarButtonImage {
                 .load(imagePath)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .skipMemoryCache(true)
+                .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .thumbnail(requestBuilder)
                 .into(imageButton)
