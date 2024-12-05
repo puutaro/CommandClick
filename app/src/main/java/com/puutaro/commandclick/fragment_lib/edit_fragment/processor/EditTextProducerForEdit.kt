@@ -6,15 +6,18 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 object EditTextProducerForEdit {
 
@@ -108,18 +111,18 @@ object EditTextProducerForEdit {
                     verticalLinear2.editComponentAdapterHorizonBind2,
                 )
             )
-        val contentsLayoutIdListList = listOf(
-            listOf(
-                R.id.button_frame_layout11,
-                R.id.button_frame_layout12,
-                R.id.button_frame_layout13,
-            ),
-            listOf(
-                R.id.button_frame_layout21,
-                R.id.button_frame_layout22,
-                R.id.button_frame_layout23,
-            ),
-        )
+//        val contentsLayoutIdListList = listOf(
+//            listOf(
+//                R.id.button_frame_layout11,
+//                R.id.button_frame_layout12,
+//                R.id.button_frame_layout13,
+//            ),
+//            listOf(
+//                R.id.button_frame_layout21,
+//                R.id.button_frame_layout22,
+//                R.id.button_frame_layout23,
+//            ),
+//        )
         val verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter =
             listOf(
                 listOf(
@@ -147,6 +150,19 @@ object EditTextProducerForEdit {
                     ),
                 )
             ) as List<List<List<FrameLayout?>>>
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
+//            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter.mapIndexed {
+//                varticalIndex, horizonIndexAndReadyContentsLayoutList ->
+//                horizonIndexAndReadyContentsLayoutList.mapIndexed {
+//                    horizonIndex, readyContentsLayoutList ->
+//                    readyContentsLayoutList.map {
+//                        contentsLayout ->
+//                        "varticalIndex: ${varticalIndex}, horizonIndex: ${horizonIndex}, bool: ${contentsLayout is FrameLayout}"
+//                    }.joinToString("\n")
+//                }.joinToString("\n")
+//            }.joinToString("\n")
+//        )
 //            varticalIndexAndHorizonLinearListForFooter.mapIndexed {
 //                    _, readyHorizonLayoutList ->
 //                readyHorizonLayoutList.mapIndexed {
