@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -30,6 +29,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialogForSetting
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GgleSchDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
@@ -107,6 +107,7 @@ class TerminalFragment:
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
     var editListDialog: Dialog? = null
+    var editListDialogForSetting: EditListDialogForSetting? = null
 //    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
     var pocketWebViewManager: WebViewJsDialog? = null
@@ -242,6 +243,7 @@ class TerminalFragment:
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
         FannelHistoryGifCreator.watch(this)
+        editListDialogForSetting = EditListDialogForSetting(WeakReference(this))
     }
 
     override fun onStart() {
@@ -466,6 +468,10 @@ class TerminalFragment:
 //        webViewDialogInstance = null
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
+        editListDialog?.dismiss()
+        editListDialog = null
+        editListDialogForSetting?.dismiss()
+        editListDialogForSetting = null
         firstDisplayUpdate = true
     }
 

@@ -60,6 +60,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
@@ -70,6 +71,7 @@ import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -133,6 +135,7 @@ class MainActivity:
     CommandIndexFragment.OnKeyboardHandleListenerForCmdIndex,
     CommandIndexFragment.OnPinFannelShowListener,
     CommandIndexFragment.OnPageSearchSwitchListener,
+    CommandIndexFragment.OnEditListDialogListener,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -1017,6 +1020,18 @@ class MainActivity:
     override fun onPageSearchSwitchForTerm() {
         PageSearchManager.switch(
             this
+        )
+    }
+
+    override fun onEditListDialog(
+        fannelInfoCon: String,
+        editListConfigPath: String
+    ) {
+        val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(this)
+            ?: return
+        EditListDialog(WeakReference(terminalFragment)).create(
+            fannelInfoCon,
+            editListConfigPath
         )
     }
 

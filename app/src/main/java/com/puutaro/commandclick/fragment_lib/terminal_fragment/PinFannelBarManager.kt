@@ -15,6 +15,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.PinFannelAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
@@ -24,6 +25,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.list.ListTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FannelSettingMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -146,6 +148,16 @@ object PinFannelBarManager {
                         File(cmdclickDefaultAppDirPath, fannelName).absolutePath
                     )
                 }
+                terminalFragment.editListDialogForSetting?.create(
+                    FannelInfoTool.makeFannelInfoMapByString(
+                        fannelName,
+                        String()
+                    ).map {
+                        "${it.key}=${it.value}"
+                    }.joinToString(JsFannelInfo.fannelInfoMapSeparator.toString()),
+                    "/storage/emulated/0/Documents/cmdclick/AppDir/default/textToSpeechDir/settings/editListConfig.js"
+                )
+                return
                 EditExecuteOrElse.handle(
                     terminalFragment,
                     fannelName,
