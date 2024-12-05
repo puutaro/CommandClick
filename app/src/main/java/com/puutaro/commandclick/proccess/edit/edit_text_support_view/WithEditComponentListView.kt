@@ -258,7 +258,7 @@ object WithEditComponentListView{
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfannelContentsList.txt").absolutePath,
 //            fannelContentsList?.joinToString("\n") ?: String()
 //        )
-        val editComponentListAdapter = withContext(Dispatchers.Main) {
+        val editComponentListAdapter = withContext(Dispatchers.IO) {
             EditComponentListAdapter(
                 WeakReference(fragment),
                 layoutInflater,
@@ -278,15 +278,17 @@ object WithEditComponentListView{
                 editListConfigMap,
             )
         }
-        withContext(Dispatchers.Main) {
-            ItemTouchHelperCallbackForEditListAdapter.set(
-                fragment,
-                fannelInfoMap,
-                setReplaceVariableMap,
-                editListRecyclerView,
-                editComponentListAdapter,
-                layoutConfigMap
-            )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                ItemTouchHelperCallbackForEditListAdapter.set(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    editListRecyclerView,
+                    editComponentListAdapter,
+                    layoutConfigMap
+                )
+            }
         }
 
         withContext(Dispatchers.Main) {
@@ -312,9 +314,7 @@ object WithEditComponentListView{
             withContext(Dispatchers.IO){
                 var prevYposi = 0f
                 for(i in 1..10){
-                    val curYPosi = withContext(Dispatchers.Main){
-                        editListRecyclerView.y
-                    }
+                    val curYPosi = editListRecyclerView.y
                     if(
                         prevYposi != 0f
                         && prevYposi == curYPosi
@@ -323,9 +323,9 @@ object WithEditComponentListView{
                     delay(100)
                 }
             }
-            withContext(Dispatchers.Main) {
-                editListRecyclerView.scrollToPosition(0)
-            }
+//            withContext(Dispatchers.Main) {
+//                editListRecyclerView.scrollToPosition(0)
+//            }
             withContext(Dispatchers.IO){
                 SettingActionManager.Companion.BeforeActionImportMapManager.init()
 //                SettingActionManager.Companion.GlobalExitManager.init()

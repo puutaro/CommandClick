@@ -192,6 +192,11 @@ class EditListDialogForSetting(
 //            constraintLayoutSrc
 //                ?:return
         CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main){
+                editListDialogOrdinarySrc?.show()
+            }
+        }
+        CoroutineScope(Dispatchers.IO).launch {
             val fannelInfoMap = withContext(Dispatchers.IO) {
                 CmdClickMap.createMap(
                     fannelInfoCon,
@@ -263,25 +268,6 @@ class EditListDialogForSetting(
                     null,
                     mainFannelConList,
                 )
-            }
-            withContext(Dispatchers.Main){
-//                editListDialogOrdinarySrc?.setOnCancelListener {
-//                    dismissForInner(
-//                        terminalFragment,
-//                        editListRecyclerView,
-//                        editFooterHorizonLayout,
-//                        editListBkFrame,
-//                        constraintLayout,
-//                        true,
-//                    )
-//                }
-//                editListDialogOrdinarySrc?.window?.apply {
-//                    setLayout(
-//                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.MATCH_PARENT
-//                    )
-//                }
-                editListDialogOrdinarySrc?.show()
             }
         }
     }
