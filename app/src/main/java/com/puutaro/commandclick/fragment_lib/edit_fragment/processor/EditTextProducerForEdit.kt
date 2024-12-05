@@ -175,27 +175,29 @@ object EditTextProducerForEdit {
 //                    }
 //                }
 //            }
-        WithEditComponentListView.create(
-            editFragment,
-            editFragment.fannelInfoMap,
-            editFragment.setReplaceVariableMap,
-            editFragment.busyboxExecutor,
-            editFragment.editListConfigMap,
-            binding.editBackstackCountFrame,
-            binding.editBackstackCount,
-            binding.editTextView,
-            binding.editTitleImage,
-            binding.editListRecyclerView,
-            binding.editListBkFrame,
-            binding.editListSearchEditText,
-            binding.editFooterHorizonLayout,
-            verticalLinearListForFooter,
-            varticalIndexAndHorizonLinearListForFooter,
-            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
-            binding.editToolBarHorizonLayout,
-            editToolbarFannelCenterButton,
-            editFragment.mainFannelConList,
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            WithEditComponentListView.create(
+                editFragment,
+                editFragment.fannelInfoMap,
+                editFragment.setReplaceVariableMap,
+                editFragment.busyboxExecutor,
+                editFragment.editListConfigMap,
+                binding.editBackstackCountFrame,
+                binding.editBackstackCount,
+                binding.editTextView,
+                binding.editTitleImage,
+                binding.editListRecyclerView,
+                binding.editListBkFrame,
+                binding.editListSearchEditText,
+                binding.editFooterHorizonLayout,
+                verticalLinearListForFooter,
+                varticalIndexAndHorizonLinearListForFooter,
+                verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
+                binding.editToolBarHorizonLayout,
+                editToolbarFannelCenterButton,
+                editFragment.mainFannelConList,
+            )
+        }
     }
 }
 

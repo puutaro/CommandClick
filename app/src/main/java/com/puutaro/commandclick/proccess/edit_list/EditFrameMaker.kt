@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
@@ -18,7 +17,6 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -129,6 +127,7 @@ object EditFrameMaker {
         overrideTag: String?,
         totalSettingValMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
         isFrameLayoutParam: Boolean = false,
     ): FrameLayout? {
         if(
@@ -142,6 +141,7 @@ object EditFrameMaker {
             firstWeight,
             overrideTag,
             isFrameLayoutParam,
+            density,
         ) ?: return null
 
 
@@ -178,7 +178,8 @@ object EditFrameMaker {
                         imageButtonView,
                         imageMap,
                         imagePropertyMap,
-                        requestBuilderSrc
+                        requestBuilderSrc,
+                        density,
                     )
                 }
 //                }
@@ -229,6 +230,7 @@ object EditFrameMaker {
                         captionTextView,
                         textMap,
                         textPropertyMap,
+                        density,
                     )
                 }
 //                }
@@ -244,6 +246,7 @@ object EditFrameMaker {
         firstWeight: Float?,
         overrideTag: String?,
         isFrameLayoutParam: Boolean,
+        density: Float,
     ):  FrameLayout? {
         if(
             context == null
@@ -274,9 +277,9 @@ object EditFrameMaker {
                 heightKey,
             ).let {
                 EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                    context,
                     it,
                     ViewGroup.LayoutParams.MATCH_PARENT,
+                    density,
                 )
             }
 //                ,ScreenSizeCalculator.toDp(context, 50)
@@ -287,9 +290,9 @@ object EditFrameMaker {
                 widthKey,
             ).let {
                 EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                    context,
                     it,
                     width,
+                    density,
                 )
 
             }
@@ -338,7 +341,6 @@ object EditFrameMaker {
             }
         }
         val paddingData = EditComponent.Template.PaddingData(
-            context,
             PairListTool.getValue(
                 frameKeyPairList,
                 paddingTopKey
@@ -355,10 +357,10 @@ object EditFrameMaker {
                 frameKeyPairList,
                 paddingEndKey
             ),
+            density,
         )
         param.apply {
             val marginData = EditComponent.Template.MarginData(
-                context,
                 PairListTool.getValue(
                     frameKeyPairList,
                     marginTopKey
@@ -375,6 +377,7 @@ object EditFrameMaker {
                     frameKeyPairList,
                     marginEndKey
                 ),
+                density,
             )
             topMargin = marginData.marginTop ?: 0
             marginStart = marginData.marginStart ?: 0
@@ -431,6 +434,7 @@ object EditFrameMaker {
         context: Context?,
         buttonFrameLayout: FrameLayout?,
         frameKeyPairList: List<Pair<String, String>>?,
+        density: Float,
     ) {
         if(
             context == null
@@ -457,7 +461,6 @@ object EditFrameMaker {
 //            )
             val paddingData = withContext(Dispatchers.IO) {
                 EditComponent.Template.PaddingData(
-                    context,
                     PairListTool.getValue(
                         frameKeyPairList,
                         paddingTopKey
@@ -474,6 +477,7 @@ object EditFrameMaker {
                         frameKeyPairList,
                         paddingEndKey
                     ),
+                    density,
                 )
             }
             withContext(Dispatchers.Main) {
@@ -518,7 +522,6 @@ object EditFrameMaker {
                 }
                 val marginData = withContext(Dispatchers.IO) {
                     EditComponent.Template.MarginData(
-                        context,
                         PairListTool.getValue(
                             frameKeyPairList,
                             marginTopKey,
@@ -535,6 +538,7 @@ object EditFrameMaker {
                             frameKeyPairList,
                             marginEndKey
                         ),
+                        density,
                     )
                 }
                 withContext(Dispatchers.Main) {
@@ -591,7 +595,8 @@ object EditFrameMaker {
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
-        requestBuilderSrc: RequestBuilder<Drawable>?
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
     ) {
         val context = imageView.context
         imageView.layoutParams = imageView.layoutParams.apply {
@@ -602,9 +607,9 @@ object EditFrameMaker {
                         imageWidthKey,
                     ).let {
                         EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                            context,
                             it,
                             FrameLayout.LayoutParams.MATCH_PARENT,
+                            density,
                         )
                     }
                 }
@@ -614,9 +619,9 @@ object EditFrameMaker {
                         imageHeightKey,
                     ).let {
                         EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                            context,
                             it,
                             FrameLayout.LayoutParams.MATCH_PARENT,
+                            density,
                         )
                     }
                 }
@@ -631,7 +636,6 @@ object EditFrameMaker {
                 } ?: Gravity.CENTER
                 gravity = overrideLayoutGravity
                 val marginData = EditComponent.Template.MarginData(
-                    context,
                     imagePropertyMap?.get(
                         imageMarginTopKey,
                     ),
@@ -644,6 +648,7 @@ object EditFrameMaker {
                     imagePropertyMap?.get(
                         imageMarginEndKey,
                     ),
+                    density,
                 )
                 marginData.marginTop?.let {
                     topMargin = it
@@ -674,7 +679,6 @@ object EditFrameMaker {
         }
         imageView.apply {
             val paddingData = EditComponent.Template.PaddingData(
-                context,
                 imagePropertyMap?.get(
                     imagePaddingTopKey,
                 ),
@@ -687,6 +691,7 @@ object EditFrameMaker {
                 imagePropertyMap?.get(
                     imagePaddingEndKey,
                 ),
+                density,
             )
             setPadding(
                 paddingData.paddingStart ?: 0,
@@ -822,6 +827,7 @@ object EditFrameMaker {
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
+        density: Float,
     ) {
         val context = imageView.context
         imageView.layoutParams = imageView.layoutParams.apply {
@@ -832,9 +838,9 @@ object EditFrameMaker {
                         imageWidthKey,
                     )?.let {
                         EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                            context,
                             it,
                             FrameLayout.LayoutParams.MATCH_PARENT,
+                            density,
                         )
                     }
                 }
@@ -846,9 +852,9 @@ object EditFrameMaker {
                         imageHeightKey,
                     )?.let {
                         EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                            context,
                             it,
                             FrameLayout.LayoutParams.MATCH_PARENT,
+                            density,
                         )
                     }
                 }
@@ -1141,6 +1147,7 @@ object EditFrameMaker {
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
         textPropertyMap: Map<String, String>?,
+        density: Float,
     ) {
 //        val enableTextSelect = withContext(Dispatchers.IO){
 //            textPropertyMap?.get(
@@ -1174,9 +1181,9 @@ object EditFrameMaker {
                             textWidthKey,
                         ).let {
                             EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                                textViewContext,
                                 it,
                                 FrameLayout.LayoutParams.WRAP_CONTENT,
+                                density,
                             )
                         }
                     }
@@ -1186,15 +1193,14 @@ object EditFrameMaker {
                             textHeightKey,
                         ).let {
                             EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                                textViewContext,
                                 it,
                                 FrameLayout.LayoutParams.WRAP_CONTENT,
+                                density,
                             )
                         }
                     }
                     height = overrideHeight
                     val marginData = EditComponent.Template.MarginData(
-                        textViewContext,
                         textPropertyMap?.get(
                             textMarginTopKey,
                         ),
@@ -1207,6 +1213,7 @@ object EditFrameMaker {
                         textPropertyMap?.get(
                             textMarginEndKey,
                         ),
+                        density,
                     )
                     topMargin = marginData.marginTop ?: 0
                     bottomMargin = marginData.marginBottom ?: 0
@@ -1223,7 +1230,6 @@ object EditFrameMaker {
                 } ?: Gravity.CENTER
                 gravity = overrideGravity
                 val paddingData = EditComponent.Template.PaddingData(
-                    textViewContext,
                     textPropertyMap?.get(
                         textPaddingTopKey,
                     ),
@@ -1236,6 +1242,7 @@ object EditFrameMaker {
                     textPropertyMap?.get(
                         textPaddingEndKey,
                     ),
+                    density,
                 )
                 setPadding(
                     paddingData.paddingStart ?: 0,

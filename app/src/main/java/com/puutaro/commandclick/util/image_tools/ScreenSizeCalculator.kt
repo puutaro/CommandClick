@@ -105,6 +105,15 @@ object ScreenSizeCalculator {
         }
     }
 
+    fun getDensity(
+        context: Context?
+    ): Float {
+        if(
+            context == null
+        ) return 0f
+        return context.resources?.displayMetrics?.density ?: 0f
+    }
+
     fun <T: Number>toDp(
         context: Context?,
         dps: T,
@@ -116,6 +125,13 @@ object ScreenSizeCalculator {
         return (dps.toFloat() * density).roundToInt()
     }
 
+    fun <T: Number>toDpByDensity(
+        dps: T,
+        density: Float,
+    ): Int {
+        return (dps.toFloat() * density).roundToInt()
+    }
+
     fun toDpForFloat(
         context: Context?,
         dps: Float,
@@ -124,6 +140,13 @@ object ScreenSizeCalculator {
             context == null
         ) return 0f
         val density = context.resources.displayMetrics.density
+        return (dps * density)
+    }
+
+    fun toDpForFloatByDensity(
+        dps: Float,
+        density: Float,
+    ): Float {
         return (dps * density)
     }
 

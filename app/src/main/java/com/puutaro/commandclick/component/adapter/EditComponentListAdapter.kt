@@ -66,6 +66,7 @@ class EditComponentListAdapter(
     val editListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
     var fannelContentsList: List<String>?,
+    private val density: Float,
 ): RecyclerView.Adapter<EditComponentListAdapter.EditListViewHolder>()
 {
     private val listLimitSize = 300
@@ -90,9 +91,9 @@ class EditComponentListAdapter(
     ).let {
         try{
             it?.toInt()?.let {
-                ScreenSizeCalculator.toDp(
-                    fragmentRef.get()?.context,
+                ScreenSizeCalculator.toDpByDensity(
                     it,
+                    density,
                 )
             }
         } catch (e: Exception){
@@ -104,9 +105,9 @@ class EditComponentListAdapter(
     ).let {
         try{
             it?.toFloat()?.let {
-                ScreenSizeCalculator.toDpForFloat(
-                    fragmentRef.get()?.context,
+                ScreenSizeCalculator.toDpForFloatByDensity(
                     it,
+                    density,
                 )
             }
         } catch (e: Exception){
@@ -119,9 +120,9 @@ class EditComponentListAdapter(
     ).let {
         try{
             it?.toFloat()?.let {
-                ScreenSizeCalculator.toDpForFloat(
-                    fragmentRef.get()?.context,
+                ScreenSizeCalculator.toDpForFloatByDensity(
                     it,
+                    density,
                 )
             }
         } catch (e: Exception){
@@ -590,6 +591,7 @@ class EditComponentListAdapter(
                         frameTag,
                         totalSettingValMap,
                         requestBuilderSrc,
+                        density,
                         true,
                     )
                 }
@@ -767,6 +769,7 @@ class EditComponentListAdapter(
                         verticalKeyPairs,
                         verticalLinerWeight,
                         verticalTag,
+                        density,
                     )
                 }
 //                FileSystems.updateFile(
@@ -886,6 +889,7 @@ class EditComponentListAdapter(
                             curRegExtraHorizonLinearId,
                             horizonKeyPairs,
                             horizonTag,
+                            density,
                         )
                     }
 //                    FileSystems.updateFile(
@@ -1119,7 +1123,7 @@ class EditComponentListAdapter(
                                             contentsTag,
                                             totalSettingValMap,
                                             requestBuilderSrc,
-
+                                            density,
                                             )
                                     }
 //                                    FileSystems.updateFile(

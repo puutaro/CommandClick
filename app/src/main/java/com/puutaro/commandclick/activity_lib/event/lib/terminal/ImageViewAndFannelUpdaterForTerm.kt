@@ -10,6 +10,7 @@ import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,7 @@ object ImageViewAndFannelUpdaterForTerm {
             terminalFragment,
             srcFragmentStr
         ) ?: return
+        val density = ScreenSizeCalculator.getDensity(activity)
         if(editListIndex is Int) {
             val holder = editListRecyclerView.findViewHolderForAdapterPosition(
                 editListIndex
@@ -76,6 +78,7 @@ object ImageViewAndFannelUpdaterForTerm {
                         imageView,
                         imageMap,
                         imagePropertyMap,
+                        density,
                     )
                 }
             }
@@ -132,6 +135,7 @@ object ImageViewAndFannelUpdaterForTerm {
                     imageView,
                     imageMap,
                     imagePropertyMap,
+                    density,
                 )
             }
         }

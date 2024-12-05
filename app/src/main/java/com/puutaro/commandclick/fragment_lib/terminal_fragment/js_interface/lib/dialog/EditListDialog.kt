@@ -194,7 +194,7 @@ class EditListDialog(
                     String()
                 )
             }
-            withContext(Dispatchers.Main) {
+            CoroutineScope(Dispatchers.IO).launch {
                 WithEditComponentListView.create(
                     terminalFragment,
                     fannelInfoMap,

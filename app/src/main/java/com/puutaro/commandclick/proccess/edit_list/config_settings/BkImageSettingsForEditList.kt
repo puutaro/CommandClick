@@ -44,7 +44,8 @@ object BkImageSettingsForEditList {
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListBkPairs: List<Pair<String, String>>?,
-        requestBuilderSrc: RequestBuilder<Drawable>?
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
     ): FrameLayout? {
         val tag =  withContext(Dispatchers.IO) {
             PairListTool.getValue(
@@ -65,6 +66,7 @@ object BkImageSettingsForEditList {
 //            true,
         null,
             requestBuilderSrc,
+            density,
         )
     }
 

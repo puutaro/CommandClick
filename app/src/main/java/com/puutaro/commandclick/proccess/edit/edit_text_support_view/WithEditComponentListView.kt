@@ -43,6 +43,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -82,7 +83,7 @@ object WithEditComponentListView{
     const val settingSectionStart = CommandClickScriptVariable.SETTING_SEC_START
     const val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
 
-    fun create(
+    suspend fun create(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
@@ -105,7 +106,7 @@ object WithEditComponentListView{
     ) {
         val context = fragment.context
             ?: return
-        runBlocking {
+        withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
         }
@@ -132,7 +133,7 @@ object WithEditComponentListView{
                 }
             }
         }
-        runBlocking {
+        withContext(Dispatchers.IO) {
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
         }
 //        FileSystems.writeFile(
@@ -143,21 +144,26 @@ object WithEditComponentListView{
 //                "varNameToValueMap3: ${varNameToValueMap3}\n",
 //            ).joinToString("\n")
 //        )
-        val setReplaceVariableMap =
+        val setReplaceVariableMap = withContext(Dispatchers.IO) {
             (setReplaceVariableMapSrc ?: emptyMap()) +
                     globalVarNameToValueMap
-        val editListConfigMap = editListConfigMapSrc?.map {
-            val key = CmdClickMap.replace(
-                it.key,
-                globalVarNameToValueMap
-            )
-            val value = CmdClickMap.replace(
-                it.value,
-                globalVarNameToValueMap
-            )
-            key to value
+        }
+        val editListConfigMap = withContext(Dispatchers.IO) {
+            editListConfigMapSrc?.map {
+                val key = CmdClickMap.replace(
+                    it.key,
+                    globalVarNameToValueMap
+                )
+                val value = CmdClickMap.replace(
+                    it.value,
+                    globalVarNameToValueMap
+                )
+                key to value
+            }
         }?.toMap()
-
+        val density = withContext(Dispatchers.Main) {
+            ScreenSizeCalculator.getDensity(context)
+        }
         CoroutineScope(Dispatchers.Main).launch{
             val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
             val titleSettingPath = editListConfigMap?.get(
@@ -204,10 +210,12 @@ object WithEditComponentListView{
                 titleSettingMap
             )
         }
-        val editListBkPairs = EditListConfig.getConfigKeyConList(
-            editListConfigMap,
-            EditListConfig.EditListConfigKey.BK.key
-        )
+        val editListBkPairs = withContext(Dispatchers.IO) {
+            EditListConfig.getConfigKeyConList(
+                editListConfigMap,
+                EditListConfig.EditListConfigKey.BK.key
+            )
+        }
         val layoutInflater = LayoutInflater.from(
                 context
             )
@@ -237,6 +245,7 @@ object WithEditComponentListView{
                     busyboxExecutor,
                     editListBkPairs,
                     requestBuilderSrc,
+                    density,
                 )
             }
             withContext(Dispatchers.Main) {
@@ -273,43 +282,56 @@ object WithEditComponentListView{
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfannelContentsList.txt").absolutePath,
 //            fannelContentsList?.joinToString("\n") ?: String()
 //        )
-        val editComponentListAdapter = EditComponentListAdapter(
-            WeakReference(fragment),
-            layoutInflater,
-            fannelInfoMap,
-            setReplaceVariableMap + globalVarNameToValueMap,
-            globalVarNameToValueMap,
-            editListConfigMap,
-            busyboxExecutor,
-            indexListMap,
-            lineMapList,
-            fannelContentsList
-        )
-        val layoutConfigMap = LayoutSettingsForEditList.getLayoutConfigMap(
-            editListConfigMap,
-        )
-        ItemTouchHelperCallbackForEditListAdapter.set(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            editListRecyclerView,
-            editComponentListAdapter,
-            layoutConfigMap
-        )
+        val editComponentListAdapter = withContext(Dispatchers.IO) {
+            EditComponentListAdapter(
+                WeakReference(fragment),
+                layoutInflater,
+                fannelInfoMap,
+                setReplaceVariableMap + globalVarNameToValueMap,
+                globalVarNameToValueMap,
+                editListConfigMap,
+                busyboxExecutor,
+                indexListMap,
+                lineMapList,
+                fannelContentsList,
+                density
+            )
+        }
+        val layoutConfigMap = withContext(Dispatchers.IO) {
+            LayoutSettingsForEditList.getLayoutConfigMap(
+                editListConfigMap,
+            )
+        }
+        withContext(Dispatchers.Main) {
+            ItemTouchHelperCallbackForEditListAdapter.set(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editListRecyclerView,
+                editComponentListAdapter,
+                layoutConfigMap
+            )
+        }
 
-        editListRecyclerView.adapter = editComponentListAdapter
+        withContext(Dispatchers.Main) {
+            editListRecyclerView.adapter = editComponentListAdapter
+        }
 
-        val isReverseLayout = LayoutSettingsForEditList.howReverseLayout(
-            fannelInfoMap,
-            setReplaceVariableMap,
-            layoutConfigMap
-        )
-        LayoutSettingsForEditList.setLayout(
-            context,
-            editComponentListAdapter.getLayoutConfigMap(),
-            editListRecyclerView,
-            isReverseLayout,
-        )
+        val isReverseLayout = withContext(Dispatchers.IO) {
+            LayoutSettingsForEditList.howReverseLayout(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                layoutConfigMap
+            )
+        }
+        withContext(Dispatchers.Main) {
+            LayoutSettingsForEditList.setLayout(
+                context,
+                editComponentListAdapter.getLayoutConfigMap(),
+                editListRecyclerView,
+                isReverseLayout,
+            )
+        }
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
                 var prevYposi = 0f
@@ -346,6 +368,7 @@ object WithEditComponentListView{
                 fannelCenterButtonLayout,
                 editListConfigMap,
                 requestBuilderSrc,
+                density,
             )
         }
         CoroutineScope(Dispatchers.Main).launch {
@@ -363,6 +386,7 @@ object WithEditComponentListView{
                 editListRecyclerView,
                 editListConfigMap,
                 requestBuilderSrc,
+                density,
             )
         }
         invokeItemSetClickListenerForFileList(
@@ -401,7 +425,8 @@ object WithEditComponentListView{
         verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter: List<List<List<FrameLayout?>>>,
         editListRecyclerView: RecyclerView,
         editListConfigMap: Map<String, String>?,
-        requestBuilderSrc: RequestBuilder<Drawable>?
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
     ){
         setFooterOrToolbar(
             fragment,
@@ -418,7 +443,8 @@ object WithEditComponentListView{
             null,
             null,
             editListConfigMap,
-            requestBuilderSrc
+            requestBuilderSrc,
+            density,
         )
     }
 
@@ -444,7 +470,8 @@ object WithEditComponentListView{
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCentrButtonLayout: FrameLayout?,
         editListConfigMap: Map<String, String>?,
-        requestBuilderSrc: RequestBuilder<Drawable>?
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
     ){
         setFooterOrToolbar(
             fragment,
@@ -462,6 +489,7 @@ object WithEditComponentListView{
             fannelCentrButtonLayout,
             editListConfigMap,
             requestBuilderSrc,
+            density,
         )
     }
 
@@ -480,7 +508,8 @@ object WithEditComponentListView{
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
         editListConfigMap: Map<String, String>?,
-        requestBuilderSrc: RequestBuilder<Drawable>?
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
         ) {
         val context = fragment.context
             ?: return
@@ -654,6 +683,7 @@ object WithEditComponentListView{
                                     verticalKeyPairs,
                                     verticalLinerWeight,
                                     verticalTag,
+                                    density,
                                 )
                             readyVerticalLinearLayout ?: let {
 //                                FileSystems.updateFile(
@@ -774,6 +804,7 @@ object WithEditComponentListView{
                                         null,
                                         horizonKeyPairs,
                                         horizonTag,
+                                        density,
                                     )
                                 }
                             }
@@ -985,7 +1016,8 @@ object WithEditComponentListView{
                                         layoutWeight,
                                         contentsTag,
                                         editComponentListAdapter?.totalSettingValMap,
-                                        requestBuilderSrc
+                                        requestBuilderSrc,
+                                        density,
                                     )
                                 }
                                 contentsLayout
@@ -1315,7 +1347,7 @@ object WithEditComponentListView{
 
     }
 
-    private fun makeSearchEditText(
+    private suspend fun makeSearchEditText(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         editComponentListAdapter: EditComponentListAdapter,
@@ -1326,60 +1358,72 @@ object WithEditComponentListView{
             editListConfigMap,
             EditListConfig.EditListConfigKey.SEARCH_BOX.key
         )
-        val inVisible =
+        val onVisible =
             searchBoxMap.get(
                 SearchBoxSettingsForEditList.SearchBoxSettingKey.VISIBLE.key
-            ) == SearchBoxSettingsForEditList.SearchBoxVisibleKey.OFF.name
-        if(inVisible){
-            searchText.isVisible = false
+            ) != SearchBoxSettingsForEditList.SearchBoxVisibleKey.OFF.name
+        if(onVisible){
+            withContext(Dispatchers.Main) {
+                searchText.isVisible = true
+            }
             return
         }
-        searchText.hint = searchBoxMap.get(
-            SearchBoxSettingsForEditList.SearchBoxSettingKey.HINT.key
-        ).let {
-            when(it.isNullOrEmpty()) {
-                false -> SearchBoxSettingsForEditList.makeCurrentVariableValueInEditText(
-                    fragment,
-                    fannelInfoMap,
-                    it
-                )
-                else -> TitleImageAndViewSetter.makeDefaultTitle(
-                    fragment,
-                    fannelInfoMap,
-                    false,
-                )
-            }
-        }
-        searchText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        withContext(Dispatchers.Main) {
+            searchText.hint = searchBoxMap.get(
+                SearchBoxSettingsForEditList.SearchBoxSettingKey.HINT.key
+            ).let {
+                when (it.isNullOrEmpty()) {
+                    false -> SearchBoxSettingsForEditList.makeCurrentVariableValueInEditText(
+                        fragment,
+                        fannelInfoMap,
+                        it
+                    )
 
-            override fun afterTextChanged(s: Editable?) {
-                if(!searchText.hasFocus()) return
-                val filteredUrlHistoryList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
-                    editComponentListAdapter.fannelInfoMap,
-                    editComponentListAdapter.setReplaceVariableMap,
-                    editComponentListAdapter.editListMap,
-                    editComponentListAdapter.busyboxExecutor,
-                ).filter {
-                    lineMap ->
-                    val title = lineMap.get(
-                        ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
-                    ) ?: String()
-                    Regex(
-                        searchText.text.toString()
-                            .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
-                        title.lowercase()
+                    else -> TitleImageAndViewSetter.makeDefaultTitle(
+                        fragment,
+                        fannelInfoMap,
+                        false,
                     )
                 }
-                ListViewToolForEditListAdapter.editListUpdateFileList(
-                    editComponentListAdapter,
-                    filteredUrlHistoryList,
-                )
             }
-        })
+            searchText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (!searchText.hasFocus()) return
+                    val filteredUrlHistoryList =
+                        ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
+                            editComponentListAdapter.fannelInfoMap,
+                            editComponentListAdapter.setReplaceVariableMap,
+                            editComponentListAdapter.editListMap,
+                            editComponentListAdapter.busyboxExecutor,
+                        ).filter { lineMap ->
+                            val title = lineMap.get(
+                                ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
+                            ) ?: String()
+                            Regex(
+                                searchText.text.toString()
+                                    .lowercase()
+                                    .replace("\n", "")
+                            ).containsMatchIn(
+                                title.lowercase()
+                            )
+                        }
+                    ListViewToolForEditListAdapter.editListUpdateFileList(
+                        editComponentListAdapter,
+                        filteredUrlHistoryList,
+                    )
+                }
+            })
+        }
     }
 }
 
