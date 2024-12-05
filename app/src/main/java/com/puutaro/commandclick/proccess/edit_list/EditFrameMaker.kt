@@ -1253,6 +1253,16 @@ object EditFrameMaker {
                     EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
                 )
                 setAutofillHints(settingValue)
+                val overrideText = withContext(Dispatchers.IO) {
+                    EditComponent.Template.TextManager.makeText(
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
+                        textMap,
+                        settingValue
+                    )
+                }
+                text = overrideText
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue
                 val overrideMaxLines = withContext(Dispatchers.IO){
@@ -1278,16 +1288,6 @@ object EditFrameMaker {
                     }
                 }
                 setFillColor(textColor?.id ?: R.color.fill_gray)
-                val overrideText = withContext(Dispatchers.IO) {
-                    EditComponent.Template.TextManager.makeText(
-                        fannelInfoMap,
-                        setReplaceVariableMap,
-                        busyboxExecutor,
-                        textMap,
-                        settingValue
-                    )
-                }
-                text = overrideText
                 val textBkColor = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textBkColorKey,

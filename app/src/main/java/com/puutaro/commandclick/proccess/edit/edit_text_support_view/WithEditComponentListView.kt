@@ -43,7 +43,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -948,27 +947,36 @@ object WithEditComponentListView{
                                 linearFrameKeyPairsListCon
                             )
                             val linearFrameLayout = withContext(Dispatchers.Main) setLinearFrameLayout@ {
-                                PairListTool.getValue(
-                                    contentsKeyPairsList,
-                                    enableKey,
-                                ).let {
+                                withContext(Dispatchers.IO) {
+                                    PairListTool.getValue(
+                                        contentsKeyPairsList,
+                                        enableKey,
+                                    )
+                                }.let {
                                         enableStr ->
                                     if(
                                         enableStr == switchOff
                                     ) return@setLinearFrameLayout null
                                 }
-                                val buttonFrameLayout =
-                                    readyContentsLayoutListForFooter
-                                        ?.getOrNull(execSetContentsIndex)
+                                val extractContentsLayout =
+                                    when(isEditToolbar) {
+                                        false -> readyContentsLayoutListForFooter
+                                            ?.getOrNull(execSetContentsIndex)
+                                        else -> null
+                                    }
+                                val contentsLayout =
+                                    extractContentsLayout
                                         ?: layoutInflater.inflate(
                                     R.layout.icon_caption_layout_for_edit_list,
                                     null
                                 ) as FrameLayout
-                                horizonLinearLayout?.addView(buttonFrameLayout)
+                                if(extractContentsLayout == null) {
+                                    horizonLinearLayout?.addView(contentsLayout)
+                                }
                                 CoroutineScope(Dispatchers.Main).launch {
                                     EditFrameMaker.make(
                                         context,
-                                        buttonFrameLayout,
+                                        contentsLayout,
                                         fannelInfoMap,
                                         setReplaceVariableMap,
                                         busyboxExecutor,
@@ -980,7 +988,7 @@ object WithEditComponentListView{
                                         requestBuilderSrc
                                     )
                                 }
-                                buttonFrameLayout
+                                contentsLayout
                             } ?: return@execSetContents
                             CoroutineScope(Dispatchers.IO).launch execClick@ {
                                 if (
