@@ -42,7 +42,7 @@ object TitleImageAndViewSetter {
     private const val switchOff = "OFF"
 
     private const val keySeparator = '|'
-    fun set(
+    suspend fun set(
         fragment: Fragment,
         editBackstackCountFrame: FrameLayout,
         editBackstackCountView: ShapeableImageView,
@@ -52,17 +52,10 @@ object TitleImageAndViewSetter {
         busyboxExecutor: BusyboxExecutor?,
         editTitleImageView: AppCompatImageView,
         titleSettingMap: Map<String, String>?,
+        requestBuilder: RequestBuilder<Drawable>?,
     ) {
         val titleTextMap = titleSettingMap?.get(
             EditBoxTitleKey.TEXT.key
-        ).let {
-            CmdClickMap.createMap(
-                it,
-                keySeparator
-            )
-        }.toMap()
-        val titleImageMap = titleSettingMap?.get(
-            EditBoxTitleKey.IMAGE.key
         ).let {
             CmdClickMap.createMap(
                 it,
@@ -75,8 +68,10 @@ object TitleImageAndViewSetter {
            val onTitleSwitch =
                it != switchOff
            if (onTitleSwitch) return@let
-            editBackstackCountFrame.isVisible = false
-            editTextView.isVisible = false
+            withContext(Dispatchers.Main) {
+                editBackstackCountFrame.isVisible = false
+                editTextView.isVisible = false
+            }
 //           editFragment.binding.editTitleLinearlayout.isVisible = false
            return
        }
@@ -90,13 +85,14 @@ object TitleImageAndViewSetter {
             busyboxExecutor,
             titleTextMap,
             fillColorStr,
+            requestBuilder,
         )
         setTitleImage(
             fragment,
             editTitleImageView,
             fannelInfoMap,
             fillColorStr,
-            titleImageMap,
+            requestBuilder,
         )
     }
 
@@ -120,7 +116,7 @@ object TitleImageAndViewSetter {
 //        CmdClickColorStr.DARK_BROWN.str,
         CmdClickColorStr.SKERLET.str,
     )
-    private fun setTitleText(
+    private suspend fun setTitleText(
         fragment: Fragment,
         editBackstackCountView: ShapeableImageView,
         editTextView: OutlineTextView,
@@ -129,6 +125,7 @@ object TitleImageAndViewSetter {
         busyboxExecutor: BusyboxExecutor?,
         titleTextMap: Map<String, String>?,
         fillColorStr: String,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
     ){
         val context = fragment.context ?: return
         val bkCountAndOverrideText = EditTextMaker.make(
@@ -188,7 +185,7 @@ object TitleImageAndViewSetter {
 //                     val hex = String.format("#%06X", 0xFFFFFF and rgb)
 //                    background = AppCompatResources.getDrawable(context, R.color.ao)
                     val requestBuilder: RequestBuilder<Drawable> =
-                        Glide.with(context)
+                        requestBuilderSrc ?: Glide.with(context)
                             .asDrawable()
                             .sizeMultiplier(0.1f)
                     Glide
@@ -202,19 +199,21 @@ object TitleImageAndViewSetter {
 
             }
         }
-        editTextView.apply {
-            letterSpacing = 0.2f
-            setFillColor(
-                Color.parseColor(
-                    fillColorStr
+        withContext(Dispatchers.Main){
+            editTextView.apply {
+                letterSpacing = 0.2f
+                setFillColor(
+                    Color.parseColor(
+                        fillColorStr
+                    )
                 )
-            )
-            setStrokeColor(
-                Color.parseColor(
-                    whiteColorStr
+                setStrokeColor(
+                    Color.parseColor(
+                        whiteColorStr
+                    )
                 )
-            )
-            text = overrideText
+                text = overrideText
+            }
         }
     }
 
@@ -276,12 +275,12 @@ object TitleImageAndViewSetter {
         )
     }
 
-    private fun setTitleImage(
+    private suspend fun setTitleImage(
         fragment: Fragment,
         editTitleImageView: AppCompatImageView,
         fannelInfoMap: Map<String, String>,
         fillColorStr: String,
-        titleImageMap: Map<String, String>,
+        requestBuilder: RequestBuilder<Drawable>?
     ){
 //        val isNotSet = titleImageMap.get(
 //            TitleImageSettingKey.VISIBLE.key
@@ -304,6 +303,7 @@ object TitleImageAndViewSetter {
 //        currentAppDirPath: String,
             currentFannelName,
             fillColorStr,
+            requestBuilder
         )
 //        QrLogo(editFragment).setTitleFannelLogo(
 //            editTitleImageView,
@@ -321,6 +321,7 @@ private object FannelLogoSetter {
 //        currentAppDirPath: String,
         selectedScriptName: String,
         fillColorStr: String,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
     ){
         val context = fragment.context
             ?: return
@@ -401,10 +402,9 @@ private object FannelLogoSetter {
 //            AppCompatResources.getDrawable(context, R.color.terminal_color)
 //        } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
             withContext(Dispatchers.Main) {
-                val requestBuilder: RequestBuilder<Drawable> =
-                    Glide.with(context)
-                        .asDrawable()
-                        .sizeMultiplier(0.1f)
+                val requestBuilder =
+                    requestBuilderSrc
+                        ?: Glide.with(context).asDrawable().sizeMultiplier(0.1f)
                 Glide
                     .with(context)
                     .load(updatedRectBitmap)

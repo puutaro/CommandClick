@@ -164,11 +164,19 @@ object WithEditComponentListView{
         val density = withContext(Dispatchers.Main) {
             ScreenSizeCalculator.getDensity(context)
         }
-        CoroutineScope(Dispatchers.Main).launch{
+        val requestBuilderSrc: RequestBuilder<Drawable>? =
+            fragment.context?.let {
+                Glide.with(it)
+                    .asDrawable()
+                    .sizeMultiplier(0.1f)
+            }
+        CoroutineScope(Dispatchers.IO).launch{
             val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
-            val titleSettingPath = editListConfigMap?.get(
-                titleLayoutPathKey
-            ) ?: String()
+            val titleSettingPath = withContext(Dispatchers.IO) {
+                editListConfigMap?.get(
+                    titleLayoutPathKey
+                )
+            } ?: String()
             val titleSettingMap = withContext(Dispatchers.IO){
                 ListSettingVariableListMaker.makeFromSettingPath(
                     context,
@@ -207,7 +215,8 @@ object WithEditComponentListView{
                 setReplaceVariableMap,
                 busyboxExecutor,
                 editTitleImage,
-                titleSettingMap
+                titleSettingMap,
+                requestBuilderSrc
             )
         }
         val editListBkPairs = withContext(Dispatchers.IO) {
@@ -219,12 +228,6 @@ object WithEditComponentListView{
         val layoutInflater = LayoutInflater.from(
                 context
             )
-        val requestBuilderSrc: RequestBuilder<Drawable>? =
-            fragment.context?.let {
-                Glide.with(it)
-                    .asDrawable()
-                    .sizeMultiplier(0.1f)
-            }
         val indexListMap = EditListConfig.getConfigKeyMap(
             editListConfigMap,
             EditListConfig.EditListConfigKey.LIST.key
@@ -255,7 +258,7 @@ object WithEditComponentListView{
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfannelContentsList.txt").absolutePath,
 //            fannelContentsList?.joinToString("\n") ?: String()
 //        )
-        val editComponentListAdapter = withContext(Dispatchers.IO) {
+        val editComponentListAdapter = withContext(Dispatchers.Main) {
             EditComponentListAdapter(
                 WeakReference(fragment),
                 layoutInflater,
@@ -328,14 +331,14 @@ object WithEditComponentListView{
 //                SettingActionManager.Companion.GlobalExitManager.init()
             }
         }
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
 //            withContext(Dispatchers.Main) {
 //                BkImageSettingsForEditList.makeBkImage(
 //                    editListBkImage,
 //                    editListBkPairs,
 //                )
 //            }
-            val bkFrameLayout = withContext(Dispatchers.Main){
+           withContext(Dispatchers.Main){
 //                val buttonFrameLayout = layoutInflater.inflate(
 //                    R.layout.icon_caption_layout_for_edit_list,
 //                    null
