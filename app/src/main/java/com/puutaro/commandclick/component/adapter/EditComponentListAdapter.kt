@@ -69,6 +69,7 @@ class EditComponentListAdapter(
     private val density: Float,
 ): RecyclerView.Adapter<EditComponentListAdapter.EditListViewHolder>()
 {
+    private val context = fragmentRef.get()?.context
     private val listLimitSize = 300
     private val initSettingValMap = RecordNumToMapNameValueInHolder.parse(
         fannelContentsList,
@@ -155,7 +156,7 @@ class EditComponentListAdapter(
     )
     private val frameMapAndFrameTagAndVerticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList =
         ListSettingsForEditList.ViewLayoutPathManager.parse(
-            fragmentRef.get()?.context,
+            context,
             fannelInfoMap,
             setReplaceVariableMap,
             viewLayoutPath
@@ -358,7 +359,7 @@ class EditComponentListAdapter(
         it.key
     }
     private val requestBuilderSrc: RequestBuilder<Drawable>? =
-        fragmentRef.get()?.context?.let {
+        context?.let {
             Glide.with(it)
                 .asDrawable()
                 .sizeMultiplier(0.1f)
@@ -369,15 +370,17 @@ class EditComponentListAdapter(
         holder: EditListViewHolder,
         editListPosition: Int
     ) {
-        val fragment = fragmentRef.get()
-            ?: return
-        val context = fragment.context
-            ?: return
         if(
             editListPosition > listLimitSize
         ) return
-        initListProperty(editListPosition)
         CoroutineScope(Dispatchers.IO).launch {
+            initListProperty(editListPosition)
+            if(
+                context == null
+            ) return@launch
+            val fragment = withContext(Dispatchers.IO) {
+                fragmentRef.get()
+            } ?: return@launch
             val lineMap = lineMapList[editListPosition]
             holder.srcTitle = withContext(Dispatchers.IO) {
                 lineMap.get(
