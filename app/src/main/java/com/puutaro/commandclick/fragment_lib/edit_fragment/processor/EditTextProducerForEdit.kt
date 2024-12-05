@@ -90,20 +90,22 @@ object EditTextProducerForEdit {
 //                "editFragment.editListConfigMap: ${editFragment.editListConfigMap}"
 //            ).joinToString("\n")
 //        )
+        val verticalLinear1 = binding.verticalLinear1
+        val verticalLinear2 = binding.verticalLinear2
         val verticalLinearListForFooter =
             listOf(
-                binding.verticalLinear1.editComponentAdapterVerticalBind as LinearLayoutCompat,
-                binding.verticalLinear2.editComponentAdapterVerticalBind as LinearLayoutCompat,
+                verticalLinear1.editComponentAdapterVerticalBind as LinearLayoutCompat,
+                verticalLinear2.editComponentAdapterVerticalBind as LinearLayoutCompat,
             )
         val varticalIndexAndHorizonLinearListForFooter =
             listOf (
                 listOf(
-                    binding.verticalLinear1.editComponentAdapterHorizonBind1,
-                    binding.verticalLinear1.editComponentAdapterHorizonBind2,
+                    verticalLinear1.editComponentAdapterHorizonBind1,
+                    verticalLinear1.editComponentAdapterHorizonBind2,
                 ),
                 listOf(
-                    binding.verticalLinear2.editComponentAdapterHorizonBind1,
-                    binding.verticalLinear2.editComponentAdapterHorizonBind2,
+                    verticalLinear2.editComponentAdapterHorizonBind1,
+                    verticalLinear2.editComponentAdapterHorizonBind2,
                 )
             )
         val contentsLayoutIdListList = listOf(
@@ -119,18 +121,44 @@ object EditTextProducerForEdit {
             ),
         )
         val verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter =
-            varticalIndexAndHorizonLinearListForFooter.mapIndexed {
-                    _, readyHorizonLayoutList ->
-                readyHorizonLayoutList.mapIndexed {
-                        horizonIndex, horizon ->
-                    val curLayoutIdListForHorizon =
-                        contentsLayoutIdListList.get(horizonIndex)
-                    curLayoutIdListForHorizon.map {
-                            layoutId ->
-                        horizon.findViewById<FrameLayout>(layoutId)
-                    }
-                }
-            }
+            listOf(
+                listOf(
+                    listOf(
+                        verticalLinear1.buttonFrameLayout11,
+                        verticalLinear1.buttonFrameLayout12,
+                        verticalLinear1.buttonFrameLayout13,
+                    ),
+                    listOf(
+                        verticalLinear1.buttonFrameLayout21,
+                        verticalLinear1.buttonFrameLayout22,
+                        verticalLinear1.buttonFrameLayout23,
+                    ),
+                ),
+                listOf(
+                    listOf(
+                        verticalLinear2.buttonFrameLayout11,
+                        verticalLinear2.buttonFrameLayout12,
+                        verticalLinear2.buttonFrameLayout13,
+                    ),
+                    listOf(
+                        verticalLinear2.buttonFrameLayout21,
+                        verticalLinear2.buttonFrameLayout22,
+                        verticalLinear2.buttonFrameLayout23,
+                    ),
+                )
+            ) as List<List<List<FrameLayout?>>>
+//            varticalIndexAndHorizonLinearListForFooter.mapIndexed {
+//                    _, readyHorizonLayoutList ->
+//                readyHorizonLayoutList.mapIndexed {
+//                        horizonIndex, horizon ->
+//                    val curLayoutIdListForHorizon =
+//                        contentsLayoutIdListList.get(horizonIndex)
+//                    curLayoutIdListForHorizon.map {
+//                            layoutId ->
+//                        horizon.findViewById<FrameLayout>(layoutId)
+//                    }
+//                }
+//            }
         WithEditComponentListView.create(
             editFragment,
             editFragment.fannelInfoMap,
