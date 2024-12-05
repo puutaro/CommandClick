@@ -118,6 +118,31 @@ class EditListDialog(
                 vertical?.findViewById<LinearLayoutCompat>(it)
             }
         }
+        val contentsLayoutIdListList = listOf(
+            listOf(
+                R.id.button_frame_layout11,
+                R.id.button_frame_layout12,
+                R.id.button_frame_layout13,
+            ),
+            listOf(
+                R.id.button_frame_layout21,
+                R.id.button_frame_layout22,
+                R.id.button_frame_layout23,
+            ),
+        )
+        val verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter =
+            horizonLinearListForFooter.mapIndexed {
+                    _, readyHorizonLayoutList ->
+                readyHorizonLayoutList.mapIndexed {
+                        horizonIndex, horizon ->
+                    val curLayoutIdListForHorizon =
+                        contentsLayoutIdListList.get(horizonIndex)
+                    curLayoutIdListForHorizon.map {
+                            layoutId ->
+                        horizon?.findViewById<FrameLayout>(layoutId)
+                    }
+                }
+            }
 
         CoroutineScope(Dispatchers.IO).launch {
             val fannelInfoMap = withContext(Dispatchers.IO) {
@@ -186,6 +211,7 @@ class EditListDialog(
                     editFooterHorizonLayout,
                     verticalLinearListForFooter,
                     horizonLinearListForFooter,
+                    verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
                     null,
                     null,
                     mainFannelConList,

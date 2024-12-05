@@ -99,6 +99,7 @@ object WithEditComponentListView{
         editFooterHorizonLayout: LinearLayoutCompat,
         verticalLinearListForFooter: List<LinearLayoutCompat?>,
         indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>,
+        verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter: List<List<List<FrameLayout?>>>,
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
         fannelContentsList: List<String>?,
@@ -359,6 +360,7 @@ object WithEditComponentListView{
                 editFooterHorizonLayout,
                 verticalLinearListForFooter,
                 indexAndHorizonLinearListForFooter,
+                verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
                 editListRecyclerView,
                 editListConfigMap,
                 requestBuilderSrc,
@@ -397,6 +399,7 @@ object WithEditComponentListView{
         editFooterHorizonLayout: LinearLayoutCompat,
         verticalLinearListForFooter: List<LinearLayoutCompat?>,
         indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>,
+        verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter: List<List<List<FrameLayout?>>>,
         editListRecyclerView: RecyclerView,
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?
@@ -411,6 +414,7 @@ object WithEditComponentListView{
             editFooterHorizonLayout,
             verticalLinearListForFooter,
             indexAndHorizonLinearListForFooter,
+            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
             editListRecyclerView,
             null,
             null,
@@ -453,6 +457,7 @@ object WithEditComponentListView{
             null,
             null,
             null,
+            null,
             editListRecyclerView,
             editToolbarHorizonLayout,
             fannelCentrButtonLayout,
@@ -471,6 +476,7 @@ object WithEditComponentListView{
         editFooterHorizonLayout: LinearLayoutCompat?,
         verticalLinearListForFooter: List<LinearLayoutCompat?>?,
         indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>?,
+        verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter: List<List<List<FrameLayout?>>>?,
         editListRecyclerView: RecyclerView,
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
@@ -691,6 +697,8 @@ object WithEditComponentListView{
                         "verticalTag: ${verticalTag}",
                         mapListElInfoForVertical,
                     ).joinToString(", ")
+                val horizonIndexAndReadyContentsLayoutListForFooter =
+                    verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter?.getOrNull(verticalIndex)
                 horizonTagToKeyPairsListToVarNameToValueMapList.forEachIndexed setHorizon@ {
                         horizonIndex, horizonTagToKeyPairsListToVarNameToValueMap ->
                     val curExtraHorizonLinearId = horizonLayoutStartId + horizonIndex
@@ -808,7 +816,8 @@ object WithEditComponentListView{
 //                        ).joinToString("\n\n\n") + "\n\n======\n\n"
 //                    )
 
-
+                    val readyContentsLayoutListForFooter =
+                        horizonIndexAndReadyContentsLayoutListForFooter?.getOrNull(horizonIndex)
                     contentsKeysList?.forEachIndexed setContents@ { contentsIndex, contentsKeyValues ->
                         val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
                             EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
@@ -948,7 +957,10 @@ object WithEditComponentListView{
                                         enableStr == switchOff
                                     ) return@setLinearFrameLayout null
                                 }
-                                val buttonFrameLayout = layoutInflater.inflate(
+                                val buttonFrameLayout =
+                                    readyContentsLayoutListForFooter
+                                        ?.getOrNull(execSetContentsIndex)
+                                        ?: layoutInflater.inflate(
                                     R.layout.icon_caption_layout_for_edit_list,
                                     null
                                 ) as FrameLayout

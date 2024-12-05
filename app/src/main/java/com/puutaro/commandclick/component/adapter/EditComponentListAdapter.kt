@@ -68,9 +68,7 @@ class EditComponentListAdapter(
     var fannelContentsList: List<String>?,
 ): RecyclerView.Adapter<EditComponentListAdapter.EditListViewHolder>()
 {
-//    private val context = fragment?.context
     private val listLimitSize = 300
-//    private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
     private val initSettingValMap = RecordNumToMapNameValueInHolder.parse(
         fannelContentsList,
         CommandClickScriptVariable.SETTING_SEC_START,
@@ -92,7 +90,6 @@ class EditComponentListAdapter(
     ).let {
         try{
             it?.toInt()?.let {
-
                 ScreenSizeCalculator.toDp(
                     fragmentRef.get()?.context,
                     it,
@@ -155,12 +152,13 @@ class EditComponentListAdapter(
         editListMap,
         ListSettingsForEditList.ListSettingKey.VIEW_LAYOUT_PATH.key,
     )
-    private val frameMapAndFrameTagAndVerticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList = ListSettingsForEditList.ViewLayoutPathManager.parse(
-        fragmentRef.get()?.context,
-        fannelInfoMap,
-        setReplaceVariableMap,
-        viewLayoutPath
-    )
+    private val frameMapAndFrameTagAndVerticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList =
+        ListSettingsForEditList.ViewLayoutPathManager.parse(
+            fragmentRef.get()?.context,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            viewLayoutPath
+        )
     private val frameMap =
         frameMapAndFrameTagAndVerticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList?.first ?: emptyMap()
     private val verticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList =
@@ -215,82 +213,51 @@ class EditComponentListAdapter(
         val totalLinearLayout = materialCardView.findViewById<LinearLayoutCompat>(
             R.id.edit_component_adapter_total_linear,
         )
-        private val vertical1 = totalLinearLayout.findViewById<LinearLayoutCompat>(
-            R.id.edit_component_adapter_vertical1,
+        private val verticalIdList = listOf(
+            R.id.vertical_linear1,
+            R.id.vertical_linear2,
         )
-        private val vertical2 = totalLinearLayout.findViewById<LinearLayoutCompat>(
-            R.id.edit_component_adapter_vertical2,
-        )
-        val readyVerticalLayoutList = listOf (
-            vertical1,
-            vertical2,
-        )
+        val readyVerticalLayoutList = verticalIdList.map {
+            totalLinearLayout.findViewById<LinearLayoutCompat>(it)
+        }
         private val horizonIdList = listOf(
             R.id.edit_component_adapter_horizon1,
             R.id.edit_component_adapter_horizon2,
         )
-        val horizon11 = vertical1.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon11)
-        val horizon12 = vertical1.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon12)
-        val horizon21 = vertical2.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon21)
-        val horizon22 = vertical2.findViewById<LinearLayoutCompat>(R.id.edit_component_adapter_horizon22)
-        val verticalIndexAndReadyHorizonLayoutList = listOf(
+        val verticalIndexAndReadyHorizonLayoutList =
+            readyVerticalLayoutList.map {
+                    vertical ->
+                horizonIdList.map {
+                    vertical.findViewById<LinearLayoutCompat>(it)
+                }
+            }
+
+        private val contentsLayoutIdListList = listOf(
             listOf(
-                horizon11,
-                horizon12
+                R.id.button_frame_layout11,
+                R.id.button_frame_layout12,
+                R.id.button_frame_layout13,
             ),
             listOf(
-                horizon21,
-                horizon22
-            )
-        )
-        val verticalIndexAndHorizonIndexAndReadyContentsLayoutList = listOf(
-            listOf(
-                listOf(
-                    horizon11.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout111),
-                    horizon11.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout112),
-                    horizon11.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout113),
-                ),
-                listOf(
-                    horizon12.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout121),
-                    horizon12.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout122),
-                    horizon12.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout123),
-                ),
-            ),
-            listOf(
-                listOf(
-                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout211),
-                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout212),
-                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout213),
-                ),
-                listOf(
-                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout221),
-                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout222),
-                    horizon22.findViewById<FrameLayout>(R.id.edit_component_adapter_contents_layout223),
-                ),
+                R.id.button_frame_layout21,
+                R.id.button_frame_layout22,
+                R.id.button_frame_layout23,
             ),
         )
-//        private val buttonFrameIdListList = listOf(
-//            listOf(
-//                R.id.icon_caption_for_edit_layout11,
-//                R.id.icon_caption_for_edit_layout12,
-//                R.id.icon_caption_for_edit_layout13,
-//            ),
-//            listOf(
-//                R.id.icon_caption_for_edit_layout21,
-//                R.id.icon_caption_for_edit_layout22,
-//                R.id.icon_caption_for_edit_layout23,
-//            ),
-//        )
-//        val verticalIndexAndHorizonIndexAndReadyButtonFrameLayoutList =
-//            verticalIndexAndReadyHorizonLayoutList.mapIndexed {
-//                index, horizonList ->
-//                buttonFrameIdListList[index].map {
-//                    horizonList.map {
-//                        horizon ->
-//                        horizon.findViewById<FrameLayout>(it)
-//                    }
-//                }
-//            }.let {
+        val verticalIndexAndHorizonIndexAndReadyContentsLayoutList =
+            verticalIndexAndReadyHorizonLayoutList.mapIndexed {
+                    _, readyHorizonLayoutList ->
+                readyHorizonLayoutList.mapIndexed {
+                        horizonIndex, horizon ->
+                    val curLayoutIdListForHorizon =
+                        contentsLayoutIdListList.get(horizonIndex)
+                    curLayoutIdListForHorizon.map {
+                        layoutId ->
+                        horizon.findViewById<FrameLayout>(layoutId)
+                    }
+                }
+            }
+//            .let {
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lFrame.txt").absolutePath,
 //                    it.mapIndexed { index, linearLayoutCompats ->
@@ -357,7 +324,6 @@ class EditComponentListAdapter(
         parent: ViewGroup,
         viewType: Int
     ): EditListViewHolder {
-//        val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(
             R.layout.edit_list_adapter_layout,
             parent,
@@ -410,37 +376,47 @@ class EditComponentListAdapter(
             editListPosition > listLimitSize
         ) return
         initListProperty(editListPosition)
-        val lineMap = lineMapList[editListPosition]
-        holder.srcTitle = lineMap.get(
-            ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
-        ) ?: String()
-        holder.srcCon = lineMap.get(
-            ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
-        ) ?: String()
-        holder.srcImage = lineMap.get(
-            ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
-        ) ?: String()
-        val alreadyUseTagList = mutableListOf<String>()
-        val frameTag = lineMap.get(
-            ListSettingsForEditList.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
-        ).let {
-            if(
-                !it.isNullOrEmpty()
-            ) return@let it
-            editListMap.get(
-                ListSettingsForEditList.ListSettingKey.DEFAULT_FRAME_TAG.key
-            )
-        }
-        if(
-            frameTag.isNullOrEmpty()
-        ) return
-        val mapListElInfo = listOf(
-            "srcTitle: ${holder.srcTitle}",
-            "srcCon: ${holder.srcCon}",
-            "srcImage: ${holder.srcImage}",
-            "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
-        ).joinToString(" ")
         CoroutineScope(Dispatchers.Main).launch {
+            val lineMap = lineMapList[editListPosition]
+            holder.srcTitle = withContext(Dispatchers.IO) {
+                lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
+                )
+            } ?: String()
+            holder.srcCon = withContext(Dispatchers.IO) {
+                lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
+                )
+            } ?: String()
+            holder.srcImage = withContext(Dispatchers.IO) {
+                lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
+                )
+            } ?: String()
+            val alreadyUseTagList = mutableListOf<String>()
+            val frameTag = withContext(Dispatchers.IO) {
+                lineMap.get(
+                    ListSettingsForEditList.MapListPathManager.Key.VIEW_LAYOUT_TAG.key
+                ).let {
+                    if (
+                        !it.isNullOrEmpty()
+                    ) return@let it
+                    editListMap.get(
+                        ListSettingsForEditList.ListSettingKey.DEFAULT_FRAME_TAG.key
+                    )
+                }
+            }
+            if(
+                frameTag.isNullOrEmpty()
+            ) return@launch
+            val mapListElInfo = withContext(Dispatchers.IO) {
+                listOf(
+                    "srcTitle: ${holder.srcTitle}",
+                    "srcCon: ${holder.srcCon}",
+                    "srcImage: ${holder.srcImage}",
+                    "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
+                ).joinToString(" ")
+            }
             val isFrameTagDulidateErr = withContext(Dispatchers.IO) frameTagCheck@ {
                 val correctFrameTag = EditComponent.AdapterSetter.tagDuplicateErrHandler(
                     context,

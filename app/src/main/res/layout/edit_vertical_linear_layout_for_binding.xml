@@ -25,6 +25,18 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:visibility="gone">
+            <include
+                android:id="@+id/button_frame_layout11"
+                layout="@layout/icon_caption_layout_for_edit_list"
+                />
+            <include
+                android:id="@+id/button_frame_layout12"
+                layout="@layout/icon_caption_layout_for_edit_list"
+                />
+            <include
+                android:id="@+id/button_frame_layout13"
+                layout="@layout/icon_caption_layout_for_edit_list"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/edit_component_adapter_horizon_bind2"
@@ -35,7 +47,18 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:visibility="gone">
-
+            <include
+                android:id="@+id/button_frame_layout21"
+                layout="@layout/icon_caption_layout_for_edit_list"
+                />
+            <include
+                android:id="@+id/button_frame_layout22"
+                layout="@layout/icon_caption_layout_for_edit_list"
+                />
+            <include
+                android:id="@+id/button_frame_layout23"
+                layout="@layout/icon_caption_layout_for_edit_list"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

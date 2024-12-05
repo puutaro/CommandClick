@@ -1,8 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
+import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
@@ -104,6 +106,31 @@ object EditTextProducerForEdit {
                     binding.verticalLinear2.editComponentAdapterHorizonBind2,
                 )
             )
+        val contentsLayoutIdListList = listOf(
+            listOf(
+                R.id.button_frame_layout11,
+                R.id.button_frame_layout12,
+                R.id.button_frame_layout13,
+            ),
+            listOf(
+                R.id.button_frame_layout21,
+                R.id.button_frame_layout22,
+                R.id.button_frame_layout23,
+            ),
+        )
+        val verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter =
+            varticalIndexAndHorizonLinearListForFooter.mapIndexed {
+                    _, readyHorizonLayoutList ->
+                readyHorizonLayoutList.mapIndexed {
+                        horizonIndex, horizon ->
+                    val curLayoutIdListForHorizon =
+                        contentsLayoutIdListList.get(horizonIndex)
+                    curLayoutIdListForHorizon.map {
+                            layoutId ->
+                        horizon.findViewById<FrameLayout>(layoutId)
+                    }
+                }
+            }
         WithEditComponentListView.create(
             editFragment,
             editFragment.fannelInfoMap,
@@ -120,6 +147,7 @@ object EditTextProducerForEdit {
             binding.editFooterHorizonLayout,
             verticalLinearListForFooter,
             varticalIndexAndHorizonLinearListForFooter,
+            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
             binding.editToolBarHorizonLayout,
             editToolbarFannelCenterButton,
             editFragment.mainFannelConList,
