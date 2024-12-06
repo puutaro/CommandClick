@@ -10,6 +10,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecSimple
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
 import com.puutaro.commandclick.util.list.ListTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 object ItemTouchHelperCallbackForEditListAdapter {
@@ -23,6 +24,7 @@ object ItemTouchHelperCallbackForEditListAdapter {
         editComponentListAdapter: EditComponentListAdapter,
         layoutConfigMap: Map<String, String>
     ){
+        delay(1500)
         val editByDragMap = LayoutSettingsForEditList.makeEditByDragMap(
             layoutConfigMap,
         )

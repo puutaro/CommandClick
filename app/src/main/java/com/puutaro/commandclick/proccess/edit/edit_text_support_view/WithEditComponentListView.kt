@@ -43,6 +43,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -64,6 +65,8 @@ import java.lang.ref.WeakReference
 
 
 object WithEditComponentListView{
+    
+    private val delayTime = 1500L
 
     fun keyboardHide(
         fragment: Fragment,
@@ -393,27 +396,35 @@ object WithEditComponentListView{
                 density,
             )
         }
-        invokeItemSetClickListenerForFileList(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            busyboxExecutor,
-            editListRecyclerView
-        )
-        invokeItemSetTouchListenerForFileList(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            busyboxExecutor,
-            editListRecyclerView,
-        )
-        makeSearchEditText(
-            fragment,
-            fannelInfoMap,
-            editComponentListAdapter,
-            editListSearchEditText,
-            editListConfigMap
-        )
+        CoroutineScope(Dispatchers.IO).launch{
+            makeSearchEditText(
+                fragment,
+                fannelInfoMap,
+                editComponentListAdapter,
+                editListSearchEditText,
+                editListConfigMap
+            )
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            invokeItemSetClickListenerForFileList(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editListRecyclerView,
+                editComponentListAdapter
+            )
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            invokeItemSetTouchListenerForFileList(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                editListRecyclerView,
+                editComponentListAdapter
+            )
+        }
     }
 
     private suspend fun setFooter(
@@ -1015,6 +1026,9 @@ object WithEditComponentListView{
                                             return@execExecClick
                                         }
                                         withContext(Dispatchers.Main) {
+                                            withContext(Dispatchers.IO){
+                                                delay(1500)
+                                            }
                                             with(clickView) {
                                                 var consecutiveJob: Job? = null
                                                 setOnTouchListener(android.view.View.OnTouchListener { v, event ->
@@ -1452,15 +1466,17 @@ object WithEditComponentListView{
         )
     }
 
-    private fun invokeItemSetClickListenerForFileList(
+    private suspend fun invokeItemSetClickListenerForFileList(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListRecyclerView: RecyclerView
+        editListRecyclerView: RecyclerView,
+        editComponentListAdapter: EditComponentListAdapter,
     ) {
-        val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+        withContext(Dispatchers.IO) {
+            delay(delayTime)
+        }
         editComponentListAdapter.editAdapterClickListener =
             object: EditComponentListAdapter.OnEditAdapterClickListener {
                 override fun onEditAdapterClick(
@@ -1534,17 +1550,19 @@ object WithEditComponentListView{
     }
 
 
-    private fun invokeItemSetTouchListenerForFileList(
+    private suspend fun invokeItemSetTouchListenerForFileList(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
+        editComponentListAdapter: EditComponentListAdapter,
     ) {
+        withContext(Dispatchers.IO) {
+            delay(delayTime)
+        }
         var execTouchJob: Job? = null
         var consecutiveJob: Job? = null
-        val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
         editComponentListAdapter.editAdapterTouchUpListener = object: EditComponentListAdapter.OnEditAdapterTouchUpListener {
             override fun onEditAdapterTouchUp(
                 itemView: View,
@@ -1637,20 +1655,28 @@ object WithEditComponentListView{
         searchText: AppCompatEditText,
         editListConfigMap: Map<String, String>?
     ) {
-        val searchBoxMap = EditListConfig.getConfigKeyMap(
-            editListConfigMap,
-            EditListConfig.EditListConfigKey.SEARCH_BOX.key
-        )
+        val searchBoxMap = withContext(Dispatchers.IO) {
+            EditListConfig.getConfigKeyMap(
+                editListConfigMap,
+                EditListConfig.EditListConfigKey.SEARCH_BOX.key
+            )
+        }
         val onVisible =
-            searchBoxMap.get(
-                SearchBoxSettingsForEditList.SearchBoxSettingKey.VISIBLE.key
-            ) != SearchBoxSettingsForEditList.SearchBoxVisibleKey.OFF.name
-        if(onVisible){
+            withContext(Dispatchers.IO) {
+                searchBoxMap.get(
+                    SearchBoxSettingsForEditList.SearchBoxSettingKey.VISIBLE.key
+                ) != SearchBoxSettingsForEditList.SearchBoxVisibleKey.OFF.name
+            }
+        if(!onVisible) {
             withContext(Dispatchers.Main) {
-                searchText.isVisible = true
+                searchText.isVisible = false
             }
             return
         }
+        withContext(Dispatchers.Main) {
+            searchText.isVisible = true
+        }
+
         withContext(Dispatchers.Main) {
             searchText.hint = searchBoxMap.get(
                 SearchBoxSettingsForEditList.SearchBoxSettingKey.HINT.key
