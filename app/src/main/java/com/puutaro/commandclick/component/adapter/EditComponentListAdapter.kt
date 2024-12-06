@@ -1366,12 +1366,15 @@ class EditComponentListAdapter(
                                 ?: let {
                                     LinearLayoutCompat(context).apply {
                                         id = curExtraVerticalLinearId
-                                        layoutParams = LinearLayoutCompat.LayoutParams(
-                                            0,
-                                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                                        ).apply {
-                                            weight = verticalLinerWeight
+                                        val verticalParams = withContext(Dispatchers.IO){
+                                            LinearLayoutCompat.LayoutParams(
+                                                0,
+                                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                            ).apply {
+                                                weight = verticalLinerWeight
+                                            }
                                         }
+                                        layoutParams = verticalParams
                                     }
                                 }.apply {
                                     weightSum = weightSumFloat
@@ -1550,10 +1553,13 @@ class EditComponentListAdapter(
                                 extractHorizonLinear
                                     ?: LinearLayoutCompat(context).apply {
                                         id = curExtraHorizonLinearId
-                                        layoutParams = LinearLayoutCompat.LayoutParams(
-                                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                                        )
+                                        val horizonParams = withContext(Dispatchers.IO){
+                                            LinearLayoutCompat.LayoutParams(
+                                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                            )
+                                        }
+                                        layoutParams = horizonParams
                                     }
                             }.apply {
                                 weightSum = weightSumFloat

@@ -54,27 +54,31 @@ object TitleImageAndViewSetter {
         titleSettingMap: Map<String, String>?,
         requestBuilder: RequestBuilder<Drawable>?,
     ) {
-        val titleTextMap = titleSettingMap?.get(
-            EditBoxTitleKey.TEXT.key
-        ).let {
-            CmdClickMap.createMap(
-                it,
-                keySeparator
+        val titleTextMap = withContext(Dispatchers.IO) {
+            titleSettingMap?.get(
+                EditBoxTitleKey.TEXT.key
+            ).let {
+                CmdClickMap.createMap(
+                    it,
+                    keySeparator
+                )
+            }.toMap()
+        }
+        withContext(Dispatchers.IO) {
+            titleTextMap.get(
+                TitleTextSettingKey.VISIBLE.key
             )
-        }.toMap()
-        titleTextMap.get(
-            TitleTextSettingKey.VISIBLE.key
-        ).let {
-           val onTitleSwitch =
-               it != switchOff
-           if (onTitleSwitch) return@let
+        }.let {
+            val onTitleSwitch =
+                it != switchOff
+            if (onTitleSwitch) return@let
             withContext(Dispatchers.Main) {
                 editBackstackCountFrame.isVisible = false
                 editTextView.isVisible = false
             }
 //           editFragment.binding.editTitleLinearlayout.isVisible = false
-           return
-       }
+            return
+        }
         val fillColorStr = fillColorStrList.random()
         setTitleText(
             fragment,
@@ -128,21 +132,29 @@ object TitleImageAndViewSetter {
         requestBuilderSrc: RequestBuilder<Drawable>?,
     ){
         val context = fragment.context ?: return
-        val bkCountAndOverrideText = EditTextMaker.make(
-            fragment,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            busyboxExecutor,
-            titleTextMap
-        )
+        val bkCountAndOverrideText = withContext(Dispatchers.IO) {
+            EditTextMaker.make(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                titleTextMap
+            )
+        }
         val space = " "
-        val bkCountAndOverrideTextList = bkCountAndOverrideText.split(space)
-        val bkCount = bkCountAndOverrideTextList.first()
-        val overrideText = bkCountAndOverrideTextList.filterIndexed { index, _ ->
-            index > 0
-        }.joinToString(space).trim()
+        val bkCountAndOverrideTextList = withContext(Dispatchers.IO) {
+            bkCountAndOverrideText.split(
+                space
+            )
+        }
+        val bkCount = withContext(Dispatchers.IO) { bkCountAndOverrideTextList.first() }
+        val overrideText = withContext(Dispatchers.IO) {
+            bkCountAndOverrideTextList.filterIndexed { index, _ ->
+                index > 0
+            }.joinToString(space).trim()
+        }
 //        val fillColorStr = fillColorStrList.random()
-        val whiteColorStr = convertWhiteColor()
+        val whiteColorStr = withContext(Dispatchers.IO) { convertWhiteColor() }
         editBackstackCountView.apply {
             CoroutineScope(Dispatchers.IO).launch {
                 val oneSideLength = withContext(Dispatchers.IO){
@@ -283,19 +295,11 @@ object TitleImageAndViewSetter {
         fillColorStr: String,
         requestBuilder: RequestBuilder<Drawable>?
     ){
-//        val isNotSet = titleImageMap.get(
-//            TitleImageSettingKey.VISIBLE.key
-//        ) == switchOff
-//        if(isNotSet) return
-//        val fannelInfoMap =
-//            fragment.fannelInfoMap
-
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//            fannelInfoMap
-//        )
-        val currentFannelName = FannelInfoTool.getCurrentFannelName(
-            fannelInfoMap
-        )
+        val currentFannelName = withContext(Dispatchers.IO) {
+            FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
+            )
+        }
 //        val binding = fragment.binding
 //        val editTitleImageView = binding.editTitleImage
         FannelLogoSetter.setTitleFannelLogo(
@@ -316,7 +320,7 @@ object TitleImageAndViewSetter {
 
 private object FannelLogoSetter {
 
-    fun setTitleFannelLogo(
+    suspend fun setTitleFannelLogo(
         fragment: Fragment,
         titleImageView: AppCompatImageView?,
 //        currentAppDirPath: String,
@@ -330,13 +334,15 @@ private object FannelLogoSetter {
             titleImageView == null
         ) return
 //        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
-        val logoPngPath = listOf(
-            UsePath.fannelLogoPngPath,
-        ).joinToString("/").let {
-            ScriptPreWordReplacer.replace(
-                it,
-                selectedScriptName
-            )
+        val logoPngPath =  withContext(Dispatchers.IO) {
+            listOf(
+                UsePath.fannelLogoPngPath,
+            ).joinToString("/").let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    selectedScriptName
+                )
+            }
         }
 //            "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
         CoroutineScope(Dispatchers.IO).launch {
@@ -350,10 +356,12 @@ private object FannelLogoSetter {
                     )
                 }
             }?: return@launch
-            val rectHeight = logoBitmap.height * 2
-            val rectWidth = rectHeight * 5
-            val transParentHex = (3..9).random().let {
-                "#0${it}"
+            val rectHeight = withContext(Dispatchers.IO) { logoBitmap.height * 2 }
+            val rectWidth = withContext(Dispatchers.IO) { rectHeight * 5 }
+            val transParentHex = withContext(Dispatchers.IO) {
+                (3..9).random().let {
+                    "#0${it}"
+                }
             }
             val updatedRectBitmap = withContext(Dispatchers.IO) {
                 val rectBitmap = BitmapTool.ImageTransformer.makeRect(

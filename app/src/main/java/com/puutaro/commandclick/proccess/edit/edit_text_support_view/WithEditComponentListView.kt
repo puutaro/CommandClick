@@ -1153,12 +1153,15 @@ object WithEditComponentListView{
                                 val verticalLinearLayoutSrc =
                                     extractVerticalLinearLayout ?: let {
                                         LinearLayoutCompat(context).apply {
-                                            layoutParams = LinearLayoutCompat.LayoutParams(
-                                                0,
-                                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                                            ).apply {
-                                                weight = verticalLinerWeight
+                                            val verticalParams = withContext(Dispatchers.IO){
+                                                LinearLayoutCompat.LayoutParams(
+                                                    0,
+                                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                                ).apply {
+                                                    weight = verticalLinerWeight
+                                                }
                                             }
+                                            layoutParams = verticalParams
                                         }
                                     }
                                 extractVerticalLinearLayout ?: let {
@@ -1347,10 +1350,13 @@ object WithEditComponentListView{
                                     extractHorizonLayout
                                         ?: LinearLayoutCompat(context).apply {
                                             id = curExtraHorizonLinearId
-                                            layoutParams = LinearLayoutCompat.LayoutParams(
-                                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                                            )
+                                            val horizonParams = withContext(Dispatchers.IO){
+                                                LinearLayoutCompat.LayoutParams(
+                                                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                                )
+                                            }
+                                            layoutParams = horizonParams
                                         }
                                 }.apply {
                                     tag = frameTag
