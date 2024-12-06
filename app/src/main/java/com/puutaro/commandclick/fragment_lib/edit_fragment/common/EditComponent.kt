@@ -6,15 +6,19 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
 import com.puutaro.commandclick.component.adapter.EditComponentListAdapter.Companion.makeLinearFrameKeyPairsList
+import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
@@ -28,6 +32,8 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
@@ -714,6 +720,19 @@ object EditComponent {
 
         object AdapterSetter {
 
+                object AlreadyUseTagListHandler {
+
+                        suspend fun get(
+                                alreadyUseTagList: MutableList<String>,
+                                alreadyUseTagListMutex: Mutex,
+                        ): List<String> {
+                                return alreadyUseTagListMutex.withLock {
+                                        alreadyUseTagList
+                                }.toList()
+
+                        }
+                }
+
 
                 fun tagDuplicateErrHandler(
                         context: Context?,
@@ -1349,6 +1368,41 @@ object EditComponent {
                                         paddingData.paddingBottom ?: 0,
                                 )
 
+                        }
+                }
+
+                fun makeContentsFrameLayout(
+                        context: Context,
+                ): FrameLayout {
+                        val dp50 =
+                                context.resources.getDimension(R.dimen.toolbar_layout_height)
+                        val contentsLayout =
+                                FrameLayout(context).apply {
+                                        layoutParams =
+                                                LinearLayoutCompat.LayoutParams(
+                                                        0,
+                                                        dp50.toInt()
+                                                )
+                                }
+                        val imageView =
+                                AppCompatImageView(context).apply {
+                                        layoutParams =
+                                                FrameLayout.LayoutParams(
+                                                        FrameLayout.LayoutParams.MATCH_PARENT,
+                                                        FrameLayout.LayoutParams.MATCH_PARENT
+                                                )
+                                }
+                        val textView =
+                                OutlineTextView(context).apply {
+                                        layoutParams =
+                                                FrameLayout.LayoutParams(
+                                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                        FrameLayout.LayoutParams.WRAP_CONTENT
+                                                )
+                                }
+                        return contentsLayout.apply {
+                                addView(imageView)
+                                addView(textView)
                         }
                 }
         }
