@@ -174,7 +174,7 @@ class EditComponentListAdapter(
         verticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList.second
     private val horizonTagToContentsKeysListMap =
         verticalKeysListToVerticalTagAndHorizonKeysListToContentsMapList.third
-            .let {
+//            .let {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "seframeMapListToLinearMapList.txt").absolutePath,
 //                listOf(
@@ -185,8 +185,8 @@ class EditComponentListAdapter(
 //                    "horizonTagToLinearKeysListMap: ${it}",
 //                ).joinToString("\n\n\n")
 //            )
-            it
-        }
+//            it
+//        }
     private val plusKeyToSubKeyConWhere =
         fannelInfoMap.map {
             val key = SnakeCamelTool.snakeToCamel(it.key)
@@ -366,8 +366,6 @@ class EditComponentListAdapter(
                 .asDrawable()
                 .sizeMultiplier(0.1f)
         }
-
-//    private val buttonFrameLayoutInflater = LayoutInflater.from(context)
 
     override fun onBindViewHolder(
         holder: EditListViewHolder,
@@ -688,18 +686,6 @@ class EditComponentListAdapter(
                     "frameTag: ${frameTag}",
                     mapListElInfo,
                 ).joinToString(", ")
-            val extraVerticalStartId = 40000
-
-            val verticalChannel = Channel<
-                    Pair<
-                            Int,
-                            Triple<
-                            Pair<Int, String>,
-                            Map<String, String>,
-                            LinearLayoutCompat,
-                            >
-                            >
-                    >(verticalTagToKeyPairsListToVarNameToValueMapList.size)
             val verticalUseList = withContext(Dispatchers.IO) {
                 makeVerticalUseList(
                     context,
@@ -745,7 +731,6 @@ class EditComponentListAdapter(
 //                )
                 val readyHorizonLayoutList =
                     holder.verticalIndexAndReadyHorizonLayoutList.getOrNull(verticalIndex)
-                val horizonLayoutStartId = 50000
                 val mapListElInfoForHorizon =
                     listOf(
                         "verticalTag: ${verticalTag}",
@@ -767,148 +752,6 @@ class EditComponentListAdapter(
                         weightSumFloat,
                     )
                 }
-//                    val jobList =
-//                        horizonTagToKeyPairsListToVarNameToValueMapList.mapIndexed setHorizon@{ horizonIndex, horizonTagToKeyPairsListToVarNameToValueMap ->
-//                            async {
-//                                val curExtraHorizonLinearId = horizonLayoutStartId + horizonIndex
-//                                val keyPairsListToVarNameToValueMapForHorizon =
-//                                    horizonTagToKeyPairsListToVarNameToValueMap.second
-//                                val horizonKeyPairs =
-//                                    keyPairsListToVarNameToValueMapForHorizon.first
-//                                val horizonVarNameToValueMap =
-//                                    keyPairsListToVarNameToValueMapForHorizon.second + verticalVarNameToValueMap
-//                                val horizonTag = CmdClickMap.replace(
-//                                    horizonTagToKeyPairsListToVarNameToValueMap.first,
-//                                    horizonVarNameToValueMap
-//                                )
-//                                withContext(Dispatchers.IO) {
-//                                    val alreadyUseTagListSrc =  EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-//                                        alreadyUseTagList,
-//                                        alreadyUseTagListMutex
-//                                    )
-//                                    EditComponent.AdapterSetter.tagDuplicateErrHandler(
-//                                        context,
-//                                        EditComponent.Template.TagManager.TagGenre.HORIZON_TAG,
-//                                        horizonTag,
-//                                        alreadyUseTagListSrc,
-//                                        mapListElInfoForHorizon,
-//                                        String(),
-//                                    )?.let {
-//                                        alreadyUseTagListMutex.withLock {
-//                                            alreadyUseTagList.add(it)
-//                                        }
-//                                    }
-//                                }
-//                                withContext(Dispatchers.IO) {
-//                                    EditComponent.AdapterSetter.isNotLinearKeyErr(
-//                                        context,
-//                                        EditComponent.Template.LayoutKey.HORIZON.key,
-//                                        horizonKeyPairs,
-//                                        "horizonTag: ${horizonTag}, ${mapListElInfoForHorizon}",
-//                                        String(),
-//                                    )
-//                                }.let { isNotHorizonKeyErr ->
-//                                    if (isNotHorizonKeyErr) return@async
-//                                }
-//                                val isHorizonEnable = withContext(Dispatchers.IO) {
-//                                    PairListTool.getValue(
-//                                        horizonKeyPairs,
-//                                        enableKey,
-//                                    ).let { enableStr ->
-//                                        enableStr != switchOff
-//                                    }
-//                                }
-//                                if (
-//                                    !isHorizonEnable
-//                                ) return@async
-//                                val extractHorizonLinear =
-//                                    let {
-//                                        readyHorizonLayoutList?.getOrNull(horizonIndex)
-//                                            ?: verticalLinearLayout.findViewById<LinearLayoutCompat>(
-//                                                curExtraHorizonLinearId
-//                                            )
-//                                    }?.apply {
-//                                        weightSum = weightSumFloat
-//                                    }
-//
-//                                val curRegExtraHorizonLinearId =
-//                                    when (extractHorizonLinear == null) {
-//                                        false -> extractHorizonLinear.id
-//                                        else -> curExtraHorizonLinearId
-//                                    }
-//                                val horizonLinearLayout = withContext(Dispatchers.Main) {
-//                                    EditComponent.AdapterSetter.makeHorizonLinear(
-//                                        context,
-//                                        extractHorizonLinear,
-//                                        curRegExtraHorizonLinearId,
-//                                        horizonKeyPairs,
-//                                        horizonTag,
-//                                        density,
-//                                    )
-//                                }
-////                    FileSystems.updateFile(
-////                        File(UsePath.cmdclickDefaultAppDirPath, "smakeHorizonLinear.txt").absolutePath,
-////                        listOf(
-////                            "verticalTag: ${verticalTag}",
-////                            "isNotExtract: ${extractHorizonLinear == null}",
-////                            "verticalTagToHorizonKeysConList: ${verticalTagToHorizonKeysConList}",
-////                            "horizonKeyPairs: ${horizonKeyPairs}",
-////                            "horizonTag: ${horizonTag}",
-////                            "isVisiblity: ${horizonLinearLayout.visibility == View.VISIBLE}"
-////                        ).joinToString("\n\n\n") + "\n\n======\n\n"
-////                    )
-//                                if (extractHorizonLinear == null) {
-//                                    withContext(Dispatchers.Main) {
-//                                        verticalLinearLayout.addView(horizonLinearLayout)
-//                                    }
-//                                }
-//                                withContext(Dispatchers.IO) {
-//                                    val registerIndex = "${verticalIndex}${horizonIndex}"
-//                                    horizonChannel.send(
-//                                        Pair(
-//                                            registerIndex,
-//                                            Triple(
-//                                                Pair(
-//                                                    horizonIndex,
-//                                                    horizonTag
-//                                                ),
-//                                                horizonVarNameToValueMap.toMap(),
-//                                                horizonLinearLayout,
-//                                            )
-//                                        )
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    jobList.forEach { it.await() }
-//                    horizonChannel.close()
-//                }
-//                val horizonUseList = withContext(Dispatchers.IO) {
-//                    val horizonUseListSrc = mutableListOf<
-//                            Pair<
-//                                    String,
-//                                    Triple<
-//                                            Pair<Int, String>,
-//                                            Map<String, String>,
-//                                            LinearLayoutCompat,
-//                                            >
-//                                    >
-//                            >()
-//                    for (v in horizonChannel) {
-//                        horizonUseListSrc.add(v)
-//                    }
-//                    horizonUseListSrc.sortBy { it.first }
-//                    horizonUseListSrc
-//                }
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "lhorizonUseList${verticalUseIndex}.txt").absolutePath,
-//                    listOf(
-//                        "verticalUseList: ${verticalUseList}",
-//                        "verticalUseList.size: ${verticalUseList.size}",
-//                        "horizonUseList.size: ${horizonUseList.size}",
-//                        "horizonUseList: ${horizonUseList}",
-//                    ).joinToString("\n")
-//                )
                 horizonUseList.forEachIndexed horizonUseList@{ horizonUseListIndex, registerIndexToHorizonUse ->
 //                    val registerIndex = registerIndexToHorizonUse.first
                     val horizonUse = registerIndexToHorizonUse.second
@@ -939,25 +782,6 @@ class EditComponentListAdapter(
                             }.toMap()
                         val readyContentsLayoutList =
                             curHorizonIndexAndReadyContentsLayoutList?.getOrNull(horizonIndex)
-//                        if (horizonTag == "speedFrame___vertical2___horizon_speedLabel2") {
-//                            FileSystems.updateFile(
-//                                File(
-//                                    UsePath.cmdclickDefaultAppDirPath,
-//                                    "lmakeContents.txt"
-//                                ).absolutePath,
-//                                listOf(
-//                                    "verticalTag: ${verticalTag}",
-//                                    "horizonTag: ${horizonTag}",
-//                                    "horizonVarNameToValueMap: ${horizonVarNameToValueMap}",
-//                                    "horizonTagToContentsKeysListMapWithReplace: ${horizonTagToContentsKeysListMapWithReplace}",
-//                                    " horizonTagToContentsKeysListMapWithReplace.get(horizonTag): ${
-//                                        horizonTagToContentsKeysListMapWithReplace.get(
-//                                            horizonTag
-//                                        )
-//                                    }",
-//                                ).joinToString("\n\n\n") + "\n\n======\n\n"
-//                            )
-//                        }
                         horizonTagToContentsKeysListMapWithReplace.get(horizonTag)
                             ?.forEachIndexed setContents@{ contentsIndex, contentsKeyValues ->
                             val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
@@ -1078,10 +902,9 @@ class EditComponentListAdapter(
                                         val extractContentsFrameLayout =
                                             readyContentsLayoutList?.getOrNull(
                                                 execSetContentsIndex
+                                            ) ?: horizonLinearLayout?.findViewById<FrameLayout>(
+                                                curContentsLayoutId
                                             )
-                                                ?: horizonLinearLayout.findViewById<FrameLayout>(
-                                                    curContentsLayoutId
-                                                )
                                         val contentsFrameLayout = extractContentsFrameLayout
                                             ?: let {
                                                 withContext(Dispatchers.Main) {
@@ -1092,7 +915,7 @@ class EditComponentListAdapter(
                                             }
                                         if (extractContentsFrameLayout == null) {
                                             withContext(Dispatchers.Main) {
-                                                horizonLinearLayout.addView(
+                                                horizonLinearLayout?.addView(
                                                     contentsFrameLayout
                                                 )
                                             }
@@ -1457,6 +1280,7 @@ class EditComponentListAdapter(
         val extraVerticalStartId = 40000
         val switchOff = EditComponent.Template.switchOff
         val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+        val weightSumFloat = 1f
         val verticalChannel = Channel<
                 Pair<
                         Int,
@@ -1531,26 +1355,38 @@ class EditComponentListAdapter(
                     if (
                         !isVerticalEnable
                     ) return@async
-                    val readyVerticalLayout =
-                        readyVerticalLayoutList.getOrNull(verticalIndex)
                     val extractVerticalLinear =
-                        readyVerticalLayout
-                            ?: let {
-                                totalLinearLayout.findViewById<LinearLayoutCompat>(
-                                    curExtraVerticalLinearId
-                                )
-                            }
-                    val curRegExtraVerticalLinearId =
-                        when (extractVerticalLinear == null) {
-                            false -> extractVerticalLinear.id
-                            else -> curExtraVerticalLinearId
+                        readyVerticalLayoutList.getOrNull(verticalIndex)
+                            ?: totalLinearLayout.findViewById<LinearLayoutCompat>(
+                                curExtraVerticalLinearId
+                            )
+                    val verticalLinearLayout =
+                        withContext(Dispatchers.Main) {
+                            extractVerticalLinear
+                                ?: let {
+                                    LinearLayoutCompat(context).apply {
+                                        id = curExtraVerticalLinearId
+                                        layoutParams = LinearLayoutCompat.LayoutParams(
+                                            0,
+                                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                        ).apply {
+                                            weight = verticalLinerWeight
+                                        }
+                                    }
+                                }.apply {
+                                    weightSum = weightSumFloat
+                                }
+                        }
+                    if (extractVerticalLinear == null) {
+                        withContext(Dispatchers.Main) {
+                            totalLinearLayout.addView(verticalLinearLayout)
                         }
 
-                    val verticalLinearLayout = withContext(Dispatchers.Main) {
-                        EditComponent.AdapterSetter.makeVerticalLinear(
+                    }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        EditComponent.AdapterSetter.setVerticalLinear(
                             context,
                             extractVerticalLinear,
-                            curRegExtraVerticalLinearId,
                             verticalKeyPairs,
                             verticalLinerWeight,
                             verticalTag,
@@ -1567,11 +1403,6 @@ class EditComponentListAdapter(
 //                        "isreadyVerticalLinear: ${extractVerticalLinear is LinearLayoutCompat}",
 //                    ).joinToString("\n")
 //                )
-                    if (extractVerticalLinear == null) {
-                        withContext(Dispatchers.Main) {
-                            totalLinearLayout.addView(verticalLinearLayout)
-                        }
-                    }
                     withContext(Dispatchers.IO) {
                         verticalChannel.send(
                             Pair(
@@ -1631,7 +1462,7 @@ class EditComponentListAdapter(
                     Triple<
                             Pair<Int, String>,
                             Map<String, String>,
-                            LinearLayoutCompat
+                            LinearLayoutCompat?,
                             >
                     >
             > {
@@ -1644,7 +1475,7 @@ class EditComponentListAdapter(
                         Triple<
                                 Pair<Int, String>,
                                 Map<String, String>,
-                                LinearLayoutCompat,
+                                LinearLayoutCompat?,
                                 >
                         >
                 >(horizonTagToKeyPairsListToVarNameToValueMapList.size)
@@ -1714,20 +1545,30 @@ class EditComponentListAdapter(
                                     ?: verticalLinearLayout.findViewById<LinearLayoutCompat>(
                                         curExtraHorizonLinearId
                                     )
-                            }?.apply {
-                                weightSum = weightSumFloat
-                            }
-
-                        val curRegExtraHorizonLinearId =
-                            when (extractHorizonLinear == null) {
-                                false -> extractHorizonLinear.id
-                                else -> curExtraHorizonLinearId
                             }
                         val horizonLinearLayout = withContext(Dispatchers.Main) {
-                            EditComponent.AdapterSetter.makeHorizonLinear(
+                            let {
+                                extractHorizonLinear
+                                    ?: LinearLayoutCompat(context).apply {
+                                        id = curExtraHorizonLinearId
+                                        layoutParams = LinearLayoutCompat.LayoutParams(
+                                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                        )
+                                    }
+                            }.apply {
+                                weightSum = weightSumFloat
+                            }
+                        }
+                        if (extractHorizonLinear == null) {
+                            withContext(Dispatchers.Main) {
+                                verticalLinearLayout.addView(horizonLinearLayout)
+                            }
+                        }
+                        CoroutineScope(Dispatchers.Main).launch {
+                            EditComponent.AdapterSetter.setHorizonLinear(
                                 context,
                                 extractHorizonLinear,
-                                curRegExtraHorizonLinearId,
                                 horizonKeyPairs,
                                 horizonTag,
                                 density,
@@ -1744,11 +1585,6 @@ class EditComponentListAdapter(
 //                            "isVisiblity: ${horizonLinearLayout.visibility == View.VISIBLE}"
 //                        ).joinToString("\n\n\n") + "\n\n======\n\n"
 //                    )
-                        if (extractHorizonLinear == null) {
-                            withContext(Dispatchers.Main) {
-                                verticalLinearLayout.addView(horizonLinearLayout)
-                            }
-                        }
                         withContext(Dispatchers.IO) {
                             val registerIndex = "${verticalIndex}${horizonIndex}"
                             horizonChannel.send(
@@ -1777,7 +1613,7 @@ class EditComponentListAdapter(
                             Triple<
                                     Pair<Int, String>,
                                     Map<String, String>,
-                                    LinearLayoutCompat,
+                                    LinearLayoutCompat?,
                                     >
                             >
                     >()

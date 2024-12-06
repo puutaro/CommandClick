@@ -1043,24 +1043,15 @@ object EditComponent {
                                         && !it.second.isNullOrEmpty()
                         }
                 }
-                suspend fun makeVerticalLinear(
+                suspend fun setVerticalLinear(
                         context: Context,
-                        xmlVerticalLinearLayout: LinearLayoutCompat?,
-                        curExtraVerticalLinearId: Int?,
+                        verticalLinearLayout: LinearLayoutCompat?,
                         verticalKeyPairs: List<Pair<String, String>>,
                         verticalLinerWeight: Float,
                         verticalTag: String,
                         density: Float,
-                ): LinearLayoutCompat {
-                        return when(xmlVerticalLinearLayout == null) {
-                                false -> xmlVerticalLinearLayout
-                                else -> LinearLayoutCompat(context).apply {
-                                        curExtraVerticalLinearId?.let {
-                                                id = it
-                                        }
-                                }
-                        }.apply {
-                                val verticalLayout = this
+                ) {
+                        verticalLinearLayout?.apply {
                                 visibility = PairListTool.getValue(
                                         verticalKeyPairs,
                                         Template.EditComponentKey.VISIBLE.key,
@@ -1094,15 +1085,15 @@ object EditComponent {
 //                                        verticalWidth,
 //                                        verticalHeight
 //                                )
-                                val verticalLinearParam = when(xmlVerticalLinearLayout == null) {
-                                        false -> xmlVerticalLinearLayout.layoutParams
+                                val verticalLinearParam = when(verticalLinearLayout == null) {
+                                        false -> verticalLinearLayout.layoutParams
                                         else -> LinearLayoutCompat.LayoutParams(
                                                 verticalWidth,
                                                 verticalHeight
                                         )
                                 }
                                 verticalLinearParam.apply {
-                                        if(xmlVerticalLinearLayout != null) {
+                                        if(verticalLinearLayout != null) {
                                                 width = verticalWidth
                                                 height = verticalHeight
                                         }
@@ -1214,22 +1205,14 @@ object EditComponent {
                 }
 
 
-                suspend fun makeHorizonLinear(
+                suspend fun setHorizonLinear(
                         context: Context,
-                        xmlHorizonLinearLayout: LinearLayoutCompat?,
-                        curExtraHorizonLinearId: Int?,
+                        horizonLinearLayout: LinearLayoutCompat?,
                         horizonKeyPairs: List<Pair<String, String>>,
                         horizonTag: String,
                         density: Float,
-                ): LinearLayoutCompat {
-                        return when(xmlHorizonLinearLayout == null) {
-                                false -> xmlHorizonLinearLayout
-                                else -> LinearLayoutCompat(context).apply {
-                                        curExtraHorizonLinearId?.let {
-                                                id = it
-                                        }
-                                }
-                        }.apply {
+                ) {
+                        horizonLinearLayout?.apply {
                                 visibility = PairListTool.getValue(
                                         horizonKeyPairs,
                                         Template.EditComponentKey.VISIBLE.key,
@@ -1264,15 +1247,15 @@ object EditComponent {
 //                                        verticalWidth,
 //                                        verticalHeight
 //                                )
-                                val verticalLinearParam = when(xmlHorizonLinearLayout == null) {
-                                        false -> xmlHorizonLinearLayout.layoutParams
+                                val verticalLinearParam = when(horizonLinearLayout == null) {
+                                        false -> horizonLinearLayout.layoutParams
                                         else -> LinearLayoutCompat.LayoutParams(
                                                 verticalWidth,
                                                 verticalHeight
                                         )
                                 }
                                 verticalLinearParam.apply {
-                                        if(xmlHorizonLinearLayout != null) {
+                                        if(horizonLinearLayout != null) {
                                                 width = verticalWidth
                                                 height = verticalHeight
                                         }
