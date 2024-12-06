@@ -1052,73 +1052,78 @@ object EditComponent {
                         density: Float,
                 ) {
                         verticalLinearLayout?.apply {
-                                visibility = PairListTool.getValue(
-                                        verticalKeyPairs,
-                                        Template.EditComponentKey.VISIBLE.key,
-                                ).let {
-                                                visibleStr ->
-                                        Template.VisibleManager.getVisible(visibleStr)
-                                }
-                                val verticalWidth =
+                                val visiblityValue = withContext(Dispatchers.IO) {
                                         PairListTool.getValue(
                                                 verticalKeyPairs,
-                                                Template.EditComponentKey.WIDTH.key,
+                                                Template.EditComponentKey.VISIBLE.key,
                                         ).let {
-                                                Template.LinearLayoutUpdater.convertWidth(
-                                                        it,
-                                                        0,
-                                                        density,
-                                                )
+                                                        visibleStr ->
+                                                Template.VisibleManager.getVisible(visibleStr)
+                                        }
+                                }
+                                visibility = visiblityValue
+                                val verticalWidth =
+                                        withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.WIDTH.key,
+                                                ).let {
+                                                        Template.LinearLayoutUpdater.convertWidth(
+                                                                it,
+                                                                0,
+                                                                density,
+                                                        )
+                                                }
                                         }
                                 val verticalHeight =
-                                        PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.HEIGHT.key,
-                                        ).let {
-                                                Template.LinearLayoutUpdater.convertWidth(
-                                                        it,
-                                                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                        density
-                                                )
+                                        withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.HEIGHT.key,
+                                                ).let {
+                                                        Template.LinearLayoutUpdater.convertWidth(
+                                                                it,
+                                                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                density
+                                                        )
+                                                }
                                         }
 //                                LinearLayoutCompat.LayoutParams(
 //                                        verticalWidth,
 //                                        verticalHeight
 //                                )
-                                val verticalLinearParam = when(verticalLinearLayout == null) {
-                                        false -> verticalLinearLayout.layoutParams
-                                        else -> LinearLayoutCompat.LayoutParams(
+                                val verticalLinearParam = withContext(Dispatchers.IO) {
+                                        LinearLayoutCompat.LayoutParams(
                                                 verticalWidth,
                                                 verticalHeight
                                         )
                                 }
                                 verticalLinearParam.apply {
-                                        if(verticalLinearLayout != null) {
-                                                width = verticalWidth
-                                                height = verticalHeight
-                                        }
                                         tag = verticalTag
-                                        val overrideVerticalLinearWeight = PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.WEIGHT.key,
-                                        )?.let {
-                                                try {
-                                                        it.toFloat()
-                                                } catch (e: Exception) {
-                                                        null
+                                        val overrideVerticalLinearWeight = withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.WEIGHT.key,
+                                                )?.let {
+                                                        try {
+                                                                it.toFloat()
+                                                        } catch (e: Exception) {
+                                                                null
+                                                        }
                                                 }
                                         } ?: verticalLinerWeight
-                                        val overrideLayoutGravity = PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.LAYOUT_GRAVITY.key,
-                                        )?.let {
-                                                        gravityStr ->
-                                                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                                                        it.key == gravityStr
-                                                }?.gravity
+                                        val overrideLayoutGravity = withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.LAYOUT_GRAVITY.key,
+                                                )?.let { gravityStr ->
+                                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                                it.key == gravityStr
+                                                        }?.gravity
+                                                }
                                         } ?: Gravity.CENTER
                                         gravity = overrideLayoutGravity
-                                        val bkColor = withContext(Dispatchers.IO) {
+                                        val bkColorDrawable = withContext(Dispatchers.IO) {
                                                 PairListTool.getValue(
                                                         verticalKeyPairs,
                                                         Template.EditComponentKey.BK_COLOR.key,
@@ -1126,36 +1131,38 @@ object EditComponent {
                                                         CmdClickColor.entries.firstOrNull {
                                                                 it.str == colorStr
                                                         }
+                                                }?.let {
+                                                        AppCompatResources.getDrawable(
+                                                                context,
+                                                                it.id
+                                                        )
                                                 }
                                         }
-                                        background = bkColor?.let {
-                                                AppCompatResources.getDrawable(
-                                                        context,
-                                                        it.id
-                                                )
-                                        }
+                                        background = bkColorDrawable
                                         val verticalLinear = this as LinearLayoutCompat.LayoutParams
                                         verticalLinear.apply setLinear@ {
                                                 weight = overrideVerticalLinearWeight
-                                                val marginData = Template.MarginData(
-                                                        PairListTool.getValue(
-                                                                verticalKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_TOP.key,
-                                                        ),
-                                                        PairListTool.getValue(
-                                                                verticalKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_BOTTOM.key,
-                                                        ),
-                                                        PairListTool.getValue(
-                                                                verticalKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_START.key,
-                                                        ),
-                                                        PairListTool.getValue(
-                                                                verticalKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_END.key,
-                                                        ),
-                                                        density,
-                                                )
+                                                val marginData = withContext(Dispatchers.IO) {
+                                                        Template.MarginData(
+                                                                PairListTool.getValue(
+                                                                        verticalKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_TOP.key,
+                                                                ),
+                                                                PairListTool.getValue(
+                                                                        verticalKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_BOTTOM.key,
+                                                                ),
+                                                                PairListTool.getValue(
+                                                                        verticalKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_START.key,
+                                                                ),
+                                                                PairListTool.getValue(
+                                                                        verticalKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_END.key,
+                                                                ),
+                                                                density,
+                                                        )
+                                                }
                                                 topMargin = marginData.marginTop ?: 0
                                                 bottomMargin = marginData.marginBottom ?: 0
                                                 marginStart = marginData.marginStart ?: 0
@@ -1164,35 +1171,38 @@ object EditComponent {
 //                            setMargins(ScreenSizeCalculator.toDp(context,10))
                                 }
                                 layoutParams = verticalLinearParam
-                                val overrideGravity = PairListTool.getValue(
-                                        verticalKeyPairs,
-                                        Template.EditComponentKey.GRAVITI.key,
-                                )?.let {
-                                                gravityStr ->
-                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                                                it.key == gravityStr
-                                        }?.gravity
-                                } ?: Gravity.CENTER
+                                val overrideGravity = withContext(Dispatchers.IO) {
+                                        PairListTool.getValue(
+                                                verticalKeyPairs,
+                                                Template.EditComponentKey.GRAVITI.key,
+                                        )?.let { gravityStr ->
+                                                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                        it.key == gravityStr
+                                                }?.gravity
+                                        }
+                                }?: Gravity.CENTER
                                 gravity = overrideGravity
-                                val paddingData = Template.PaddingData(
-                                        PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.PADDING_TOP.key,
-                                        ),
-                                        PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.PADDING_BOTTOM.key,
-                                        ),
-                                        PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.PADDING_START.key,
-                                        ),
-                                        PairListTool.getValue(
-                                                verticalKeyPairs,
-                                                Template.EditComponentKey.PADDING_END.key,
-                                        ),
-                                        density
-                                )
+                                val paddingData = withContext(Dispatchers.IO) {
+                                        Template.PaddingData(
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.PADDING_TOP.key,
+                                                ),
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.PADDING_BOTTOM.key,
+                                                ),
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.PADDING_START.key,
+                                                ),
+                                                PairListTool.getValue(
+                                                        verticalKeyPairs,
+                                                        Template.EditComponentKey.PADDING_END.key,
+                                                ),
+                                                density
+                                        )
+                                }
                                 setPadding(
                                         paddingData.paddingStart ?: 0,
                                         paddingData.paddingTop ?: 0,
@@ -1213,61 +1223,60 @@ object EditComponent {
                         density: Float,
                 ) {
                         horizonLinearLayout?.apply {
-                                visibility = PairListTool.getValue(
-                                        horizonKeyPairs,
-                                        Template.EditComponentKey.VISIBLE.key,
-                                ).let {
-                                                visibleStr ->
-                                        Template.VisibleManager.getVisible(visibleStr)
+                                val visiblityValue = withContext(Dispatchers.IO){
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.VISIBLE.key,
+                                        ).let {
+                                                        visibleStr ->
+                                                Template.VisibleManager.getVisible(visibleStr)
+                                        }
                                 }
+                                visibility = visiblityValue
                                 orientation = LinearLayoutCompat.HORIZONTAL
                                 val verticalWidth =
-                                        PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.WIDTH.key,
-                                        ).let {
-                                                Template.LinearLayoutUpdater.convertWidth(
-                                                        it,
-                                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                                        density
-                                                )
+                                        withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.WIDTH.key,
+                                                ).let {
+                                                        Template.LinearLayoutUpdater.convertWidth(
+                                                                it,
+                                                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                                                density
+                                                        )
+                                                }
                                         }
                                 val verticalHeight =
-                                        PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.HEIGHT.key,
-                                        ).let {
-                                                Template.LinearLayoutUpdater.convertWidth(
-                                                        it,
-                                                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                        density
-                                                )
+                                        withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.HEIGHT.key,
+                                                ).let {
+                                                        Template.LinearLayoutUpdater.convertWidth(
+                                                                it,
+                                                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                density
+                                                        )
+                                                }
                                         }
-//                                LinearLayoutCompat.LayoutParams(
-//                                        verticalWidth,
-//                                        verticalHeight
-//                                )
-                                val verticalLinearParam = when(horizonLinearLayout == null) {
-                                        false -> horizonLinearLayout.layoutParams
-                                        else -> LinearLayoutCompat.LayoutParams(
+                                val verticalLinearParam = withContext(Dispatchers.IO) {
+                                        LinearLayoutCompat.LayoutParams(
                                                 verticalWidth,
                                                 verticalHeight
                                         )
                                 }
                                 verticalLinearParam.apply {
-                                        if(horizonLinearLayout != null) {
-                                                width = verticalWidth
-                                                height = verticalHeight
-                                        }
                                         tag = horizonTag
-                                        val overrideLayoutGravity = PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.LAYOUT_GRAVITY.key,
-                                        )?.let {
-                                                        gravityStr ->
-                                                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                                                        it.key == gravityStr
-                                                }?.gravity
+                                        val overrideLayoutGravity = withContext(Dispatchers.IO) {
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.LAYOUT_GRAVITY.key,
+                                                )?.let { gravityStr ->
+                                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                                it.key == gravityStr
+                                                        }?.gravity
+                                                }
                                         } ?: Gravity.CENTER
                                         gravity = overrideLayoutGravity
                                         val bkColor = withContext(Dispatchers.IO) {
@@ -1280,70 +1289,82 @@ object EditComponent {
                                                         }
                                                 }
                                         }
-                                        background = bkColor?.let {
-                                                AppCompatResources.getDrawable(
-                                                        context,
-                                                        it.id
-                                                )
+                                        val bkDrawable = withContext(Dispatchers.IO) {
+                                                bkColor?.let {
+                                                        AppCompatResources.getDrawable(
+                                                                context,
+                                                                it.id
+                                                        )
+                                                }
                                         }
+                                        background = bkDrawable
                                         val verticalLinear = this as LinearLayoutCompat.LayoutParams
                                         verticalLinear.apply setLinear@ {
-                                                val marginData = Template.MarginData(
-                                                        PairListTool.getValue(
-                                                                horizonKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_TOP.key,
-                                                        ),
-                                                        PairListTool.getValue(
-                                                                horizonKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_BOTTOM.key,
-                                                        ),
-                                                        PairListTool.getValue(
-                                                                horizonKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_START.key,
-                                                        ),
-                                                        PairListTool.getValue(
-                                                                horizonKeyPairs,
-                                                                Template.EditComponentKey.MARGIN_END.key,
-                                                        ),
-                                                        density
-                                                )
-                                                topMargin = marginData.marginTop ?: 0
-                                                bottomMargin = marginData.marginBottom ?: 0
-                                                marginStart = marginData.marginStart ?: 0
-                                                marginEnd = marginData.marginBottom ?: 0
+                                                val marginData = withContext(Dispatchers.IO) {
+                                                        Template.MarginData(
+                                                                PairListTool.getValue(
+                                                                        horizonKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_TOP.key,
+                                                                ),
+                                                                PairListTool.getValue(
+                                                                        horizonKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_BOTTOM.key,
+                                                                ),
+                                                                PairListTool.getValue(
+                                                                        horizonKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_START.key,
+                                                                ),
+                                                                PairListTool.getValue(
+                                                                        horizonKeyPairs,
+                                                                        Template.EditComponentKey.MARGIN_END.key,
+                                                                ),
+                                                                density
+                                                        )
+                                                }
+                                                withContext(Dispatchers.Main) {
+                                                        topMargin = marginData.marginTop ?: 0
+                                                        bottomMargin = marginData.marginBottom ?: 0
+                                                        marginStart = marginData.marginStart ?: 0
+                                                        marginEnd = marginData.marginBottom ?: 0
+                                                }
                                         }
 //                            setMargins(ScreenSizeCalculator.toDp(context,10))
                                 }
-                                layoutParams = verticalLinearParam
-                                val overrideGravity = PairListTool.getValue(
-                                        horizonKeyPairs,
-                                        Template.EditComponentKey.GRAVITI.key,
-                                )?.let {
-                                                gravityStr ->
-                                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                                                it.key == gravityStr
-                                        }?.gravity
+                                withContext(Dispatchers.Main) {
+                                        layoutParams = verticalLinearParam
+                                }
+                                val overrideGravity =withContext(Dispatchers.IO) {
+                                        PairListTool.getValue(
+                                                horizonKeyPairs,
+                                                Template.EditComponentKey.GRAVITI.key,
+                                        )?.let { gravityStr ->
+                                                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                                        it.key == gravityStr
+                                                }?.gravity
+                                        }
                                 } ?: Gravity.CENTER
                                 gravity = overrideGravity
-                                val paddingData = Template.PaddingData(
-                                        PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.PADDING_TOP.key,
-                                        ),
-                                        PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.PADDING_BOTTOM.key,
-                                        ),
-                                        PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.PADDING_START.key,
-                                        ),
-                                        PairListTool.getValue(
-                                                horizonKeyPairs,
-                                                Template.EditComponentKey.PADDING_END.key,
-                                        ),
-                                        density
-                                )
+                                val paddingData = withContext(Dispatchers.IO) {
+                                        Template.PaddingData(
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.PADDING_TOP.key,
+                                                ),
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.PADDING_BOTTOM.key,
+                                                ),
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.PADDING_START.key,
+                                                ),
+                                                PairListTool.getValue(
+                                                        horizonKeyPairs,
+                                                        Template.EditComponentKey.PADDING_END.key,
+                                                ),
+                                                density
+                                        )
+                                }
                                 setPadding(
                                         paddingData.paddingStart ?: 0,
                                         paddingData.paddingTop ?: 0,

@@ -19,14 +19,12 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
@@ -251,26 +249,26 @@ object EditFrameMaker {
         if(
             context == null
         ) return null
-        PairListTool.getValue(
-            frameKeyPairList,
-            enableKey,
-        ).let {
-                enableStr ->
-            if(
-                enableStr == switchOff
-            ) return null
+        val isEnable = withContext(Dispatchers.IO) {
+            PairListTool.getValue(
+                frameKeyPairList,
+                enableKey,
+           ) != switchOff
         }
-        PairListTool.getValue(
-            frameKeyPairList,
-            visibleKey,
-        ).let {
-                visibleStr ->
-            withContext(Dispatchers.Main) {
-                buttonLayout?.visibility = EditComponent.Template.VisibleManager.getVisible(
+        if(
+            !isEnable
+        ) return null
+        val visibilityValue = withContext(Dispatchers.IO) {
+            PairListTool.getValue(
+                frameKeyPairList,
+                visibleKey,
+            ).let { visibleStr ->
+                EditComponent.Template.VisibleManager.getVisible(
                     visibleStr
                 )
             }
         }
+        buttonLayout?.visibility = visibilityValue
         val height = withContext(Dispatchers.IO) {
             PairListTool.getValue(
                 frameKeyPairList,
@@ -298,17 +296,12 @@ object EditFrameMaker {
             }
 //                ,ScreenSizeCalculator.toDp(context, 50)
         }
-        FrameLayout.LayoutParams(
-            overrideWidth,
-            height,
-        )
 
-        val param = let {
+        val param = withContext(Dispatchers.IO) {
             val overrideLayoutGravity = PairListTool.getValue(
                 frameKeyPairList,
                 layoutGravityKey
-            )?.let {
-                    gravityStr ->
+            )?.let { gravityStr ->
                 EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                     it.key == gravityStr
                 }?.gravity
@@ -320,7 +313,6 @@ object EditFrameMaker {
                 ).apply {
                     gravity = overrideLayoutGravity
                 }
-
                 else -> LinearLayoutCompat.LayoutParams(
                     overrideWidth,
                     height,
@@ -340,49 +332,53 @@ object EditFrameMaker {
                 }
             }
         }
-        val paddingData = EditComponent.Template.PaddingData(
-            PairListTool.getValue(
-                frameKeyPairList,
-                paddingTopKey
-            ),
-            PairListTool.getValue(
-                frameKeyPairList,
-                paddingBottomKey
-            ),
-            PairListTool.getValue(
-                frameKeyPairList,
-                paddingStartKey
-            ),
-            PairListTool.getValue(
-                frameKeyPairList,
-                paddingEndKey
-            ),
-            density,
-        )
-        param.apply {
-            val marginData = EditComponent.Template.MarginData(
+        val paddingData = withContext(Dispatchers.IO) {
+            EditComponent.Template.PaddingData(
                 PairListTool.getValue(
                     frameKeyPairList,
-                    marginTopKey
+                    paddingTopKey
                 ),
                 PairListTool.getValue(
                     frameKeyPairList,
-                    marginBottomKey
+                    paddingBottomKey
                 ),
                 PairListTool.getValue(
                     frameKeyPairList,
-                    marginStartKey
+                    paddingStartKey
                 ),
                 PairListTool.getValue(
                     frameKeyPairList,
-                    marginEndKey
+                    paddingEndKey
                 ),
                 density,
             )
-            topMargin = marginData.marginTop ?: 0
-            marginStart = marginData.marginStart ?: 0
-            marginEnd = marginData.marginEnd ?: 0
-            bottomMargin = marginData.marginBottom ?: 0
+        }
+        withContext(Dispatchers.IO) {
+            param.apply {
+                val marginData = EditComponent.Template.MarginData(
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginTopKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginBottomKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginStartKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginEndKey
+                    ),
+                    density,
+                )
+                topMargin = marginData.marginTop ?: 0
+                marginStart = marginData.marginStart ?: 0
+                marginEnd = marginData.marginEnd ?: 0
+                bottomMargin = marginData.marginBottom ?: 0
+            }
         }
         buttonLayout?.apply {
 //            FileSystems.updateFile(
@@ -392,15 +388,16 @@ object EditFrameMaker {
 //                ).joinToString("\n")
 //            )
             tag = overrideTag
-            val overrideGravity = PairListTool.getValue(
-                frameKeyPairList,
-                gravityKey
-            )?.let {
-                    gravityStr ->
-                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                    it.key == gravityStr
-                }?.gravity
-            } ?: Gravity.CENTER
+            val overrideGravity = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    gravityKey
+                )?.let { gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }
+            }?: Gravity.CENTER
             foregroundGravity = overrideGravity
             setPadding(
                 paddingData.paddingStart ?: 0,
@@ -408,7 +405,7 @@ object EditFrameMaker {
                 paddingData.paddingEnd ?: 0,
                 paddingData.paddingBottom ?: 0,
             )
-            val bkColor = withContext(Dispatchers.IO) {
+            val bkColorDrawable = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
@@ -417,14 +414,14 @@ object EditFrameMaker {
                     CmdClickColor.entries.firstOrNull {
                         it.str == colorStr
                     }
+                }?.let {
+                    AppCompatResources.getDrawable(
+                        context,
+                        it.id
+                    )
                 }
             }
-            background = bkColor?.let {
-                AppCompatResources.getDrawable(
-                    context,
-                    it.id
-                )
-            }
+            background = bkColorDrawable
             layoutParams = param
         }
         return buttonLayout
@@ -445,11 +442,11 @@ object EditFrameMaker {
             visibleKey,
         )?.let {
                 visibleStr ->
-            withContext(Dispatchers.Main) {
-                buttonFrameLayout.visibility = EditComponent.Template.VisibleManager.getVisible(
-                    visibleStr
-                )
-            }
+            EditComponent.Template.VisibleManager.getVisible(
+                visibleStr
+            )
+        }?.let {
+            buttonFrameLayout.visibility = it
         }
 
         buttonFrameLayout.apply {
@@ -491,14 +488,15 @@ object EditFrameMaker {
             val liearLayoutParam =
                 buttonFrameLayout.layoutParams as LinearLayoutCompat.LayoutParams
             liearLayoutParam.apply {
-                val overrideLayoutGravity = PairListTool.getValue(
-                    frameKeyPairList,
-                    layoutGravityKey
-                )?.let {
-                        gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
+                val overrideLayoutGravity = withContext(Dispatchers.IO) {
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        layoutGravityKey
+                    )?.let { gravityStr ->
+                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                            it.key == gravityStr
+                        }?.gravity
+                    }
                 }
                 overrideLayoutGravity?.let {
                     foregroundGravity = it
@@ -559,19 +557,19 @@ object EditFrameMaker {
             withContext(Dispatchers.Main) {
                 layoutParams = liearLayoutParam
             }
-            val overrideGravity = PairListTool.getValue(
-                frameKeyPairList,
-                gravityKey
-            )?.let {
-                    gravityStr ->
-                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                    it.key == gravityStr
-                }?.gravity
-            }
-            overrideGravity?.let {
+            val overrideGravity = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    gravityKey
+                )?.let { gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }
+            }?.let {
                 foregroundGravity = it
             }
-            val bkColor = withContext(Dispatchers.IO) {
+            val bkColorDrawable = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
@@ -581,12 +579,13 @@ object EditFrameMaker {
                         it.str == colorStr
                     }
                 }
-            }
-            bkColor?.let {
-                background = AppCompatResources.getDrawable(
+            }?.let {
+               AppCompatResources.getDrawable(
                     context,
                     it.id
                 )
+            }?.let {
+                background = it
             }
         }
     }
@@ -626,30 +625,33 @@ object EditFrameMaker {
                     }
                 }
                 height = overrideHeight
-                val overrideLayoutGravity = imagePropertyMap?.get(
-                    imageLayoutGravity,
-                )?.let {
-                        gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                } ?: Gravity.CENTER
+                val overrideLayoutGravity = withContext(Dispatchers.IO) {
+                    imagePropertyMap?.get(
+                        imageLayoutGravity,
+                    )?.let { gravityStr ->
+                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                            it.key == gravityStr
+                        }?.gravity
+                    }
+                }?: Gravity.CENTER
                 gravity = overrideLayoutGravity
-                val marginData = EditComponent.Template.MarginData(
-                    imagePropertyMap?.get(
-                        imageMarginTopKey,
-                    ),
-                    imagePropertyMap?.get(
-                        imageMarginBottomKey,
-                    ),
-                    imagePropertyMap?.get(
-                        imageMarginStartKey,
-                    ),
-                    imagePropertyMap?.get(
-                        imageMarginEndKey,
-                    ),
-                    density,
-                )
+                val marginData = withContext(Dispatchers.IO) {
+                    EditComponent.Template.MarginData(
+                        imagePropertyMap?.get(
+                            imageMarginTopKey,
+                        ),
+                        imagePropertyMap?.get(
+                            imageMarginBottomKey,
+                        ),
+                        imagePropertyMap?.get(
+                            imageMarginStartKey,
+                        ),
+                        imagePropertyMap?.get(
+                            imageMarginEndKey,
+                        ),
+                        density,
+                    )
+                }
                 marginData.marginTop?.let {
                     topMargin = it
                 }
@@ -678,21 +680,23 @@ object EditFrameMaker {
             )?.split(valueSeparator)
         }
         imageView.apply {
-            val paddingData = EditComponent.Template.PaddingData(
-                imagePropertyMap?.get(
-                    imagePaddingTopKey,
-                ),
-                imagePropertyMap?.get(
-                    imagePaddingBottomKey,
-                ),
-                imagePropertyMap?.get(
-                    imagePaddingStartKey,
-                ),
-                imagePropertyMap?.get(
-                    imagePaddingEndKey,
-                ),
-                density,
-            )
+            val paddingData = withContext(Dispatchers.IO) {
+                EditComponent.Template.PaddingData(
+                    imagePropertyMap?.get(
+                        imagePaddingTopKey,
+                    ),
+                    imagePropertyMap?.get(
+                        imagePaddingBottomKey,
+                    ),
+                    imagePropertyMap?.get(
+                        imagePaddingStartKey,
+                    ),
+                    imagePropertyMap?.get(
+                        imagePaddingEndKey,
+                    ),
+                    density,
+                )
+            }
             setPadding(
                 paddingData.paddingStart ?: 0,
                 paddingData.paddingTop ?: 0,
@@ -714,14 +718,25 @@ object EditFrameMaker {
             return
         }
         imageView.apply {
-            val overrideGravity = imagePropertyMap?.get(
-                imageGravityKey,
-            )?.let {
-                    gravityStr ->
-                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                    it.key == gravityStr
-                }?.gravity
-            } ?: Gravity.CENTER
+            val visibilityValue = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageVisibleKey,
+                ).let { visibleStr ->
+                    EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
+                    )
+                }
+            }
+            visibility = visibilityValue
+            val overrideGravity = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageGravityKey,
+                )?.let { gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }
+            }?: Gravity.CENTER
             foregroundGravity = overrideGravity
             val imageColor = withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
@@ -784,14 +799,6 @@ object EditFrameMaker {
 //            tag = imageTag
             alpha = imageAlpha ?: 1f
             scaleType = imageScale.scale
-            imagePropertyMap?.get(
-                imageVisibleKey,
-            ).let {
-                    visibleStr ->
-                visibility = EditComponent.Template.VisibleManager.getVisible(
-                    visibleStr
-                )
-            }
         }
 
         when(imagePathList.size == 1){
@@ -861,15 +868,15 @@ object EditFrameMaker {
                 overrideHeight?.let {
                     height = it
                 }
-                val overrideLayoutGravity = imagePropertyMap?.get(
-                    imageLayoutGravity,
-                )?.let {
-                        gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                }
-                overrideLayoutGravity?.let {
+                withContext(Dispatchers.IO) {
+                    imagePropertyMap?.get(
+                        imageLayoutGravity,
+                    )?.let { gravityStr ->
+                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                            it.key == gravityStr
+                        }?.gravity
+                    }
+                }?.let {
                     gravity = it
                 }
             }
@@ -888,15 +895,26 @@ object EditFrameMaker {
             )?.split(valueSeparator)
         }
         imageView.apply {
-            val overrideGravity = imagePropertyMap?.get(
-                imageGravityKey,
-            )?.let {
-                    gravityStr ->
-                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                    it.key == gravityStr
-                }?.gravity
+            withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageVisibleKey,
+                )?.let { visibleStr ->
+                    EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
+                    )
+                }?.let {
+                    visibility = it
+                }
             }
-            overrideGravity?.let {
+            withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageGravityKey,
+                )?.let { gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }
+            }?.let {
                 foregroundGravity = it
             }
             val imageColor = withContext(Dispatchers.IO) {
@@ -915,7 +933,7 @@ object EditFrameMaker {
                     it.id
                 )
             }
-            val imageBkColor = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageBkColorKey,
                 )?.let {
@@ -924,14 +942,15 @@ object EditFrameMaker {
                         it.str == colorStr
                     }
                 }
+            }?.let {
+                AppCompatResources.getDrawable(
+                    context,
+                    it.id
+                )
+            }?.let {
+                background = it
             }
-            imageBkColor?.let {
-                background =
-                    AppCompatResources.getDrawable(
-                        context,
-                        it.id
-                    )
-            }
+
             val imageAlpha = withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageAlphaKey,
@@ -958,14 +977,6 @@ object EditFrameMaker {
             }
             imageScale?.let {
                 scaleType = it.scale
-            }
-            imagePropertyMap?.get(
-                imageVisibleKey,
-            ).let {
-                    visibleStr ->
-                visibility = EditComponent.Template.VisibleManager.getVisible(
-                    visibleStr
-                )
             }
         }
 
@@ -1015,9 +1026,11 @@ object EditFrameMaker {
             requestBuilderSrc ?: Glide.with(imageViewContext)
                 .asDrawable()
                 .sizeMultiplier(0.1f)
-        val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
-            imagePathSrc
-        )
+        val imagePathToIconType = withContext(Dispatchers.IO) {
+            EditComponent.Template.ImageManager.makeIconAndTypePair(
+                imagePathSrc
+            )
+        }
         val imagePath =
             imagePathToIconType.first
 //        FileSystems.updateFile(
@@ -1044,32 +1057,38 @@ object EditFrameMaker {
                 .into(imageView)
             return
         }
-        val iconType = imagePathToIconType.second.let {
-                iconTypeStr ->
-            EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
-                it.type == iconTypeStr
-            } ?: EditComponent.Template.ImageManager.IconType.IMAGE
+        val iconType = withContext(Dispatchers.IO) {
+            imagePathToIconType.second.let { iconTypeStr ->
+                EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
+                    it.type == iconTypeStr
+                } ?: EditComponent.Template.ImageManager.IconType.IMAGE
+            }
         }
 //        val iconId = icon?.id
 //        imageView.setAutofillHints(CmdClickIcons.values().firstOrNull {
 //            it.id == iconId
 //        }?.str)
-        val assetsPath = CmdClickIcons.entries.firstOrNull {
-            it.str == imagePath
-        }?.assetsPath ?: return
-        val bitmap = when(iconType) {
-            EditComponent.Template.ImageManager.IconType.IMAGE -> {
-                val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                    assetsPath
-                )
-                BitmapTool.convertFileToBitmap(iconFile.absolutePath)
-            }
-            EditComponent.Template.ImageManager.IconType.ICON -> {
-                AssetsFileManager.assetsByteArray(
-                    imageViewContext,
-                    assetsPath,
-                )?.let {
-                    BitmapFactory.decodeByteArray(it, 0, it.size)
+        val assetsPath = withContext(Dispatchers.IO) {
+            CmdClickIcons.entries.firstOrNull {
+                it.str == imagePath
+            }?.assetsPath
+        }?: return
+        val bitmap = withContext(Dispatchers.IO) {
+            when (iconType) {
+                EditComponent.Template.ImageManager.IconType.IMAGE -> {
+                    val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                        assetsPath
+                    )
+                    BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+                }
+
+                EditComponent.Template.ImageManager.IconType.ICON -> {
+                    AssetsFileManager.assetsByteArray(
+                        imageViewContext,
+                        assetsPath,
+                    )?.let {
+                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                    }
                 }
             }
         }
@@ -1085,45 +1104,46 @@ object EditFrameMaker {
             .into(imageView)
     }
 
-    private fun execSetMultipleImage(
+    private suspend fun execSetMultipleImage(
         imageView: AppCompatImageView,
         imagePathList: List<String>,
         delay: Int,
     ){
         val imageViewContext = imageView.context
         val animationDrawable = AnimationDrawable()
-        val bitmapList = imagePathList.map {
-            imagePathSrc ->
-            if(File(imagePathSrc).isFile) {
-                return@map BitmapTool.convertFileToBitmap(imagePathSrc)
-            }
-            val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
-                imagePathSrc
-            )
-            val imagePath =
-                imagePathToIconType.first
-            val iconType = imagePathToIconType.second.let {
-                    iconTypeStr ->
-                EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
-                    it.type == iconTypeStr
-                } ?: EditComponent.Template.ImageManager.IconType.IMAGE
-            }
-            val assetsPath = CmdClickIcons.entries.firstOrNull {
-                it.str == imagePath
-            }?.assetsPath ?: return@map null
-            when(iconType) {
-                EditComponent.Template.ImageManager.IconType.IMAGE -> {
-                    val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                        assetsPath
-                    )
-                   BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+        val bitmapList = withContext(Dispatchers.IO) {
+            imagePathList.map { imagePathSrc ->
+                if (File(imagePathSrc).isFile) {
+                    return@map BitmapTool.convertFileToBitmap(imagePathSrc)
                 }
-                EditComponent.Template.ImageManager.IconType.ICON -> {
-                    AssetsFileManager.assetsByteArray(
-                        imageViewContext,
-                        assetsPath,
-                    )?.let {
-                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
+                    imagePathSrc
+                )
+                val imagePath =
+                    imagePathToIconType.first
+                val iconType = imagePathToIconType.second.let { iconTypeStr ->
+                    EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
+                        it.type == iconTypeStr
+                    } ?: EditComponent.Template.ImageManager.IconType.IMAGE
+                }
+                val assetsPath = CmdClickIcons.entries.firstOrNull {
+                    it.str == imagePath
+                }?.assetsPath ?: return@map null
+                when (iconType) {
+                    EditComponent.Template.ImageManager.IconType.IMAGE -> {
+                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                            assetsPath
+                        )
+                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+                    }
+
+                    EditComponent.Template.ImageManager.IconType.ICON -> {
+                        AssetsFileManager.assetsByteArray(
+                            imageViewContext,
+                            assetsPath,
+                        )?.let {
+                            BitmapFactory.decodeByteArray(it, 0, it.size)
+                        }
                     }
                 }
             }

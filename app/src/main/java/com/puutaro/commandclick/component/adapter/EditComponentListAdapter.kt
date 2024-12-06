@@ -1393,7 +1393,6 @@ class EditComponentListAdapter(
                             density,
                         )
                     }
-//                verticalLayoutList.add(verticalLinearLayout)
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lreadyVerticalLinear.txt").absolutePath,
 //                    listOf(
