@@ -148,7 +148,7 @@ object PinFannelBarManager {
                         File(cmdclickDefaultAppDirPath, fannelName).absolutePath
                     )
                 }
-                terminalFragment.editListDialogForSetting?.create(
+                terminalFragment.editListDialogForOrdinaryRevolver?.show(
                     FannelInfoTool.makeFannelInfoMapByString(
                         fannelName,
                         String()

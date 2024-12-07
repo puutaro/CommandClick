@@ -5,7 +5,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object EditListRecyclerViewGetter {
@@ -64,7 +63,10 @@ object EditListRecyclerViewGetter {
     if(
         terminalFragment == null
     ) return null
-    return terminalFragment.editListDialog?.findViewById<RecyclerView>(
+    return terminalFragment
+        .editListDialogForOrdinaryRevolver
+        ?.getActiveEditListOrdinaryDialog()
+        ?.findViewById<RecyclerView>(
             R.id.edit_list_dialog_recycler_view
         )
     }

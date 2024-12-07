@@ -34,11 +34,12 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
 
-class EditListDialogForSetting(
+class EditListDialogOrdinary(
     private val terminalFragmentRef: WeakReference<TerminalFragment>
 ) {
 
     private val context = terminalFragmentRef.get()?.context
+    private var isAlreadyShow = false
 
     private val density = ScreenSizeCalculator.getDensity(context)
     private val requestBuilderSrc: RequestBuilder<Drawable>? =
@@ -48,7 +49,7 @@ class EditListDialogForSetting(
                 .sizeMultiplier(0.1f)
         }
 
-    private val editListDialogOrdinarySrc = context?.let {
+    val editListDialogOrdinary = context?.let {
         Dialog(
             it,
             R.style.FullScreenRoundCornerDialogTheme
@@ -65,48 +66,48 @@ class EditListDialogForSetting(
         }
     }
     private val constraintLayoutSrc =
-        editListDialogOrdinarySrc?.findViewById<ConstraintLayout>(
+        editListDialogOrdinary?.findViewById<ConstraintLayout>(
             R.id.edit_list_dialog_constraint_layout
         )
     private val editBackstackCountFrameSrc =
-        editListDialogOrdinarySrc?.findViewById<FrameLayout>(
+        editListDialogOrdinary?.findViewById<FrameLayout>(
             R.id.edit_list_dialog_backstack_count_frame
         )
     private val editBackstackCountViewSrc =
-        editListDialogOrdinarySrc?.findViewById<ShapeableImageView>(
+        editListDialogOrdinary?.findViewById<ShapeableImageView>(
             R.id.edit_list_dialog_backstack_count
         )
     private val editListTitleViewSrc =
-        editListDialogOrdinarySrc?.findViewById<OutlineTextView>(
+        editListDialogOrdinary?.findViewById<OutlineTextView>(
             R.id.edit_list_dialog_title_view
         )
     private val editListTitleImageSrc =
-        editListDialogOrdinarySrc?.findViewById<AppCompatImageView>(
+        editListDialogOrdinary?.findViewById<AppCompatImageView>(
             R.id.edit_list_dialog_title_image
         )
     private val editListRecyclerViewSrc =
-        editListDialogOrdinarySrc?.findViewById<RecyclerView>(
+        editListDialogOrdinary?.findViewById<RecyclerView>(
             R.id.edit_list_dialog_recycler_view
         )
     private val editListBkFrameSrc =
-        editListDialogOrdinarySrc?.findViewById<FrameLayout>(
+        editListDialogOrdinary?.findViewById<FrameLayout>(
             R.id.edit_list_bk_frame
         )
 
     private val editListSearchEditTextSrc =
-        editListDialogOrdinarySrc?.findViewById<AppCompatEditText>(
+        editListDialogOrdinary?.findViewById<AppCompatEditText>(
             R.id.edit_list_dialog_search_edit_text
         )
     private val editFooterHorizonLayoutSrc =
-        editListDialogOrdinarySrc?.findViewById<LinearLayoutCompat>(
+        editListDialogOrdinary?.findViewById<LinearLayoutCompat>(
             R.id.edit_list_dialog_footer_horizon_layout
         )
     private val verticalLinearListForFooter =
         listOf(
-            editListDialogOrdinarySrc?.findViewById<LinearLayoutCompat>(
+            editListDialogOrdinary?.findViewById<LinearLayoutCompat>(
                 R.id.vertical_linear1
             ),
-            editListDialogOrdinarySrc?.findViewById<LinearLayoutCompat>(
+            editListDialogOrdinary?.findViewById<LinearLayoutCompat>(
                 R.id.vertical_linear2
             )
         )
@@ -146,7 +147,7 @@ class EditListDialogForSetting(
             }
         }
     init {
-        editListDialogOrdinarySrc?.setOnCancelListener {
+        editListDialogOrdinary?.setOnCancelListener {
             dismissForInner(
                 terminalFragmentRef.get(),
                 editListRecyclerViewSrc,
@@ -172,10 +173,16 @@ class EditListDialogForSetting(
         }
     }
 
+    fun isAlreadyShow(): Boolean {
+        return isAlreadyShow
+    }
+
+
     fun execCreate(
         fannelInfoCon: String,
         editListConfigPath: String,
     ){
+        isAlreadyShow = true
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val editBackstackCountFrame =
@@ -281,8 +288,21 @@ class EditListDialogForSetting(
         }
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main){
-                editListDialogOrdinarySrc?.show()
+                editListDialogOrdinary?.show()
             }
+//            withContext(Dispatchers.IO){
+//                delay(1000)
+//            }
+//            withContext(Dispatchers.Main){
+//                val firstEditListDialogForSetting =
+//                    terminalFragment.editListDialogOrdinaly?.last()
+//                terminalFragment.editListDialogOrdinaly = listOf(
+//                    EditListDialogOrdinary(
+//                        terminalFragmentRef
+//                    ),
+//                    firstEditListDialogForSetting,
+//                )
+//            }
         }
     }
 
@@ -301,13 +321,20 @@ class EditListDialogForSetting(
         editFooterLinearlayout?.removeAllViews()
         editListBkFrame?.removeAllViews()
         constraintLayout?.removeAllViews()
-        terminalFragment?.editListDialog?.dismiss()
-        terminalFragment?.editListDialog = null
-        if(isRecreate) {
-            terminalFragment?.editListDialogForSetting = EditListDialogForSetting(
-                terminalFragmentRef
-            )
-        }
+//        terminalFragment?.editListDialogOrdinaly?.first()?.dismiss()
+//        when(isRecreate) {
+//            true -> {
+////                val firstEditListDialogForSetting =
+////                    terminalFragment?.editListDialogOrdinalyList?.last()
+////                terminalFragment?.editListDialogOrdinalyList = listOf(
+////                    firstEditListDialogForSetting,
+////                    EditListDialogOrdinary(
+////                        terminalFragmentRef
+////                    )
+////                )
+//            }
+//            else -> terminalFragment?.editListDialogOrdinaly = null
+//        }
     }
 
     fun dismiss(){

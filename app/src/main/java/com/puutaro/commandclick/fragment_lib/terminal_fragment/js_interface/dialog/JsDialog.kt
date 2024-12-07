@@ -521,10 +521,15 @@ class JsDialog(
         fannelInfoCon: String,
         editListConfigPath: String
     ){
-        editListDialog.create(
-            fannelInfoCon,
-            editListConfigPath,
-        )
+        terminalFragmentRef.get()?.editListDialogForOrdinaryRevolver
+            ?.show(
+                fannelInfoCon,
+                editListConfigPath,
+            )
+//        editListDialog.create(
+//            fannelInfoCon,
+//            editListConfigPath,
+//        )
     }
 
     @JavascriptInterface

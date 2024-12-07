@@ -29,7 +29,8 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialogForSetting
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialogForOrdinaryRevolver
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialogOrdinary
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GgleSchDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewJsDialog
@@ -106,8 +107,9 @@ class TerminalFragment:
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
-    var editListDialog: Dialog? = null
-    var editListDialogForSetting: EditListDialogForSetting? = null
+//    var editListDialog: Dialog? = null
+//    var editListDialogOrdinaly: EditListDialogOrdinary? = null
+    var editListDialogForOrdinaryRevolver:  EditListDialogForOrdinaryRevolver? = null
 //    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
     var pocketWebViewManager: WebViewJsDialog? = null
@@ -243,7 +245,11 @@ class TerminalFragment:
         MonitorFileManager.trim(terminalViewModel)
         BroadcastRegisterForTerm.register(this)
         FannelHistoryGifCreator.watch(this)
-        editListDialogForSetting = EditListDialogForSetting(WeakReference(this))
+//        editListDialogOrdinaly = EditListDialogOrdinary(WeakReference(this))
+        editListDialogForOrdinaryRevolver =
+            EditListDialogForOrdinaryRevolver(
+                WeakReference(this)
+            )
     }
 
     override fun onStart() {
@@ -468,10 +474,12 @@ class TerminalFragment:
 //        webViewDialogInstance = null
         alertDialogInstance?.dismiss()
         alertDialogInstance = null
-        editListDialog?.dismiss()
-        editListDialog = null
-        editListDialogForSetting?.dismiss()
-        editListDialogForSetting = null
+//        editListDialog?.dismiss()
+//        editListDialog = null
+        editListDialogForOrdinaryRevolver?.destroy()
+        editListDialogForOrdinaryRevolver = null
+//        editListDialogOrdinaly?.dismiss()
+//        editListDialogOrdinaly = null
         firstDisplayUpdate = true
     }
 

@@ -142,7 +142,8 @@ object TextViewAndFannelUpdaterForTerm {
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
             -> {
-                terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
+                terminalFragment.editListDialogForOrdinaryRevolver
+                    ?.getActiveEditListOrdinaryDialog()?.findViewById<LinearLayoutCompat>(
                     R.id.edit_list_dialog_footer_horizon_layout
                 )
             }

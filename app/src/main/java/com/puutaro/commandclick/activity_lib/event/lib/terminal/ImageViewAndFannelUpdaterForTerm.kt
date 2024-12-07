@@ -113,9 +113,11 @@ object ImageViewAndFannelUpdaterForTerm {
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
                 -> {
-                terminalFragment.editListDialog?.findViewById<LinearLayoutCompat>(
-                    R.id.edit_list_dialog_footer_horizon_layout
-                )
+                terminalFragment.editListDialogForOrdinaryRevolver
+                    ?.getActiveEditListOrdinaryDialog()
+                    ?.findViewById<LinearLayoutCompat>(
+                        R.id.edit_list_dialog_footer_horizon_layout
+                    )
             }
         }
         val frameLayoutList = tagNameList.map {

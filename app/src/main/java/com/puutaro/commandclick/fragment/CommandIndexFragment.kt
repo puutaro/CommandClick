@@ -271,11 +271,4 @@ class CommandIndexFragment: Fragment() {
     interface OnPageSearchSwitchListener {
         fun onPageSearchSwitch()
     }
-
-    interface OnEditListDialogListener {
-        fun onEditListDialog(
-            fannelInfoCon: String,
-            editListConfigPath: String,
-        )
-    }
 }

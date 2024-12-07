@@ -135,7 +135,6 @@ class MainActivity:
     CommandIndexFragment.OnKeyboardHandleListenerForCmdIndex,
     CommandIndexFragment.OnPinFannelShowListener,
     CommandIndexFragment.OnPageSearchSwitchListener,
-    CommandIndexFragment.OnEditListDialogListener,
     EditFragment.OnToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -1022,17 +1021,4 @@ class MainActivity:
             this
         )
     }
-
-    override fun onEditListDialog(
-        fannelInfoCon: String,
-        editListConfigPath: String
-    ) {
-        val terminalFragment = TargetFragmentInstance.getCurrentTerminalFragment(this)
-            ?: return
-        EditListDialog(WeakReference(terminalFragment)).create(
-            fannelInfoCon,
-            editListConfigPath
-        )
-    }
-
 }

@@ -222,9 +222,6 @@ object WithEditComponentListView{
                 EditListConfig.EditListConfigKey.BK.key
             )
         }
-        val layoutInflater = LayoutInflater.from(
-                context
-            )
         val indexListMap = EditListConfig.getConfigKeyMap(
             editListConfigMap,
             EditListConfig.EditListConfigKey.LIST.key
@@ -256,6 +253,9 @@ object WithEditComponentListView{
 //            fannelContentsList?.joinToString("\n") ?: String()
 //        )
         val editComponentListAdapter = withContext(Dispatchers.IO) {
+            val layoutInflater = LayoutInflater.from(
+                context
+            )
             EditComponentListAdapter(
                 WeakReference(fragment),
                 layoutInflater,
@@ -271,8 +271,10 @@ object WithEditComponentListView{
             )
         }
 
-        withContext(Dispatchers.Main) {
-            editListRecyclerView.adapter = editComponentListAdapter
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main) {
+                editListRecyclerView.adapter = editComponentListAdapter
+            }
         }
 
         val layoutConfigMap = withContext(Dispatchers.IO) {

@@ -108,12 +108,16 @@ object BroadcastHandlerForTerm {
                 )
             }
             BroadCastIntentSchemeTerm.EDIT_INDEX_LIST_UPDATE -> {
-                val editListRecyclerView = terminalFragment.editListDialog?.findViewById<RecyclerView>(
-                    R.id.edit_list_dialog_recycler_view
-                ) ?: return
-                val editListSearchEditText = terminalFragment.editListDialog?.findViewById<AppCompatEditText>(
-                    R.id.edit_list_dialog_search_edit_text
-                )
+                val editListRecyclerView =
+                    terminalFragment.editListDialogForOrdinaryRevolver
+                        ?.getActiveEditListOrdinaryDialog()?.findViewById<RecyclerView>(
+                        R.id.edit_list_dialog_recycler_view
+                    ) ?: return
+                val editListSearchEditText =
+                    terminalFragment.editListDialogForOrdinaryRevolver
+                        ?.getActiveEditListOrdinaryDialog()?.findViewById<AppCompatEditText>(
+                        R.id.edit_list_dialog_search_edit_text
+                    )
                 val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
                 if(editListSearchEditText?.isVisible == true) {
                     editListSearchEditText.setText(String())
