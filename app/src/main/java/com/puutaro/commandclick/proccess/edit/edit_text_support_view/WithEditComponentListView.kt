@@ -107,6 +107,8 @@ object WithEditComponentListView{
         editToolbarHorizonLayout: LinearLayoutCompat?,
         fannelCenterButtonLayout: FrameLayout?,
         fannelContentsList: List<String>?,
+        density: Float,
+        requestBuilderSrc: RequestBuilder<Drawable>?
     ) {
         val context = fragment.context
             ?: return
@@ -165,15 +167,6 @@ object WithEditComponentListView{
                 key to value
             }
         }?.toMap()
-        val density = withContext(Dispatchers.Main) {
-            ScreenSizeCalculator.getDensity(context)
-        }
-        val requestBuilderSrc: RequestBuilder<Drawable>? =
-            fragment.context?.let {
-                Glide.with(it)
-                    .asDrawable()
-                    .sizeMultiplier(0.1f)
-            }
         CoroutineScope(Dispatchers.IO).launch{
             val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
             val titleSettingPath = withContext(Dispatchers.IO) {
@@ -277,6 +270,11 @@ object WithEditComponentListView{
                 density
             )
         }
+
+        withContext(Dispatchers.Main) {
+            editListRecyclerView.adapter = editComponentListAdapter
+        }
+
         val layoutConfigMap = withContext(Dispatchers.IO) {
             LayoutSettingsForEditList.getLayoutConfigMap(
                 editListConfigMap,
@@ -295,24 +293,22 @@ object WithEditComponentListView{
             }
         }
 
-        withContext(Dispatchers.Main) {
-            editListRecyclerView.adapter = editComponentListAdapter
-        }
-
-        val isReverseLayout = withContext(Dispatchers.IO) {
-            LayoutSettingsForEditList.howReverseLayout(
-                fannelInfoMap,
-                setReplaceVariableMap,
-                layoutConfigMap
-            )
-        }
-        withContext(Dispatchers.Main) {
-            LayoutSettingsForEditList.setLayout(
-                context,
-                editComponentListAdapter.getLayoutConfigMap(),
-                editListRecyclerView,
-                isReverseLayout,
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main) {
+                val isReverseLayout = withContext(Dispatchers.IO) {
+                    LayoutSettingsForEditList.howReverseLayout(
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        layoutConfigMap
+                    )
+                }
+                LayoutSettingsForEditList.setLayout(
+                    context,
+                    editComponentListAdapter.getLayoutConfigMap(),
+                    editListRecyclerView,
+                    isReverseLayout,
+                )
+            }
         }
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){

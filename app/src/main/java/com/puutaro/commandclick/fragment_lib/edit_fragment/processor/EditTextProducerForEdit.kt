@@ -1,9 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
+import android.graphics.drawable.Drawable
 import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -13,10 +16,12 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object EditTextProducerForEdit {
@@ -175,7 +180,19 @@ object EditTextProducerForEdit {
 //                    }
 //                }
 //            }
+
         CoroutineScope(Dispatchers.IO).launch {
+            val context = editFragment.context
+            val density = withContext(Dispatchers.Main) {
+                ScreenSizeCalculator.getDensity(editFragment.context)
+            }
+            val requestBuilderSrc: RequestBuilder<Drawable>? = withContext(Dispatchers.IO){
+                context?.let {
+                    Glide.with(it)
+                        .asDrawable()
+                        .sizeMultiplier(0.1f)
+                }
+            }
             WithEditComponentListView.create(
                 editFragment,
                 editFragment.fannelInfoMap,
@@ -196,6 +213,8 @@ object EditTextProducerForEdit {
                 binding.editToolBarHorizonLayout,
                 editToolbarFannelCenterButton,
                 editFragment.mainFannelConList,
+                density,
+                requestBuilderSrc,
             )
         }
     }
