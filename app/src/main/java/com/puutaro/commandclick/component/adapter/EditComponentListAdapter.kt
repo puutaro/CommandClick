@@ -46,6 +46,7 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.SnakeCamelTool
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -691,11 +692,36 @@ class EditComponentListAdapter(
                     "frameTag: ${frameTag}",
                     mapListElInfo,
                 ).joinToString(", ")
-            val verticalUseList = withContext(Dispatchers.IO) {
+            val verticalChannel = Channel<
+                    Pair<
+                            Int,
+                            Triple<
+                                    Pair<Int, String>,
+                                    Map<String, String>,
+                                    LinearLayoutCompat,
+                                    >
+                            >
+                    >(verticalTagToKeyPairsListToVarNameToValueMapList.size)
+            val horizonChannel = Channel<
+                    Triple<
+                            String,
+                            Triple<
+                                    Pair<Int, String>,
+                                    Map<String, String>,
+                                    LinearLayoutCompat?,
+                                    >,
+                            Pair<
+                                    String,
+                                    List<List<FrameLayout>>?,
+                                    >,
+                            >
+                    >(100)
+            CoroutineScope(Dispatchers.IO).launch {
                 makeVerticalUseList(
                     context,
                     frameVarNameValueMap,
                     totalLinearLayout,
+                    verticalChannel,
                     verticalTagToKeyPairsListToVarNameToValueMapList,
                     holder.readyVerticalLayoutList,
                     verticalLinerWeight,
@@ -704,68 +730,85 @@ class EditComponentListAdapter(
                     mapListElInfoForVertical,
                 )
             }
-            verticalUseList.forEachIndexed verticalUseList@  {
-                    verticalUseIndex, verticalUse, ->
-                val verticalIndexToTag = verticalUse.first
-                val verticalIndex = verticalIndexToTag.first
-                val verticalTag = verticalIndexToTag.second
-                val verticalVarNameToValueMap = verticalUse.second
-                val verticalLinearLayout = verticalUse.third
-                val horizonTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO){
-                    EditComponent.AdapterSetter.makeLinearTagAndKeyPairsListToVarNameToValueMap(
-                        fragment,
-                        fannelInfoMap,
-                        setReplaceVariableMap,
-                        busyboxExecutor,
-                        verticalTag,
-                        verticalTagToHorizonKeysConList,
-                        verticalVarNameToValueMap,
-                        holder.srcTitle,
-                        holder.srcCon,
-                        holder.srcImage,
-                        holder.bindingAdapterPosition,
-                        "verticalTag: ${verticalTag}, ${mapListElInfo}",
-                    )
+            CoroutineScope(Dispatchers.IO).launch {
+                val asyncTaskList = mutableListOf<Deferred<Unit>>()
+                for (indexToUse in verticalChannel) {
+                    val verticalUse = indexToUse.second
+                    val job = async {
+                        val verticalIndexToTag = verticalUse.first
+                        val verticalIndex = verticalIndexToTag.first
+                        val verticalTag = verticalIndexToTag.second
+                        val verticalVarNameToValueMap = verticalUse.second
+                        val verticalLinearLayout = verticalUse.third
+                        val horizonTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO){
+                            EditComponent.AdapterSetter.makeLinearTagAndKeyPairsListToVarNameToValueMap(
+                                fragment,
+                                fannelInfoMap,
+                                setReplaceVariableMap,
+                                busyboxExecutor,
+                                verticalTag,
+                                verticalTagToHorizonKeysConList,
+                                verticalVarNameToValueMap,
+                                holder.srcTitle,
+                                holder.srcCon,
+                                holder.srcImage,
+                                holder.bindingAdapterPosition,
+                                "verticalTag: ${verticalTag}, ${mapListElInfo}",
+                            )
+                        }
+    //                FileSystems.updateFile(
+    //                    File(UsePath.cmdclickDefaultAppDirPath, "shorizonTagToKeyPairsListToVarNameToValueMapList.txt").absolutePath,
+    //                    listOf(
+    //                        "verticalTag: ${verticalTag}",
+    //                        "verticalTagToHorizonKeysConList: ${verticalTagToHorizonKeysConList}",
+    //                    ).joinToString("\n\n\n") + "\n\n======\n\n"
+    //                )
+                        val readyHorizonLayoutList =
+                            holder.verticalIndexAndReadyHorizonLayoutList.getOrNull(verticalIndex)
+                        val mapListElInfoForHorizon =
+                            listOf(
+                                "verticalTag: ${verticalTag}",
+                                mapListElInfoForVertical
+                            ).joinToString(", ")
+                        val curHorizonIndexAndReadyContentsLayoutList =
+                            holder.verticalIndexAndHorizonIndexAndReadyContentsLayoutList.getOrNull(verticalIndex)
+                            withContext(Dispatchers.IO) {
+                                makeHorizonUseList(
+                                    context,
+                                    verticalIndex,
+                                    verticalLinearLayout,
+                                    verticalVarNameToValueMap,
+                                    horizonChannel,
+                                    readyHorizonLayoutList,
+                                    curHorizonIndexAndReadyContentsLayoutList,
+                                    horizonTagToKeyPairsListToVarNameToValueMapList,
+                                    alreadyUseTagList,
+                                    alreadyUseTagListMutex,
+                                    mapListElInfoForHorizon,
+                                    weightSumFloat,
+                                )
+                            }
+                        }
+                    asyncTaskList.add(job)
                 }
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "shorizonTagToKeyPairsListToVarNameToValueMapList.txt").absolutePath,
-//                    listOf(
-//                        "verticalTag: ${verticalTag}",
-//                        "verticalTagToHorizonKeysConList: ${verticalTagToHorizonKeysConList}",
-//                    ).joinToString("\n\n\n") + "\n\n======\n\n"
-//                )
-                val readyHorizonLayoutList =
-                    holder.verticalIndexAndReadyHorizonLayoutList.getOrNull(verticalIndex)
-                val mapListElInfoForHorizon =
-                    listOf(
-                        "verticalTag: ${verticalTag}",
-                        mapListElInfoForVertical
-                    ).joinToString(", ")
-                val curHorizonIndexAndReadyContentsLayoutList =
-                    holder.verticalIndexAndHorizonIndexAndReadyContentsLayoutList.getOrNull(verticalIndex)
-                val horizonUseList = withContext(Dispatchers.IO) {
-                    makeHorizonUseList(
-                        context,
-                        verticalIndex,
-                        verticalLinearLayout,
-                        verticalVarNameToValueMap,
-                        readyHorizonLayoutList,
-                        horizonTagToKeyPairsListToVarNameToValueMapList,
-                        alreadyUseTagList,
-                        alreadyUseTagListMutex,
-                        mapListElInfoForHorizon,
-                        weightSumFloat,
-                    )
+                asyncTaskList.forEach {
+                    it.await()
                 }
-                horizonUseList.forEachIndexed horizonUseList@{ horizonUseListIndex, registerIndexToHorizonUse ->
-//                    val registerIndex = registerIndexToHorizonUse.first
-                    val horizonUse = registerIndexToHorizonUse.second
-                    val horizonlIndexToTag = horizonUse.first
-                    val horizonIndex = horizonlIndexToTag.first
-                    val horizonTag = horizonlIndexToTag.second
-                    val horizonVarNameToValueMap = horizonUse.second
-                    val horizonLinearLayout = horizonUse.third
+                horizonChannel.close()
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                for(registerIndexToHorizonUseToExtraInfo in horizonChannel){
+                    val horizonUse = registerIndexToHorizonUseToExtraInfo.second
                     CoroutineScope(Dispatchers.IO).launch {
+                        val horizonlIndexToTag = horizonUse.first
+                        val horizonIndex = horizonlIndexToTag.first
+                        val horizonTag = horizonlIndexToTag.second
+                        val horizonVarNameToValueMap = horizonUse.second
+                        val horizonLinearLayout = horizonUse.third
+                        val extraInfo = registerIndexToHorizonUseToExtraInfo.third
+                        val mapListElInfoForHorizon = extraInfo.first
+                        val curHorizonIndexAndReadyContentsLayoutList = extraInfo.second
 //                        FileSystems.updateFile(
 //                            File(
 //                                UsePath.cmdclickDefaultAppDirPath,
@@ -777,7 +820,7 @@ class EditComponentListAdapter(
 //                                "horizonVarNameToValueMap: ${horizonVarNameToValueMap}",
 //                            ).joinToString("\n")
 //                        )
-                        val horizonTagToContentsKeysListMapWithReplace =
+                        val horizonTagToContentsKeysListMapWithReplace = withContext(Dispatchers.IO) {
                             horizonTagToContentsKeysListMap.map {
                                 val key = CmdClickMap.replace(
                                     it.key,
@@ -785,6 +828,7 @@ class EditComponentListAdapter(
                                 )
                                 key to it.value
                             }.toMap()
+                        }
                         val readyContentsLayoutList =
                             curHorizonIndexAndReadyContentsLayoutList?.getOrNull(horizonIndex)
                         horizonTagToContentsKeysListMapWithReplace.get(horizonTag)
@@ -1058,16 +1102,6 @@ class EditComponentListAdapter(
                     }
                 }
             }
-            withContext(Dispatchers.Main) {
-                val itemView = holder.itemView
-                itemView.setOnClickListener {
-                    editAdapterClickListener?.onEditAdapterClick(
-                        itemView,
-                        holder,
-                        editListPosition,
-                    )
-                }
-            }
         }
     }
 
@@ -1279,18 +1313,7 @@ class EditComponentListAdapter(
         context: Context,
         frameVarNameValueMap: Map<String, String>,
         totalLinearLayout: LinearLayoutCompat,
-        verticalTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>,
-        readyVerticalLayoutList: List<LinearLayoutCompat>,
-        verticalLinerWeight: Float,
-        alreadyUseTagList: MutableList<String>,
-        alreadyUseTagListMutex: Mutex,
-        mapListElInfoForVertical: String,
-    ): List<Triple<Pair<Int, String>, Map<String, String>, LinearLayoutCompat>> {
-        val extraVerticalStartId = 40000
-        val switchOff = EditComponent.Template.switchOff
-        val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
-        val weightSumFloat = 1f
-        val verticalChannel = Channel<
+        verticalChannel: Channel<
                 Pair<
                         Int,
                         Triple<
@@ -1299,7 +1322,20 @@ class EditComponentListAdapter(
                                 LinearLayoutCompat,
                                 >
                         >
-                >(verticalTagToKeyPairsListToVarNameToValueMapList.size)
+                >,
+        verticalTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>,
+        readyVerticalLayoutList: List<LinearLayoutCompat>,
+        verticalLinerWeight: Float,
+        alreadyUseTagList: MutableList<String>,
+        alreadyUseTagListMutex: Mutex,
+        mapListElInfoForVertical: String,
+    )
+//    : List<Triple<Pair<Int, String>, Map<String, String>, LinearLayoutCompat>>
+    {
+        val extraVerticalStartId = 40000
+        val switchOff = EditComponent.Template.switchOff
+        val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+        val weightSumFloat = 1f
         withContext(Dispatchers.IO) {
             val jobList = verticalTagToKeyPairsListToVarNameToValueMapList.mapIndexed setVertical@{ verticalIndex, verticalTagToKeyPairsListToVarNameToValueMap ->
                 async {
@@ -1434,62 +1470,68 @@ class EditComponentListAdapter(
             jobList.forEach { it.await() }
             verticalChannel.close()
         }
-        val verticalUseList = withContext(Dispatchers.IO) {
-            val verticalUseListSrc = mutableListOf<
-                    Pair<
-                            Int,
-                            Triple<
-                                    Pair<Int, String>,
-                                    Map<String, String>,
-                                    LinearLayoutCompat,
-                                    >
-                            >
-                    >()
-            for (v in verticalChannel) {
-                verticalUseListSrc.add(v)
-            }
-            verticalUseListSrc.sortBy { it.first }
-            verticalUseListSrc.map {
-                it.second
-            }
-        }
-        return verticalUseList
+//        val verticalUseList = withContext(Dispatchers.IO) {
+//            val verticalUseListSrc = mutableListOf<
+//                    Pair<
+//                            Int,
+//                            Triple<
+//                                    Pair<Int, String>,
+//                                    Map<String, String>,
+//                                    LinearLayoutCompat,
+//                                    >
+//                            >
+//                    >()
+//            for (v in verticalChannel) {
+//                verticalUseListSrc.add(v)
+//            }
+//            verticalUseListSrc.sortBy { it.first }
+//            verticalUseListSrc.map {
+//                it.second
+//            }
+//        }
+//        return verticalUseList
     }
-
     private suspend fun makeHorizonUseList(
         context: Context,
         verticalIndex: Int,
         verticalLinearLayout: LinearLayoutCompat,
         verticalVarNameToValueMap: Map<String, String>,
-        readyHorizonLayoutList: List<LinearLayoutCompat>?,
-        horizonTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>,
-        alreadyUseTagList: MutableList<String>,
-        alreadyUseTagListMutex: Mutex,
-        mapListElInfoForHorizon: String,
-        weightSumFloat: Float,
-    ):  MutableList<
-            Pair<
-                    String,
-                    Triple<
-                            Pair<Int, String>,
-                            Map<String, String>,
-                            LinearLayoutCompat?,
-                            >
-                    >
-            > {
-        val switchOff = EditComponent.Template.switchOff
-        val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
-        val horizonLayoutStartId = 50000
-        val horizonChannel = Channel<
-                Pair<
+        horizonChannel: Channel<
+                Triple<
                         String,
                         Triple<
                                 Pair<Int, String>,
                                 Map<String, String>,
                                 LinearLayoutCompat?,
-                                >
-                        >
-                >(horizonTagToKeyPairsListToVarNameToValueMapList.size)
+                                >,
+                        Pair<
+                                String,
+                                List<List<FrameLayout>>?
+                                >,
+                        >,
+                >,
+        readyHorizonLayoutList: List<LinearLayoutCompat>?,
+        curHorizonIndexAndReadyContentsLayoutList: List<List<FrameLayout>>?,
+        horizonTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>,
+        alreadyUseTagList: MutableList<String>,
+        alreadyUseTagListMutex: Mutex,
+        mapListElInfoForHorizon: String,
+        weightSumFloat: Float,
+    )
+//    :  MutableList<
+//            Pair<
+//                    String,
+//                    Triple<
+//                            Pair<Int, String>,
+//                            Map<String, String>,
+//                            LinearLayoutCompat?,
+//                            >
+//                    >
+//            >
+    {
+        val switchOff = EditComponent.Template.switchOff
+        val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+        val horizonLayoutStartId = 50000
         withContext(Dispatchers.IO) {
             val jobList =
                 horizonTagToKeyPairsListToVarNameToValueMapList.mapIndexed setHorizon@{ horizonIndex, horizonTagToKeyPairsListToVarNameToValueMap ->
@@ -1602,7 +1644,7 @@ class EditComponentListAdapter(
                         withContext(Dispatchers.IO) {
                             val registerIndex = "${verticalIndex}${horizonIndex}"
                             horizonChannel.send(
-                                Pair(
+                                Triple(
                                     registerIndex,
                                     Triple(
                                         Pair(
@@ -1611,33 +1653,18 @@ class EditComponentListAdapter(
                                         ),
                                         horizonVarNameToValueMap.toMap(),
                                         horizonLinearLayout,
-                                    )
+                                    ),
+                                    Pair(
+                                        mapListElInfoForHorizon,
+                                        curHorizonIndexAndReadyContentsLayoutList,
+                                    ),
                                 )
                             )
                         }
                     }
                 }
             jobList.forEach { it.await() }
-            horizonChannel.close()
         }
-        val horizonUseList = withContext(Dispatchers.IO) {
-            val horizonUseListSrc = mutableListOf<
-                    Pair<
-                            String,
-                            Triple<
-                                    Pair<Int, String>,
-                                    Map<String, String>,
-                                    LinearLayoutCompat?,
-                                    >
-                            >
-                    >()
-            for (v in horizonChannel) {
-                horizonUseListSrc.add(v)
-            }
-            horizonUseListSrc.sortBy { it.first }
-            horizonUseListSrc
-        }
-        return horizonUseList
     }
 
 
