@@ -17,7 +17,6 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -43,7 +42,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -67,6 +66,17 @@ import java.lang.ref.WeakReference
 object WithEditComponentListView{
     
     private val delayTime = 1500L
+    private val noIndexSign = -1
+    private val weightSumFloat = 1f
+    private val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map {
+        it.key
+    }
+    private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+    private val typeSeparator = EditComponent.Template.typeSeparator
+    private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
+    private val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
+    private val switchOff = EditComponent.Template.switchOff
+    private val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
 
     fun keyboardHide(
         fragment: Fragment,
@@ -360,6 +370,16 @@ object WithEditComponentListView{
 //                editListBkFrame.addView(bkFrameLayout)
 //            }
         }
+
+        val outValue = withContext(Dispatchers.IO) {
+            val outValueSrc = TypedValue()
+            context.theme?.resolveAttribute(
+                android.R.attr.selectableItemBackground,
+                outValueSrc,
+                true
+            )
+            outValueSrc
+        }
         CoroutineScope(Dispatchers.IO).launch {
             setToolbar(
                 fragment,
@@ -374,6 +394,7 @@ object WithEditComponentListView{
                 editListConfigMap,
                 requestBuilderSrc,
                 density,
+                outValue
             )
         }
         CoroutineScope(Dispatchers.IO).launch {
@@ -392,6 +413,7 @@ object WithEditComponentListView{
                 editListConfigMap,
                 requestBuilderSrc,
                 density,
+                outValue
             )
         }
         CoroutineScope(Dispatchers.IO).launch{
@@ -440,6 +462,7 @@ object WithEditComponentListView{
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
+        outValue: TypedValue,
     ){
         setFooterOrToolbar(
             fragment,
@@ -458,6 +481,7 @@ object WithEditComponentListView{
             editListConfigMap,
             requestBuilderSrc,
             density,
+            outValue
         )
     }
 
@@ -485,6 +509,7 @@ object WithEditComponentListView{
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
+        outValue: TypedValue,
     ){
         setFooterOrToolbar(
             fragment,
@@ -503,6 +528,7 @@ object WithEditComponentListView{
             editListConfigMap,
             requestBuilderSrc,
             density,
+            outValue
         )
     }
 
@@ -523,6 +549,7 @@ object WithEditComponentListView{
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
+        outValue: TypedValue,
         ) {
         val context = fragment.context
             ?: return
@@ -589,19 +616,8 @@ object WithEditComponentListView{
 //                it
 //            }
 
-        val tagKey = EditComponent.Template.EditComponentKey.TAG.key
-        val typeSeparator = EditComponent.Template.typeSeparator
-        val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
-        val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
-        val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map {
-            it.key
-        }
-        val switchOff = EditComponent.Template.switchOff
-        val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
         val alreadyUseTagListMutex = Mutex()
         val alreadyUseTagList = mutableListOf<String>()
-        val noIndexSign = -1
-        val weightSumFloat = 1f
         val frameTag = frameTagList.firstOrNull()
             ?: return
         val isDuplicateFrameTagErr = withContext(Dispatchers.IO) frameTagCheck@ {
@@ -674,8 +690,22 @@ object WithEditComponentListView{
                                 >,
                         >
                 >(100)
+        val contentsChannel = Channel<
+                Triple<
+                        Pair<String, String>,
+                        Pair<
+                                Map<String, String>,
+                                Pair<List<String>, List<Pair<String, String?>>>
+                                >,
+                        Triple<
+                                LinearLayoutCompat?,
+                                List<FrameLayout?>?,
+                                Float
+                                >
+                        >
+                >(100)
         CoroutineScope(Dispatchers.IO).launch {
-            makeVerticalUseList(
+            publishVerticalChannel(
                 context,
                 alreadyUseTagList,
                 alreadyUseTagListMutex,
@@ -693,56 +723,24 @@ object WithEditComponentListView{
         CoroutineScope(Dispatchers.IO).launch {
             val asyncTaskList = mutableListOf<Deferred<Unit>>()
             for (indexToVerticalUse in verticalChannel) {
-                val verticalUse = indexToVerticalUse.second
                 val job = async {
-                    val verticalIndexToTag = verticalUse.first
-                    val verticalIndex = verticalIndexToTag.first
-                    val verticalTag = verticalIndexToTag.second
-                    val verticalVarNameToValueMap = verticalUse.second
-                    val verticalLinearLayout = verticalUse.third
-                    val horizonTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO) {
-                        EditComponent.AdapterSetter.makeLinearTagAndKeyPairsListToVarNameToValueMap(
+                    withContext(Dispatchers.IO) {
+                        publishHorizonChannel(
                             fragment,
                             fannelInfoMap,
                             setReplaceVariableMap,
                             busyboxExecutor,
-                            verticalTag,
-                            verticalTagToHorizonKeysConList,
-                            verticalVarNameToValueMap,
-                            String(),
-                            String(),
-                            String(),
-                            noIndexSign,
-                            String(),
-                        )
-                    }
-                    val readyHorizonLayoutList =
-                        indexAndHorizonLinearListForFooter?.getOrNull(verticalIndex)
-                    val mapListElInfoForHorizon =
-                        listOf(
-                            "verticalTag: ${verticalTag}",
-                            mapListElInfoForVertical,
-                        ).joinToString(", ")
-                    val horizonIndexAndReadyContentsLayoutListForFooter =
-                        verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter?.getOrNull(
-                            verticalIndex
-                        )
-                    withContext(Dispatchers.IO) {
-                        makeHorizonUseList(
-                            context,
                             frameTag,
-                            verticalIndex,
                             isEditToolbar,
-                            verticalLinearLayout,
-                            verticalVarNameToValueMap,
+                            indexToVerticalUse,
                             horizonChannel,
-                            horizonTagToKeyPairsListToVarNameToValueMapList,
-                            mapListElInfoForHorizon,
-                            readyHorizonLayoutList,
-                            horizonIndexAndReadyContentsLayoutListForFooter,
+                            verticalTagToHorizonKeysConList,
                             editToolbarHorizonLayout,
+                            indexAndHorizonLinearListForFooter,
+                            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
                             alreadyUseTagList,
                             alreadyUseTagListMutex,
+                            mapListElInfoForVertical,
                             density,
                         )
                     }
@@ -756,379 +754,212 @@ object WithEditComponentListView{
         }
 
         CoroutineScope(Dispatchers.IO).launch {
+            val asyncTaskList = mutableListOf<Deferred<Unit>>()
             for (registerIndexToHorizonUseToExtraInfo in horizonChannel) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val horizonUse = registerIndexToHorizonUseToExtraInfo.second
-                    val horizonIndexToTag = horizonUse.first
-                    val horizonIndex = horizonIndexToTag.first
-                    val horizonTag = horizonIndexToTag.second
-                    val horizonVarNameToValueMap = horizonUse.second
-                    val horizonLinearLayout = horizonUse.third
-                    val extraInfo = registerIndexToHorizonUseToExtraInfo.third
-                    val mapListElInfoForHorizon = extraInfo.first
-                    val horizonIndexAndReadyContentsLayoutListForFooter =
-                        extraInfo.second
-                    val horizonTagToContentsKeysListMapWithReplace =
-                        horizonTagToContentsKeysListMap.map {
-                            val key = CmdClickMap.replace(
-                                it.key,
-                                horizonVarNameToValueMap,
-                            )
-                            key to it.value
-                        }.toMap()
-                    val contentsKeysList =
-                        withContext(Dispatchers.IO) {
-                            horizonTagToContentsKeysListMapWithReplace.get(horizonTag)
-                                ?.let { contentsKeysListSrc ->
-                                    when (isEditToolbar) {
-                                        true -> listOf(
-                                            contentsKeysListSrc.firstOrNull() ?: emptyList()
-                                        )
+                val job = async {
+                    publishContents(
+                        registerIndexToHorizonUseToExtraInfo,
+                        horizonTagToContentsKeysListMap,
+                        isEditToolbar,
+                        isOnlyCmdValEdit,
+                        fannelCenterButtonLayout,
+                        contentsChannel,
+                    )
+                }
+                asyncTaskList.add(job)
+            }
+            asyncTaskList.forEach { it.await() }
+            contentsChannel.close()
+        }
 
-                                        else -> contentsKeysListSrc
-                                    }
-                                }
-                        }
-//                    FileSystems.updateFile(
-//                        File(UsePath.cmdclickDefaultAppDirPath, "smakeHorizonLinear_in_listview.txt").absolutePath,
-//                        listOf(
-//                            "verticalTag: ${verticalTag}",
-//                            "isNotExtract: ${extractHorizonLayout == null}",
-//                            "verticalTagToHorizonKeysConList: ${verticalTagToHorizonKeysConList}",
-//                            "horizonKeyPairs: ${horizonKeyPairs}",
-//                            "horizonTag: ${horizonTag}",
-//                            "horizonTagToContentsKeysListMapWithReplace: ${horizonTagToContentsKeysListMapWithReplace}",
-//                            "horizonKeyPairs: ${horizonKeyPairs}",
-//                            "contentsKeysList: ${contentsKeysList}"
-//                        ).joinToString("\n\n\n") + "\n\n======\n\n"
-//                    )
-
-                    val readyContentsLayoutListForFooter =
-                        horizonIndexAndReadyContentsLayoutListForFooter?.getOrNull(horizonIndex)
-                    contentsKeysList?.forEachIndexed setContents@{ contentsIndex, contentsKeyValues ->
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
-                                EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
-                                    contentsKeyValues,
+        CoroutineScope(Dispatchers.IO).launch {
+            for (contentsUseTriple in contentsChannel){
+                val horizonTagToMapListElInfo = contentsUseTriple.first
+                val horizonTag = horizonTagToMapListElInfo.first
+                val mapListElInfoForHorizon =
+                    horizonTagToMapListElInfo.second
+                val horizontalMapToKeySubKeysPair =
+                    contentsUseTriple.second
+                val horizonVarNameToValueMap =
+                    horizontalMapToKeySubKeysPair.first
+                val contentsKeySubKeysPair =
+                    horizontalMapToKeySubKeysPair.second
+                val contentsKeyValues = contentsKeySubKeysPair.first
+                val contentsTagToKeyPairsList = contentsKeySubKeysPair.second
+                val horizonLinearLayoutToReadyContentsLayoutList =
+                    contentsUseTriple.third
+                val horizonLinearLayout =
+                    horizonLinearLayoutToReadyContentsLayoutList.first
+                val readyContentsLayoutListForFooter =
+                    horizonLinearLayoutToReadyContentsLayoutList.second
+                val layoutWeight =
+                    horizonLinearLayoutToReadyContentsLayoutList.third
+                contentsKeyValues.forEachIndexed execSetContents@{ execSetContentsIndex, contentsKeyPairsListConSrc ->
+                    CoroutineScope(Dispatchers.IO).launch execSetContentsCoroutine@{
+                        val contentsTagSrc =
+                            contentsTagToKeyPairsList.getOrNull(execSetContentsIndex)
+                        val mapListElInfoForContentsTag =
+                            listOf(
+                                "contentsTagSrc: ${contentsTagSrc}",
+                                "horizonTag: ${horizonTag}",
+                                mapListElInfoForHorizon
+                            ).joinToString(", ")
+                        val varNameToValueMap =
+                            withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
+                                EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
+                                    fragment,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    editComponentListAdapter,
                                     horizonVarNameToValueMap,
+                                    mapListElInfoForContentsTag,
+                                    contentsKeyPairsListConSrc,
                                     frameTag,
                                     frameTag,
                                     frameTag,
                                     noIndexSign,
                                 )
                             }
-                            val contentsKeyValueSize = withContext(Dispatchers.IO) {
-                                EditComponent.AdapterSetter.culcLinearKeyValueSize(
-                                    contentsTagToKeyPairsList,
+                        val contentsVarNameToValueMap = horizonVarNameToValueMap + varNameToValueMap
+                        val linearFrameKeyPairsListCon = CmdClickMap.replace(
+                            contentsKeyPairsListConSrc,
+                            contentsVarNameToValueMap
+                        )
+                        val contentsKeyPairsList = withContext(Dispatchers.IO) {
+                            CmdClickMap.createMap(
+                                linearFrameKeyPairsListCon,
+                                typeSeparator
+                            )
+                        }
+                        val contentsTag = withContext(Dispatchers.IO) {
+                            PairListTool.getValue(
+                                contentsKeyPairsList,
+                                tagKey,
+                            )?.let {
+                                CmdClickMap.replace(
+                                    it,
+                                    contentsVarNameToValueMap
                                 )
-                            }
-                            val layoutWeight = withContext(Dispatchers.IO) culcFrameLayoutWeight@{
-                                when (isEditToolbar && !isOnlyCmdValEdit) {
-                                    true -> weightSumFloat / (contentsKeyValueSize + 1)
-                                    else -> {
-                                        if (
-                                            contentsKeyValueSize == 0
-                                        ) return@culcFrameLayoutWeight 0f
-                                        weightSumFloat / contentsKeyValueSize
-                                    }
-                                }
-                            }
-                            if (isEditToolbar) {
-                                withContext(Dispatchers.Main) {
-                                    let {
-                                        val layoutParam =
-                                            fannelCenterButtonLayout?.layoutParams as? LinearLayoutCompat.LayoutParams
-                                        if (layoutParam?.weight == layoutWeight) return@let
-                                        layoutParam?.weight = layoutWeight
-                                        fannelCenterButtonLayout?.layoutParams = layoutParam
-                                    }
-                                }
-                            }
-                            contentsKeyValues.forEachIndexed execSetContents@{ execSetContentsIndex, contentsKeyPairsListConSrc ->
-                                CoroutineScope(Dispatchers.IO).launch execSetContentsCoroutine@{
-                                    val contentsTagSrc =
-                                        contentsTagToKeyPairsList.getOrNull(execSetContentsIndex)
-                                    val mapListElInfoForContentsTag =
-                                        listOf(
-                                            "contentsTagSrc: ${contentsTagSrc}",
-                                            "horizonTag: ${horizonTag}",
-                                            mapListElInfoForHorizon
-                                        ).joinToString(", ")
-                                    val varNameToValueMap =
-                                        withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
-                                            EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
-                                                fragment,
-                                                fannelInfoMap,
-                                                setReplaceVariableMap,
-                                                busyboxExecutor,
-                                                editComponentListAdapter,
-                                                horizonVarNameToValueMap,
-                                                mapListElInfoForContentsTag,
-                                                contentsKeyPairsListConSrc,
-                                                frameTag,
-                                                frameTag,
-                                                frameTag,
-                                                noIndexSign,
-                                            )
-                                        }
-                                    val contentsVarNameToValueMap = horizonVarNameToValueMap + varNameToValueMap
-                                    val linearFrameKeyPairsListCon = CmdClickMap.replace(
-                                        contentsKeyPairsListConSrc,
-                                        contentsVarNameToValueMap
-                                    )
-                                    val contentsKeyPairsList = withContext(Dispatchers.IO) {
-                                        CmdClickMap.createMap(
-                                            linearFrameKeyPairsListCon,
-                                            typeSeparator
-                                        )
-                                    }
-                                    val contentsTag = withContext(Dispatchers.IO) {
-                                        PairListTool.getValue(
-                                            contentsKeyPairsList,
-                                            tagKey,
-                                        )?.let {
-                                            CmdClickMap.replace(
-                                                it,
-                                                contentsVarNameToValueMap
-                                            )
-                                        } ?: String()
-                                    }
-                                    val mapListElInfoForContentsTagWithReplace =
-                                        listOf(
-                                            "contentsTag: ${contentsTag}",
-                                            "horizonTag: ${horizonTag}",
-                                            mapListElInfoForHorizon
-                                        ).joinToString(", ")
-                                    val isContentsTagErr =
-                                        withContext(Dispatchers.IO) contentsTagCheck@{
-                                            val tagGenre =
-                                                EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
-                                            val isTagBlankErr =
-                                                ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
-                                                    context,
-                                                    contentsTag,
-                                                    mapListElInfoForContentsTagWithReplace,
-                                                    tagGenre
-                                                )
-                                            if (
-                                                isTagBlankErr
-                                            ) return@contentsTagCheck true
-                                            val alreadyUseTagListSrc =
-                                                EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                                                    alreadyUseTagList,
-                                                    alreadyUseTagListMutex
-                                                )
-                                            val correctContentsTag =
-                                                EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                                                    context,
-                                                    tagGenre,
-                                                    contentsTag,
-                                                    alreadyUseTagListSrc,
-                                                    mapListElInfoForContentsTagWithReplace,
-                                                    String(),
-                                                )
-                                            correctContentsTag?.let {
-                                                alreadyUseTagListMutex.withLock {
-                                                    alreadyUseTagList.add(it)
-                                                }
-                                            }
-                                            val isDuplidateTagErr =
-                                                correctContentsTag.isNullOrEmpty()
-                                            if (
-                                                isDuplidateTagErr
-                                            ) return@contentsTagCheck true
-                                            false
-                                        }
-                                    if (isContentsTagErr) {
-                                        return@execSetContentsCoroutine
-                                    }
-
-
-                                    editComponentListAdapter?.footerKeyPairListConMap?.put(
+                            } ?: String()
+                        }
+                        val mapListElInfoForContentsTagWithReplace =
+                            listOf(
+                                "contentsTag: ${contentsTag}",
+                                "horizonTag: ${horizonTag}",
+                                mapListElInfoForHorizon
+                            ).joinToString(", ")
+                        val isContentsTagErr =
+                            withContext(Dispatchers.IO) contentsTagCheck@{
+                                val tagGenre =
+                                    EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
+                                val isTagBlankErr =
+                                    ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
+                                        context,
                                         contentsTag,
-                                        linearFrameKeyPairsListCon
+                                        mapListElInfoForContentsTagWithReplace,
+                                        tagGenre
                                     )
-                                    val contentsFrameLayout =
-                                        withContext(Dispatchers.Main) setLinearFrameLayout@{
-                                            withContext(Dispatchers.IO) {
-                                                PairListTool.getValue(
-                                                    contentsKeyPairsList,
-                                                    enableKey,
-                                                )
-                                            }.let { enableStr ->
-                                                if (
-                                                    enableStr == switchOff
-                                                ) return@setLinearFrameLayout null
-                                            }
-                                            val extractContentsLayout =
-                                                when (isEditToolbar) {
-                                                    false -> readyContentsLayoutListForFooter
-                                                        ?.getOrNull(execSetContentsIndex)
-
-                                                    else -> null
-                                                }
-                                            val contentsLayout =
-                                                extractContentsLayout
-                                                    ?: let {
-                                                        withContext(Dispatchers.Main) {
-                                                            EditComponent.AdapterSetter.makeContentsFrameLayout(
-                                                                context
-                                                            )
-                                                        }
-                                                    }
-                                            if (extractContentsLayout == null) {
-                                                withContext(Dispatchers.Main) {
-                                                    horizonLinearLayout?.addView(contentsLayout)
-                                                }
-                                            }
-                                            CoroutineScope(Dispatchers.Main).launch {
-                                                EditFrameMaker.make(
-                                                    context,
-                                                    contentsLayout,
-                                                    fannelInfoMap,
-                                                    setReplaceVariableMap,
-                                                    busyboxExecutor,
-                                                    contentsKeyPairsList,
-                                                    0,
-                                                    layoutWeight,
-                                                    contentsTag,
-                                                    editComponentListAdapter?.totalSettingValMap,
-                                                    requestBuilderSrc,
-                                                    density,
-                                                )
-                                            }
-//                                    val makedContents = contentsLayout.layoutParams as LinearLayoutCompat.LayoutParams
-//                                    FileSystems.updateFile(
-//                                        File(UsePath.cmdclickDefaultAppDirPath, "leditFrame.txt").absolutePath,
-//                                        listOf(
-//                                            "tag: ${contentsLayout.tag}",
-//                                            "contentsTag: ${contentsTag}",
-//                                            "weight: ${makedContents.weight}",
-//                                            "width: ${makedContents.width}",
-//                                        ).joinToString("\n") + "\n\n===========\n\n"
-//                                    )
-                                            contentsLayout
-                                        } ?: return@execSetContentsCoroutine
-                                    CoroutineScope(Dispatchers.IO).launch execClick@{
-                                        if (
-                                            linearFrameKeyPairsListCon.isNullOrEmpty()
-                                        ) return@execClick
-                                        val onClick = withContext(Dispatchers.IO) {
-                                            PairListTool.getValue(
-                                                contentsKeyPairsList,
-                                                onClickKey,
-                                            ) != switchOff
-                                        }
-                                        val isConsec = withContext(Dispatchers.IO) {
-                                            PairListTool.getValue(
-                                                contentsKeyPairsList,
-                                                onConsecKey,
-                                            ) == EditComponent.Template.switchOn
-                                        }
-                                        val isNotClickSetting = withContext(Dispatchers.IO) {
-                                            jsActionKeyList.any { jsActionKey ->
-                                                !PairListTool.getValue(
-                                                    contentsKeyPairsList,
-                                                    jsActionKey,
-                                                ).isNullOrEmpty()
-                                            }.let { isJsAc ->
-                                                val isJsAcClick = !isJsAc
-                                                        && contentsFrameLayout.tag != null
-                                                isJsAcClick
-                                                        || !onClick
-                                            }
-                                        }
-                                        if (
-                                            isNotClickSetting
-                                        ) return@execClick
-                                        withContext(Dispatchers.IO) execExecClick@{
-                                            val outValue = TypedValue()
-                                            context.theme.resolveAttribute(
-                                                android.R.attr.selectableItemBackground,
-                                                outValue,
-                                                true
-                                            )
-                                            val clickViewList =
-                                                contentsFrameLayout.children.filter {
-                                                    it is OutlineTextView
-                                                            || it is AppCompatImageView
-                                                }
-                                            clickViewList.forEach { clickView ->
-                                                withContext(Dispatchers.Main) {
-                                                    clickView.setBackgroundResource(outValue.resourceId)
-                                                    clickView.isClickable = true
-                                                }
-                                                if (!isConsec) {
-                                                    withContext(Dispatchers.Main) {
-                                                        clickView.setOnClickListener {
-                                                            execJsAction(
-                                                                fragment,
-                                                                fannelInfoMap,
-                                                                setReplaceVariableMap,
-                                                                editListRecyclerView,
-                                                                linearFrameKeyPairsListCon
-                                                            )
-                                                        }
-                                                    }
-                                                    return@execExecClick
-                                                }
-                                                withContext(Dispatchers.Main) {
-                                                    withContext(Dispatchers.IO) {
-                                                        delay(1500)
-                                                    }
-                                                    with(clickView) {
-                                                        var consecutiveJob: Job? = null
-                                                        setOnTouchListener(android.view.View.OnTouchListener { v, event ->
-                                                            var execTouchJob: Job? = null
-                                                            when (event.action) {
-                                                                MotionEvent.ACTION_DOWN -> {
-                                                                    consecutiveJob?.cancel()
-                                                                    consecutiveJob =
-                                                                        CoroutineScope(Dispatchers.IO).launch {
-                                                                            var roopTimes = 0
-                                                                            while (true) {
-                                                                                execTouchJob =
-                                                                                    CoroutineScope(
-                                                                                        Dispatchers.Main
-                                                                                    ).launch {
-                                                                                        execJsAction(
-                                                                                            fragment,
-                                                                                            fannelInfoMap,
-                                                                                            setReplaceVariableMap,
-                                                                                            editListRecyclerView,
-                                                                                            linearFrameKeyPairsListCon
-                                                                                        )
-                                                                                    }
-                                                                                withContext(
-                                                                                    Dispatchers.IO
-                                                                                ) {
-                                                                                    if (
-                                                                                        roopTimes == 0
-                                                                                    ) delay(300)
-                                                                                    else delay(60)
-                                                                                }
-                                                                                roopTimes++
-                                                                            }
-                                                                        }
-                                                                }
-
-                                                                MotionEvent.ACTION_UP,
-                                                                MotionEvent.ACTION_CANCEL,
-                                                                    -> {
-                                                                    v.performClick()
-                                                                    execTouchJob?.cancel()
-                                                                    consecutiveJob?.cancel()
-                                                                }
-                                                            }
-                                                            true
-                                                        })
-                                                    }
-                                                }
-                                            }
-                                        }
+                                if (
+                                    isTagBlankErr
+                                ) return@contentsTagCheck true
+                                val alreadyUseTagListSrc =
+                                    EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                                        alreadyUseTagList,
+                                        alreadyUseTagListMutex
+                                    )
+                                val correctContentsTag =
+                                    EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                        context,
+                                        tagGenre,
+                                        contentsTag,
+                                        alreadyUseTagListSrc,
+                                        mapListElInfoForContentsTagWithReplace,
+                                        String(),
+                                    )
+                                correctContentsTag?.let {
+                                    alreadyUseTagListMutex.withLock {
+                                        alreadyUseTagList.add(it)
                                     }
                                 }
+                                val isDuplidateTagErr =
+                                    correctContentsTag.isNullOrEmpty()
+                                if (
+                                    isDuplidateTagErr
+                                ) return@contentsTagCheck true
+                                false
                             }
+                        if (isContentsTagErr) {
+                            return@execSetContentsCoroutine
+                        }
+
+
+                        editComponentListAdapter?.footerKeyPairListConMap?.put(
+                            contentsTag,
+                            linearFrameKeyPairsListCon
+                        )
+                        val contentsFrameLayout =
+                            withContext(Dispatchers.Main) setLinearFrameLayout@{
+                                withContext(Dispatchers.IO) {
+                                    PairListTool.getValue(
+                                        contentsKeyPairsList,
+                                        enableKey,
+                                    )
+                                }.let { enableStr ->
+                                    if (
+                                        enableStr == switchOff
+                                    ) return@setLinearFrameLayout null
+                                }
+                                val extractContentsLayout =
+                                    when (isEditToolbar) {
+                                        false -> readyContentsLayoutListForFooter
+                                            ?.getOrNull(execSetContentsIndex)
+
+                                        else -> null
+                                    }
+                                val contentsLayout =
+                                    extractContentsLayout
+                                        ?: let {
+                                            withContext(Dispatchers.Main) {
+                                                EditComponent.AdapterSetter.makeContentsFrameLayout(
+                                                    context
+                                                )
+                                            }
+                                        }
+                                if (extractContentsLayout == null) {
+                                    withContext(Dispatchers.Main) {
+                                        horizonLinearLayout?.addView(contentsLayout)
+                                    }
+                                }
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    EditFrameMaker.make(
+                                        context,
+                                        contentsLayout,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        contentsKeyPairsList,
+                                        0,
+                                        layoutWeight,
+                                        contentsTag,
+                                        editComponentListAdapter?.totalSettingValMap,
+                                        requestBuilderSrc,
+                                        density,
+                                    )
+                                }
+                                contentsLayout
+                            } ?: return@execSetContentsCoroutine
+                        CoroutineScope(Dispatchers.IO).launch execClick@{
+                            clickHandler(
+                                fragment,
+                                fannelInfoMap,
+                                setReplaceVariableMap,
+                                editListRecyclerView,
+                                linearFrameKeyPairsListCon,
+                                contentsKeyPairsList,
+                                contentsFrameLayout,
+                                outValue,
+                            )
                         }
                     }
                 }
@@ -1136,7 +967,7 @@ object WithEditComponentListView{
         }
     }
 
-    private suspend fun makeVerticalUseList(
+    private suspend fun publishVerticalChannel(
         context: Context,
         alreadyUseTagList: MutableList<String>,
         alreadyUseTagListMutex: Mutex,
@@ -1280,13 +1111,21 @@ object WithEditComponentListView{
         }
     }
 
-    private suspend fun makeHorizonUseList(
-        context: Context,
+    private suspend fun publishHorizonChannel(
+        fragment: Fragment?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
         frameTag: String,
-        verticalIndex: Int,
         isEditToolbar: Boolean,
-        verticalLinearLayout: LinearLayoutCompat?,
-        verticalVarNameToValueMap: Map<String, String>,
+        indexToUse: Pair<
+                Int,
+                Triple<
+                        Pair<Int, String>,
+                        Map<String, String>,
+                        LinearLayoutCompat?
+                        >
+                >,
         horizonChannel: Channel<
                 Triple<
                         String,
@@ -1301,19 +1140,52 @@ object WithEditComponentListView{
                                 >,
                         >
                 >,
-        horizonTagToKeyPairsListToVarNameToValueMapList: List<Pair<String, Pair<List<Pair<String, String>>, Map<String, String>>>>,
-        mapListElInfoForHorizon: String,
-        readyHorizonLayoutList: List<LinearLayoutCompat?>?,
-        horizonIndexAndReadyContentsLayoutListForFooter: List<List<FrameLayout?>>?,
+        verticalTagToHorizonKeysConList: List<Pair<String, String>>?,
         editToolbarHorizonLayout: LinearLayoutCompat?,
+        indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>?,
+        verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter: List<List<List<FrameLayout?>>>?,
         alreadyUseTagList: MutableList<String>,
         alreadyUseTagListMutex: Mutex,
+        mapListElInfoForVertical: String,
         density: Float,
     ) {
         val switchOff = EditComponent.Template.switchOff
         val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
-        val weightSumFloat = 1f
         val horizonLayoutStartId = 55000
+        val verticalUse = indexToUse.second
+        val context = fragment?.context ?: return
+        val verticalIndexToTag = verticalUse.first
+        val verticalIndex = verticalIndexToTag.first
+        val verticalTag = verticalIndexToTag.second
+        val verticalVarNameToValueMap = verticalUse.second
+        val verticalLinearLayout = verticalUse.third
+        val horizonTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO) {
+            EditComponent.AdapterSetter.makeLinearTagAndKeyPairsListToVarNameToValueMap(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                verticalTag,
+                verticalTagToHorizonKeysConList ?: emptyList(),
+                verticalVarNameToValueMap,
+                String(),
+                String(),
+                String(),
+                noIndexSign,
+                String(),
+            )
+        }
+        val readyHorizonLayoutList =
+            indexAndHorizonLinearListForFooter?.getOrNull(verticalIndex)
+        val mapListElInfoForHorizon =
+            listOf(
+                "verticalTag: ${verticalTag}",
+                mapListElInfoForVertical,
+            ).joinToString(", ")
+        val horizonIndexAndReadyContentsLayoutListForFooter =
+            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter?.getOrNull(
+                verticalIndex
+            )
         withContext(Dispatchers.IO) {
             val jobList =horizonTagToKeyPairsListToVarNameToValueMapList.mapIndexed setHorizon@{ horizonIndex, horizonTagToKeyPairsListToVarNameToValueMap ->
                 async {
@@ -1446,6 +1318,278 @@ object WithEditComponentListView{
         }
     }
 
+    private suspend fun publishContents(
+        registerIndexToHorizonUseToExtraInfo: Triple<
+                String,
+                Triple<
+                        Pair<Int, String>,
+                        Map<String, String>,
+                        LinearLayoutCompat?
+                        >,
+                Pair<
+                        String,
+                        List<List<FrameLayout?>>?
+                        >
+                >,
+        horizonTagToContentsKeysListMap: Map<String, List<List<String>>>,
+        isEditToolbar: Boolean,
+        isOnlyCmdValEdit: Boolean,
+        fannelCenterButtonLayout: FrameLayout?,
+        contentsChannel: Channel<
+                Triple<
+                        Pair<String, String>,
+                        Pair<
+                                Map<String, String>,
+                                Pair<List<String>, List<Pair<String, String?>>>
+                                >,
+                        Triple<
+                                LinearLayoutCompat?,
+                                List<FrameLayout?>?,
+                                Float
+                                >
+                        >
+                >,
+    ) {
+        val horizonUse = registerIndexToHorizonUseToExtraInfo.second
+        val horizonIndexToTag = horizonUse.first
+        val horizonIndex = horizonIndexToTag.first
+        val horizonTag = horizonIndexToTag.second
+        val horizonVarNameToValueMap = horizonUse.second
+        val horizonLinearLayout = horizonUse.third
+        val extraInfo = registerIndexToHorizonUseToExtraInfo.third
+        val mapListElInfoForHorizon = extraInfo.first
+        val horizonIndexAndReadyContentsLayoutListForFooter =
+            extraInfo.second
+        val horizonTagToContentsKeysListMapWithReplace =
+            horizonTagToContentsKeysListMap.map {
+                val key = CmdClickMap.replace(
+                    it.key,
+                    horizonVarNameToValueMap,
+                )
+                key to it.value
+            }.toMap()
+        val contentsKeysList =
+            withContext(Dispatchers.IO) {
+                horizonTagToContentsKeysListMapWithReplace.get(horizonTag)
+                    ?.let { contentsKeysListSrc ->
+                        when (isEditToolbar) {
+                            true -> listOf(
+                                contentsKeysListSrc.firstOrNull() ?: emptyList()
+                            )
+
+                            else -> contentsKeysListSrc
+                        }
+                    }
+            }
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "smakeHorizonLinear_in_listview.txt").absolutePath,
+//                        listOf(
+//                            "verticalTag: ${verticalTag}",
+//                            "isNotExtract: ${extractHorizonLayout == null}",
+//                            "verticalTagToHorizonKeysConList: ${verticalTagToHorizonKeysConList}",
+//                            "horizonKeyPairs: ${horizonKeyPairs}",
+//                            "horizonTag: ${horizonTag}",
+//                            "horizonTagToContentsKeysListMapWithReplace: ${horizonTagToContentsKeysListMapWithReplace}",
+//                            "horizonKeyPairs: ${horizonKeyPairs}",
+//                            "contentsKeysList: ${contentsKeysList}"
+//                        ).joinToString("\n\n\n") + "\n\n======\n\n"
+//                    )
+        val readyContentsLayoutListForFooter =
+            horizonIndexAndReadyContentsLayoutListForFooter?.getOrNull(horizonIndex)
+        withContext(Dispatchers.IO) {
+            val jobList =
+                contentsKeysList?.mapIndexed setContents@{ contentsIndex, contentsKeyValues ->
+                    async {
+                        val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
+                            EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
+                                contentsKeyValues,
+                                horizonVarNameToValueMap,
+                                String(),
+                                String(),
+                                String(),
+                                noIndexSign,
+                            )
+                        }
+                        val contentsKeyValueSize = withContext(Dispatchers.IO) {
+                            EditComponent.AdapterSetter.culcLinearKeyValueSize(
+                                contentsTagToKeyPairsList,
+                            )
+                        }
+                        val layoutWeight = withContext(Dispatchers.IO) culcFrameLayoutWeight@{
+                            when (isEditToolbar && !isOnlyCmdValEdit) {
+                                true -> weightSumFloat / (contentsKeyValueSize + 1)
+                                else -> {
+                                    if (
+                                        contentsKeyValueSize == 0
+                                    ) return@culcFrameLayoutWeight 0f
+                                    weightSumFloat / contentsKeyValueSize
+                                }
+                            }
+                        }
+                        if (isEditToolbar) {
+                            withContext(Dispatchers.Main) {
+                                let {
+                                    val layoutParam =
+                                        fannelCenterButtonLayout?.layoutParams as? LinearLayoutCompat.LayoutParams
+                                    if (layoutParam?.weight == layoutWeight) return@let
+                                    layoutParam?.weight = layoutWeight
+                                    fannelCenterButtonLayout?.layoutParams = layoutParam
+                                }
+                            }
+                        }
+                        withContext(Dispatchers.IO) {
+                            contentsChannel.send(
+                                Triple(
+                                    Pair(
+                                        horizonTag,
+                                        mapListElInfoForHorizon,
+                                    ),
+                                    Pair(
+                                        horizonVarNameToValueMap,
+                                        Pair(
+                                            contentsKeyValues,
+                                            contentsTagToKeyPairsList,
+                                        )
+                                    ),
+                                    Triple(
+                                        horizonLinearLayout,
+                                        readyContentsLayoutListForFooter,
+                                        layoutWeight,
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            jobList?.forEach { it.await() }
+        }
+    }
+
+    private suspend fun clickHandler(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        editListRecyclerView: RecyclerView?,
+        linearFrameKeyPairsListCon: String,
+        contentsKeyPairsList: List<Pair<String, String>>,
+        contentsFrameLayout: FrameLayout,
+        outValue: TypedValue,
+    ){
+
+        if (
+            linearFrameKeyPairsListCon.isNullOrEmpty()
+        ) return
+        val context = fragment.context
+            ?: return
+        val onClick = withContext(Dispatchers.IO) {
+            PairListTool.getValue(
+                contentsKeyPairsList,
+                onClickKey,
+            ) != switchOff
+        }
+        val isConsec = withContext(Dispatchers.IO) {
+            PairListTool.getValue(
+                contentsKeyPairsList,
+                onConsecKey,
+            ) == EditComponent.Template.switchOn
+        }
+        val isNotClickSetting = withContext(Dispatchers.IO) {
+            jsActionKeyList.any { jsActionKey ->
+                !PairListTool.getValue(
+                    contentsKeyPairsList,
+                    jsActionKey,
+                ).isNullOrEmpty()
+            }.let { isJsAc ->
+                val isJsAcClick = !isJsAc
+                        && contentsFrameLayout.tag != null
+                isJsAcClick
+                        || !onClick
+            }
+        }
+        if (
+            isNotClickSetting
+        ) return
+        withContext(Dispatchers.IO) execExecClick@{
+            val clickViewList =
+                contentsFrameLayout.children.filter {
+                    it is OutlineTextView
+                            || it is AppCompatImageView
+                }
+            clickViewList.forEach { clickView ->
+                withContext(Dispatchers.Main) {
+                    clickView.setBackgroundResource(outValue.resourceId)
+                    clickView.isClickable = true
+                }
+                if (!isConsec) {
+                    withContext(Dispatchers.Main) {
+                        clickView.setOnClickListener {
+                            execJsAction(
+                                fragment,
+                                fannelInfoMap,
+                                setReplaceVariableMap,
+                                editListRecyclerView,
+                                linearFrameKeyPairsListCon
+                            )
+                        }
+                    }
+                    return@execExecClick
+                }
+                withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.IO) {
+                        delay(1500)
+                    }
+                    with(clickView) {
+                        var consecutiveJob: Job? = null
+                        setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                            var execTouchJob: Job? = null
+                            when (event.action) {
+                                android.view.MotionEvent.ACTION_DOWN -> {
+                                    consecutiveJob?.cancel()
+                                    consecutiveJob =
+                                        CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                                            var roopTimes = 0
+                                            while (true) {
+                                                execTouchJob =
+                                                    CoroutineScope(
+                                                        kotlinx.coroutines.Dispatchers.Main
+                                                    ).launch {
+                                                        execJsAction(
+                                                            fragment,
+                                                            fannelInfoMap,
+                                                            setReplaceVariableMap,
+                                                            editListRecyclerView,
+                                                            linearFrameKeyPairsListCon
+                                                        )
+                                                    }
+                                                withContext(
+                                                    kotlinx.coroutines.Dispatchers.IO
+                                                ) {
+                                                    if (
+                                                        roopTimes == 0
+                                                    ) delay(300)
+                                                    else delay(60)
+                                                }
+                                                roopTimes++
+                                            }
+                                        }
+                                }
+
+                                android.view.MotionEvent.ACTION_UP,
+                                android.view.MotionEvent.ACTION_CANCEL,
+                                    -> {
+                                    v.performClick()
+                                    execTouchJob?.cancel()
+                                    consecutiveJob?.cancel()
+                                }
+                            }
+                            true
+                        })
+                    }
+                }
+            }
+        }
+    }
+
     private fun execJsAction(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
@@ -1486,9 +1630,9 @@ object WithEditComponentListView{
         editListRecyclerView: RecyclerView,
         editComponentListAdapter: EditComponentListAdapter,
     ) {
-        withContext(Dispatchers.IO) {
-            delay(delayTime)
-        }
+//        withContext(Dispatchers.IO) {
+//            delay(delayTime)
+//        }
         editComponentListAdapter.editAdapterClickListener =
             object: EditComponentListAdapter.OnEditAdapterClickListener {
                 override fun onEditAdapterClick(
@@ -1570,9 +1714,9 @@ object WithEditComponentListView{
         editListRecyclerView: RecyclerView,
         editComponentListAdapter: EditComponentListAdapter,
     ) {
-        withContext(Dispatchers.IO) {
-            delay(delayTime)
-        }
+//        withContext(Dispatchers.IO) {
+//            delay(delayTime)
+//        }
         var execTouchJob: Job? = null
         var consecutiveJob: Job? = null
         editComponentListAdapter.editAdapterTouchUpListener = object: EditComponentListAdapter.OnEditAdapterTouchUpListener {
@@ -1602,6 +1746,15 @@ object WithEditComponentListView{
                 val frameOrLinearCon = runBlocking {
                     holder.getKeyPairListConMap().get(tag)
                 } ?: return
+                FileSystems.writeFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "lOnClidek.txt").absolutePath,
+                    listOf(
+                        "tag: ${tag}",
+                        "editListPosition: ${editListPosition}",
+                        "holder.bindingAdapterPosition: ${holder.bindingAdapterPosition}",
+                        "frameOrLinearCon: ${frameOrLinearCon}",
+                    ).joinToString("\n")
+                )
 //                val frameOrLinearCon = holder.keyPairListConMap.get(tag)
 //                    ?: return
                 val textView = frameLayout.children.firstOrNull{
