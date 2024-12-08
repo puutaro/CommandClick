@@ -226,16 +226,7 @@ object WithEditComponentListView{
                 requestBuilderSrc
             )
         }
-        val editListBkPairs = withContext(Dispatchers.IO) {
-            EditListConfig.getConfigKeyConList(
-                editListConfigMap,
-                EditListConfig.EditListConfigKey.BK.key
-            )
-        }
-        val indexListMap = EditListConfig.getConfigKeyMap(
-            editListConfigMap,
-            EditListConfig.EditListConfigKey.LIST.key
-        )
+
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "glistWith.txt").absolutePath,
 //            listOf(
@@ -245,12 +236,6 @@ object WithEditComponentListView{
 //                "listIndexTypeKey: ${listIndexTypeKey.key}",
 //            ).joinToString("\n\n")
 //        )
-        val lineMapList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
-            fannelInfoMap,
-            setReplaceVariableMap,
-            indexListMap,
-            busyboxExecutor,
-        )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfileList.txt").absolutePath,
 //            listOf(
@@ -263,6 +248,16 @@ object WithEditComponentListView{
 //            fannelContentsList?.joinToString("\n") ?: String()
 //        )
         val editComponentListAdapter = withContext(Dispatchers.IO) {
+            val indexListMap = EditListConfig.getConfigKeyMap(
+                editListConfigMap,
+                EditListConfig.EditListConfigKey.LIST.key
+            )
+            val lineMapList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                indexListMap,
+                busyboxExecutor,
+            )
             val layoutInflater = LayoutInflater.from(
                 context
             )
@@ -344,12 +339,12 @@ object WithEditComponentListView{
             }
         }
         CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Main) {
-//                BkImageSettingsForEditList.makeBkImage(
-//                    editListBkImage,
-//                    editListBkPairs,
-//                )
-//            }
+            val editListBkPairs = withContext(Dispatchers.IO) {
+                EditListConfig.getConfigKeyConList(
+                    editListConfigMap,
+                    EditListConfig.EditListConfigKey.BK.key
+                )
+            }
            withContext(Dispatchers.Main){
 //                val buttonFrameLayout = layoutInflater.inflate(
 //                    R.layout.icon_caption_layout_for_edit_list,
