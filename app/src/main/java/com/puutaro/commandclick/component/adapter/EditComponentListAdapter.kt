@@ -429,6 +429,69 @@ class EditComponentListAdapter(
             if(
                 frameTag.isNullOrEmpty()
             ) return@launch
+            val viewInitJob = async {
+                withContext(Dispatchers.Main) {
+                    val materialCardView = holder.materialCardView
+                    val totalLinearLayoutList = materialCardView.children.filter { layout ->
+                        layout is LinearLayoutCompat
+                    }.toList() as List<LinearLayoutCompat>
+                    val verticalLinearLayoutList = totalLinearLayoutList.map { totalLayout ->
+                        val innerVerticalLinearLayoutList = totalLayout.children.filter { layout ->
+                            layout is LinearLayoutCompat
+                        }.toList() as List<LinearLayoutCompat>
+                        innerVerticalLinearLayoutList
+                    }.flatten()
+                    val horizonLinearLayoutList = verticalLinearLayoutList.map { verticalLayout ->
+                        val innerHorizonLinearLayoutList =
+                            verticalLayout.children.filter { layout ->
+                                layout is LinearLayoutCompat
+                            }.toList() as List<LinearLayoutCompat>
+                        innerHorizonLinearLayoutList
+                    }.flatten()
+                    val frameLayoutList = horizonLinearLayoutList.map { horizonLayout ->
+                        val innerFrameLayoutList = horizonLayout.children.filter { frameLayout ->
+                            frameLayout is FrameLayout
+                        }.toList() as List<FrameLayout>
+                        innerFrameLayoutList
+                    }.flatten()
+                    val cardViewSettingJob = async {
+                        materialCardView.apply {
+                            layoutElevation?.let {
+                                elevation = it
+                            }
+                            layoutRadius?.let {
+                                radius = it
+                            }
+                            val cardLinearParams =
+                                layoutParams as GridLayoutManager.LayoutParams
+                            layoutMargin?.let {
+                                cardLinearParams.setMargins(it)
+                            }
+                        }
+                    }
+                    val hideVerticalLinearLayoutListJob = async {
+                        verticalLinearLayoutList.forEach {
+                            it.visibility = View.GONE
+                        }
+                    }
+                    val hideHorizonLinearLayoutList = async {
+                        horizonLinearLayoutList.forEach {
+                            it.visibility = View.GONE
+                        }
+                    }
+                    val hideFrameLayoutList = async {
+                        frameLayoutList.forEach {
+                            it.visibility = View.GONE
+                        }
+                    }
+                    listOf(
+                        cardViewSettingJob,
+                        hideVerticalLinearLayoutListJob,
+                        hideHorizonLinearLayoutList,
+                        hideFrameLayoutList
+                    ).forEach { it.await() }
+                }
+            }
             val mapListElInfo = withContext(Dispatchers.IO) {
                 listOf(
                     "srcTitle: ${holder.srcTitle}",
@@ -507,58 +570,6 @@ class EditComponentListAdapter(
 //                    "linearMapList: ${frameTagToLinearKeysListMap}",
 //                ).joinToString("\n\n")
 //            )
-            withContext(Dispatchers.Main) {
-                val materialCardView = holder.materialCardView.apply {
-                    layoutElevation?.let {
-                        elevation = it
-                    }
-                    layoutRadius?.let {
-                        radius = it
-                    }
-                    val cardLinearParams =
-                        layoutParams as GridLayoutManager.LayoutParams
-                    layoutMargin?.let {
-                        cardLinearParams.setMargins(it)
-                    }
-                }
-                val totalLinearLayoutList = materialCardView.children.filter {
-                    layout ->
-                    layout is LinearLayoutCompat
-                }.toList() as List<LinearLayoutCompat>
-                val verticalLinearLayoutList = totalLinearLayoutList.map {
-                        totalLayout ->
-                    val innerVerticalLinearLayoutList = totalLayout.children.filter {
-                            layout ->
-                        layout is LinearLayoutCompat
-                    }.toList() as List<LinearLayoutCompat>
-                    innerVerticalLinearLayoutList
-                }.flatten()
-                verticalLinearLayoutList.forEach {
-                    it.visibility = View.GONE
-                }
-                val horizonLinearLayoutList = verticalLinearLayoutList.map {
-                    verticalLayout ->
-                    val innerHorizonLinearLayoutList = verticalLayout.children.filter {
-                        layout ->
-                        layout is LinearLayoutCompat
-                    }.toList() as List<LinearLayoutCompat>
-                    innerHorizonLinearLayoutList
-                }.flatten()
-                horizonLinearLayoutList.forEach {
-                    it.visibility = View.GONE
-                }
-                val frameLayoutList = horizonLinearLayoutList.map {
-                    horizonLayout ->
-                    val innerFrameLayoutList = horizonLayout.children.filter {
-                            frameLayout ->
-                        frameLayout is FrameLayout
-                    }.toList() as List<FrameLayout>
-                    innerFrameLayoutList
-                }.flatten()
-                frameLayoutList.forEach {
-                    it.visibility = View.GONE
-                }
-            }
             val isClickEnable = withContext(Dispatchers.IO) {
                 val isJsAcForFrame =
                     jsActionKeyList.any {
@@ -586,6 +597,7 @@ class EditComponentListAdapter(
                     )
                 }
             }
+            viewInitJob.await()
             CoroutineScope(Dispatchers.IO).launch {
                 val frameFrameLayout = withContext(Dispatchers.Main) execSetFrame@{
                     EditFrameMaker.make(
