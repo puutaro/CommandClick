@@ -397,21 +397,23 @@ class EditComponentListAdapter(
                 fragmentRef.get()
             } ?: return@launch
             val lineMap = lineMapList[editListPosition]
-            holder.srcTitle = withContext(Dispatchers.IO) {
-                lineMap.get(
-                    ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
-                )
-            } ?: String()
-            holder.srcCon = withContext(Dispatchers.IO) {
-                lineMap.get(
-                    ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
-                )
-            } ?: String()
-            holder.srcImage = withContext(Dispatchers.IO) {
-                lineMap.get(
-                    ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
-                )
-            } ?: String()
+            val initLineMapEl = async {
+                holder.srcTitle = withContext(Dispatchers.IO) {
+                    lineMap.get(
+                        ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
+                    )
+                } ?: String()
+                holder.srcCon = withContext(Dispatchers.IO) {
+                    lineMap.get(
+                        ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
+                    )
+                } ?: String()
+                holder.srcImage = withContext(Dispatchers.IO) {
+                    lineMap.get(
+                        ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
+                    )
+                } ?: String()
+            }
             val alreadyUseTagListMutex = Mutex()
             val alreadyUseTagList = mutableListOf<String>()
             val frameTag = withContext(Dispatchers.IO) {
@@ -429,6 +431,7 @@ class EditComponentListAdapter(
             if(
                 frameTag.isNullOrEmpty()
             ) return@launch
+            initLineMapEl.await()
             val viewInitJob = async {
                 withContext(Dispatchers.Main) {
                     val materialCardView = holder.materialCardView
@@ -500,31 +503,33 @@ class EditComponentListAdapter(
                     "bindingAdapterPosition: ${holder.bindingAdapterPosition}",
                 ).joinToString(" ")
             }
-            val isFrameTagDulidateErr = withContext(Dispatchers.IO) frameTagCheck@ {
-                val alreadyUseTagListSrc = EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                    alreadyUseTagList,
-                    alreadyUseTagListMutex
-                )
-                val correctFrameTag = EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                    context,
-                    EditComponent.Template.TagManager.TagGenre.FRAME_TAG,
-                    frameTag,
-                    alreadyUseTagListSrc,
-                    mapListElInfo,
-                    plusKeyToSubKeyConWhere,
-                )
-                correctFrameTag?.let {
-                    alreadyUseTagListMutex.withLock {
-                        alreadyUseTagList.add(it)
+            val isFrameTagDulidateErrJob = async {
+                withContext(Dispatchers.IO) frameTagCheck@{
+                    val alreadyUseTagListSrc =
+                        EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                            alreadyUseTagList,
+                            alreadyUseTagListMutex
+                        )
+                    val correctFrameTag = EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                        context,
+                        EditComponent.Template.TagManager.TagGenre.FRAME_TAG,
+                        frameTag,
+                        alreadyUseTagListSrc,
+                        mapListElInfo,
+                        plusKeyToSubKeyConWhere,
+                    )
+                    correctFrameTag?.let {
+                        alreadyUseTagListMutex.withLock {
+                            alreadyUseTagList.add(it)
+                        }
                     }
+                    val isDuplidateTagErr = correctFrameTag.isNullOrEmpty()
+                    if (
+                        isDuplidateTagErr
+                    ) return@frameTagCheck true
+                    false
                 }
-                val isDuplidateTagErr = correctFrameTag.isNullOrEmpty()
-                if(
-                    isDuplidateTagErr
-                ) return@frameTagCheck true
-                false
             }
-            if(isFrameTagDulidateErr) return@launch
             val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
                 val frameKeyPairsConSrc = frameMap.get(frameTag)
                 EditComponent.Template.ReplaceHolder.replaceHolder(
@@ -598,6 +603,9 @@ class EditComponentListAdapter(
                 }
             }
             viewInitJob.await()
+            if(
+                isFrameTagDulidateErrJob.await()
+            ) return@launch
             CoroutineScope(Dispatchers.IO).launch {
                 val frameFrameLayout = withContext(Dispatchers.Main) execSetFrame@{
                     EditFrameMaker.make(
@@ -874,46 +882,51 @@ class EditComponentListAdapter(
                                 contentsTagSrc,
                                 contentsVarNameToValueMap
                             )
-                            val isContentsTagErr =
-                                withContext(Dispatchers.IO) contentsTagCheck@{
+                            val isContentsTagErrJob =
+                                async {
                                     val tagGenre =
                                         EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
-
-                                    ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
-                                        context,
-                                        contentsTag,
-                                        mapListElInfo,
-                                        tagGenre
-                                    )
-                                    val alreadyUseTagListSrc =
-                                        EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                                            alreadyUseTagList,
-                                            alreadyUseTagListMutex
-                                        )
-                                    val correctContentsTag =
-                                        EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                                            context,
-                                            tagGenre,
-                                            contentsTag,
-                                            alreadyUseTagListSrc,
-                                            mapListElInfoForContentsTag,
-                                            String(),
-                                        )
-                                    correctContentsTag?.let {
-                                        alreadyUseTagListMutex.withLock {
-                                            alreadyUseTagList.add(it)
+                                    val isTagBlankErrJob = async {
+                                        withContext(Dispatchers.IO) {
+                                            val isTagBlankErrJob =
+                                                ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
+                                                    context,
+                                                    contentsTag,
+                                                    mapListElInfo,
+                                                    tagGenre
+                                                )
+                                            isTagBlankErrJob
                                         }
                                     }
-                                    val isDuplicateTagErr =
-                                        correctContentsTag.isNullOrEmpty()
-                                    if (
-                                        isDuplicateTagErr
-                                    ) return@contentsTagCheck true
-                                    false
+                                    val isDuplicateTagErrJob = async {
+                                        withContext(Dispatchers.IO) {
+                                            val alreadyUseTagListSrc =
+                                                EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                                                    alreadyUseTagList,
+                                                    alreadyUseTagListMutex
+                                                )
+                                            val correctContentsTag =
+                                                EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                                    context,
+                                                    tagGenre,
+                                                    contentsTag,
+                                                    alreadyUseTagListSrc,
+                                                    mapListElInfoForContentsTag,
+                                                    String(),
+                                                )
+                                            correctContentsTag?.let {
+                                                alreadyUseTagListMutex.withLock {
+                                                    alreadyUseTagList.add(it)
+                                                }
+                                            }
+                                            val isDuplicateTagErr =
+                                                correctContentsTag.isNullOrEmpty()
+                                            isDuplicateTagErr
+                                        }
+                                    }
+                                    isTagBlankErrJob.await()
+                                            && isDuplicateTagErrJob.await()
                                 }
-                            if (isContentsTagErr) {
-                                return@async
-                            }
                             val contentsKeyPairsListCon =
                                 contentsKeyPairsListConSrc?.let {
                                     CmdClickMap.replace(
@@ -927,6 +940,9 @@ class EditComponentListAdapter(
                                         contentsKeyPairsListCon
                                     )
                                 }
+                            if(
+                                isContentsTagErrJob.await()
+                            ) return@async
                             withContext(Dispatchers.Main) setLinearFrameLayout@{
                                 withContext(Dispatchers.IO) {
                                     PairListTool.getValue(
@@ -985,6 +1001,11 @@ class EditComponentListAdapter(
                                         contentsFrameLayout,
                                     )
                                 }
+                            }
+                            if (
+                                isContentsTagErrJob.await()
+                            ) {
+                                return@async
                             }
                         }
                     }
@@ -1238,45 +1259,47 @@ class EditComponentListAdapter(
                         verticalTagToKeyPairsListToVarNameToValueMap.first,
                         verticalVarNameToValueMap,
                     )
-                    val isVerticalTagDuplicateErr =
-                        withContext(Dispatchers.IO) verticalTagCheck@{
-                            val alreadyUseTagListSrc =
-                                EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                                    alreadyUseTagList,
-                                    alreadyUseTagListMutex
-                                )
-                            val correctVerticalTag =
-                                EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                                    context,
-                                    EditComponent.Template.TagManager.TagGenre.VERTICAL_TAG,
-                                    verticalTag,
-                                    alreadyUseTagListSrc,
-                                    mapListElInfoForVertical,
-                                    String(),
-                                )
-                            correctVerticalTag?.let {
-                                alreadyUseTagListMutex.withLock {
-                                    alreadyUseTagList.add(it)
+                    val isVerticalTagErrCheckJob =
+                        async {
+                          val isDuplicateTagErrJob = async verticalTagCheck@ {
+                              withContext(Dispatchers.IO) {
+                                  val alreadyUseTagListSrc =
+                                      EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                                          alreadyUseTagList,
+                                          alreadyUseTagListMutex
+                                      )
+                                  val correctVerticalTag =
+                                      EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                          context,
+                                          EditComponent.Template.TagManager.TagGenre.VERTICAL_TAG,
+                                          verticalTag,
+                                          alreadyUseTagListSrc,
+                                          mapListElInfoForVertical,
+                                          String(),
+                                      )
+                                  correctVerticalTag?.let {
+                                      alreadyUseTagListMutex.withLock {
+                                          alreadyUseTagList.add(it)
+                                      }
+                                  }
+                                  val isDuplicateTagErr = correctVerticalTag.isNullOrEmpty()
+                                  isDuplicateTagErr
+                              }
+                            }
+                            val isNotVerticalKeyErrJob = async {
+                                withContext(Dispatchers.IO) {
+                                    EditComponent.AdapterSetter.isNotLinearKeyErr(
+                                        context,
+                                        EditComponent.Template.LayoutKey.VERTICAL.key,
+                                        verticalKeyPairs,
+                                        "verticalTag: ${verticalTag}, ${mapListElInfoForVertical}",
+                                        String(),
+                                    )
                                 }
                             }
-                            val isDuplicateTagErr = correctVerticalTag.isNullOrEmpty()
-                            if (
-                                isDuplicateTagErr
-                            ) return@verticalTagCheck true
-                            false
+                            isDuplicateTagErrJob.await()
+                                    && isNotVerticalKeyErrJob.await()
                         }
-                    if (isVerticalTagDuplicateErr) return@async
-                    withContext(Dispatchers.IO) {
-                        EditComponent.AdapterSetter.isNotLinearKeyErr(
-                            context,
-                            EditComponent.Template.LayoutKey.VERTICAL.key,
-                            verticalKeyPairs,
-                            "verticalTag: ${verticalTag}, ${mapListElInfoForVertical}",
-                            String(),
-                        )
-                    }.let { isNotVerticalKeyErr ->
-                        if (isNotVerticalKeyErr) return@async
-                    }
                     val isVerticalEnable = withContext(Dispatchers.IO) {
                         PairListTool.getValue(
                             verticalKeyPairs,
@@ -1293,6 +1316,9 @@ class EditComponentListAdapter(
                             ?: totalLinearLayout.findViewById<LinearLayoutCompat>(
                                 curExtraVerticalLinearId
                             )
+                    if(
+                        isVerticalTagErrCheckJob.await()
+                    ) return@async
                     val verticalLinearLayout =
                         withContext(Dispatchers.Main) {
                             extractVerticalLinear
@@ -1317,7 +1343,6 @@ class EditComponentListAdapter(
                         withContext(Dispatchers.Main) {
                             totalLinearLayout.addView(verticalLinearLayout)
                         }
-
                     }
                     CoroutineScope(Dispatchers.Main).launch {
                         EditComponent.AdapterSetter.setVerticalLinear(
@@ -1353,6 +1378,9 @@ class EditComponentListAdapter(
                             )
                         )
                     }
+                    if(
+                        isVerticalTagErrCheckJob.await()
+                    ) return@async
                 }
             }
             jobList.forEach { it.await() }
@@ -1448,40 +1476,45 @@ class EditComponentListAdapter(
                         horizonTagToKeyPairsListToVarNameToValueMap.first,
                         horizonVarNameToValueMap
                     )
-                    val alreadyUseTagListSrc =
-                        EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                            alreadyUseTagList,
-                            alreadyUseTagListMutex
-                        )
-                    val correctHorizonTag =
-                        EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                            context,
-                            EditComponent.Template.TagManager.TagGenre.HORIZON_TAG,
-                            horizonTag,
-                            alreadyUseTagListSrc,
-                            mapListElInfoForHorizon,
-                            String(),
-                        )
-                    correctHorizonTag?.let {
-                        alreadyUseTagListMutex.withLock {
-                            alreadyUseTagList.add(it)
+                    val isHorizonTagErrJob = async {
+                        val isDuplicateTagErrJob = async {
+                            withContext(Dispatchers.IO) {
+                                val alreadyUseTagListSrc =
+                                    EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                                        alreadyUseTagList,
+                                        alreadyUseTagListMutex
+                                    )
+                                val correctHorizonTag =
+                                    EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                        context,
+                                        EditComponent.Template.TagManager.TagGenre.HORIZON_TAG,
+                                        horizonTag,
+                                        alreadyUseTagListSrc,
+                                        mapListElInfoForHorizon,
+                                        String(),
+                                    )
+                                correctHorizonTag?.let {
+                                    alreadyUseTagListMutex.withLock {
+                                        alreadyUseTagList.add(it)
+                                    }
+                                }
+                                val isDuplidateTagErr = correctHorizonTag.isNullOrEmpty()
+                                isDuplidateTagErr
+                            }
                         }
-                    }
-                    val isDuplidateTagErr = correctHorizonTag.isNullOrEmpty()
-                    if (
-                        isDuplidateTagErr
-                    ) return@async
-
-                    withContext(Dispatchers.IO) {
-                        EditComponent.AdapterSetter.isNotLinearKeyErr(
-                            context,
-                            EditComponent.Template.LayoutKey.HORIZON.key,
-                            horizonKeyPairs,
-                            "horizonTag: ${horizonTag}, ${mapListElInfoForHorizon}",
-                            String(),
-                        )
-                    }.let { isNotHorizonKeyErr ->
-                        if (isNotHorizonKeyErr) return@async
+                        val isNotLinearKeyErrJob = async {
+                            withContext(Dispatchers.IO) {
+                                EditComponent.AdapterSetter.isNotLinearKeyErr(
+                                    context,
+                                    EditComponent.Template.LayoutKey.HORIZON.key,
+                                    horizonKeyPairs,
+                                    "horizonTag: ${horizonTag}, ${mapListElInfoForHorizon}",
+                                    String(),
+                                )
+                            }
+                        }
+                        isDuplicateTagErrJob.await()
+                                && isNotLinearKeyErrJob.await()
                     }
                     val isHorizonEnable = withContext(Dispatchers.IO) {
                         PairListTool.getValue(
@@ -1501,6 +1534,9 @@ class EditComponentListAdapter(
                                     curExtraHorizonLinearId
                                 )
                         }
+                    if(
+                        isHorizonTagErrJob.await()
+                    ) return@async
                     val horizonLinearLayout = withContext(Dispatchers.Main) {
                         let {
                             extractHorizonLinear
