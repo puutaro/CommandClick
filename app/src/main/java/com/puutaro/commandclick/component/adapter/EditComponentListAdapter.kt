@@ -624,69 +624,13 @@ class EditComponentListAdapter(
                         true,
                     )
                 }
-                let setClickOrTouch@{
-                    if (
-                        frameFrameLayout == null
-                    ) return@setClickOrTouch
-//                    withContext(Dispatchers.IO){
-//                        delay(delayTime)
-//                    }
-                    val isConsec =
-                        withContext(Dispatchers.IO) {
-                            PairListTool.getValue(
-                                frameKeyPairsList,
-                                onConsecKey,
-                            ) == switchOn
-                        }
-                    if (
-                        !isClickEnable
-                    ) {
-                        withContext(Dispatchers.Main) {
-                            frameFrameLayout.setBackgroundResource(0)
-                            frameFrameLayout.isClickable = false
-                        }
-                        return@setClickOrTouch
-                    }
-                    withContext(Dispatchers.Main) {
-                        frameFrameLayout.setBackgroundResource(outValue.resourceId)
-                        frameFrameLayout.isClickable = true
-                        when (isConsec) {
-                            true -> with(frameFrameLayout) {
-                                setOnTouchListener(android.view.View.OnTouchListener { v, event ->
-                                    when (event.action) {
-                                        android.view.MotionEvent.ACTION_DOWN -> {
-                                            editAdapterTouchDownListener?.onEditAdapterTouchDown(
-                                                frameFrameLayout,
-                                                holder,
-                                                editListPosition
-                                            )
-                                        }
-
-                                        android.view.MotionEvent.ACTION_UP,
-                                        android.view.MotionEvent.ACTION_CANCEL,
-                                            -> {
-                                            editAdapterTouchUpListener?.onEditAdapterTouchUp(
-                                                frameFrameLayout,
-                                                holder,
-                                                editListPosition
-                                            )
-                                            v.performClick()
-                                        }
-                                    }
-                                    true
-                                })
-                            }
-
-                            else -> frameFrameLayout.setOnClickListener {
-                                editAdapterClickListener?.onEditAdapterClick(
-                                    frameFrameLayout,
-                                    holder,
-                                    editListPosition,
-                                )
-                            }
-                        }
-                    }
-                }
+                frameClickHandle(
+                    holder,
+                    editListPosition,
+                    frameFrameLayout,
+                    frameKeyPairsList,
+                    isClickEnable,
+                )
             }
 
             val verticalTagToKeyPairsListToVarNameToValueMapList = withContext(Dispatchers.IO){
@@ -1216,6 +1160,76 @@ class EditComponentListAdapter(
             fannelInfoMap,
             fannelContentsList
         )
+    }
+
+    private suspend fun frameClickHandle(
+        holder: EditListViewHolder,
+        editListPosition: Int,
+        frameFrameLayout: FrameLayout?,
+        frameKeyPairsList: List<Pair<String, String>>,
+        isClickEnable: Boolean,
+    ){
+        if (
+            frameFrameLayout == null
+        ) return
+//                    withContext(Dispatchers.IO){
+//                        delay(delayTime)
+//                    }
+        val isConsec =
+            withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairsList,
+                    onConsecKey,
+                ) == switchOn
+            }
+        if (
+            !isClickEnable
+        ) {
+            withContext(Dispatchers.Main) {
+                frameFrameLayout.setBackgroundResource(0)
+                frameFrameLayout.isClickable = false
+            }
+            return
+        }
+        withContext(Dispatchers.Main) {
+            frameFrameLayout.setBackgroundResource(outValue.resourceId)
+            frameFrameLayout.isClickable = true
+            when (isConsec) {
+                true -> with(frameFrameLayout) {
+                    setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                        when (event.action) {
+                            android.view.MotionEvent.ACTION_DOWN -> {
+                                editAdapterTouchDownListener?.onEditAdapterTouchDown(
+                                    frameFrameLayout,
+                                    holder,
+                                    editListPosition
+                                )
+                            }
+
+                            android.view.MotionEvent.ACTION_UP,
+                            android.view.MotionEvent.ACTION_CANCEL,
+                                -> {
+                                editAdapterTouchUpListener?.onEditAdapterTouchUp(
+                                    frameFrameLayout,
+                                    holder,
+                                    editListPosition
+                                )
+                                v.performClick()
+                            }
+                        }
+                        true
+                    })
+                }
+
+                else -> frameFrameLayout.setOnClickListener {
+                    editAdapterClickListener?.onEditAdapterClick(
+                        frameFrameLayout,
+                        holder,
+                        editListPosition,
+                    )
+                }
+            }
+        }
     }
 
     private suspend fun publushVerticalChannel(
