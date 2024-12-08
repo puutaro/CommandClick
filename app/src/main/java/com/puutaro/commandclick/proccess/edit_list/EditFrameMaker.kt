@@ -332,27 +332,6 @@ object EditFrameMaker {
                 }
             }
         }
-        val paddingData = withContext(Dispatchers.IO) {
-            EditComponent.Template.PaddingData(
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    paddingTopKey
-                ),
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    paddingBottomKey
-                ),
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    paddingStartKey
-                ),
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    paddingEndKey
-                ),
-                density,
-            )
-        }
         withContext(Dispatchers.IO) {
             param.apply {
                 val marginData = EditComponent.Template.MarginData(
@@ -387,6 +366,7 @@ object EditFrameMaker {
 //                    "overrideTag: ${overrideTag}"
 //                ).joinToString("\n")
 //            )
+            layoutParams = param
             tag = overrideTag
             val overrideGravity = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
@@ -399,6 +379,27 @@ object EditFrameMaker {
                 }
             }?: Gravity.CENTER
             foregroundGravity = overrideGravity
+            val paddingData = withContext(Dispatchers.IO) {
+                EditComponent.Template.PaddingData(
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingTopKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingBottomKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingStartKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        paddingEndKey
+                    ),
+                    density,
+                )
+            }
             setPadding(
                 paddingData.paddingStart ?: 0,
                 paddingData.paddingTop ?: 0,
@@ -422,7 +423,6 @@ object EditFrameMaker {
                 }
             }
             background = bkColorDrawable
-            layoutParams = param
         }
         return buttonLayout
     }
@@ -557,7 +557,7 @@ object EditFrameMaker {
             withContext(Dispatchers.Main) {
                 layoutParams = liearLayoutParam
             }
-            val overrideGravity = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     gravityKey
@@ -569,7 +569,7 @@ object EditFrameMaker {
             }?.let {
                 foregroundGravity = it
             }
-            val bkColorDrawable = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
@@ -598,6 +598,151 @@ object EditFrameMaker {
         density: Float,
     ) {
         val context = imageView.context
+        val imagePathList = withContext(Dispatchers.IO) {
+            imageMap?.get(
+                imagePathsKey,
+            )?.split(valueSeparator)
+        }
+        imageView.apply {
+            isVisible = !imagePathList.isNullOrEmpty()
+        }
+        when(
+            imagePathList.isNullOrEmpty()
+        ) {
+            true -> imageView.setImageDrawable(null)
+            else -> {
+                imageView.apply {
+                    val visibilityValue = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageVisibleKey,
+                        ).let { visibleStr ->
+                            EditComponent.Template.VisibleManager.getVisible(
+                                visibleStr
+                            )
+                        }
+                    }
+                    visibility = visibilityValue
+                    CoroutineScope(Dispatchers.Main).launch {
+                        when (imagePathList.size == 1) {
+                            false -> {
+                                val delay = withContext(Dispatchers.IO) {
+                                    imageMap?.get(
+                                        imageDelayKey,
+                                    )?.let {
+                                        try {
+                                            it.toInt()
+                                        } catch (e: Exception) {
+                                            null
+                                        }
+                                    } ?: 800
+                                }
+                                execSetMultipleImage(
+                                    imageView,
+                                    imagePathList,
+                                    delay,
+                                )
+                            }
+
+                            else -> {
+                                execSetSingleImage(
+                                    imageView,
+                                    imagePathList.firstOrNull(),
+                                    requestBuilderSrc
+                                )
+                            }
+                        }
+                    }
+                    val overrideGravity = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageGravityKey,
+                        )?.let { gravityStr ->
+                            EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                                it.key == gravityStr
+                            }?.gravity
+                        }
+                    }?: Gravity.CENTER
+                    foregroundGravity = overrideGravity
+                    val imageColor = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageColorKey,
+                        )?.let {
+                                colorStr ->
+                            CmdClickColor.entries.firstOrNull {
+                                it.str == colorStr
+                            }
+                        }
+                    }
+                    imageTintList = imageColor?.let {
+                        AppCompatResources.getColorStateList(
+                            context,
+                            it.id
+                        )
+                    }
+                    val imageBkColor = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageBkColorKey,
+                        )?.let {
+                                colorStr ->
+                            CmdClickColor.entries.firstOrNull {
+                                it.str == colorStr
+                            }
+                        }
+                    }
+                    background = imageBkColor?.let {
+                        AppCompatResources.getDrawable(
+                            context,
+                            it.id
+                        )
+                    }
+                    val imageAlpha = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageAlphaKey,
+                        )?.let {
+                            try {
+                                it.toFloat()
+                            } catch(e: Exception){
+                                null
+                            }
+                        }
+                    }
+                    alpha = imageAlpha ?: 1f
+                    val imageScale = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageScaleKey,
+                        ).let {
+                                scale ->
+                            EditComponent.Template.ImagePropertyManager.ImageScale.entries.firstOrNull {
+                                it.str == scale
+                            } ?: EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER
+                        }
+                    }
+                    scaleType = imageScale.scale
+                    val paddingData = withContext(Dispatchers.IO) {
+                        EditComponent.Template.PaddingData(
+                            imagePropertyMap?.get(
+                                imagePaddingTopKey,
+                            ),
+                            imagePropertyMap?.get(
+                                imagePaddingBottomKey,
+                            ),
+                            imagePropertyMap?.get(
+                                imagePaddingStartKey,
+                            ),
+                            imagePropertyMap?.get(
+                                imagePaddingEndKey,
+                            ),
+                            density,
+                        )
+                    }
+                    setPadding(
+                        paddingData.paddingStart ?: 0,
+                        paddingData.paddingTop ?: 0,
+                        paddingData.paddingEnd ?: 0,
+                        paddingData.paddingBottom ?: 0,
+                    )
+                }
+            }
+        }
         imageView.layoutParams = imageView.layoutParams.apply {
             val curLayoutParams = this as FrameLayout.LayoutParams
             curLayoutParams.apply setParam@ {
@@ -674,160 +819,7 @@ object EditFrameMaker {
 //                "height: ${height}",
 //            ).joinToString("\n")
 //        )
-        val imagePathList = withContext(Dispatchers.IO) {
-            imageMap?.get(
-                imagePathsKey,
-            )?.split(valueSeparator)
-        }
-        imageView.apply {
-            val paddingData = withContext(Dispatchers.IO) {
-                EditComponent.Template.PaddingData(
-                    imagePropertyMap?.get(
-                        imagePaddingTopKey,
-                    ),
-                    imagePropertyMap?.get(
-                        imagePaddingBottomKey,
-                    ),
-                    imagePropertyMap?.get(
-                        imagePaddingStartKey,
-                    ),
-                    imagePropertyMap?.get(
-                        imagePaddingEndKey,
-                    ),
-                    density,
-                )
-            }
-            setPadding(
-                paddingData.paddingStart ?: 0,
-                paddingData.paddingTop ?: 0,
-                paddingData.paddingEnd ?: 0,
-                paddingData.paddingBottom ?: 0,
-            )
-            isVisible = !imagePathList.isNullOrEmpty()
-        }
-        if(
-            imagePathList.isNullOrEmpty()
-        ) {
-            imageView.setImageDrawable(null)
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "licon0.txt").absolutePath,
-//                    listOf(
-//                        "imageTag: ${imageTag}",
-//                    ).joinToString("\n")
-//                )
-            return
-        }
-        imageView.apply {
-            val visibilityValue = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageVisibleKey,
-                ).let { visibleStr ->
-                    EditComponent.Template.VisibleManager.getVisible(
-                        visibleStr
-                    )
-                }
-            }
-            visibility = visibilityValue
-            val overrideGravity = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageGravityKey,
-                )?.let { gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                }
-            }?: Gravity.CENTER
-            foregroundGravity = overrideGravity
-            val imageColor = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageColorKey,
-                )?.let {
-                        colorStr ->
-                    CmdClickColor.entries.firstOrNull {
-                        it.str == colorStr
-                    }
-                }
-            }
-            imageTintList = imageColor?.let {
-                AppCompatResources.getColorStateList(
-                    context,
-                    it.id
-                )
-            }
-            val imageBkColor = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageBkColorKey,
-                )?.let {
-                        colorStr ->
-                    CmdClickColor.entries.firstOrNull {
-                        it.str == colorStr
-                    }
-                }
-            }
-            background = imageBkColor?.let {
-                AppCompatResources.getDrawable(
-                    context,
-                    it.id
-                )
-            }
-//            val imageTag = withContext(Dispatchers.IO) {
-//                imagePropertyMap?.get(
-//                    imageTagKey,
-//                )
-//            }
-            val imageAlpha = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageAlphaKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }
-            val imageScale = withContext(Dispatchers.IO) {
-                imagePropertyMap?.get(
-                    imageScaleKey,
-                ).let {
-                        scale ->
-                    EditComponent.Template.ImagePropertyManager.ImageScale.entries.firstOrNull {
-                        it.str == scale
-                    } ?: EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER
-                }
-            }
-//            tag = imageTag
-            alpha = imageAlpha ?: 1f
-            scaleType = imageScale.scale
-        }
 
-        when(imagePathList.size == 1){
-            false -> {
-                val delay = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageDelayKey,
-                    )?.let {
-                        try {
-                            it.toInt()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: 800
-                }
-                execSetMultipleImage(
-                    imageView,
-                    imagePathList,
-                    delay,
-                )
-            }
-            else -> {
-                execSetSingleImage(
-                    imageView,
-                    imagePathList.firstOrNull(),
-                    requestBuilderSrc
-                )
-            }
-        }
     }
 
     suspend fun setImageViewForDynamic(
@@ -984,31 +976,34 @@ object EditFrameMaker {
             imagePathList.isNullOrEmpty()
             ) return
         imageView.isVisible = true
-        when(imagePathList.size == 1){
-            false -> {
-                val delay = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageDelayKey,
-                    )?.let {
-                        try {
-                            it.toInt()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: 800
+        CoroutineScope(Dispatchers.Main).launch {
+            when (imagePathList.size == 1) {
+                false -> {
+                    val delay = withContext(Dispatchers.IO) {
+                        imageMap?.get(
+                            imageDelayKey,
+                        )?.let {
+                            try {
+                                it.toInt()
+                            } catch (e: Exception) {
+                                null
+                            }
+                        } ?: 800
+                    }
+                    execSetMultipleImage(
+                        imageView,
+                        imagePathList,
+                        delay,
+                    )
                 }
-                execSetMultipleImage(
-                    imageView,
-                    imagePathList,
-                    delay,
-                )
-            }
-            else -> {
-                execSetSingleImage(
-                    imageView,
-                    imagePathList.firstOrNull(),
-                    null
-                )
+
+                else -> {
+                    execSetSingleImage(
+                        imageView,
+                        imagePathList.firstOrNull(),
+                        null
+                    )
+                }
             }
         }
     }
