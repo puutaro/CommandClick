@@ -925,7 +925,7 @@ class EditComponentListAdapter(
                                         }
                                     }
                                     isTagBlankErrJob.await()
-                                            && isDuplicateTagErrJob.await()
+                                            || isDuplicateTagErrJob.await()
                                 }
                             val contentsKeyPairsListCon =
                                 contentsKeyPairsListConSrc?.let {
@@ -1298,7 +1298,7 @@ class EditComponentListAdapter(
                                 }
                             }
                             isDuplicateTagErrJob.await()
-                                    && isNotVerticalKeyErrJob.await()
+                                    || isNotVerticalKeyErrJob.await()
                         }
                     val isVerticalEnable = withContext(Dispatchers.IO) {
                         PairListTool.getValue(
@@ -1514,7 +1514,7 @@ class EditComponentListAdapter(
                             }
                         }
                         isDuplicateTagErrJob.await()
-                                && isNotLinearKeyErrJob.await()
+                                || isNotLinearKeyErrJob.await()
                     }
                     val isHorizonEnable = withContext(Dispatchers.IO) {
                         PairListTool.getValue(

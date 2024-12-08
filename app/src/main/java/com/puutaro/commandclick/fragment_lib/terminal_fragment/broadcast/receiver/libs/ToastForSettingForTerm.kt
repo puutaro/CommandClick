@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 object ToastForSettingForTerm {
-    fun handle(
+    suspend fun handle(
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>

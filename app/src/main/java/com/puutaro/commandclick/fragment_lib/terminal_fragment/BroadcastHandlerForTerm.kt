@@ -133,9 +133,9 @@ object BroadcastHandlerForTerm {
                 )
             }
             BroadCastIntentSchemeTerm.SETING_ACTION_FUNC -> {
-                SettingActionFuncBroadcastManager.handle(
-                    intent
-                )
+//                SettingActionFuncBroadcastManager.handle(
+//                    intent
+//                )
             }
             BroadCastIntentSchemeTerm.ERR_LOG -> {
                 ErrLogBroadcastManagerForTerm.handle(

@@ -16,7 +16,7 @@ object SettingActionFuncBroadcastManager {
         TOAST("toast", listOf("message"))
     }
 
-    fun handle(
+    suspend fun handle(
         intent: Intent,
     ): FuncCheckerForSetting.FuncCheckErr? {
         val funcClassStr = intent.getStringExtra(

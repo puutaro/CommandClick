@@ -19,6 +19,7 @@ import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -336,38 +337,41 @@ class SettingActionManager {
             if(
                 keyToSubKeyConList.isNullOrEmpty()
                 ) return
-            VarErrManager.isBlankSVarOrSAcVArErr(
-                context,
-                keyToSubKeyConList,
-                keyToSubKeyConWhere,
-            ).let {
-                    isBlankSVarOrSAcVArErr ->
-                if(isBlankSVarOrSAcVArErr) return
+            val isErr = withContext(Dispatchers.IO) {
+                val isBlankSVarOrSAcVArErrJob = async {
+                    VarErrManager.isBlankSVarOrSAcVArErr(
+                        context,
+                        keyToSubKeyConList,
+                        keyToSubKeyConWhere,
+                    )
+                }
+                val isNotUseVarErrJob = async {
+                    VarErrManager.isNotUseVarErr(
+                        context,
+                        keyToSubKeyConList,
+                        keyToSubKeyConWhere,
+                    )
+                }
+                val isRunPrefixUseErrJob = async {
+                    VarErrManager.isRunPrefixUseErr(
+                        context,
+                        keyToSubKeyConList,
+                        keyToSubKeyConWhere,
+                    )
+                }
+                val isSameVarNameErrJob = async {
+                    VarErrManager.isSameVarNameErr(
+                        context,
+                        makeSettingKeyToVarNameList(keyToSubKeyConList),
+                        keyToSubKeyConWhere,
+                    )
+                }
+                isBlankSVarOrSAcVArErrJob.await()
+                        || isNotUseVarErrJob.await()
+                        || isRunPrefixUseErrJob.await()
+                        || isSameVarNameErrJob.await()
             }
-            VarErrManager.isNotUseVarErr(
-                context,
-                keyToSubKeyConList,
-                keyToSubKeyConWhere,
-            ).let {
-                isNotUseVarErr ->
-                if(isNotUseVarErr) return
-            }
-            VarErrManager.isRunPrefixUseErr(
-                context,
-                keyToSubKeyConList,
-                keyToSubKeyConWhere,
-            ).let {
-                    isRunPrefixUseErr ->
-                if(isRunPrefixUseErr) return
-            }
-            VarErrManager.isSameVarNameErr(
-                context,
-                makeSettingKeyToVarNameList(keyToSubKeyConList),
-                keyToSubKeyConWhere,
-            ).let {
-                    isSameVarNameErr ->
-                if(isSameVarNameErr) return
-            }
+            if(isErr) return
             keyToSubKeyConList.forEach {
                 keyToSubKeyConSrc ->
 //                val globalEdit = GlobalExitManager.get()
@@ -1288,33 +1292,36 @@ class SettingActionManager {
                 val settingKeyToVarNameList = makeSettingKeyToVarNameList(
                     importedKeyToSubKeyConList
                 )
-                ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
-                    context,
-                    settingKeyToVarNameList,
-                    renewalVarName,
-                    keyToSubKeyConWhere
-                ).let {
-                    isGlobalVarNameErrWithRunPrefix ->
-                    if(isGlobalVarNameErrWithRunPrefix) return blankReturnValue
+                val isErr = withContext(Dispatchers.IO) {
+                    val isGlobalVarNameErrWithRunPrefixJob = async {
+                        ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
+                            context,
+                            settingKeyToVarNameList,
+                            renewalVarName,
+                            keyToSubKeyConWhere
+                        )
+                    }
+                    val isGlobalVarNameMultipleExistErrWithoutRunPrefixJob = async {
+                        ImportErrManager.isGlobalVarNameMultipleErrWithoutRunPrefix(
+                            context,
+                            settingKeyToVarNameList,
+                            renewalVarName,
+                            keyToSubKeyConWhere
+                        )
+                    }
+                    val isGlobalVarNameNotLastErrWithoutRunPrefixJob = async {
+                        ImportErrManager.isGlobalVarNameNotLastErrWithoutRunPrefix(
+                            context,
+                            settingKeyToVarNameList,
+                            renewalVarName,
+                            keyToSubKeyConWhere
+                        )
+                    }
+                    isGlobalVarNameErrWithRunPrefixJob.await()
+                            || isGlobalVarNameMultipleExistErrWithoutRunPrefixJob.await()
+                            || isGlobalVarNameNotLastErrWithoutRunPrefixJob.await()
                 }
-                ImportErrManager.isGlobalVarNameMultipleErrWithoutRunPrefix(
-                    context,
-                    settingKeyToVarNameList,
-                    renewalVarName,
-                    keyToSubKeyConWhere
-                ).let {
-                        isGlobalVarNameMultipleExistErrWithoutRunPrefix ->
-                    if(isGlobalVarNameMultipleExistErrWithoutRunPrefix) return blankReturnValue
-                }
-                ImportErrManager.isGlobalVarNameNotLastErrWithoutRunPrefix(
-                    context,
-                    settingKeyToVarNameList,
-                    renewalVarName,
-                    keyToSubKeyConWhere
-                ).let {
-                        isGlobalVarNameNotLastErrWithoutRunPrefix ->
-                    if(isGlobalVarNameNotLastErrWithoutRunPrefix) return blankReturnValue
-                }
+                if(isErr) blankReturnValue
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "smakeImportPathAndRenewalVarNameToImportCon.txt").absolutePath,
 //                    listOf(
