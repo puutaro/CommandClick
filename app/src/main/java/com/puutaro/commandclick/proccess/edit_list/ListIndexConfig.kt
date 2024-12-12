@@ -447,7 +447,7 @@ object EditListConfig {
             val macroConList: List<String>,
         ){
             FOR_ONLY_CMD_VAL_EDIT(
-                ToolbarLayoutForOnlyCmdValEdit.toolbarLayoutForOnlyCmdValEdit,
+                ToolbarLayoutForOnlyCmdValEdit.toolbarLayoutForOnlyCmdValEdit2,
             ),
         }
     }
@@ -468,8 +468,20 @@ object EditListConfig {
         private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
         private val paddingEndKey = EditComponent.Template.EditComponentKey.PADDING_END.key
         private val onSaveKey = EditComponent.Template.EditComponentKey.ON_SAVE.key
+        private val onClickViewsKey = EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
         private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
         private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
+        private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
+        private val topToBottomKey = EditComponent.Template.EditComponentKey.TOP_TO_BOTTOM.key
+        private val bottomToBottomKey = EditComponent.Template.EditComponentKey.BOTTOM_TO_BOTTOM.key
+        private val bottomToTopKey = EditComponent.Template.EditComponentKey.BOTTOM_TO_TOP.key
+        private val startToStartKey = EditComponent.Template.EditComponentKey.START_TO_START.key
+        private val startToEndKey = EditComponent.Template.EditComponentKey.START_TO_END.key
+        private val endToEndKey = EditComponent.Template.EditComponentKey.END_TO_END.key
+        private val endToStartKey = EditComponent.Template.EditComponentKey.END_TO_START.key
+
+        private val parentIdStr = EditComponent.Template.ConstraintManager.ConstraintParameter.PARENT_ID.str
+        private val unsetStr = EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.str
 
         private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
         private val imagePropertyKey = EditComponent.Template.EditComponentKey.IMAGE_PROPERTY.key
@@ -477,7 +489,7 @@ object EditListConfig {
         private val textPropertyKey = EditComponent.Template.EditComponentKey.TEXT_PROPERTY.key
         private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
         private val widthKey = EditComponent.Template.EditComponentKey.WIDTH.key
-        private val weightKey = EditComponent.Template.EditComponentKey.WEIGHT.key
+        private val constClickImageViewStr =  EditComponent.Template.ClickViewManager.ClickViews.IMAGE.str
 
         private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
         private val imageDelayKey = EditComponent.Template.ImageManager.ImageKey.DELAY.key
@@ -502,6 +514,7 @@ object EditListConfig {
 
         private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
         private val textStyleKey = EditComponent.Template.TextPropertyManager.Property.STYLE.key
+        private val textWidthKey = EditComponent.Template.TextPropertyManager.Property.WIDTH.key
         private val textTagKey = EditComponent.Template.TextPropertyManager.Property.TAG.key
         private val textColorKey = EditComponent.Template.TextPropertyManager.Property.COLOR.key
         private val strokeColorKey = EditComponent.Template.TextPropertyManager.Property.STROKE_COLOR.key
@@ -519,6 +532,7 @@ object EditListConfig {
 
         private val srcStrHolder = EditComponent.Template.ReplaceHolder.SrcReplaceHolders.SRC_STR.key
         private val fitCenterImageScale = EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER.scale
+        private val fitXyImageScale = EditComponent.Template.ImagePropertyManager.ImageScale.FIT_XY.scale
         private val textBoldStyle = EditComponent.Template.TextPropertyManager.TextStyle.BOLD.key
         val toolbarLayoutForOnlyCmdValEdit = """
     --
@@ -547,6 +561,40 @@ object EditListConfig {
         ${typeSeparator}${imageKey}=
             ${imagePathsKey}="ok"
         ${typeSeparator}${imagePropertyKey}=
+            ${keySeparator}${imageScaleKey}=`${fitCenterImageScale}`
+        ${typeSeparator}${onSaveKey}=ON
+        ${typeSeparator}${onConsecKey}=OFF
+        ${typeSeparator}var=runDisplayCurSettingValue
+            ?func=jsBackstack.exec
+        ${sectionSeparator}
+    """.trimIndent().split("\n")
+
+        val toolbarLayoutForOnlyCmdValEdit2 = """
+    --
+    ${EditComponent.Template.LayoutKey.FRAME.key}=
+        ${typeSeparator}${tagKey}=okForCmdValEdit
+    ---
+    
+    ${EditComponent.Template.LayoutKey.CONTENTS.key}=
+        ${typeSeparator}${tagKey}=ok
+        ${typeSeparator}${topToTopKey}=${parentIdStr}
+        ${typeSeparator}${startToStartKey}=${parentIdStr}
+        ${typeSeparator}${endToEndKey}=${parentIdStr}
+        ${typeSeparator}${bottomToBottomKey}=${parentIdStr}
+        ${typeSeparator}${widthKey}=MATCH
+        ${typeSeparator}${heightKey}=50
+        ${typeSeparator}${onClickViewsKey}=${constClickImageViewStr}
+        ${typeSeparator}${textKey}=
+            ${displayTextKey}=`${srcStrHolder}`
+            ${keySeparator}${srcStrKey}=`OK`
+        ${typeSeparator}${textPropertyKey}=
+            ${keySeparator}${textWidthKey}=`WRAP`
+            ${keySeparator}${textStyleKey}=`${textBoldStyle}`
+            ${keySeparator}${textMaxLinesKey}=1
+        ${typeSeparator}${imageKey}=
+            ${imagePathsKey}="ok"
+        ${typeSeparator}${imagePropertyKey}=
+            ${keySeparator}${imageWidthKey}=`MATCH`
             ${keySeparator}${imageScaleKey}=`${fitCenterImageScale}`
         ${typeSeparator}${onSaveKey}=ON
         ${typeSeparator}${onConsecKey}=OFF

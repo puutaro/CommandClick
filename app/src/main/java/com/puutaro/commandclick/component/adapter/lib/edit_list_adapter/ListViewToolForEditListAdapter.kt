@@ -1,40 +1,36 @@
 package com.puutaro.commandclick.component.adapter.lib.edit_list_adapter
 
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 
 object ListViewToolForEditListAdapter {
 
 //    private var listIndexScrollToBottomJob: Job? = null
 
     fun editListUpdateFileList(
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         updateLineMapList: List<Map<String, String>>,
     ){
-//        val editListRecyclerView = editFragment.binding.editListRecyclerView
-//        if(
-//            !editListRecyclerView.isVisible
-//        ) return
-//        val listIndexForEditAdapter =
-//            editListRecyclerView.adapter as? EditComponentListAdapter
-//                ?: return
         if(
-            editComponentListAdapter.lineMapList ==
+            editConstraintListAdapter.lineMapList ==
             updateLineMapList
         ) return
-        editComponentListAdapter.lineMapList.clear()
-        editComponentListAdapter.lineMapList.addAll(updateLineMapList)
-        editComponentListAdapter.notifyDataSetChanged()
-//        val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
-//            listIndexForEditAdapter.fannelInfoMap,
-//            listIndexForEditAdapter.setReplaceVariablesMap,
-//            listIndexForEditAdapter.indexListMap
-//        )
-//        if(!isReverseLayout) return
-//        scrollToBottom(
-//            editListRecyclerView,
-//            listIndexForEditAdapter,
-//        )
+        editConstraintListAdapter.lineMapList.clear()
+        editConstraintListAdapter.lineMapList.addAll(updateLineMapList)
+        editConstraintListAdapter.notifyDataSetChanged()
+    }
+
+    fun editConstraintListUpdateFileList(
+        editConstraintListAdapter: EditConstraintListAdapter,
+        updateLineMapList: List<Map<String, String>>,
+    ){
+        if(
+            editConstraintListAdapter.lineMapList ==
+            updateLineMapList
+        ) return
+        editConstraintListAdapter.lineMapList.clear()
+        editConstraintListAdapter.lineMapList.addAll(updateLineMapList)
+        editConstraintListAdapter.notifyDataSetChanged()
     }
 
 //    fun scrollToBottom(

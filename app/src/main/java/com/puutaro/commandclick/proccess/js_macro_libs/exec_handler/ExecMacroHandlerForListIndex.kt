@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.exec_handler
 
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
 import com.puutaro.commandclick.proccess.edit_list.libs.ListIndexMenuLauncher
@@ -40,11 +40,11 @@ object ExecMacroHandlerForListIndex {
             jsActionMap.get(
                 JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
             )
-        val macro = JsPathMacroForListIndex.values().firstOrNull {
+        val macro = JsPathMacroForListIndex.entries.firstOrNull {
             it.name == macroStr
         } ?: return
-        val editComponentListAdapter =
-            editListRecyclerView?.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editListRecyclerView?.adapter as EditConstraintListAdapter
         when(macro){
             JsPathMacroForListIndex.DELETE -> {
 //                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
@@ -65,7 +65,7 @@ object ExecMacroHandlerForListIndex {
                 ExecSimpleDelete.removeController(
                     fragment,
                     editListRecyclerView,
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     selectedItemLineMap,
                     listIndexPosition,
                 )
@@ -73,13 +73,13 @@ object ExecMacroHandlerForListIndex {
             JsPathMacroForListIndex.CAT
             -> ExecItemCat.cat(
                 context,
-                editComponentListAdapter,
+                editConstraintListAdapter,
                 listIndexPosition,
             )
             JsPathMacroForListIndex.COPY_PATH ->
                 ExecCopyPath.copyPath(
                     context,
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     listIndexPosition,
                 )
             JsPathMacroForListIndex.COPY_FILE -> {
@@ -146,18 +146,18 @@ object ExecMacroHandlerForListIndex {
             JsPathMacroForListIndex.DESC ->
                 ExecShowDescription.desc(
                     fragment,
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     listIndexPosition,
                 )
             JsPathMacroForListIndex.SIMPLE_EDIT ->
                 ExecSimpleEditItem.edit(
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     listIndexPosition,
                 )
             JsPathMacroForListIndex.WRITE ->
                 ExecWriteItem.write(
                     fragment.context,
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     listIndexPosition
                 )
         }

@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddForEditListAdapter
 
 object ExecCopyFileHere {
@@ -50,10 +50,10 @@ object ExecCopyFileHere {
 //        listIndexForEditAdapter: EditComponentListAdapter,
         listIndexPosition: Int,
     ){
-        val listIndexForEditAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editListRecyclerView.adapter as EditConstraintListAdapter
         val addLineMap =
-            listIndexForEditAdapter.lineMapList[listIndexPosition]
+            editConstraintListAdapter.lineMapList[listIndexPosition]
 //                .let {
 //                lineMap ->
 ////                val titleConList = it.split("\t")

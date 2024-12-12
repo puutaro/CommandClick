@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib.edit_list_adapter
 
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecItemDelete
 import com.puutaro.commandclick.proccess.edit_list.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
@@ -11,13 +11,13 @@ import java.io.File
 object ExecRemoveForListIndexAdapter {
 
     fun updateTsv(
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         removeItemLineList: List<Map<String, String>>,
     ){
         val mapListPath = FilePrefixGetter.get(
-            editComponentListAdapter.fannelInfoMap,
-            editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.editListMap,
+            editConstraintListAdapter.fannelInfoMap,
+            editConstraintListAdapter.setReplaceVariableMap,
+            editConstraintListAdapter.indexListMap,
             ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
         )
         if(
@@ -30,7 +30,7 @@ object ExecRemoveForListIndexAdapter {
     }
 
     fun removeCon(
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
 //        listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
         removeItemLineMap: Map<String, String>,
     ){
@@ -42,7 +42,7 @@ object ExecRemoveForListIndexAdapter {
 //            -> {}
 //        }
         val onDeleteConFile = DeleteSettingsForListIndex.howOnDeleteConFileValue(
-            editComponentListAdapter.deleteConfigMap
+            editConstraintListAdapter.deleteConfigMap
         )
         if(
             !onDeleteConFile
@@ -60,7 +60,7 @@ object ExecRemoveForListIndexAdapter {
         val parentDirPath = filePathObj.parent
             ?: return
         ExecItemDelete.DeleteAfterConfirm.execDeleteAfterConfirm(
-            editComponentListAdapter,
+            editConstraintListAdapter,
             parentDirPath,
             fileName,
         )

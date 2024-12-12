@@ -18,7 +18,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -305,13 +305,14 @@ object QrDialogMethod {
                         context.sendBroadcast(indexfannelListUpdateIntent)
                     }
                     is EditFragment -> {
-                        val editComponentListAdapter = fragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+                        val editConstraintListAdapter =
+                            fragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
                         ListViewToolForEditListAdapter.editListUpdateFileList(
-                            editComponentListAdapter,
+                            editConstraintListAdapter,
                             ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
-                                editComponentListAdapter.editListMap,
+                                editConstraintListAdapter.indexListMap,
                                 fragment.busyboxExecutor
 //                                ListIndexAdapter.listIndexTypeKey
                             )
@@ -388,14 +389,14 @@ object QrDialogMethod {
 //                        context.sendBroadcast(indexfannelListUpdateIntent)
 //                    }
                     is EditFragment -> {
-                        val editComponentListAdapter =
-                            fragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+                        val editConstraintListAdapter =
+                            fragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
                         ListViewToolForEditListAdapter.editListUpdateFileList(
-                            editComponentListAdapter,
+                            editConstraintListAdapter,
                             ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                                 fragment.fannelInfoMap,
                                 fragment.setReplaceVariableMap,
-                                editComponentListAdapter.editListMap,
+                                editConstraintListAdapter.indexListMap,
                                 fragment.busyboxExecutor
 //                                ListIndexAdapter.listIndexTypeKey
                             )

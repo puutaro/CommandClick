@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecSwitcherForListIndexAdapter
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecSimpleDelete
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
@@ -21,7 +21,7 @@ object ItemTouchHelperCallbackForEditListAdapter {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         recyclerView: RecyclerView,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         layoutConfigMap: Map<String, String>
     ){
         delay(1500)
@@ -46,23 +46,23 @@ object ItemTouchHelperCallbackForEditListAdapter {
                         viewHolder: RecyclerView.ViewHolder,
                         target: RecyclerView.ViewHolder
                     ): Boolean {
-                        val adapter = recyclerView.adapter as EditComponentListAdapter
+                        val editConstraintListAdapter = recyclerView.adapter as EditConstraintListAdapter
                         val fromViewHolder = viewHolder as
-                                EditComponentListAdapter.EditListViewHolder
+                                EditConstraintListAdapter.EditListViewHolder
                         val toViewHolder = target as
-                                EditComponentListAdapter.EditListViewHolder
+                                EditConstraintListAdapter.EditListViewHolder
                         val from = fromViewHolder.bindingAdapterPosition
                         val to = toViewHolder.bindingAdapterPosition
-                        adapter.notifyItemMoved(from, to)
+                        editConstraintListAdapter.notifyItemMoved(from, to)
                         ListTool.switchMapList(
-                            editComponentListAdapter.lineMapList,
+                            editConstraintListAdapter.lineMapList,
                             from,
                             to,
                         )
                         switchHandler(
                             fannelInfoMap,
                             setReplaceVariableMap,
-                            editComponentListAdapter,
+                            editConstraintListAdapter,
                             fromViewHolder,
                             toViewHolder
                         )
@@ -77,12 +77,12 @@ object ItemTouchHelperCallbackForEditListAdapter {
                             direction != ItemTouchHelper.LEFT
                         ) return
                         val listIndexViewHolder =
-                            viewHolder as EditComponentListAdapter.EditListViewHolder
+                            viewHolder as EditConstraintListAdapter.EditListViewHolder
                         ExecSimpleDelete.removeController(
                             fragment,
                             recyclerView,
-                            editComponentListAdapter,
-                            editComponentListAdapter.lineMapList[listIndexViewHolder.bindingAdapterPosition],
+                            editConstraintListAdapter,
+                            editConstraintListAdapter.lineMapList[listIndexViewHolder.bindingAdapterPosition],
                             listIndexViewHolder.bindingAdapterPosition,
                         )
                     }
@@ -112,15 +112,15 @@ object ItemTouchHelperCallbackForEditListAdapter {
     private fun switchHandler(
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
-        editComponentListAdapter: EditComponentListAdapter,
-        fromViewHolder: EditComponentListAdapter.EditListViewHolder,
-        toViewHolder: EditComponentListAdapter.EditListViewHolder
+        editConstraintListAdapter: EditConstraintListAdapter,
+        fromViewHolder: EditConstraintListAdapter.EditListViewHolder,
+        toViewHolder: EditConstraintListAdapter.EditListViewHolder
     ){
         ExecSwitcherForListIndexAdapter.updateTsv(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter,
-            editComponentListAdapter.lineMapList
+            editConstraintListAdapter,
+            editConstraintListAdapter.lineMapList
         )
 //        val listIndexTypeKey = ListIndexAdapter.listIndexTypeKey
 //        when(listIndexTypeKey){

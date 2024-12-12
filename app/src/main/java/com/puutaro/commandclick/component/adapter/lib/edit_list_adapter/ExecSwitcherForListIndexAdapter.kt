@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.component.adapter.lib.edit_list_adapter
 
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.file.MapListFileTool
 import com.puutaro.commandclick.util.file.ReadText
@@ -11,7 +11,7 @@ object ExecSwitcherForListIndexAdapter {
     fun updateTsv(
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         lineMapList: List<Map<String, String>>,
     ){
 //        val editComponentListAdapter =
@@ -19,7 +19,7 @@ object ExecSwitcherForListIndexAdapter {
         val tsvPath = FilePrefixGetter.get(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter.editListMap,
+            editConstraintListAdapter.indexListMap,
             ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
         )
         if(
@@ -28,7 +28,7 @@ object ExecSwitcherForListIndexAdapter {
         val sortType = ListSettingsForEditList.getSortType(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter.editListMap
+            editConstraintListAdapter.indexListMap
         )
         val sortListIndexListForTsvSave =
             ListSettingsForEditList.EditListMaker.sortListForTsvSave(

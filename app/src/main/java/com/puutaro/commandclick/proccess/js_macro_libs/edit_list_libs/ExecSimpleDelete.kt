@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.webkit.ValueCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecRemoveForListIndexAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -23,17 +23,17 @@ object ExecSimpleDelete {
     fun removeController(
         fragment: Fragment,
         recyclerView: RecyclerView,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         selectedItemMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         val enableDeleteConfirm = !DeleteSettingsForListIndex.howDisableDeleteConfirm(
-            editComponentListAdapter.deleteConfigMap
+            editConstraintListAdapter.deleteConfigMap
         )
         when(enableDeleteConfirm){
             false -> removeItem(
                 fragment,
-                editComponentListAdapter,
+                editConstraintListAdapter,
                 selectedItemMap,
                 listIndexPosition,
             )
@@ -42,14 +42,14 @@ object ExecSimpleDelete {
                 recyclerView,
                 listIndexPosition,
                 selectedItemMap,
-                editComponentListAdapter,
+                editConstraintListAdapter,
             )
         }
     }
 
     private fun removeItem(
         fragment: Fragment,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         selectedItemMap: Map<String, String>,
         listIndexPosition: Int,
     ){
@@ -58,17 +58,17 @@ object ExecSimpleDelete {
 //                editComponentListAdapter.notifyItemRemoved(listIndexPosition)
 //            }
             val removeItemLineMap = withContext(Dispatchers.IO) {
-                editComponentListAdapter.lineMapList[listIndexPosition]
+                editConstraintListAdapter.lineMapList[listIndexPosition]
             }
             withContext(Dispatchers.IO) {
-                editComponentListAdapter.lineMapList.removeAt(listIndexPosition)
+                editConstraintListAdapter.lineMapList.removeAt(listIndexPosition)
             }
             withContext(Dispatchers.Main) {
-                editComponentListAdapter.notifyItemRemoved(listIndexPosition)
+                editConstraintListAdapter.notifyItemRemoved(listIndexPosition)
             }
             withContext(Dispatchers.IO) {
                 ExecRemoveForListIndexAdapter.removeCon(
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
 //                    ListIndexAdapter.listIndexTypeKey,
                     removeItemLineMap,
                 )
@@ -76,7 +76,7 @@ object ExecSimpleDelete {
             withContext(Dispatchers.IO) {
                 execRemoveItemHandler(
                     fragment,
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     selectedItemMap,
                     removeItemLineMap,
                     listIndexPosition,
@@ -87,13 +87,13 @@ object ExecSimpleDelete {
 
     private fun execRemoveItemHandler(
         fragment: Fragment,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         selectedItemMap: Map<String, String>,
         removeItemLineMap: Map<String, String>,
         listIndexPosition: Int,
     ){
         ExecRemoveForListIndexAdapter.updateTsv(
-            editComponentListAdapter,
+            editConstraintListAdapter,
             listOf(removeItemLineMap),
         )
 //        when(ListIndexAdapter.listIndexTypeKey){
@@ -119,7 +119,7 @@ object ExecSimpleDelete {
 
         DeleteSettingsForListIndex.doWithJsAction(
             fragment,
-            editComponentListAdapter,
+            editConstraintListAdapter,
             selectedItemMap,
             listIndexPosition,
         )
@@ -134,7 +134,7 @@ object ExecSimpleDelete {
             recyclerView: RecyclerView,
             listIndexPosition: Int,
             selectedItemMap: Map<String, String>,
-            editComponentListAdapter: EditComponentListAdapter
+            editConstraintListAdapter: EditConstraintListAdapter
         ){
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
@@ -143,7 +143,7 @@ object ExecSimpleDelete {
                         recyclerView,
                         listIndexPosition,
                         selectedItemMap,
-                        editComponentListAdapter
+                        editConstraintListAdapter
                     )
                 }
             }
@@ -153,10 +153,8 @@ object ExecSimpleDelete {
             recyclerView: RecyclerView,
             listIndexPosition: Int,
             selectedItemMap: Map<String, String>,
-            editComponentListAdapter: EditComponentListAdapter
+            editConstraintListAdapter: EditConstraintListAdapter
         ){
-            val context = fragment.context
-                ?: return
             val terminalFragment = when(fragment){
                 is TerminalFragment -> fragment
                 else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
@@ -181,7 +179,7 @@ object ExecSimpleDelete {
                     when(isDelete){
                         true.toString() ->  removeItem(
                             fragment,
-                            editComponentListAdapter,
+                            editConstraintListAdapter,
                             selectedItemMap,
                             listIndexPosition,
                         )

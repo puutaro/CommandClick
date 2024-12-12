@@ -8,7 +8,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLaunchExtra
 import com.puutaro.commandclick.common.variable.broadcast.extra.PocketWebviewLoadUrlExtra
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
@@ -19,7 +19,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.PocketWebViewLancher
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.SettingActionFuncBroadcastManager
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
@@ -29,7 +28,7 @@ object BroadcastHandlerForTerm {
         intent: Intent,
     ){
         val action = intent.action
-        val termBroadcastType = BroadCastIntentSchemeTerm.values().firstOrNull {
+        val termBroadcastType = BroadCastIntentSchemeTerm.entries.firstOrNull {
             it.action == action
         } ?: return
         when(termBroadcastType){
@@ -118,17 +117,17 @@ object BroadcastHandlerForTerm {
                         ?.getActiveEditListOrdinaryDialog()?.findViewById<AppCompatEditText>(
                         R.id.edit_list_dialog_search_edit_text
                     )
-                val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
+                val editConstraintListAdapter = editListRecyclerView.adapter as EditConstraintListAdapter
                 if(editListSearchEditText?.isVisible == true) {
                     editListSearchEditText.setText(String())
                 }
                 ListViewToolForEditListAdapter.editListUpdateFileList(
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
-                        editComponentListAdapter.fannelInfoMap,
-                        editComponentListAdapter.setReplaceVariableMap,
-                        editComponentListAdapter.editListMap,
-                        editComponentListAdapter.busyboxExecutor,
+                        editConstraintListAdapter.fannelInfoMap,
+                        editConstraintListAdapter.setReplaceVariableMap,
+                        editConstraintListAdapter.indexListMap,
+                        editConstraintListAdapter.busyboxExecutor,
                     )
                 )
             }

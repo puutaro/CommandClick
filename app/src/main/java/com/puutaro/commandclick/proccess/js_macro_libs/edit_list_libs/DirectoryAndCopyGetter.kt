@@ -5,7 +5,7 @@ import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.RequestCode
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit_list.ItemPathMaker
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
@@ -28,10 +28,10 @@ class DirectoryAndCopyGetter(
         if(
             context == null
         ) return
-        val editComponentListAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
         val copySrcFilePath = ItemPathMaker.make(
-            editComponentListAdapter,
+            editConstraintListAdapter,
             listIndexPosition,
         ) ?: return
         val copySrcFilePathObj = File(copySrcFilePath)

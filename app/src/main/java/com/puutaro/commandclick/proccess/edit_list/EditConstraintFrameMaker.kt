@@ -7,11 +7,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -33,7 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-object EditFrameMaker {
+object EditConstraintFrameMaker {
 
 
     private val valueSeparator = EditComponent.Template.valueSeparator
@@ -52,6 +51,20 @@ object EditFrameMaker {
     private val bkColorKey = EditComponent.Template.EditComponentKey.BK_COLOR.key
     private val layoutGravityKey = EditComponent.Template.EditComponentKey.LAYOUT_GRAVITY.key
     private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
+    private val elevationkey = EditComponent.Template.EditComponentKey.ELEVATION.key
+
+    private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
+    private val topToBottomKey = EditComponent.Template.EditComponentKey.TOP_TO_BOTTOM.key
+    private val startToStartKey = EditComponent.Template.EditComponentKey.START_TO_START.key
+    private val startToEndKey = EditComponent.Template.EditComponentKey.START_TO_END.key
+    private val endToEndKey = EditComponent.Template.EditComponentKey.END_TO_END.key
+    private val endToStartKey = EditComponent.Template.EditComponentKey.END_TO_START.key
+    private val bottomToBottomKey = EditComponent.Template.EditComponentKey.BOTTOM_TO_BOTTOM.key
+    private val bottomToTopKey = EditComponent.Template.EditComponentKey.BOTTOM_TO_TOP.key
+    private val horizontalBiasKey = EditComponent.Template.EditComponentKey.HORIZONTAL_BIAS.key
+    private val horizontalWeightKey = EditComponent.Template.EditComponentKey.HORIZONTAL_WEIGHT.key
+    private val dimensionRatioKey = EditComponent.Template.EditComponentKey.DIMENSION_RATIO.key
+
 
     private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
     private val imagePropertyKey = EditComponent.Template.EditComponentKey.IMAGE_PROPERTY.key
@@ -59,7 +72,6 @@ object EditFrameMaker {
     private val textPropertyKey = EditComponent.Template.EditComponentKey.TEXT_PROPERTY.key
     private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
     private val widthKey = EditComponent.Template.EditComponentKey.WIDTH.key
-    private val weightKey = EditComponent.Template.EditComponentKey.WEIGHT.key
 
 
     private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
@@ -113,32 +125,57 @@ object EditFrameMaker {
     private val switchOn = EditComponent.Template.switchOn
     private val switchOff = EditComponent.Template.switchOff
 
+    object ParentReplace {
+
+        fun makeReplaceParentInt(
+            positionEntryStr: String?,
+            tagIdMap: Map<String, Int>?,
+        ): Int? {
+            if(
+                positionEntryStr.isNullOrEmpty()
+            ) return null
+            val unsetEnum = EditComponent.Template
+                .ConstraintManager
+                .ConstraintParameter.UNSET
+            if(
+                positionEntryStr == unsetEnum.str
+            ) return unsetEnum.int
+            val parentIdEnum = EditComponent.Template
+                .ConstraintManager
+                .ConstraintParameter.PARENT_ID
+            if(
+                positionEntryStr == parentIdEnum.str
+            ) return parentIdEnum.int
+            return tagIdMap?.get(positionEntryStr)
+        }
+    }
+
     suspend fun make(
         context: Context?,
+        idInt: Int?,
+        tagIdMap: Map<String, Int>?,
         buttonLayoutSrc: FrameLayout?,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         frameKeyPairList: List<Pair<String, String>>?,
         width: Int,
-        firstWeight: Float?,
         overrideTag: String?,
         totalSettingValMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
-        isFrameLayoutParam: Boolean = false,
     ): FrameLayout? {
         if(
             context == null
         ) return null
         val buttonLayout = makeButtonFrameLayout(
             context,
+            idInt,
+            tagIdMap,
             buttonLayoutSrc,
             frameKeyPairList,
             width,
-            firstWeight,
             overrideTag,
-            isFrameLayoutParam,
             density,
         ) ?: return null
 
@@ -238,12 +275,12 @@ object EditFrameMaker {
 
     private suspend fun makeButtonFrameLayout(
         context: Context?,
+        idInt: Int?,
+        tagIdMap: Map<String, Int>?,
         buttonLayout: FrameLayout?,
         frameKeyPairList: List<Pair<String, String>>?,
         width: Int,
-        firstWeight: Float?,
         overrideTag: String?,
-        isFrameLayoutParam: Boolean,
         density: Float,
     ):  FrameLayout? {
         if(
@@ -268,7 +305,11 @@ object EditFrameMaker {
                 )
             }
         }
-        buttonLayout?.visibility = visibilityValue
+        buttonLayout?.apply {
+            visibility = visibilityValue
+            id = idInt ?: id
+        }
+
         val height = withContext(Dispatchers.IO) {
             PairListTool.getValue(
                 frameKeyPairList,
@@ -276,7 +317,7 @@ object EditFrameMaker {
             ).let {
                 EditComponent.Template.LinearLayoutUpdater.convertHeight(
                     it,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    0,
                     density,
                 )
             }
@@ -292,9 +333,7 @@ object EditFrameMaker {
                     width,
                     density,
                 )
-
             }
-//                ,ScreenSizeCalculator.toDp(context, 50)
         }
 
         val param = withContext(Dispatchers.IO) {
@@ -306,6 +345,7 @@ object EditFrameMaker {
                     it.key == gravityStr
                 }?.gravity
             } ?: Gravity.CENTER
+            val isFrameLayoutParam = tagIdMap.isNullOrEmpty()
             when (isFrameLayoutParam) {
                 true -> FrameLayout.LayoutParams(
                     overrideWidth,
@@ -313,22 +353,261 @@ object EditFrameMaker {
                 ).apply {
                     gravity = overrideLayoutGravity
                 }
-                else -> LinearLayoutCompat.LayoutParams(
+                else -> ConstraintLayout.LayoutParams(
                     overrideWidth,
                     height,
                 ).apply {
-                    val overrideWeight = PairListTool.getValue(
-                        frameKeyPairList,
-                        weightKey
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch (e: Exception) {
-                            null
-                        }
-                    } ?: firstWeight ?: this.weight
-                    weight = overrideWeight
-                    gravity = overrideLayoutGravity
+                    val unsetInt =
+                        EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int
+                    val topToTopInt = withContext(Dispatchers.IO){
+                        val topToTopStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            topToTopKey
+                        )
+                        ParentReplace.makeReplaceParentInt(
+                            topToTopStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        EditComponent.Template.ConstraintManager.makePosition(
+//                            topToTopStr
+//                        ) ?: unsetInt
+                    }
+                    topToTop = topToTopInt
+                    val topToBottomInt = withContext(Dispatchers.IO){
+                        val topToBottomStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            topToBottomKey
+                        )
+                        val topToBottomId = ParentReplace.makeReplaceParentInt(
+                            topToBottomStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        if(
+//                            overrideTag == "ok"
+//                            || overrideTag == "firstTag"
+//                            ) {
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultAppDirPath,
+//                                    "ltagIdMap_topToBottomInt.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "overrideTag: ${overrideTag}",
+//                                    "idInt: ${idInt}",
+//                                    "tagIdMap: ${tagIdMap}",
+//                                    "topToBottomStr: ${topToBottomStr}",
+//                                    "topToBottomId: ${topToBottomId}",
+//                                    "edit_list_button_frame_layout1: ${R.id.edit_list_button_frame_layout1}",
+//                                    "edit_list_dialog_search_edit_text: ${R.id.edit_list_dialog_search_edit_text}",
+//                                ).joinToString("\n") + "\n\n============\n\n\n"
+//                            )
+//                        }
+                        topToBottomId
+                    }
+//                    if(scene == ParentReplace.Scene.EDIT_LIST_DIALOG) {
+//                        FileSystems.updateFile(
+//                            File(
+//                                UsePath.cmdclickDefaultAppDirPath,
+//                                "lEditFrameParam.txt"
+//                            ).absolutePath,
+//                            listOf(
+//                                "tag: ${overrideTag}",
+//                                "topToBottomStr: ${
+//                                    PairListTool.getValue(
+//                                        frameKeyPairList,
+//                                        topToBottomKey
+//                                    )
+//                                }",
+//                                "frameKeyPairList: ${frameKeyPairList}",
+//                                "topToBottomInt: ${topToBottomInt}",
+//                                "R.id.edit_list_dialog_search_edit_text: ${R.id.edit_list_dialog_search_edit_text}",
+//                            ).joinToString("\n") + "\n\n============\n\n\n"
+//                        )
+//                    }
+                    topToBottom = topToBottomInt
+
+                    val startToStartInt = withContext(Dispatchers.IO){
+                        val startToStartStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            startToStartKey
+                        )
+                        ParentReplace.makeReplaceParentInt(
+                            startToStartStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        ?: EditComponent.Template.ConstraintManager.makePosition(
+//                            startToStartStr
+//                        ) ?: unsetInt
+                    }
+                    startToStart = startToStartInt
+                    val startToEndInt = withContext(Dispatchers.IO){
+                        val startToEndStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            startToEndKey
+                        )
+                        val startToEndId = ParentReplace.makeReplaceParentInt(
+                            startToEndStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        if(
+//                            overrideTag == "ok"
+//                            || overrideTag == "firstTag"
+//                            ) {
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultAppDirPath,
+//                                    "ltagIdMap_startToEndInt.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "overrideTag: ${overrideTag}",
+//                                    "idInt: ${idInt}",
+//                                    "tagIdMap: ${tagIdMap}",
+//                                    "startToEndStr: ${startToEndStr}",
+//                                    "startToEndId: ${startToEndId}",
+//                                    "edit_list_toolbar_fannel_center_button: ${R.id.edit_list_toolbar_fannel_center_button}",
+//                                ).joinToString("\n") + "\n\n============\n\n\n"
+//                            )
+//                        }
+                        startToEndId
+                    }
+                    startToEnd = startToEndInt
+                    val endToEndInt = withContext(Dispatchers.IO){
+                        val endToEndStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            endToEndKey
+                        )
+                        val endToEndId = ParentReplace.makeReplaceParentInt(
+                            endToEndStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        if(
+//                            overrideTag == "ok"
+//                            || overrideTag == "firstTag"
+//                            ) {
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultAppDirPath,
+//                                    "ltagIdMap_endToEndInt.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "overrideTag: ${overrideTag}",
+//                                    "idInt: ${idInt}",
+//                                    "tagIdMap: ${tagIdMap}",
+//                                    "endToEndStr: ${endToEndStr}",
+//                                    "endToEndId: ${endToEndId}",
+//                                    "edit_list_toolbar_fannel_center_button: ${R.id.edit_list_toolbar_fannel_center_button}",
+//                                ).joinToString("\n") + "\n\n============\n\n\n"
+//                            )
+//                        }
+                        endToEndId
+//                        ?: EditComponent.Template.ConstraintManager.makePosition(
+//                            endToEndStr
+//                        ) ?: unsetInt
+                    }
+                    endToEnd = endToEndInt
+                    val endToStartInt = withContext(Dispatchers.IO){
+                        val endToStartStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            endToStartKey
+                        )
+                        ParentReplace.makeReplaceParentInt(
+                            endToStartStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        ?: EditComponent.Template.ConstraintManager.makePosition(
+//                            endToStartStr
+//                        ) ?: unsetInt
+                    }
+                    endToStart = endToStartInt
+                    val bottomToBottomInt = withContext(Dispatchers.IO){
+                        val bottomToBottomStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            bottomToBottomKey
+                        )
+                        val bottomToBottomId = ParentReplace.makeReplaceParentInt(
+                            bottomToBottomStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        if(
+//                            overrideTag == "ok"
+//                            || overrideTag == "firstTag"
+//                            ) {
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultAppDirPath,
+//                                    "ltagIdMap_bottomToBottomInt.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "overrideTag: ${overrideTag}",
+//                                    "idInt: ${idInt}",
+//                                    "tagIdMap: ${tagIdMap}",
+//                                    "bottomToBottomStr: ${bottomToBottomStr}",
+//                                    "bottomToBottomId: ${bottomToBottomId}",
+//                                    "edit_list_dialog_search_edit_text: ${R.id.edit_list_dialog_search_edit_text}",
+//                                ).joinToString("\n") + "\n\n============\n\n\n"
+//                            )
+//                        }
+                        bottomToBottomId
+                    }
+                    bottomToBottom = bottomToBottomInt
+                    val bottomToTopInt = withContext(Dispatchers.IO){
+                        val bottomToTopStr = PairListTool.getValue(
+                            frameKeyPairList,
+                            bottomToTopKey
+                        )
+                        val bottomToTopId = ParentReplace.makeReplaceParentInt(
+                            bottomToTopStr,
+                            tagIdMap,
+                        ) ?: unsetInt
+//                        if(
+//                            overrideTag == "ok"
+//                            || overrideTag == "firstTag"
+//                            ) {
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultAppDirPath,
+//                                    "ltagIdMap_bottomToTopInt.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "overrideTag: ${overrideTag}",
+//                                    "idInt: ${idInt}",
+//                                    "tagIdMap: ${tagIdMap}",
+//                                    "bottomToTopStr: ${bottomToTopStr}",
+//                                    "bottomToTopId: ${bottomToTopId}",
+//                                    "edit_list_dialog_search_edit_text: ${R.id.edit_list_dialog_search_edit_text}",
+//                                ).joinToString("\n") + "\n\n============\n\n\n"
+//                            )
+//                        }
+                        bottomToTopId
+                    }
+                    bottomToTop = bottomToTopInt
+                    val horizontalBiasFloat = withContext(Dispatchers.IO){
+                        EditComponent.Template.ConstraintManager.makeBias(
+                            PairListTool.getValue(
+                                frameKeyPairList,
+                                horizontalBiasKey
+                            )
+                        ) ?: horizontalBias
+                    }
+                    horizontalBias = horizontalBiasFloat
+                    val horizontalWeightFloat = withContext(Dispatchers.IO){
+                        EditComponent.Template.ConstraintManager.makeBias(
+                            PairListTool.getValue(
+                                frameKeyPairList,
+                                horizontalWeightKey
+                            )
+                        ) ?: horizontalWeight
+                    }
+                    horizontalWeight = horizontalWeightFloat
+                    val dimensionRatioStr = withContext(Dispatchers.IO){
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            dimensionRatioKey
+                        )
+                    }
+                    dimensionRatio = dimensionRatioStr
+                        ?: dimensionRatio
+
                 }
             }
         }
@@ -366,6 +645,14 @@ object EditFrameMaker {
 //                    "overrideTag: ${overrideTag}"
 //                ).joinToString("\n")
 //            )
+//            val idInt = withContext(Dispatchers.IO){
+//                EditComponent.Template.ConstraintManager.makeId(
+//                    PairListTool.getValue(
+//                        frameKeyPairList,
+//                        idKey
+//                    )
+//                ) ?: id
+//            }
             layoutParams = param
             tag = overrideTag
             val overrideGravity = withContext(Dispatchers.IO) {
@@ -423,6 +710,42 @@ object EditFrameMaker {
                 }
             }
             background = bkColorDrawable
+            val elevationFloat = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    elevationkey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            } ?: elevation
+            elevation = elevationFloat
+//            val paramConst = try {
+//                param as ConstraintLayout.LayoutParams
+//            } catch (e: Exception){
+//                return@apply
+//            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "ledtConstarintFramel.txt").absolutePath,
+//                listOf(
+//                    "unsetInt: ${EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int}",
+//                    "PARENT_ID: ${EditComponent.Template.ConstraintManager.ConstraintParameter.PARENT_ID.int}",
+//                    "id: ${id}",
+//                    "tag: ${tag}",
+//                    "this.topToTop: ${paramConst.topToTop}",
+//                    "this.topToBottom: ${paramConst.topToBottom}",
+//                    "this.startToEnd: ${paramConst.startToEnd}",
+//                    "this.startToStart: ${paramConst.startToStart}",
+//                    "this.endToEnd: ${paramConst.endToEnd}",
+//                    "this.endToStart: ${paramConst.endToStart}",
+//                    "this.bottomToTop: ${paramConst.bottomToTop}",
+//                    "this.bottomToBottom: ${paramConst.bottomToBottom}",
+//                    "this.horizontalBias: ${paramConst.horizontalBias}",
+//                ).joinToString("\n")
+//            )
         }
         return buttonLayout
     }
@@ -435,27 +758,109 @@ object EditFrameMaker {
     ) {
         if(
             context == null
-            || buttonFrameLayout == null
         ) return
-        PairListTool.getValue(
-            frameKeyPairList,
-            visibleKey,
-        )?.let {
-                visibleStr ->
-            EditComponent.Template.VisibleManager.getVisible(
-                visibleStr
-            )
-        }?.let {
-            buttonFrameLayout.visibility = it
+        val isEnable = withContext(Dispatchers.IO) {
+            PairListTool.getValue(
+                frameKeyPairList,
+                enableKey,
+            ) != switchOff
+        }
+        if(
+            !isEnable
+        ) return
+        buttonFrameLayout?.apply {
+           withContext(Dispatchers.Main) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    visibleKey,
+                )?.let { visibleStr ->
+                    visibility = EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
+                    )
+                }
+            }
         }
 
-        buttonFrameLayout.apply {
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "soverrideTag.txt").absolutePath,
-//                listOf(
-//                    "overrideTag: ${overrideTag}"
-//                ).joinToString("\n")
-//            )
+        val param = withContext(Dispatchers.IO) {
+            (buttonFrameLayout?.layoutParams as? ConstraintLayout.LayoutParams)?.apply {
+                withContext(Dispatchers.Main){
+                    EditComponent.Template.ConstraintManager.makeBias(
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            horizontalBiasKey
+                        )
+                    )?.let {
+                        horizontalBias = it
+                    }
+                }
+                withContext(Dispatchers.Main){
+                    EditComponent.Template.ConstraintManager.makeBias(
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            horizontalWeightKey
+                        )
+                    )?.let {
+                        horizontalWeight = it
+                    }
+                }
+                withContext(Dispatchers.Main){
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        dimensionRatioKey
+                    )?.let {
+                        dimensionRatio = it
+                    }
+                }
+                val marginData = EditComponent.Template.MarginData(
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginTopKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginBottomKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginStartKey
+                    ),
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        marginEndKey
+                    ),
+                    density,
+                )
+                withContext(Dispatchers.Main) {
+                    marginData.marginTop?.let {
+                        topMargin = it
+                    }
+                    marginData.marginStart?.let {
+                        marginStart = 0
+                    }
+                    marginData.marginEnd?.let {
+                        marginEnd = it
+                    }
+                    marginData.marginBottom?.let {
+                        bottomMargin = it
+                    }
+                }
+            }
+        }
+
+        buttonFrameLayout?.apply {
+            layoutParams = param
+            withContext(Dispatchers.Main) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    gravityKey
+                )?.let { gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }?.let {
+                    foregroundGravity = it
+                }
+            }
             val paddingData = withContext(Dispatchers.IO) {
                 EditComponent.Template.PaddingData(
                     PairListTool.getValue(
@@ -480,96 +885,12 @@ object EditFrameMaker {
             withContext(Dispatchers.Main) {
                 setPadding(
                     paddingData.paddingStart ?: paddingStart,
-                    paddingData.paddingTop ?: paddingTop,
+                    paddingData.paddingTop ?: paddingStart,
                     paddingData.paddingEnd ?: paddingEnd,
                     paddingData.paddingBottom ?: paddingBottom,
                 )
             }
-            val liearLayoutParam =
-                buttonFrameLayout.layoutParams as LinearLayoutCompat.LayoutParams
-            liearLayoutParam.apply {
-                val overrideLayoutGravity = withContext(Dispatchers.IO) {
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        layoutGravityKey
-                    )?.let { gravityStr ->
-                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                            it.key == gravityStr
-                        }?.gravity
-                    }
-                }
-                overrideLayoutGravity?.let {
-                    foregroundGravity = it
-                }
-                val overrideWeight = withContext(Dispatchers.IO) {
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        weightKey
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch (e: Exception) {
-                            null
-                        }
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    overrideWeight?.let {
-                        weight = it
-                    }
-                }
-                val marginData = withContext(Dispatchers.IO) {
-                    EditComponent.Template.MarginData(
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            marginTopKey,
-                        ),
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            marginBottomKey
-                        ),
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            marginStartKey
-                        ),
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            marginEndKey
-                        ),
-                        density,
-                    )
-                }
-                withContext(Dispatchers.Main) {
-                    marginData.marginTop?.let {
-                        topMargin = it
-                    }
-                    marginData.marginStart?.let {
-                        marginStart = it
-                    }
-                    marginData.marginEnd?.let {
-                        marginEnd = it
-                    }
-                    marginData.marginBottom?.let {
-                        bottomMargin = it
-                    }
-                }
-            }
             withContext(Dispatchers.Main) {
-                layoutParams = liearLayoutParam
-            }
-            withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    gravityKey
-                )?.let { gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                }
-            }?.let {
-                foregroundGravity = it
-            }
-            withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
@@ -578,14 +899,28 @@ object EditFrameMaker {
                     CmdClickColor.entries.firstOrNull {
                         it.str == colorStr
                     }
+                }?.let {
+                    AppCompatResources.getDrawable(
+                        context,
+                        it.id
+                    )
+                }?.let {
+                    background = it
+                }
+            }
+            withContext(Dispatchers.Main) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    elevationkey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
                 }
             }?.let {
-               AppCompatResources.getDrawable(
-                    context,
-                    it.id
-                )
-            }?.let {
-                background = it
+                elevation = it
             }
         }
     }
@@ -597,15 +932,22 @@ object EditFrameMaker {
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
     ) {
+        if(
+            imageMap.isNullOrEmpty()
+            && imagePropertyMap.isNullOrEmpty()
+        ){
+            imageView.isVisible = false
+            return
+        }
         val context = imageView.context
         val imagePathList = withContext(Dispatchers.IO) {
             imageMap?.get(
                 imagePathsKey,
             )?.split(valueSeparator)
         }
-        imageView.apply {
-            isVisible = !imagePathList.isNullOrEmpty()
-        }
+//        imageView.apply {
+//            isVisible = !imagePathList.isNullOrEmpty()
+//        }
         when(
             imagePathList.isNullOrEmpty()
         ) {
@@ -1087,10 +1429,10 @@ object EditFrameMaker {
                 }
             }
         }
-        if(bitmap == null){
-            imageView.isVisible = false
-            return
-        }
+//        if(bitmap == null){
+//            imageView.isVisible = false
+//            return
+//        }
         Glide.with(imageViewContext)
             .load(bitmap)
             .skipMemoryCache(true)

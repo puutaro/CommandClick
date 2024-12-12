@@ -18,7 +18,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -359,13 +359,13 @@ class EditFragment: Fragment() {
         }
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
-            val editComponentListAdapter = binding.editListRecyclerView.adapter as EditComponentListAdapter
+            val editConstraintListAdapter = binding.editListRecyclerView.adapter as EditConstraintListAdapter
             ListViewToolForEditListAdapter.editListUpdateFileList(
-                editComponentListAdapter,
+                editConstraintListAdapter,
                 ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                     this@EditFragment.fannelInfoMap,
                     this@EditFragment.setReplaceVariableMap,
-                    editComponentListAdapter.editListMap,
+                    editConstraintListAdapter.indexListMap,
                     this@EditFragment.busyboxExecutor,
 //                    ListIndexAdapter.listIndexTypeKey
                 )
@@ -384,7 +384,7 @@ class EditFragment: Fragment() {
 
     private fun destroyViews(){
         exitDialog(binding.editListRecyclerView)
-        binding.editToolBarHorizonLayout.removeAllViews()
+//        binding.editToolBarHorizonLayout.removeAllViews()
 //        binding.editListInnerTopLinearLayout.removeAllViews()
 //        binding.editListInnerBottomLinearLayout.removeAllViews()
 //        binding.editListLinearLayout.removeAllViews()

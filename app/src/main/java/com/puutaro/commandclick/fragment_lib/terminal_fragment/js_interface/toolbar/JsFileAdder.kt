@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddForEditListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListIndexDuplicate
 import com.puutaro.commandclick.fragment.EditFragment
@@ -198,13 +198,13 @@ class JsFileAdder(
             fileName,
             compFileNameMap,
         )
-        val editComponentListAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
-                editComponentListAdapter.editListMap,
+                editConstraintListAdapter.indexListMap,
                 ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
         ListIndexDuplicate.isTsvDetect(

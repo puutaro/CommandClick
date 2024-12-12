@@ -2,16 +2,16 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
-import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -53,11 +53,11 @@ object TextViewAndFannelUpdaterForTerm {
             srcFragmentStr
         ) ?: return
         val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView.adapter as EditConstraintListAdapter
         if(editListIndex is Int) {
             val holder = editListRecyclerView.findViewHolderForAdapterPosition(
                 editListIndex
-            ) as EditComponentListAdapter.EditListViewHolder
+            ) as EditConstraintListAdapter.EditListViewHolder
             val materialCardView = holder.materialCardView
             val tagNameToFrameLayoutList = tagNameList.map {
                 tagName ->
@@ -120,7 +120,7 @@ object TextViewAndFannelUpdaterForTerm {
         val srcFragmentEnum = EditListRecyclerViewGetter.RecyclerViewFragment.entries.firstOrNull {
             it.frag == srcFragmentStr
         } ?: return
-        val linearLayout = when(srcFragmentEnum){
+        val constraintLayout = when(srcFragmentEnum){
             EditListRecyclerViewGetter.RecyclerViewFragment.EDIT
             -> {
                 val cmdEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(
@@ -136,22 +136,22 @@ object TextViewAndFannelUpdaterForTerm {
                     ) return@let null
                     fragment
                 }
-                editFragment?.binding?.editFooterHorizonLayout?.findViewWithTag<LinearLayoutCompat>(
+                editFragment?.binding?.editListFooterConstraintLayout?.findViewWithTag<ConstraintLayout>(
                     indexOrParentTagName
                 )
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
             -> {
                 terminalFragment.editListDialogForOrdinaryRevolver
-                    ?.getActiveEditListOrdinaryDialog()?.findViewById<LinearLayoutCompat>(
-                    R.id.edit_list_dialog_footer_horizon_layout
+                    ?.getActiveEditListOrdinaryDialog()?.findViewById<ConstraintLayout>(
+                    R.id.edit_list_dialog_footer_constraint_layout
                 )
             }
         }
         val noSignIndex = -1
         val frameLayoutList = tagNameList.map {
             tagName ->
-            linearLayout?.findViewWithTag<FrameLayout>(
+            constraintLayout?.findViewWithTag<FrameLayout>(
                 tagName
             )
         }
@@ -180,7 +180,7 @@ object TextViewAndFannelUpdaterForTerm {
 
     object UpdateAndSaveMainFannel {
         fun updateAndSave(
-            editComponentListAdapter: EditComponentListAdapter,
+            editConstraintListAdapter: EditConstraintListAdapter,
             keyPairListConMap: Map<String, String?>,
             tagName: String,
             srcTitle: String,
@@ -203,7 +203,7 @@ object TextViewAndFannelUpdaterForTerm {
                 srcImage,
                 editListIndex,
             )
-            val linearFrameKeyPairsList = EditComponentListAdapter.makeLinearFrameKeyPairsList(
+            val linearFrameKeyPairsList = EditConstraintListAdapter.makeLinearFrameKeyPairsList(
                 linearFrameKeyPairsListCon,
             )
             val textMap = PairListTool.getValue(
@@ -216,9 +216,9 @@ object TextViewAndFannelUpdaterForTerm {
                 ).toMap()
             }
             val text = EditComponent.Template.TextManager.makeText(
-                editComponentListAdapter.fannelInfoMap,
-                editComponentListAdapter.setReplaceVariableMap,
-                editComponentListAdapter.busyboxExecutor,
+                editConstraintListAdapter.fannelInfoMap,
+                editConstraintListAdapter.setReplaceVariableMap,
+                editConstraintListAdapter.busyboxExecutor,
                 textMap,
                 updateText
             )
@@ -239,7 +239,7 @@ object TextViewAndFannelUpdaterForTerm {
 //            )
             textView?.let {
                 CoroutineScope(Dispatchers.Main).launch {
-                    EditFrameMaker.setCaptionByDynamic(
+                    EditConstraintFrameMaker.setCaptionByDynamic(
                         it,
                         overrideTextMap,
                         textPropertyMap,
@@ -250,7 +250,7 @@ object TextViewAndFannelUpdaterForTerm {
 //            textView?.text = text
             execUpdateAndSave(
                 textView,
-                editComponentListAdapter,
+                editConstraintListAdapter,
                 tagName,
                 updateText,
                 isSave,
@@ -259,7 +259,7 @@ object TextViewAndFannelUpdaterForTerm {
 
         private fun execUpdateAndSave(
             textView: AppCompatTextView?,
-            editComponentListAdapter: EditComponentListAdapter,
+            editComponentListAdapter: EditConstraintListAdapter,
             tagName: String,
             updateText: String,
             isSave: Boolean,

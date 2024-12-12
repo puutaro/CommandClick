@@ -1,11 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
-import com.puutaro.commandclick.proccess.edit.func.EditComponentFunc
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -165,9 +164,9 @@ class JsEdit(
             terminalFragment,
             srcFragment
         ) ?: return String()
-        val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
-        return editComponentListAdapter.getCurrentSettingVals(
+        val editConstraintListAdapter =
+            editListRecyclerView.adapter as EditConstraintListAdapter
+        return editConstraintListAdapter.getCurrentSettingVals(
             context,
             targetVariableName
         )?.let {

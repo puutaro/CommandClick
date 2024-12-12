@@ -150,9 +150,14 @@ object PreInstallFannel {
                     if (
                         isNotUpdateFannelInfo
                     ) return@withContext
+                    val jsFileSuffix = UsePath.JS_FILE_SUFFIX
+                    val existFannelList = FileSystems.sortedFiles(cmdclickDefaultAppDirPath).filter {
+                        it.endsWith(jsFileSuffix)
+                    }
                     val fannelSettingMapList = FannelSettingMapMaker.make(
                         context,
-                        fannelNameToDownloadList.map { it.first }
+                        existFannelList
+//                        fannelNameToDownloadList.map { it.first }
                     )
                     FileSystems.writeFile(
                         fannelSettingMapTsvPath,

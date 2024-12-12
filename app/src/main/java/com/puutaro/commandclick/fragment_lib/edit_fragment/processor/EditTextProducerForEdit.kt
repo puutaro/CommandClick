@@ -1,28 +1,18 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.graphics.drawable.Drawable
-import android.widget.FrameLayout
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
-import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryButtonEvent
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 object EditTextProducerForEdit {
 
@@ -76,21 +66,22 @@ object EditTextProducerForEdit {
                 } ?: toolbarLayoutMap
             }
             else -> {
-                CoroutineScope(Dispatchers.Main).launch {
-                    ExecSetToolbarButtonImage.setImageButton(
-                        binding.editToolbarFannelCenterButtonImage,
-                        CmdClickIcons.HISTORY
-                    )
-                    binding.editToolbarFannelCenterButton.setOnClickListener {
-                        FannelHistoryButtonEvent.invoke(editFragment)
-                    }
-                }
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    ExecSetToolbarButtonImage.setImageButton(
+//                        binding.editToolbarFannelCenterButtonImage,
+//                        CmdClickIcons.HISTORY
+//                    )
+//                    binding.editListToolbarFannelCenterButton.setOnClickListener {
+//                        FannelHistoryButtonEvent.invoke(editFragment)
+//                    }
+//                }
             }
         }
-        val editToolbarFannelCenterButton =
-            binding.editToolbarFannelCenterButton.apply {
-                isVisible = !isOnlyCmdValEdit
-            }
+        val editListToolbarConstraintLayout =
+            binding.editListToolbarConstraintLayout
+//                .apply {
+//                isVisible = !isOnlyCmdValEdit
+//            }
 
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
@@ -98,88 +89,12 @@ object EditTextProducerForEdit {
 //                "editFragment.editListConfigMap: ${editFragment.editListConfigMap}"
 //            ).joinToString("\n")
 //        )
-        val verticalLinear1 = binding.verticalLinear1
-        val verticalLinear2 = binding.verticalLinear2
-        val verticalLinearListForFooter =
-            listOf(
-                verticalLinear1.editComponentAdapterVerticalBind as LinearLayoutCompat,
-                verticalLinear2.editComponentAdapterVerticalBind as LinearLayoutCompat,
-            )
-        val varticalIndexAndHorizonLinearListForFooter =
-            listOf (
-                listOf(
-                    verticalLinear1.editComponentAdapterHorizonBind1,
-                    verticalLinear1.editComponentAdapterHorizonBind2,
-                ),
-                listOf(
-                    verticalLinear2.editComponentAdapterHorizonBind1,
-                    verticalLinear2.editComponentAdapterHorizonBind2,
-                )
-            )
-//        val contentsLayoutIdListList = listOf(
+        val editListFooterConstraintLayout = binding.editListFooterConstraintLayout
 //            listOf(
-//                R.id.button_frame_layout11,
-//                R.id.button_frame_layout12,
-//                R.id.button_frame_layout13,
-//            ),
-//            listOf(
-//                R.id.button_frame_layout21,
-//                R.id.button_frame_layout22,
-//                R.id.button_frame_layout23,
-//            ),
+//            binding.editFragment.findViewById<ConstraintLayout>(
+//                R.id.edit_list_footer_constraint_layout
+//            )
 //        )
-        val verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter =
-            listOf(
-                listOf(
-                    listOf(
-                        verticalLinear1.buttonFrameLayout11,
-                        verticalLinear1.buttonFrameLayout12,
-                        verticalLinear1.buttonFrameLayout13,
-                    ),
-                    listOf(
-                        verticalLinear1.buttonFrameLayout21,
-                        verticalLinear1.buttonFrameLayout22,
-                        verticalLinear1.buttonFrameLayout23,
-                    ),
-                ),
-                listOf(
-                    listOf(
-                        verticalLinear2.buttonFrameLayout11,
-                        verticalLinear2.buttonFrameLayout12,
-                        verticalLinear2.buttonFrameLayout13,
-                    ),
-                    listOf(
-                        verticalLinear2.buttonFrameLayout21,
-                        verticalLinear2.buttonFrameLayout22,
-                        verticalLinear2.buttonFrameLayout23,
-                    ),
-                )
-            ) as List<List<List<FrameLayout?>>>
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
-//            verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter.mapIndexed {
-//                varticalIndex, horizonIndexAndReadyContentsLayoutList ->
-//                horizonIndexAndReadyContentsLayoutList.mapIndexed {
-//                    horizonIndex, readyContentsLayoutList ->
-//                    readyContentsLayoutList.map {
-//                        contentsLayout ->
-//                        "varticalIndex: ${varticalIndex}, horizonIndex: ${horizonIndex}, bool: ${contentsLayout is FrameLayout}"
-//                    }.joinToString("\n")
-//                }.joinToString("\n")
-//            }.joinToString("\n")
-//        )
-//            varticalIndexAndHorizonLinearListForFooter.mapIndexed {
-//                    _, readyHorizonLayoutList ->
-//                readyHorizonLayoutList.mapIndexed {
-//                        horizonIndex, horizon ->
-//                    val curLayoutIdListForHorizon =
-//                        contentsLayoutIdListList.get(horizonIndex)
-//                    curLayoutIdListForHorizon.map {
-//                            layoutId ->
-//                        horizon.findViewById<FrameLayout>(layoutId)
-//                    }
-//                }
-//            }
 
         CoroutineScope(Dispatchers.IO).launch {
             val context = editFragment.context
@@ -193,7 +108,7 @@ object EditTextProducerForEdit {
                         .sizeMultiplier(0.1f)
                 }
             }
-            WithEditComponentListView.create(
+            WithEditConstraintListView.create(
                 editFragment,
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
@@ -206,12 +121,8 @@ object EditTextProducerForEdit {
                 binding.editListRecyclerView,
                 binding.editListBkFrame,
                 binding.editListSearchEditText,
-                binding.editFooterHorizonLayout,
-                verticalLinearListForFooter,
-                varticalIndexAndHorizonLinearListForFooter,
-                verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
-                binding.editToolBarHorizonLayout,
-                editToolbarFannelCenterButton,
+                editListFooterConstraintLayout,
+                editListToolbarConstraintLayout,
                 editFragment.mainFannelConList,
                 density,
                 requestBuilderSrc,

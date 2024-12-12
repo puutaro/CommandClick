@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.file.MapListFileRenamer
@@ -45,17 +45,17 @@ object EditTextAndMapListForTerm {
             editListRecyclerView: RecyclerView,
             listIndexPosition: Int,
         ) {
-            val editComponentListAdapter =
-                editListRecyclerView.adapter as EditComponentListAdapter
+            val editConstraintListAdapter =
+                editListRecyclerView.adapter as EditConstraintListAdapter
             val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator
             val selectedLineMap =
-                editComponentListAdapter.lineMapList.getOrNull(
+                editConstraintListAdapter.lineMapList.getOrNull(
                     listIndexPosition
                 ) ?: return
             val mapListPath = FilePrefixGetter.get(
-                editComponentListAdapter.fannelInfoMap,
-                editComponentListAdapter.setReplaceVariableMap,
-                editComponentListAdapter.editListMap,
+                editConstraintListAdapter.fannelInfoMap,
+                editConstraintListAdapter.setReplaceVariableMap,
+                editConstraintListAdapter.indexListMap,
                 ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             ) ?: String()
             val isExist = ReadText(

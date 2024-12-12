@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.edit_list.config_settings
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit_list.libs.ListIndexReplacer
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 
@@ -42,11 +42,11 @@ object DeleteSettingsForListIndex {
 
     fun doWithJsAction(
         fragment: Fragment,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         selectedItemMap: Map<String, String>,
         listIndexListPosition: Int,
     ){
-        val jsActionConSrcBeforeReplace = editComponentListAdapter.deleteConfigMap.get(
+        val jsActionConSrcBeforeReplace = editConstraintListAdapter.deleteConfigMap.get(
             DeleteKey.WITH_JS_ACTION.key
         )
         val jsActionCon = ListIndexReplacer.replace(
@@ -59,9 +59,9 @@ object DeleteSettingsForListIndex {
         ) return
         JsActionHandler.handle(
             fragment,
-            editComponentListAdapter.fannelInfoMap,
+            editConstraintListAdapter.fannelInfoMap,
             String(),
-            editComponentListAdapter.setReplaceVariableMap,
+            editConstraintListAdapter.setReplaceVariableMap,
             jsActionCon
         )
     }

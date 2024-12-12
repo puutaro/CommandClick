@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.component.adapter.lib.edit_list_adapter
 
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,21 +14,21 @@ object ExecReWriteForListIndexAdapter {
         srcAndRepLineMapPairList: List<Pair<Map<String, String>, Map<String, String>>>,
     ){
 //        val binding = fragment.binding
-        val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editListRecyclerView.adapter as EditConstraintListAdapter
         val srcAndRepLinePairListSize = srcAndRepLineMapPairList.size
         CoroutineScope(Dispatchers.IO).launch {
             srcAndRepLineMapPairList.forEach {
                 val replaceItemIndex = withContext(Dispatchers.IO) {
                     val srcTsvLine = it.first
-                    editComponentListAdapter.lineMapList.indexOf(srcTsvLine)
+                    editConstraintListAdapter.lineMapList.indexOf(srcTsvLine)
                 }
                 if (replaceItemIndex < 0) return@forEach
                 withContext(Dispatchers.IO) {
-                    editComponentListAdapter.lineMapList[replaceItemIndex] = it.second
+                    editConstraintListAdapter.lineMapList[replaceItemIndex] = it.second
                 }
                 withContext(Dispatchers.Main) {
-                    editComponentListAdapter.notifyItemChanged(replaceItemIndex)
+                    editConstraintListAdapter.notifyItemChanged(replaceItemIndex)
                 }
                 if (srcAndRepLinePairListSize != 1) return@forEach
 //                val editListRecyclerView = binding.editListRecyclerView

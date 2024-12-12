@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,10 +18,11 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditComponentListView
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditConstraintListView
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -98,63 +98,16 @@ class EditListDialogOrdinary(
         editListDialogOrdinary?.findViewById<AppCompatEditText>(
             R.id.edit_list_dialog_search_edit_text
         )
-    private val editFooterHorizonLayoutSrc =
-        editListDialogOrdinary?.findViewById<LinearLayoutCompat>(
-            R.id.edit_list_dialog_footer_horizon_layout
+    private val readyContentsLayoutListForFooter =
+        constraintLayoutSrc?.findViewById<ConstraintLayout>(
+            R.id.edit_list_dialog_footer_constraint_layout
         )
-    private val verticalLinearListForFooter =
-        listOf(
-            editListDialogOrdinary?.findViewById<LinearLayoutCompat>(
-                R.id.vertical_linear1
-            ),
-            editListDialogOrdinary?.findViewById<LinearLayoutCompat>(
-                R.id.vertical_linear2
-            )
-        )
-    private val horizonIdListSrc = listOf(
-        R.id.edit_component_adapter_horizon1,
-        R.id.edit_component_adapter_horizon2,
-    )
-    private val horizonLinearListForFooter = verticalLinearListForFooter.map {
-            vertical ->
-        horizonIdListSrc.map {
-            vertical?.findViewById<LinearLayoutCompat>(it)
-        }
-    }
-    private val contentsLayoutIdListList = listOf(
-        listOf(
-            R.id.button_frame_layout11,
-            R.id.button_frame_layout12,
-            R.id.button_frame_layout13,
-        ),
-        listOf(
-            R.id.button_frame_layout21,
-            R.id.button_frame_layout22,
-            R.id.button_frame_layout23,
-        ),
-    )
-    private val verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter =
-        horizonLinearListForFooter.mapIndexed {
-                _, readyHorizonLayoutList ->
-            readyHorizonLayoutList.mapIndexed {
-                    horizonIndex, horizon ->
-                val curLayoutIdListForHorizon =
-                    contentsLayoutIdListList.get(horizonIndex)
-                curLayoutIdListForHorizon.map {
-                        layoutId ->
-                    horizon?.findViewById<FrameLayout>(layoutId)
-                }
-            }
-        }
     init {
         editListDialogOrdinary?.setOnCancelListener {
             dismissForInner(
-                terminalFragmentRef.get(),
                 editListRecyclerViewSrc,
-                editFooterHorizonLayoutSrc,
                 editListBkFrameSrc,
                 constraintLayoutSrc,
-                true,
             )
         }
     }
@@ -182,6 +135,7 @@ class EditListDialogOrdinary(
         fannelInfoCon: String,
         editListConfigPath: String,
     ){
+
         isAlreadyShow = true
         val terminalFragment = terminalFragmentRef.get()
             ?: return
@@ -204,9 +158,9 @@ class EditListDialogOrdinary(
             ?: return
         val editListSearchEditText = editListSearchEditTextSrc
             ?:return
-        val editFooterHorizonLayout =
-            editFooterHorizonLayoutSrc
-                ?:return
+//        val editFooterHorizonLayout =
+//            editFooterHorizonLayoutSrc
+//                ?:return
 //        val constraintLayout =
 //            constraintLayoutSrc
 //                ?:return
@@ -260,8 +214,19 @@ class EditListDialogOrdinary(
                     String()
                 )
             }
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "leditDistDialog.txt").absolutePath,
+                listOf(
+                    "fannelInfoCon: ${fannelInfoCon}",
+                    "editListConfigPath: ${editListConfigPath}",
+                    "editListConfigPath.isFole: ${File(editListConfigPath).isFile}",
+                    "editListConfigMap: ${editListConfigMap}",
+                    "mainFannelFile: ${mainFannelFile.absolutePath}",
+                    "editListSearchEditText.id: ${editListSearchEditText.id}"
+                ).joinToString("\n")
+            )
             CoroutineScope(Dispatchers.IO).launch {
-                WithEditComponentListView.create(
+                WithEditConstraintListView.create(
                     terminalFragment,
                     fannelInfoMap,
                     setReplaceVariableMap,
@@ -274,12 +239,13 @@ class EditListDialogOrdinary(
                     editListRecyclerView,
                     editListBkFrame,
                     editListSearchEditText,
-                    editFooterHorizonLayout,
-                    verticalLinearListForFooter,
-                    horizonLinearListForFooter,
-                    verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
+                    readyContentsLayoutListForFooter,
+//                    editFooterHorizonLayout,
+//                    verticalLinearListForFooter,
+//                    horizonLinearListForFooter,
+//                    verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
                     null,
-                    null,
+//                    null,
                     mainFannelConList,
                     density,
                     requestBuilderSrc,
@@ -307,18 +273,15 @@ class EditListDialogOrdinary(
     }
 
     private fun dismissForInner(
-        terminalFragment: TerminalFragment?,
         editListRecyclerView: RecyclerView?,
-        editFooterLinearlayout: LinearLayoutCompat?,
         editListBkFrame: FrameLayout?,
         constraintLayout: ConstraintLayout?,
-        isRecreate: Boolean,
     ){
         editListRecyclerView?.layoutManager = null
         editListRecyclerView?.adapter = null
         editListRecyclerView?.recycledViewPool?.clear()
         editListRecyclerView?.removeAllViews()
-        editFooterLinearlayout?.removeAllViews()
+//        editFooterLinearlayout?.removeAllViews()
         editListBkFrame?.removeAllViews()
         constraintLayout?.removeAllViews()
 //        terminalFragment?.editListDialogOrdinaly?.first()?.dismiss()
@@ -347,18 +310,10 @@ class EditListDialogOrdinary(
         val editListBkFrame =
             editListBkFrameSrc
                 ?: return
-        val editFooterLinearlayout =
-            editFooterHorizonLayoutSrc
-                ?: return
-        val terminalFragment =
-            terminalFragmentRef.get()
         dismissForInner(
-            terminalFragment,
             editListRecyclerView,
-            editFooterLinearlayout,
             editListBkFrame,
             constraintLayout,
-            false
         )
     }
 }

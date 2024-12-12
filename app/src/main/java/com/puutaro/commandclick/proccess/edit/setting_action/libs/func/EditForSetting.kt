@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.func.EditComponentFunc
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ object EditForSetting {
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-        editComponentListAdapterArg: EditComponentListAdapter?,
+        editConstraintListAdapterArg: EditConstraintListAdapter?,
     ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -54,7 +54,7 @@ object EditForSetting {
                         terminalFragment,
                         firstArg,
                         secondArg,
-                        editComponentListAdapterArg,
+                        editConstraintListAdapterArg,
                     )
 
                 }

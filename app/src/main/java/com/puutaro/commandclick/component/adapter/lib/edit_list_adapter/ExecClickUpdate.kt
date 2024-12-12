@@ -2,7 +2,7 @@ package com.puutaro.commandclick.component.adapter.lib.edit_list_adapter
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.file.MapListFileTool
@@ -52,7 +52,7 @@ object ExecClickUpdate {
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         bindingAdapterPosition: Int,
     ){
 //        val editComponentAdapter =
@@ -60,7 +60,7 @@ object ExecClickUpdate {
         val sortType = ListSettingsForEditList.getSortType(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter.editListMap
+            editConstraintListAdapter.indexListMap
         )
         when(sortType){
             ListSettingsForEditList.SortByKey.SORT,
@@ -73,13 +73,13 @@ object ExecClickUpdate {
 //        val editListRecyclerView = binding.editListRecyclerView
 //        val editComponentListAdapter = editListRecyclerView.adapter as EditComponentListAdapter
         val lineMap =
-            editComponentListAdapter.lineMapList.getOrNull(
+            editConstraintListAdapter.lineMapList.getOrNull(
                 bindingAdapterPosition
             ) ?: return
         val mapListPath = FilePrefixGetter.get(
             fannelInfoMap,
             setReplaceVariableMap,
-            editComponentListAdapter.editListMap,
+            editConstraintListAdapter.indexListMap,
             ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
         )
         MapListFileTool.insertMapFileInFirst(

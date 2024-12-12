@@ -1,9 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
@@ -25,7 +24,7 @@ object SettingFuncManager {
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?,
-        editComponentListAdapterArg: EditComponentListAdapter?,
+        editConstraintListAdapter: EditConstraintListAdapter?,
     ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val funcTypeAndMethodList =
             funcTypeDotMethod.split(funcTypeAndMethodSeparatorDot)
@@ -100,7 +99,7 @@ object SettingFuncManager {
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
-                    editComponentListAdapterArg,
+                    editConstraintListAdapter,
                 )
             }
             FuncType.CULC -> {

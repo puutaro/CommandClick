@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
@@ -22,7 +22,7 @@ object ExecAddForEditListAdapter {
 
     private fun getInsertIndex(
         sortType: ListSettingsForEditList.SortByKey,
-        listIndexForEditAdapter: EditComponentListAdapter,
+        listIndexForEditAdapter: EditConstraintListAdapter,
         addLineMap: Map<String, String>,
     ): Int {
 //        val addLineMap = CmdClickMap.createMap(
@@ -54,7 +54,7 @@ object ExecAddForEditListAdapter {
 //        val binding = editFragment.binding
 //        val editListRecyclerView = binding.editListRecyclerView
         val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView.adapter as EditConstraintListAdapter
 //        val addLineMap = CmdClickMap.createMap(
 //            addLineMap,
 //            ListSettingsForListIndex.MapListPathManager.mapListSeparator
@@ -173,12 +173,12 @@ object ExecAddForEditListAdapter {
         insertLineListSrc: List<String>
     ){
         val editComponentAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+            editFragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
-                editComponentAdapter.editListMap,
+                editComponentAdapter.indexListMap,
                 ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
         if(
@@ -221,12 +221,12 @@ object ExecAddForEditListAdapter {
     ){
 //        val context = editFragment.context
         val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+            editListRecyclerView.adapter as EditConstraintListAdapter
         val mapListPath =
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
-                editComponentListAdapter.editListMap,
+                editComponentListAdapter.indexListMap,
                 ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
 //        FileSystems.writeFile(
@@ -276,7 +276,7 @@ object ExecAddForEditListAdapter {
         val sortType = ListSettingsForEditList.getSortType(
             editComponentListAdapter.fannelInfoMap,
             editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.editListMap
+            editComponentListAdapter.indexListMap
         )
         val insertIndex = getInsertIndex(
             sortType,

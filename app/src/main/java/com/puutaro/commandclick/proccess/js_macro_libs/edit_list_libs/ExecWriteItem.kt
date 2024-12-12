@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs
 
 import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.file.ReadText
@@ -13,7 +13,7 @@ import java.io.File
 object ExecWriteItem {
     fun write(
         context: Context?,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         listIndexPosition: Int,
     ){
 //        val type = ListIndexEditConfig.getListIndexType(
@@ -21,7 +21,7 @@ object ExecWriteItem {
 //        )
         writeFileInTsvLine(
             context,
-            editComponentListAdapter,
+            editConstraintListAdapter,
             listIndexPosition,
         )
 //        when(type){
@@ -66,7 +66,7 @@ object ExecWriteItem {
 
     private fun writeFileInTsvLine(
         context: Context?,
-        editComponentListAdapter: EditComponentListAdapter,
+        editConstraintListAdapter: EditConstraintListAdapter,
         listIndexPosition: Int,
     ){
         if(
@@ -77,15 +77,15 @@ object ExecWriteItem {
 //        val listIndexForEditAdapter =
 //            binding.editListRecyclerView.adapter as EditComponentListAdapter
         val selectedLineMap =
-            editComponentListAdapter.lineMapList.getOrNull(
+            editConstraintListAdapter.lineMapList.getOrNull(
                 listIndexPosition
             ) ?: return
 //        val editComponentListAdapter =
 //            binding.editListRecyclerView.adapter as EditComponentListAdapter
         val tsvPath = FilePrefixGetter.get(
-            editComponentListAdapter.fannelInfoMap,
-            editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.editListMap,
+            editConstraintListAdapter.fannelInfoMap,
+            editConstraintListAdapter.setReplaceVariableMap,
+            editConstraintListAdapter.indexListMap,
             ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: return
         val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator

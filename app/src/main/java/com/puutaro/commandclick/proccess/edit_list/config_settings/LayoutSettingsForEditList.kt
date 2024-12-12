@@ -17,6 +17,8 @@ object LayoutSettingsForEditList {
         ON_REVERSE_LAYOUT("onReverseLayout"),
         EDIT_BY_DRAG("editByDrag"),
         MARGIN("margin"),
+        INNER_PADDING("innerPadding"),
+        INNER_MARGIN("innerMargin"),
         ELEVATION("elevation"),
         RADIUS("radius"),
         ON_CLICK_UPDATE("onClickUpdate"),

@@ -19,6 +19,9 @@ import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.SnakeCamelTool
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.io.File
 
@@ -113,6 +116,53 @@ object ListSettingsForEditList  {
             )
         }
 
+        suspend fun parseForConstraint(
+            context: Context?,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            viewLayoutPath: String,
+        ):  Triple<
+                Map<String, String >,
+                Map<String, List< List<String> > >,
+                Map<String, Int>,
+                >?
+        {
+            val viewLayoutPathObj = File(viewLayoutPath)
+            if(
+                !viewLayoutPathObj.isFile
+            ) return null
+            val fannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
+            )
+            val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
+            val viewLayoutListSrc = LayoutSettingFile.read(
+                context,
+                viewLayoutPathObj.absolutePath,
+                fannelPath,
+                setReplaceVariableMap,
+            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
+//                listOf(
+////                    "indexListMap: ${indexListMap}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "File(viewLayoutPath).isFile: ${File(viewLayoutPath).isFile}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "viewLayoutListSrc: ${viewLayoutListSrc.joinToString("####")}",
+//                ).joinToString("\n\n") + "\n\n-----------\n\n"
+//            )
+            val plusKeyToSubKeyConWhere =
+                fannelInfoMap.map {
+                    val key = SnakeCamelTool.snakeToCamel(it.key)
+                    "${key}: ${it.value}"
+                }.joinToString(", ")
+            return execConstraintParse(
+                context,
+                viewLayoutListSrc,
+                plusKeyToSubKeyConWhere,
+            )
+        }
+
         fun parseFromList(
             context: Context?,
             fannelInfoMap: Map<String, String>,
@@ -149,6 +199,45 @@ object ListSettingsForEditList  {
 //                ).joinToString("\n\n") + "\n\n-----------\n\n"
 //            )
             return execParse(
+                context,
+                viewLayoutListSrc,
+                whereForLog,
+            )
+        }
+
+        suspend fun parseFromListForConstraint(
+            context: Context?,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            viewLayoutConList: List<String>,
+            whereForLog: String,
+        ): Triple<
+                Map<String, String >,
+                Map<String, List< List<String> > >,
+                Map<String, Int>,
+                >
+        {
+
+            val fannelName = FannelInfoTool.getCurrentFannelName(
+                fannelInfoMap
+            )
+            val viewLayoutListSrc = LayoutSettingFile.readFromList(
+                context,
+                viewLayoutConList,
+                fannelName,
+                setReplaceVariableMap,
+            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
+//                listOf(
+////                    "indexListMap: ${indexListMap}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "File(viewLayoutPath).isFile: ${File(viewLayoutPath).isFile}",
+//                    "viewLayoutPath: ${viewLayoutPath}",
+//                    "viewLayoutListSrc: ${viewLayoutListSrc.joinToString("####")}",
+//                ).joinToString("\n\n") + "\n\n-----------\n\n"
+//            )
+            return execConstraintParse(
                 context,
                 viewLayoutListSrc,
                 whereForLog,
@@ -433,6 +522,203 @@ object ListSettingsForEditList  {
                     horizonPairsConList,
                     horizonTagToLinearPairConListMap,
                 )
+            )
+        }
+
+        private suspend fun execConstraintParse(
+            context: Context?,
+            viewLayoutListSrc: List<String>,
+            whereForLog: String,
+        ): Triple<
+                Map<String, String >,
+                Map<String, List< List<String> > >,
+                Map<String, Int>,
+                >
+        {
+            val typeSeparator = EditComponent.Template.typeSeparator
+            val frameTypeName = EditComponent.Template.LayoutKey.FRAME.key
+            val contentsTypeName = EditComponent.Template.LayoutKey.CONTENTS.key
+            val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+            var curFrameTag = String()
+            val framePairsConList: MutableList< Pair<String, String > > = mutableListOf()
+            val frameTagToContentsPairsConList: MutableList< Pair<String, List<String> > > = mutableListOf()
+            var tagToIdList: List<Pair<String, Int>> = emptyList()
+            var frameMapAndFrameTagToContentsMapList:
+                    Pair<List<Pair<String, String>>, Map<String, List<List<String>>>> = Pair(
+                        emptyList(),
+                        emptyMap()
+                    )
+            val errBlankReturnValue = Pair(
+                emptyList<Pair<String, String>>(),
+                emptyMap<String, List<List<String>>>()
+            )
+            withContext(Dispatchers.IO) {
+                val tagListMakeJob = async {
+                    val startTagId = 600000
+                    val tagKeyName = EditComponent.Template.EditComponentKey.TAG.key
+                    val tagRegex = Regex("[^a-zA-Z0-9_]${tagKeyName}=[\"'`]*[a-zA-Z0-9_$}{]+[\"'`]*")
+                    val removeNoCharPrefixRegex = Regex("^[^a-zA-Z0-9_]${tagKeyName}=(.*)")
+                    val removeQuotePrefix = Regex("[\"'`]")
+                    val tagToIdListSrc =
+                        tagRegex.findAll(
+                            "\n${viewLayoutListSrc.joinToString("\n")}\n"
+                        ).mapIndexed {
+                            index, matchResult ->
+                            val tagCon = matchResult.value.replace(
+                                removeNoCharPrefixRegex,
+                                "$1"
+                            ).replace(
+                                removeQuotePrefix,
+                                String(),
+                            )
+                            tagCon to startTagId + index
+                    }
+                    tagToIdListSrc
+                }
+                val viewLayoutParseJob = async {
+                    viewLayoutListSrc.forEachIndexed { index,
+                                                       smallLayoutMapCon ->
+                        val smallLayoutMapConList = smallLayoutMapCon.split("=")
+                        val layoutKey =
+                            smallLayoutMapConList.firstOrNull()
+                                ?: return@forEachIndexed
+                        val layoutTypePairConList =
+                            smallLayoutMapConList
+                                .filterIndexed { innerIndex, _ -> innerIndex > 0 }
+                                .joinToString("=")
+                                .let {
+                                    val trimSectionCon = QuoteTool.trimBothEdgeQuote(it)
+                                    QuoteTool.splitBySurroundedIgnore(
+                                        trimSectionCon,
+                                        sectionSeparator
+                                    ).filter {
+                                        it.isNotEmpty()
+                                    }
+                                }
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse.txt").absolutePath,
+//                    listOf(
+//                        "layoutKey: ${layoutKey}",
+//                        "smallLayoutMapCon: ${smallLayoutMapCon}",
+//                        "framePairsConList: ${framePairsConList}",
+//                        "linearPairConList: ${linearPairConList}",
+//                    ).joinToString("\n") + "\n----\n"
+//                )
+//                 Pair<
+//                Map<String, String >,
+//                Triple<
+//                        List<Pair<String, String>>,
+//                        List<Pair<String, String>>,
+//                        Map<String, List< List<String> > >,
+//                        >,
+//                >
+                        when (true) {
+                            (layoutKey == frameTypeName) -> {
+                                val frameLayoutKeyPairListCon =
+                                    layoutTypePairConList.firstOrNull()
+                                        ?: String()
+                                val tag =
+                                    CmdClickMap.createMap(
+                                        frameLayoutKeyPairListCon,
+                                        typeSeparator
+                                    ).firstOrNull {
+                                        val key = it.first
+                                        key == tagKey
+                                    }?.second.let {
+                                        ViewLayoutCheck.isTagBlankErr(
+                                            context,
+                                            it,
+                                            whereForLog,
+                                            EditComponent.Template.TagManager.TagGenre.FRAME_TAG
+                                        ).let { isTagBlankErr ->
+                                            if (
+                                                isTagBlankErr
+                                            ) return@async errBlankReturnValue
+                                        }
+                                        ViewLayoutCheck.isVariableUseErr(
+                                            context,
+                                            it,
+                                            whereForLog,
+                                            EditComponent.Template.TagManager.TagGenre.FRAME_TAG
+                                        ).let { isTagBlankErr ->
+                                            if (
+                                                isTagBlankErr
+                                            ) return@async errBlankReturnValue
+                                        }
+                                        QuoteTool.trimBothEdgeQuote(it)
+                                    }
+                                curFrameTag = tag
+                                val frameTagToCon = Pair(
+                                    curFrameTag,
+                                    frameLayoutKeyPairListCon
+                                )
+                                if (
+                                    frameTagToCon.first.isEmpty()
+                                ) return@forEachIndexed
+                                framePairsConList.add(frameTagToCon)
+                            }
+
+                            (layoutKey == contentsTypeName) -> {
+                                val frameTagToContentsKeyPairCon = Pair(
+                                    curFrameTag,
+                                    layoutTypePairConList
+                                )
+                                if (
+                                    frameTagToContentsKeyPairCon.first.isEmpty()
+                                ) return@forEachIndexed
+                                frameTagToContentsPairsConList.add(frameTagToContentsKeyPairCon)
+                            }
+
+                            else -> {}
+                        }
+                        tagListMakeJob.await()
+                    }
+
+                    val frameTagList = mutableListOf<String>()
+                    frameTagToContentsPairsConList.forEach {
+                        val frameTag = it.first
+                        if (
+                            frameTag.isNotEmpty()
+                            && !frameTagList.contains(frameTag)
+                        ) frameTagList.add(frameTag)
+                    }
+                    val frameTagToContentsPairConListMap = frameTagList.map { frameTag ->
+                        frameTag to frameTagToContentsPairsConList.filter {
+                            it.first == frameTag
+                        }.map {
+                            it.second
+                        }
+                    }.toMap()
+                    framePairsConList to frameTagToContentsPairConListMap
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_parse_end.txt").absolutePath,
+//                listOf(
+////                    "layoutKey: ${layoutKey}",
+//                    "framePairsConList: ${framePairsConList}",
+//                    "linearPairConList: ${linearPairConList}",
+//                    "\npair: ${Pair(
+//                        framePairsConList.toMap(),
+//                        frameTagToLinearPairConListMap,
+//                    )}"
+//                ).joinToString("\n") + "\n----\n"
+//            )
+                }
+                tagToIdList = tagListMakeJob.await().toList()
+                frameMapAndFrameTagToContentsMapList = viewLayoutParseJob.await()
+            }
+            val isErr = frameMapAndFrameTagToContentsMapList ==
+                    errBlankReturnValue
+            if(isErr){
+                return Triple(
+                    errBlankReturnValue.first.toMap(),
+                    errBlankReturnValue.second,
+                    emptyMap()
+                )
+            }
+            return Triple(
+                frameMapAndFrameTagToContentsMapList.first.toMap(),
+                frameMapAndFrameTagToContentsMapList.second,
+                tagToIdList.toMap()
             )
         }
     }

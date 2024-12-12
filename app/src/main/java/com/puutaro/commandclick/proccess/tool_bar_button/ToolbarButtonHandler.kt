@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.widget.FrameLayout
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSaverByTag
@@ -120,9 +120,9 @@ private object ScriptSaver{
                     onScriptStr
                 } == ClickSettingsForToolbarButton.OnScriptSave.ON.name
         if (!isScriptSave) return
-        val editComponentListAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
-        editComponentListAdapter.saveFannelCon()
+        val editConstraintListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
+        editConstraintListAdapter.saveFannelCon()
 //        ScriptFileSaver.save(editFragment)
     }
 }

@@ -778,6 +778,7 @@ object BitmapTool {
                 val scale = resources.displayMetrics.density
                 val bitmapSrc = BitmapFactory.decodeResource(resources, resourceId)
                 val bitmapConfig = bitmapSrc.config
+                    ?: return null
                 // set default bitmap config if none
 //            if (bitmapConfig == null) {
 //                bitmapConfig = Bitmap.Config.ARGB_8888
@@ -1536,8 +1537,9 @@ object BitmapTool {
             val bitmap2Height = bitmapImage.height
             val marginLeft = (bitmapBackground.width * 0.5 - bitmap2Width * 0.5).toFloat()
             val marginTop = (bitmapBackground.height * 0.5 - bitmap2Height * 0.5).toFloat()
+            val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmap2Width, bitmap2Height, bitmapBackground.config)
+                Bitmap.createBitmap(bitmap2Width, bitmap2Height, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
@@ -1551,8 +1553,9 @@ object BitmapTool {
             val bitmap2Height = bitmapImage.height
             val marginLeft = (0..(bitmapBackground.width - bitmap2Width)).random().toFloat()
             val marginTop = (0..(bitmapBackground.height - bitmap2Height)).random().toFloat()
+            val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bitmapBackground.config)
+                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
@@ -1567,10 +1570,11 @@ object BitmapTool {
         ): Bitmap {
             val bitmapWidth = bitmapBackground.width
             val bitmapHeight = bitmapBackground.height
-            val bitmap2Width = bitmapImage.width
-            val bitmap2Height = bitmapImage.height
+//            val bitmap2Width = bitmapImage.width
+//            val bitmap2Height = bitmapImage.height
+            val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bitmapBackground.config)
+                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, pivotX, pivotY, null)

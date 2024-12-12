@@ -4,12 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/icon_caption_for_edit_layout"
     android:layout_width="0dp"
-    android:layout_height="@dimen/toolbar_layout_height"
+    android:layout_height="0dp"
     android:background="@null"
     android:backgroundTint="@null"
-    android:layout_marginStart="0dp"
-    android:layout_marginEnd="0dp"
-    android:layout_weight="1"
     >
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon_caption_for_edit_image"
@@ -21,8 +18,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="0dp"
-        android:background="@null"
-        android:backgroundTint="@null"
         />
 <!--    "@drawable/icons8_wheel"-->
     <com.puutaro.commandclick.custom_view.OutlineTextView
@@ -35,8 +30,6 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_gravity="center"
-        android:background="@null"
-        android:backgroundTint="@null"
         />
 </FrameLayout>
 

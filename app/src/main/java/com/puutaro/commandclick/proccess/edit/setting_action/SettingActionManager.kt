@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncManager
@@ -189,7 +189,7 @@ class SettingActionManager {
         busyboxExecutor: BusyboxExecutor?,
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
-        editComponentListAdapterArg: EditComponentListAdapter? = null,
+        editConstraintListAdapterArg: EditConstraintListAdapter? = null,
     ): Map<String, String> {
         if(
             fragment == null
@@ -212,7 +212,7 @@ class SettingActionManager {
             busyboxExecutor,
         )
         settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
-            editComponentListAdapterArg,
+            editConstraintListAdapterArg,
             keyToSubKeyConList,
             SettingActionExecutor.mapRoopKeyUnit,
             keyToSubKeyConWhere,
@@ -322,7 +322,7 @@ class SettingActionManager {
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
-            editComponentListAdapterArg: EditComponentListAdapter?,
+            editConstraintListAdapterArg: EditConstraintListAdapter?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
             keyToSubKeyConWhere: String,
@@ -454,7 +454,7 @@ class SettingActionManager {
 //                            ).joinToString("\n") + "\n\n=============\n\n"
 //                        )
                         makeResultLoopKeyToVarNameValueMap(
-                            editComponentListAdapterArg,
+                            editConstraintListAdapterArg,
                             importedKeyToSubKeyConList,
                             addLoopKey(curMapLoopKey),
                             "${importPath} by imported",
@@ -526,7 +526,7 @@ class SettingActionManager {
                             curSettingActionKey.key,
                             subKeyCon,
                             busyboxExecutor,
-                            editComponentListAdapterArg,
+                            editConstraintListAdapterArg,
                             renewalVarName,
                             keyToSubKeyConWhere,
                         )?.let {
@@ -1414,7 +1414,7 @@ class SettingActionManager {
                 settingVarKey: String,
                 subKeyCon: String,
                 busyboxExecutor: BusyboxExecutor?,
-                editComponentListAdapterArg: EditComponentListAdapter?,
+                editConstraintListAdapterArg: EditConstraintListAdapter?,
                 renewalVarName: String?,
                 keyToSubKeyConWhere: String,
             ): Pair<String, String>? {
@@ -1477,7 +1477,7 @@ class SettingActionManager {
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor,
-                                editComponentListAdapterArg,
+                                editConstraintListAdapterArg,
                             )
                             val checkErr = resultStrToCheckErr.second
                             if(checkErr != null){

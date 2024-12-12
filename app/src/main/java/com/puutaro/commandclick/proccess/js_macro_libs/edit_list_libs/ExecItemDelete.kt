@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs
 
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
@@ -120,7 +120,7 @@ object ExecItemDelete {
 //        }
 
         fun execDeleteAfterConfirm(
-            editComponentListAdapter: EditComponentListAdapter,
+            editConstraintListAdapter: EditConstraintListAdapter,
             parentDirPath: String,
             selectedItem: String,
         ){
@@ -131,7 +131,7 @@ object ExecItemDelete {
             when(true){
                 removeTargetPathPbj.isFile
                 -> deleteFile(
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     parentDirPath,
                     selectedItem,
                 )
@@ -144,7 +144,7 @@ object ExecItemDelete {
         }
 
         private fun deleteFile(
-            editComponentListAdapter: EditComponentListAdapter,
+            editConstraintListAdapter: EditConstraintListAdapter,
             parentDirPath: String,
             selectedItem: String,
         ){

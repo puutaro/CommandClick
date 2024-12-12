@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit_list
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.ExecShowDescription
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -64,11 +64,11 @@ class JsDesc(
             currentFannelName,
             currentFannelState
         ) ?: return
-        val editComponentListAdapter =
-            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editFragment.binding.editListRecyclerView.adapter as EditConstraintListAdapter
         ExecShowDescription.desc(
             editFragment,
-            editComponentListAdapter,
+            editConstraintListAdapter,
             listIndexPosition
         )
     }

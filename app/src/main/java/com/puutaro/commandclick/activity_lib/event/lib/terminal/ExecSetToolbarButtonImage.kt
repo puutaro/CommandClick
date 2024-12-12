@@ -172,7 +172,7 @@ object ExecSetToolbarButtonImage {
             imageButton.setImageDrawable(animation)
             imageButton.scaleType = ImageView.ScaleType.FIT_XY
             animation.start()
-            imageButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ff8800"))
+                imageButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ff8800"))
         }
 
         private fun setIconForSelectionBarActiveGBar(

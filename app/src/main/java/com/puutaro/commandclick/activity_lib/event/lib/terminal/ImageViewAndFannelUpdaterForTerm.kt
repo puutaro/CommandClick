@@ -2,14 +2,14 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
-import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +49,7 @@ object ImageViewAndFannelUpdaterForTerm {
         if(editListIndex is Int) {
             val holder = editListRecyclerView.findViewHolderForAdapterPosition(
                 editListIndex
-            ) as EditComponentListAdapter.EditListViewHolder
+            ) as EditConstraintListAdapter.EditListViewHolder
             val materialCardView = holder.materialCardView
             val frameLayoutList = tagNameList.map {
                     tagName ->
@@ -74,7 +74,7 @@ object ImageViewAndFannelUpdaterForTerm {
 //                ).joinToString("\n")
 //            )
                 CoroutineScope(Dispatchers.Main).launch {
-                    EditFrameMaker.setImageViewForDynamic(
+                    EditConstraintFrameMaker.setImageViewForDynamic(
                         imageView,
                         imageMap,
                         imagePropertyMap,
@@ -85,13 +85,13 @@ object ImageViewAndFannelUpdaterForTerm {
             return
         }
 
-//        val editToolbarTag = activity.getString(
-//            R.string.edit_toolbar_tag
-//        )
+        val editToolbarTag = activity.getString(
+            R.string.edit_toolbar_tag
+        )
         val srcFragmentEnum = EditListRecyclerViewGetter.RecyclerViewFragment.entries.firstOrNull {
             it.frag == srcFragmentStr
         } ?: return
-        val linearLayout = when(srcFragmentEnum){
+        val constraintLayout = when(srcFragmentEnum){
             EditListRecyclerViewGetter.RecyclerViewFragment.EDIT
                 -> {
                 val cmdEditFragmentTag = TargetFragmentInstance.getCmdEditFragmentTag(
@@ -107,22 +107,20 @@ object ImageViewAndFannelUpdaterForTerm {
                     ) return@let null
                     fragment
                 }
-                editFragment?.binding?.editFooterHorizonLayout?.findViewWithTag<LinearLayoutCompat>(
-                    indexOrParentTagName
-                )
+                editFragment?.binding?.editListFooterConstraintLayout
             }
             EditListRecyclerViewGetter.RecyclerViewFragment.WEB
                 -> {
                 terminalFragment.editListDialogForOrdinaryRevolver
                     ?.getActiveEditListOrdinaryDialog()
-                    ?.findViewById<LinearLayoutCompat>(
-                        R.id.edit_list_dialog_footer_horizon_layout
+                    ?.findViewById<ConstraintLayout>(
+                        R.id.edit_list_dialog_footer_constraint_layout
                     )
             }
         }
         val frameLayoutList = tagNameList.map {
                 tagName ->
-            linearLayout?.findViewWithTag<FrameLayout>(
+            constraintLayout?.findViewWithTag<FrameLayout>(
                 tagName
             )
         }
@@ -133,7 +131,7 @@ object ImageViewAndFannelUpdaterForTerm {
             } as? AppCompatImageView
                 ?: return@forEach
             CoroutineScope(Dispatchers.Main).launch {
-                EditFrameMaker.setImageViewForDynamic(
+                EditConstraintFrameMaker.setImageViewForDynamic(
                     imageView,
                     imageMap,
                     imagePropertyMap,

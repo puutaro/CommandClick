@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
-import com.puutaro.commandclick.proccess.edit_list.EditFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -53,21 +53,21 @@ object BkImageSettingsForEditList {
                 tagKey
             )
         }
-        return EditFrameMaker.make(
+        return EditConstraintFrameMaker.make(
             context,
+            100000,
+            null,
             buttonFrameLayout,
             fannelInfoMap,
             setReplaceVariableMap,
             busyboxExecutor,
             editListBkPairs,
             ViewGroup.LayoutParams.MATCH_PARENT,
-            null,
             tag,
 //            true,
         null,
             requestBuilderSrc,
             density,
-            true,
         )
     }
 

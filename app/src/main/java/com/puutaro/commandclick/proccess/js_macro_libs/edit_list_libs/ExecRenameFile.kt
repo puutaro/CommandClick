@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
-import com.puutaro.commandclick.component.adapter.EditComponentListAdapter
+import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.util.file.MapListFileRenamer
 import com.puutaro.commandclick.util.file.ReadText
@@ -77,17 +77,17 @@ object ExecRenameFile {
 //        val binding = fragment.binding
 //        val listIndexForEditAdapter =
 //            blinding.editListRecycerView.adapter as EditComponentListAdapter
-        val editComponentListAdapter =
-            editListRecyclerView.adapter as EditComponentListAdapter
+        val editConstraintListAdapter =
+            editListRecyclerView.adapter as EditConstraintListAdapter
         val mapListSeparator = ListSettingsForEditList.MapListPathManager.mapListSeparator
         val selectedLineMap =
-            editComponentListAdapter.lineMapList.getOrNull(
+            editConstraintListAdapter.lineMapList.getOrNull(
                 listIndexPosition
             ) ?: return
         val mapListPath = FilePrefixGetter.get(
-            editComponentListAdapter.fannelInfoMap,
-            editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.editListMap,
+            editConstraintListAdapter.fannelInfoMap,
+            editConstraintListAdapter.setReplaceVariableMap,
+            editConstraintListAdapter.indexListMap,
             ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
         ) ?: String()
         val isExist = ReadText(
