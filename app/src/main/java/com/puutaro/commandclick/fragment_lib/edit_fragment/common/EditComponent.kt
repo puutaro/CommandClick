@@ -84,9 +84,6 @@ object EditComponent {
 
                 enum class LayoutKey(val key: String){
                         FRAME("frame"),
-//                        FOOTER("footer"),
-                        VERTICAL("vertical"),
-                        HORIZON("horizon"),
                         CONTENTS("contents")
                 }
 
