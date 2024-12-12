@@ -119,7 +119,7 @@ object TextJsDialogV3{
         ).toMap()
         webViewDialogInstance = Dialog(
             context,
-            R.style.FullScreenRoundCornerDialogTheme,
+            R.style.fullScreenRoundCornerDialogTheme,
         )
         webViewDialogInstance?.setContentView(
             R.layout.text_dialog_v3_layout,

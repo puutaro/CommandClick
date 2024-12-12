@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomSheetDialogThemeWithNoDimmTransBk" parent="Theme.CommandClick">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@drawable/trans_drawable</item>
+    </style>
+</resources>

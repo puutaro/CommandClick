@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
@@ -52,6 +53,7 @@ object EditConstraintFrameMaker {
     private val layoutGravityKey = EditComponent.Template.EditComponentKey.LAYOUT_GRAVITY.key
     private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
     private val elevationkey = EditComponent.Template.EditComponentKey.ELEVATION.key
+    private val alphaKey = EditComponent.Template.EditComponentKey.ALPHA.key
 
     private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
     private val topToBottomKey = EditComponent.Template.EditComponentKey.TOP_TO_BOTTOM.key
@@ -76,6 +78,7 @@ object EditConstraintFrameMaker {
 
     private val imagePathsKey = EditComponent.Template.ImageManager.ImageKey.PATHS.key
     private val imageDelayKey = EditComponent.Template.ImageManager.ImageKey.DELAY.key
+    private val imageFadeInMilliKey = EditComponent.Template.ImageManager.ImageKey.FADE_IN_MILLI.key
 //    private val imageTagKey = EditComponent.Template.ImagePropertyManager.PropertyKey.TAG.key
     private val imageColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.COLOR.key
     private val imageBkColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.BK_COLOR.key
@@ -723,6 +726,19 @@ object EditConstraintFrameMaker {
                 }
             } ?: elevation
             elevation = elevationFloat
+            val alphaFloat = withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    alphaKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            } ?: alpha
+            alpha = alphaFloat
 //            val paramConst = try {
 //                param as ConstraintLayout.LayoutParams
 //            } catch (e: Exception){
@@ -922,6 +938,20 @@ object EditConstraintFrameMaker {
             }?.let {
                 elevation = it
             }
+            withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    alphaKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                alpha = it
+            }
         }
     }
 
@@ -945,13 +975,27 @@ object EditConstraintFrameMaker {
                 imagePathsKey,
             )?.split(valueSeparator)
         }
-//        imageView.apply {
-//            isVisible = !imagePathList.isNullOrEmpty()
-//        }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lBk_image.txt").absolutePath,
+//            listOf(
+//                "imageMap: ${imageMap}",
+//                "imagePropertyMap: ${imagePropertyMap}"
+//            ).joinToString("\n") + "\n\n==========\n\n"
+//        )
         when(
             imagePathList.isNullOrEmpty()
         ) {
-            true -> imageView.setImageDrawable(null)
+            true -> {
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lBk_image.txt").absolutePath,
+//                    listOf(
+//                        "bk: ${bk}",
+//                        "imageMap: ${imageMap}",
+//                        "imagePropertyMap: ${imagePropertyMap}"
+//                    ).joinToString("\n") + "\n\n==========\n\n"
+//                )
+                imageView.setImageDrawable(null)
+            }
             else -> {
                 imageView.apply {
                     val visibilityValue = withContext(Dispatchers.IO) {
@@ -986,10 +1030,22 @@ object EditConstraintFrameMaker {
                             }
 
                             else -> {
+                                val fadeInMilli = withContext(Dispatchers.IO) {
+                                    imageMap?.get(
+                                        imageFadeInMilliKey,
+                                    )?.let {
+                                        try {
+                                            it.toInt()
+                                        } catch (e: Exception){
+                                            null
+                                        }
+                                    }
+                                }
                                 execSetSingleImage(
                                     imageView,
                                     imagePathList.firstOrNull(),
-                                    requestBuilderSrc
+                                    requestBuilderSrc,
+                                    fadeInMilli,
                                 )
                             }
                         }
@@ -1317,7 +1373,7 @@ object EditConstraintFrameMaker {
         if(
             imagePathList.isNullOrEmpty()
             ) return
-        imageView.isVisible = true
+//        imageView.isVisible = true
         CoroutineScope(Dispatchers.Main).launch {
             when (imagePathList.size == 1) {
                 false -> {
@@ -1340,10 +1396,22 @@ object EditConstraintFrameMaker {
                 }
 
                 else -> {
+                    val fadeInMilli = withContext(Dispatchers.IO) {
+                        imageMap?.get(
+                            imageFadeInMilliKey,
+                        )?.let {
+                            try {
+                                it.toInt()
+                            } catch (e: Exception){
+                                null
+                            }
+                        }
+                    }
                     execSetSingleImage(
                         imageView,
                         imagePathList.firstOrNull(),
-                        null
+                        null,
+                        fadeInMilli,
                     )
                 }
             }
@@ -1353,7 +1421,8 @@ object EditConstraintFrameMaker {
     private suspend fun execSetSingleImage(
         imageView: AppCompatImageView,
         imagePathSrc: String?,
-        requestBuilderSrc: RequestBuilder<Drawable>?
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        fadeInMilli: Int?,
     ){
         if(
             imagePathSrc.isNullOrEmpty()
@@ -1385,13 +1454,23 @@ object EditConstraintFrameMaker {
 //                    "icon: ${icon?.str}",
 //                ).joinToString("\n\n")
 //            )
-            Glide.with(imageViewContext)
-                .load(imagePathSrc)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .dontAnimate()
-                .thumbnail(requestBuilder)
-                .into(imageView)
+            when(fadeInMilli != null) {
+                true -> Glide.with(imageViewContext)
+                    .load(imagePathSrc)
+                    .transition(DrawableTransitionOptions.withCrossFade(fadeInMilli))
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .dontAnimate()
+                    .thumbnail(requestBuilder)
+                    .into(imageView)
+                else -> Glide.with(imageViewContext)
+                    .load(imagePathSrc)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .dontAnimate()
+                    .thumbnail(requestBuilder)
+                    .into(imageView)
+            }
             return
         }
         val iconType = withContext(Dispatchers.IO) {
@@ -1433,13 +1512,24 @@ object EditConstraintFrameMaker {
 //            imageView.isVisible = false
 //            return
 //        }
-        Glide.with(imageViewContext)
-            .load(bitmap)
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .thumbnail(requestBuilder)
-            .into(imageView)
+        when(fadeInMilli != null) {
+            true ->
+                Glide.with(imageViewContext)
+                .load(bitmap)
+                .transition(DrawableTransitionOptions.withCrossFade(fadeInMilli))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .thumbnail(requestBuilder)
+                .into(imageView)
+            else ->  Glide.with(imageViewContext)
+                .load(bitmap)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .thumbnail(requestBuilder)
+                .into(imageView)
+        }
     }
+
 
     private suspend fun execSetMultipleImage(
         imageView: AppCompatImageView,

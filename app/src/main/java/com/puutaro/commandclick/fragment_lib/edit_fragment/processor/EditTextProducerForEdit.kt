@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.graphics.drawable.Drawable
+import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -79,9 +80,6 @@ object EditTextProducerForEdit {
         }
         val editListToolbarConstraintLayout =
             binding.editListToolbarConstraintLayout
-//                .apply {
-//                isVisible = !isOnlyCmdValEdit
-//            }
 
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "editList.txt").absolutePath,
@@ -90,11 +88,6 @@ object EditTextProducerForEdit {
 //            ).joinToString("\n")
 //        )
         val editListFooterConstraintLayout = binding.editListFooterConstraintLayout
-//            listOf(
-//            binding.editFragment.findViewById<ConstraintLayout>(
-//                R.id.edit_list_footer_constraint_layout
-//            )
-//        )
 
         CoroutineScope(Dispatchers.IO).launch {
             val context = editFragment.context
@@ -119,7 +112,7 @@ object EditTextProducerForEdit {
                 binding.editTextView,
                 binding.editTitleImage,
                 binding.editListRecyclerView,
-                binding.editListBkFrame,
+                binding.editListBkFrame as FrameLayout,
                 binding.editListSearchEditText,
                 editListFooterConstraintLayout,
                 editListToolbarConstraintLayout,

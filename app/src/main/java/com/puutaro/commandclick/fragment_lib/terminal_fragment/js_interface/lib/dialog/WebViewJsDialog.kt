@@ -138,7 +138,7 @@ class WebViewJsDialog(
         val context = terminalFragment?.context
         val webViewDialog = Dialog(
             context as Context,
-            R.style.FullScreenRoundCornerDialogTheme,
+            R.style.fullScreenRoundCornerDialogTheme,
             )
         webViewDialog.setContentView(
             R.layout.dialog_webview_layout,

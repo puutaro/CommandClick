@@ -111,6 +111,7 @@ object EditComponent {
                         ON_CLICK("onClick"),
                         ON_SAVE("onSave"),
                         ON_CONSEC("onConsec"),
+                        ALPHA("alpha"),
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
                         HEIGHT("height"),
                         WIDTH("width"),
@@ -250,6 +251,7 @@ object EditComponent {
                        enum class ImageKey(val key: String) {
                                PATHS("paths"),
                                DELAY("delay"),
+                               FADE_IN_MILLI("fadeInMilli"),
                        }
 
                         private const val iconMacroSeprator = ":"

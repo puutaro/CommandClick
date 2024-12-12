@@ -51,7 +51,7 @@ class EditListDialogOrdinary(
     val editListDialogOrdinary = context?.let {
         Dialog(
             it,
-            R.style.FullScreenRoundCornerDialogTheme
+            R.style.BottomSheetDialogThemeWithNoDimmTransBk
         ).apply {
             setContentView(
                 R.layout.edit_list_dialog_layout
@@ -90,7 +90,7 @@ class EditListDialogOrdinary(
         )
     private val editListBkFrameSrc =
         editListDialogOrdinary?.findViewById<FrameLayout>(
-            R.id.edit_list_bk_frame
+            R.id.edit_list_dialog_bk_frame
         )
 
     private val editListSearchEditTextSrc =
@@ -240,12 +240,7 @@ class EditListDialogOrdinary(
                     editListBkFrame,
                     editListSearchEditText,
                     contentsLayoutForFooter,
-//                    editFooterHorizonLayout,
-//                    verticalLinearListForFooter,
-//                    horizonLinearListForFooter,
-//                    verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter,
                     null,
-//                    null,
                     mainFannelConList,
                     density,
                     requestBuilderSrc,

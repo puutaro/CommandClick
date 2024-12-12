@@ -6,12 +6,15 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object BkImageSettingsForEditList {
 
@@ -53,10 +56,21 @@ object BkImageSettingsForEditList {
                 tagKey
             )
         }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lBk.txt").absolutePath,
+//            listOf(
+//                "tag: ${tag}",
+//                "editListBkPairs: ${editListBkPairs}"
+//            ).joinToString("\n")
+//        )
+        val bkId = 10000
+        val tagIdMap = mapOf(
+            "bk" to bkId
+        )
         return EditConstraintFrameMaker.make(
             context,
-            100000,
-            null,
+            bkId,
+            tagIdMap,
             buttonFrameLayout,
             fannelInfoMap,
             setReplaceVariableMap,

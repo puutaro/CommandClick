@@ -7,7 +7,19 @@
     android:layout_height="match_parent"
     android:background="@null"
     android:backgroundTint="@null">
-
+    <include
+        android:id="@+id/edit_list_dialog_bk_frame"
+        layout="@layout/icon_caption_layout_for_edit_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:foregroundGravity="center"
+        android:background="@color/trans"
+        android:backgroundTint="@color/trans"
+        />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/edit_list_dialog_title_image"
         android:layout_width="0dp"
@@ -72,40 +84,22 @@
         android:background="@null"
         android:backgroundTint="@null"
         />
-    <FrameLayout
-        android:id="@+id/edit_list_dialog_frame_layout_view"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/edit_list_dialog_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/edit_list_dialog_title_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/edit_list_dialog_search_edit_text"
-        android:foregroundGravity="center"
+        android:textIsSelectable="true"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:layout_gravity="center"
         android:background="@null"
         android:backgroundTint="@null"
-        >
-        <FrameLayout
-            android:id="@+id/edit_list_bk_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:foregroundGravity="center"
-            android:background="@null"
-            android:backgroundTint="@null"
-            >
-        </FrameLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/edit_list_dialog_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textIsSelectable="true"
-            android:scrollbars="vertical"
-            android:fadeScrollbars="false"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:backgroundTint="@null"
-            />
-    </FrameLayout>
+        />
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_list_dialog_search_edit_text"
         android:layout_width="0dp"

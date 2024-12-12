@@ -147,7 +147,7 @@ class TextJsDialogV2(
         ).toMap()
         textDialogObj = Dialog(
             context,
-            R.style.FullScreenRoundCornerDialogTheme
+            R.style.fullScreenRoundCornerDialogTheme
         )
         textDialogObj?.setContentView(
             R.layout.text_dialog_v2_layout
