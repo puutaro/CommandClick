@@ -53,16 +53,16 @@ object ExecAddForEditListAdapter {
     ){
 //        val binding = editFragment.binding
 //        val editListRecyclerView = binding.editListRecyclerView
-        val editComponentListAdapter =
+        val editConstraintListAdapter =
             editListRecyclerView.adapter as EditConstraintListAdapter
 //        val addLineMap = CmdClickMap.createMap(
 //            addLineMap,
 //            ListSettingsForListIndex.MapListPathManager.mapListSeparator
 //        ).toMap()
-        editComponentListAdapter.lineMapList.add(insertIndex, addLineMap)
+        editConstraintListAdapter.lineMapList.add(insertIndex, addLineMap)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
-                editComponentListAdapter.notifyItemInserted(insertIndex)
+                editConstraintListAdapter.notifyItemInserted(insertIndex)
             }
             withContext(Dispatchers.IO) {
                 val listInsertWaitTime = 200L
@@ -220,13 +220,13 @@ object ExecAddForEditListAdapter {
         insertLineMap: Map<String, String>,
     ){
 //        val context = editFragment.context
-        val editComponentListAdapter =
+        val editConstraintListAdapter =
             editListRecyclerView.adapter as EditConstraintListAdapter
         val mapListPath =
             FilePrefixGetter.get(
                 fannelInfoMap,
                 setReplaceVariableMap,
-                editComponentListAdapter.indexListMap,
+                editConstraintListAdapter.indexListMap,
                 ListSettingsForEditList.ListSettingKey.MAP_LIST_PATH.key,
             )  ?: String()
 //        FileSystems.writeFile(
@@ -255,7 +255,7 @@ object ExecAddForEditListAdapter {
 //        val con = insertLineMap.get(
 //            ListSettingsForListIndex.MapListPathManager.Key.SRC_CON.key
 //        ) ?: String()
-        editComponentListAdapter.lineMapList.contains(insertLineMap).let {
+        editConstraintListAdapter.lineMapList.contains(insertLineMap).let {
                 isDuplidate ->
             if(
                 isDuplidate
@@ -274,13 +274,13 @@ object ExecAddForEditListAdapter {
 //        val editComponentAdapter =
 //            editFragment.binding.editListRecyclerView.adapter as EditComponentListAdapter
         val sortType = ListSettingsForEditList.getSortType(
-            editComponentListAdapter.fannelInfoMap,
-            editComponentListAdapter.setReplaceVariableMap,
-            editComponentListAdapter.indexListMap
+            editConstraintListAdapter.fannelInfoMap,
+            editConstraintListAdapter.setReplaceVariableMap,
+            editConstraintListAdapter.indexListMap
         )
         val insertIndex = getInsertIndex(
             sortType,
-            editComponentListAdapter,
+            editConstraintListAdapter,
             insertLineMap,
         )
         MapListFileTool.insertByLastUpdate(

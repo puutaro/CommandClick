@@ -17,6 +17,7 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList.LogErrLabel
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -823,13 +824,15 @@ object EditComponent {
                         }
                 }
 
-                suspend fun makeLinearFrameTagToKeyPairsList(
-                        linearKeyValues: List<String>,
+                suspend fun makeContentsTagToKeyPairsList(
+                        context: Context?,
+                        contentsKeyValues: List<String>,
                         horizonVarNameToValueMap: Map<String, String>?,
                         srcTitle: String,
                         srcCon: String,
                         srcImage: String,
                         bindingAdapterPosition: Int,
+                        mapListElInfo: String,
                 ):  List<
                         Pair<
                                 String,
@@ -837,14 +840,14 @@ object EditComponent {
                         >
                         > {
                         return withContext(Dispatchers.IO) {
-                                val jobList = linearKeyValues.mapIndexed { index, linearFrameKeyPairsListConSrc ->
+                                val jobList = contentsKeyValues.mapIndexed { index, contentsKeyPairsListConSrc ->
                                         async {
                                                 if (
-                                                        linearFrameKeyPairsListConSrc.isEmpty()
+                                                        contentsKeyPairsListConSrc.isEmpty()
                                                 ) return@async index to Pair(String(), null)
-                                                val linearFrameKeyPairsListCon =
+                                                val contentsKeyPairsListCon =
                                                         Template.ReplaceHolder.replaceHolder(
-                                                                linearFrameKeyPairsListConSrc,
+                                                                contentsKeyPairsListConSrc,
                                                                 srcTitle,
                                                                 srcCon,
                                                                 srcImage,
@@ -857,17 +860,37 @@ object EditComponent {
                                                         }
                                                 val linearFrameKeyPairsList =
                                                         EditConstraintListAdapter.makeLinearFrameKeyPairsList(
-                                                                linearFrameKeyPairsListCon,
+                                                                contentsKeyPairsListCon,
                                                         )
-                                                val linearFrameTag =
+                                                val contentsTag =
                                                         PairListTool.getValue(
                                                                 linearFrameKeyPairsList,
                                                                 Template.EditComponentKey.TAG.key,
                                                         ) ?: String()
+                                                when(
+                                                        contentsTag.isEmpty()
+                                                        && !contentsKeyPairsListCon.isNullOrEmpty()
+                                                ) {
+                                                        true -> {
+                                                                ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
+                                                                        context,
+                                                                        contentsTag,
+                                                                        mapListElInfo,
+                                                                        EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
+                                                                ).let {
+                                                                        isTagBlankErrJob ->
+                                                                        if (!isTagBlankErrJob) return@let
+                                                                        return@async index to Pair(
+                                                                                String(),
+                                                                                String()
+                                                                        )
+                                                                }
+                                                        }
+                                                        else -> {}
+                                                }
                                                 index to Pair(
-                                                        linearFrameTag,
-//                                        linearFrameKeyPairsList,
-                                                        linearFrameKeyPairsListCon
+                                                        contentsTag,
+                                                        contentsKeyPairsListCon
                                                 )
                                         }
                                 }
@@ -885,41 +908,6 @@ object EditComponent {
                 }
 
                 fun makeContentsFrameLayout(
-                        context: Context,
-                ): FrameLayout {
-                        val dp50 =
-                                context.resources.getDimension(R.dimen.toolbar_layout_height)
-                        val contentsLayout =
-                                FrameLayout(context).apply {
-                                        layoutParams =
-                                                LinearLayoutCompat.LayoutParams(
-                                                        0,
-                                                        dp50.toInt()
-                                                )
-                                }
-                        val imageView =
-                                AppCompatImageView(context).apply {
-                                        layoutParams =
-                                                FrameLayout.LayoutParams(
-                                                        FrameLayout.LayoutParams.MATCH_PARENT,
-                                                        FrameLayout.LayoutParams.MATCH_PARENT
-                                                )
-                                }
-                        val textView =
-                                OutlineTextView(context).apply {
-                                        layoutParams =
-                                                FrameLayout.LayoutParams(
-                                                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                        FrameLayout.LayoutParams.WRAP_CONTENT
-                                                )
-                                }
-                        return contentsLayout.apply {
-                                addView(imageView)
-                                addView(textView)
-                        }
-                }
-
-                fun makeContentsFrameLayout2(
                         context: Context,
                 ): FrameLayout {
                         val dp50 =

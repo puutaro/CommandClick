@@ -569,7 +569,7 @@ class EditConstraintListAdapter(
 //                    ).joinToString("\n")
 //                )
                 val frameId = 10000
-                val frameFrameLayout = withContext(Dispatchers.Main) execSetFrame@{
+                withContext(Dispatchers.Main) execSetFrame@{
                     EditConstraintFrameMaker.make(
                         context,
                         frameId,
@@ -613,6 +613,7 @@ class EditConstraintListAdapter(
                         holder.srcImage,
                         holder.bindingAdapterPosition,
                         contentsChannel,
+                        mapListElInfo,
                     )
                 }
                 withContext(Dispatchers.IO) {
@@ -670,18 +671,6 @@ class EditConstraintListAdapter(
                                 async {
                                     val tagGenre =
                                         EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
-                                    val isTagBlankErrJob = async {
-                                        withContext(Dispatchers.IO) {
-                                            val isTagBlankErrJob =
-                                                ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
-                                                    context,
-                                                    contentsTag,
-                                                    mapListElInfo,
-                                                    tagGenre
-                                                )
-                                            isTagBlankErrJob
-                                        }
-                                    }
                                     val isDuplicateTagErrJob = async {
                                         withContext(Dispatchers.IO) {
                                             val alreadyUseTagListSrc =
@@ -708,8 +697,7 @@ class EditConstraintListAdapter(
                                             isDuplicateTagErr
                                         }
                                     }
-                                    isTagBlankErrJob.await()
-                                            || isDuplicateTagErrJob.await()
+                                    isDuplicateTagErrJob.await()
                                 }
                             val contentsKeyPairsListCon =
                                 contentsKeyPairsListConSrc?.let {
@@ -763,7 +751,7 @@ class EditConstraintListAdapter(
                                 val contentsFrameLayout = let {
                                     extractContentsFrameLayout
                                         ?: withContext(Dispatchers.Main) {
-                                            EditComponent.AdapterSetter.makeContentsFrameLayout2(
+                                            EditComponent.AdapterSetter.makeContentsFrameLayout(
                                                 context
                                             )
                                         }
@@ -945,9 +933,9 @@ class EditConstraintListAdapter(
                 -> {
                 }
             }
-            val editComponentListAdapter = editRecyclerView.adapter as EditConstraintListAdapter
+            val editConstraintListAdapter = editRecyclerView.adapter as EditConstraintListAdapter
             val lineMap =
-                editComponentListAdapter.lineMapList.getOrNull(
+                editConstraintListAdapter.lineMapList.getOrNull(
                     bindingAdapterPosition
                 ) ?: return
             val mapListPath = FilePrefixGetter.get(
@@ -1127,7 +1115,8 @@ class EditConstraintListAdapter(
         bindingAdapterPosition: Int,
         contentsChannel: Channel<
                 List<Pair<String, String?>>,
-            >
+            >,
+        mapListElInfo: String,
     ){
         val frameTagToContentsKeysListMapWithReplace =
             withContext(Dispatchers.IO) {
@@ -1146,13 +1135,15 @@ class EditConstraintListAdapter(
             val jobList = contentsKeysListMapWithReplace.mapIndexed setContents@{ contentsIndex, contentsKeyValues ->
                     async {
                         val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
-                            EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
+                            EditComponent.AdapterSetter.makeContentsTagToKeyPairsList(
+                                context,
                                 contentsKeyValues,
                                 frameVarNameToValueMap,
                                 srcTitle,
                                 srcCon,
                                 srcImage,
                                 bindingAdapterPosition,
+                                mapListElInfo,
                             )
                         }
                         contentsChannel.send(

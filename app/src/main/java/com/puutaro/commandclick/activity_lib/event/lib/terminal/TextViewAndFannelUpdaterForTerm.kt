@@ -52,7 +52,7 @@ object TextViewAndFannelUpdaterForTerm {
             terminalFragment,
             srcFragmentStr
         ) ?: return
-        val editComponentListAdapter =
+        val editConstraintListAdapter =
             editListRecyclerView.adapter as EditConstraintListAdapter
         if(editListIndex is Int) {
             val holder = editListRecyclerView.findViewHolderForAdapterPosition(
@@ -74,7 +74,7 @@ object TextViewAndFannelUpdaterForTerm {
                     view is OutlineTextView
                 } as? OutlineTextView
 
-                val lineMap = editComponentListAdapter.lineMapList.get(editListIndex)
+                val lineMap = editConstraintListAdapter.lineMapList.get(editListIndex)
                 holder.srcTitle = lineMap.get(
                     ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
                 ) ?: String()
@@ -97,7 +97,7 @@ object TextViewAndFannelUpdaterForTerm {
                     holder.getKeyPairListConMap()
                 }
                 UpdateAndSaveMainFannel.updateAndSave(
-                    editComponentListAdapter,
+                    editConstraintListAdapter,
                     keyPairListConMap,
                     tagName,
                     holder.srcTitle,
@@ -162,8 +162,8 @@ object TextViewAndFannelUpdaterForTerm {
                 view is OutlineTextView
             } as? OutlineTextView
             UpdateAndSaveMainFannel.updateAndSave(
-                editComponentListAdapter,
-                editComponentListAdapter.footerKeyPairListConMap,
+                editConstraintListAdapter,
+                editConstraintListAdapter.footerKeyPairListConMap,
                 String(),
                 String(),
                 String(),
@@ -259,13 +259,13 @@ object TextViewAndFannelUpdaterForTerm {
 
         private fun execUpdateAndSave(
             textView: AppCompatTextView?,
-            editComponentListAdapter: EditConstraintListAdapter,
+            editConstraintListAdapter: EditConstraintListAdapter,
             tagName: String,
             updateText: String,
             isSave: Boolean,
         ) {
             val isNotUpdate =
-                editComponentListAdapter.totalSettingValMap.get(tagName).isNullOrEmpty()
+                editConstraintListAdapter.totalSettingValMap.get(tagName).isNullOrEmpty()
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lUpdatetextView.txt").absolutePath,
 //                listOf(
@@ -277,11 +277,11 @@ object TextViewAndFannelUpdaterForTerm {
             if (
                 isNotUpdate
             ) return
-            editComponentListAdapter.updateMainFannelList(
+            editConstraintListAdapter.updateMainFannelList(
                 tagName,
                 updateText
             )
-            editComponentListAdapter.totalSettingValMap.get(tagName).let {
+            editConstraintListAdapter.totalSettingValMap.get(tagName).let {
                 textView?.setAutofillHints(updateText)
             }
 //            FileSystems.writeFile(
@@ -295,7 +295,7 @@ object TextViewAndFannelUpdaterForTerm {
 //                ).joinToString("\n")
 //            )
             if (!isSave) return
-            editComponentListAdapter.saveFannelCon()
+            editConstraintListAdapter.saveFannelCon()
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lUpdatetextView_saved.txt").absolutePath,
 //                listOf(

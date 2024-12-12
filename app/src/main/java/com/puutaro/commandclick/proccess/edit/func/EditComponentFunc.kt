@@ -16,7 +16,7 @@ object EditComponentFunc {
         val terminalFragment = terminalFragmentSrc
             ?: return String()
         val context = terminalFragment.context
-        val editComponentListAdapter = let {
+        val editConstraintListAdapter = let {
             if(
                 editConstraintListAdapterArg != null
             ) return@let editConstraintListAdapterArg
@@ -26,7 +26,7 @@ object EditComponentFunc {
             ) ?: return String()
             editListRecyclerViewSrc.adapter as EditConstraintListAdapter
         }
-        return editComponentListAdapter.getCurrentSettingVals(
+        return editConstraintListAdapter.getCurrentSettingVals(
             context,
             targetVariableName
         )?.let {

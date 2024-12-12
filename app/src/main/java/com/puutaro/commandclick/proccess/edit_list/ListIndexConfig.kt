@@ -447,7 +447,7 @@ object EditListConfig {
             val macroConList: List<String>,
         ){
             FOR_ONLY_CMD_VAL_EDIT(
-                ToolbarLayoutForOnlyCmdValEdit.toolbarLayoutForOnlyCmdValEdit2,
+                ToolbarLayoutForOnlyCmdValEdit.toolbarLayoutForOnlyCmdValEdit,
             ),
         }
     }
@@ -534,42 +534,8 @@ object EditListConfig {
         private val fitCenterImageScale = EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER.scale
         private val fitXyImageScale = EditComponent.Template.ImagePropertyManager.ImageScale.FIT_XY.scale
         private val textBoldStyle = EditComponent.Template.TextPropertyManager.TextStyle.BOLD.key
-        val toolbarLayoutForOnlyCmdValEdit = """
-    --
-    ${EditComponent.Template.LayoutKey.FRAME.key}=
-        ${typeSeparator}${tagKey}=okForCmdValEdit
-        ${sectionSeparator}
-    ---
-    
-    ${EditComponent.Template.LayoutKey.VERTICAL.key}=
-        ${typeSeparator}${tagKey}=vertical1
-        ${sectionSeparator}
-    
-    ---
-    ${EditComponent.Template.LayoutKey.HORIZON.key}=
-        ${typeSeparator}${tagKey}=horizonTag
-        ${sectionSeparator}
-    ---
-    ${EditComponent.Template.LayoutKey.CONTENTS.key}=
-        ${typeSeparator}${tagKey}=ok
-        ${typeSeparator}${textKey}=
-            ${displayTextKey}=`${srcStrHolder}`
-            ${keySeparator}${srcStrKey}=`OK`
-        ${typeSeparator}${textPropertyKey}=
-            ${keySeparator}${textStyleKey}=`${textBoldStyle}`
-            ${keySeparator}${textMaxLinesKey}=1
-        ${typeSeparator}${imageKey}=
-            ${imagePathsKey}="ok"
-        ${typeSeparator}${imagePropertyKey}=
-            ${keySeparator}${imageScaleKey}=`${fitCenterImageScale}`
-        ${typeSeparator}${onSaveKey}=ON
-        ${typeSeparator}${onConsecKey}=OFF
-        ${typeSeparator}var=runDisplayCurSettingValue
-            ?func=jsBackstack.exec
-        ${sectionSeparator}
-    """.trimIndent().split("\n")
 
-        val toolbarLayoutForOnlyCmdValEdit2 = """
+        val toolbarLayoutForOnlyCmdValEdit = """
     --
     ${EditComponent.Template.LayoutKey.FRAME.key}=
         ${typeSeparator}${tagKey}=okForCmdValEdit

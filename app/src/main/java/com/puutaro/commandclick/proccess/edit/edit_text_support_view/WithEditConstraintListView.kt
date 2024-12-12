@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
+import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.Editable
@@ -15,7 +16,6 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.RequestBuilder
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.imageview.ShapeableImageView
@@ -41,7 +41,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -536,7 +535,7 @@ object WithEditConstraintListView{
         ) {
         val context = fragment.context
             ?: return
-        val editComponentListAdapter =
+        val editConstraintListAdapter =
             editListRecyclerView.adapter as? EditConstraintListAdapter
         val plusKeyToSubKeyConWhere =
             fannelInfoMap.map {
@@ -675,6 +674,7 @@ object WithEditConstraintListView{
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
                 publishContents(
+                    context,
                     frameTag,
                     frameTagToContentsMapList,
                     frameVarNameValueMap,
@@ -682,6 +682,7 @@ object WithEditConstraintListView{
 //                    isOnlyCmdValEdit,
 //                    editListToolbarConstraintLayout,
                     contentsChannel,
+                    totalMapListElInfo,
                 )
             }
             withContext(Dispatchers.IO) {
@@ -710,7 +711,7 @@ object WithEditConstraintListView{
                                     fannelInfoMap,
                                     setReplaceVariableMap,
                                     busyboxExecutor,
-                                    editComponentListAdapter,
+                                    editConstraintListAdapter,
                                     frameVarNameValueMap,
                                     mapListElInfoForExecContents,
                                     contentsKeyPairsListConSrc,
@@ -751,16 +752,6 @@ object WithEditConstraintListView{
                             withContext(Dispatchers.IO) contentsTagCheck@{
                                 val tagGenre =
                                     EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
-                                val isTagBlankErr =
-                                    ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
-                                        context,
-                                        execContentsTag,
-                                        mapListElInfoForContentsTagWithReplace,
-                                        tagGenre
-                                    )
-                                if (
-                                    isTagBlankErr
-                                ) return@contentsTagCheck true
                                 val alreadyUseTagListSrc =
                                     EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
                                         alreadyUseTagList,
@@ -792,7 +783,7 @@ object WithEditConstraintListView{
                         }
 
 
-                        editComponentListAdapter?.footerKeyPairListConMap?.put(
+                        editConstraintListAdapter?.footerKeyPairListConMap?.put(
                             execContentsTag,
                             linearFrameKeyPairsListCon
                         )
@@ -858,7 +849,7 @@ object WithEditConstraintListView{
                                         contentsKeyPairsList,
                                         0,
                                         execContentsTag,
-                                        editComponentListAdapter?.totalSettingValMap,
+                                        editConstraintListAdapter?.totalSettingValMap,
                                         requestBuilderSrc,
                                         density,
                                     )
@@ -884,18 +875,18 @@ object WithEditConstraintListView{
     }
 
     private suspend fun publishContents(
+        context: Context?,
         frameTag: String,
         frameTagToContentsMapList: Map<String, List<List<String>>>?,
         frameVarNameToValueMap: Map<String, String>,
         isEditToolbar: Boolean,
-//        isOnlyCmdValEdit: Boolean,
-//        editListToolbarConstraintLayout: FrameLayout?,
         contentsChannel: Channel<
                 Pair<
                         List<String>,
                         List<Pair<String, String?>>
                         >,
                 >,
+        totalMapListElInfo: String,
     ) {
         val frameTagToContentsKeysListMapWithReplace =
             frameTagToContentsMapList?.map {
@@ -936,13 +927,15 @@ object WithEditConstraintListView{
                 contentsKeysList?.mapIndexed setContents@{ contentsIndex, contentsKeyValues ->
                     async {
                         val contentsTagToKeyPairsList = withContext(Dispatchers.IO) {
-                            EditComponent.AdapterSetter.makeLinearFrameTagToKeyPairsList(
+                            EditComponent.AdapterSetter.makeContentsTagToKeyPairsList(
+                                context,
                                 contentsKeyValues,
                                 frameVarNameToValueMap,
                                 String(),
                                 String(),
                                 String(),
                                 noIndexSign,
+                                totalMapListElInfo,
                             )
                         }
 //                        val contentsKeyValueSize = withContext(Dispatchers.IO) {
@@ -1134,9 +1127,9 @@ object WithEditConstraintListView{
             UsePath.cmdclickDefaultAppDirPath,
             FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         ).absolutePath
-        val editComponentListAdapter = editListRecyclerView?.adapter as? EditConstraintListAdapter
+        val editConstraintListAdapter = editListRecyclerView?.adapter as? EditConstraintListAdapter
         EditConstraintListAdapter.MainFannelUpdater.saveFannelCon(
-            editComponentListAdapter?.fannelContentsList,
+            editConstraintListAdapter?.fannelContentsList,
             fannelInfoMap,
             jsAcCon
         )
