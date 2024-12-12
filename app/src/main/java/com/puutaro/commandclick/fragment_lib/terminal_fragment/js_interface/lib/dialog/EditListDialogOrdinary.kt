@@ -22,7 +22,6 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditCon
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -98,7 +97,7 @@ class EditListDialogOrdinary(
         editListDialogOrdinary?.findViewById<AppCompatEditText>(
             R.id.edit_list_dialog_search_edit_text
         )
-    private val readyContentsLayoutListForFooter =
+    private val contentsLayoutForFooter =
         constraintLayoutSrc?.findViewById<ConstraintLayout>(
             R.id.edit_list_dialog_footer_constraint_layout
         )
@@ -108,6 +107,7 @@ class EditListDialogOrdinary(
                 editListRecyclerViewSrc,
                 editListBkFrameSrc,
                 constraintLayoutSrc,
+                contentsLayoutForFooter
             )
         }
     }
@@ -214,17 +214,17 @@ class EditListDialogOrdinary(
                     String()
                 )
             }
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "leditDistDialog.txt").absolutePath,
-                listOf(
-                    "fannelInfoCon: ${fannelInfoCon}",
-                    "editListConfigPath: ${editListConfigPath}",
-                    "editListConfigPath.isFole: ${File(editListConfigPath).isFile}",
-                    "editListConfigMap: ${editListConfigMap}",
-                    "mainFannelFile: ${mainFannelFile.absolutePath}",
-                    "editListSearchEditText.id: ${editListSearchEditText.id}"
-                ).joinToString("\n")
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "leditDistDialog.txt").absolutePath,
+//                listOf(
+//                    "fannelInfoCon: ${fannelInfoCon}",
+//                    "editListConfigPath: ${editListConfigPath}",
+//                    "editListConfigPath.isFole: ${File(editListConfigPath).isFile}",
+//                    "editListConfigMap: ${editListConfigMap}",
+//                    "mainFannelFile: ${mainFannelFile.absolutePath}",
+//                    "editListSearchEditText.id: ${editListSearchEditText.id}"
+//                ).joinToString("\n")
+//            )
             CoroutineScope(Dispatchers.IO).launch {
                 WithEditConstraintListView.create(
                     terminalFragment,
@@ -239,7 +239,7 @@ class EditListDialogOrdinary(
                     editListRecyclerView,
                     editListBkFrame,
                     editListSearchEditText,
-                    readyContentsLayoutListForFooter,
+                    contentsLayoutForFooter,
 //                    editFooterHorizonLayout,
 //                    verticalLinearListForFooter,
 //                    horizonLinearListForFooter,
@@ -276,44 +276,24 @@ class EditListDialogOrdinary(
         editListRecyclerView: RecyclerView?,
         editListBkFrame: FrameLayout?,
         constraintLayout: ConstraintLayout?,
+        contentsLayoutForFooter: ConstraintLayout?,
     ){
+        contentsLayoutForFooter?.removeAllViews()
         editListRecyclerView?.layoutManager = null
         editListRecyclerView?.adapter = null
         editListRecyclerView?.recycledViewPool?.clear()
         editListRecyclerView?.removeAllViews()
-//        editFooterLinearlayout?.removeAllViews()
         editListBkFrame?.removeAllViews()
         constraintLayout?.removeAllViews()
-//        terminalFragment?.editListDialogOrdinaly?.first()?.dismiss()
-//        when(isRecreate) {
-//            true -> {
-////                val firstEditListDialogForSetting =
-////                    terminalFragment?.editListDialogOrdinalyList?.last()
-////                terminalFragment?.editListDialogOrdinalyList = listOf(
-////                    firstEditListDialogForSetting,
-////                    EditListDialogOrdinary(
-////                        terminalFragmentRef
-////                    )
-////                )
-//            }
-//            else -> terminalFragment?.editListDialogOrdinaly = null
-//        }
+        editListDialogOrdinary?.dismiss()
     }
 
-    fun dismiss(){
-        val constraintLayout =
-            constraintLayoutSrc
-                ?: return
-        val editListRecyclerView =
-            editListRecyclerViewSrc
-                ?: return
-        val editListBkFrame =
-            editListBkFrameSrc
-                ?: return
+    fun destroy(){
         dismissForInner(
-            editListRecyclerView,
-            editListBkFrame,
-            constraintLayout,
+            editListRecyclerViewSrc,
+            editListBkFrameSrc,
+            constraintLayoutSrc,
+            contentsLayoutForFooter,
         )
     }
 }

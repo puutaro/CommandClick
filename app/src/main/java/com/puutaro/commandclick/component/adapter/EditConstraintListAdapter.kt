@@ -183,21 +183,6 @@ class EditConstraintListAdapter(
         val totalSettingValsMap = curSettingValsMap + curCmdValsMap
         return totalSettingValsMap.get(settingValName)
     }
-//    private val viewLayoutPath = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutPath(
-//        fannelInfoMap,
-//        setReplaceVariableMap,
-//        editListMap,
-//        ListSettingsForEditList.ListSettingKey.VIEW_LAYOUT_PATH.key,
-//    )
-//    private val frameMapAndFrameTagToContentsMapListToTagIdList =
-//        runBlocking {
-//            ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint(
-//                context,
-//                fannelInfoMap,
-//                setReplaceVariableMap,
-//                viewLayoutPath
-//            )
-//        }
     private val frameMap =
         frameMapAndFrameTagToContentsMapListToTagIdList?.first ?: emptyMap()
     private val frameTagToContentsMapList =

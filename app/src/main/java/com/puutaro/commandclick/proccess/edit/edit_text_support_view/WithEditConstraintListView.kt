@@ -522,18 +522,12 @@ object WithEditConstraintListView{
 
     private suspend fun setFooterOrToolbar(
         fragment: Fragment,
-//        layoutInflater: LayoutInflater,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-//        editFooterHorizonLayout: LinearLayoutCompat?,
-//        verticalLinearListForFooter: List<LinearLayoutCompat?>?,
-//        indexAndHorizonLinearListForFooter: List<List<LinearLayoutCompat?>>?,
         editListFooterConstraintLayout: ConstraintLayout?,
-//        verticalIndexAndHorizonIndexAndReadyContentsLayoutListForFooter: List<List<List<FrameLayout?>>>?,
         editListRecyclerView: RecyclerView,
-//        editToolbarHorizonLayout: LinearLayoutCompat?,
         editListToolbarConstraintLayout: ConstraintLayout?,
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,

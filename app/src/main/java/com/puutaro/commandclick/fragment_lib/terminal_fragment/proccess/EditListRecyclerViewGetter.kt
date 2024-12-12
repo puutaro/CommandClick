@@ -3,9 +3,12 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.io.File
 
 object EditListRecyclerViewGetter {
 
@@ -13,6 +16,10 @@ object EditListRecyclerViewGetter {
         terminalFragment: TerminalFragment?,
         srcFragStr: String
     ): RecyclerView? {
+        if(terminalFragment == null){
+            ToastUtils.showShort("not found terminalFragment: ${srcFragStr}")
+            return null
+        }
         val recyclerViewFrag = RecyclerViewFragment.entries.firstOrNull {
             it.frag == srcFragStr
         }
@@ -20,6 +27,12 @@ object EditListRecyclerViewGetter {
             ToastUtils.showShort("not found srcFragStr: ${srcFragStr}")
             return null
         }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "ldialog0.txt").absolutePath,
+//            listOf(
+//                "recyclerViewFrag: ${recyclerViewFrag.frag}",
+//            ).joinToString("\n")
+//        )
         val recyclerView = when(recyclerViewFrag){
             RecyclerViewFragment.WEB -> {
                 getFromTermFrag(terminalFragment)

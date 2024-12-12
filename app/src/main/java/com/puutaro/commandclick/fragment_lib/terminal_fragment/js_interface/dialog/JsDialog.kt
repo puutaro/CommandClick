@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.AsciiArtJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ColorPickerJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.CopyJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.FormJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.GridJsDialog
@@ -102,10 +103,6 @@ class JsDialog(
         terminalFragmentRef
     )
 
-    private val editListDialog = EditListDialog(
-        terminalFragmentRef
-    )
-
     private val promptWithListDialog = PromptWithListDialog(
         terminalFragmentRef,
     )
@@ -116,6 +113,10 @@ class JsDialog(
 
     private val gridDialogV2 = GridJsDialogV2(
         terminalFragmentRef
+    )
+
+    private val colorPickerJsDialog = ColorPickerJsDialog(
+        terminalFragmentRef,
     )
 
     @JavascriptInterface
@@ -517,22 +518,6 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun editList(
-        fannelInfoCon: String,
-        editListConfigPath: String
-    ){
-        terminalFragmentRef.get()?.editListDialogForOrdinaryRevolver
-            ?.show(
-                fannelInfoCon,
-                editListConfigPath,
-            )
-//        editListDialog.create(
-//            fannelInfoCon,
-//            editListConfigPath,
-//        )
-    }
-
-    @JavascriptInterface
     fun promptWithList(
         fannelPath: String,
         title: String,
@@ -592,6 +577,15 @@ class JsDialog(
             title,
             imagePathListCon,
             configMapCon,
+        )
+    }
+
+    @JavascriptInterface
+    fun colorPicker(
+        title: String
+    ): String {
+        return colorPickerJsDialog.create(
+            title
         )
     }
 }

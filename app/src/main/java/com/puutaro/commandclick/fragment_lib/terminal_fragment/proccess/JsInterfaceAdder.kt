@@ -42,6 +42,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMusic
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsVar
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsEditDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsDiff
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToListFilter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.JsToListMap
@@ -111,6 +112,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsDialog(terminalFragmentRef),
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsEditDialog(terminalFragmentRef),
         )
 
         ExecJsInterfaceAdder.add(
