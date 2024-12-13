@@ -28,7 +28,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
@@ -92,7 +91,8 @@ class EditConstraintListAdapter(
         (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
     val footerKeyPairListConMap: MutableMap<String, String> = mutableMapOf()
     private val layoutConfigMap = LayoutSettingsForEditList.getLayoutConfigMap(
-        editListConfigMap
+        editListConfigMap,
+        setReplaceVariableMap,
     )
     private val layoutMargin = layoutConfigMap.get(
         LayoutSettingsForEditList.LayoutSettingKey.MARGIN.key
@@ -311,7 +311,6 @@ class EditConstraintListAdapter(
 
         private val typeSeparator = EditComponent.Template.typeSeparator
         private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
-        private val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
         private val onClickViewsKey =
             EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
         fun makeLinearFrameKeyPairsList(
@@ -326,9 +325,6 @@ class EditConstraintListAdapter(
 
     private val switchOn = EditComponent.Template.switchOn
     private val switchOff = EditComponent.Template.switchOff
-    private val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map{
-        it.key
-    }
     private val requestBuilderSrc: RequestBuilder<Drawable>? =
         context?.let {
             Glide.with(it)
@@ -1341,7 +1337,8 @@ class EditConstraintListAdapter(
         recentAppDirPath = UsePath.cmdclickDefaultAppDirPath
         deleteConfigMap = EditListConfig.getConfigKeyMap(
             editListConfigMap,
-            EditListConfig.EditListConfigKey.DELETE.key
+            EditListConfig.EditListConfigKey.DELETE.key,
+            setReplaceVariableMap,
         )
         filterPrefix =
             FilePrefixGetter.get(

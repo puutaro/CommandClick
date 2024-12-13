@@ -30,10 +30,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
-import com.puutaro.commandclick.proccess.edit_list.config_settings.BkImageSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
@@ -41,6 +39,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -64,17 +63,19 @@ object WithEditConstraintListView{
     
     private val delayTime = 500L
     private val noIndexSign = -1
-    private val jsActionKeyList = JsActionKeyManager.JsActionsKey.entries.map {
-        it.key
-    }
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
     private val typeSeparator = EditComponent.Template.typeSeparator
     private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
-    private val onClickKey = EditComponent.Template.EditComponentKey.ON_CLICK.key
     private val onClickViewsKey = EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
     private val switchOn = EditComponent.Template.switchOn
     private val switchOff = EditComponent.Template.switchOff
     private val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+
+    enum class SceneType {
+        TOOLBAR,
+        FOOTER,
+        BK,
+    }
 
     fun keyboardHide(
         fragment: Fragment,
@@ -106,8 +107,8 @@ object WithEditConstraintListView{
         editTextView: OutlineTextView,
         editTitleImage: AppCompatImageView,
         editListRecyclerView: RecyclerView,
-        editListBkFrame: FrameLayout,
         editListSearchEditText: AppCompatEditText,
+        editBkFrame: FrameLayout?,
         editListFooterConstraintLayout: ConstraintLayout?,
         editListToolbarConstraintLayout: ConstraintLayout?,
         fannelContentsList: List<String>?,
@@ -220,6 +221,20 @@ object WithEditConstraintListView{
                 requestBuilderSrc
             )
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            setBk(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                globalVarNameToValueMap,
+                busyboxExecutor,
+                editListRecyclerView,
+                editBkFrame,
+                editListConfigMap,
+                requestBuilderSrc,
+                density,
+            )
+        }
 
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "glistWith.txt").absolutePath,
@@ -244,7 +259,8 @@ object WithEditConstraintListView{
         val editConstraintListAdapter = withContext(Dispatchers.IO) {
             val indexListMap = EditListConfig.getConfigKeyMap(
                 editListConfigMap,
-                EditListConfig.EditListConfigKey.LIST.key
+                EditListConfig.EditListConfigKey.LIST.key,
+                setReplaceVariableMap,
             )
             val lineMapList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                 fannelInfoMap,
@@ -295,6 +311,7 @@ object WithEditConstraintListView{
         val layoutConfigMap = withContext(Dispatchers.IO) {
             LayoutSettingsForEditList.getLayoutConfigMap(
                 editListConfigMap,
+                null,
             )
         }
 //        CoroutineScope(Dispatchers.IO).launch {
@@ -352,33 +369,33 @@ object WithEditConstraintListView{
                 }
             }
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            val editListBkPairs = withContext(Dispatchers.IO) {
-                EditListConfig.getConfigKeyConList(
-                    editListConfigMap,
-                    EditListConfig.EditListConfigKey.BK.key
-                )
-            }
-           withContext(Dispatchers.Main){
-//                val buttonFrameLayout = layoutInflater.inflate(
-//                    R.layout.icon_caption_layout_for_edit_list,
-//                    null
-//                ) as FrameLayout?
-                BkImageSettingsForEditList.makeBkFrame(
-                    context,
-                    editListBkFrame,
-                    fannelInfoMap,
-                    setReplaceVariableMap,
-                    busyboxExecutor,
-                    editListBkPairs,
-                    requestBuilderSrc,
-                    density,
-                )
-            }
-//            withContext(Dispatchers.Main) {
-//                editListBkFrame.addView(bkFrameLayout)
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val editListBkPairs = withContext(Dispatchers.IO) {
+//                EditListConfig.getConfigKeyConList(
+//                    editListConfigMap,
+//                    EditListConfig.EditListConfigKey.BK_LAYOUT_PATH.key,
+//                )
 //            }
-        }
+//           withContext(Dispatchers.Main){
+////                val buttonFrameLayout = layoutInflater.inflate(
+////                    R.layout.icon_caption_layout_for_edit_list,
+////                    null
+////                ) as FrameLayout?
+//                BkImageSettingsForEditList.makeBkFrame(
+//                    context,
+//                    editListBkFrame,
+//                    fannelInfoMap,
+//                    setReplaceVariableMap,
+//                    busyboxExecutor,
+//                    editListBkPairs,
+//                    requestBuilderSrc,
+//                    density,
+//                )
+//            }
+////            withContext(Dispatchers.Main) {
+////                editListBkFrame.addView(bkFrameLayout)
+////            }
+//        }
 
         val outValue = withContext(Dispatchers.IO) {
             val outValueSrc = TypedValue()
@@ -425,7 +442,8 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 editConstraintListAdapter,
                 editListSearchEditText,
-                editListConfigMap
+                editListConfigMap,
+                setReplaceVariableMap,
             )
         }
         CoroutineScope(Dispatchers.Main).launch {
@@ -463,14 +481,15 @@ object WithEditConstraintListView{
         density: Float,
         outValue: TypedValue,
     ){
-        setFooterOrToolbar(
+        createViewLayout(
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
             globalVarNameToValueMap,
             busyboxExecutor,
-            editListFooterConstraintLayout,
             editListRecyclerView,
+            null,
+            editListFooterConstraintLayout,
             null,
             editListConfigMap,
             requestBuilderSrc,
@@ -497,21 +516,22 @@ object WithEditConstraintListView{
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
-        fannelCentrButtonLayout: ConstraintLayout?,
+        editListToolbarConstraintLayout: ConstraintLayout?,
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
         outValue: TypedValue,
     ){
-        setFooterOrToolbar(
+        createViewLayout(
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
             globalVarNameToValueMap,
             busyboxExecutor,
-            null,
             editListRecyclerView,
-            fannelCentrButtonLayout,
+            null,
+            editListToolbarConstraintLayout,
+            null,
             editListConfigMap,
             requestBuilderSrc,
             density,
@@ -519,19 +539,49 @@ object WithEditConstraintListView{
         )
     }
 
-    private suspend fun setFooterOrToolbar(
+    private suspend fun setBk(
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editListFooterConstraintLayout: ConstraintLayout?,
         editListRecyclerView: RecyclerView,
+        editBkFrame: FrameLayout?,
+        editListConfigMap: Map<String, String>?,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
+    ){
+        createViewLayout(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            globalVarNameToValueMap,
+            busyboxExecutor,
+            editListRecyclerView,
+            editBkFrame,
+            null,
+            null,
+            editListConfigMap,
+            requestBuilderSrc,
+            density,
+            null,
+        )
+    }
+
+    private suspend fun createViewLayout(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        globalVarNameToValueMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
+        editBkFrame: FrameLayout?,
+        editListFooterConstraintLayout: ConstraintLayout?,
         editListToolbarConstraintLayout: ConstraintLayout?,
         editListConfigMap: Map<String, String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
-        outValue: TypedValue,
+        outValue: TypedValue?,
         ) {
         val context = fragment.context
             ?: return
@@ -542,23 +592,27 @@ object WithEditConstraintListView{
                 val key = SnakeCamelTool.snakeToCamel(it.key)
                 "${key}: ${it.value}"
             }.joinToString(", ")
-        val isEditToolbar = editListToolbarConstraintLayout != null
-        val debugWhere = when(isEditToolbar){
-            true -> "toolBar"
-            else -> "footer"
+//        val isEditToolbar = editListToolbarConstraintLayout != null
+        val sceneType = when(true){
+            (editListFooterConstraintLayout != null) -> SceneType.FOOTER
+            (editListToolbarConstraintLayout != null) -> SceneType.TOOLBAR
+            (editBkFrame != null) -> SceneType.BK
+            else -> return
         }
-        val layoutKey = when(isEditToolbar){
-            true -> EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH
-            else -> EditListConfig.EditListConfigKey.FOOTER_LAYOUT_PATH
+        val debugWhere = sceneType.name
+        val layoutKey = when(sceneType){
+            SceneType.TOOLBAR -> EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH
+            SceneType.FOOTER-> EditListConfig.EditListConfigKey.FOOTER_LAYOUT_PATH
+            SceneType.BK -> EditListConfig.EditListConfigKey.BK_LAYOUT_PATH
         }.key
-        val footerOrToolbarLayoutPath = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutPath(
+        val viewLayoutPath = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutPath(
             fannelInfoMap,
             setReplaceVariableMap,
             editListConfigMap,
             layoutKey,
         )
         val isOnlyCmdValEdit =
-            footerOrToolbarLayoutPath == EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
+            viewLayoutPath == EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
         val frameMapAndFrameTagToContentsMapListToTagIdList = when(isOnlyCmdValEdit) {
             true -> ListSettingsForEditList.ViewLayoutPathManager.parseFromListForConstraint(
                 context,
@@ -571,7 +625,7 @@ object WithEditConstraintListView{
                 context,
                 fannelInfoMap,
                 setReplaceVariableMap,
-                footerOrToolbarLayoutPath
+                viewLayoutPath
             )
         }
         val frameMap = frameMapAndFrameTagToContentsMapListToTagIdList?.first ?: emptyMap()
@@ -579,15 +633,29 @@ object WithEditConstraintListView{
             frameMapAndFrameTagToContentsMapListToTagIdList?.second
         val tagToIdListSrc =
             frameMapAndFrameTagToContentsMapListToTagIdList?.third
+//        if(sceneType == SceneType.BK) {
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lbk.txt").absolutePath,
+//                listOf(
+//                    "editListConfigMap: ${editListConfigMap}",
+//                    "frameMap: ${frameMap}",
+//                    "frameTagToContentsMapList: ${frameTagToContentsMapList}"
+//                ).joinToString("\n\n\n")
+//            )
+//        }
         if(
             frameMap.isEmpty()
         ){
-            when(isEditToolbar) {
-                false -> withContext(Dispatchers.Main) {
+            when(sceneType) {
+                SceneType.FOOTER
+                    -> withContext(Dispatchers.Main) {
                     editListFooterConstraintLayout?.visibility = View.GONE
                 }
-                else ->  withContext(Dispatchers.Main){
+                SceneType.TOOLBAR ->  withContext(Dispatchers.Main){
                     editListToolbarConstraintLayout?.visibility = View.GONE
+                }
+                SceneType.BK -> withContext(Dispatchers.Main) {
+                    editBkFrame?.visibility = View.GONE
                 }
             }
             return
@@ -652,12 +720,12 @@ object WithEditConstraintListView{
                     busyboxExecutor,
                     innerFrameKeyPairsConSrc,
                     "frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
-//                        editComponentListAdapterArg = this@EditConstraintListAdapter
+                        editConstraintListAdapterArg = editConstraintListAdapter
                 ) + (globalVarNameToValueMap ?: emptyMap())
                varNameToValueMap
             }
         }
-        val tagIdMap = withContext(Dispatchers.IO){
+        val tagIdMapSrc = withContext(Dispatchers.IO){
             tagToIdListSrc?.map {
                 val key = CmdClickMap.replace(
                     it.key,
@@ -678,9 +746,6 @@ object WithEditConstraintListView{
                     frameTag,
                     frameTagToContentsMapList,
                     frameVarNameValueMap,
-                    isEditToolbar,
-//                    isOnlyCmdValEdit,
-//                    editListToolbarConstraintLayout,
                     contentsChannel,
                     totalMapListElInfo,
                 )
@@ -806,15 +871,17 @@ object WithEditConstraintListView{
                                             )
                                         }
 
-                                val addConstraint = when(isEditToolbar){
-                                    true -> editListToolbarConstraintLayout
-                                    else -> editListFooterConstraintLayout
+                                val baseLayoutForAdd = when(sceneType){
+                                    SceneType.TOOLBAR
+                                        -> editListToolbarConstraintLayout
+                                    SceneType.FOOTER ->  editListFooterConstraintLayout
+                                    SceneType.BK -> editBkFrame
                                 }
                                 withContext(Dispatchers.Main) {
-                                    addConstraint?.addView(contentsLayout)
+                                    baseLayoutForAdd?.addView(contentsLayout)
                                 }
                                 val idInt = withContext(Dispatchers.IO){
-                                    tagIdMap.get(
+                                    tagIdMapSrc.get(
                                         execContentsTag
                                     )
                                 }
@@ -837,6 +904,11 @@ object WithEditConstraintListView{
 //                                        }
 //                                    }
 //                                }
+                                val tagIdMap = when(sceneType){
+                                    SceneType.TOOLBAR,
+                                    SceneType.FOOTER ->  tagIdMapSrc
+                                    SceneType.BK -> null
+                                }
                                 CoroutineScope(Dispatchers.Main).launch {
                                     EditConstraintFrameMaker.make(
                                         context,
@@ -857,6 +929,10 @@ object WithEditConstraintListView{
                                 contentsLayout
                             } ?: return@execSetContentsCoroutine
                         CoroutineScope(Dispatchers.IO).launch execClick@{
+                            if(
+                                sceneType == SceneType.BK
+                                || outValue == null
+                            ) return@execClick
                             clickHandler(
                                 fragment,
                                 fannelInfoMap,
@@ -879,7 +955,6 @@ object WithEditConstraintListView{
         frameTag: String,
         frameTagToContentsMapList: Map<String, List<List<String>>>?,
         frameVarNameToValueMap: Map<String, String>,
-        isEditToolbar: Boolean,
         contentsChannel: Channel<
                 Pair<
                         List<String>,
@@ -899,15 +974,6 @@ object WithEditConstraintListView{
         val contentsKeysList =
             withContext(Dispatchers.IO) {
                 frameTagToContentsKeysListMapWithReplace?.get(frameTag)
-                    ?.let { contentsKeysListSrc ->
-                        when (isEditToolbar) {
-                            true -> listOf(
-                                contentsKeysListSrc.firstOrNull() ?: emptyList()
-                            )
-
-                            else -> contentsKeysListSrc
-                        }
-                    }
             }
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "smakeHorizonLinear_in_listview.txt").absolutePath,
@@ -1382,12 +1448,14 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         editConstraintListAdapter: EditConstraintListAdapter,
         searchText: AppCompatEditText,
-        editListConfigMap: Map<String, String>?
+        editListConfigMap: Map<String, String>?,
+        setReplaceVariableMap: Map<String, String>?,
     ) {
         val searchBoxMap = withContext(Dispatchers.IO) {
             EditListConfig.getConfigKeyMap(
                 editListConfigMap,
-                EditListConfig.EditListConfigKey.SEARCH_BOX.key
+                EditListConfig.EditListConfigKey.SEARCH_BOX.key,
+                setReplaceVariableMap
             )
         }
         val onVisible =

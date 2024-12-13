@@ -42,10 +42,12 @@ object LayoutSettingsForEditList {
 
     fun getLayoutConfigMap(
         editListConfigMap: Map<String, String>?,
+        setReplaceVariableMap: Map<String, String>?,
     ): Map<String, String> {
         return EditListConfig.getConfigKeyMap(
             editListConfigMap,
-            EditListConfig.EditListConfigKey.LAYOUT.key
+            EditListConfig.EditListConfigKey.LAYOUT.key,
+            setReplaceVariableMap,
         )
     }
 

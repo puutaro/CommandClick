@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     android:background="@null"
     android:backgroundTint="@null">
-    <include
+    <FrameLayout
         android:id="@+id/edit_list_dialog_bk_frame"
-        layout="@layout/icon_caption_layout_for_edit_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +18,18 @@
         android:foregroundGravity="center"
         android:background="@color/trans"
         android:backgroundTint="@color/trans"
-        />
+        >
+<!--        <include-->
+<!--            android:id="@+id/edit_list_dialog_inner_bk_frame1"-->
+<!--            layout="@layout/icon_caption_layout_for_edit_list"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:foregroundGravity="center"-->
+<!--            android:background="@color/trans"-->
+<!--            android:backgroundTint="@color/trans"-->
+<!--            />-->
+    </FrameLayout>
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/edit_list_dialog_title_image"
         android:layout_width="0dp"

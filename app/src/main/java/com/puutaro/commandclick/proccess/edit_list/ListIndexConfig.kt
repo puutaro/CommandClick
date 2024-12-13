@@ -112,6 +112,7 @@ object EditListConfig {
     fun getConfigKeyMap(
         editListConfigMap: Map<String, String>?,
         configKey: String,
+        setReplaceVariableMap: Map<String, String>?,
     ): Map<String, String> {
 
         return getConfigKeyConList(
@@ -431,7 +432,7 @@ object EditListConfig {
         TOOLBAR_LAYOUT_PATH("toolbarLayoutPath"),
         NAME("name"),
         DESC("desc"),
-        BK("bk"),
+        BK_LAYOUT_PATH("bkLayoutPath"),
         CHECK_ITEM("checkItem"),
         CLICK("click"),
 //        LONG_CLICK("longClick"),
