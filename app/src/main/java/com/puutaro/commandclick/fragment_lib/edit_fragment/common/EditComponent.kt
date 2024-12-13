@@ -278,6 +278,7 @@ object EditComponent {
                                 SCALE("scale"),
                                 COLOR("color"),
                                 BK_COLOR("bkColor"),
+                                BK_TINT_COLOR("bkTintColor"),
                                 HEIGHT("height"),
                                 WIDTH("width"),
                                 LAYOUT_GRAVITY("layoutGravity"),

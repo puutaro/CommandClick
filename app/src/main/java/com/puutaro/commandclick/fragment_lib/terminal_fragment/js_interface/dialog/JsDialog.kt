@@ -582,10 +582,10 @@ class JsDialog(
 
     @JavascriptInterface
     fun colorPicker(
-        title: String
+        configMapCon: String,
     ): String {
         return colorPickerJsDialog.create(
-            title
+            configMapCon,
         )
     }
 }

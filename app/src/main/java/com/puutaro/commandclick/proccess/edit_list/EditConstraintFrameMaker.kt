@@ -1,9 +1,12 @@
 package com.puutaro.commandclick.proccess.edit_list
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
@@ -11,6 +14,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -82,6 +86,7 @@ object EditConstraintFrameMaker {
 //    private val imageTagKey = EditComponent.Template.ImagePropertyManager.PropertyKey.TAG.key
     private val imageColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.COLOR.key
     private val imageBkColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.BK_COLOR.key
+    private val imageBkTintColorKey = EditComponent.Template.ImagePropertyManager.PropertyKey.BK_COLOR.key
     private val imageAlphaKey = EditComponent.Template.ImagePropertyManager.PropertyKey.ALPHA.key
     private val imageScaleKey = EditComponent.Template.ImagePropertyManager.PropertyKey.SCALE.key
     private val imageLayoutGravity = EditComponent.Template.ImagePropertyManager.PropertyKey.LAYOUT_GRAVITY.key
@@ -696,22 +701,36 @@ object EditConstraintFrameMaker {
                 paddingData.paddingEnd ?: 0,
                 paddingData.paddingBottom ?: 0,
             )
-            val bkColorDrawable = withContext(Dispatchers.IO) {
+            val bkColorStr =  withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
-                )?.let {
-                        colorStr ->
+                )
+            }
+            val bkColorDrawable = withContext(Dispatchers.IO) {
                     CmdClickColor.entries.firstOrNull {
-                        it.str == colorStr
-                    }
-                }?.let {
+                        it.str == bkColorStr
+                    }?.let {
                     AppCompatResources.getDrawable(
                         context,
                         it.id
                     )
                 }
             }
+            if(bkColorDrawable == null) {
+                val bkTintColor =
+                    bkColorStr?.let {
+                        try {
+                            Color.parseColor(it)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+            }
+
+            bkColorStr?.let {
+                    ColorStateList.valueOf(Color.parseColor(it))
+                }
             background = bkColorDrawable
             val elevationFloat = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
@@ -1063,35 +1082,39 @@ object EditConstraintFrameMaker {
                     val imageColor = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
                             imageColorKey,
-                        )?.let {
+                        ).let {
                                 colorStr ->
-                            CmdClickColor.entries.firstOrNull {
-                                it.str == colorStr
-                            }
+                            makeColor(
+                                context,
+                                colorStr,
+                            )
                         }
                     }
                     imageTintList = imageColor?.let {
-                        AppCompatResources.getColorStateList(
-                            context,
-                            it.id
-                        )
+                        ColorStateList.valueOf(it)
                     }
                     val imageBkColor = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
                             imageBkColorKey,
-                        )?.let {
-                                colorStr ->
-                            CmdClickColor.entries.firstOrNull {
-                                it.str == colorStr
-                            }
+                        ).let {
+                            colorStr ->
+                            makeColor(
+                                context,
+                                colorStr,
+                            )
                         }
                     }
                     background = imageBkColor?.let {
-                        AppCompatResources.getDrawable(
-                            context,
-                            it.id
-                        )
+                        ColorDrawable(imageBkColor)
                     }
+
+//                    backgroundTintList = ColorStateList.valueOf(imageBkColor)
+//                    background = imageBkColorId?.let {
+//                        AppCompatResources.getDrawable(
+//                            context,
+//                            it.id
+//                        )
+//                    }
                     val imageAlpha = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
                             imageAlphaKey,
@@ -1307,38 +1330,31 @@ object EditConstraintFrameMaker {
             }?.let {
                 foregroundGravity = it
             }
-            val imageColor = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageColorKey,
-                )?.let {
+                ).let {
                         colorStr ->
-                    CmdClickColor.entries.firstOrNull {
-                        it.str == colorStr
-                    }
+                    makeColor(
+                        context,
+                        colorStr,
+                    )
                 }
-            }
-            imageColor?.let {
-                imageTintList = AppCompatResources.getColorStateList(
-                    context,
-                    it.id
-                )
+            }?.let {
+                imageTintList = ColorStateList.valueOf(it)
             }
             withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
                     imageBkColorKey,
-                )?.let {
+                ).let {
                         colorStr ->
-                    CmdClickColor.entries.firstOrNull {
-                        it.str == colorStr
-                    }
+                    makeColor(
+                        context,
+                        colorStr,
+                    )
                 }
             }?.let {
-                AppCompatResources.getDrawable(
-                    context,
-                    it.id
-                )
-            }?.let {
-                background = it
+                background = ColorDrawable(it)
             }
 
             val imageAlpha = withContext(Dispatchers.IO) {
@@ -2027,5 +2043,22 @@ object EditConstraintFrameMaker {
 //
 //            ).joinToString("\n")
 //        )
+    }
+
+    private fun makeColor(
+        context: Context,
+        colorStr: String?,
+    ): Int? {
+        return CmdClickColor.entries.firstOrNull {
+            it.str == colorStr
+        }?.let {
+            ContextCompat.getColor(context, it.id)
+        } ?: let {
+            try {
+                Color.parseColor(colorStr)
+            } catch (e: Exception) {
+                null
+            }
+        }
     }
 }
