@@ -19,7 +19,6 @@ object CommandClickScriptVariable {
     const val CMD_SEC_END = "/// CMD_VARIABLE_SECTION_END"
     const val SCRIPT_START = "/// Please write bellow with javascript"
 
-    val SHELL_EXEC_ENV = "shellExecEnv"
     val UBUNTU_EXEC_MODE = "ubuntuExecMode"
     val UBUNTU_OUTPUT_FILE = "ubuntuOutputFile"
     val TERMINAL_DO = "terminalDo"
@@ -84,7 +83,6 @@ object CommandClickScriptVariable {
     val CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT = "EXTERNAL_EXEC_REPLACE_TXT"
 
     val SETTING_VARIABLE_NAMES_LIST = listOf(
-        SHELL_EXEC_ENV,
         UBUNTU_EXEC_MODE,
         UBUNTU_OUTPUT_FILE,
         TERMINAL_DO,
@@ -163,8 +161,6 @@ object CommandClickScriptVariable {
     private val onAdBlockOff = SettingVariableSelects.OnAdblockSelects.OFF.name
     private val onLaunchUrlHistoryByBackstackOn = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON
     private val onLaunchUrlHistoryByBackstackOff = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF
-    private val shellExecEnvUbuntu = SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
-    private val shellExecEnvTermux = SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
     private val ubuntuExecModeSelectsBackground = SettingVariableSelects.UbuntuExecModeSelects.background.name
     private val ubuntuExecModeSelectsForeground = SettingVariableSelects.UbuntuExecModeSelects.foreground.name
     private val onTermVisibleWhenKeyboardSelectsInherit = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name
@@ -185,7 +181,6 @@ object CommandClickScriptVariable {
     private val ubuntuAutoSetupOff = SettingVariableSelects.UbuntuAutoSetup.OFF.name
     private val ubuntuAutoSetupSetup = SettingVariableSelects.UbuntuAutoSetup.SETUP.name
     private val ubuntuAutoSetupRestore = SettingVariableSelects.UbuntuAutoSetup.RESTORE.name
-    val SHELL_EXEC_ENV_DEFAULT_VALUE = shellExecEnvUbuntu
     val UBUNTU_EXEC_MODE_DEFAULT_VALUE = ubuntuExecModeSelectsBackground
     val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val TERMINAL_DO_DEFAULT_VALUE = terminalOn
@@ -383,7 +378,7 @@ object CommandClickScriptVariable {
         return """# Table of Contents
             |# $mdDash
             |# * [$settingVariableStr](#${replaceLowerAdnBlankDash(settingVariableStr)})
-            |#  * [$SHELL_EXEC_ENV](#${replaceLowerAdnBlankDash(SHELL_EXEC_ENV)})
+       
             |#  * [$UBUNTU_EXEC_MODE](#${replaceLowerAdnBlankDash(UBUNTU_EXEC_MODE)})
             |#  * [$UBUNTU_OUTPUT_FILE](#${replaceLowerAdnBlankDash(UBUNTU_OUTPUT_FILE)})
             |#  * [$TERMINAL_OUTPUT_MODE](#${replaceLowerAdnBlankDash(TERMINAL_OUTPUT_MODE)})
@@ -419,14 +414,6 @@ object CommandClickScriptVariable {
             |
             |# ## $settingVariableStr
             |# $mdDash
-            |
-            |# ### $SHELL_EXEC_ENV
-            |# Set shell exec enviroment
-            |
-            |# | option | description |
-            |# | $mdDash | $mdDash |
-            |# | `$shellExecEnvUbuntu` | ubuntu |
-            |# | `$shellExecEnvTermux` | termux |
             |
             |# ### $UBUNTU_EXEC_MODE
             |# Set shell exec mode
@@ -635,7 +622,6 @@ object CommandClickScriptVariable {
         |
         |
         |${SETTING_SEC_START}
-        |$SHELL_EXEC_ENV="$SHELL_EXEC_ENV_DEFAULT_VALUE"
         |$UBUNTU_EXEC_MODE="$UBUNTU_EXEC_MODE_DEFAULT_VALUE"
         |$UBUNTU_OUTPUT_FILE="$UBUNTU_OUTPUT_FILE_DEFAULT_VALUE"
         |$TERMINAL_DO="$TERMINAL_DO_DEFAULT_VALUE"

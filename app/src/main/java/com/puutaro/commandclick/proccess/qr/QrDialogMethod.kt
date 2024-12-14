@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.qr
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.view.Gravity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -10,8 +11,9 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import coil.load
 import com.blankj.utilcode.util.ToastUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
@@ -293,10 +295,22 @@ object QrDialogMethod {
                     delay(100)
                 }
             }
+            val requestBuilder: RequestBuilder<Drawable> =withContext(Dispatchers.IO){
+                    Glide.with(context)
+                        .asDrawable()
+                        .sizeMultiplier(0.1f)
+            }
             withContext(Dispatchers.Main) {
                 dialogObj?.findViewById<AppCompatImageView>(
                     replace_qr_logo_int
-                )?.load(qrLogoPath)
+                )?.apply {
+                    Glide
+                        .with(context)
+                        .load(qrLogoPath)
+                        .thumbnail(requestBuilder)
+                        .centerCrop()
+                        .into(this)
+                }
                 when(fragment) {
                     is CommandIndexFragment -> {
                         val indexfannelListUpdateIntent = Intent()
@@ -330,6 +344,8 @@ object QrDialogMethod {
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
     ){
+        val context = fragment.context
+            ?: return
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
         val fannelDirPath = "${cmdclickDefaultAppDirPath}/${fannelDirName}"
@@ -377,10 +393,23 @@ object QrDialogMethod {
             if(
                 updateChecksum == previousChecksum
             ) return@launch
+            val requestBuilder: RequestBuilder<Drawable> =withContext(Dispatchers.IO){
+                Glide.with(context)
+                    .asDrawable()
+                    .sizeMultiplier(0.1f)
+            }
             withContext(Dispatchers.Main) {
                 dialogObj?.findViewById<AppCompatImageView>(
                     replace_qr_logo_int
-                )?.load(qrLogoPath)
+                )?.apply {
+                    Glide
+                        .with(context)
+                        .load(qrLogoPath)
+                        .thumbnail(requestBuilder)
+                        .into(this)
+                }
+            }
+            withContext(Dispatchers.Main) {
                 when(fragment) {
 //                    is CommandIndexFragment -> {
 //                        val indexfannelListUpdateIntent = Intent()

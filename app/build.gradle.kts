@@ -115,18 +115,19 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.media:media:1.7.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.android.material:material:1.12.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    implementation("com.termux.termux-app:termux-shared:0.117")
+//    implementation("com.termux.termux-app:termux-shared:0.117")
+    implementation("com.google.guava:guava:28.2-android")
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
     implementation("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3")
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     implementation("commons-io:commons-io:2.13.0")
-    implementation("com.github.omadahealth:swipy:1.2.3@aar")
+//    implementation("com.github.omadahealth:swipy:1.2.3@aar")
     implementation("com.github.skydoves:colorpickerview:2.2.4")
     implementation("com.anggrayudi:storage:1.5.5")
     implementation("com.github.sya-ri:kgit:1.0.5")
@@ -146,7 +147,7 @@ dependencies {
 
     implementation ("com.github.alexzhirkevich:custom-qr-generator:2.0.0-alpha01")
 
-    implementation("io.coil-kt:coil:2.4.0")
+//    implementation("io.coil-kt:coil:2.4.0")
 //    implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
     implementation("com.blankj:utilcodex:1.31.1")
 
@@ -158,10 +159,10 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.github.gleb8k:Android-PathShapeView:1.3.2")
     implementation("com.daimajia.androidanimations:library:2.4@aar")
-    val htextview_version = "0.1.2"
+//    val htextview_version = "0.1.2"
 //    implementation("com.github.kibotu:htextview:0.1.28")
-    implementation("com.github.takusemba:spotlight:2.0.5")
-    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
+//    implementation("com.github.takusemba:spotlight:2.0.5")
+//    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
     implementation("jp.wasabeef:glide-transformations:4.3.0")
     implementation("net.objecthunter:exp4j:0.4.8")
 // as 3.0 use implementation
@@ -180,12 +181,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
-
-
-
-//    implementation("androidx.camera:camera-camera2:1.2.2")
-//    implementation("androidx.camera:camera-lifecycle:1.2.2")
-//    implementation("androidx.camera:camera-view:1.2.2")
 
 //    implementation("org.nanohttpd:nanohttpd:2.2.0")
 }

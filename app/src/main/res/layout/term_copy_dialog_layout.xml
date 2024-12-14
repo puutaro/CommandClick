@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
-            android:src="@drawable/ic_copy"
+            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"
             app:tint="@color/web_icon_color"
             android:backgroundTint="@color/white"
             android:id="@+id/term_copy_webview_dialog_copy"

@@ -4,39 +4,38 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.util.file.FileSystems
 
 object CommandListManager {
 
-    fun makeListSource(
-//        currentAppDirPath: String
-    ): List<String> {
-        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-        FileSystems.createDirs(UsePath.cmdclickDefaultAppDirPath)
-        return FileSystems.filterSuffixShellOrJsOrHtmlFiles(
-            cmdclickDefaultAppDirPath
-        )
-    }
-
-    fun execListUpdateForCmdIndex(
-//        currentAppDirPath: String,
-        cmdListView: RecyclerView,
-    ){
-        val fannelIndexListAdapter = cmdListView.adapter as FannelIndexListAdapter
-        val updateList = makeListSource(
+//    fun makeListSource(
+////        currentAppDirPath: String
+//    ): List<String> {
+//        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        FileSystems.createDirs(UsePath.cmdclickDefaultAppDirPath)
+//        return FileSystems.filterSuffixShellOrJsOrHtmlFiles(
 //            cmdclickDefaultAppDirPath
-        )
-        if(
-            fannelIndexListAdapter.fannelIndexList == updateList
-        ) return
-        fannelIndexListAdapter.fannelIndexList.clear()
-        fannelIndexListAdapter.fannelIndexList.addAll(updateList)
-        fannelIndexListAdapter.notifyDataSetChanged()
-        cmdListView.scrollToPosition(
-            fannelIndexListAdapter.itemCount - 1
-        )
-    }
+//        )
+//    }
+
+//    fun execListUpdateForCmdIndex(
+////        currentAppDirPath: String,
+//        cmdListView: RecyclerView,
+//    ){
+//        val fannelIndexListAdapter = cmdListView.adapter as FannelIndexListAdapter
+//        val updateList = makeListSource(
+////            cmdclickDefaultAppDirPath
+//        )
+//        if(
+//            fannelIndexListAdapter.fannelIndexList == updateList
+//        ) return
+//        fannelIndexListAdapter.fannelIndexList.clear()
+//        fannelIndexListAdapter.fannelIndexList.addAll(updateList)
+//        fannelIndexListAdapter.notifyDataSetChanged()
+//        cmdListView.scrollToPosition(
+//            fannelIndexListAdapter.itemCount - 1
+//        )
+//    }
 
     fun execListUpdateByEditText(
         cmdStrList: List<String>,
@@ -49,16 +48,16 @@ object CommandListManager {
         cmdListAdapter.notifyDataSetChanged()
     }
 
-    fun execListUpdateByEditTextForCmdIndex(
-        cmdStrList: List<String>,
-        fannelIndexListAdapter: FannelIndexListAdapter,
-        cmdListView: RecyclerView
-    ){
-        fannelIndexListAdapter.fannelIndexList.clear()
-        fannelIndexListAdapter.fannelIndexList.addAll(cmdStrList)
-        fannelIndexListAdapter.notifyDataSetChanged()
-        cmdListView.scrollToPosition(
-            fannelIndexListAdapter.itemCount - 1
-        )
-    }
+//    fun execListUpdateByEditTextForCmdIndex(
+//        cmdStrList: List<String>,
+//        fannelIndexListAdapter: FannelIndexListAdapter,
+//        cmdListView: RecyclerView
+//    ){
+//        fannelIndexListAdapter.fannelIndexList.clear()
+//        fannelIndexListAdapter.fannelIndexList.addAll(cmdStrList)
+//        fannelIndexListAdapter.notifyDataSetChanged()
+//        cmdListView.scrollToPosition(
+//            fannelIndexListAdapter.itemCount - 1
+//        )
+//    }
 }

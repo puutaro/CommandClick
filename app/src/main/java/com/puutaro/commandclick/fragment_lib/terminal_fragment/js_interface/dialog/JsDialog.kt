@@ -26,6 +26,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.QrScanJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TextJsDialogV3
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TimePickerDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.TitleJsDialog
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -117,6 +118,10 @@ class JsDialog(
 
     private val colorPickerJsDialog = ColorPickerJsDialog(
         terminalFragmentRef,
+    )
+
+    private val timePickerDialog = TimePickerDialog(
+        terminalFragmentRef
     )
 
     @JavascriptInterface
@@ -585,6 +590,15 @@ class JsDialog(
         configMapCon: String,
     ): String {
         return colorPickerJsDialog.create(
+            configMapCon,
+        )
+    }
+
+    @JavascriptInterface
+    fun timePicker(
+        configMapCon: String,
+    ): String {
+        return timePickerDialog.create(
             configMapCon,
         )
     }

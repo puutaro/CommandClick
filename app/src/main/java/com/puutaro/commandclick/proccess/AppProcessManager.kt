@@ -17,7 +17,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFan
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -360,21 +359,6 @@ object AppProcessManager {
             ).textToList(),
 //            languageType
         )
-        val shellExecEnv = CommandClickVariables.substituteCmdClickVariable(
-            settingVariable,
-            CommandClickScriptVariable.SHELL_EXEC_ENV
-        ) ?: CommandClickScriptVariable.SHELL_EXEC_ENV_DEFAULT_VALUE
-
-        if(
-            fannelName.endsWith(UsePath.SHELL_FILE_SUFFIX)
-            && shellExecEnv == SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
-        ) {
-            killThisTermuxShell(
-                fragment,
-                fannelName
-            )
-            return
-        }
         val fannelDirName = CcPathTool.makeFannelDirName(
             fannelName
         )
@@ -388,7 +372,7 @@ object AppProcessManager {
             val isContainFannelPath = tergetFannelPath.contains(
                 "$cmdclickDefaultAppDirPath/$fannelName"
             )
-            isContainFannelDirPath ||  isContainFannelPath
+            isContainFannelDirPath || isContainFannelPath
         }.map {
             tergetFannelPathTagIconStr ->
             val tergetFannelPathTagIconStrList = tergetFannelPathTagIconStr.split("\t")
@@ -424,27 +408,6 @@ object AppProcessManager {
             selectedProcessTabSepa
         )
         fragment.context?.sendBroadcast(killProcessIntent)
-    }
-
-    private fun killThisTermuxShell(
-        fragment: Fragment,
-        fannelName: String
-    ){
-        val context = fragment.context
-        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        val currentMonitorFileName = terminalViewModel.currentMonitorFileName
-        val factExecCmd =
-            "ps aux | grep \"${fannelName}\" " +
-                    " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "
-        val outputPath = "${UsePath.cmdclickMonitorDirPath}/${currentMonitorFileName}"
-        val execCmd = " touch \"${fannelName}\"; " +
-                "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
-                ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
-        ToastUtils.showShort("killing..")
-        ExecBashScriptIntent.ToTermux(
-            context,
-            execCmd
-        )
     }
 }
 

@@ -157,7 +157,7 @@ object QrLogo {
                 }
                 logo {
                     drawable = ContextCompat
-                        .getDrawable(context, com.termux.shared.R.drawable.ic_copy)?.apply {
+                        .getDrawable(context, androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha)?.apply {
                             setTint(
                                 qrColor
                             )

@@ -20,7 +20,6 @@ object WaitQuizPair {
         }.joinToString("\n")
     }
     private val UBUNTU_EXEC_MODE = CommandClickScriptVariable.UBUNTU_EXEC_MODE
-    private val SHELL_EXEC_ENV = CommandClickScriptVariable.SHELL_EXEC_ENV
 //    private val HIDE_SETTING_VARIABLES = CommandClickScriptVariable.HIDE_SETTING_VARIABLES
     private val SET_VARIABLE_TYPE = CommandClickScriptVariable.SET_VARIABLE_TYPE
     private val SET_REPLACE_VARIABLE = CommandClickScriptVariable.SET_REPLACE_VARIABLE
@@ -524,19 +523,6 @@ object WaitQuizPair {
         Pair(
             "How to switch exec mode?",
             "-> Use \"${UBUNTU_EXEC_MODE}\""
-        ),
-
-        Pair(
-            "Where's \"${SHELL_EXEC_ENV}\"?",
-            "-> \"setting variables section\" in fannel script"
-        ),
-        Pair(
-            "What's \"${SHELL_EXEC_ENV}\"?",
-            "-> Switch ubuntu to termux as shell env"
-        ),
-        Pair(
-            "How to switch ubuntu to termux as shell env?",
-            "-> Use \"${SHELL_EXEC_ENV}\""
         ),
         Pair(
             "Where's \"${EDIT_EXECUTE}\"?",

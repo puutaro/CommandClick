@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment

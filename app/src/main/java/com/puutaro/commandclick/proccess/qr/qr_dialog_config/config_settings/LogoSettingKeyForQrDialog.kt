@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import coil.load
+import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
@@ -73,6 +73,9 @@ object QrLogoSettingsForQrDialog {
         context: Context?,
         qrLogoHandlerArgsMaker: QrDialogConfig.QrLogoHandlerArgsMaker,
     ){
+        if(
+            context == null
+        ) return
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
         val fileName =  qrLogoHandlerArgsMaker.fileName
         val fileDirName = CcPathTool.makeFannelDirName(fileName)
@@ -82,7 +85,12 @@ object QrLogoSettingsForQrDialog {
         val qrPngPath = "${fileDirPath}/${qrPngNameRelativePath}"
         val qrPngPathObj = File(qrPngPath)
         if(qrPngPathObj.isFile){
-            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPath)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.apply {
+                Glide
+                    .with(context)
+                    .load(qrPngPath)
+                    .into(this)
+            }
             return
         }
         val qrLogoConfigMap = qrLogoHandlerArgsMaker.qrLogoConfigMap
@@ -102,6 +110,9 @@ object QrLogoSettingsForQrDialog {
         context: Context?,
         qrLogoHandlerArgsMaker: QrDialogConfig.QrLogoHandlerArgsMaker,
     ){
+        if(
+            context == null
+        ) return
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
         val fannelName = qrLogoHandlerArgsMaker.fileName
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
@@ -112,7 +123,12 @@ object QrLogoSettingsForQrDialog {
         if(
             qrPngPathObjInInstallIndex.isFile
         ) {
-            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPathObjInInstallIndex.absolutePath)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.apply {
+                Glide
+                    .with(context)
+                    .load(qrPngPathObjInInstallIndex.absolutePath)
+                    .into(this)
+            }
             return
         }
         val currentAppDirPath = qrLogoHandlerArgsMaker.recentAppDirPath
@@ -123,7 +139,12 @@ object QrLogoSettingsForQrDialog {
         if(
             qrPngPathObjInCurrentAppDir.isFile
         ) {
-            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPathObjInCurrentAppDir.absolutePath)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.apply {
+                Glide
+                    .with(context)
+                    .load( qrPngPathObjInCurrentAppDir.absolutePath)
+                    .into(this)
+            }
             return
         }
 //        val fragment = qrLogoHandlerArgsMaker.fragment

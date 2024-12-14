@@ -7,14 +7,12 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.broadcast.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
@@ -24,10 +22,8 @@ import com.puutaro.commandclick.proccess.edit.lib.ListPathGetterForDragSort
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -276,12 +272,6 @@ object ButtonViewProducer {
 //                buttonEventArgs,
 //                execCmdReplaceBlankList,
 //            )
-            ButtonCmdType.basht
-            -> execShellScriptByTermux(
-                editFragment,
-                execCmdAfterTrimButtonEditExecVariant,
-//                innerExecCmd,
-            )
             ButtonCmdType.bashb
             -> execShellScriptByBackground(
                 editFragment,
@@ -307,41 +297,6 @@ object ButtonViewProducer {
         }
     }
 
-    private fun execShellScriptByTermux(
-        editFragment: EditFragment,
-        execCmdAfterTrimButtonEditExecVariant: String,
-//        innerExecCmd: String,
-    ){
-        val context = editFragment.context
-            ?: return
-        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
-        val execCmd = if(
-            execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
-            || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
-        ) "${execCmdAfterTrimButtonEditExecVariant};"
-        else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
-        ExecBashScriptIntent.ToTermux(
-            context,
-            execCmd.replace(
-                Regex("^${ButtonCmdType.basht}"),
-                "bash"
-            ),
-            true
-        )
-//        val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
-//        if(onEditExecuteOnce) {
-//            val listener =
-//                context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-//            listener?.onToolBarButtonClickForEditFragment(
-//                editFragment.tag,
-//                ToolbarButtonBariantForEdit.OK,
-//                editFragment.readSharePreferenceMap,
-//                true,
-//            )
-//        }
-    }
-
 
     private fun execShellHandler(
         editFragment: EditFragment,
@@ -358,24 +313,11 @@ object ButtonViewProducer {
 //                editFragment.settingSectionStart,
 //                editFragment.settingSectionEnd,
 //            )
-        val shellExecEnv = CommandClickVariables.substituteCmdClickVariable(
-            substituteSettingVariableList,
-            CommandClickScriptVariable.SHELL_EXEC_ENV
-        ) ?: CommandClickScriptVariable.SHELL_EXEC_ENV_DEFAULT_VALUE
-        when(shellExecEnv){
-            SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
-            -> execUbuntuShellHandler(
-                editFragment,
-                execCmdAfterTrimButtonEditExecVariant,
-                substituteSettingVariableList
-            )
-            SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
-            -> execShellScriptByTermux(
-                editFragment,
-                execCmdAfterTrimButtonEditExecVariant,
-//                innerExecCmd,
-            )
-        }
+       execUbuntuShellHandler(
+            editFragment,
+            execCmdAfterTrimButtonEditExecVariant,
+            substituteSettingVariableList
+        )
     }
 
     private fun execUbuntuShellHandler(
@@ -1010,8 +952,6 @@ object ButtonViewProducer {
         jsActionConFrag("jsac"),
         jsCode("jsCode"),
 //        settingFrag("setf"),
-        basht(
-    "basht"),
         bashf("bashf"),
         bashb("bashb"),
     }

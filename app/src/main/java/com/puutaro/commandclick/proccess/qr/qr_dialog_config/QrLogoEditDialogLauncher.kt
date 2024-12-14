@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 
 import android.app.Dialog
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.view.Gravity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -9,7 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
@@ -74,9 +76,18 @@ object QrLogoEditDialogLauncher {
         )
 
         titleTextView?.text = fannelName
+        val requestBuilder: RequestBuilder<Drawable> = Glide.with(context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
         qrLogoDialogObj?.findViewById<AppCompatImageView>(
             R.id.qr_logo_list_index_dialog_top_image
-        )?.load(qrLogoPath)
+        )?.apply {
+            Glide
+                .with(context)
+                .load(qrLogoPath)
+                .thumbnail(requestBuilder)
+                .into(this)
+        }
         val isFileCon =
             QrLogoSettingsForQrDialog.Type.how(logoConfigMap) ==
                     QrTypeSettingsForQrDialog.QrTypeSettingKey.FILE_CON.type
