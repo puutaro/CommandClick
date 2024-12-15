@@ -19,7 +19,7 @@ class TimePickerDialog(
 ) {
     private var returnValue = String()
     private var onDialog = false
-    val keySeparator = '|'
+    private val keySeparator = '|'
 
     private enum class ColorPickerConfig(
         val key: String
