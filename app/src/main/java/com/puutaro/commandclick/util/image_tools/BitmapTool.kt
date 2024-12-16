@@ -28,6 +28,7 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.text.style.RelativeSizeSpan
 import android.util.Base64
+import android.util.TypedValue
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
@@ -1562,6 +1563,22 @@ object BitmapTool {
             return overlayBitmap
         }
 
+        fun overlayOnBkBitmapCenter(bitmapBackground: Bitmap, bitmapImage: Bitmap): Bitmap {
+            val bitmapWidth = bitmapBackground.width
+            val bitmapHeight = bitmapBackground.height
+            val bitmap2Width = bitmapImage.width
+            val bitmap2Height = bitmapImage.height
+            val marginLeft = (bitmapBackground.width - bitmap2Width) / 2f
+            val marginTop =(bitmapBackground.height - bitmap2Height) / 2f
+            val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
+            val overlayBitmap =
+                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
+            val canvas = Canvas(overlayBitmap)
+            canvas.drawBitmap(bitmapBackground, Matrix(), null)
+            canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
+            return overlayBitmap
+        }
+
         fun overlayOnBkBitmapByPivot(
             bitmapBackground: Bitmap,
             bitmapImage: Bitmap,
@@ -1579,6 +1596,37 @@ object BitmapTool {
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, pivotX, pivotY, null)
             return overlayBitmap
+        }
+
+        fun roundCorner(
+                context: Context?,
+                bitmap: Bitmap,
+                cornerDips: Int,
+            ): Bitmap? {
+                val output = Bitmap.createBitmap(
+                bitmap.width, bitmap.height,
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(output)
+            val cornerSizePx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, cornerDips.toFloat(),
+                context?.resources?.displayMetrics
+            ).toInt()
+            val paint = Paint()
+            val rect = Rect(0, 0, bitmap.width, bitmap.height)
+            val rectF = RectF(rect)
+
+            // prepare canvas for transfer
+            paint.isAntiAlias = true
+            paint.color = -0x1
+            paint.style = Paint.Style.FILL
+            canvas.drawARGB(0, 0, 0, 0)
+            canvas.drawRoundRect(rectF, cornerSizePx.toFloat(), cornerSizePx.toFloat(), paint)
+
+            // draw bitmap
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+            canvas.drawBitmap(bitmap, rect, rect, paint)
+            return output
         }
 
     }

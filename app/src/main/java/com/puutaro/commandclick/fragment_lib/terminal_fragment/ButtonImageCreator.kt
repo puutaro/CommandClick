@@ -374,11 +374,16 @@ object ButtonImageCreator {
              bkBitmapSrc,
              outBitmap,
         )
-        val resultBitmap = getRoundedCornerBitmap(
+        val resultBitmap = BitmapTool.ImageTransformer.roundCorner(
             context,
             overBitmap,
             cornerDips,
         ) ?: return null
+//        getRoundedCornerBitmap(
+//            context,
+//            overBitmap,
+//            cornerDips,
+//        ) ?: return null
         return BitmapTool.convertBitmapToByteArray(resultBitmap)
     }
 
