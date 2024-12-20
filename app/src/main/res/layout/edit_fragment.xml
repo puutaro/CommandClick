@@ -26,77 +26,39 @@
             android:background="@color/trans"
             android:backgroundTint="@color/trans"
             />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/edit_title_image"
+        <FrameLayout
+            android:id="@+id/edit_list_title_frame"
             android:layout_width="0dp"
             android:layout_height="@dimen/edit_title_height"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center_vertical"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             />
-<!--        app:layout_constraintEnd_toStartOf="@+id/editTextView"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintHorizontal_weight="2"-->
-        <FrameLayout
-            android:id="@+id/edit_backstack_count_frame"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/edit_list_linear_align_title"
+            layout="@layout/edit_list_linear_align_title"
+            android:layout_width="0dp"
             android:layout_height="@dimen/edit_title_height"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/editTextView"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            android:foregroundGravity="center"
-            android:layout_marginEnd="15dp"
-            >
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/edit_backstack_count"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:padding="0dp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:gravity="center_vertical"
-                android:alpha="1"
-                android:layout_marginStart="0dp"
-                android:layout_gravity="center_vertical"
-                app:shapeAppearanceOverlay="@style/round_corner_for_backstack_count"
-                app:srcCompat="@drawable/white_grad"
-                android:background="@null"
-                android:backgroundTint="@null"
-                android:foregroundGravity="center"
-                />
-        </FrameLayout>
-        <com.puutaro.commandclick.custom_view.OutlineTextView
-            android:id="@+id/editTextView"
-            android:layout_width="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            />
+        <include
+            android:id="@+id/edit_list_frag_align_title"
+            layout="@layout/edit_list_frag_align_title"
+            android:layout_width="0dp"
             android:layout_height="@dimen/edit_title_height"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_backstack_count_frame"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:textColor="#050505"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:background="@null"
-            android:fontFamily="sans-serif"
+            android:visibility="gone"
             />
-<!--        / app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/edit_title_image"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"
- app:layout_constraintHorizontal_weight="8"-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/edit_list_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/editTextView"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/edit_list_search_edit_text"

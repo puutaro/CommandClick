@@ -328,9 +328,9 @@ object BitmapTool {
             strokeSize: Float?,
             firstCharRate: Float?,
             letterSpacing: Float?,
-            typeFace: Int?,
             innerWidthRate: Float = 1f,
             font: Typeface = Typeface.DEFAULT,
+            isAntiAlias: Boolean = false,
         ): Bitmap {
 //            val imgWidth = 200f     // 画像幅
 //            val imgHeight = 200f    // 画像高さ
@@ -382,6 +382,7 @@ object BitmapTool {
                 firstCharRate,
                 letterSpacing,
                 font = font,
+                isAntiAlias = isAntiAlias,
             )
             val transX = ((canvas.width / 2f) - (staticLayoutForStroke.width / 2f)).let {
                 if(it <= 0) return@let 0f
@@ -409,6 +410,7 @@ object BitmapTool {
                 firstCharRate,
                 letterSpacing,
                 font = font,
+                isAntiAlias = isAntiAlias,
             )
 //                builder.build()
 //            canvas.translate(x, y)

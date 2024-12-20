@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_list_dialog_backstack_count_frame"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/edit_title_height"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_chainStyle="packed"
+    android:foregroundGravity="center"
+    android:background="@null"
+    android:backgroundTint="@null"
+    >
+    <!--        app:layout_constraintEnd_toStartOf="@+id/edit_list_dialog_title_view"-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/edit_list_dialog_frag_bk_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:gravity="center_vertical"
+        android:alpha="1"
+        android:layout_marginStart="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@null"
+        android:backgroundTint="@null"
+        android:foregroundGravity="center"
+        />
+    <com.puutaro.commandclick.custom_view.OutlineTextView
+        android:id="@+id/edit_list_dialog_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:background="@null"
+        android:backgroundTint="@null"
+        android:visibility="gone"
+        />
+</FrameLayout>

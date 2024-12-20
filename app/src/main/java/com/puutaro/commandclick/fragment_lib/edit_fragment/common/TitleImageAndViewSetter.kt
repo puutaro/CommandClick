@@ -5,9 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.isVisible
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -26,13 +28,17 @@ import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -43,6 +49,58 @@ object TitleImageAndViewSetter {
     private const val switchOff = "OFF"
     private const val switchOn = "ON"
     private const val keySeparator = '|'
+    private const val valueSeparator = '&'
+
+    private fun parseColors(
+        context: Context?,
+        titleTextMap: Map<String, String>?,
+        colorsKey: String
+    ): List<String>? {
+        if(
+            titleTextMap.isNullOrEmpty()
+        ) return null
+        return titleTextMap.get(
+            colorsKey
+        )?.split(valueSeparator)?.map {
+                colorStr ->
+            ColorTool.parseColorStr(
+                context,
+                colorStr
+            )
+        }
+    }
+
+    private enum class EditBoxTitleKey(
+        val key: String,
+    ){
+        TEXT("text"),
+        IMAGE("image"),
+    }
+
+    enum class TitleType(
+        val str: String
+    ){
+        LINEAR("linear"),
+        FRAG("frag"),
+    }
+
+    enum class TitleTextSettingKey(
+        val key: String
+    ){
+        //    SIZE("size"),
+        HEIGHT("height"),
+        TYPE("type"),
+        BK_HEX_ALPHA("bkHexAlpha"),
+        STROKE_COLORS("strokeColors"),
+        BACKSTACK_COLORS("backstackColors"),
+        FORE_FILL_COLORS("foreFillColors"),
+        BK_FILL_COLORS("bkFillColors"),
+        ON_FORE_BK_DIFF_COLOR("onForeBkDiffColor"),
+        VISIBLE("visible"),
+        SHELL_PATH("shellPath"),
+        SHELL_CON("shellCon"),
+        ARGS("args"),
+    }
 
 
     private enum class ErrType(
@@ -53,13 +111,12 @@ object TitleImageAndViewSetter {
 
     suspend fun set(
         fragment: Fragment,
-        editBackstackCountFrame: FrameLayout,
-        editBackstackCountView: ShapeableImageView,
-        editTextView: OutlineTextView,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        editTitleImageView: AppCompatImageView,
+        editListTitleFrame: FrameLayout?,
+        editListLinearAlignTitleLayout: FrameLayout?,
+        editListFragAlignTitleLayout: FrameLayout?,
         titleSettingMap: Map<String, String>?,
         requestBuilder: RequestBuilder<Drawable>?,
     ) {
@@ -82,42 +139,621 @@ object TitleImageAndViewSetter {
                 it != switchOff
             if (onTitleSwitch) return@let
             withContext(Dispatchers.Main) {
-                editBackstackCountFrame.isVisible = false
-                editTextView.isVisible = false
+                editListTitleFrame?.apply {
+                    visibility = View.VISIBLE
+                }
             }
-//           editFragment.binding.editTitleLinearlayout.isVisible = false
             return
         }
+        val titleType = withContext(Dispatchers.IO) {
+            titleTextMap.get(
+                TitleTextSettingKey.TYPE.key
+            )?.let { titleTypeSrc ->
+                TitleType.entries.firstOrNull {
+                    it.str == titleTypeSrc
+                }
+            }
+        } ?: TitleType.LINEAR
+        when(titleType) {
+            TitleType.LINEAR -> {
+                withContext(Dispatchers.Main) {
+                    editListLinearAlignTitleLayout?.apply {
+                        visibility = View.VISIBLE
+                        (layoutParams as ConstraintLayout.LayoutParams).apply {
+                            elevation = 5f
+                        }
+                    }
+                }
+                val titleBkImageView =
+                    editListLinearAlignTitleLayout
+                        ?.findViewById<AppCompatImageView>(
+                            R.id.edit_list_linear_align_title_bk_image
+                        )
+                val editBackstackCountView =
+                    editListLinearAlignTitleLayout
+                        ?.findViewById<ShapeableImageView>(
+                            R.id.edit_list_linear_align_title_backstack_count
+                        )
+                val editTextView =
+                    editListLinearAlignTitleLayout
+                        ?.findViewById<OutlineTextView>(
+                            R.id.edit_list_linear_align_title_text
+                        )
+                setLinearAlignTitle(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    titleBkImageView,
+                    editBackstackCountView,
+                    editTextView,
+                    titleTextMap,
+                    requestBuilder
+                )
+            }
+            TitleType.FRAG -> {
+                withContext(Dispatchers.Main) {
+                    editListFragAlignTitleLayout?.apply {
+                        visibility = View.VISIBLE
+                        (layoutParams as ConstraintLayout.LayoutParams).apply {
+                            elevation = 5f
+                        }
+                    }
+                }
+                val fragBkImageView = editListFragAlignTitleLayout?.findViewById<AppCompatImageView>(
+                    R.id.edit_list_dialog_frag_bk_image
+                )
+                val titleView = editListFragAlignTitleLayout?.findViewById<OutlineTextView>(
+                    R.id.edit_list_dialog_title_text
+                )
+                FragAlignBk.set(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    fragBkImageView,
+                    titleView,
+                    titleTextMap,
+                    requestBuilder
+                )
+            }
+        }
+    }
+
+    private object FragAlignBk {
+        suspend fun set(
+            fragment: Fragment,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            fragBkImageView: AppCompatImageView?,
+            titleView: OutlineTextView?,
+            titleTextMap: Map<String, String>?,
+            requestBuilderSrc: RequestBuilder<Drawable>?
+        ) {
+            val context = fragment.context
+                ?: return
+            val bkCountAndOverrideText = withContext(Dispatchers.IO) {
+                EditTextMaker.make(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    titleTextMap
+                )
+            }
+            val bkCountAndOverrideTextList = withContext(Dispatchers.IO) {
+                EditTextMaker.makeBkCountAndOverrideTextList(
+                    bkCountAndOverrideText
+                )
+            }
+            val overrideText = withContext(Dispatchers.IO) {
+                EditTextMaker.extractText(
+                    bkCountAndOverrideTextList
+                )
+//                    .split(":").filterIndexed { index, _ ->
+//                    index > 0
+//                }.joinToString(":").trim()
+            }
+            val fillColorStr = withContext(Dispatchers.IO) {
+                val foreFillColorsKey = TitleTextSettingKey.FORE_FILL_COLORS.key
+                val fillColorStrListSrc = parseColors(
+                    context,
+                    titleTextMap,
+                    foreFillColorsKey
+                )
+                when(fillColorStrListSrc.isNullOrEmpty()) {
+                    false -> {
+                        colorChecker(
+                            fragment.context,
+                            fillColorStrListSrc.random(),
+                            foreFillColorsKey,
+                        ) ?: return@withContext null
+                    }
+                    else -> {
+                        fillColorStrList.random()
+                    }
+                }
+            } ?: return
+            val strokeColorStr = let {
+                val strokeColorKey = TitleTextSettingKey.STROKE_COLORS.key
+                val strokeColorStrListSrc =  parseColors(
+                    context,
+                    titleTextMap,
+                    strokeColorKey
+                )
+                when (strokeColorStrListSrc.isNullOrEmpty()) {
+                    false -> {
+                        colorChecker(
+                            fragment.context,
+                            strokeColorStrListSrc.random(),
+                            strokeColorKey,
+                        ) ?: return
+                    }
+                    else -> makeWhiteColor()
+                }
+            }
+            val backstackColorKey = TitleTextSettingKey.BACKSTACK_COLORS.key
+            val backstackColorStrListSrc = parseColors(
+                context,
+                titleTextMap,
+                backstackColorKey
+            )
+            val isColorErr = withContext(Dispatchers.IO) {
+                backstackColorStrListSrc?.forEach {
+                    if(
+                        it.isEmpty()
+                    ) return@forEach
+                    val colorStr = colorChecker(
+                        context,
+                        it,
+                        backstackColorKey
+                    )
+                    if (
+                        colorStr.isNullOrEmpty()
+                    ) return@withContext true
+                }
+                false
+            }
+            if(
+                isColorErr
+            ) return
+            val escapeColorStrList = listOf(
+                fillColorStr,
+                strokeColorStr,
+            )
+            val backstackColorStr =
+                backstackColorStrListSrc?.random()
+                    ?: backStackStrListForFragBackStack.filter {
+                        !escapeColorStrList.contains(it)
+                    }.random()
+            val escapeColorListForBkArgbColor = listOf(
+                backstackColorStr,
+            ) + escapeColorStrList
+            val bkArgbColor = makeArgbBkColor(
+                context,
+                titleTextMap ?: emptyMap(),
+                escapeColorListForBkArgbColor,
+                fillColorStr,
+            ) ?: return
+            CoroutineScope(Dispatchers.IO).launch {
+                setTitleText(
+                    titleView,
+                    overrideText,
+                    fillColorStr,
+                    strokeColorStr,
+                )
+            }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "ldefault.txt").absolutePath,
+//                listOf(
+//                    "fillColorStr: ${fillColorStr}",
+//                    "strokeColorStr: ${strokeColorStr}",
+//                    "backstackColorStr: ${backstackColorStr}",
+//                    "bkArgbColor: ${bkArgbColor }",
+//                ).joinToString("\n")
+//            )
+            CoroutineScope(Dispatchers.IO).launch {
+                val bkCount = withContext(Dispatchers.IO) {
+                    bkCountAndOverrideTextList.first()
+                }
+                setBackstackCountAndLogoImage(
+                    context,
+                    fannelInfoMap,
+                    fragBkImageView,
+                    bkCount,
+                    overrideText,
+                    backstackColorStr,
+                    bkArgbColor,
+                    requestBuilderSrc,
+                )
+            }
+        }
+
+        private suspend fun setTitleText(
+            titleView: OutlineTextView?,
+            overrideText: String,
+            fillColorStr: String,
+            strokeColorStr: String,
+        ){
+            titleView?.apply {
+                if (
+                    overrideText.isEmpty()
+                ) return@apply
+                withContext(Dispatchers.Main) {
+                    visibility = View.VISIBLE
+                    letterSpacing = 0.2f
+                    text = overrideText
+                    setFillColor(Color.parseColor(fillColorStr))
+                    setStrokeColor(
+                        Color.parseColor(
+                            strokeColorStr
+                        )
+                    )
+                }
+            }
+        }
+
+        private enum class PutImageType {
+            LOGO,
+            BACKSTACK_COUNT
+        }
+
+        private suspend fun setBackstackCountAndLogoImage(
+            context: Context?,
+            fannelInfoMap: Map<String, String>,
+            fragBkImageView: AppCompatImageView?,
+            bkCount: String,
+            overrideText: String,
+            backstackColorStr: String,
+            bkArgbColor: String,
+            requestBuilderSrc: RequestBuilder<Drawable>?,
+        ){
+            if(
+                context == null
+            ) return
+            fragBkImageView?.apply {
+                withContext(Dispatchers.Main) {
+                    scaleType = ImageView.ScaleType.FIT_XY
+                }
+
+                val logoPngPath = withContext(Dispatchers.IO) {
+                    val fannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+                    listOf(
+                        UsePath.fannelLogoPngPath,
+                    ).joinToString("/").let {
+                        ScriptPreWordReplacer.replace(
+                            it,
+                            fannelName
+                        )
+                    }
+                }
+                val logoBitmap = withContext(Dispatchers.IO) {
+                    when (File(logoPngPath).isFile) {
+                        true -> BitmapTool.convertFileToBitmap(logoPngPath)
+                        else -> BitmapTool.convertFileToBitmap(
+                            ExecSetToolbarButtonImage.getImageFile(
+                                CmdClickIcons.CC.assetsPath
+                            ).absolutePath
+                        )
+                    }
+                } ?: return
+                val shrinkRate = 0.5f  //0.5f
+                val oneSideLength = withContext(Dispatchers.IO) {
+                   (context.resources.getDimension(R.dimen.twenty_dp) * 2).let {
+                       it * shrinkRate
+                   }.toFloat()
+                }
+                val screenWidth = withContext(Dispatchers.Main) {
+                    ScreenSizeCalculator.toDp(
+                        context,
+                        300
+                    )
+                }
+                val rectWidth = withContext(Dispatchers.Main) {
+                    val rectWidthSrc = let {
+                        val baseWidth = 720f
+                        val minSize = 200f
+                        val maxSize = 250f
+                        val incline = (maxSize - minSize) / (1080f - baseWidth)
+                        val culcSize = incline * (screenWidth - baseWidth) + minSize
+                        if (
+                            culcSize <= minSize
+                        ) return@let minSize
+                        culcSize
+                    }.toInt()
+                    ScreenSizeCalculator.toDp(
+                        context,
+                        rectWidthSrc
+                    ).let {
+                        it * shrinkRate
+                    }.toInt()
+                }
+                val rectHeight = withContext(Dispatchers.Main) {
+                    ScreenSizeCalculator.toDp(
+                        context,
+                        55
+                    ).let {
+                        it * shrinkRate
+                    }.toInt()
+                }
+                val backstackCountBitmap = withContext(Dispatchers.IO) {
+                    val boldOfNormalList = listOf(
+                        Typeface.BOLD,
+                        Typeface.NORMAL,
+                    )
+                    val fontType = listOf(
+                        Typeface.SANS_SERIF,
+                        Typeface.SERIF,
+                        Typeface.MONOSPACE,
+                        Typeface.DEFAULT,
+                    )
+                    var bkRect = BitmapTool.ImageTransformer.makeRect(
+                        bkArgbColor,
+                        rectWidth,
+                        rectHeight
+                    )
+                    val bkRectWidth = bkRect.width
+                    val bkRectHeight = bkRect.height
+//                    FileSystems.writeFromByteArray(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lbkRect.png").absolutePath,
+//                        BitmapTool.convertBitmapToByteArray(bkRect)
+//                    )
+                    val fontSize = let {
+                        val baseWidth = 720f
+                        val minSize = 70f //60f
+                            // (40..60).random().toFloat()
+                        val maxSize = minSize + 10f  //70f
+                        val incline = (maxSize - minSize) / (1080f - baseWidth)
+                        val culcSize = incline * (screenWidth - baseWidth) + minSize
+                        if (
+                            culcSize <= minSize
+                        ) return@let minSize
+                        culcSize
+                    }.let {
+                        it * shrinkRate
+                    }.toFloat()
+                    val imagePutTimes = 100
+                    var count =0
+                    val backstackCountRotateList =  listOf(90, 180, -90, 0)
+                    val backstackCountBitmapListForOverlay = withContext(Dispatchers.IO) {
+                        val imageTypeTobackstackCountBitmapListForOverlayJobList = (0..<imagePutTimes).map {
+                            async {
+                                val isLogoMaking =
+                                    (1..6).random() == 1
+                                val imageTypeToBackstackCountBitmap = when (isLogoMaking) {
+                                    false -> {
+                                        val backstackCountBitmapSrc =
+                                            BitmapTool.DrawText.drawTextToBitmap(
+                                                bkCount,
+                                                oneSideLength,
+                                                oneSideLength,
+                                                null,
+                                                fontSize,
+                                                Color.parseColor(backstackColorStr),
+                                                Color.parseColor(backstackColorStr),
+                                                0f,
+                                                null,
+                                                null,
+                                                font = Typeface.create(
+                                                    fontType.random(),
+                                                    boldOfNormalList.random()
+                                                ),
+                                                isAntiAlias = true,
+                                            ).let {
+                                                val shurinkOnesideLength =
+                                                    (oneSideLength * 0.8).toInt()
+                                                BitmapTool.ImageTransformer.cutCenter2(
+                                                    it,
+                                                    shurinkOnesideLength,
+                                                    shurinkOnesideLength
+                                                )
+                                            }.let {
+                                                BitmapTool.rotate(
+                                                    it,
+                                                    backstackCountRotateList.random().toFloat()
+                                                )
+                                            }
+                                        if (count == 0) {
+                                            count++
+                                        }
+                                        PutImageType.BACKSTACK_COUNT to backstackCountBitmapSrc
+                                    }
+
+                                    else -> {
+                                        val logoBitmapRate = (1..5).random() / 5f
+                                        PutImageType.LOGO to Bitmap.createScaledBitmap(
+                                            logoBitmap,
+                                            (logoBitmap.width * logoBitmapRate).let {
+                                                it * shrinkRate
+                                            }.toInt(),
+                                            (logoBitmap.height * logoBitmapRate).let {
+                                                it * shrinkRate
+                                            }.toInt(),
+                                            false,
+                                        ).let {
+                                            BitmapTool.rotate(
+                                                it,
+                                                (0..180).random().toFloat()
+                                            )
+                                        }
+                                    }
+                                }
+                                val hexOpacity = when (overrideText.isNotEmpty()) {
+                                    true -> (50..100).random()
+                                    //(10..60).random()
+                                    else -> (100..255).random()
+                                }
+
+                                val backstackCountBitmapForOverlay =
+                                    BitmapTool.ImageTransformer.adjustOpacity(
+                                        imageTypeToBackstackCountBitmap.second,
+                                        hexOpacity
+                                        //(10..60).random()
+                                    )
+                                imageTypeToBackstackCountBitmap.first to backstackCountBitmapForOverlay
+                            }
+                        }
+                        imageTypeTobackstackCountBitmapListForOverlayJobList.awaitAll()
+                    }
+                    withContext(Dispatchers.IO) {
+                        val overrideTextLength = overrideText.length
+                        val maxTextLength = 22
+                        val marginDivideInt = let {
+                            val maxRate = 10 //14
+                            if(
+                                overrideTextLength >= maxTextLength
+                            ) return@let maxRate
+                            ((maxRate * overrideTextLength) / maxTextLength.toFloat()).toInt()
+                        }
+//                        FileSystems.writeFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lrate.txt").absolutePath,
+//                            listOf(
+//                                "marginDivideInt: ${marginDivideInt}"
+//                            ).joinToString("\n")
+//                        )
+                        backstackCountBitmapListForOverlay.forEachIndexed { index, imageTypeTobackstackCountBitmap ->
+                            val imageType = imageTypeTobackstackCountBitmap.first
+                            val backstackCountBitmap = imageTypeTobackstackCountBitmap.second
+                            bkRect = when(imageType) {
+                                PutImageType.LOGO -> BitmapTool.ImageTransformer.overlayOnBkBitmap(
+                                    bkRect,
+                                    backstackCountBitmap,
+                                )
+                                PutImageType.BACKSTACK_COUNT -> {
+                                    val pivotX = let {
+                                        val marginWidth =
+                                            bkRectWidth - backstackCountBitmap.width
+                                        val inFreqAreaWidth = marginWidth / marginDivideInt
+                                            //marginWidth / 8
+                                        when ((1..6).random() == 1) {
+                                            true -> (0..marginWidth).random()
+                                                .toFloat()
+
+                                            else -> (inFreqAreaWidth..(marginWidth - inFreqAreaWidth)).random()
+                                                .toFloat()
+                                        }
+                                    }
+                                    val pivotY = let {
+                                        val marginHeight =
+                                            bkRectHeight - backstackCountBitmap.height
+                                        val inFreqAreaHeight = marginHeight / 5
+                                        when ((1..6).random() == 1) {
+                                            true -> (0..marginHeight).random()
+                                                .toFloat()
+
+                                            else -> (inFreqAreaHeight..(marginHeight - inFreqAreaHeight)).random()
+                                                .toFloat()
+                                        }
+                                    }
+                                    BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                                        bkRect,
+                                        backstackCountBitmap,
+                                        pivotX,
+                                        pivotY
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    val trimWidth = let {
+                        val baseWidth = 720f
+                        val minSize = 100f
+                        val maxSize = 200f //70f
+                        val incline = (maxSize - minSize) / (1080f - baseWidth)
+                        val culcSize = incline * (screenWidth - baseWidth) + minSize
+                        if (
+                            culcSize <= minSize
+                        ) return@let minSize
+                        culcSize
+                    }.let {
+                        it * shrinkRate
+                    }.toInt()
+                    val trimHeight = let {
+                        val baseWidth = 720f
+                        val minSize = 70f
+                        val maxSize = 100f //70f
+                        val incline = (maxSize - minSize) / (1080f - baseWidth)
+                        val culcSize = incline * (screenWidth - baseWidth) + minSize
+                        if (
+                            culcSize <= minSize
+                        ) return@let minSize
+                        culcSize
+                    }.let {
+                        it * shrinkRate
+                    }.toInt()
+                    BitmapTool.ImageTransformer.cutCenter2(
+                        bkRect,
+                        bkRect.width - trimWidth,
+                        bkRect.height - trimHeight
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    val requestBuilder: RequestBuilder<Drawable> =
+                        requestBuilderSrc ?: Glide.with(context)
+                            .asDrawable()
+                            .sizeMultiplier(0.1f)
+                    Glide
+                        .with(context)
+                        .load(backstackCountBitmap)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .dontAnimate()
+                        .thumbnail(requestBuilder)
+                        .into(this@apply)
+                }
+
+            }
+        }
+    }
+
+    private suspend fun setLinearAlignTitle(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        titleBkImageView: AppCompatImageView?,
+        editBackstackCountView: ShapeableImageView?,
+        editTextView: OutlineTextView?,
+        titleTextMap: Map<String, String>,
+        requestBuilder: RequestBuilder<Drawable>?,
+
+    ){
+        val context = fragment.context
         val whiteColorStr =
             withContext(Dispatchers.IO) {
-                convertWhiteColor()
+                makeWhiteColor()
             }
         val fillColorStr = withContext(Dispatchers.IO) {
-            val foreFillColorKey = TitleTextSettingKey.FORE_FILL_COLOR.key
-            val fillColorStrSrc = titleTextMap.get(
-                foreFillColorKey
+            val foreFillColorsKey = TitleTextSettingKey.FORE_FILL_COLORS.key
+            val fillColorStrListSrc = parseColors(
+                context,
+                titleTextMap,
+                foreFillColorsKey
             )
-            when(fillColorStrSrc.isNullOrEmpty()) {
+            when(fillColorStrListSrc.isNullOrEmpty()) {
                 false -> {
                     colorChecker(
                         fragment.context,
-                        fillColorStrSrc,
-                        foreFillColorKey,
+                        fillColorStrListSrc.random(),
+                        foreFillColorsKey,
                     ) ?: return@withContext null
                 }
                 else -> fillColorStrList.random()
             }
         } ?: return
         val strokeColorStr = let {
-            val strokeColorKey = TitleTextSettingKey.STROKE_COLOR.key
-            val strokeColorStrSrc = titleTextMap.get(
+            val strokeColorKey = TitleTextSettingKey.STROKE_COLORS.key
+            val strokeColorStrListSrc = parseColors(
+                context,
+                titleTextMap,
                 strokeColorKey
             )
-            when (strokeColorStrSrc.isNullOrEmpty()) {
+            when (strokeColorStrListSrc.isNullOrEmpty()) {
                 false -> {
                     colorChecker(
-                        fragment.context,
-                        strokeColorStrSrc,
+                        context,
+                        strokeColorStrListSrc.random(),
                         strokeColorKey,
                     ) ?: return
                 }
@@ -126,34 +762,35 @@ object TitleImageAndViewSetter {
         }
 
         val backstackColorStr = let {
-            val backstackColorKey = TitleTextSettingKey.BACKSTACK_COLOR.key
-            val backstackColorStrSrc = titleTextMap.get(
-                backstackColorKey
+            val backstackColorsKey = TitleTextSettingKey.BACKSTACK_COLORS.key
+            val backstackColorStrListSrc = parseColors(
+                context,
+                titleTextMap,
+                backstackColorsKey
             )
-            when (backstackColorStrSrc.isNullOrEmpty()) {
+            when (backstackColorStrListSrc.isNullOrEmpty()) {
                 false -> colorChecker(
-                    fragment.context,
-                    backstackColorStrSrc,
-                    backstackColorKey,
-                    ) ?: return
+                    context,
+                    backstackColorStrListSrc.random(),
+                    backstackColorsKey,
+                ) ?: return
                 else -> whiteColorStr
             }
         }
-
         setTitleText(
             fragment,
-            editBackstackCountView,
-            editTextView,
             fannelInfoMap,
             setReplaceVariableMap,
             busyboxExecutor,
+            editBackstackCountView,
+            editTextView,
             titleTextMap,
             fillColorStr,
             backstackColorStr,
             strokeColorStr,
             requestBuilder,
         )
-        val bkArgbColor = makeArgbBkColor(
+        val bkArgbColorStr = makeArgbBkColor(
             fragment.context,
             titleTextMap,
             listOf(
@@ -165,9 +802,9 @@ object TitleImageAndViewSetter {
         ) ?: return
         setTitleImage(
             fragment,
-            editTitleImageView,
+            titleBkImageView,
             fannelInfoMap,
-            bkArgbColor,
+            bkArgbColorStr,
             requestBuilder,
         )
     }
@@ -226,16 +863,18 @@ object TitleImageAndViewSetter {
         val onForeBkDiffColor = titleTextMap.get(
             TitleTextSettingKey.ON_FORE_BK_DIFF_COLOR.key
         ) == switchOn
-        val bkFillColorKey =
-            TitleTextSettingKey.BK_FILL_COLOR.key
-        val bkColorStrSrc = titleTextMap.get(
-            bkFillColorKey
+        val bkFillColorsKey =
+            TitleTextSettingKey.BK_FILL_COLORS.key
+        val bkColorStrListSrc = parseColors(
+            context,
+            titleTextMap,
+            bkFillColorsKey
         )
-        val bkColorStr = when(bkColorStrSrc.isNullOrEmpty()) {
+        val bkColorStr = when(bkColorStrListSrc.isNullOrEmpty()) {
             false -> colorChecker(
                 context,
-                bkColorStrSrc,
-                bkFillColorKey,
+                bkColorStrListSrc.random(),
+                bkFillColorsKey,
                 ) ?: return null
             else -> when (onForeBkDiffColor) {
                 true -> {
@@ -290,7 +929,34 @@ object TitleImageAndViewSetter {
 
     private val blackGreen = "#0f1419"
 //    private val fillGray = "#808080"
-    val fillColorStrList = listOf(
+
+    private val backStackStrListForFragBackStack = listOf(
+//        blackGreen,
+//        fillGray,
+        CmdClickColorStr.GREEN.str,
+        CmdClickColorStr.WHITE_GREEN.str,
+        CmdClickColorStr.LIGHT_GREEN.str,
+        CmdClickColorStr.ANDROID_GREEN.str,
+        CmdClickColorStr.YELLOW_GREEN.str,
+        CmdClickColorStr.YELLOW.str,
+//        CmdClickColorStr.THICK_GREEN.str,
+//        CmdClickColorStr.CARKI.str,
+        CmdClickColorStr.GOLD_YELLOW.str,
+//        CmdClickColorStr.DARK_GREEN.str,
+//        CmdClickColorStr.THICK_AO.str,
+//        CmdClickColorStr.BLACK_AO.str,
+//        CmdClickColorStr.NAVY.str,
+        CmdClickColorStr.WHITE_BLUE.str,
+        CmdClickColorStr.WHITE_BLUE_PURPLE.str,
+        CmdClickColorStr.BLUE.str,
+//        CmdClickColorStr.BLUE_DARK_PURPLE.str,
+//        CmdClickColorStr.PURPLE.str,
+//        CmdClickColorStr.BROWN.str,
+//        CmdClickColorStr.DARK_BROWN.str,
+        CmdClickColorStr.SKERLET.str,
+    )
+
+    private val fillColorStrList = listOf(
 //        blackGreen,
 //        fillGray,
         CmdClickColorStr.GREEN.str,
@@ -310,11 +976,11 @@ object TitleImageAndViewSetter {
     )
     private suspend fun setTitleText(
         fragment: Fragment,
-        editBackstackCountView: ShapeableImageView,
-        editTextView: OutlineTextView,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        editBackstackCountView: ShapeableImageView?,
+        editTextView: OutlineTextView   ?,
         titleTextMap: Map<String, String>?,
         fillColorStr: String,
         backstackColorStr: String,
@@ -331,20 +997,18 @@ object TitleImageAndViewSetter {
                 titleTextMap
             )
         }
-        val space = " "
         val bkCountAndOverrideTextList = withContext(Dispatchers.IO) {
-            bkCountAndOverrideText.split(
-                space
+            EditTextMaker.makeBkCountAndOverrideTextList(
+                bkCountAndOverrideText
             )
         }
         val bkCount = withContext(Dispatchers.IO) { bkCountAndOverrideTextList.first() }
         val overrideText = withContext(Dispatchers.IO) {
-            bkCountAndOverrideTextList.filterIndexed { index, _ ->
-                index > 0
-            }.joinToString(space).trim()
+            EditTextMaker.extractText(
+                bkCountAndOverrideTextList
+            )
         }
-//        val fillColorStr = fillColorStrList.random()
-        editBackstackCountView.apply {
+        editBackstackCountView?.apply {
             CoroutineScope(Dispatchers.IO).launch {
                 val oneSideLength = withContext(Dispatchers.IO){
                     context.resources.getDimension(R.dimen.twenty_dp) * 2
@@ -377,48 +1041,10 @@ object TitleImageAndViewSetter {
                         null,
                         null,
                         null,
-                        null,
                         font = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
+                        isAntiAlias = true,
                     )
                     backstackCountBitmap
-//                    val baseCornerDips = ScreenSizeCalculator.toDp(context, 4)
-//                    val extendDp = ScreenSizeCalculator.toDp(context, 4)
-//                    val backstackCountBitmapWidth = backstackCountBitmap.width
-//                    val backstackCountBitmapHeight = backstackCountBitmap.height
-//                    val bkBaseRect = BitmapTool.ImageTransformer.makeRect(
-//                        whiteColorStr,
-//                        backstackCountBitmapWidth + extendDp,
-//                        backstackCountBitmapHeight + extendDp
-//                    ).let {
-//                        BitmapTool.ImageTransformer.roundCorner(
-//                            context,
-//                            it,
-//                            baseCornerDips,
-//                        )
-//                    }
-//
-//                    val bkCornerDip = baseCornerDips + ScreenSizeCalculator.toDp(context, 2)
-//                    val roundCornerBackkstackBitmap = BitmapTool.ImageTransformer.roundCorner(
-//                        context,
-//                        backstackCountBitmap,
-//                        bkCornerDip,
-//                    )
-//                    val displayRoundCornerBackkstackBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
-//                            bkBaseRect as Bitmap,
-//                            roundCornerBackkstackBitmap as Bitmap
-//                        )
-//                    displayRoundCornerBackkstackBitmap?.let {
-//                        FileSystems.writeFromByteArray(
-//                            File(
-//                                UsePath.cmdclickDefaultAppDirPath,
-//                                "ldisplayRoundCornerBackkstackBitmap.png"
-//                            ).absolutePath,
-//                            BitmapTool.convertBitmapToByteArray(
-//                                it
-//                            )
-//                        )
-//                    }
-//                    displayRoundCornerBackkstackBitmap
                 }
                 withContext(Dispatchers.Main) {
                     setBackgroundColor(Color.parseColor(fillColorStr))
@@ -439,7 +1065,7 @@ object TitleImageAndViewSetter {
             }
         }
         withContext(Dispatchers.Main){
-            editTextView.apply {
+            editTextView?.apply {
                 letterSpacing = 0.2f
                 setFillColor(
                     Color.parseColor(
@@ -456,7 +1082,7 @@ object TitleImageAndViewSetter {
         }
     }
 
-    private fun convertWhiteColor(
+    private fun makeWhiteColor(
     ): String {
         val pink = "#faf0f9"
         val whiteColorList = listOf(
@@ -473,12 +1099,6 @@ object TitleImageAndViewSetter {
         fannelInfoMap: Map<String, String>,
         isBackstackEmoji: Boolean,
     ): String {
-//        val fannelInfoMap =
-//            fragment.fannelInfoMap
-
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//            fannelInfoMap
-//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
@@ -489,14 +1109,12 @@ object TitleImageAndViewSetter {
         return listOf(
             backstackOrder,
             makeCompressFannelPath(
-//                currentAppDirPath,
                 currentFannelName
             ),
         ).joinToString(backstackCountSeparator)
     }
 
     fun makeCompressFannelPath(
-//        currentAppDirPath: String,
         currentScriptFileName: String
     ): String {
         return CcPathTool.trimAllExtend(
@@ -516,9 +1134,9 @@ object TitleImageAndViewSetter {
 
     private suspend fun setTitleImage(
         fragment: Fragment,
-        editTitleImageView: AppCompatImageView,
+        editTitleImageView: AppCompatImageView?,
         fannelInfoMap: Map<String, String>,
-        bkArgbColor: String,
+        bkArgbColorStr: String,
         requestBuilder: RequestBuilder<Drawable>?
     ){
         val currentFannelName = withContext(Dispatchers.IO) {
@@ -526,21 +1144,13 @@ object TitleImageAndViewSetter {
                 fannelInfoMap
             )
         }
-//        val binding = fragment.binding
-//        val editTitleImageView = binding.editTitleImage
         FannelLogoSetter.setTitleFannelLogo(
             fragment,
             editTitleImageView,
-//        currentAppDirPath: String,
             currentFannelName,
-            bkArgbColor,
+            bkArgbColorStr,
             requestBuilder
         )
-//        QrLogo(editFragment).setTitleFannelLogo(
-//            editTitleImageView,
-////            currentAppDirPath,
-//            currentFannelName
-//        )
     }
 }
 
@@ -549,9 +1159,8 @@ private object FannelLogoSetter {
     suspend fun setTitleFannelLogo(
         fragment: Fragment,
         titleImageView: AppCompatImageView?,
-//        currentAppDirPath: String,
         selectedScriptName: String,
-        bkArgbColor: String,
+        bkArgbColorStr: String,
         requestBuilderSrc: RequestBuilder<Drawable>?,
     ){
         val context = fragment.context
@@ -559,7 +1168,6 @@ private object FannelLogoSetter {
         if(
             titleImageView == null
         ) return
-//        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
         val logoPngPath =  withContext(Dispatchers.IO) {
             listOf(
                 UsePath.fannelLogoPngPath,
@@ -570,7 +1178,6 @@ private object FannelLogoSetter {
                 )
             }
         }
-//            "${UsePath.cmdclickDefaultAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
         CoroutineScope(Dispatchers.IO).launch {
             val logoBitmap = withContext(Dispatchers.IO) {
                 when (File(logoPngPath).isFile) {
@@ -586,7 +1193,7 @@ private object FannelLogoSetter {
             val rectWidth = withContext(Dispatchers.IO) { rectHeight * 5 }
             val updatedRectBitmap = withContext(Dispatchers.IO) {
                 val rectBitmap = BitmapTool.ImageTransformer.makeRect(
-                    bkArgbColor,
+                    bkArgbColorStr,
 //            "#bbedc9", //"#0000000000"
                     rectWidth,
                     rectHeight,
@@ -619,14 +1226,6 @@ private object FannelLogoSetter {
                 updatedRectBitmap
             }
 
-//        val isEditExecute = checkEditExecute(
-////            currentAppDirPath,
-//            selectedScriptName,
-//        )
-//        titleImageView.setPadding(2, 2,2,2)
-//        titleImageView.background = if(isEditExecute) {
-//            AppCompatResources.getDrawable(context, R.color.terminal_color)
-//        } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
             withContext(Dispatchers.Main) {
                 val requestBuilder =
                     requestBuilderSrc
@@ -640,7 +1239,6 @@ private object FannelLogoSetter {
                     .thumbnail(requestBuilder)
                     .into(titleImageView)
             }
-//        titleImageView.load(logoPngPath)
         }
     }
 }
@@ -688,26 +1286,14 @@ private object EditTextMaker {
             editTextPropertyMap.isNullOrEmpty()
             || busyboxExecutor == null
         ) return null
-//        val busyboxExecutor =
-//            editFragment.busyboxExecutor
-//                ?: return null
-//        val setReplaceVariableMap =
-//            editFragment.setReplaceVariableMap
-//
-//        val fannelInfoMap =
-//            editFragment.fannelInfoMap
-
-//        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
-//            fannelInfoMap
-//        )
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap
         )
         val shellConSrc = editTextPropertyMap.get(
-            TitleTextSettingKey.SHELL_CON.key
+            TitleImageAndViewSetter.TitleTextSettingKey.SHELL_CON.key
         )
         val repValMap = editTextPropertyMap.get(
-            TitleTextSettingKey.ARGS.key
+            TitleImageAndViewSetter.TitleTextSettingKey.ARGS.key
         ).let {
             CmdClickMap.createMap(
                 it,
@@ -739,7 +1325,7 @@ private object EditTextMaker {
             fragment.context,
             busyboxExecutor,
             editTextPropertyMap.get(
-                TitleTextSettingKey.SHELL_PATH.key
+                TitleImageAndViewSetter.TitleTextSettingKey.SHELL_PATH.key
             ) ?: String(),
             setReplaceVariableMap,
             updateRepValMap
@@ -753,7 +1339,6 @@ private object EditTextMaker {
         busyboxExecutor: BusyboxExecutor?,
         repValMap: Map<String, String>?,
         shellConSrc: String,
-//        currentAppDirPath: String,
         currentFannelName: String,
         currentVariableValue: String?
     ): String? {
@@ -779,7 +1364,25 @@ private object EditTextMaker {
             repValMap
         )
     }
+
+    private val space = " "
+    fun makeBkCountAndOverrideTextList(
+        bkCountAndOverrideText: String
+    ): List<String> {
+        return bkCountAndOverrideText.split(
+            space
+        )
+    }
+
+    fun extractText(
+        bkCountAndOverrideTextList: List<String>
+    ): String {
+        return bkCountAndOverrideTextList.filterIndexed { index, _ ->
+            index > 0
+        }.joinToString(space).trim()
+    }
 }
+
 
 private fun execMakeBackstackCount(
     fragment: Fragment,
@@ -806,38 +1409,5 @@ private fun execMakeBackstackCount(
         9.toString() to "9\uFE0F⃣",
     )
     return backstackCount.toString()
-//        .map {
-//        c ->
-//        numberStrMap.get(c.toString()) ?: "0"
-//    }.joinToString(String()) + " "
 }
 
-private enum class EditBoxTitleKey(
-    val key: String,
-){
-    TEXT("text"),
-    IMAGE("image"),
-}
-
-enum class TitleTextSettingKey(
-    val key: String
-){
-//    SIZE("size"),
-    HEIGHT("height"),
-    BK_HEX_ALPHA("bkHexAlpha"),
-    STROKE_COLOR("strokeColor"),
-    BACKSTACK_COLOR("backstackColor"),
-    FORE_FILL_COLOR("foreFillColor"),
-    BK_FILL_COLOR("bkFillColor"),
-    ON_FORE_BK_DIFF_COLOR("onForeBkDiffColor"),
-    VISIBLE("visible"),
-    SHELL_PATH("shellPath"),
-    SHELL_CON("shellCon"),
-    ARGS("args"),
-}
-
-//enum class TitleImageSettingKey(
-//    val key: String
-//){
-//    VISIBLE("visible"),
-//}

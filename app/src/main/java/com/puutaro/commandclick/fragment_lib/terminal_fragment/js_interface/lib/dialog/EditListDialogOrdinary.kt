@@ -5,17 +5,14 @@ import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
-import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditConstraintListView
@@ -68,21 +65,29 @@ class EditListDialogOrdinary(
         editListDialogOrdinary?.findViewById<ConstraintLayout>(
             R.id.edit_list_dialog_constraint_layout
         )
-    private val editBackstackCountFrameSrc =
+//    private val editBackstackCountFrameSrc =
+//        editListDialogOrdinary?.findViewById<FrameLayout>(
+//            R.id.edit_list_dialog_backstack_count_frame
+//        )
+//    private val editBackstackCountViewSrc =
+//        editListDialogOrdinary?.findViewById<ShapeableImageView>(
+//            R.id.edit_list_dialog_backstack_count
+//        )
+//    private val editListTitleViewSrc =
+//        editListDialogOrdinary?.findViewById<OutlineTextView>(
+//            R.id.edit_list_dialog_title_view
+//        )
+private val editListDialogTitleFrameSrc =
+    editListDialogOrdinary?.findViewById<FrameLayout>(
+        R.id.edit_list_dialog_title_frame
+    )
+    private val editListLinearAlignTitleLayoutSrc =
         editListDialogOrdinary?.findViewById<FrameLayout>(
-            R.id.edit_list_dialog_backstack_count_frame
+            R.id.edit_list_linear_align_title
         )
-    private val editBackstackCountViewSrc =
-        editListDialogOrdinary?.findViewById<ShapeableImageView>(
-            R.id.edit_list_dialog_backstack_count
-        )
-    private val editListTitleViewSrc =
-        editListDialogOrdinary?.findViewById<OutlineTextView>(
-            R.id.edit_list_dialog_title_view
-        )
-    private val editListTitleImageSrc =
-        editListDialogOrdinary?.findViewById<AppCompatImageView>(
-            R.id.edit_list_dialog_title_image
+    private val editListFragAlignTitleLayoutSrc =
+        editListDialogOrdinary?.findViewById<FrameLayout>(
+            R.id.edit_list_frag_align_title
         )
     private val editListRecyclerViewSrc =
         editListDialogOrdinary?.findViewById<RecyclerView>(
@@ -139,17 +144,23 @@ class EditListDialogOrdinary(
         isAlreadyShow = true
         val terminalFragment = terminalFragmentRef.get()
             ?: return
-        val editBackstackCountFrame =
-            editBackstackCountFrameSrc
+//        val editBackstackCountFrame =
+//            editBackstackCountFrameSrc
+//                ?: return
+//        val editBackstackCountView =
+//            editBackstackCountViewSrc
+//                ?: return
+//        val editListTitleView =
+//            editListTitleViewSrc
+//                ?: return
+        val editListDialogTitleFrame =
+            editListDialogTitleFrameSrc
                 ?: return
-        val editBackstackCountView =
-            editBackstackCountViewSrc
+        val editListLinearAlignTitleLayout =
+            editListLinearAlignTitleLayoutSrc
                 ?: return
-        val editListTitleView =
-            editListTitleViewSrc
-                ?: return
-        val editListTitleImage =
-            editListTitleImageSrc
+        val editListFragAlignTitleLayout =
+            editListFragAlignTitleLayoutSrc
                 ?: return
         val editListRecyclerView =
             editListRecyclerViewSrc
@@ -232,10 +243,9 @@ class EditListDialogOrdinary(
                     setReplaceVariableMap,
                     terminalFragment.busyboxExecutor,
                     editListConfigMap,
-                    editBackstackCountFrame,
-                    editBackstackCountView,
-                    editListTitleView,
-                    editListTitleImage,
+                    editListDialogTitleFrame,
+                    editListLinearAlignTitleLayout,
+                    editListFragAlignTitleLayout,
                     editListRecyclerView,
                     editListSearchEditText,
                     editListBkFrame,

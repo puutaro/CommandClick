@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.graphics.drawable.Drawable
 import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -107,10 +108,9 @@ object EditTextProducerForEdit {
                 editFragment.setReplaceVariableMap,
                 editFragment.busyboxExecutor,
                 editFragment.editListConfigMap,
-                binding.editBackstackCountFrame,
-                binding.editBackstackCount,
-                binding.editTextView,
-                binding.editTitleImage,
+                binding.editListTitleFrame,
+                binding.editListLinearAlignTitle as FrameLayout,
+                binding.editListFragAlignTitle as FrameLayout,
                 binding.editListRecyclerView,
                 binding.editListSearchEditText,
                 binding.editListBkFrame as FrameLayout,

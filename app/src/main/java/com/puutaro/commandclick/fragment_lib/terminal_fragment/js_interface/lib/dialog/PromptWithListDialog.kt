@@ -1079,9 +1079,6 @@ class PromptWithListDialog(
         return promptDialogObj?.findViewById<OutlineTextView>(
             R.id.prompt_list_dialog_list_title
         )?.apply {
-            val titleStr = title.map {
-                "${it}"
-            }.joinToString(" ")
             letterSpacing = 0.2f
             val ss1 = SpannableString(title)
             ss1.setSpan(

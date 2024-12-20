@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -18,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestBuilder
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
@@ -39,7 +37,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -102,10 +99,9 @@ object WithEditConstraintListView{
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListConfigMapSrc: Map<String, String>?,
-        editBackstackCountFrame: FrameLayout,
-        editBackstackCountView: ShapeableImageView,
-        editTextView: OutlineTextView,
-        editTitleImage: AppCompatImageView,
+        editListTitleFrame: FrameLayout?,
+        editListLinearAlignTitleLayout: FrameLayout?,
+        editListFragAlignTitleLayout: FrameLayout?,
         editListRecyclerView: RecyclerView,
         editListSearchEditText: AppCompatEditText,
         editBkFrame: FrameLayout?,
@@ -210,13 +206,15 @@ object WithEditConstraintListView{
             }
             TitleImageAndViewSetter.set(
                 fragment,
-                editBackstackCountFrame,
-                editBackstackCountView,
-                editTextView,
+//                editBackstackCountFrame,
+//                editBackstackCountView,
+//                editTextView,
                 fannelInfoMap,
                 setReplaceVariableMap,
                 busyboxExecutor,
-                editTitleImage,
+                editListTitleFrame,
+                editListLinearAlignTitleLayout,
+                editListFragAlignTitleLayout,
                 titleSettingMap,
                 requestBuilderSrc
             )

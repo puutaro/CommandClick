@@ -397,7 +397,6 @@ class DragSortJsDialog(
                         strokeWidth,
                         1.5f,
                         null,
-                        null,
                     )
                     val textBitmapListSrc = withContext(Dispatchers.IO) {
 //                        FileSystems.writeFromByteArray(
