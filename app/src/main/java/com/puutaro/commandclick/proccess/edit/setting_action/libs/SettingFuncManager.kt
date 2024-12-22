@@ -12,6 +12,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDate
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.MathCulcForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.PathForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.RndForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ShellToolManagerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
@@ -118,8 +119,15 @@ object SettingFuncManager {
                     baseArgsPairList
                 )
             }
-            FuncType.RND -> {
+            FuncType.LIST -> {
                 ListForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList
+                )
+            }
+            FuncType.RND -> {
+                RndForSetting.handle(
                     funcTypeStr,
                     methodName,
                     baseArgsPairList
@@ -142,7 +150,8 @@ object SettingFuncManager {
         EDIT("edit"),
         CULC("culc"),
         COLOR("color"),
-        RND("list"),
+        LIST("list"),
+        RND("rnd"),
     }
 
 }

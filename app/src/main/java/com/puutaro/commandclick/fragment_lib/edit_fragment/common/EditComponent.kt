@@ -14,7 +14,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Template.ImagePropertyManager.PropertyKey
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
@@ -283,13 +282,14 @@ object EditComponent {
                                PATHS("paths"),
                                DELAY("delay"),
                                FADE_IN_MILLI("fadeInMilli"),
-                               RANDOM_RECT_CONFIG_MAP_CON("randomRectConfigMapCon"),
+                               MATRIX_RECT_CONFIG_MAP_CON("matrixRectConfigMapCon"),
+                               RND_RECT_CONFIG_MAP_CON("rndRectConfigMapCon"),
                        }
 
-                        object RandomRectManager {
+                        object MatrixRectManager {
 
                                 private const val keySeparator = '|'
-                                enum class RandomRectKey(
+                                enum class MatrixRectKey(
                                         val key: String
                                 ){
                                         WIDTH("width"),
@@ -300,10 +300,10 @@ object EditComponent {
                                 }
 
                                 fun getWidth(
-                                        randomRectConfigMap: Map<String, String>
+                                        matrixRectConfigMap: Map<String, String>
                                 ): Int? {
-                                        return randomRectConfigMap.get(
-                                                RandomRectKey.WIDTH.key
+                                        return matrixRectConfigMap.get(
+                                                MatrixRectKey.WIDTH.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -313,10 +313,10 @@ object EditComponent {
 
 
                                 fun getHeight(
-                                        randomRectConfigMap: Map<String, String>
+                                        matrixRectConfigMap: Map<String, String>
                                 ): Int? {
-                                        return randomRectConfigMap.get(
-                                                RandomRectKey.HEIGHT.key
+                                        return matrixRectConfigMap.get(
+                                                MatrixRectKey.HEIGHT.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -325,10 +325,10 @@ object EditComponent {
                                 }
 
                                 fun getXMulti(
-                                        randomRectConfigMap: Map<String, String>
+                                        matrixRectConfigMap: Map<String, String>
                                 ): Int? {
-                                        return randomRectConfigMap.get(
-                                                RandomRectKey.X_MULTI.key
+                                        return matrixRectConfigMap.get(
+                                                MatrixRectKey.X_MULTI.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -337,10 +337,10 @@ object EditComponent {
                                 }
 
                                 fun getYMulti(
-                                        randomRectConfigMap: Map<String, String>
+                                        matrixRectConfigMap: Map<String, String>
                                 ): Int? {
-                                        return randomRectConfigMap.get(
-                                                RandomRectKey.Y_MULTI.key
+                                        return matrixRectConfigMap.get(
+                                                MatrixRectKey.Y_MULTI.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -362,7 +362,106 @@ object EditComponent {
                                         imagePropertyMap: Map<String, String>?,
                                 ): Map<String, String> {
                                         return imagePropertyMap?.get(
-                                                ImageKey.RANDOM_RECT_CONFIG_MAP_CON.key
+                                                ImageKey.MATRIX_RECT_CONFIG_MAP_CON.key
+                                        ).let {
+                                                CmdClickMap.createMap(
+                                                        it,
+                                                        keySeparator
+                                                ).toMap()
+                                        }
+                                }
+                        }
+
+                        object RndRectManager {
+
+                                private const val keySeparator = '|'
+                                enum class RndRectKey(
+                                        val key: String
+                                ){
+                                        WIDTH("width"),
+                                        HEIGHT("height"),
+                                        PIECE_WIDTH("pieceWidth"),
+                                        PIECE_HEIGHT("pieceHeight"),
+                                        TIMES("times"),
+
+                                }
+
+                                fun getWidth(
+                                        rndRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return rndRectConfigMap.get(
+                                                RndRectKey.WIDTH.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+
+                                fun getHeight(
+                                        rndRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return rndRectConfigMap.get(
+                                                RndRectKey.HEIGHT.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getPieceWidth(
+                                        rndRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return rndRectConfigMap.get(
+                                                RndRectKey.PIECE_WIDTH.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getPieceHeight(
+                                        rndRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return rndRectConfigMap.get(
+                                                RndRectKey.PIECE_HEIGHT.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getTimes(
+                                        rndRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return rndRectConfigMap.get(
+                                                RndRectKey.TIMES.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                private fun toInt(
+                                        numString: String?
+                                ): Int? {
+                                        return try {
+                                                numString?.toInt()
+                                        } catch (e: Exception){
+                                                null
+                                        }
+                                }
+
+                                fun makeConfigMap(
+                                        imagePropertyMap: Map<String, String>?,
+                                ): Map<String, String> {
+                                        return imagePropertyMap?.get(
+                                                ImageKey.RND_RECT_CONFIG_MAP_CON.key
                                         ).let {
                                                 CmdClickMap.createMap(
                                                         it,

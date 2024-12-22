@@ -863,7 +863,7 @@ object BitmapTool {
             return resultRect
         }
 
-        suspend fun makeRect(
+        suspend fun makeMatrixRect(
             pieceWidth: Int,
             pieceHeight: Int,
             widthMulti: Int,
@@ -888,12 +888,6 @@ object BitmapTool {
                                 it
                             }
                             val firstOpacity = (fistLowerOpacity..maxOpacity).random()
-//                            when(
-//                                (1..5).random() == 1
-//                            ) {
-//                                true -> (0..maxOpacity).random()
-//                                else -> ((maxOpacity - opacityDiff)..maxOpacity).random()
-//                            }
                             var horizontalRect = ImageTransformer.ajustOpacity(
                                 pieceRectSrc,
                                 firstOpacity
@@ -955,20 +949,159 @@ object BitmapTool {
                 }
 
                 val verticalRect = chunkedHorizonRectList.first().first()
-//                var verticalRect = concatedHorizonRectList.first()
-//                concatedHorizonRectList.forEachIndexed { index, chunkedHorizonRect ->
-//                    if(index == 0) return@forEachIndexed
-//                    verticalRect = concatByHorizon(
-//                        verticalRect,
-//                        chunkedHorizonRect
-//                    )
-//                }
                 rotate(
                     verticalRect,
                     -90f
                 )
             }
         }
+
+        fun makeRndRect2(
+            width: Int,
+            height: Int,
+            pieceWidth: Int,
+            pieceHeight: Int,
+            times: Int,
+        ): Bitmap {
+            var baseRect = ImageTransformer.makeRect(
+                "#00000000",
+                width,
+                height
+            )
+            val baseRectWidth = baseRect.width
+            val baseRectHeight = baseRect.height
+            val pieceRect = ImageTransformer.makeRect(
+                "#000000",
+                pieceWidth,
+                pieceHeight
+            )
+            val pieceRectWidth = pieceRect.width
+            val pieceRectHeight = pieceRect.height
+            val totalMarginLeft = baseRectWidth - pieceRectWidth
+            val totalMarginTop = baseRectHeight - pieceRectHeight
+            if(
+                times <= 0
+            ) return baseRect
+            for(i in 1..times){
+                val curPieceRectSrc = rotate(
+                        pieceRect,
+                        (0..180).random().toFloat()
+                    ).let {
+                    val rate = (5..10).random() / 10f
+                    Bitmap.createScaledBitmap(
+                        it,
+                        (it.width * rate).toInt(),
+                        (it.height * rate).toInt(),
+                        true,
+                    )
+                }
+                val pivotX = (0..(baseRectWidth - curPieceRectSrc.width)).random()
+                val pivotY = (0..(baseRectHeight - curPieceRectSrc.height)).random()
+                val curOpacity = culcOpacityByHorizon(
+                    baseRectWidth,
+                    curPieceRectSrc.width,
+                    pivotX,
+                )
+                val curPieceRect = ImageTransformer.ajustOpacity(
+                    curPieceRectSrc,
+                    curOpacity
+                )
+                baseRect = ImageTransformer.overlayOnBkBitmapByPivot(
+                    baseRect,
+                    curPieceRect,
+                    pivotX.toFloat(),
+                    pivotY.toFloat(),
+                )
+            }
+            return baseRect
+        }
+
+        fun makeRndRect(
+            width: Int,
+            height: Int,
+            pieceWidth: Int,
+            pieceHeight: Int,
+            times: Int,
+        ): Bitmap {
+            var baseRect = ImageTransformer.makeRect(
+                "#00000000",
+                width,
+                height
+            )
+            val baseRectWidth = baseRect.width
+            val baseRectHeight = baseRect.height
+            val pieceRect = ImageTransformer.makeRect(
+                "#000000",
+                pieceWidth,
+                pieceHeight
+            )
+            val pieceRectWidth = pieceRect.width
+            val pieceRectHeight = pieceRect.height
+            val totalMarginLeft = baseRectWidth - pieceRectWidth
+            val totalMarginTop = baseRectHeight - pieceRectHeight
+            if(
+                times <= 0
+            ) return baseRect
+            for(i in 1..times){
+                val curMarginLeft = (0..totalMarginLeft).random()
+                val curMarginTop = (0..totalMarginTop).random()
+                val curOpacity = culcOpacityByHorizon(
+                    baseRectWidth,
+                    pieceRectWidth,
+                    curMarginLeft,
+                )
+                val curPieceRect = ImageTransformer.ajustOpacity(
+                    pieceRect,
+                    curOpacity
+                )
+                baseRect = ImageTransformer.overlayOnBkBitmapByPivot(
+                    baseRect,
+                    curPieceRect,
+                    curMarginLeft.toFloat(),
+                    curMarginTop.toFloat(),
+                )
+            }
+            return baseRect
+        }
+
+        private fun culcOpacityByHorizon(
+            baseRectWidth: Int,
+            rectWidth: Int,
+            x: Int,
+        ): Int {
+            val maxOpacity = 255
+            val multi = baseRectWidth / rectWidth
+            val opacityDiff = maxOpacity - multi
+            val currentPoint = x / rectWidth
+            val firstOpacityInf = 230
+            return when(currentPoint) {
+                0 -> (maxOpacity - opacityDiff).let fistLowerOpacity@ {
+                        if(
+                            it < firstOpacityInf
+                        ) return@fistLowerOpacity firstOpacityInf
+                        it
+                    }
+                else -> {
+                    val curOpacityDiff = opacityDiff * (currentPoint - 1)
+                    val supOpacity = (maxOpacity - curOpacityDiff).let makeSupOpacity@ {
+                        if (it <= 0) return@makeSupOpacity 10
+                        it
+                    }
+                    val lowerOpacity = (supOpacity - curOpacityDiff).let makeLowerOpacity@ {
+                        if (it <= 0) return@makeLowerOpacity 0
+                        it
+                    }
+                    when(
+                        (1..5).random() == 1
+                    ) {
+                        true -> (0..maxOpacity).random()
+                        else -> (lowerOpacity..supOpacity).random()
+                    }
+
+                }
+            }
+        }
+
         fun dotArtMaker(
             srcBitmap: Bitmap
         ): Bitmap {

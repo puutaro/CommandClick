@@ -18,7 +18,8 @@ object CmdClickBkImageInfo {
     }
 
     enum class CmdClickAutoCreateImage {
-        RANDOM_RECT_OVERLAY
+        AUTO_MATRIX_RECT,
+        AUTO_RND_RECT,
     }
 
 }
