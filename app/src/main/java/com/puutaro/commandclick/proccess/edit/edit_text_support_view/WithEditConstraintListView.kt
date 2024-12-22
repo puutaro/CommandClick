@@ -67,6 +67,8 @@ object WithEditConstraintListView{
     private val switchOn = EditComponent.Template.switchOn
     private val switchOff = EditComponent.Template.switchOff
     private val enableKey = EditComponent.Template.EditComponentKey.ENABLE.key
+    val titleLayoutElevation = 10f
+    private val starndardLayoutElevation = 9f
 
     enum class SceneType {
         TOOLBAR,
@@ -104,15 +106,30 @@ object WithEditConstraintListView{
         editListFragAlignTitleLayout: FrameLayout?,
         editListRecyclerView: RecyclerView,
         editListSearchEditText: AppCompatEditText,
-        editBkFrame: FrameLayout?,
+        editBkConstraintLayout: ConstraintLayout?,
         editListFooterConstraintLayout: ConstraintLayout?,
         editListToolbarConstraintLayout: ConstraintLayout?,
+        eachLayoutIdMap: Map<String, Int>,
         fannelContentsList: List<String>?,
         density: Float,
         requestBuilderSrc: RequestBuilder<Drawable>?
     ) {
         val context = fragment.context
             ?: return
+        CoroutineScope(Dispatchers.Main).launch{
+            listOf(
+                editListRecyclerView,
+                editListSearchEditText,
+                editListFooterConstraintLayout,
+                editListToolbarConstraintLayout
+            ).forEach {
+                it?.apply {
+                    (layoutParams as ConstraintLayout.LayoutParams).apply {
+                        elevation = starndardLayoutElevation
+                    }
+                }
+            }
+        }
         withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
@@ -227,8 +244,9 @@ object WithEditConstraintListView{
                 globalVarNameToValueMap,
                 busyboxExecutor,
                 editListRecyclerView,
-                editBkFrame,
+                editBkConstraintLayout,
                 editListConfigMap,
+                eachLayoutIdMap,
                 requestBuilderSrc,
                 density,
             )
@@ -490,6 +508,7 @@ object WithEditConstraintListView{
             editListFooterConstraintLayout,
             null,
             editListConfigMap,
+            null,
             requestBuilderSrc,
             density,
             outValue
@@ -531,6 +550,7 @@ object WithEditConstraintListView{
             editListToolbarConstraintLayout,
             null,
             editListConfigMap,
+            null,
             requestBuilderSrc,
             density,
             outValue
@@ -544,8 +564,9 @@ object WithEditConstraintListView{
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
-        editBkFrame: FrameLayout?,
+        editBkConstraintLayout: ConstraintLayout?,
         editListConfigMap: Map<String, String>?,
+        eachLayoutIdMap: Map<String, Int>,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
     ){
@@ -556,10 +577,11 @@ object WithEditConstraintListView{
             globalVarNameToValueMap,
             busyboxExecutor,
             editListRecyclerView,
-            editBkFrame,
+            editBkConstraintLayout,
             null,
             null,
             editListConfigMap,
+            eachLayoutIdMap,
             requestBuilderSrc,
             density,
             null,
@@ -573,10 +595,11 @@ object WithEditConstraintListView{
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
-        editBkFrame: FrameLayout?,
+        editBkConstraintLayout: ConstraintLayout?,
         editListFooterConstraintLayout: ConstraintLayout?,
         editListToolbarConstraintLayout: ConstraintLayout?,
         editListConfigMap: Map<String, String>?,
+        eachLayoutIdMap: Map<String, Int>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
         outValue: TypedValue?,
@@ -594,7 +617,7 @@ object WithEditConstraintListView{
         val sceneType = when(true){
             (editListFooterConstraintLayout != null) -> SceneType.FOOTER
             (editListToolbarConstraintLayout != null) -> SceneType.TOOLBAR
-            (editBkFrame != null) -> SceneType.BK
+            (editBkConstraintLayout != null) -> SceneType.BK
             else -> return
         }
         val debugWhere = sceneType.name
@@ -653,7 +676,7 @@ object WithEditConstraintListView{
                     editListToolbarConstraintLayout?.visibility = View.GONE
                 }
                 SceneType.BK -> withContext(Dispatchers.Main) {
-                    editBkFrame?.visibility = View.GONE
+                    editBkConstraintLayout?.visibility = View.GONE
                 }
             }
             return
@@ -873,7 +896,7 @@ object WithEditConstraintListView{
                                     SceneType.TOOLBAR
                                         -> editListToolbarConstraintLayout
                                     SceneType.FOOTER ->  editListFooterConstraintLayout
-                                    SceneType.BK -> editBkFrame
+                                    SceneType.BK -> editBkConstraintLayout
                                 }
                                 withContext(Dispatchers.Main) {
                                     baseLayoutForAdd?.addView(contentsLayout)
@@ -883,29 +906,10 @@ object WithEditConstraintListView{
                                         execContentsTag
                                     )
                                 }
-//                                CoroutineScope(Dispatchers.Main).launch {
-//                                    if(isEditToolbar && execSetContentsIndex == 0){
-//                                        (editListToolbarConstraintLayout?.layoutParams as? ConstraintLayout.LayoutParams)?.apply {
-//                                            FileSystems.updateFile(
-//                                                File(UsePath.cmdclickDefaultAppDirPath, "lfanlCenter.txt").absolutePath,
-//                                                listOf(
-//                                                    "execSetContentsIndex: ${execSetContentsIndex}",
-//                                                    "tagIdMap: ${tagIdMap}",
-//                                                    "execContentsTag: ${execContentsTag}",
-//                                                    "id: ${tagIdMap.get(execContentsTag)}",
-//                                                ).joinToString("\n")
-//                                            )
-//                                            tagIdMap.get(execContentsTag)?.let {
-//                                                endToEnd = ConstraintLayout.LayoutParams.UNSET
-//                                                endToStart = it
-//                                            }
-//                                        }
-//                                    }
-//                                }
                                 val tagIdMap = when(sceneType){
                                     SceneType.TOOLBAR,
-                                    SceneType.FOOTER ->  tagIdMapSrc
-                                    SceneType.BK -> null
+                                    SceneType.FOOTER -> tagIdMapSrc
+                                    SceneType.BK -> tagIdMapSrc + (eachLayoutIdMap ?: emptyMap())
                                 }
                                 CoroutineScope(Dispatchers.Main).launch {
                                     EditConstraintFrameMaker.make(
@@ -920,6 +924,7 @@ object WithEditConstraintListView{
                                         0,
                                         execContentsTag,
                                         editConstraintListAdapter?.totalSettingValMap,
+                                        mapListElInfoForContentsTagWithReplace,
                                         requestBuilderSrc,
                                         density,
                                     )
@@ -1002,33 +1007,6 @@ object WithEditConstraintListView{
                                 totalMapListElInfo,
                             )
                         }
-//                        val contentsKeyValueSize = withContext(Dispatchers.IO) {
-//                            EditComponent.AdapterSetter.culcLinearKeyValueSize(
-//                                contentsTagToKeyPairsList,
-//                            )
-//                        }
-//                        val layoutWeight = withContext(Dispatchers.IO) culcFrameLayoutWeight@{
-//                            when (isEditToolbar && !isOnlyCmdValEdit) {
-//                                true -> weightSumFloat / (contentsKeyValueSize + 1)
-//                                else -> {
-//                                    if (
-//                                        contentsKeyValueSize == 0
-//                                    ) return@culcFrameLayoutWeight 0f
-//                                    weightSumFloat / contentsKeyValueSize
-//                                }
-//                            }
-//                        }
-//                        if (isEditToolbar) {
-//                            withContext(Dispatchers.Main) {
-//                                let {
-//                                    val layoutParam =
-//                                        editListToolbarConstraintLayout?.layoutParams as? LinearLayoutCompat.LayoutParams
-//                                    if (layoutParam?.weight == layoutWeight) return@let
-//                                    layoutParam?.weight = layoutWeight
-//                                    editListToolbarConstraintLayout?.layoutParams = layoutParam
-//                                }
-//                            }
-//                        }
                         withContext(Dispatchers.IO) {
                             contentsChannel.send(
                                 Pair(

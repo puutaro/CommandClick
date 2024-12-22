@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
@@ -102,6 +103,13 @@ object EditTextProducerForEdit {
                         .sizeMultiplier(0.1f)
                 }
             }
+            val eachLayoutIdMap = EditComponent.Template.LayoutIdMap.makeMap(
+                binding.editListTitleFrame.id,
+                binding.editListRecyclerView.id,
+                binding.editListSearchEditText.id,
+                binding.editListFooterConstraintLayout.id,
+                binding.editListToolbarConstraintLayout.id,
+            )
             WithEditConstraintListView.create(
                 editFragment,
                 editFragment.fannelInfoMap,
@@ -113,9 +121,10 @@ object EditTextProducerForEdit {
                 binding.editListFragAlignTitle as FrameLayout,
                 binding.editListRecyclerView,
                 binding.editListSearchEditText,
-                binding.editListBkFrame as FrameLayout,
+                binding.editFragment,
                 editListFooterConstraintLayout,
                 editListToolbarConstraintLayout,
+                eachLayoutIdMap,
                 editFragment.mainFannelConList,
                 density,
                 requestBuilderSrc,

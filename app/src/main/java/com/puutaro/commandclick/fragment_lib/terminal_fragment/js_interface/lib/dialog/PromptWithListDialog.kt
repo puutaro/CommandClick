@@ -1109,7 +1109,7 @@ class PromptWithListDialog(
             text = ss1
             setFillColor(R.color.ao)
             setStrokeColor(CmdClickColor.WHITE.id)
-            outlineWidthSrc = 3
+            strokeWidthSrc = 3
             maxLines = maxLinesInt
             viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {

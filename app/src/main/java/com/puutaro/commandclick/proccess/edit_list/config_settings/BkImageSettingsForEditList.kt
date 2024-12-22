@@ -40,50 +40,50 @@ object BkImageSettingsForEditList {
 //    private val imageAlphaKey = EditComponent.Template.EditComponentKey.IMAGE_ALPHA.key
 //    private val imageScaleKey = EditComponent.Template.EditComponentKey.IMAGE_SCALE.key
 
-    suspend fun makeBkFrame(
-        context: Context?,
-        buttonFrameLayout: FrameLayout?,
-        fannelInfoMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
-        busyboxExecutor: BusyboxExecutor?,
-        editListBkPairs: List<Pair<String, String>>?,
-        requestBuilderSrc: RequestBuilder<Drawable>?,
-        density: Float,
-    ): FrameLayout? {
-        val tag =  withContext(Dispatchers.IO) {
-            PairListTool.getValue(
-                editListBkPairs,
-                tagKey
-            )
-        }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lBk.txt").absolutePath,
-//            listOf(
-//                "tag: ${tag}",
-//                "editListBkPairs: ${editListBkPairs}"
-//            ).joinToString("\n")
+//    suspend fun makeBkFrame(
+//        context: Context?,
+//        buttonFrameLayout: FrameLayout?,
+//        fannelInfoMap: Map<String, String>,
+//        setReplaceVariableMap: Map<String, String>?,
+//        busyboxExecutor: BusyboxExecutor?,
+//        editListBkPairs: List<Pair<String, String>>?,
+//        requestBuilderSrc: RequestBuilder<Drawable>?,
+//        density: Float,
+//    ): FrameLayout? {
+//        val tag =  withContext(Dispatchers.IO) {
+//            PairListTool.getValue(
+//                editListBkPairs,
+//                tagKey
+//            )
+//        }
+////        FileSystems.writeFile(
+////            File(UsePath.cmdclickDefaultAppDirPath, "lBk.txt").absolutePath,
+////            listOf(
+////                "tag: ${tag}",
+////                "editListBkPairs: ${editListBkPairs}"
+////            ).joinToString("\n")
+////        )
+//        val bkId = 10000
+//        val tagIdMap = mapOf(
+//            "bk" to bkId
 //        )
-        val bkId = 10000
-        val tagIdMap = mapOf(
-            "bk" to bkId
-        )
-        return EditConstraintFrameMaker.make(
-            context,
-            bkId,
-            tagIdMap,
-            buttonFrameLayout,
-            fannelInfoMap,
-            setReplaceVariableMap,
-            busyboxExecutor,
-            editListBkPairs,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            tag,
-//            true,
-        null,
-            requestBuilderSrc,
-            density,
-        )
-    }
+//        return EditConstraintFrameMaker.make(
+//            context,
+//            bkId,
+//            tagIdMap,
+//            buttonFrameLayout,
+//            fannelInfoMap,
+//            setReplaceVariableMap,
+//            busyboxExecutor,
+//            editListBkPairs,
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            tag,
+////            true,
+//        null,
+//            requestBuilderSrc,
+//            density,
+//        )
+//    }
 
 //    suspend fun makeBkImage(
 //        imageView: AppCompatImageView,

@@ -20,12 +20,12 @@ object TsvToolForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameList,
+            methodNameClass.argsNameToTypeList,
             argsPairList
         )?.let {
                 argsCheckErr ->
@@ -62,22 +62,22 @@ object TsvToolForSetting {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameList: List<String>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ){
-        GET_KEY_VALUE_FROM_FILE("getKeyValueFromFile", filePathAndKeyArgsNameList),
-        GET_KEY_VALUE("getKeyValue", conAndKeyArgsNameList),
+        GET_KEY_VALUE_FROM_FILE("getKeyValueFromFile", filePathAndKeyArgsNameToTypeList),
+        GET_KEY_VALUE("getKeyValue", conAndKeyArgsNameToTypeList),
     }
 
-    private val filePathAndKeyArgsNameList = listOf(
-        "filePath",
-        "key",
+    private val filePathAndKeyArgsNameToTypeList = listOf(
+        Pair("filePath", FuncCheckerForSetting.ArgType.STRING),
+        Pair("key", FuncCheckerForSetting.ArgType.STRING),
 
     )
 
 
-    private val conAndKeyArgsNameList = listOf(
-        "tsvCon",
-        "key",
+    private val conAndKeyArgsNameToTypeList = listOf(
+        Pair("tsvCon", FuncCheckerForSetting.ArgType.STRING),
+        Pair("key", FuncCheckerForSetting.ArgType.STRING),
     )
 
 }

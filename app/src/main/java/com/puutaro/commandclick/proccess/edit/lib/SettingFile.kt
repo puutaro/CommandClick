@@ -133,7 +133,6 @@ object SettingFile {
             it.trim()
         }.filter {
             it.isNotEmpty()
-                && !it.startsWith("#")
                 && !it.startsWith("//")
         }.joinToString("").let {
             QuoteTool.replaceBySurroundedIgnore(
@@ -151,7 +150,6 @@ object SettingFile {
             it.trim()
         }.filter {
             it.isNotEmpty()
-                    && !it.startsWith("#")
                     && !it.startsWith("//")
         }.joinToString("")
     }

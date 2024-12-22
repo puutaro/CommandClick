@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
@@ -8,8 +9,10 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -17,17 +20,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.imageview.ShapeableImageView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditConstraintListView
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -35,6 +37,9 @@ import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import jp.wasabeef.blurry.Blurry
+import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.GrayscaleTransformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -50,12 +55,13 @@ object TitleImageAndViewSetter {
     private const val switchOn = "ON"
     private const val keySeparator = '|'
     private const val valueSeparator = '&'
+    private const val errWhere = "editTitle"
 
     private fun parseColors(
         context: Context?,
         titleTextMap: Map<String, String>?,
         colorsKey: String
-    ): List<String>? {
+    ): List<String?>? {
         if(
             titleTextMap.isNullOrEmpty()
         ) return null
@@ -65,8 +71,14 @@ object TitleImageAndViewSetter {
                 colorStr ->
             ColorTool.parseColorStr(
                 context,
-                colorStr
+                colorStr,
+                colorsKey,
+                ErrType.FANNEL_TITLE.str,
             )
+//            ColorTool.parseColorStr(
+//                context,
+//                colorStr
+//            )
         }
     }
 
@@ -91,6 +103,7 @@ object TitleImageAndViewSetter {
         HEIGHT("height"),
         TYPE("type"),
         BK_HEX_ALPHA("bkHexAlpha"),
+        STROKE_WIDTH("strokeWidth"),
         STROKE_COLORS("strokeColors"),
         BACKSTACK_COLORS("backstackColors"),
         FORE_FILL_COLORS("foreFillColors"),
@@ -100,6 +113,10 @@ object TitleImageAndViewSetter {
         SHELL_PATH("shellPath"),
         SHELL_CON("shellCon"),
         ARGS("args"),
+        SHADOW_RADIUS("shadowRadius"),
+        SHADOW_COLOR("shadowColor"),
+        SHADOW_X("shadowX"),
+        SHADOW_Y("shadowY"),
     }
 
 
@@ -154,13 +171,15 @@ object TitleImageAndViewSetter {
                 }
             }
         } ?: TitleType.LINEAR
+        val titleLayoutElevation =
+            WithEditConstraintListView.titleLayoutElevation
         when(titleType) {
             TitleType.LINEAR -> {
                 withContext(Dispatchers.Main) {
                     editListLinearAlignTitleLayout?.apply {
                         visibility = View.VISIBLE
                         (layoutParams as ConstraintLayout.LayoutParams).apply {
-                            elevation = 5f
+                            elevation = titleLayoutElevation
                         }
                     }
                 }
@@ -169,10 +188,18 @@ object TitleImageAndViewSetter {
                         ?.findViewById<AppCompatImageView>(
                             R.id.edit_list_linear_align_title_bk_image
                         )
+                val fragImageFrame = editListLinearAlignTitleLayout?.findViewById<FrameLayout>(
+                    R.id.edit_list_linear_align_title_backstack_count_frame
+                )
                 val editBackstackCountView =
                     editListLinearAlignTitleLayout
                         ?.findViewById<ShapeableImageView>(
                             R.id.edit_list_linear_align_title_backstack_count
+                        )
+                val editBackstackCountShadowView =
+                    editListLinearAlignTitleLayout
+                        ?.findViewById<ShapeableImageView>(
+                            R.id.edit_list_linear_align_title_backstack_count_shaddow
                         )
                 val editTextView =
                     editListLinearAlignTitleLayout
@@ -184,8 +211,10 @@ object TitleImageAndViewSetter {
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
+                    fragImageFrame,
                     titleBkImageView,
                     editBackstackCountView,
+                    editBackstackCountShadowView,
                     editTextView,
                     titleTextMap,
                     requestBuilder
@@ -196,7 +225,7 @@ object TitleImageAndViewSetter {
                     editListFragAlignTitleLayout?.apply {
                         visibility = View.VISIBLE
                         (layoutParams as ConstraintLayout.LayoutParams).apply {
-                            elevation = 5f
+                            elevation = titleLayoutElevation
                         }
                     }
                 }
@@ -251,79 +280,51 @@ object TitleImageAndViewSetter {
                 EditTextMaker.extractText(
                     bkCountAndOverrideTextList
                 )
-//                    .split(":").filterIndexed { index, _ ->
-//                    index > 0
-//                }.joinToString(":").trim()
             }
             val fillColorStr = withContext(Dispatchers.IO) {
                 val foreFillColorsKey = TitleTextSettingKey.FORE_FILL_COLORS.key
-                val fillColorStrListSrc = parseColors(
+                parseColors(
                     context,
                     titleTextMap,
                     foreFillColorsKey
-                )
-                when(fillColorStrListSrc.isNullOrEmpty()) {
-                    false -> {
-                        colorChecker(
-                            fragment.context,
-                            fillColorStrListSrc.random(),
-                            foreFillColorsKey,
-                        ) ?: return@withContext null
-                    }
-                    else -> {
-                        fillColorStrList.random()
-                    }
+                )?.random() ?: fillColorStrList.random()
+            }
+            val strokeWidthInt = let {
+                val strokeWidthKey = TitleTextSettingKey.STROKE_WIDTH.key
+                try {
+                    titleTextMap?.get(
+                        strokeWidthKey
+                    )?.toInt()
+                } catch (e: Exception){
+                    null
                 }
-            } ?: return
+            }
             val strokeColorStr = let {
                 val strokeColorKey = TitleTextSettingKey.STROKE_COLORS.key
-                val strokeColorStrListSrc =  parseColors(
+                parseColors(
                     context,
                     titleTextMap,
                     strokeColorKey
-                )
-                when (strokeColorStrListSrc.isNullOrEmpty()) {
-                    false -> {
-                        colorChecker(
-                            fragment.context,
-                            strokeColorStrListSrc.random(),
-                            strokeColorKey,
-                        ) ?: return
-                    }
-                    else -> makeWhiteColor()
-                }
+                )?.random() ?: makeWhiteColor()
             }
             val backstackColorKey = TitleTextSettingKey.BACKSTACK_COLORS.key
             val backstackColorStrListSrc = parseColors(
                 context,
                 titleTextMap,
                 backstackColorKey
-            )
-            val isColorErr = withContext(Dispatchers.IO) {
-                backstackColorStrListSrc?.forEach {
-                    if(
-                        it.isEmpty()
-                    ) return@forEach
-                    val colorStr = colorChecker(
-                        context,
-                        it,
-                        backstackColorKey
-                    )
-                    if (
-                        colorStr.isNullOrEmpty()
-                    ) return@withContext true
-                }
-                false
-            }
+            ) ?: listOf(backStackStrListForFragBackStack.random())
             if(
-                isColorErr
+                backstackColorStrListSrc.isNullOrEmpty()
+                || backstackColorStrListSrc.any {
+                    it.isNullOrEmpty()
+                }
             ) return
             val escapeColorStrList = listOf(
                 fillColorStr,
                 strokeColorStr,
             )
             val backstackColorStr =
-                backstackColorStrListSrc?.random()
+                backstackColorStrListSrc.random()
                     ?: backStackStrListForFragBackStack.filter {
                         !escapeColorStrList.contains(it)
                     }.random()
@@ -336,23 +337,60 @@ object TitleImageAndViewSetter {
                 escapeColorListForBkArgbColor,
                 fillColorStr,
             ) ?: return
+            val shadowColorStr = let {
+                val shadowColorKey = TitleTextSettingKey.SHADOW_COLOR.key
+                parseColors(
+                    context,
+                    titleTextMap,
+                    shadowColorKey
+                )?.random() ?: makeWhiteColor()
+            }
+            val shadowRadiusFloat = let {
+                val shadowRadiusKey = TitleTextSettingKey.SHADOW_RADIUS.key
+                try {
+                    titleTextMap?.get(shadowRadiusKey)?.toFloat()
+                } catch (e: Exception){
+                    null
+                }
+            } ?: 0f
+            val shadowXFloat = let {
+                val shadowXKey = TitleTextSettingKey.SHADOW_X.key
+                try {
+                    titleTextMap?.get(shadowXKey)?.toFloat()
+                } catch (e: Exception){
+                    null
+                }
+            } ?: 0f
+            val shadowYFloat = let {
+                val shadowYKey = TitleTextSettingKey.SHADOW_Y.key
+                try {
+                    titleTextMap?.get(shadowYKey)?.toFloat()
+                } catch (e: Exception){
+                    null
+                }
+            } ?: 0f
             CoroutineScope(Dispatchers.IO).launch {
                 setTitleText(
                     titleView,
                     overrideText,
                     fillColorStr,
+                    strokeWidthInt,
                     strokeColorStr,
+                    shadowColorStr,
+                    shadowRadiusFloat,
+                    shadowXFloat,
+                    shadowYFloat,
                 )
             }
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "ldefault.txt").absolutePath,
-//                listOf(
-//                    "fillColorStr: ${fillColorStr}",
-//                    "strokeColorStr: ${strokeColorStr}",
-//                    "backstackColorStr: ${backstackColorStr}",
-//                    "bkArgbColor: ${bkArgbColor }",
-//                ).joinToString("\n")
-//            )
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "ldefault.txt").absolutePath,
+                listOf(
+                    "fillColorStr: ${fillColorStr}",
+                    "strokeColorStr: ${strokeColorStr}",
+                    "backstackColorStr: ${backstackColorStr}",
+                    "bkArgbColor: ${bkArgbColor }",
+                ).joinToString("\n")
+            )
             CoroutineScope(Dispatchers.IO).launch {
                 val bkCount = withContext(Dispatchers.IO) {
                     bkCountAndOverrideTextList.first()
@@ -374,7 +412,12 @@ object TitleImageAndViewSetter {
             titleView: OutlineTextView?,
             overrideText: String,
             fillColorStr: String,
+            strokeWidthInt: Int?,
             strokeColorStr: String,
+            shadowColorStr: String,
+            shadowRadiusFloat: Float,
+            shadowXFloat: Float,
+            shadowYFloat: Float,
         ){
             titleView?.apply {
                 if (
@@ -384,6 +427,13 @@ object TitleImageAndViewSetter {
                     visibility = View.VISIBLE
                     letterSpacing = 0.2f
                     text = overrideText
+                    setShadowLayer(
+                        shadowRadiusFloat,
+                        shadowXFloat,
+                        shadowYFloat,
+                        Color.parseColor(shadowColorStr)
+                    )
+                    strokeWidthSrc = strokeWidthInt ?: strokeWidthSrc
                     setFillColor(Color.parseColor(fillColorStr))
                     setStrokeColor(
                         Color.parseColor(
@@ -586,7 +636,7 @@ object TitleImageAndViewSetter {
                                 }
 
                                 val backstackCountBitmapForOverlay =
-                                    BitmapTool.ImageTransformer.adjustOpacity(
+                                    BitmapTool.ImageTransformer.ajustOpacity(
                                         imageTypeToBackstackCountBitmap.second,
                                         hexOpacity
                                         //(10..60).random()
@@ -712,8 +762,10 @@ object TitleImageAndViewSetter {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        fragImageFrame: FrameLayout?,
         titleBkImageView: AppCompatImageView?,
         editBackstackCountView: ShapeableImageView?,
+        editBackstackCountShadowView: ShapeableImageView?,
         editTextView: OutlineTextView?,
         titleTextMap: Map<String, String>,
         requestBuilder: RequestBuilder<Drawable>?,
@@ -726,68 +778,88 @@ object TitleImageAndViewSetter {
             }
         val fillColorStr = withContext(Dispatchers.IO) {
             val foreFillColorsKey = TitleTextSettingKey.FORE_FILL_COLORS.key
-            val fillColorStrListSrc = parseColors(
+            parseColors(
                 context,
                 titleTextMap,
                 foreFillColorsKey
-            )
-            when(fillColorStrListSrc.isNullOrEmpty()) {
-                false -> {
-                    colorChecker(
-                        fragment.context,
-                        fillColorStrListSrc.random(),
-                        foreFillColorsKey,
-                    ) ?: return@withContext null
-                }
-                else -> fillColorStrList.random()
+            )?.random() ?: fillColorStrList.random()
+        }
+        val strokeWidthInt = let {
+            val strokeWidthKey = TitleTextSettingKey.STROKE_WIDTH.key
+            try {
+                titleTextMap.get(
+                    strokeWidthKey
+                )?.toInt()
+            } catch (e: Exception){
+                null
             }
-        } ?: return
+        }
         val strokeColorStr = let {
             val strokeColorKey = TitleTextSettingKey.STROKE_COLORS.key
-            val strokeColorStrListSrc = parseColors(
+            parseColors(
                 context,
                 titleTextMap,
                 strokeColorKey
-            )
-            when (strokeColorStrListSrc.isNullOrEmpty()) {
-                false -> {
-                    colorChecker(
-                        context,
-                        strokeColorStrListSrc.random(),
-                        strokeColorKey,
-                    ) ?: return
-                }
-                else -> whiteColorStr
-            }
+            )?.random() ?: whiteColorStr
         }
-
+        val shadowColorStr = let {
+            val shadowColorKey = TitleTextSettingKey.SHADOW_COLOR.key
+            parseColors(
+                context,
+                titleTextMap,
+                shadowColorKey
+            )?.random() ?: makeWhiteColor()
+        }
+        val shadowRadiusFloat = let {
+            val shadowRadiusKey = TitleTextSettingKey.SHADOW_RADIUS.key
+            try {
+                titleTextMap.get(shadowRadiusKey)?.toFloat()
+            } catch (e: Exception){
+                null
+            }
+        } ?: 0f
+        val shadowXFloat = let {
+            val shadowXKey = TitleTextSettingKey.SHADOW_X.key
+            try {
+                titleTextMap.get(shadowXKey)?.toFloat()
+            } catch (e: Exception){
+                null
+            }
+        } ?: 0f
+        val shadowYFloat = let {
+            val shadowYKey = TitleTextSettingKey.SHADOW_Y.key
+            try {
+                titleTextMap.get(shadowYKey)?.toFloat()
+            } catch (e: Exception){
+                null
+            }
+        } ?: 0f
         val backstackColorStr = let {
             val backstackColorsKey = TitleTextSettingKey.BACKSTACK_COLORS.key
-            val backstackColorStrListSrc = parseColors(
+            parseColors(
                 context,
                 titleTextMap,
                 backstackColorsKey
-            )
-            when (backstackColorStrListSrc.isNullOrEmpty()) {
-                false -> colorChecker(
-                    context,
-                    backstackColorStrListSrc.random(),
-                    backstackColorsKey,
-                ) ?: return
-                else -> whiteColorStr
-            }
+            )?.random() ?: whiteColorStr
         }
         setTitleText(
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
             busyboxExecutor,
+            fragImageFrame,
             editBackstackCountView,
+            editBackstackCountShadowView,
             editTextView,
             titleTextMap,
             fillColorStr,
             backstackColorStr,
+            strokeWidthInt,
             strokeColorStr,
+            shadowColorStr,
+            shadowRadiusFloat,
+            shadowXFloat,
+            shadowYFloat,
             requestBuilder,
         )
         val bkArgbColorStr = makeArgbBkColor(
@@ -809,33 +881,33 @@ object TitleImageAndViewSetter {
         )
     }
 
-    private fun colorChecker(
-        context: Context?,
-        colorStr: String,
-        colorKey: String,
-    ): String? {
-        return try {
-            Color.parseColor(
-                colorStr
-            )
-            colorStr
-        } catch (e: Exception){
-            val spanColorKey =
-                CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.errBrown,
-                    colorKey
-                )
-            val spanSrcColorStr =CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.errRedCode,
-                colorStr
-            )
-            LogSystems.stdErr(
-                context,
-                "${ErrType.FANNEL_TITLE.str} ${spanColorKey} parse err: ${spanSrcColorStr}",
-            )
-            null
-        }
-    }
+//    private fun colorChecker(
+//        context: Context?,
+//        colorStr: String,
+//        colorKey: String,
+//    ): String? {
+//        return try {
+//            Color.parseColor(
+//                colorStr
+//            )
+//            colorStr
+//        } catch (e: Exception){
+//            val spanColorKey =
+//                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                    CheckTool.errBrown,
+//                    colorKey
+//                )
+//            val spanSrcColorStr =CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                CheckTool.errRedCode,
+//                colorStr
+//            )
+//            LogSystems.stdErr(
+//                context,
+//                "${ErrType.FANNEL_TITLE.str} ${spanColorKey} parse err: ${spanSrcColorStr}",
+//            )
+//            null
+//        }
+//    }
 
     private fun makeArgbBkColor(
         context: Context?,
@@ -865,18 +937,12 @@ object TitleImageAndViewSetter {
         ) == switchOn
         val bkFillColorsKey =
             TitleTextSettingKey.BK_FILL_COLORS.key
-        val bkColorStrListSrc = parseColors(
+        val bkColorStr = parseColors(
             context,
             titleTextMap,
             bkFillColorsKey
-        )
-        val bkColorStr = when(bkColorStrListSrc.isNullOrEmpty()) {
-            false -> colorChecker(
-                context,
-                bkColorStrListSrc.random(),
-                bkFillColorsKey,
-                ) ?: return null
-            else -> when (onForeBkDiffColor) {
+        )?.random() ?: let {
+            when (onForeBkDiffColor) {
                 true -> {
                     fillColorStrListForBk.filter {
                         !escapeColorListWhenDiff.contains(it)
@@ -886,6 +952,22 @@ object TitleImageAndViewSetter {
                 else -> fillColorStr
             }
         }
+//        val bkColorStr = when(bkColorStrListSrc.isNullOrEmpty()) {
+//            false -> colorChecker(
+//                context,
+//                bkColorStrListSrc.random(),
+//                bkFillColorsKey,
+//                ) ?: return null
+//            else -> when (onForeBkDiffColor) {
+//                true -> {
+//                    fillColorStrListForBk.filter {
+//                        !escapeColorListWhenDiff.contains(it)
+//                    }.random()
+//                }
+//
+//                else -> fillColorStr
+//            }
+//        }
         val bkHexAlphaKey =
             TitleTextSettingKey.BK_HEX_ALPHA.key
         val bkAlphaIntPrefixStr = titleTextMap.get(
@@ -919,11 +1001,17 @@ object TitleImageAndViewSetter {
 //                "titleTextMap: ${titleTextMap}",
 //            ).joinToString("\n")
 //        )
-        colorChecker(
+        ColorTool.parseColorStr(
             context,
             bkArgbColorSrc,
-            bkHexAlphaKey
+            bkHexAlphaKey,
+            ErrType.FANNEL_TITLE.str,
         ) ?: return null
+//        colorChecker(
+//            context,
+//            bkArgbColorSrc,
+//            bkHexAlphaKey
+//        ) ?: return null
         return bkArgbColorSrc
     }
 
@@ -979,12 +1067,19 @@ object TitleImageAndViewSetter {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        fragImageFrame: FrameLayout?,
         editBackstackCountView: ShapeableImageView?,
+        editBackstackCountShadowView: ShapeableImageView?,
         editTextView: OutlineTextView   ?,
         titleTextMap: Map<String, String>?,
         fillColorStr: String,
         backstackColorStr: String,
+        strokeWidthInt: Int?,
         strokeColorStr: String,
+        shadowColorStr: String,
+        shadowRadiusFloat: Float,
+        shadowXFloat: Float,
+        shadowYFloat: Float,
         requestBuilderSrc: RequestBuilder<Drawable>?,
     ){
         val context = fragment.context ?: return
@@ -1007,6 +1102,39 @@ object TitleImageAndViewSetter {
             EditTextMaker.extractText(
                 bkCountAndOverrideTextList
             )
+        }
+        editBackstackCountShadowView?.apply {
+            withContext(Dispatchers.Main) {
+                imageTintList =
+                    ColorStateList.valueOf(Color.parseColor(shadowColorStr))
+                val bitmap = AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.rect
+                )?.toBitmap()
+                Blurry.with(context)
+                    .radius(25)
+                    .sampling(2)
+                    .async()
+                    .animate(500)
+                    .from(bitmap)
+                    .into( this@apply)
+//                val requestBuilder: RequestBuilder<Drawable> =
+//                    requestBuilderSrc ?: Glide.with(context)
+//                        .asDrawable()
+//                        .sizeMultiplier(0.1f)
+//                Glide
+//                    .with(context)
+//                    .load(R.drawable.rect)
+//                    .transform(
+//                        GrayscaleTransformation(),
+//                        BlurTransformation(50, )
+//                    )
+//                    .skipMemoryCache(true)
+//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                    .dontAnimate()
+//                    .thumbnail(requestBuilder)
+//                    .into(this@apply)
+            }
         }
         editBackstackCountView?.apply {
             CoroutineScope(Dispatchers.IO).launch {
@@ -1067,6 +1195,8 @@ object TitleImageAndViewSetter {
         withContext(Dispatchers.Main){
             editTextView?.apply {
                 letterSpacing = 0.2f
+                strokeWidthSrc =
+                    strokeWidthInt ?: strokeWidthSrc
                 setFillColor(
                     Color.parseColor(
                         fillColorStr
@@ -1076,6 +1206,12 @@ object TitleImageAndViewSetter {
                     Color.parseColor(
                         strokeColorStr
                     )
+                )
+                setShadowLayer(
+                    shadowRadiusFloat,
+                    shadowXFloat,
+                    shadowYFloat,
+                    Color.parseColor(shadowColorStr)
                 )
                 text = overrideText
             }
@@ -1213,7 +1349,7 @@ private object FannelLogoSetter {
                             (0..180).random().toFloat()
                         )
                     }.let {
-                        BitmapTool.ImageTransformer.adjustOpacity(
+                        BitmapTool.ImageTransformer.ajustOpacity(
                             it,
                             (10..60).random()
                         )

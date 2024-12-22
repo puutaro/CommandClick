@@ -27,12 +27,12 @@ object EditForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameList,
+            methodNameClass.argsNameToTypeList,
             argsPairList
         )?.let { argsCheckErr ->
             return null to argsCheckErr
@@ -65,13 +65,13 @@ object EditForSetting {
 
     enum class MethodNameClass(
         val str: String,
-        val argsNameList: List<String>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ) {
-        GET_SETTING_VALUE("getSettingValue", getSettingValueArgsNameList),
+        GET_SETTING_VALUE("getSettingValue", getSettingValueArgsNameToTypeList),
     }
 
-    private val getSettingValueArgsNameList = listOf(
-        "targetVariableName",
-        "srcFragment",
+    private val getSettingValueArgsNameToTypeList = listOf(
+        Pair("targetVariableName", FuncCheckerForSetting.ArgType.STRING),
+        Pair("srcFragment", FuncCheckerForSetting.ArgType.STRING),
     )
 }

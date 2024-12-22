@@ -30,7 +30,7 @@ object ToastForSettingForTerm {
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.readArgsNameList,
+            methodNameClass.readArgsNameToTypeList,
             argsPairList
         )?.let {
                 argsCheckErr ->

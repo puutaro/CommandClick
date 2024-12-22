@@ -578,6 +578,7 @@ class EditConstraintListAdapter(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         frameTag,
                         totalSettingValMap,
+                        totalMapListElInfo,
                         requestBuilderSrc,
                         density,
                     )
@@ -646,8 +647,7 @@ class EditConstraintListAdapter(
                                         fannelInfoMap,
                                         setReplaceVariableMap,
                                         busyboxExecutor,
-                                        null,
-//                                        this@EditConstraintListAdapter,
+                                        this@EditConstraintListAdapter,
                                         frameVarNameValueMap,
                                         "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",
                                         contentsKeyPairsListConSrc,
@@ -794,6 +794,7 @@ class EditConstraintListAdapter(
                                         0,
                                         contentsTag,
                                         totalSettingValMap,
+                                        "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
                                         requestBuilderSrc,
                                         density,
                                     )

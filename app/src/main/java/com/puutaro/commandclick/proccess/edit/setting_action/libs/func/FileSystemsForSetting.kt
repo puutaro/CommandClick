@@ -22,12 +22,12 @@ object FileSystemsForSettingHandler {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameList,
+            methodNameClass.argsNameToTypeList,
             argsPairList
         )?.let {
             argsCheckErr ->
@@ -86,22 +86,22 @@ object FileSystemsForSettingHandler {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameList: List<String>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ){
-        READ("read", readArgsNameList),
-        WRITE("write", writeArgsNameList),
-        UPDATE_WRITE("updateWrite", writeArgsNameList),
-        REMOVE("remove", readArgsNameList),
+        READ("read", readArgsNameToTypeList),
+        WRITE("write", writeArgsNameToTypeList),
+        UPDATE_WRITE("updateWrite", writeArgsNameToTypeList),
+        REMOVE("remove", readArgsNameToTypeList),
     }
 
-    private val readArgsNameList = listOf(
-        "filePath"
+    private val readArgsNameToTypeList = listOf(
+        Pair("filePath", FuncCheckerForSetting.ArgType.STRING)
     )
 
 
-    private val writeArgsNameList = listOf(
-        "filePath",
-        "contents",
+    private val writeArgsNameToTypeList = listOf(
+        Pair("filePath", FuncCheckerForSetting.ArgType.STRING),
+        Pair("contents", FuncCheckerForSetting.ArgType.STRING),
     )
 
 }

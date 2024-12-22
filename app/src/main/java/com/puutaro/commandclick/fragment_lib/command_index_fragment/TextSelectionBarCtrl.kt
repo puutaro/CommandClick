@@ -29,12 +29,12 @@ object TextSelectionBarCtrl {
         )
         binding.cmdindexSelectionSearchCaption.apply {
 //            setFillColor(R.color.file_dark_green_color)
-            outlineWidthSrc = 5
+            strokeWidthSrc = 5
 //            text = "\uD83D\uDD0D Search"
         }
         binding.cmdindexSelectionSearchCurText.apply {
             isVisible = false
-            outlineWidthSrc = 3
+            strokeWidthSrc = 3
             setFillColor(R.color.white)
             setStrokeColor(R.color.fill_gray)
         }

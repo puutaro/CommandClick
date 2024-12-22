@@ -5,16 +5,11 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.BitmapTool
-import java.io.File
 
 
 class DragSortRecyclerAdapter(
@@ -122,7 +117,7 @@ class DragSortRecyclerAdapter(
             text = titleText
             setFillColor(R.color.ao)
             setStrokeColor(R.color.white)
-            outlineWidthSrc = 3
+            strokeWidthSrc = 3
         }
 //        itemTitleView.imageTintList = null
 ////        AppCompatResources.getColorStateList(

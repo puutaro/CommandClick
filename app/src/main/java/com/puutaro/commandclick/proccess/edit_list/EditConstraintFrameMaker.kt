@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit_list
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
@@ -11,10 +12,8 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.FrameLayout
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -23,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
@@ -30,9 +30,13 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ColorTool
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -69,6 +73,8 @@ object EditConstraintFrameMaker {
     private val bottomToTopKey = EditComponent.Template.EditComponentKey.BOTTOM_TO_TOP.key
     private val horizontalBiasKey = EditComponent.Template.EditComponentKey.HORIZONTAL_BIAS.key
     private val horizontalWeightKey = EditComponent.Template.EditComponentKey.HORIZONTAL_WEIGHT.key
+    private val percentageWidthKey = EditComponent.Template.EditComponentKey.PERCENTAGE_WIDTH.key
+    private val percentageHeightKey = EditComponent.Template.EditComponentKey.PERCENTAGE_HEIGHT.key
     private val dimensionRatioKey = EditComponent.Template.EditComponentKey.DIMENSION_RATIO.key
 
 
@@ -128,6 +134,10 @@ object EditConstraintFrameMaker {
     private val textPaddingStartKey = EditComponent.Template.TextPropertyManager.Property.PADDING_START.key
     private val textPaddingEndKey = EditComponent.Template.TextPropertyManager.Property.PADDING_END.key
     private val textPaddingBottomKey = EditComponent.Template.TextPropertyManager.Property.PADDING_BOTTOM.key
+    private val textShadowRadiusKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_RADIUS.key
+    private val textShadowColorKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_COLOR.key
+    private val textShadowXKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_X.key
+    private val textShadowYKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_Y.key
 //    private val disableTextSelectKey = EditComponent.Template.TextPropertyManager.Property.DISABLE_TEXT_SELECT.key
 
     private val switchOn = EditComponent.Template.switchOn
@@ -170,6 +180,7 @@ object EditConstraintFrameMaker {
         width: Int,
         overrideTag: String?,
         totalSettingValMap: Map<String, String>?,
+        whereForErr: String,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
     ): FrameLayout? {
@@ -182,6 +193,7 @@ object EditConstraintFrameMaker {
             tagIdMap,
             buttonLayoutSrc,
             frameKeyPairList,
+            whereForErr,
             width,
             overrideTag,
             density,
@@ -221,6 +233,7 @@ object EditConstraintFrameMaker {
                         imageButtonView,
                         imageMap,
                         imagePropertyMap,
+                        whereForErr,
                         requestBuilderSrc,
                         density,
                     )
@@ -273,6 +286,7 @@ object EditConstraintFrameMaker {
                         captionTextView,
                         textMap,
                         textPropertyMap,
+                        whereForErr,
                         density,
                     )
                 }
@@ -287,6 +301,7 @@ object EditConstraintFrameMaker {
         tagIdMap: Map<String, Int>?,
         buttonLayout: FrameLayout?,
         frameKeyPairList: List<Pair<String, String>>?,
+        whereForErr: String,
         width: Int,
         overrideTag: String?,
         density: Float,
@@ -568,7 +583,7 @@ object EditConstraintFrameMaker {
                             tagIdMap,
                         ) ?: unsetInt
 //                        if(
-//                            overrideTag == "ok"
+//                            overrideTag == "bk2"
 //                            || overrideTag == "firstTag"
 //                            ) {
 //                            FileSystems.updateFile(
@@ -583,6 +598,7 @@ object EditConstraintFrameMaker {
 //                                    "bottomToTopStr: ${bottomToTopStr}",
 //                                    "bottomToTopId: ${bottomToTopId}",
 //                                    "edit_list_dialog_search_edit_text: ${R.id.edit_list_dialog_search_edit_text}",
+//                                    "edit_list_dialog_footer_constraint_layout: ${R.id.edit_list_dialog_footer_constraint_layout}"
 //                                ).joinToString("\n") + "\n\n============\n\n\n"
 //                            )
 //                        }
@@ -607,6 +623,25 @@ object EditConstraintFrameMaker {
                         ) ?: horizontalWeight
                     }
                     horizontalWeight = horizontalWeightFloat
+                    horizontalBias = horizontalBiasFloat
+                    val percentageWidthFloat = withContext(Dispatchers.IO){
+                        EditComponent.Template.ConstraintManager.makeBias(
+                            PairListTool.getValue(
+                                frameKeyPairList,
+                                percentageWidthKey
+                            )
+                        ) ?: matchConstraintPercentWidth
+                    }
+                    matchConstraintPercentWidth = percentageWidthFloat
+                    val percentageHeightFloat = withContext(Dispatchers.IO){
+                        EditComponent.Template.ConstraintManager.makeBias(
+                            PairListTool.getValue(
+                                frameKeyPairList,
+                                percentageHeightKey
+                            )
+                        ) ?: matchConstraintPercentHeight
+                    }
+                    matchConstraintPercentHeight = percentageHeightFloat
                     val dimensionRatioStr = withContext(Dispatchers.IO){
                         PairListTool.getValue(
                             frameKeyPairList,
@@ -701,36 +736,29 @@ object EditConstraintFrameMaker {
                 paddingData.paddingEnd ?: 0,
                 paddingData.paddingBottom ?: 0,
             )
-            val bkColorStr =  withContext(Dispatchers.IO) {
+            val bkColorStr = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
                 )
             }
             val bkColorDrawable = withContext(Dispatchers.IO) {
-                    CmdClickColor.entries.firstOrNull {
-                        it.str == bkColorStr
-                    }?.let {
-                    AppCompatResources.getDrawable(
-                        context,
-                        it.id
-                    )
+                if(
+                    bkColorStr.isNullOrEmpty()
+                ) return@withContext null
+                ColorTool.parseColorStr(
+                    context,
+                    bkColorStr,
+                    bkColorKey,
+                    whereForErr,
+                )?.let {
+                    ColorDrawable(Color.parseColor(it))
                 }
-            }
-            if(bkColorDrawable == null) {
-                val bkTintColor =
-                    bkColorStr?.let {
-                        try {
-                            Color.parseColor(it)
-                        } catch (e: Exception) {
-                            null
-                        }
-                    }
             }
 
-            bkColorStr?.let {
-                    ColorStateList.valueOf(Color.parseColor(it))
-                }
+//            bkColorStr?.let {
+//                    ColorStateList.valueOf(Color.parseColor(it))
+//                }
             background = bkColorDrawable
             val elevationFloat = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
@@ -794,6 +822,7 @@ object EditConstraintFrameMaker {
         if(
             context == null
         ) return
+        val where = "EditConstraintFrameMaker.setButtonFrameLayoutByDynamic"
         val isEnable = withContext(Dispatchers.IO) {
             PairListTool.getValue(
                 frameKeyPairList,
@@ -826,6 +855,26 @@ object EditConstraintFrameMaker {
                         )
                     )?.let {
                         horizontalBias = it
+                    }
+                }
+                withContext(Dispatchers.Main){
+                    EditComponent.Template.ConstraintManager.makeBias(
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            percentageWidthKey
+                        )
+                    )?.let {
+                        matchConstraintPercentWidth = it
+                    }
+                }
+                withContext(Dispatchers.Main){
+                    EditComponent.Template.ConstraintManager.makeBias(
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            percentageHeightKey
+                        )
+                    )?.let {
+                        matchConstraintPercentHeight = it
                     }
                 }
                 withContext(Dispatchers.Main){
@@ -931,16 +980,18 @@ object EditConstraintFrameMaker {
                     bkColorKey,
                 )?.let {
                         colorStr ->
-                    CmdClickColor.entries.firstOrNull {
-                        it.str == colorStr
-                    }
-                }?.let {
-                    AppCompatResources.getDrawable(
+                    val parsedColorStr = ColorTool.parseColorStr(
                         context,
-                        it.id
+                        colorStr,
+                        bkColorKey,
+                        where,
                     )
+                    Color.parseColor(parsedColorStr)
+//                    CmdClickColor.entries.firstOrNull {
+//                        it.str == colorStr
+//                    }
                 }?.let {
-                    background = it
+                    background = ColorDrawable(it)
                 }
             }
             withContext(Dispatchers.Main) {
@@ -978,6 +1029,7 @@ object EditConstraintFrameMaker {
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
+        where: String,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
     ) {
@@ -1001,6 +1053,7 @@ object EditConstraintFrameMaker {
 //                "imagePropertyMap: ${imagePropertyMap}"
 //            ).joinToString("\n") + "\n\n==========\n\n"
 //        )
+
         when(
             imagePathList.isNullOrEmpty()
         ) {
@@ -1028,6 +1081,11 @@ object EditConstraintFrameMaker {
                     }
                     visibility = visibilityValue
                     CoroutineScope(Dispatchers.Main).launch {
+                        val randomRectConfigMap = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImageManager.RandomRectManager.makeConfigMap(
+                                imagePropertyMap,
+                            )
+                        }
                         when (imagePathList.size == 1) {
                             false -> {
                                 val delay = withContext(Dispatchers.IO) {
@@ -1045,6 +1103,7 @@ object EditConstraintFrameMaker {
                                     imageView,
                                     imagePathList,
                                     delay,
+                                    randomRectConfigMap,
                                 )
                             }
 
@@ -1065,6 +1124,7 @@ object EditConstraintFrameMaker {
                                     imagePathList.firstOrNull(),
                                     requestBuilderSrc,
                                     fadeInMilli,
+                                    randomRectConfigMap
                                 )
                             }
                         }
@@ -1082,12 +1142,19 @@ object EditConstraintFrameMaker {
                     val imageColor = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
                             imageColorKey,
-                        ).let {
+                        )?.let {
                                 colorStr ->
-                            makeColor(
+                            val parsedColorStr = ColorTool.parseColorStr(
                                 context,
                                 colorStr,
+                                imageColorKey,
+                                where,
                             )
+                            Color.parseColor(parsedColorStr)
+//                            makeColor(
+//                                context,
+//                                colorStr,
+//                            )
                         }
                     }
                     imageTintList = imageColor?.let {
@@ -1096,12 +1163,15 @@ object EditConstraintFrameMaker {
                     val imageBkColor = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
                             imageBkColorKey,
-                        ).let {
+                        )?.let {
                             colorStr ->
-                            makeColor(
+                            val parsedColorStr = ColorTool.parseColorStr(
                                 context,
                                 colorStr,
+                                imageBkColorKey,
+                                where,
                             )
+                            Color.parseColor(parsedColorStr)
                         }
                     }
                     background = imageBkColor?.let {
@@ -1250,6 +1320,7 @@ object EditConstraintFrameMaker {
         density: Float,
     ) {
         val context = imageView.context
+        val where = "EditConstraintFrameMaker.setImageViewForDynamic"
         imageView.layoutParams = imageView.layoutParams.apply {
             val curLayoutParams = this as FrameLayout.LayoutParams
             curLayoutParams.apply setParam@ {
@@ -1330,32 +1401,58 @@ object EditConstraintFrameMaker {
             }?.let {
                 foregroundGravity = it
             }
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
                 imagePropertyMap?.get(
                     imageColorKey,
-                ).let {
+                )?.let {
                         colorStr ->
-                    makeColor(
+                    val parsedColorStr = ColorTool.parseColorStr(
                         context,
                         colorStr,
+                        imageColorKey,
+                        where,
                     )
+                    Color.parseColor(parsedColorStr)
+//                            makeColor(
+//                                context,
+//                                colorStr,
+//                            )
+                }?.let {
+                    imageTintList = ColorStateList.valueOf(it)
                 }
-            }?.let {
-                imageTintList = ColorStateList.valueOf(it)
+//                imagePropertyMap?.get(
+//                    imageColorKey,
+//                ).let {
+//                        colorStr ->
+//                    makeColor(
+//                        context,
+//                        colorStr,
+//                    )
+//                }
             }
-            withContext(Dispatchers.IO) {
+//                ?.let {
+//                imageTintList = ColorStateList.valueOf(it)
+//            }
+            withContext(Dispatchers.Main) {
                 imagePropertyMap?.get(
                     imageBkColorKey,
-                ).let {
-                        colorStr ->
-                    makeColor(
+                )?.let { colorStr ->
+                    val parsedColorStr = ColorTool.parseColorStr(
                         context,
                         colorStr,
+                        imageBkColorKey,
+                        where,
                     )
+                    Color.parseColor(parsedColorStr)
+//                    makeColor(
+//                        context,
+//                        colorStr,
+//                    )
+                }?.let {
+                    background = ColorDrawable(it)
                 }
-            }?.let {
-                background = ColorDrawable(it)
             }
+
 
             val imageAlpha = withContext(Dispatchers.IO) {
                 imagePropertyMap?.get(
@@ -1391,6 +1488,11 @@ object EditConstraintFrameMaker {
             ) return
 //        imageView.isVisible = true
         CoroutineScope(Dispatchers.Main).launch {
+            val randomRectConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.RandomRectManager.makeConfigMap(
+                    imagePropertyMap,
+                )
+            }
             when (imagePathList.size == 1) {
                 false -> {
                     val delay = withContext(Dispatchers.IO) {
@@ -1408,6 +1510,7 @@ object EditConstraintFrameMaker {
                         imageView,
                         imagePathList,
                         delay,
+                        randomRectConfigMap,
                     )
                 }
 
@@ -1428,10 +1531,15 @@ object EditConstraintFrameMaker {
                         imagePathList.firstOrNull(),
                         null,
                         fadeInMilli,
+                        randomRectConfigMap
                     )
                 }
             }
         }
+    }
+
+    private enum class ImageMacro{
+        IMAGE_RND
     }
 
     private suspend fun execSetSingleImage(
@@ -1439,6 +1547,7 @@ object EditConstraintFrameMaker {
         imagePathSrc: String?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         fadeInMilli: Int?,
+        randomRectConfigMap: Map<String, String>
     ){
         if(
             imagePathSrc.isNullOrEmpty()
@@ -1453,8 +1562,6 @@ object EditConstraintFrameMaker {
                 imagePathSrc
             )
         }
-        val imagePath =
-            imagePathToIconType.first
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "licon.txt").absolutePath,
 //            listOf(
@@ -1462,116 +1569,155 @@ object EditConstraintFrameMaker {
 //                "icon: ${icon?.str}",
 //            ).joinToString("\n\n")
 //        )
-        if(File(imagePathSrc).isFile){
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "liconImagePath.txt").absolutePath,
-//                listOf(
-//                    "imagePath: ${imagePathSrc}",
-//                    "icon: ${icon?.str}",
-//                ).joinToString("\n\n")
-//            )
-            when(fadeInMilli != null) {
-                true -> Glide.with(imageViewContext)
-                    .load(imagePathSrc)
-                    .transition(DrawableTransitionOptions.withCrossFade(fadeInMilli))
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .dontAnimate()
-                    .thumbnail(requestBuilder)
-                    .into(imageView)
-                else -> Glide.with(imageViewContext)
-                    .load(imagePathSrc)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .dontAnimate()
-                    .thumbnail(requestBuilder)
-                    .into(imageView)
-            }
-            return
-        }
-        val iconType = withContext(Dispatchers.IO) {
-            imagePathToIconType.second.let { iconTypeStr ->
-                EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
-                    it.type == iconTypeStr
-                } ?: EditComponent.Template.ImageManager.IconType.IMAGE
-            }
-        }
-//        val iconId = icon?.id
-//        imageView.setAutofillHints(CmdClickIcons.values().firstOrNull {
-//            it.id == iconId
-//        }?.str)
-        val assetsPath = withContext(Dispatchers.IO) {
-            CmdClickIcons.entries.firstOrNull {
-                it.str == imagePath
-            }?.assetsPath
-        }?: return
-        val bitmap = withContext(Dispatchers.IO) {
-            when (iconType) {
-                EditComponent.Template.ImageManager.IconType.IMAGE -> {
-                    val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                        assetsPath
-                    )
-                    BitmapTool.convertFileToBitmap(iconFile.absolutePath)
-                }
 
-                EditComponent.Template.ImageManager.IconType.ICON -> {
-                    AssetsFileManager.assetsByteArray(
-                        imageViewContext,
-                        assetsPath,
-                    )?.let {
-                        BitmapFactory.decodeByteArray(it, 0, it.size)
-                    }
-                }
-            }
-        }
-//        if(bitmap == null){
-//            imageView.isVisible = false
-//            return
-//        }
+
+        val bitmap = ImageCreator.byFilePath(imagePathSrc)
+            ?: ImageCreator.byImageMacro(
+            imagePathSrc
+        ) ?: ImageCreator.byAutoCreateImage(
+            imagePathSrc,
+            randomRectConfigMap,
+        ) ?: ImageCreator.byIconMacro(
+            imageViewContext,
+            imagePathToIconType
+        )
         when(fadeInMilli != null) {
-            true ->
-                Glide.with(imageViewContext)
+            true -> Glide.with(imageViewContext)
                 .load(bitmap)
                 .transition(DrawableTransitionOptions.withCrossFade(fadeInMilli))
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .dontAnimate()
                 .thumbnail(requestBuilder)
                 .into(imageView)
-            else ->  Glide.with(imageViewContext)
+            else -> Glide.with(imageViewContext)
                 .load(bitmap)
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .dontAnimate()
                 .thumbnail(requestBuilder)
                 .into(imageView)
         }
+        if(bitmap == null){
+            imageView.isVisible = false
+            return
+        }
     }
 
+    private object ImageCreator {
 
-    private suspend fun execSetMultipleImage(
-        imageView: AppCompatImageView,
-        imagePathList: List<String>,
-        delay: Int,
-    ){
-        val imageViewContext = imageView.context
-        val animationDrawable = AnimationDrawable()
-        val bitmapList = withContext(Dispatchers.IO) {
-            imagePathList.map { imagePathSrc ->
-                if (File(imagePathSrc).isFile) {
-                    return@map BitmapTool.convertFileToBitmap(imagePathSrc)
+        fun byFilePath(
+            imagePathSrc: String,
+        ): Bitmap? {
+            if(
+                !File(imagePathSrc).isFile
+            ) return null
+            return BitmapTool.convertFileToBitmap(imagePathSrc)
+        }
+        suspend fun byImageMacro(
+            imageMacro: String,
+        ): Bitmap? {
+            val escapeImage = listOf(
+                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY,
+                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY3,
+            )
+            val cmdClickBkImageFile = when (imageMacro == ImageMacro.IMAGE_RND.name) {
+                true -> CmdClickBkImageInfo.CmdClickBkImages.entries.filter {
+                    !escapeImage.contains(it)
+                }.random().file
+
+                else -> CmdClickBkImageInfo.CmdClickBkImages.entries.firstOrNull {
+                    it.name == imageMacro
+                }?.file
+            }
+            if (cmdClickBkImageFile?.isFile != true) return null
+            return withContext(Dispatchers.IO) {
+                BitmapTool.convertFileToBitmap(cmdClickBkImageFile.absolutePath)?.let {
+                    BitmapTool.ImageTransformer.cutCenter(
+                        it,
+                        400,
+                        800
+                    )
                 }
-                val imagePathToIconType = EditComponent.Template.ImageManager.makeIconAndTypePair(
-                    imagePathSrc
-                )
-                val imagePath =
-                    imagePathToIconType.first
-                val iconType = imagePathToIconType.second.let { iconTypeStr ->
+            }
+        }
+
+        suspend fun byAutoCreateImage(
+            autoCreateMacroStr: String,
+            randomRectConfigMap: Map<String, String>,
+        ): Bitmap? {
+            val autoCreateMacro = CmdClickBkImageInfo.CmdClickAutoCreateImage.entries.firstOrNull {
+                it.name == autoCreateMacroStr
+            }
+            if (
+                autoCreateMacro == null
+            ) return null
+            val cmdClickAutoCreateBitmap = withContext(Dispatchers.IO) {
+                when (autoCreateMacro) {
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.RANDOM_RECT_OVERLAY -> {
+//                        val divideIntPairToHorizonRndBool =
+//                            Pair(1, 1)
+////                            Pair(Pair(30, 30), false),
+////                            Pair(60, 1),
+////                            Pair(1, 120),
+//                        ).random()
+//                        val divideIntPair = Pair(1, 1)
+//                        val isSecondAfterHorizonOpacityZero = divideIntPairToHorizonRndBool.second
+//                            listOf(1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30).random()
+                        val goalWidth =
+                            EditComponent.Template.ImageManager.RandomRectManager.getWidth(
+                                randomRectConfigMap
+                            ) ?: 300
+                        val widthMulti = EditComponent.Template.ImageManager.RandomRectManager.getXMulti(
+                            randomRectConfigMap
+                        ) ?: 60
+                        val pieceWidth = goalWidth / widthMulti
+                        val goalHeight =
+                            EditComponent.Template.ImageManager.RandomRectManager.getHeight(
+                                randomRectConfigMap
+                            ) ?: 600
+                        val heightMulti = EditComponent.Template.ImageManager.RandomRectManager.getYMulti(
+                            randomRectConfigMap
+                        ) ?: 120
+                        val pieceHeight = goalHeight / heightMulti
+                        BitmapTool.DotArt.makeRect(
+                            pieceWidth,
+                            pieceHeight,
+                            widthMulti,
+                            heightMulti,
+                        )
+                    }
+                }
+            }
+//            FileSystems.writeFromByteArray(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                    "lCREATE_OVERLAY_RECT00.png"
+//                ).absolutePath,
+//                BitmapTool.convertBitmapToByteArray(cmdClickAutoCreateBitmap)
+//            )
+            return cmdClickAutoCreateBitmap
+        }
+
+        suspend fun byIconMacro(
+            context: Context?,
+            imagePathToIconType: Pair<String, String>,
+        ): Bitmap? {
+            val imagePath =
+                imagePathToIconType.first
+            val iconType = withContext(Dispatchers.IO) {
+                imagePathToIconType.second.let { iconTypeStr ->
                     EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
                         it.type == iconTypeStr
                     } ?: EditComponent.Template.ImageManager.IconType.IMAGE
                 }
-                val assetsPath = CmdClickIcons.entries.firstOrNull {
+            }
+            val assetsPath = withContext(Dispatchers.IO) {
+                CmdClickIcons.entries.firstOrNull {
                     it.str == imagePath
-                }?.assetsPath ?: return@map null
+                }?.assetsPath
+            }?: return null
+            return withContext(Dispatchers.IO) {
                 when (iconType) {
                     EditComponent.Template.ImageManager.IconType.IMAGE -> {
                         val iconFile = ExecSetToolbarButtonImage.getImageFile(
@@ -1582,13 +1728,48 @@ object EditConstraintFrameMaker {
 
                     EditComponent.Template.ImageManager.IconType.ICON -> {
                         AssetsFileManager.assetsByteArray(
-                            imageViewContext,
+                            context,
                             assetsPath,
                         )?.let {
                             BitmapFactory.decodeByteArray(it, 0, it.size)
                         }
                     }
                 }
+            }
+        }
+    }
+
+
+    private suspend fun execSetMultipleImage(
+        imageView: AppCompatImageView,
+        imagePathList: List<String>,
+        delay: Int,
+        randomRectConfigMap: Map<String, String>,
+    ){
+        val imageViewContext = imageView.context
+        val animationDrawable = AnimationDrawable()
+        val bitmapList = withContext(Dispatchers.IO) {
+            val bitmapIndexToListJob = imagePathList.mapIndexed { index, imagePathSrc ->
+                async {
+                    val imagePathToIconType =
+                        EditComponent.Template.ImageManager.makeIconAndTypePair(
+                            imagePathSrc
+                        )
+                    val bitmap = ImageCreator.byFilePath(imagePathSrc)
+                        ?: ImageCreator.byImageMacro(
+                            imagePathSrc
+                        ) ?: ImageCreator.byAutoCreateImage(
+                            imagePathSrc,
+                            randomRectConfigMap,
+                        ) ?: ImageCreator.byIconMacro(
+                            imageViewContext,
+                            imagePathToIconType
+                        )
+                    index to bitmap
+                }
+            }
+            bitmapIndexToListJob.awaitAll().sortedBy { it.first }.map {
+                it.second
             }
         }
         bitmapList.forEach {
@@ -1611,6 +1792,7 @@ object EditConstraintFrameMaker {
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
         textPropertyMap: Map<String, String>?,
+        where: String,
         density: Float,
     ) {
 //        val enableTextSelect = withContext(Dispatchers.IO){
@@ -1753,28 +1935,43 @@ object EditConstraintFrameMaker {
                         textColorKey,
                     )?.let {
                             colorStr ->
-                        CmdClickColor.entries.firstOrNull {
-                            it.str == colorStr
-                        }
+                        val parsedColorStr = ColorTool.parseColorStr(
+                            context,
+                            colorStr,
+                            textColorKey,
+                            where,
+                        )
+                        Color.parseColor(parsedColorStr)
+//                        CmdClickColor.entries.firstOrNull {
+//                            it.str == colorStr
+//                        }
                     }
                 }
-                setFillColor(textColor?.id ?: R.color.fill_gray)
+                setFillColor(textColor ?: R.color.fill_gray)
                 val textBkColor = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textBkColorKey,
                     )?.let {
                             colorStr ->
-                        CmdClickColor.entries.firstOrNull {
-                            it.str == colorStr
-                        }
+                        val parsedColorStr = ColorTool.parseColorStr(
+                            context,
+                            colorStr,
+                            textBkColorKey,
+                            where,
+                        )
+                        Color.parseColor(parsedColorStr)
+//                        CmdClickColor.entries.firstOrNull {
+//                            it.str == colorStr
+//                        }
                     }
                 }
                 background =
                     textBkColor?.let {
-                        AppCompatResources.getDrawable(
-                            textViewContext,
-                            it.id
-                        )
+                        ColorDrawable(it)
+//                        AppCompatResources.getDrawable(
+//                            textViewContext,
+//                            it.id
+//                        )
                     }
                 //            captionTextView.setTextIsSelectable(enableTextSelect)
                 val strokeColorStr = withContext(Dispatchers.IO) {
@@ -1798,7 +1995,7 @@ object EditConstraintFrameMaker {
                         }
                     }
                 }
-                outlineWidthSrc = strokeWidth ?: 2
+                strokeWidthSrc = strokeWidth ?: 2
                 val overrideTextSize = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textSizeKey,
@@ -1827,6 +2024,67 @@ object EditConstraintFrameMaker {
                     }
                 }
                 alpha = textAlpha ?: 1f
+                val textShadowXFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowXKey,
+                    )?.let {
+                        try {
+                            ScreenSizeCalculator.toDpByDensity(
+                                it.toFloat(),
+                                density
+                            ).toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: 0f
+                }
+                val textShadowYFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowYKey,
+                    )?.let {
+                        try {
+                            ScreenSizeCalculator.toDpByDensity(
+                                it.toFloat(),
+                                density
+                            ).toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: 0f
+                }
+                val textShadowRadiusFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowRadiusKey,
+                    )?.let {
+                        try {
+                            ScreenSizeCalculator.toDpByDensity(
+                                it.toFloat(),
+                                density
+                            ).toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: 0f
+                }
+                val textShadowColor = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowColorKey,
+                    )?.let {
+                        val colorStr = ColorTool.parseColorStr(
+                            context,
+                            it,
+                            textShadowColorKey,
+                            where
+                        )
+                        Color.parseColor(colorStr)
+                    } ?: Color.TRANSPARENT
+                }
+                setShadowLayer(
+                    textShadowRadiusFloat,
+                    textShadowXFloat,
+                    textShadowYFloat,
+                    textShadowColor
+                )
                 val overrideTextStyle = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textStyleKey,
@@ -1868,6 +2126,7 @@ object EditConstraintFrameMaker {
         textPropertyMap: Map<String, String>?,
         overrideText: String?,
     ) {
+        val where = "EditConstraintFrameMaker.setCaptionByDynamic"
 //        val enableTextSelect = withContext(Dispatchers.IO){
 //            textPropertyMap?.get(
 //                disableTextSelectKey
@@ -1939,24 +2198,46 @@ object EditConstraintFrameMaker {
                 textColor?.let {
                     setFillColor(it.id)
                 }
-                val textBkColor = withContext(Dispatchers.IO) {
+                withContext(Dispatchers.Main) {
                     textPropertyMap?.get(
                         textBkColorKey,
                     )?.let {
                             colorStr ->
-                        CmdClickColor.entries.firstOrNull {
-                            it.str == colorStr
-                        }
-                    }
-                }
-                textBkColor?.let {
-                    background =
-                        AppCompatResources.getDrawable(
-                            textViewContext,
-                            it.id
+                        val parsedColorStr = ColorTool.parseColorStr(
+                            context,
+                            colorStr,
+                            textBkColorKey,
+                            where,
                         )
-
+                        Color.parseColor(parsedColorStr)
+//                        CmdClickColor.entries.firstOrNull {
+//                            it.str == colorStr
+//                        }
+                    }?.let {
+                        background =
+                            ColorDrawable(it)
+//                            AppCompatResources.getDrawable(
+//                                textViewContext,
+//                                it.id
+//                            )
+                    }
+//                    textPropertyMap?.get(
+//                        textBkColorKey,
+//                    )?.let {
+//                            colorStr ->
+//                        CmdClickColor.entries.firstOrNull {
+//                            it.str == colorStr
+//                        }
+//                    }
                 }
+//                textBkColor?.let {
+//                    background =
+//                        AppCompatResources.getDrawable(
+//                            textViewContext,
+//                            it.id
+//                        )
+//
+//                }
                 //            captionTextView.setTextIsSelectable(enableTextSelect)
                 val strokeColorStr = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
@@ -1980,7 +2261,7 @@ object EditConstraintFrameMaker {
                     }
                 }
                 strokeWidth?.let {
-                    outlineWidthSrc = it
+                    strokeWidthSrc = it
                 }
                 val overrideTextSize = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
@@ -2007,6 +2288,67 @@ object EditConstraintFrameMaker {
                         }
                     }
                 }
+                val textShadowXFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowXKey,
+                    )?.let {
+                        try {
+                            ScreenSizeCalculator.toDp(
+                                context,
+                                it.toFloat(),
+                            ).toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: shadowDx
+                }
+                val textShadowYFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowYKey,
+                    )?.let {
+                        try {
+                            ScreenSizeCalculator.toDp(
+                                context,
+                                it.toFloat(),
+                            ).toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: shadowDy
+                }
+                val textShadowRadiusFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowRadiusKey,
+                    )?.let {
+                        try {
+                            ScreenSizeCalculator.toDp(
+                                context,
+                                it.toFloat(),
+                            ).toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: shadowRadius
+                }
+                val textShadowColor = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        textShadowColorKey,
+                    )?.let {
+                        val colorStr = ColorTool.parseColorStr(
+                            context,
+                            it,
+                            textShadowColorKey,
+                            where
+                        )
+                        Color.parseColor(colorStr)
+                    } ?: shadowColor
+                }
+                setShadowLayer(
+                    textShadowRadiusFloat,
+                    textShadowXFloat,
+                    textShadowYFloat,
+                    textShadowColor
+                )
                 textAlpha?.let {
                     alpha = it
                 }
@@ -2045,20 +2387,28 @@ object EditConstraintFrameMaker {
 //        )
     }
 
-    private fun makeColor(
-        context: Context,
-        colorStr: String?,
-    ): Int? {
-        return CmdClickColor.entries.firstOrNull {
-            it.str == colorStr
-        }?.let {
-            ContextCompat.getColor(context, it.id)
-        } ?: let {
-            try {
-                Color.parseColor(colorStr)
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
+//    private fun makeColor(
+//        context: Context,
+//        colorStr: String?,
+//    ): Int? {
+//        return CmdClickColor.entries.firstOrNull {
+//            it.str == colorStr
+//        }?.let {
+//            ContextCompat.getColor(context, it.id)
+//        } ?: let {
+//            val parsedColorStr = ColorTool.parseColorMacro(
+//                colorStr
+//            )
+//            if(
+//                parsedColorStr.isNullOrEmpty()
+//            ) return@let null
+//            return Color.parseColor(parsedColorStr)
+//        } ?: let {
+//            try {
+//                Color.parseColor(colorStr)
+//            } catch (e: Exception) {
+//                null
+//            }
+//        }
+//    }
 }

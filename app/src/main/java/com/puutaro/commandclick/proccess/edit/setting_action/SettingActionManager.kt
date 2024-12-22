@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -1081,6 +1082,13 @@ class SettingActionManager {
                             varName
                         )
                     runBlocking {
+                        FileSystems.writeFile(
+                            File(UsePath.cmdclickDefaultAppDirPath, "lsVar.txt").absolutePath,
+                            listOf(
+                                "settingKeyToVarNameList: ${settingKeyToVarNameList}",
+                                "keyToSubKeyListCon: ${keyToSubKeyListCon}",
+                            ).joinToString("\n")
+                        )
                         ErrLogger.sendErrLog(
                             context,
                             ErrLogger.SettingActionErrType.S_VAR,

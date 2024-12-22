@@ -20,12 +20,12 @@ object LocalDatetimeForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameList,
+            methodNameClass.argsNameToTypeList,
             argsPairList
         )?.let {
                 argsCheckErr ->
@@ -40,7 +40,7 @@ object LocalDatetimeForSetting {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameList: List<String>?,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>?,
     ){
         NOW("now", null),
     }

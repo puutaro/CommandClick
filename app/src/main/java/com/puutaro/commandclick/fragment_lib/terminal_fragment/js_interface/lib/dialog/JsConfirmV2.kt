@@ -391,7 +391,7 @@ class JsConfirmV2(
                             ConfirmDialogAssets.ImageMakingType.PLANE -> return@let bitmap //215 //200 kusumu
                             ConfirmDialogAssets.ImageMakingType.OPACITY -> 50
                         }
-                        BitmapTool.ImageTransformer.adjustOpacity(
+                        BitmapTool.ImageTransformer.ajustOpacity(
                             bitmap,
                             opacity //130 //50
                         )

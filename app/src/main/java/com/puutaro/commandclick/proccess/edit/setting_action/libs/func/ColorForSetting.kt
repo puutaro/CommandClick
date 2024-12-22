@@ -1,18 +1,16 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
+import com.puutaro.commandclick.util.image_tools.ColorTool
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-object ShellToolManagerForSetting {
-
-    private val cmdSeparator = '|'
-
-    fun handle(
+object ColorForSetting {
+    suspend fun handle(
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-        busyboxExecutor: BusyboxExecutor?
     ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -32,34 +30,31 @@ object ShellToolManagerForSetting {
             methodNameStr,
             methodNameClass.argsNameToTypeList,
             argsPairList
-        )?.let {
-                argsCheckErr ->
+        )?.let { argsCheckErr ->
             return null to argsCheckErr
         }
         val argsList = argsPairList.map {
             it.second
         }
-        val firstArg = argsList.get(0)
-        val cmd = QuoteTool.splitBySurroundedIgnore(
-            firstArg,
-            cmdSeparator
-        ).map {
-            "${'$'}{b} ${it} "
-        }.joinToString(cmdSeparator.toString())
-        return busyboxExecutor?.getCmdOutput(
-            cmd,
-            null
-        ) to null
+        val settingValueStr = withContext(Dispatchers.Main) {
+            when (methodNameClass) {
+                MethodNameClass.RND -> {
+                    val firstArg = argsList.get(0)
+                   ColorTool.parseColorMacro(firstArg) ?: CmdClickColorStr.entries.random().str
+                }
+            }
+        }
+        return settingValueStr to null
     }
 
-    private enum class MethodNameClass(
+    enum class MethodNameClass(
         val str: String,
         val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
-    ){
-        EXEC("exec", shellArgsNameToTypeList),
+    ) {
+        RND("rnd", rndArgsNameToTypeList),
     }
 
-    private val  shellArgsNameToTypeList = listOf(
-        Pair("cmdList", FuncCheckerForSetting.ArgType.STRING)
+    private val rndArgsNameToTypeList = listOf(
+        Pair("rndMacro", FuncCheckerForSetting.ArgType.STRING),
     )
 }

@@ -165,6 +165,7 @@ dependencies {
 //    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
     implementation("jp.wasabeef:glide-transformations:4.3.0")
     implementation("net.objecthunter:exp4j:0.4.8")
+    implementation("jp.wasabeef:blurry:4.0.1")
 // as 3.0 use implementation
 //    implementation ("com.hanks:htextview-base:0.1.6" )       // base library
 

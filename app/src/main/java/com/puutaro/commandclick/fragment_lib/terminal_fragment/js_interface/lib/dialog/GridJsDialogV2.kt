@@ -212,7 +212,7 @@ class GridJsDialogV2(
                     gradientRect,
                     180f
                 ).let {
-                    BitmapTool.ImageTransformer.adjustOpacity(
+                    BitmapTool.ImageTransformer.ajustOpacity(
                         it,
                         200
                     )
@@ -322,7 +322,7 @@ class GridJsDialogV2(
                     )
                 }
                 val bkShibukiBitmapOpacity = withContext(Dispatchers.IO){
-                    BitmapTool.ImageTransformer.adjustOpacity(
+                    BitmapTool.ImageTransformer.ajustOpacity(
                         bkShibukiBitmap,
                         50
                     )

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ColorForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
@@ -10,6 +11,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSyste
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.MathCulcForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.PathForSettingHandler
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ShellToolManagerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
@@ -109,6 +111,20 @@ object SettingFuncManager {
                     baseArgsPairList,
                 )
             }
+            FuncType.COLOR -> {
+                ColorForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList
+                )
+            }
+            FuncType.RND -> {
+                ListForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList
+                )
+            }
         }
 
     }
@@ -125,6 +141,8 @@ object SettingFuncManager {
         SHELL("shell"),
         EDIT("edit"),
         CULC("culc"),
+        COLOR("color"),
+        RND("list"),
     }
 
 }

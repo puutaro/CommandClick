@@ -299,7 +299,7 @@ object EditExecuteOrElse {
                 ubuntuSetupAlertDialog?.findViewById<OutlineTextView>(
                     R.id.only_alert_dialog_text_view
                 )
-            confirmContentTextView?.outlineWidthSrc = 5
+            confirmContentTextView?.strokeWidthSrc = 5
             confirmContentTextView?.text =
                 "Setup or restore ubuntu on notification bar, ok?"
 //            "\n".repeat(2) +

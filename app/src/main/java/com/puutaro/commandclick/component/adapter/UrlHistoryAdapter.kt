@@ -325,7 +325,7 @@ class UrlHistoryAdapter(
         withContext(Dispatchers.Main) {
             holder.urlTitleTextView.text = title
             holder.urlTitleTextView.setFillColor(R.color.ao)
-            holder.urlTitleTextView.outlineWidthSrc = 5
+            holder.urlTitleTextView.strokeWidthSrc = 5
         }
     }
 }

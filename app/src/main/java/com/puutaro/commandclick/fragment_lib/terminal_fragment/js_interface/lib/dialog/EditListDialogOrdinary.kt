@@ -14,6 +14,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditConstraintListView
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
@@ -93,10 +94,10 @@ private val editListDialogTitleFrameSrc =
         editListDialogOrdinary?.findViewById<RecyclerView>(
             R.id.edit_list_dialog_recycler_view
         )
-    private val editListBkFrameSrc =
-        editListDialogOrdinary?.findViewById<FrameLayout>(
-            R.id.edit_list_dialog_bk_frame
-        )
+//    private val editListBkFrameSrc =
+//        editListDialogOrdinary?.findViewById<FrameLayout>(
+//            R.id.edit_list_dialog_bk_frame
+//        )
 
     private val editListSearchEditTextSrc =
         editListDialogOrdinary?.findViewById<AppCompatEditText>(
@@ -110,7 +111,7 @@ private val editListDialogTitleFrameSrc =
         editListDialogOrdinary?.setOnCancelListener {
             dismissForInner(
                 editListRecyclerViewSrc,
-                editListBkFrameSrc,
+//                editListBkFrameSrc,
                 constraintLayoutSrc,
                 contentsLayoutForFooter
             )
@@ -165,8 +166,8 @@ private val editListDialogTitleFrameSrc =
         val editListRecyclerView =
             editListRecyclerViewSrc
                 ?: return
-        val editListBkFrame = editListBkFrameSrc
-            ?: return
+//        val editListBkFrame = editListBkFrameSrc
+//            ?: return
         val editListSearchEditText = editListSearchEditTextSrc
             ?:return
 //        val editFooterHorizonLayout =
@@ -237,6 +238,13 @@ private val editListDialogTitleFrameSrc =
 //                ).joinToString("\n")
 //            )
             CoroutineScope(Dispatchers.IO).launch {
+                val eachLayoutIdMap = EditComponent.Template.LayoutIdMap.makeMap(
+                    editListDialogTitleFrame.id,
+                    editListRecyclerView.id,
+                    editListSearchEditText.id,
+                    contentsLayoutForFooter?.id,
+                    null,
+                )
                 WithEditConstraintListView.create(
                     terminalFragment,
                     fannelInfoMap,
@@ -248,9 +256,11 @@ private val editListDialogTitleFrameSrc =
                     editListFragAlignTitleLayout,
                     editListRecyclerView,
                     editListSearchEditText,
-                    editListBkFrame,
+                    constraintLayoutSrc,
+//                    editListBkFrame,
                     contentsLayoutForFooter,
                     null,
+                    eachLayoutIdMap,
                     mainFannelConList,
                     density,
                     requestBuilderSrc,
@@ -279,7 +289,7 @@ private val editListDialogTitleFrameSrc =
 
     private fun dismissForInner(
         editListRecyclerView: RecyclerView?,
-        editListBkFrame: FrameLayout?,
+//        editListBkFrame: FrameLayout?,
         constraintLayout: ConstraintLayout?,
         contentsLayoutForFooter: ConstraintLayout?,
     ){
@@ -288,7 +298,7 @@ private val editListDialogTitleFrameSrc =
         editListRecyclerView?.adapter = null
         editListRecyclerView?.recycledViewPool?.clear()
         editListRecyclerView?.removeAllViews()
-        editListBkFrame?.removeAllViews()
+//        editListBkFrame?.removeAllViews()
         constraintLayout?.removeAllViews()
         editListDialogOrdinary?.dismiss()
     }
@@ -296,7 +306,7 @@ private val editListDialogTitleFrameSrc =
     fun destroy(){
         dismissForInner(
             editListRecyclerViewSrc,
-            editListBkFrameSrc,
+//            editListBkFrameSrc,
             constraintLayoutSrc,
             contentsLayoutForFooter,
         )

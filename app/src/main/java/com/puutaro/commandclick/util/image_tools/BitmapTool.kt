@@ -36,6 +36,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -861,6 +862,113 @@ object BitmapTool {
             }
             return resultRect
         }
+
+        suspend fun makeRect(
+            pieceWidth: Int,
+            pieceHeight: Int,
+            widthMulti: Int,
+            heightMulti: Int,
+        ): Bitmap {
+            return withContext(Dispatchers.IO){
+                val horizonRectList = let {
+                    val maxOpacity = 255
+                    val pieceRectSrc = ImageTransformer.makeRect(
+                        "#000000",
+                        pieceWidth,
+                        pieceHeight,
+                    )
+                    val opacityDiff = maxOpacity / widthMulti
+                    val firstOpacityInf = 230
+                    val horizonRectJobList = (1..heightMulti).map { verticalOrder ->
+                        async {
+                            val fistLowerOpacity = (maxOpacity - opacityDiff).let fistLowerOpacity@ {
+                                if(
+                                    it < firstOpacityInf
+                                ) return@fistLowerOpacity firstOpacityInf
+                                it
+                            }
+                            val firstOpacity = (fistLowerOpacity..maxOpacity).random()
+//                            when(
+//                                (1..5).random() == 1
+//                            ) {
+//                                true -> (0..maxOpacity).random()
+//                                else -> ((maxOpacity - opacityDiff)..maxOpacity).random()
+//                            }
+                            var horizontalRect = ImageTransformer.ajustOpacity(
+                                pieceRectSrc,
+                                firstOpacity
+                            )
+                            (2..widthMulti).forEach { horizonOrder ->
+                                val curOpacityDiff = opacityDiff * (horizonOrder - 1)
+                                val supOpacity = (maxOpacity - curOpacityDiff).let makeSupOpacity@ {
+                                    if (it <= 0) return@makeSupOpacity 10
+                                    it
+                                }
+                                val lowerOpacity = (supOpacity - curOpacityDiff).let makeLowerOpacity@ {
+                                    if (it <= 0) return@makeLowerOpacity 0
+                                    it
+                                }
+                                val curOpacity = when(
+                                    (1..5).random() == 1
+                                ) {
+                                    true -> (0..maxOpacity).random()
+                                    else -> (lowerOpacity..supOpacity).random()
+                                }
+                                val pieceRect = ImageTransformer.ajustOpacity(
+                                    pieceRectSrc,
+                                    curOpacity
+                                )
+                                horizontalRect = concatByHorizon(
+                                    horizontalRect,
+                                    pieceRect
+                                )
+                            }
+                            rotate(
+                                horizontalRect,
+                                90f
+                            )
+                        }
+                    }
+                    horizonRectJobList.awaitAll()
+                }
+                var chunkedHorizonRectList: List<List<Bitmap>> = horizonRectList.chunked(2)
+                while(true) {
+                    val chunkedHorizonRectJob =
+                        chunkedHorizonRectList.mapIndexed { index, horizonChunkedRectList ->
+                            async {
+                                var partVerticalRect = horizonChunkedRectList.first()
+                                horizonChunkedRectList.forEachIndexed { horizonRectListIndex, horizonBitmap ->
+                                    if (horizonRectListIndex == 0) return@forEachIndexed
+                                    partVerticalRect = concatByHorizon(
+                                        partVerticalRect,
+                                        horizonBitmap
+                                    )
+                                }
+                                partVerticalRect
+                            }
+                        }
+                    chunkedHorizonRectList = chunkedHorizonRectJob.awaitAll().chunked(2)
+                    if(
+                        chunkedHorizonRectList.size == 1
+                        && chunkedHorizonRectList.first().size <= 1
+                    ) break
+                }
+
+                val verticalRect = chunkedHorizonRectList.first().first()
+//                var verticalRect = concatedHorizonRectList.first()
+//                concatedHorizonRectList.forEachIndexed { index, chunkedHorizonRect ->
+//                    if(index == 0) return@forEachIndexed
+//                    verticalRect = concatByHorizon(
+//                        verticalRect,
+//                        chunkedHorizonRect
+//                    )
+//                }
+                rotate(
+                    verticalRect,
+                    -90f
+                )
+            }
+        }
         fun dotArtMaker(
             srcBitmap: Bitmap
         ): Bitmap {
@@ -1368,7 +1476,7 @@ object BitmapTool {
         }
 
 
-        fun adjustOpacity(
+        fun ajustOpacity(
             bitmap: Bitmap,
             opacity: Int, //0(trans)..255
         ): Bitmap {

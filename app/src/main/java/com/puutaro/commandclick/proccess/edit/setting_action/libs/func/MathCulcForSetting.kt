@@ -21,12 +21,12 @@ object MathCulcForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameList,
+            methodNameClass.argsNameToTypeList,
             argsPairList
         )?.let {
                 argsCheckErr ->
@@ -66,9 +66,21 @@ object MathCulcForSetting {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameList: List<String>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ){
-        INT("int", listOf("formula")),
-        FLOAT("float", listOf("formula")),
+        INT(
+            "int",
+            formulaArgsNameToTypeList,
+        ),
+        FLOAT(
+            "float",
+            formulaArgsNameToTypeList,
+        )
     }
+
+    private val formulaArgsNameToTypeList =  listOf(
+        Pair("formula",
+            FuncCheckerForSetting.ArgType.STRING,
+            )
+    )
 }

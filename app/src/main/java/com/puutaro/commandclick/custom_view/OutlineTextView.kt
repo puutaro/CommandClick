@@ -3,11 +3,10 @@ package com.puutaro.commandclick.custom_view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.LinearGradient
 import android.graphics.Paint
-import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.R
 
 
@@ -23,14 +22,14 @@ class OutlineTextView : AppCompatTextView {
 
 //    private var isRevOutLine = false
 
-    var outlineWidthSrc = 2
+    var strokeWidthSrc = 2
     private var strokeColor = Color.WHITE
     private var fillColor = context.getColor(R.color.fill_gray)
     private val densityForOutline = context.resources.displayMetrics.density
 
     fun setStrokeColor(id: Int){
         strokeColor = try {
-            context.getColor(id)
+            ContextCompat.getColor(context, id)
         } catch (e: Exception){
             id
         }
@@ -38,16 +37,17 @@ class OutlineTextView : AppCompatTextView {
 
     fun setFillColor(id: Int){
         fillColor = try {
-            context.getColor(id)
+            ContextCompat.getColor(context, id)
         } catch (e: Exception){
             id
         }
+
     }
     override fun onDraw(canvas: Canvas) {
         setTextColor(strokeColor)
         paint.apply {
             style = Paint.Style.STROKE
-            strokeWidth = outlineWidthSrc * densityForOutline
+            strokeWidth = strokeWidthSrc * densityForOutline
         }
         super.onDraw(canvas)
 

@@ -147,7 +147,7 @@ class SdCardDirGetter(
                 getSdcardTreeUriConfirmDialog?.findViewById<OutlineTextView>(
                     R.id.confirm_text_gif_dialog_text_view
                 )
-            confirmContentTextView?.outlineWidthSrc = 5
+            confirmContentTextView?.strokeWidthSrc = 5
             confirmContentTextView?.text =
                 "\n".repeat(4) + "Specify use dir in sd card, ok?"
             val confirmCancelButton =

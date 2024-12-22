@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -20,17 +18,13 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.ButtonImageCreator
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog
 import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
-import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.ButtonAssetsImage
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -138,7 +132,7 @@ class PromptListAdapter(
             withContext(Dispatchers.Main){
                 holder.promptListAdapterTitle.apply {
                     setFillColor(R.color.ao)
-                    outlineWidthSrc = 3
+                    strokeWidthSrc = 3
                     text = title
 //                    viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
 //                        override fun onPreDraw(): Boolean {

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -96,7 +95,7 @@ class PinFannelAdapter(
                         holder.fannelPinAdapterNameView.setFillColor(R.color.fill_gray)
                     }
                 }
-                holder.fannelPinAdapterNameView.outlineWidthSrc = 2
+                holder.fannelPinAdapterNameView.strokeWidthSrc = 2
                 holder.fannelPinAdapterNameView.text = CcPathTool.trimAllExtend(fannelName)
             }
             val fannelLogoPngPath = withContext(Dispatchers.IO) {

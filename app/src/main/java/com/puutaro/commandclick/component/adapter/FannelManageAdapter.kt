@@ -217,7 +217,7 @@ class FannelManageAdapter(
                 holder.fannelNameTextView.text = displayFannelName
             }
             withContext(Dispatchers.Main) {
-                holder.titleTextView.outlineWidthSrc = 5
+                holder.titleTextView.strokeWidthSrc = 5
                 when(fannelName == homeFannel){
                     true -> {
                         holder.titleTextView.text = "\uD83C\uDFE0"

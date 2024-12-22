@@ -3,10 +3,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.broadcast.SettingActionFuncExtra
-import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.SettingActionFuncBroadcastManager
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -34,7 +30,7 @@ object ToastForSetting {
         FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
-            methodNameClass.readArgsNameList,
+            methodNameClass.readArgsNameToTypeList,
             argsPairList
         )?.let {
                 argsCheckErr ->
@@ -77,18 +73,18 @@ object ToastForSetting {
 
     enum class MethodNameClass(
         val str: String,
-        val readArgsNameList: List<String>,
+        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ){
-        SHORT("short", shortArgsNameList),
-        LONG("long", longArgsNameList),
+        SHORT("short", shortArgsNameToTypeList),
+        LONG("long", longArgsNameToTypeList),
     }
 
-    private val shortArgsNameList = listOf(
-        "message"
+    private val shortArgsNameToTypeList = listOf(
+        Pair("message", FuncCheckerForSetting.ArgType.STRING)
     )
 
 
-    private val longArgsNameList = listOf(
-        "message"
+    private val longArgsNameToTypeList = listOf(
+        Pair("message", FuncCheckerForSetting.ArgType.STRING)
     )
 }

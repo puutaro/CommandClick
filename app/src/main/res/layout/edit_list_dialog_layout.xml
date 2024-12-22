@@ -7,19 +7,19 @@
     android:layout_height="match_parent"
     android:background="@null"
     android:backgroundTint="@null">
-    <FrameLayout
-        android:id="@+id/edit_list_dialog_bk_frame"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:foregroundGravity="center"
-        android:background="@color/trans"
-        android:backgroundTint="@color/trans"
-        >
-    </FrameLayout>
+<!--    <FrameLayout-->
+<!--        android:id="@+id/edit_list_dialog_bk_frame"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        android:foregroundGravity="center"-->
+<!--        android:background="@color/trans"-->
+<!--        android:backgroundTint="@color/trans"-->
+<!--        >-->
+<!--    </FrameLayout>-->
     <FrameLayout
         android:id="@+id/edit_list_dialog_title_frame"
         android:layout_width="0dp"

@@ -14,6 +14,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Template.ImagePropertyManager.PropertyKey
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
@@ -141,6 +142,8 @@ object EditComponent {
                         BOTTOM_TO_TOP("bottomToTop"),
                         HORIZONTAL_BIAS("horizontalBias"),
                         HORIZONTAL_WEIGHT("horizontalWeight"),
+                        PERCENTAGE_WIDTH("percentageWidth"),
+                        PERCENTAGE_HEIGHT("percentageHeight"),
                         DIMENSION_RATIO("dimensionRatio"),
                 }
 
@@ -232,6 +235,34 @@ object EditComponent {
                         }
                 }
 
+                object LayoutIdMap {
+                        enum class LayoutName {
+                                TITLE,
+                                LIST,
+                                SEARCH,
+                                FOOTER,
+                                TOOLBAR,
+                        }
+                        fun makeMap(
+                                titleId: Int?,
+                                listId: Int?,
+                                searchId: Int?,
+                                footerId: Int?,
+                                toolbarId: Int?,
+                        ): Map<String, Int> {
+                                val unsetInt =
+                                        ConstraintLayout.LayoutParams.UNSET
+                                return mapOf(
+                                        LayoutName.TITLE.name to (titleId ?: unsetInt),
+                                        LayoutName.LIST.name to (listId ?: unsetInt),
+                                        LayoutName.SEARCH.name to (searchId ?: unsetInt),
+                                        LayoutName.FOOTER.name to (footerId ?: unsetInt),
+                                        LayoutName.TOOLBAR.name to (toolbarId ?: unsetInt),
+                                )
+
+                        }
+                }
+
                 object GravityManager {
                         enum class Graviti(
                                 val key: String,
@@ -252,7 +283,94 @@ object EditComponent {
                                PATHS("paths"),
                                DELAY("delay"),
                                FADE_IN_MILLI("fadeInMilli"),
+                               RANDOM_RECT_CONFIG_MAP_CON("randomRectConfigMapCon"),
                        }
+
+                        object RandomRectManager {
+
+                                private const val keySeparator = '|'
+                                enum class RandomRectKey(
+                                        val key: String
+                                ){
+                                        WIDTH("width"),
+                                        HEIGHT("height"),
+                                        X_MULTI("xMulti"),
+                                        Y_MULTI("yMulti"),
+
+                                }
+
+                                fun getWidth(
+                                        randomRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return randomRectConfigMap.get(
+                                                RandomRectKey.WIDTH.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+
+                                fun getHeight(
+                                        randomRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return randomRectConfigMap.get(
+                                                RandomRectKey.HEIGHT.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getXMulti(
+                                        randomRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return randomRectConfigMap.get(
+                                                RandomRectKey.X_MULTI.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getYMulti(
+                                        randomRectConfigMap: Map<String, String>
+                                ): Int? {
+                                        return randomRectConfigMap.get(
+                                                RandomRectKey.Y_MULTI.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                private fun toInt(
+                                        numString: String?
+                                ): Int? {
+                                        return try {
+                                                numString?.toInt()
+                                        } catch (e: Exception){
+                                                null
+                                        }
+                                }
+
+                                fun makeConfigMap(
+                                        imagePropertyMap: Map<String, String>?,
+                                ): Map<String, String> {
+                                        return imagePropertyMap?.get(
+                                                ImageKey.RANDOM_RECT_CONFIG_MAP_CON.key
+                                        ).let {
+                                                CmdClickMap.createMap(
+                                                        it,
+                                                        keySeparator
+                                                ).toMap()
+                                        }
+                                }
+                        }
 
                         private const val iconMacroSeprator = ":"
 
@@ -292,7 +410,9 @@ object EditComponent {
                                 MARGIN_START("marginStart"),
                                 MARGIN_END("marginEnd"),
                                 VISIBLE("visible"),
+
                         }
+
                         enum class ImageScale(
                                 val str: String,
                                 val scale:  ImageView.ScaleType
@@ -328,6 +448,10 @@ object EditComponent {
                                 MARGIN_END("marginEnd"),
                                 BK_COLOR("bkColor"),
                                 VISIBLE("visible"),
+                                SHADOW_RADIUS("shadowRadius"),
+                                SHADOW_COLOR("shadowColor"),
+                                SHADOW_X("shadowX"),
+                                SHADOW_Y("shadowY"),
 //                                DISABLE_TEXT_SELECT("disableTextSelect"),
                         }
 
