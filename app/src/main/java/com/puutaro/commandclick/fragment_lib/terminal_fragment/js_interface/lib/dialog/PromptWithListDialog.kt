@@ -74,6 +74,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
+import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -2086,7 +2087,7 @@ class PromptWithListDialog(
                                 val incline = ((endX - startX) / textBitmapListSize.toFloat())
                                 val currentRndEnd = (endX - incline * order).toInt() - ajustNum
                                 val rndList = (1..currentRndEnd)
-                                val maskSquare = BitmapTool.DotArt.maskSquareMaker(
+                                val maskSquare = CcDotArt.maskSquareMaker(
                                     srcOneSide,
                                     peaceLength,
                                     rndList,

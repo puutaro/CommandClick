@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import java.io.File
 
 object FuncCheckerForSetting {
 
@@ -101,6 +102,19 @@ object FuncCheckerForSetting {
                 when (argType) {
                     ArgType.STRING ->
                         null
+                    ArgType.PATH -> {
+                        if(
+                            File(argStr).isFile
+                        ) null
+                        else launchTypeCheckErr(
+                            funcName,
+                            methodName,
+                            argName,
+                            index,
+                            argType,
+                            argStr,
+                        )
+                    }
                     ArgType.INT -> {
                         argStr.toInt()
                         null
@@ -163,13 +177,20 @@ object FuncCheckerForSetting {
                 CheckTool.errRedCode,
                 argStr
             )
-            return FuncCheckErr(
-                "Arg ${spanArgName} not ${spanArgType} type: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
-            )
+            return when(argType) {
+                ArgType.PATH ->
+                    FuncCheckErr(
+                        "Arg ${spanArgName} not found path: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
+                    )
+                else -> FuncCheckErr(
+                    "Arg ${spanArgName} not ${spanArgType} type: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
+                )
+            }
         }
     }
 
     enum class ArgType {
+        PATH,
         STRING,
         INT,
         FLOAT,

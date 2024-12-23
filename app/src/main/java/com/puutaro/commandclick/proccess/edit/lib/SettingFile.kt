@@ -160,9 +160,21 @@ object SettingFile {
 
         private const val importEndSeparator = ".impEND"
         private const val settingSeparators = "|?&"
+        private const val replaceSeparator = '&'
         private const val importRegexStr =
             "\n[ \t]*[${settingSeparators}]*${importPreWord}=.+?\\${importEndSeparator}"
         private val importRegex = importRegexStr.toRegex(RegexOption.DOT_MATCHES_ALL)
+        private enum class ImportKey(val key: String) {
+            IMPORT_PATH("importPath"),
+            REPLACE("replace"),
+            TIMES("times"),
+            SEPARATOR("separator"),
+            PREFIX("prefix"),
+            SUFFIX("suffix"),
+        }
+        private const val loopVarName = "LOOP_INDEX"
+        private const val startLoopIndex = 1
+
 
         fun import(
             context: Context?,
@@ -234,10 +246,10 @@ object SettingFile {
                 if (
                     importSrcCon.isEmpty()
                 ) return@forEach
-                val importMap = ImportTool.makeImportMap(
+                val importMap = makeImportMap(
                     importSrcCon
                 )
-                val importPath = ImportTool.getImportPath(
+                val importPath = getImportPath(
                     importMap
                 ) ?: return@forEach
                 if (
@@ -254,14 +266,37 @@ object SettingFile {
                     )
                     return@forEach
                 }
-                val repValMap = ImportTool.getRepMap(
+                val loopTimes = getLoopTimes(
                     importMap
                 )
-                val importCon = ReadText(importPath).readText().let {
-                    CmdClickMap.replaceHolderForJsAction(
-                        it,
-                        repValMap
-                    )
+                val separator = getSeparator(
+                    importMap
+                )
+                val prefix = getPrefix(
+                    importMap
+                )
+                val suffix = getSuffix(
+                    importMap
+                )
+                val repValMap = getRepMap(
+                    importMap
+                )
+                val importCon = CmdClickMap.replaceHolderForJsAction(
+                    ReadText(importPath).readText(),
+                    repValMap
+                ).let {
+                    innerImportCon ->
+                    (startLoopIndex..loopTimes).map {
+                        loopIndex ->
+                        CmdClickMap.replaceByAtVar(
+                            innerImportCon,
+                            mapOf(
+                                loopVarName to loopIndex.toString()
+                            )
+                        )
+                    }.joinToString(separator).let {
+                        "${prefix}${it}${suffix}"
+                    }
                 }
                 settingCon = settingCon.replace(
                     importRawSrcCon,
@@ -284,61 +319,100 @@ object SettingFile {
                 .replace("\n//[^\n]+".toRegex(), "\n")
         }
 
-        private object ImportTool {
+        fun makeImportMap(
+            importKeyAndSubKeyCon: String,
+        ): Map<String, String> {
 
-            private const val importPreWord = SettingFileVariables.importPreWord
+            return ImportMapMaker.comp(
+                importKeyAndSubKeyCon,
+                "${importPreWord}="
+            )
+        }
 
-            private enum class ImportKey(val key: String) {
-                IMPORT_PATH("importPath"),
-                REPLACE("replace"),
-            }
+        fun getImportPath(
+            importMap: Map<String, String>,
+        ): String? {
+            val importPath = importMap.get(
+                ImportKey.IMPORT_PATH.key
+            )
+            return importPath
+        }
 
-            private const val replaceSeparator = '&'
-
-
-            fun makeImportMap(
-                importKeyAndSubKeyCon: String,
-            ): Map<String, String> {
-
-                return ImportMapMaker.comp(
-                    importKeyAndSubKeyCon,
-                    "${importPreWord}="
+        fun getRepMap(
+            importMap: Map<String, String>,
+        ): Map<String, String> {
+            return makeRepValHolderMap(
+                importMap.get(
+                    ImportKey.REPLACE.key
                 )
-            }
+            )
+        }
 
-            fun getImportPath(
-                importMap: Map<String, String>,
-            ): String? {
-                val importPath = importMap.get(
-                    ImportKey.IMPORT_PATH.key
-                )
-                return importPath
+        fun getLoopTimes(
+            importMap: Map<String, String>,
+        ): Int {
+            val loopTimesSrc = try {
+               importMap.get(
+                        ImportKey.TIMES.key
+                    )?.toInt() ?: startLoopIndex
+            } catch (e: Exception){
+                startLoopIndex
             }
+            return when(loopTimesSrc < startLoopIndex){
+                true -> 1
+                else -> loopTimesSrc
+            }
+        }
 
-            fun getRepMap(
-                importMap: Map<String, String>,
-            ): Map<String, String> {
-                return makeRepValHolderMap(
-                    importMap.get(
-                        ImportKey.REPLACE.key
-                    )
-                )
+        fun getSeparator(
+            importMap: Map<String, String>,
+        ): String {
+            return try {
+                importMap.get(
+                    ImportKey.SEPARATOR.key
+                ) ?: String()
+            } catch (e: Exception){
+                String()
             }
+        }
 
-            private fun makeRepValHolderMap(
-                replaceKeyConWithQuote: String?,
-            ): Map<String, String> {
-                if(
-                    replaceKeyConWithQuote.isNullOrEmpty()
-                ) return emptyMap()
-                val replaceKeyCon = QuoteTool.trimBothEdgeQuote(
-                    replaceKeyConWithQuote
-                )
-                return CmdClickMap.createMap(
-                    replaceKeyCon,
-                    replaceSeparator
-                ).toMap().filterKeys { it.isNotEmpty() }
+        fun getPrefix(
+            importMap: Map<String, String>,
+        ): String {
+            return try {
+                importMap.get(
+                    ImportKey.PREFIX.key
+                ) ?: String()
+            } catch (e: Exception){
+                String()
             }
+        }
+
+        fun getSuffix(
+            importMap: Map<String, String>,
+        ): String {
+            return try {
+                importMap.get(
+                    ImportKey.SUFFIX.key
+                ) ?: String()
+            } catch (e: Exception){
+                String()
+            }
+        }
+
+        private fun makeRepValHolderMap(
+            replaceKeyConWithQuote: String?,
+        ): Map<String, String> {
+            if(
+                replaceKeyConWithQuote.isNullOrEmpty()
+            ) return emptyMap()
+            val replaceKeyCon = QuoteTool.trimBothEdgeQuote(
+                replaceKeyConWithQuote
+            )
+            return CmdClickMap.createMap(
+                replaceKeyCon,
+                replaceSeparator
+            ).toMap().filterKeys { it.isNotEmpty() }
         }
     }
 }

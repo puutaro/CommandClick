@@ -32,6 +32,7 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
@@ -211,6 +212,14 @@ object EditConstraintFrameMaker {
 //            buttonLayout.findViewById<AppCompatImageView>(R.id.icon_caption_for_edit_image)
 //                ?.let { imageButtonView ->
                 val imageMap = withContext(Dispatchers.IO) {
+//                    if(overrideTag == "rndRect1") {
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "limagemap.txt").absolutePath,
+//                            listOf(
+//                                "frameKeyPairList: ${frameKeyPairList}"
+//                            ).joinToString("\n")
+//                        )
+//                    }
                     PairListTool.getValue(
                         frameKeyPairList,
                         imageKey,
@@ -1083,13 +1092,13 @@ object EditConstraintFrameMaker {
                     }
                     visibility = visibilityValue
                     CoroutineScope(Dispatchers.Main).launch {
-                        val matrixRectConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.MatrixRectManager.makeConfigMap(
+                        val matrixStormConfigMap = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
                                 imageMap,
                             )
                         }
-                        val rndRectConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.RndRectManager.makeConfigMap(
+                        val leftRectsConfigMap = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImageManager.LeftRectsManager.makeConfigMap(
                                 imageMap,
                             )
                         }
@@ -1110,8 +1119,8 @@ object EditConstraintFrameMaker {
                                     imageView,
                                     imagePathList,
                                     delay,
-                                    matrixRectConfigMap,
-                                    rndRectConfigMap,
+                                    matrixStormConfigMap,
+                                    leftRectsConfigMap,
                                 )
                             }
 
@@ -1132,8 +1141,8 @@ object EditConstraintFrameMaker {
                                     imagePathList.firstOrNull(),
                                     requestBuilderSrc,
                                     fadeInMilli,
-                                    matrixRectConfigMap,
-                                    rndRectConfigMap,
+                                    matrixStormConfigMap,
+                                    leftRectsConfigMap,
                                 )
                             }
                         }
@@ -1497,13 +1506,13 @@ object EditConstraintFrameMaker {
             ) return
 //        imageView.isVisible = true
         CoroutineScope(Dispatchers.Main).launch {
-            val matrixRectConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.MatrixRectManager.makeConfigMap(
+            val matrixStormConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
                     imageMap,
                 )
             }
-            val rndRectConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.RndRectManager.makeConfigMap(
+            val leftRectsConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.LeftRectsManager.makeConfigMap(
                     imageMap,
                 )
             }
@@ -1524,8 +1533,8 @@ object EditConstraintFrameMaker {
                         imageView,
                         imagePathList,
                         delay,
-                        matrixRectConfigMap,
-                        rndRectConfigMap,
+                        matrixStormConfigMap,
+                        leftRectsConfigMap,
                     )
                 }
 
@@ -1546,8 +1555,8 @@ object EditConstraintFrameMaker {
                         imagePathList.firstOrNull(),
                         null,
                         fadeInMilli,
-                        matrixRectConfigMap,
-                        rndRectConfigMap,
+                        matrixStormConfigMap,
+                        leftRectsConfigMap,
                     )
                 }
             }
@@ -1563,8 +1572,8 @@ object EditConstraintFrameMaker {
         imagePathSrc: String?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         fadeInMilli: Int?,
-        matrixRectConfigMap: Map<String, String>,
-        rndRectConfigMap: Map<String, String>,
+        matrixStormConfigMap: Map<String, String>,
+        leftRectsConfigMap: Map<String, String>,
     ){
         if(
             imagePathSrc.isNullOrEmpty()
@@ -1593,8 +1602,8 @@ object EditConstraintFrameMaker {
             imagePathSrc
         ) ?: ImageCreator.byAutoCreateImage(
             imagePathSrc,
-            matrixRectConfigMap,
-            rndRectConfigMap,
+            matrixStormConfigMap,
+            leftRectsConfigMap,
         ) ?: ImageCreator.byIconMacro(
             imageViewContext,
             imagePathToIconType
@@ -1635,15 +1644,12 @@ object EditConstraintFrameMaker {
         suspend fun byImageMacro(
             imageMacro: String,
         ): Bitmap? {
-            val escapeImage = listOf(
-                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY,
-                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY3,
-            )
+//            val escapeImage = listOf(
+//                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY,
+//                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY3,
+//            )
             val cmdClickBkImageFile = when (imageMacro == ImageMacro.IMAGE_RND.name) {
-                true -> CmdClickBkImageInfo.CmdClickBkImages.entries.filter {
-                    !escapeImage.contains(it)
-                }.random().file
-
+                true -> CmdClickBkImageInfo.CmdClickBkImages.entries.random().file
                 else -> CmdClickBkImageInfo.CmdClickBkImages.entries.firstOrNull {
                     it.name == imageMacro
                 }?.file
@@ -1662,8 +1668,8 @@ object EditConstraintFrameMaker {
 
         suspend fun byAutoCreateImage(
             autoCreateMacroStr: String,
-            matrixRectConfigMap: Map<String, String>,
-            rndRectConfigMap: Map<String, String>,
+            matrixStormConfigMap: Map<String, String>,
+            leftRectsConfigMap: Map<String, String>,
         ): Bitmap? {
             val autoCreateMacro = CmdClickBkImageInfo.CmdClickAutoCreateImage.entries.firstOrNull {
                 it.name == autoCreateMacroStr
@@ -1673,11 +1679,11 @@ object EditConstraintFrameMaker {
             ) return null
             val cmdClickAutoCreateBitmap = withContext(Dispatchers.IO) {
                 when (autoCreateMacro) {
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_MATRIX_RECT
-                        -> makeMatrixRect(matrixRectConfigMap)
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_MATRIX_STORM
+                        -> makeMatrixStorm(matrixStormConfigMap)
 
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_RECT
-                        -> makeRndRect(rndRectConfigMap)
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_LEFT_RECTS
+                        -> makeLeftRects(leftRectsConfigMap)
                 }
             }
 //            FileSystems.writeFromByteArray(
@@ -1690,26 +1696,26 @@ object EditConstraintFrameMaker {
             return cmdClickAutoCreateBitmap
         }
 
-        suspend fun makeMatrixRect(
-            matrixRectConfigMap: Map<String, String>
-        ): Bitmap {
+        suspend fun makeMatrixStorm(
+            matrixStormConfigMap: Map<String, String>
+        ): Bitmap? {
             val goalWidth =
-                EditComponent.Template.ImageManager.MatrixRectManager.getWidth(
-                    matrixRectConfigMap
+                EditComponent.Template.ImageManager.MatrixStormManager.getWidth(
+                    matrixStormConfigMap
                 ) ?: 300
-            val widthMulti = EditComponent.Template.ImageManager.MatrixRectManager.getXMulti(
-                matrixRectConfigMap
+            val widthMulti = EditComponent.Template.ImageManager.MatrixStormManager.getXMulti(
+                matrixStormConfigMap
             ) ?: 60
             val pieceWidth = goalWidth / widthMulti
             val goalHeight =
-                EditComponent.Template.ImageManager.MatrixRectManager.getHeight(
-                    matrixRectConfigMap
+                EditComponent.Template.ImageManager.MatrixStormManager.getHeight(
+                    matrixStormConfigMap
                 ) ?: 600
-            val heightMulti = EditComponent.Template.ImageManager.MatrixRectManager.getYMulti(
-                matrixRectConfigMap
+            val heightMulti = EditComponent.Template.ImageManager.MatrixStormManager.getYMulti(
+                matrixStormConfigMap
             ) ?: 120
             val pieceHeight = goalHeight / heightMulti
-            return BitmapTool.DotArt.makeMatrixRect(
+            return CcDotArt.makeMatrixStorm(
                 pieceWidth,
                 pieceHeight,
                 widthMulti,
@@ -1717,30 +1723,30 @@ object EditConstraintFrameMaker {
             )
         }
 
-        private fun makeRndRect(
-            rndRectConfigMap: Map<String, String>,
+        private fun makeLeftRects(
+            leftRectsConfigMap: Map<String, String>,
         ): Bitmap {
             val baseWidth =
-                EditComponent.Template.ImageManager.RndRectManager.getWidth(
-                    rndRectConfigMap
+                EditComponent.Template.ImageManager.LeftRectsManager.getWidth(
+                    leftRectsConfigMap
                 ) ?: 300
             val baseHeight =
-                EditComponent.Template.ImageManager.RndRectManager.getHeight(
-                    rndRectConfigMap
+                EditComponent.Template.ImageManager.LeftRectsManager.getHeight(
+                    leftRectsConfigMap
                 ) ?: 600
-            val pieceWidth = EditComponent.Template.ImageManager.RndRectManager.getPieceWidth(
-                rndRectConfigMap
-            ) ?: 5
-            val pieceHeight = EditComponent.Template.ImageManager.RndRectManager.getPieceHeight(
-                rndRectConfigMap
-            ) ?: 5
-            val times = EditComponent.Template.ImageManager.RndRectManager.getTimes(
-                rndRectConfigMap
-            ) ?: 2000
+            val pieceWidth = EditComponent.Template.ImageManager.LeftRectsManager.getPieceWidth(
+                leftRectsConfigMap
+            ) ?: 100
+            val pieceHeight = EditComponent.Template.ImageManager.LeftRectsManager.getPieceHeight(
+                leftRectsConfigMap
+            ) ?: 100
+            val times = EditComponent.Template.ImageManager.LeftRectsManager.getTimes(
+                leftRectsConfigMap
+            ) ?: 10
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
 //                listOf(
-//                    "rndRectConfigMap: ${rndRectConfigMap}",
+//                    "leftRectsConfigMap: ${leftRectsConfigMap}",
 //                    "baseWidth: ${baseWidth}",
 //                    "baseHeight: ${baseHeight}",
 //                    "pieceWidth: ${pieceWidth}",
@@ -1748,15 +1754,19 @@ object EditConstraintFrameMaker {
 //                    "times: ${times}",
 //                ).joinToString("\n")
 //            )
-            val rndRect = BitmapTool.DotArt.makeRndRect2(
+            val pieceRect = BitmapTool.ImageTransformer.makeRect(
+                "#000000",
+                pieceWidth,
+                pieceHeight
+            )
+            val leftRectsBitmap = CcDotArt.MistMaker.makeLeftRects(
                 baseWidth,
                 baseHeight,
-                pieceWidth,
-                pieceHeight,
+                pieceRect,
                 times
             ).let {
-                val cutWidth = (baseWidth * 0.7).toInt()
-                val cutHeight = (baseHeight * 0.7).toInt()
+                val cutWidth = (baseWidth * 0.8).toInt()
+                val cutHeight = (baseHeight * 0.8).toInt()
                 BitmapTool.ImageTransformer.cutByTarget(
                     it,
                     cutWidth,
@@ -1769,7 +1779,7 @@ object EditConstraintFrameMaker {
 //                File(UsePath.cmdclickDefaultAppDirPath, "lrndRect.png").absolutePath,
 //                BitmapTool.convertBitmapToByteArray(rndRect)
 //            )
-            return rndRect
+            return leftRectsBitmap
         }
 
         suspend fun byIconMacro(
@@ -1817,8 +1827,8 @@ object EditConstraintFrameMaker {
         imageView: AppCompatImageView,
         imagePathList: List<String>,
         delay: Int,
-        matrixRectConfigMap: Map<String, String>,
-        rndRectConfigMap: Map<String, String>,
+        matrixStormConfigMap: Map<String, String>,
+        leftRectsConfigMap: Map<String, String>,
     ){
         val imageViewContext = imageView.context
         val animationDrawable = AnimationDrawable()
@@ -1834,8 +1844,8 @@ object EditConstraintFrameMaker {
                             imagePathSrc
                         ) ?: ImageCreator.byAutoCreateImage(
                             imagePathSrc,
-                            matrixRectConfigMap,
-                            rndRectConfigMap,
+                            matrixStormConfigMap,
+                            leftRectsConfigMap,
                         ) ?: ImageCreator.byIconMacro(
                             imageViewContext,
                             imagePathToIconType
@@ -2461,29 +2471,4 @@ object EditConstraintFrameMaker {
 //            ).joinToString("\n")
 //        )
     }
-
-//    private fun makeColor(
-//        context: Context,
-//        colorStr: String?,
-//    ): Int? {
-//        return CmdClickColor.entries.firstOrNull {
-//            it.str == colorStr
-//        }?.let {
-//            ContextCompat.getColor(context, it.id)
-//        } ?: let {
-//            val parsedColorStr = ColorTool.parseColorMacro(
-//                colorStr
-//            )
-//            if(
-//                parsedColorStr.isNullOrEmpty()
-//            ) return@let null
-//            return Color.parseColor(parsedColorStr)
-//        } ?: let {
-//            try {
-//                Color.parseColor(colorStr)
-//            } catch (e: Exception) {
-//                null
-//            }
-//        }
-//    }
 }

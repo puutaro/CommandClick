@@ -69,9 +69,8 @@ object TsvToolForSetting {
     }
 
     private val filePathAndKeyArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting.ArgType.STRING),
+        Pair("filePath", FuncCheckerForSetting.ArgType.PATH),
         Pair("key", FuncCheckerForSetting.ArgType.STRING),
-
     )
 
 

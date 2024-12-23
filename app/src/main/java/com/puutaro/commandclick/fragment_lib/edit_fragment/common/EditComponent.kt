@@ -282,14 +282,14 @@ object EditComponent {
                                PATHS("paths"),
                                DELAY("delay"),
                                FADE_IN_MILLI("fadeInMilli"),
-                               MATRIX_RECT_CONFIG_MAP_CON("matrixRectConfigMapCon"),
-                               RND_RECT_CONFIG_MAP_CON("rndRectConfigMapCon"),
+                               MATRIX_STORM_CONFIG_MAP_CON("matrixStormConfigMapCon"),
+                               LEFT_RECTS_CONFIG_MAP_CON("leftRectsConfigMapCon"),
                        }
 
-                        object MatrixRectManager {
+                        object MatrixStormManager {
 
                                 private const val keySeparator = '|'
-                                enum class MatrixRectKey(
+                                enum class MatrixStormKey(
                                         val key: String
                                 ){
                                         WIDTH("width"),
@@ -300,10 +300,10 @@ object EditComponent {
                                 }
 
                                 fun getWidth(
-                                        matrixRectConfigMap: Map<String, String>
+                                        matrixStormConfigMap: Map<String, String>
                                 ): Int? {
-                                        return matrixRectConfigMap.get(
-                                                MatrixRectKey.WIDTH.key
+                                        return matrixStormConfigMap.get(
+                                                MatrixStormKey.WIDTH.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -313,10 +313,10 @@ object EditComponent {
 
 
                                 fun getHeight(
-                                        matrixRectConfigMap: Map<String, String>
+                                        matrixStormConfigMap: Map<String, String>
                                 ): Int? {
-                                        return matrixRectConfigMap.get(
-                                                MatrixRectKey.HEIGHT.key
+                                        return matrixStormConfigMap.get(
+                                                MatrixStormKey.HEIGHT.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -325,10 +325,10 @@ object EditComponent {
                                 }
 
                                 fun getXMulti(
-                                        matrixRectConfigMap: Map<String, String>
+                                        matrixStormConfigMap: Map<String, String>
                                 ): Int? {
-                                        return matrixRectConfigMap.get(
-                                                MatrixRectKey.X_MULTI.key
+                                        return matrixStormConfigMap.get(
+                                                MatrixStormKey.X_MULTI.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -337,10 +337,10 @@ object EditComponent {
                                 }
 
                                 fun getYMulti(
-                                        matrixRectConfigMap: Map<String, String>
+                                        matrixStormConfigMap: Map<String, String>
                                 ): Int? {
-                                        return matrixRectConfigMap.get(
-                                                MatrixRectKey.Y_MULTI.key
+                                        return matrixStormConfigMap.get(
+                                                MatrixStormKey.Y_MULTI.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -359,10 +359,10 @@ object EditComponent {
                                 }
 
                                 fun makeConfigMap(
-                                        imagePropertyMap: Map<String, String>?,
+                                        imageMap: Map<String, String>?,
                                 ): Map<String, String> {
-                                        return imagePropertyMap?.get(
-                                                ImageKey.MATRIX_RECT_CONFIG_MAP_CON.key
+                                        return imageMap?.get(
+                                                ImageKey.MATRIX_STORM_CONFIG_MAP_CON.key
                                         ).let {
                                                 CmdClickMap.createMap(
                                                         it,
@@ -372,10 +372,10 @@ object EditComponent {
                                 }
                         }
 
-                        object RndRectManager {
+                        object LeftRectsManager {
 
                                 private const val keySeparator = '|'
-                                enum class RndRectKey(
+                                enum class LeftRectsKey(
                                         val key: String
                                 ){
                                         WIDTH("width"),
@@ -387,10 +387,10 @@ object EditComponent {
                                 }
 
                                 fun getWidth(
-                                        rndRectConfigMap: Map<String, String>
+                                        leftRectsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return rndRectConfigMap.get(
-                                                RndRectKey.WIDTH.key
+                                        return leftRectsConfigMap.get(
+                                                LeftRectsKey.WIDTH.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -400,10 +400,10 @@ object EditComponent {
 
 
                                 fun getHeight(
-                                        rndRectConfigMap: Map<String, String>
+                                        leftRectsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return rndRectConfigMap.get(
-                                                RndRectKey.HEIGHT.key
+                                        return leftRectsConfigMap.get(
+                                                LeftRectsKey.HEIGHT.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -412,10 +412,10 @@ object EditComponent {
                                 }
 
                                 fun getPieceWidth(
-                                        rndRectConfigMap: Map<String, String>
+                                        leftRectsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return rndRectConfigMap.get(
-                                                RndRectKey.PIECE_WIDTH.key
+                                        return leftRectsConfigMap.get(
+                                                LeftRectsKey.PIECE_WIDTH.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -424,10 +424,10 @@ object EditComponent {
                                 }
 
                                 fun getPieceHeight(
-                                        rndRectConfigMap: Map<String, String>
+                                        leftRectsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return rndRectConfigMap.get(
-                                                RndRectKey.PIECE_HEIGHT.key
+                                        return leftRectsConfigMap.get(
+                                                LeftRectsKey.PIECE_HEIGHT.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -436,10 +436,10 @@ object EditComponent {
                                 }
 
                                 fun getTimes(
-                                        rndRectConfigMap: Map<String, String>
+                                        leftRectsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return rndRectConfigMap.get(
-                                                RndRectKey.TIMES.key
+                                        return leftRectsConfigMap.get(
+                                                LeftRectsKey.TIMES.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -458,10 +458,10 @@ object EditComponent {
                                 }
 
                                 fun makeConfigMap(
-                                        imagePropertyMap: Map<String, String>?,
+                                        imageMap: Map<String, String>?,
                                 ): Map<String, String> {
-                                        return imagePropertyMap?.get(
-                                                ImageKey.RND_RECT_CONFIG_MAP_CON.key
+                                        return imageMap?.get(
+                                                ImageKey.LEFT_RECTS_CONFIG_MAP_CON.key
                                         ).let {
                                                 CmdClickMap.createMap(
                                                         it,

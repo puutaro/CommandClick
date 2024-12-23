@@ -88,15 +88,14 @@ object SettingFuncManager {
                     methodName,
                     baseArgsPairList
                 )
-            FuncType.SHELL -> {
+            FuncType.SHELL ->
                 ShellToolManagerForSetting.handle(
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
                     busyboxExecutor
                 )
-            }
-            FuncType.EDIT -> {
+            FuncType.EDIT ->
                 EditForSetting.handle(
                     fragment,
                     funcTypeStr,
@@ -104,14 +103,12 @@ object SettingFuncManager {
                     baseArgsPairList,
                     editConstraintListAdapter,
                 )
-            }
-            FuncType.CULC -> {
+            FuncType.CULC ->
                 MathCulcForSetting.handle(
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
-            }
             FuncType.COLOR -> {
                 ColorForSetting.handle(
                     funcTypeStr,
@@ -119,20 +116,18 @@ object SettingFuncManager {
                     baseArgsPairList
                 )
             }
-            FuncType.LIST -> {
+            FuncType.LIST ->
                 ListForSetting.handle(
                     funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
-            }
-            FuncType.RND -> {
+            FuncType.RND ->
                 RndForSetting.handle(
                     funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
-            }
         }
 
     }

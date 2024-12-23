@@ -37,6 +37,7 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -656,7 +657,7 @@ object WithEditConstraintListView{
             frameMapAndFrameTagToContentsMapListToTagIdList?.third
 //        if(sceneType == SceneType.BK) {
 //            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lbk.txt").absolutePath,
+//                File(UsePath.cmdclickDefaultAppDirPath, "lbk00.txt").absolutePath,
 //                listOf(
 //                    "editListConfigMap: ${editListConfigMap}",
 //                    "frameMap: ${frameMap}",
@@ -771,6 +772,16 @@ object WithEditConstraintListView{
                     totalMapListElInfo,
                 )
             }
+//            if(frameTag == "bkFrame") {
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lbk.txt").absolutePath,
+//                    listOf(
+//                        "frameTag: ${frameTag}",
+//                        "frameTagToContentsMapList: ${frameTagToContentsMapList}",
+//                        "frameVarNameValueMap: ${frameVarNameValueMap}",
+//                    ).joinToString("\n\n\n")
+//                )
+//            }
             withContext(Dispatchers.IO) {
                 contentsChannel.close()
             }

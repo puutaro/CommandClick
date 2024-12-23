@@ -125,6 +125,23 @@ object CmdClickMap {
         return repCon
     }
 
+    fun replaceByAtVar(
+        targetCon: String,
+        repMap: Map<String, String>?
+    ): String {
+        if(
+            repMap.isNullOrEmpty()
+        ) return targetCon
+        var repCon = targetCon
+        repMap.forEach {
+            repCon = repCon.replace(
+                "@{${it.key}}",
+                it.value
+            )
+        }
+        return repCon
+    }
+
     fun replaceHolderForJsAction(
         targetCon: String,
         repMap: Map<String, String>?
