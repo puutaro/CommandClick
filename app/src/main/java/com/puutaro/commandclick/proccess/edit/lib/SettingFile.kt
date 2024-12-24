@@ -281,21 +281,22 @@ object SettingFile {
                 val repValMap = getRepMap(
                     importMap
                 )
-                val importCon = CmdClickMap.replaceHolderForJsAction(
-                    ReadText(importPath).readText(),
-                    repValMap
-                ).let {
-                    innerImportCon ->
-                    (startLoopIndex..loopTimes).map {
-                        loopIndex ->
-                        CmdClickMap.replaceByAtVar(
-                            innerImportCon,
-                            mapOf(
-                                loopVarName to loopIndex.toString()
+                val importCon = when(loopTimes < startLoopIndex) {
+                    true -> String()
+                    else -> CmdClickMap.replaceHolderForJsAction(
+                        ReadText(importPath).readText(),
+                        repValMap
+                    ).let { innerImportCon ->
+                        (startLoopIndex..loopTimes).map { loopIndex ->
+                            CmdClickMap.replaceByAtVar(
+                                innerImportCon,
+                                mapOf(
+                                    loopVarName to loopIndex.toString()
+                                )
                             )
-                        )
-                    }.joinToString(separator).let {
-                        "${prefix}${it}${suffix}"
+                        }.joinToString(separator).let {
+                            "${prefix}${it}${suffix}"
+                        }
                     }
                 }
                 settingCon = settingCon.replace(
@@ -351,16 +352,12 @@ object SettingFile {
         fun getLoopTimes(
             importMap: Map<String, String>,
         ): Int {
-            val loopTimesSrc = try {
+            return try {
                importMap.get(
                         ImportKey.TIMES.key
                     )?.toInt() ?: startLoopIndex
             } catch (e: Exception){
                 startLoopIndex
-            }
-            return when(loopTimesSrc < startLoopIndex){
-                true -> 1
-                else -> loopTimesSrc
             }
         }
 

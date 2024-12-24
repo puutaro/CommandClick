@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -12,8 +13,10 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.FrameLayout
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -36,6 +39,7 @@ import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
+import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -76,9 +80,14 @@ object EditConstraintFrameMaker {
     private val bottomToTopKey = EditComponent.Template.EditComponentKey.BOTTOM_TO_TOP.key
     private val horizontalBiasKey = EditComponent.Template.EditComponentKey.HORIZONTAL_BIAS.key
     private val horizontalWeightKey = EditComponent.Template.EditComponentKey.HORIZONTAL_WEIGHT.key
+    private val verticalWeightKey = EditComponent.Template.EditComponentKey.VERTICAL_WEIGHT.key
     private val percentageWidthKey = EditComponent.Template.EditComponentKey.PERCENTAGE_WIDTH.key
     private val percentageHeightKey = EditComponent.Template.EditComponentKey.PERCENTAGE_HEIGHT.key
     private val dimensionRatioKey = EditComponent.Template.EditComponentKey.DIMENSION_RATIO.key
+    private val horizontalChainStyleKey =
+        EditComponent.Template.EditComponentKey.HORIZONTAL_CHAIN_STYLE.key
+    private val verticalChainStyleKey =
+        EditComponent.Template.EditComponentKey.VERTICAL_CHAIN_STYLE.key
 
 
     private val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
@@ -141,6 +150,7 @@ object EditConstraintFrameMaker {
     private val textShadowColorKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_COLOR.key
     private val textShadowXKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_X.key
     private val textShadowYKey = EditComponent.Template.TextPropertyManager.Property.SHADOW_Y.key
+    private val letterSpacingKey = EditComponent.Template.TextPropertyManager.Property.LETTER_SPACING.key
 //    private val disableTextSelectKey = EditComponent.Template.TextPropertyManager.Property.DISABLE_TEXT_SELECT.key
 
     private val switchOn = EditComponent.Template.switchOn
@@ -617,7 +627,7 @@ object EditConstraintFrameMaker {
                     }
                     bottomToTop = bottomToTopInt
                     val horizontalBiasFloat = withContext(Dispatchers.IO){
-                        EditComponent.Template.ConstraintManager.makeBias(
+                        EditComponent.Template.ConstraintManager.makeFloat(
                             PairListTool.getValue(
                                 frameKeyPairList,
                                 horizontalBiasKey
@@ -626,7 +636,7 @@ object EditConstraintFrameMaker {
                     }
                     horizontalBias = horizontalBiasFloat
                     val horizontalWeightFloat = withContext(Dispatchers.IO){
-                        EditComponent.Template.ConstraintManager.makeBias(
+                        EditComponent.Template.ConstraintManager.makeFloat(
                             PairListTool.getValue(
                                 frameKeyPairList,
                                 horizontalWeightKey
@@ -634,9 +644,17 @@ object EditConstraintFrameMaker {
                         ) ?: horizontalWeight
                     }
                     horizontalWeight = horizontalWeightFloat
-                    horizontalBias = horizontalBiasFloat
+                    val verticalWeightFloat = withContext(Dispatchers.IO){
+                        EditComponent.Template.ConstraintManager.makeFloat(
+                            PairListTool.getValue(
+                                frameKeyPairList,
+                                verticalWeightKey
+                            )
+                        ) ?: verticalWeight
+                    }
+                    verticalWeight = verticalWeightFloat
                     val percentageWidthFloat = withContext(Dispatchers.IO){
-                        EditComponent.Template.ConstraintManager.makeBias(
+                        EditComponent.Template.ConstraintManager.makeFloat(
                             PairListTool.getValue(
                                 frameKeyPairList,
                                 percentageWidthKey
@@ -645,7 +663,7 @@ object EditConstraintFrameMaker {
                     }
                     matchConstraintPercentWidth = percentageWidthFloat
                     val percentageHeightFloat = withContext(Dispatchers.IO){
-                        EditComponent.Template.ConstraintManager.makeBias(
+                        EditComponent.Template.ConstraintManager.makeFloat(
                             PairListTool.getValue(
                                 frameKeyPairList,
                                 percentageHeightKey
@@ -661,6 +679,38 @@ object EditConstraintFrameMaker {
                     }
                     dimensionRatio = dimensionRatioStr
                         ?: dimensionRatio
+                    val horizontalChainStyleInt = withContext(Dispatchers.IO){
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            horizontalChainStyleKey
+                        )?.let {
+                            EditComponent.Template.ConstraintManager.getChainStyleInt(
+                                it,
+                            )
+                        } ?: ConstraintLayout.LayoutParams.UNSET
+                    }
+                    horizontalChainStyle = horizontalChainStyleInt
+//                    if(overrideTag == "backstackCountRect"){
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lhorizontalChainStyle.txt").absolutePath,
+//                            listOf(
+//                                "horizontalChainStyleInt: ${horizontalChainStyleInt}",
+//                                "horizontalChainStyle: ${horizontalChainStyle}",
+//                                "ConstraintLayout.LayoutParams.CHAIN_PACKED: ${ConstraintLayout.LayoutParams.CHAIN_PACKED}",
+//                            ).joinToString("\n")
+//                        )
+//                    }
+                    val verticalChainStyleInt = withContext(Dispatchers.IO){
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            verticalChainStyleKey
+                        )?.let {
+                            EditComponent.Template.ConstraintManager.getChainStyleInt(
+                                it,
+                            )
+                        } ?: ConstraintLayout.LayoutParams.UNSET
+                    }
+                    verticalChainStyle = verticalChainStyleInt
 
                 }
             }
@@ -859,7 +909,7 @@ object EditConstraintFrameMaker {
         val param = withContext(Dispatchers.IO) {
             (buttonFrameLayout?.layoutParams as? ConstraintLayout.LayoutParams)?.apply {
                 withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeBias(
+                    EditComponent.Template.ConstraintManager.makeFloat(
                         PairListTool.getValue(
                             frameKeyPairList,
                             horizontalBiasKey
@@ -869,7 +919,7 @@ object EditConstraintFrameMaker {
                     }
                 }
                 withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeBias(
+                    EditComponent.Template.ConstraintManager.makeFloat(
                         PairListTool.getValue(
                             frameKeyPairList,
                             percentageWidthKey
@@ -879,7 +929,7 @@ object EditConstraintFrameMaker {
                     }
                 }
                 withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeBias(
+                    EditComponent.Template.ConstraintManager.makeFloat(
                         PairListTool.getValue(
                             frameKeyPairList,
                             percentageHeightKey
@@ -889,7 +939,7 @@ object EditConstraintFrameMaker {
                     }
                 }
                 withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeBias(
+                    EditComponent.Template.ConstraintManager.makeFloat(
                         PairListTool.getValue(
                             frameKeyPairList,
                             horizontalWeightKey
@@ -899,11 +949,46 @@ object EditConstraintFrameMaker {
                     }
                 }
                 withContext(Dispatchers.Main){
+                    EditComponent.Template.ConstraintManager.makeFloat(
+                        PairListTool.getValue(
+                            frameKeyPairList,
+                            verticalWeightKey
+                        )
+                    )?.let {
+                        verticalWeight = it
+                    }
+                }
+
+                withContext(Dispatchers.Main){
                     PairListTool.getValue(
                         frameKeyPairList,
                         dimensionRatioKey
                     )?.let {
                         dimensionRatio = it
+                    }
+                }
+                withContext(Dispatchers.Main){
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        horizontalChainStyleKey
+                    )?.let {
+                        EditComponent.Template.ConstraintManager.getChainStyleInt(
+                            it,
+                        )
+                    }?.let {
+                        horizontalChainStyle = it
+                    }
+                }
+                withContext(Dispatchers.Main){
+                    PairListTool.getValue(
+                        frameKeyPairList,
+                        verticalChainStyleKey
+                    )?.let {
+                        EditComponent.Template.ConstraintManager.getChainStyleInt(
+                            it,
+                        )
+                    }?.let {
+                        verticalChainStyle = it
                     }
                 }
                 val marginData = EditComponent.Template.MarginData(
@@ -1097,8 +1182,8 @@ object EditConstraintFrameMaker {
                                 imageMap,
                             )
                         }
-                        val leftRectsConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.LeftRectsManager.makeConfigMap(
+                        val autoRndBitmapsConfigMap = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImageManager.AutoRndBitmapsManager.makeConfigMap(
                                 imageMap,
                             )
                         }
@@ -1120,7 +1205,8 @@ object EditConstraintFrameMaker {
                                     imagePathList,
                                     delay,
                                     matrixStormConfigMap,
-                                    leftRectsConfigMap,
+                                    autoRndBitmapsConfigMap,
+                                    where,
                                 )
                             }
 
@@ -1136,13 +1222,20 @@ object EditConstraintFrameMaker {
                                         }
                                     }
                                 }
+                                val blurRadiusToSampling = withContext(Dispatchers.IO){
+                                    EditComponent.Template.ImagePropertyManager.BlurManager.getBlueRadiusToSampling(
+                                        imagePropertyMap
+                                    )
+                                }
                                 execSetSingleImage(
                                     imageView,
                                     imagePathList.firstOrNull(),
                                     requestBuilderSrc,
                                     fadeInMilli,
                                     matrixStormConfigMap,
-                                    leftRectsConfigMap,
+                                    autoRndBitmapsConfigMap,
+                                    blurRadiusToSampling,
+                                    where,
                                 )
                             }
                         }
@@ -1511,8 +1604,8 @@ object EditConstraintFrameMaker {
                     imageMap,
                 )
             }
-            val leftRectsConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.LeftRectsManager.makeConfigMap(
+            val autoRndBitmapsConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.AutoRndBitmapsManager.makeConfigMap(
                     imageMap,
                 )
             }
@@ -1534,7 +1627,8 @@ object EditConstraintFrameMaker {
                         imagePathList,
                         delay,
                         matrixStormConfigMap,
-                        leftRectsConfigMap,
+                        autoRndBitmapsConfigMap,
+                        where,
                     )
                 }
 
@@ -1550,13 +1644,20 @@ object EditConstraintFrameMaker {
                             }
                         }
                     }
+                    val blurRadiusToSampling = withContext(Dispatchers.IO){
+                        EditComponent.Template.ImagePropertyManager.BlurManager.getBlueRadiusToSampling(
+                            imagePropertyMap
+                        )
+                    }
                     execSetSingleImage(
                         imageView,
                         imagePathList.firstOrNull(),
                         null,
                         fadeInMilli,
                         matrixStormConfigMap,
-                        leftRectsConfigMap,
+                        autoRndBitmapsConfigMap,
+                        blurRadiusToSampling,
+                        where,
                     )
                 }
             }
@@ -1573,7 +1674,9 @@ object EditConstraintFrameMaker {
         requestBuilderSrc: RequestBuilder<Drawable>?,
         fadeInMilli: Int?,
         matrixStormConfigMap: Map<String, String>,
-        leftRectsConfigMap: Map<String, String>,
+        autoRndBitmapsConfigMap: Map<String, String>,
+        blurRadiusAndSamplingPair: Pair<Int, Int>?,
+        where: String,
     ){
         if(
             imagePathSrc.isNullOrEmpty()
@@ -1601,13 +1704,35 @@ object EditConstraintFrameMaker {
             ?: ImageCreator.byImageMacro(
             imagePathSrc
         ) ?: ImageCreator.byAutoCreateImage(
-            imagePathSrc,
-            matrixStormConfigMap,
-            leftRectsConfigMap,
-        ) ?: ImageCreator.byIconMacro(
+                imageViewContext,
+                imagePathSrc,
+                matrixStormConfigMap,
+                autoRndBitmapsConfigMap,
+                where,
+            ) ?: ImageCreator.byIconMacro(
             imageViewContext,
             imagePathToIconType
         )
+        if(blurRadiusAndSamplingPair != null){
+            val blurRadius = blurRadiusAndSamplingPair.first
+            val blurSampling = blurRadiusAndSamplingPair.second
+            when(fadeInMilli != null) {
+                true -> Blurry.with(imageViewContext)
+                    .radius(blurRadius)
+                    .sampling(blurSampling)
+                    .async()
+                    .animate(fadeInMilli)
+                    .from(bitmap)
+                    .into( imageView)
+                else ->  Blurry.with(imageViewContext)
+                    .radius(blurRadius)
+                    .sampling(blurSampling)
+                    .async()
+                    .from(bitmap)
+                    .into( imageView)
+            }
+            return
+        }
         when(fadeInMilli != null) {
             true -> Glide.with(imageViewContext)
                 .load(bitmap)
@@ -1667,9 +1792,11 @@ object EditConstraintFrameMaker {
         }
 
         suspend fun byAutoCreateImage(
+            context: Context,
             autoCreateMacroStr: String,
             matrixStormConfigMap: Map<String, String>,
-            leftRectsConfigMap: Map<String, String>,
+            autoRndBitmapsConfigMap: Map<String, String>,
+            where: String,
         ): Bitmap? {
             val autoCreateMacro = CmdClickBkImageInfo.CmdClickAutoCreateImage.entries.firstOrNull {
                 it.name == autoCreateMacroStr
@@ -1682,8 +1809,16 @@ object EditConstraintFrameMaker {
                     CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_MATRIX_STORM
                         -> makeMatrixStorm(matrixStormConfigMap)
 
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_LEFT_RECTS
-                        -> makeLeftRects(leftRectsConfigMap)
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_BITMAPS
+                        -> makeAutoRndBitmap(
+                            context,
+                            autoRndBitmapsConfigMap,
+                            where,
+                        )
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_LEFT_STRINGS
+                        ->  makeLeftStrings(
+                        autoRndBitmapsConfigMap
+                    )
                 }
             }
 //            FileSystems.writeFromByteArray(
@@ -1723,26 +1858,234 @@ object EditConstraintFrameMaker {
             )
         }
 
-        private fun makeLeftRects(
-            leftRectsConfigMap: Map<String, String>,
+        private fun makeAutoRndBitmap(
+            context: Context,
+            autoRndBitmapsConfigMap: Map<String, String>,
+            where: String,
         ): Bitmap {
             val baseWidth =
-                EditComponent.Template.ImageManager.LeftRectsManager.getWidth(
-                    leftRectsConfigMap
+                EditComponent.Template.ImageManager.AutoRndBitmapsManager.getWidth(
+                    autoRndBitmapsConfigMap
                 ) ?: 300
             val baseHeight =
-                EditComponent.Template.ImageManager.LeftRectsManager.getHeight(
-                    leftRectsConfigMap
+                EditComponent.Template.ImageManager.AutoRndBitmapsManager.getHeight(
+                    autoRndBitmapsConfigMap
                 ) ?: 600
-            val pieceWidth = EditComponent.Template.ImageManager.LeftRectsManager.getPieceWidth(
-                leftRectsConfigMap
+            val pieceWidth = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getPieceWidth(
+                autoRndBitmapsConfigMap
             ) ?: 100
-            val pieceHeight = EditComponent.Template.ImageManager.LeftRectsManager.getPieceHeight(
-                leftRectsConfigMap
+            val pieceHeight = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getPieceHeight(
+                autoRndBitmapsConfigMap
             ) ?: 100
-            val times = EditComponent.Template.ImageManager.LeftRectsManager.getTimes(
-                leftRectsConfigMap
+            val times = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getTimes(
+                autoRndBitmapsConfigMap
             ) ?: 10
+            val shapeType = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getShapeType(
+                autoRndBitmapsConfigMap
+            )
+            val shapeColor = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getShapeColor(
+                context,
+                autoRndBitmapsConfigMap,
+                where
+            ) ?: "#000000"
+            val bkColor = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getBkColor(
+                context,
+                autoRndBitmapsConfigMap,
+                where
+            ) ?: "#00000000"
+            val pieceBitmap = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getShape(
+                autoRndBitmapsConfigMap
+            ).let {
+                shapeStr ->
+                if(
+                    File(shapeStr).isFile
+                ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
+                    Bitmap.createScaledBitmap(
+                        it,
+                        pieceWidth,
+                        pieceHeight,
+                        true,
+                    )
+                }
+                val shape = CmdClickIcons.entries.firstOrNull {
+                    it.str == shapeStr
+                } ?: CmdClickIcons.RECT
+                return@let when(shapeType){
+                    EditComponent.Template.ImageManager.AutoRndBitmapsManager.IconType.IMAGE -> {
+                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                            shape.assetsPath
+                        )
+                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
+                            Bitmap.createScaledBitmap(
+                                it,
+                                pieceWidth,
+                                pieceHeight,
+                                true,
+                            )
+                        }
+                    }
+                    EditComponent.Template.ImageManager.AutoRndBitmapsManager.IconType.SVG -> {
+                        AppCompatResources.getDrawable(
+                            context,
+                            shape.id,
+                        )?.toBitmap(
+                            pieceWidth,
+                            pieceHeight
+                        )?.let {
+                            BitmapTool.ImageTransformer.convertBlackToColor(
+                                it,
+                                shapeColor
+                            )
+                        }
+                    }
+                }
+            } ?: BitmapTool.ImageTransformer.makeRect(
+                shapeColor,
+                pieceWidth,
+                pieceHeight
+            )
+            val layout = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getLayout(
+                autoRndBitmapsConfigMap
+            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
+//                listOf(
+//                    "leftRectsConfigMap: ${autoRndBitmapsConfigMap}",
+//                    "baseWidth: ${baseWidth}",
+//                    "baseHeight: ${baseHeight}",
+//                    "pieceWidth: ${pieceWidth}",
+//                    "pieceHeight: ${pieceHeight}",
+//                    "times: ${times}",
+//                    "shapeType: $shapeType",
+//                ).joinToString("\n")
+//            )
+//            val pieceRect = BitmapTool.ImageTransformer.makeRect(
+//                "#000000",
+//                pieceWidth,
+//                pieceHeight
+//            )
+            val autoRndBitmap = when(layout){
+                EditComponent.Template.ImageManager.AutoRndBitmapsManager.Layout.LEFT -> {
+                   CcDotArt.MistMaker.makeLeftRndBitmaps(
+                        baseWidth,
+                        baseHeight,
+                        pieceBitmap,
+                        times
+                    ).let {
+                       val cutWidth = (baseWidth * 0.8).toInt()
+                       val cutHeight = (baseHeight * 0.8).toInt()
+                       BitmapTool.ImageTransformer.cutByTarget(
+                           it,
+                           cutWidth,
+                           cutHeight,
+                           it.width - cutWidth,
+                           (it.height - cutHeight) / 2
+                       )
+                   }
+                }
+                EditComponent.Template.ImageManager.AutoRndBitmapsManager.Layout.RND -> {
+                    CcDotArt.MistMaker.makeRndBitmap(
+                        baseWidth,
+                        baseHeight,
+                        bkColor,
+                        pieceBitmap,
+                        times
+                    )
+//                        .let {
+//                        val cutWidth = (baseWidth * 0.8).toInt()
+//                        val cutHeight = (baseHeight * 0.8).toInt()
+//                        BitmapTool.ImageTransformer.cutCenter2(
+//                            it,
+//                            cutWidth,
+//                            cutHeight,
+//                        )
+//                    }
+                }
+            }
+
+//            FileSystems.writeFromByteArray(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lrndRect.png").absolutePath,
+//                BitmapTool.convertBitmapToByteArray(autoRndBitmap)
+//            )
+            return autoRndBitmap
+        }
+
+        private fun makeLeftStrings(
+            leftStringsConfigMap: Map<String, String>,
+        ): Bitmap {
+            val baseWidth =
+                EditComponent.Template.ImageManager.AutoRndBitmapsManager.getWidth(
+                    leftStringsConfigMap
+                ) ?: 300
+            val baseHeight =
+                EditComponent.Template.ImageManager.LeftStringsManager.getHeight(
+                    leftStringsConfigMap
+                ) ?: 600
+            val pieceWidth = EditComponent.Template.ImageManager.LeftStringsManager.getPieceWidth(
+                leftStringsConfigMap
+            ) ?: 40f
+            val pieceHeight = EditComponent.Template.ImageManager.LeftStringsManager.getPieceHeight(
+                leftStringsConfigMap
+            ) ?: 40f
+            val times = EditComponent.Template.ImageManager.LeftStringsManager.getTimes(
+                leftStringsConfigMap
+            ) ?: 10
+            val string = EditComponent.Template.ImageManager.LeftStringsManager.getString(
+                leftStringsConfigMap
+            )
+            val fontSize = EditComponent.Template.ImageManager.LeftStringsManager.getFontSize(
+                leftStringsConfigMap
+            ) ?: 20f
+            val fontType = EditComponent.Template.ImageManager.LeftStringsManager.getFontType(
+                leftStringsConfigMap
+            )
+            val fontStyle = EditComponent.Template.ImageManager.LeftStringsManager.getFontStyle(
+                leftStringsConfigMap
+            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBk.txt").absolutePath,
+//                listOf(
+//                    "baseWidth: ${baseWidth}",
+//                    "baseHeight: ${baseHeight}",
+//                    "pieceWidth: ${pieceWidth}",
+//                    "pieceHeight: ${pieceHeight}",
+//                    "times: ${times}",
+//                    "string: ${string}",
+//                    "fontSize: ${fontSize}",
+//                    "fontType: ${fontType}",
+//                    "fontStyle: ${fontStyle}",
+//                ).joinToString("\n")
+//            )
+//            Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
+            val stringBitmap = BitmapTool.DrawText.drawTextToBitmap(
+                string,
+                pieceWidth,
+                pieceHeight,
+                null,
+                fontSize,
+                Color.BLACK,
+                Color.BLACK,
+                    0f,
+                    null,
+                    null,
+                    font = Typeface.create(
+                        fontType,
+                        fontStyle
+                    ),
+                    isAntiAlias = true,
+            ).let {
+                val cutWidth = (pieceWidth * 0.8).toInt()
+                val cutHeight = (pieceHeight * 0.8).toInt()
+                    BitmapTool.ImageTransformer.cutCenter2(
+                        it,
+                        cutWidth,
+                        cutHeight
+                    )
+                }
+//            FileSystems.writeFromByteArray(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lstringBitmap.png").absolutePath,
+//               BitmapTool.convertBitmapToByteArray(stringBitmap)
+//            )
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
 //                listOf(
@@ -1754,15 +2097,15 @@ object EditConstraintFrameMaker {
 //                    "times: ${times}",
 //                ).joinToString("\n")
 //            )
-            val pieceRect = BitmapTool.ImageTransformer.makeRect(
-                "#000000",
-                pieceWidth,
-                pieceHeight
-            )
-            val leftRectsBitmap = CcDotArt.MistMaker.makeLeftRects(
+//            val pieceRect = BitmapTool.ImageTransformer.makeRect(
+//                "#000000",
+//                pieceWidth,
+//                pieceHeight
+//            )
+            val stringsBitmap = CcDotArt.MistMaker.makeLeftRndBitmaps(
                 baseWidth,
                 baseHeight,
-                pieceRect,
+                stringBitmap,
                 times
             ).let {
                 val cutWidth = (baseWidth * 0.8).toInt()
@@ -1776,10 +2119,10 @@ object EditConstraintFrameMaker {
                 )
             }
 //            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lrndRect.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(rndRect)
+//                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBitmap.png").absolutePath,
+//                BitmapTool.convertBitmapToByteArray(stringsBitmap)
 //            )
-            return leftRectsBitmap
+            return stringsBitmap
         }
 
         suspend fun byIconMacro(
@@ -1828,7 +2171,8 @@ object EditConstraintFrameMaker {
         imagePathList: List<String>,
         delay: Int,
         matrixStormConfigMap: Map<String, String>,
-        leftRectsConfigMap: Map<String, String>,
+        autoRndBitmapsConfigMap: Map<String, String>,
+        where: String,
     ){
         val imageViewContext = imageView.context
         val animationDrawable = AnimationDrawable()
@@ -1843,9 +2187,11 @@ object EditConstraintFrameMaker {
                         ?: ImageCreator.byImageMacro(
                             imagePathSrc
                         ) ?: ImageCreator.byAutoCreateImage(
+                            imageViewContext,
                             imagePathSrc,
                             matrixStormConfigMap,
-                            leftRectsConfigMap,
+                            autoRndBitmapsConfigMap,
+                            where,
                         ) ?: ImageCreator.byIconMacro(
                             imageViewContext,
                             imagePathToIconType
@@ -2097,6 +2443,18 @@ object EditConstraintFrameMaker {
                 } ?: let {
                     setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.text_size_16))
                 }
+                val letterSpacingFloat = withContext(Dispatchers.IO) {
+                    textPropertyMap?.get(
+                        letterSpacingKey,
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    } ?: 0f
+                }
+                letterSpacing = letterSpacingFloat
                 val textAlpha = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textAlphaKey,
@@ -2185,11 +2543,11 @@ object EditConstraintFrameMaker {
                         textFontKey,
                     )?.let {
                             textFontStr ->
-                        EditComponent.Template.TextPropertyManager.Font.entries.firstOrNull {
+                        EditComponent.Font.entries.firstOrNull {
                             it.key == textFontStr
                         }
                     }
-                } ?: EditComponent.Template.TextPropertyManager.Font.SANS_SERIF
+                } ?: EditComponent.Font.SANS_SERIF
                 setTypeface(overrideFont.typeface, overrideTextStyle.style)
             }
         }
@@ -2362,6 +2720,19 @@ object EditConstraintFrameMaker {
                 overrideTextSize?.let {
                     textSize = it
                 }
+                withContext(Dispatchers.Main) {
+                    textPropertyMap?.get(
+                        letterSpacingKey,
+                    )?.let {
+                        try {
+                            it.toFloat()
+                        } catch(e: Exception){
+                            null
+                        }
+                    }?.let {
+                        letterSpacing = it
+                    }
+                }
                 val textAlpha = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         textAlphaKey,
@@ -2452,7 +2823,7 @@ object EditConstraintFrameMaker {
                         textFontKey,
                     )?.let {
                             textFontStr ->
-                        EditComponent.Template.TextPropertyManager.Font.entries.firstOrNull {
+                        EditComponent.Font.entries.firstOrNull {
                             it.key == textFontStr
                         }?.typeface
                     }

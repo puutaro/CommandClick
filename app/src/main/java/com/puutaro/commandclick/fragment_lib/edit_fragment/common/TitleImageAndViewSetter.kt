@@ -137,6 +137,7 @@ object TitleImageAndViewSetter {
         titleSettingMap: Map<String, String>?,
         requestBuilder: RequestBuilder<Drawable>?,
     ) {
+        return
         val titleTextMap = withContext(Dispatchers.IO) {
             titleSettingMap?.get(
                 EditBoxTitleKey.TEXT.key
@@ -564,7 +565,6 @@ object TitleImageAndViewSetter {
                         it * shrinkRate
                     }.toFloat()
                     val imagePutTimes = 100
-                    var count =0
                     val backstackCountRotateList =  listOf(90, 180, -90, 0)
                     val backstackCountBitmapListForOverlay = withContext(Dispatchers.IO) {
                         val imageTypeTobackstackCountBitmapListForOverlayJobList = (0..<imagePutTimes).map {
@@ -604,9 +604,6 @@ object TitleImageAndViewSetter {
                                                     backstackCountRotateList.random().toFloat()
                                                 )
                                             }
-                                        if (count == 0) {
-                                            count++
-                                        }
                                         PutImageType.BACKSTACK_COUNT to backstackCountBitmapSrc
                                     }
 

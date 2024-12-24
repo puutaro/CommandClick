@@ -1,8 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.setting_action
 
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager.CommonPathKey
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager.JsSubKey
-
 object SettingActionKeyManager {
 
     val landSeparator = ','

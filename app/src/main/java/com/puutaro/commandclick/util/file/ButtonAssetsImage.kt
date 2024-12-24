@@ -42,6 +42,7 @@ object ButtonAssetsImage {
     const val playPingPath = "${resButtonPngDirPath}/play.png"
     const val puzzlePingPath = "${resButtonPngDirPath}/puzzle.png"
     const val qrPingPath = "${resButtonPngDirPath}/qr.png"
+    const val roundRectPath = "${resButtonPngDirPath}/round_rect.png"
     const val rectPingPath = "${resButtonPngDirPath}/rect.png"
     const val refleshPingPath = "${resButtonPngDirPath}/reflesh.png"
     const val setupPingPath = "${resButtonPngDirPath}/setup.png"

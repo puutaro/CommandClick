@@ -152,7 +152,48 @@ object CcDotArt {
     }
 
     object MistMaker {
-        fun makeLeftRects(
+
+        fun makeRndBitmap(
+            width: Int,
+            height: Int,
+            backgroundColorStr: String,
+            peaceBitmap: Bitmap,
+            times: Int,
+        ): Bitmap {
+            val rectBitmap = ImageTransformer.makeRect(
+                backgroundColorStr,
+                width,
+                height,
+            )
+            var updatedRectBitmap = rectBitmap
+            val addTimes = (1..times).random()
+            for (i in 1..addTimes) {
+                val logoBitmapRate = (5..10).random() / 10f
+                val rateLogoBitmap = Bitmap.createScaledBitmap(
+                    peaceBitmap,
+                    (peaceBitmap.width * logoBitmapRate).toInt(),
+                    (peaceBitmap.height * logoBitmapRate).toInt(),
+                    false,
+                ).let {
+                    rotate(
+                        it,
+                        (0..180).random().toFloat()
+                    )
+                }.let {
+                    ImageTransformer.ajustOpacity(
+                        it,
+                        (150..255).random()
+                    )
+                }
+                updatedRectBitmap = ImageTransformer.overlayOnBkBitmap(
+                    updatedRectBitmap,
+                    rateLogoBitmap
+                )
+            }
+            return updatedRectBitmap
+        }
+
+        fun makeLeftRndBitmaps(
             width: Int,
             height: Int,
             pieceBitmap: Bitmap,
@@ -324,7 +365,7 @@ object CcDotArt {
             ) ?: return null
             val pivotX = try {
                 val selectPoint = selectPointList.random()
-                val curBaseX = (selectPoint - 1) * pieceWidth
+                val curBaseX = ((selectPoint - 1) * pieceWidth)
                 val curOffSet = (0..pieceWidth).random()
                 curBaseX + curOffSet
             } catch (e: Exception){

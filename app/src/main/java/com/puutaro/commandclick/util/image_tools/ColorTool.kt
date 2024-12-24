@@ -21,11 +21,12 @@ object ColorTool {
     private val colorStrList = CmdClickColorStr.entries.map {
         it.str
     }
+    private val pink = "#fcf2fb"
     private val whiteColorStrList = listOf(
         CmdClickColorStr.WHITE_GREEN.str,
-        CmdClickColorStr.WATER_BLUE.str,
         CmdClickColorStr.WHITE_BLUE.str,
         CmdClickColorStr.WHITE_BLUE_PURPLE.str,
+        pink,
     )
     private val lightColorStrList = listOf(
         CmdClickColorStr.LIGHT_GREEN.str,
@@ -39,6 +40,7 @@ object ColorTool {
         CmdClickColorStr.ORANGE.str,
         CmdClickColorStr.YELLOW.str,
         CmdClickColorStr.SKERLET.str,
+        pink,
     )
     private val blackAo = "#02303b"
     private val blackRed = "#1c0104"

@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
@@ -23,6 +24,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyMa
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -37,6 +39,17 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
 object EditComponent {
+
+        enum class Font(
+                val key: String,
+                val typeface: Typeface,
+        ){
+                DEFAULT("monospace", Typeface.DEFAULT),
+                MONOSPACE("monospace", Typeface.MONOSPACE),
+                SANS_SERIF("sansSerif", Typeface.SANS_SERIF),
+                SERIF("serif", Typeface.SERIF),
+        }
+
         object Template {
 
                 const val sectionSeparator = ','
@@ -141,9 +154,12 @@ object EditComponent {
                         BOTTOM_TO_TOP("bottomToTop"),
                         HORIZONTAL_BIAS("horizontalBias"),
                         HORIZONTAL_WEIGHT("horizontalWeight"),
+                        VERTICAL_WEIGHT("verticalWeight"),
                         PERCENTAGE_WIDTH("percentageWidth"),
                         PERCENTAGE_HEIGHT("percentageHeight"),
                         DIMENSION_RATIO("dimensionRatio"),
+                        HORIZONTAL_CHAIN_STYLE("horizontalChainStyle"),
+                        VERTICAL_CHAIN_STYLE("verticalChainStyle"),
                 }
 
                 object ClickManager {
@@ -212,6 +228,7 @@ object EditComponent {
                 }
 
                 object ConstraintManager {
+
                         enum class ConstraintParameter(
                                 val str: String,
                                 val int: Int,
@@ -220,7 +237,7 @@ object EditComponent {
                                 PARENT_ID("PARENT", ConstraintLayout.LayoutParams.PARENT_ID),
                         }
 
-                        fun makeBias(
+                        fun makeFloat(
                                 biasFloatStr: String?
                         ): Float? {
                                 if(
@@ -231,6 +248,22 @@ object EditComponent {
                                 } catch (e: Exception){
                                         null
                                 }
+                        }
+
+                        fun getChainStyleInt(
+                                chainStyleStr: String,
+                        ): Int? {
+                                return ChainStyle.entries.firstOrNull {
+                                        it.str == chainStyleStr
+                                }?.chainStyle
+                        }
+
+                        enum class ChainStyle(
+                                val str: String,
+                                val chainStyle: Int,
+                        ){
+                                PACKED("packed", ConstraintLayout.LayoutParams.CHAIN_PACKED),
+                                SPREAD("spread", ConstraintLayout.LayoutParams.CHAIN_SPREAD),
                         }
                 }
 
@@ -283,7 +316,8 @@ object EditComponent {
                                DELAY("delay"),
                                FADE_IN_MILLI("fadeInMilli"),
                                MATRIX_STORM_CONFIG_MAP_CON("matrixStormConfigMapCon"),
-                               LEFT_RECTS_CONFIG_MAP_CON("leftRectsConfigMapCon"),
+                               AUTO_RND_BITMAPS_CONFIG_MAP_CON("autoRndBitmapsConfigMapCon"),
+                               LEFT_STRINGS_CONFIG_MAP_CON("leftStringsConfigMapCon"),
                        }
 
                         object MatrixStormManager {
@@ -372,10 +406,10 @@ object EditComponent {
                                 }
                         }
 
-                        object LeftRectsManager {
+                        object AutoRndBitmapsManager {
 
                                 private const val keySeparator = '|'
-                                enum class LeftRectsKey(
+                                enum class AutoRndBitmapsKey(
                                         val key: String
                                 ){
                                         WIDTH("width"),
@@ -383,14 +417,92 @@ object EditComponent {
                                         PIECE_WIDTH("pieceWidth"),
                                         PIECE_HEIGHT("pieceHeight"),
                                         TIMES("times"),
+                                        SHAPE("shape"),
+                                        SHAPE_COLOR("shapeColor"),
+                                        SHAPE_TYPE("shapeType"),
+                                        BK_COLOR("bkColor"),
+                                        LAYOUT("layout")
+                                }
 
+                                enum class Layout {
+                                        LEFT,
+                                        RND,
+                                }
+
+                                enum class IconType {
+                                        IMAGE,
+                                        SVG
+                                }
+
+                                fun getLayout (
+                                        autoRndBitmapsConfigMap: Map<String, String>,
+                                ): Layout {
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.LAYOUT.key
+                                        )?.let {
+                                                layoutStr ->
+                                                Layout.entries.firstOrNull {
+                                                        it.name == layoutStr
+                                                }
+                                        } ?: Layout.LEFT
+                                }
+
+                                fun getBkColor(
+                                        context: Context?,
+                                        autoRndBitmapsConfigMap: Map<String, String>,
+                                        where: String,
+                                ): String? {
+                                        val bkColorKey =  AutoRndBitmapsKey.BK_COLOR.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                bkColorKey
+                                        )?.let {
+                                                        shapeTypeStr ->
+                                                ColorTool.parseColorStr(
+                                                        context,
+                                                        shapeTypeStr,
+                                                        bkColorKey,
+                                                        where,
+                                                )
+                                        }
+                                }
+
+                                fun getShapeColor(
+                                        context: Context?,
+                                        autoRndBitmapsConfigMap: Map<String, String>,
+                                        where: String,
+                                ): String? {
+                                        val shapeColorKey =  AutoRndBitmapsKey.SHAPE_COLOR.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                shapeColorKey
+                                        )?.let {
+                                                        shapeTypeStr ->
+                                                ColorTool.parseColorStr(
+                                                        context,
+                                                        shapeTypeStr,
+                                                        shapeColorKey,
+                                                        where,
+                                                )
+                                        }
+                                }
+
+                                fun getShapeType(
+                                        autoRndBitmapsConfigMap: Map<String, String>,
+                                ): IconType {
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.SHAPE_TYPE.key
+                                        )?.let {
+                                                shapeTypeStr ->
+                                                IconType.entries.firstOrNull {
+                                                        it.name == shapeTypeStr
+                                                }
+                                        } ?: IconType.SVG
                                 }
 
                                 fun getWidth(
-                                        leftRectsConfigMap: Map<String, String>
+                                        autoRndBitmapsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return leftRectsConfigMap.get(
-                                                LeftRectsKey.WIDTH.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.WIDTH.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -400,10 +512,10 @@ object EditComponent {
 
 
                                 fun getHeight(
-                                        leftRectsConfigMap: Map<String, String>
+                                        autoRndBitmapsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return leftRectsConfigMap.get(
-                                                LeftRectsKey.HEIGHT.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.HEIGHT.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -412,10 +524,10 @@ object EditComponent {
                                 }
 
                                 fun getPieceWidth(
-                                        leftRectsConfigMap: Map<String, String>
+                                        autoRndBitmapsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return leftRectsConfigMap.get(
-                                                LeftRectsKey.PIECE_WIDTH.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.PIECE_WIDTH.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -424,10 +536,10 @@ object EditComponent {
                                 }
 
                                 fun getPieceHeight(
-                                        leftRectsConfigMap: Map<String, String>
+                                        autoRndBitmapsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return leftRectsConfigMap.get(
-                                                LeftRectsKey.PIECE_HEIGHT.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.PIECE_HEIGHT.key
                                         )?.let {
                                                 toInt(
                                                         it,
@@ -436,15 +548,23 @@ object EditComponent {
                                 }
 
                                 fun getTimes(
-                                        leftRectsConfigMap: Map<String, String>
+                                        autoRndBitmapsConfigMap: Map<String, String>
                                 ): Int? {
-                                        return leftRectsConfigMap.get(
-                                                LeftRectsKey.TIMES.key
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.TIMES.key
                                         )?.let {
                                                 toInt(
                                                         it,
                                                 )
                                         }
+                                }
+
+                                fun getShape(
+                                        autoRndBitmapsConfigMap: Map<String, String>
+                                ): String {
+                                        return autoRndBitmapsConfigMap.get(
+                                                AutoRndBitmapsKey.SHAPE.key
+                                        ) ?: CmdClickIcons.RECT.str
                                 }
 
                                 private fun toInt(
@@ -461,7 +581,164 @@ object EditComponent {
                                         imageMap: Map<String, String>?,
                                 ): Map<String, String> {
                                         return imageMap?.get(
-                                                ImageKey.LEFT_RECTS_CONFIG_MAP_CON.key
+                                                ImageKey.AUTO_RND_BITMAPS_CONFIG_MAP_CON.key
+                                        ).let {
+                                                CmdClickMap.createMap(
+                                                        it,
+                                                        keySeparator
+                                                ).toMap()
+                                        }
+                                }
+                        }
+
+                        object LeftStringsManager {
+
+                                private const val keySeparator = '|'
+                                enum class LeftStringsKey(
+                                        val key: String
+                                ){
+                                        WIDTH("width"),
+                                        HEIGHT("height"),
+                                        PIECE_WIDTH("pieceWidth"),
+                                        PIECE_HEIGHT("pieceHeight"),
+                                        TIMES("times"),
+                                        STRING("string"),
+                                        FONT_SIZE("fontSize"),
+                                        FONT_TYPE("fontType"),
+                                        FONT_STYLE("fontStyle")
+
+                                }
+
+                                fun getWidth(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Int? {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.WIDTH.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+
+                                fun getHeight(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Int? {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.HEIGHT.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getPieceWidth(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Float? {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.PIECE_WIDTH.key
+                                        )?.let {
+                                                toFloat(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getPieceHeight(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Float? {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.PIECE_HEIGHT.key
+                                        )?.let {
+                                                toFloat(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getTimes(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Int? {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.TIMES.key
+                                        )?.let {
+                                                toInt(
+                                                        it,
+                                                )
+                                        }
+                                }
+
+                                fun getString(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): String {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.STRING.key
+                                        ) ?: String()
+                                }
+
+                                fun getFontSize(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Float? {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.FONT_SIZE.key
+                                        )?.let {
+                                                toFloat(it)
+                                        }
+                                }
+
+                                fun getFontType(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Typeface {
+                                        return leftStringsConfigMap.get(
+                                                LeftStringsKey.FONT_TYPE.key,
+                                        )?.let {
+                                                fontTypeStr ->
+                                                EditComponent.Font.entries.firstOrNull {
+                                                        it.key == fontTypeStr
+                                                }
+                                        }?.typeface ?: Font.SANS_SERIF.typeface
+                                }
+
+                                fun getFontStyle(
+                                        leftStringsConfigMap: Map<String, String>
+                                ): Int {
+                                        return leftStringsConfigMap.get(
+                                                        LeftStringsKey.FONT_STYLE.key,
+                                                )?.let {
+                                                                fontStyleStr ->
+                                                        EditComponent.Template.TextPropertyManager.TextStyle.entries.firstOrNull {
+                                                                it.key == fontStyleStr
+                                                        }
+                                                }?.style ?: EditComponent.Template.TextPropertyManager.TextStyle.NORMAL.style
+                                }
+
+                                private fun toInt(
+                                        numString: String?
+                                ): Int? {
+                                        return try {
+                                                numString?.toInt()
+                                        } catch (e: Exception){
+                                                null
+                                        }
+                                }
+
+                                private fun toFloat(
+                                        numString: String?
+                                ): Float? {
+                                        return try {
+                                                numString?.toFloat()
+                                        } catch (e: Exception){
+                                                null
+                                        }
+                                }
+
+                                fun makeConfigMap(
+                                        imageMap: Map<String, String>?,
+                                ): Map<String, String> {
+                                        return imageMap?.get(
+                                                ImageKey.LEFT_STRINGS_CONFIG_MAP_CON.key
                                         ).let {
                                                 CmdClickMap.createMap(
                                                         it,
@@ -509,7 +786,59 @@ object EditComponent {
                                 MARGIN_START("marginStart"),
                                 MARGIN_END("marginEnd"),
                                 VISIBLE("visible"),
+                                BLUR_MAP_CON("blurMapCon")
 
+                        }
+
+                        object BlurManager {
+
+                                private val keySeparator = '|'
+
+                                enum class BlurKey(
+                                        val key: String,
+                                ) {
+                                        RADIUS("radius"),
+                                        SAMPLING("sampling"),
+                                }
+                                fun getBlueRadiusToSampling(
+                                        imagePropertyMap: Map<String, String>?
+                                ): Pair<Int, Int>? {
+                                        if(
+                                                imagePropertyMap.isNullOrEmpty()
+                                        ) return null
+                                        val blurMap = imagePropertyMap.get(
+                                                PropertyKey.BLUR_MAP_CON.key
+                                        ).let {
+                                                CmdClickMap.createMap(
+                                                        it,
+                                                        keySeparator,
+                                                ).toMap()
+                                        }
+                                        val radius =
+                                                blurMap.get(
+                                                        BlurKey.RADIUS.key
+                                                )?.let {
+                                                        toInt(it)
+                                                } ?: return null
+                                        val sampling = blurMap.get(
+                                                BlurKey.SAMPLING.key
+                                        )?.let {
+                                                toInt(it)
+                                        } ?: return null
+                                        return Pair(
+                                                radius,
+                                                sampling,
+                                                )
+
+                                }
+
+                                fun toInt(str: String): Int? {
+                                        return try {
+                                                str.toInt()
+                                        } catch (e:Exception){
+                                                null
+                                        }
+                                }
                         }
 
                         enum class ImageScale(
@@ -547,6 +876,7 @@ object EditComponent {
                                 MARGIN_END("marginEnd"),
                                 BK_COLOR("bkColor"),
                                 VISIBLE("visible"),
+                                LETTER_SPACING("letterSpacing"),
                                 SHADOW_RADIUS("shadowRadius"),
                                 SHADOW_COLOR("shadowColor"),
                                 SHADOW_X("shadowX"),
@@ -562,16 +892,6 @@ object EditComponent {
                                 BOLD("bold", Typeface.BOLD),
                                 BOLD_ITALIC("boldItalic", Typeface.BOLD_ITALIC),
                                 ITALIC("bold", Typeface.ITALIC),
-                        }
-
-                        enum class Font(
-                                val key: String,
-                                val typeface: Typeface,
-                        ){
-                                DEFAULT("monospace", Typeface.DEFAULT),
-                                MONOSPACE("monospace", Typeface.MONOSPACE),
-                                SANS_SERIF("sansSerif", Typeface.SANS_SERIF),
-                                SERIF("serif", Typeface.SERIF),
                         }
                 }
 

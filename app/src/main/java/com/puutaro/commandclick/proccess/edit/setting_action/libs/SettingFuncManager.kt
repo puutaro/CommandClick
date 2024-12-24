@@ -14,6 +14,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.PathForSe
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.RndForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ShellToolManagerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.SystemInfoForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -128,6 +129,13 @@ object SettingFuncManager {
                     methodName,
                     baseArgsPairList
                 )
+            FuncType.SYSTEM_INFO ->
+                SystemInfoForSetting.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList
+                )
         }
 
     }
@@ -147,6 +155,7 @@ object SettingFuncManager {
         COLOR("color"),
         LIST("list"),
         RND("rnd"),
+        SYSTEM_INFO("systemInfo"),
     }
 
 }
