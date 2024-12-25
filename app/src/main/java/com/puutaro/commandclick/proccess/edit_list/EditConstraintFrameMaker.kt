@@ -25,7 +25,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -33,7 +32,6 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -1182,8 +1180,13 @@ object EditConstraintFrameMaker {
                                 imageMap,
                             )
                         }
-                        val autoRndBitmapsConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.AutoRndBitmapsManager.makeConfigMap(
+                        val autoRndIconsConfigMap = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
+                                imageMap,
+                            )
+                        }
+                        val autoRndStringsConfigMap = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
                                 imageMap,
                             )
                         }
@@ -1205,7 +1208,8 @@ object EditConstraintFrameMaker {
                                     imagePathList,
                                     delay,
                                     matrixStormConfigMap,
-                                    autoRndBitmapsConfigMap,
+                                    autoRndIconsConfigMap,
+                                    autoRndStringsConfigMap,
                                     where,
                                 )
                             }
@@ -1233,7 +1237,8 @@ object EditConstraintFrameMaker {
                                     requestBuilderSrc,
                                     fadeInMilli,
                                     matrixStormConfigMap,
-                                    autoRndBitmapsConfigMap,
+                                    autoRndIconsConfigMap,
+                                    autoRndStringsConfigMap,
                                     blurRadiusToSampling,
                                     where,
                                 )
@@ -1604,8 +1609,13 @@ object EditConstraintFrameMaker {
                     imageMap,
                 )
             }
-            val autoRndBitmapsConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.AutoRndBitmapsManager.makeConfigMap(
+            val autoRndIconsConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
+                    imageMap,
+                )
+            }
+            val autoRndStringsConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
                     imageMap,
                 )
             }
@@ -1627,7 +1637,8 @@ object EditConstraintFrameMaker {
                         imagePathList,
                         delay,
                         matrixStormConfigMap,
-                        autoRndBitmapsConfigMap,
+                        autoRndIconsConfigMap,
+                        autoRndStringsConfigMap,
                         where,
                     )
                 }
@@ -1655,7 +1666,8 @@ object EditConstraintFrameMaker {
                         null,
                         fadeInMilli,
                         matrixStormConfigMap,
-                        autoRndBitmapsConfigMap,
+                        autoRndIconsConfigMap,
+                        autoRndStringsConfigMap,
                         blurRadiusToSampling,
                         where,
                     )
@@ -1674,7 +1686,8 @@ object EditConstraintFrameMaker {
         requestBuilderSrc: RequestBuilder<Drawable>?,
         fadeInMilli: Int?,
         matrixStormConfigMap: Map<String, String>,
-        autoRndBitmapsConfigMap: Map<String, String>,
+        autoRndIconsConfigMap: Map<String, String>,
+        autoRndStringsConfigMap: Map<String, String>,
         blurRadiusAndSamplingPair: Pair<Int, Int>?,
         where: String,
     ){
@@ -1707,7 +1720,8 @@ object EditConstraintFrameMaker {
                 imageViewContext,
                 imagePathSrc,
                 matrixStormConfigMap,
-                autoRndBitmapsConfigMap,
+                autoRndIconsConfigMap,
+                autoRndStringsConfigMap,
                 where,
             ) ?: ImageCreator.byIconMacro(
             imageViewContext,
@@ -1723,7 +1737,7 @@ object EditConstraintFrameMaker {
                     .async()
                     .animate(fadeInMilli)
                     .from(bitmap)
-                    .into( imageView)
+                    .into(imageView)
                 else ->  Blurry.with(imageViewContext)
                     .radius(blurRadius)
                     .sampling(blurSampling)
@@ -1795,7 +1809,8 @@ object EditConstraintFrameMaker {
             context: Context,
             autoCreateMacroStr: String,
             matrixStormConfigMap: Map<String, String>,
-            autoRndBitmapsConfigMap: Map<String, String>,
+            autoRndIconsConfigMap: Map<String, String>,
+            autoRndStringsConfigMap: Map<String, String>,
             where: String,
         ): Bitmap? {
             val autoCreateMacro = CmdClickBkImageInfo.CmdClickAutoCreateImage.entries.firstOrNull {
@@ -1809,16 +1824,18 @@ object EditConstraintFrameMaker {
                     CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_MATRIX_STORM
                         -> makeMatrixStorm(matrixStormConfigMap)
 
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_BITMAPS
-                        -> makeAutoRndBitmap(
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_ICONS
+                        -> makeAutoRndIcons(
                             context,
-                            autoRndBitmapsConfigMap,
+                            autoRndIconsConfigMap,
                             where,
                         )
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_LEFT_STRINGS
-                        ->  makeLeftStrings(
-                        autoRndBitmapsConfigMap
-                    )
+                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_STRINGS
+                        ->  makeAutoRndStrings(
+                        context,
+                        autoRndStringsConfigMap,
+                        where
+                        )
                 }
             }
 //            FileSystems.writeFromByteArray(
@@ -1858,43 +1875,43 @@ object EditConstraintFrameMaker {
             )
         }
 
-        private fun makeAutoRndBitmap(
+        private fun makeAutoRndIcons(
             context: Context,
-            autoRndBitmapsConfigMap: Map<String, String>,
+            autoRndIconsConfigMap: Map<String, String>,
             where: String,
         ): Bitmap {
             val baseWidth =
-                EditComponent.Template.ImageManager.AutoRndBitmapsManager.getWidth(
-                    autoRndBitmapsConfigMap
+                EditComponent.Template.ImageManager.AutoRndIconsManager.getWidth(
+                    autoRndIconsConfigMap
                 ) ?: 300
             val baseHeight =
-                EditComponent.Template.ImageManager.AutoRndBitmapsManager.getHeight(
-                    autoRndBitmapsConfigMap
+                EditComponent.Template.ImageManager.AutoRndIconsManager.getHeight(
+                    autoRndIconsConfigMap
                 ) ?: 600
-            val pieceWidth = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getPieceWidth(
-                autoRndBitmapsConfigMap
+            val pieceWidth = EditComponent.Template.ImageManager.AutoRndIconsManager.getPieceWidth(
+                autoRndIconsConfigMap
             ) ?: 100
-            val pieceHeight = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getPieceHeight(
-                autoRndBitmapsConfigMap
+            val pieceHeight = EditComponent.Template.ImageManager.AutoRndIconsManager.getPieceHeight(
+                autoRndIconsConfigMap
             ) ?: 100
-            val times = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getTimes(
-                autoRndBitmapsConfigMap
+            val times = EditComponent.Template.ImageManager.AutoRndIconsManager.getTimes(
+                autoRndIconsConfigMap
             ) ?: 10
-            val shapeType = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getShapeType(
-                autoRndBitmapsConfigMap
+            val iconType = EditComponent.Template.ImageManager.AutoRndIconsManager.getIconType(
+                autoRndIconsConfigMap
             )
-            val shapeColor = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getShapeColor(
+            val iconColor = EditComponent.Template.ImageManager.AutoRndIconsManager.getColor(
                 context,
-                autoRndBitmapsConfigMap,
+                autoRndIconsConfigMap,
                 where
             ) ?: "#000000"
-            val bkColor = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getBkColor(
+            val bkColor = EditComponent.Template.ImageManager.AutoRndIconsManager.getBkColor(
                 context,
-                autoRndBitmapsConfigMap,
+                autoRndIconsConfigMap,
                 where
             ) ?: "#00000000"
-            val pieceBitmap = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getShape(
-                autoRndBitmapsConfigMap
+            val pieceBitmap = EditComponent.Template.ImageManager.AutoRndIconsManager.getShape(
+                autoRndIconsConfigMap
             ).let {
                 shapeStr ->
                 if(
@@ -1910,8 +1927,8 @@ object EditConstraintFrameMaker {
                 val shape = CmdClickIcons.entries.firstOrNull {
                     it.str == shapeStr
                 } ?: CmdClickIcons.RECT
-                return@let when(shapeType){
-                    EditComponent.Template.ImageManager.AutoRndBitmapsManager.IconType.IMAGE -> {
+                return@let when(iconType){
+                    EditComponent.Template.ImageManager.AutoRndIconsManager.IconType.IMAGE -> {
                         val iconFile = ExecSetToolbarButtonImage.getImageFile(
                             shape.assetsPath
                         )
@@ -1924,7 +1941,7 @@ object EditConstraintFrameMaker {
                             )
                         }
                     }
-                    EditComponent.Template.ImageManager.AutoRndBitmapsManager.IconType.SVG -> {
+                    EditComponent.Template.ImageManager.AutoRndIconsManager.IconType.SVG -> {
                         AppCompatResources.getDrawable(
                             context,
                             shape.id,
@@ -1934,23 +1951,23 @@ object EditConstraintFrameMaker {
                         )?.let {
                             BitmapTool.ImageTransformer.convertBlackToColor(
                                 it,
-                                shapeColor
+                                iconColor
                             )
                         }
                     }
                 }
             } ?: BitmapTool.ImageTransformer.makeRect(
-                shapeColor,
+                iconColor,
                 pieceWidth,
                 pieceHeight
             )
-            val layout = EditComponent.Template.ImageManager.AutoRndBitmapsManager.getLayout(
-                autoRndBitmapsConfigMap
+            val layout = EditComponent.Template.ImageManager.AutoRndIconsManager.getLayout(
+                autoRndIconsConfigMap
             )
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
 //                listOf(
-//                    "leftRectsConfigMap: ${autoRndBitmapsConfigMap}",
+//                    "leftRectsConfigMap: ${autoRndIconsConfigMap}",
 //                    "baseWidth: ${baseWidth}",
 //                    "baseHeight: ${baseHeight}",
 //                    "pieceWidth: ${pieceWidth}",
@@ -1964,8 +1981,8 @@ object EditConstraintFrameMaker {
 //                pieceWidth,
 //                pieceHeight
 //            )
-            val autoRndBitmap = when(layout){
-                EditComponent.Template.ImageManager.AutoRndBitmapsManager.Layout.LEFT -> {
+            val autoRndIcons = when(layout){
+                EditComponent.Template.ImageManager.AutoRndIconsManager.Layout.LEFT -> {
                    CcDotArt.MistMaker.makeLeftRndBitmaps(
                         baseWidth,
                         baseHeight,
@@ -1983,7 +2000,7 @@ object EditConstraintFrameMaker {
                        )
                    }
                 }
-                EditComponent.Template.ImageManager.AutoRndBitmapsManager.Layout.RND -> {
+                EditComponent.Template.ImageManager.AutoRndIconsManager.Layout.RND -> {
                     CcDotArt.MistMaker.makeRndBitmap(
                         baseWidth,
                         baseHeight,
@@ -2007,40 +2024,70 @@ object EditConstraintFrameMaker {
 //                File(UsePath.cmdclickDefaultAppDirPath, "lrndRect.png").absolutePath,
 //                BitmapTool.convertBitmapToByteArray(autoRndBitmap)
 //            )
-            return autoRndBitmap
+            return autoRndIcons
         }
 
-        private fun makeLeftStrings(
-            leftStringsConfigMap: Map<String, String>,
+        private fun makeAutoRndStrings(
+            context: Context,
+            autoRndStringsConfigMap: Map<String, String>,
+            where: String,
         ): Bitmap {
             val baseWidth =
-                EditComponent.Template.ImageManager.AutoRndBitmapsManager.getWidth(
-                    leftStringsConfigMap
+                EditComponent.Template.ImageManager.AutoRndStringsManager.getWidth(
+                    autoRndStringsConfigMap
                 ) ?: 300
             val baseHeight =
-                EditComponent.Template.ImageManager.LeftStringsManager.getHeight(
-                    leftStringsConfigMap
+                EditComponent.Template.ImageManager.AutoRndStringsManager.getHeight(
+                    autoRndStringsConfigMap
                 ) ?: 600
-            val pieceWidth = EditComponent.Template.ImageManager.LeftStringsManager.getPieceWidth(
-                leftStringsConfigMap
+            val bkColorStr = EditComponent.Template.ImageManager.AutoRndStringsManager.getBkColor(
+                context,
+                autoRndStringsConfigMap,
+                where
+            ) ?: "#00000000"
+            val pieceWidth = EditComponent.Template.ImageManager.AutoRndStringsManager.getPieceWidth(
+                autoRndStringsConfigMap
             ) ?: 40f
-            val pieceHeight = EditComponent.Template.ImageManager.LeftStringsManager.getPieceHeight(
-                leftStringsConfigMap
+            val pieceHeight = EditComponent.Template.ImageManager.AutoRndStringsManager.getPieceHeight(
+                autoRndStringsConfigMap
             ) ?: 40f
-            val times = EditComponent.Template.ImageManager.LeftStringsManager.getTimes(
-                leftStringsConfigMap
+            val times = EditComponent.Template.ImageManager.AutoRndStringsManager.getTimes(
+                autoRndStringsConfigMap
             ) ?: 10
-            val string = EditComponent.Template.ImageManager.LeftStringsManager.getString(
-                leftStringsConfigMap
-            )
-            val fontSize = EditComponent.Template.ImageManager.LeftStringsManager.getFontSize(
-                leftStringsConfigMap
+            val string = EditComponent.Template.ImageManager.AutoRndStringsManager.getString(
+                autoRndStringsConfigMap
+            ) ?: "C"
+            val fontSize = EditComponent.Template.ImageManager.AutoRndStringsManager.getFontSize(
+                autoRndStringsConfigMap
             ) ?: 20f
-            val fontType = EditComponent.Template.ImageManager.LeftStringsManager.getFontType(
-                leftStringsConfigMap
+            val fontType = EditComponent.Template.ImageManager.AutoRndStringsManager.getFontType(
+                autoRndStringsConfigMap
             )
-            val fontStyle = EditComponent.Template.ImageManager.LeftStringsManager.getFontStyle(
-                leftStringsConfigMap
+            val fontStyle = EditComponent.Template.ImageManager.AutoRndStringsManager.getFontStyle(
+                autoRndStringsConfigMap
+            )
+            val color = EditComponent.Template.ImageManager.AutoRndStringsManager.getColor(
+                context,
+                autoRndStringsConfigMap,
+                where
+            )?.let {
+                Color.parseColor(it)
+            } ?: Color.BLACK
+            val strokeColor = EditComponent.Template.ImageManager.AutoRndStringsManager.getStrokeColor(
+                context,
+                autoRndStringsConfigMap,
+                where
+            )?.let {
+                Color.parseColor(it)
+            } ?: Color.BLACK
+            val strokeWidthInt = EditComponent.Template.ImageManager.AutoRndStringsManager.getStrokeWidth(
+                autoRndStringsConfigMap,
+            ) ?: 0f
+            val letterSpacingFloat = EditComponent.Template.ImageManager.AutoRndStringsManager.getLetterSpacing(
+                autoRndStringsConfigMap,
+            ) ?: 0f
+            val layout = EditComponent.Template.ImageManager.AutoRndStringsManager.getLayout(
+                autoRndStringsConfigMap
             )
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBk.txt").absolutePath,
@@ -2063,25 +2110,64 @@ object EditConstraintFrameMaker {
                 pieceHeight,
                 null,
                 fontSize,
-                Color.BLACK,
-                Color.BLACK,
-                    0f,
-                    null,
-                    null,
-                    font = Typeface.create(
-                        fontType,
-                        fontStyle
-                    ),
-                    isAntiAlias = true,
+                color,
+                strokeColor,
+                strokeWidthInt,
+                null,
+                letterSpacingFloat,
+                font = Typeface.create(
+                    fontType,
+                    fontStyle
+                ),
+                isAntiAlias = true,
             ).let {
                 val cutWidth = (pieceWidth * 0.8).toInt()
                 val cutHeight = (pieceHeight * 0.8).toInt()
-                    BitmapTool.ImageTransformer.cutCenter2(
-                        it,
-                        cutWidth,
-                        cutHeight
-                    )
+                BitmapTool.ImageTransformer.cutCenter2(
+                    it,
+                    cutWidth,
+                    cutHeight
+                )
+            }
+            val autoRndStringsBitmap = when(layout){
+                EditComponent.Template.ImageManager.AutoRndStringsManager.Layout.LEFT -> {
+                    CcDotArt.MistMaker.makeLeftRndBitmaps(
+                        baseWidth,
+                        baseHeight,
+                        stringBitmap,
+                        times
+                    ).let {
+                        val cutWidth = (baseWidth * 0.8).toInt()
+                        val cutHeight = (baseHeight * 0.8).toInt()
+                        BitmapTool.ImageTransformer.cutByTarget(
+                            it,
+                            cutWidth,
+                            cutHeight,
+                            it.width - cutWidth,
+                            (it.height - cutHeight) / 2
+                        )
+                    }
                 }
+                EditComponent.Template.ImageManager.AutoRndStringsManager.Layout.RND -> {
+                    CcDotArt.MistMaker.makeRndBitmap(
+                        baseWidth,
+                        baseHeight,
+                        bkColorStr,
+                        stringBitmap,
+                        times
+                    )
+//                        .let {
+//                        val cutWidth = (baseWidth * 0.8).toInt()
+//                        val cutHeight = (baseHeight * 0.8).toInt()
+//                        BitmapTool.ImageTransformer.cutCenter2(
+//                            it,
+//                            cutWidth,
+//                            cutHeight,
+//                        )
+//                    }
+                }
+            }
+
 //            FileSystems.writeFromByteArray(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lstringBitmap.png").absolutePath,
 //               BitmapTool.convertBitmapToByteArray(stringBitmap)
@@ -2102,27 +2188,11 @@ object EditConstraintFrameMaker {
 //                pieceWidth,
 //                pieceHeight
 //            )
-            val stringsBitmap = CcDotArt.MistMaker.makeLeftRndBitmaps(
-                baseWidth,
-                baseHeight,
-                stringBitmap,
-                times
-            ).let {
-                val cutWidth = (baseWidth * 0.8).toInt()
-                val cutHeight = (baseHeight * 0.8).toInt()
-                BitmapTool.ImageTransformer.cutByTarget(
-                    it,
-                    cutWidth,
-                    cutHeight,
-                    it.width - cutWidth,
-                    (it.height - cutHeight) / 2
-                )
-            }
 //            FileSystems.writeFromByteArray(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBitmap.png").absolutePath,
 //                BitmapTool.convertBitmapToByteArray(stringsBitmap)
 //            )
-            return stringsBitmap
+            return autoRndStringsBitmap
         }
 
         suspend fun byIconMacro(
@@ -2134,7 +2204,7 @@ object EditConstraintFrameMaker {
             val iconType = withContext(Dispatchers.IO) {
                 imagePathToIconType.second.let { iconTypeStr ->
                     EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
-                        it.type == iconTypeStr
+                        it.name == iconTypeStr
                     } ?: EditComponent.Template.ImageManager.IconType.IMAGE
                 }
             }
@@ -2152,7 +2222,7 @@ object EditConstraintFrameMaker {
                         BitmapTool.convertFileToBitmap(iconFile.absolutePath)
                     }
 
-                    EditComponent.Template.ImageManager.IconType.ICON -> {
+                    EditComponent.Template.ImageManager.IconType.SVG -> {
                         AssetsFileManager.assetsByteArray(
                             context,
                             assetsPath,
@@ -2171,7 +2241,8 @@ object EditConstraintFrameMaker {
         imagePathList: List<String>,
         delay: Int,
         matrixStormConfigMap: Map<String, String>,
-        autoRndBitmapsConfigMap: Map<String, String>,
+        autoRndIconsConfigMap: Map<String, String>,
+        autoRndStringsConfigMap: Map<String, String>,
         where: String,
     ){
         val imageViewContext = imageView.context
@@ -2190,7 +2261,8 @@ object EditConstraintFrameMaker {
                             imageViewContext,
                             imagePathSrc,
                             matrixStormConfigMap,
-                            autoRndBitmapsConfigMap,
+                            autoRndIconsConfigMap,
+                            autoRndStringsConfigMap,
                             where,
                         ) ?: ImageCreator.byIconMacro(
                             imageViewContext,

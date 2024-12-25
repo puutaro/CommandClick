@@ -19,8 +19,8 @@ object CmdClickBkImageInfo {
 
     enum class CmdClickAutoCreateImage {
         AUTO_MATRIX_STORM,
-        AUTO_RND_BITMAPS,
-        AUTO_LEFT_STRINGS,
+        AUTO_RND_ICONS,
+        AUTO_RND_STRINGS,
     }
 
 }
