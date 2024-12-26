@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -32,6 +33,7 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -118,6 +120,9 @@ object EditConstraintFrameMaker {
     private val imagePaddingEndKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_END.key
     private val imagePaddingBottomKey = EditComponent.Template.ImagePropertyManager.PropertyKey.PADDING_BOTTOM.key
     private val imageVisibleKey = EditComponent.Template.ImagePropertyManager.PropertyKey.VISIBLE.key
+    private val imageRotateKey = EditComponent.Template.ImagePropertyManager.PropertyKey.ROTATE.key
+    private val imageScaleXKey = EditComponent.Template.ImagePropertyManager.PropertyKey.SCALE_X.key
+    private val imageScaleYKey = EditComponent.Template.ImagePropertyManager.PropertyKey.SCALE_Y.key
 
     private val onUpdateKey = EditComponent.Template.TextManager.TextKey.ON_UPDATE.key
     private val textSizeKey = EditComponent.Template.TextPropertyManager.Property.SIZE.key
@@ -1324,6 +1329,42 @@ object EditConstraintFrameMaker {
                         }
                     }
                     scaleType = imageScale.scale
+                    val rotateFloat = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageRotateKey,
+                        )?.let {
+                            try {
+                                it.toFloat()
+                            } catch(e: Exception){
+                                null
+                            }
+                        } ?: 0f
+                    }
+                    rotation = rotateFloat
+                    val scaleXFloat = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageScaleXKey,
+                        )?.let {
+                            try {
+                                it.toFloat()
+                            } catch(e: Exception){
+                                null
+                            }
+                        } ?: scaleX
+                    }
+                    scaleX = scaleXFloat
+                    val scaleYFloat = withContext(Dispatchers.IO) {
+                        imagePropertyMap?.get(
+                            imageScaleYKey,
+                        )?.let {
+                            try {
+                                it.toFloat()
+                            } catch(e: Exception){
+                                null
+                            }
+                        } ?: scaleY
+                    }
+                    scaleY = scaleYFloat
                     val paddingData = withContext(Dispatchers.IO) {
                         EditComponent.Template.PaddingData(
                             imagePropertyMap?.get(
@@ -1597,6 +1638,46 @@ object EditConstraintFrameMaker {
             imageScale?.let {
                 scaleType = it.scale
             }
+
+            withContext(Dispatchers.Main) {
+                imagePropertyMap?.get(
+                    imageRotateKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                }?.let {
+                    rotation = it
+                }
+            }
+            val scaleXFloat = withContext(Dispatchers.Main) {
+                imagePropertyMap?.get(
+                    imageScaleXKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                }?.let {
+                    scaleX = it
+                }
+            }
+            val scaleYFloat = withContext(Dispatchers.Main) {
+                imagePropertyMap?.get(
+                    imageScaleYKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                }?.let {
+                    scaleY = it
+                }
+            }
         }
 
         if(
@@ -1822,8 +1903,11 @@ object EditConstraintFrameMaker {
             val cmdClickAutoCreateBitmap = withContext(Dispatchers.IO) {
                 when (autoCreateMacro) {
                     CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_MATRIX_STORM
-                        -> makeMatrixStorm(matrixStormConfigMap)
-
+                        -> makeMatrixStorm(
+                        context,
+                        matrixStormConfigMap,
+                        where
+                        )
                     CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_ICONS
                         -> makeAutoRndIcons(
                             context,
@@ -1849,7 +1933,9 @@ object EditConstraintFrameMaker {
         }
 
         suspend fun makeMatrixStorm(
-            matrixStormConfigMap: Map<String, String>
+            context: Context,
+            matrixStormConfigMap: Map<String, String>,
+            where: String,
         ): Bitmap? {
             val goalWidth =
                 EditComponent.Template.ImageManager.MatrixStormManager.getWidth(
@@ -1866,10 +1952,47 @@ object EditConstraintFrameMaker {
             val heightMulti = EditComponent.Template.ImageManager.MatrixStormManager.getYMulti(
                 matrixStormConfigMap
             ) ?: 120
+            val iconType = EditComponent.Template.ImageManager.MatrixStormManager.getIconType(
+                matrixStormConfigMap
+            )
+            val iconColorStr = EditComponent.Template.ImageManager.MatrixStormManager.getColor(
+                context,
+                matrixStormConfigMap,
+                where
+            ) ?: ColorTool.convertColorToHex(
+                Color.BLACK
+            )
+            val shapeStr = EditComponent.Template.ImageManager.MatrixStormManager.getShape(
+                matrixStormConfigMap
+            )
+            //            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
+//                listOf(
+//                    "leftRectsConfigMap: ${autoRndIconsConfigMap}",
+//                    "baseWidth: ${baseWidth}",
+//                    "baseHeight: ${baseHeight}",
+//                    "pieceWidth: ${pieceWidth}",
+//                    "pieceHeight: ${pieceHeight}",
+//                    "times: ${times}",
+//                    "shapeType: $shapeType",
+//                ).joinToString("\n")
+//            )
             val pieceHeight = goalHeight / heightMulti
-            return CcDotArt.makeMatrixStorm(
+            val pieceBitmap = makePieceBitmap(
+                context,
                 pieceWidth,
                 pieceHeight,
+                shapeStr,
+                iconType,
+                iconColorStr,
+            )
+//            BitmapTool.ImageTransformer.makeRect(
+//                    "#000000",
+//                    pieceWidth,
+//                    pieceHeight,
+//                )
+            return CcDotArt.makeMatrixStorm(
+                pieceBitmap,
                 widthMulti,
                 heightMulti,
             )
@@ -1900,66 +2023,29 @@ object EditConstraintFrameMaker {
             val iconType = EditComponent.Template.ImageManager.AutoRndIconsManager.getIconType(
                 autoRndIconsConfigMap
             )
-            val iconColor = EditComponent.Template.ImageManager.AutoRndIconsManager.getColor(
+            val blackHexStr = ColorTool.convertColorToHex(
+                Color.BLACK
+            )
+            val iconColorStr = EditComponent.Template.ImageManager.AutoRndIconsManager.getColor(
                 context,
                 autoRndIconsConfigMap,
                 where
-            ) ?: "#000000"
-            val bkColor = EditComponent.Template.ImageManager.AutoRndIconsManager.getBkColor(
+            ) ?: blackHexStr
+            val bkColorStr = EditComponent.Template.ImageManager.AutoRndIconsManager.getBkColor(
                 context,
                 autoRndIconsConfigMap,
                 where
             ) ?: "#00000000"
-            val pieceBitmap = EditComponent.Template.ImageManager.AutoRndIconsManager.getShape(
+            val shapeStr = EditComponent.Template.ImageManager.AutoRndIconsManager.getShape(
                 autoRndIconsConfigMap
-            ).let {
-                shapeStr ->
-                if(
-                    File(shapeStr).isFile
-                ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
-                    Bitmap.createScaledBitmap(
-                        it,
-                        pieceWidth,
-                        pieceHeight,
-                        true,
-                    )
-                }
-                val shape = CmdClickIcons.entries.firstOrNull {
-                    it.str == shapeStr
-                } ?: CmdClickIcons.RECT
-                return@let when(iconType){
-                    EditComponent.Template.ImageManager.AutoRndIconsManager.IconType.IMAGE -> {
-                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                            shape.assetsPath
-                        )
-                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
-                            Bitmap.createScaledBitmap(
-                                it,
-                                pieceWidth,
-                                pieceHeight,
-                                true,
-                            )
-                        }
-                    }
-                    EditComponent.Template.ImageManager.AutoRndIconsManager.IconType.SVG -> {
-                        AppCompatResources.getDrawable(
-                            context,
-                            shape.id,
-                        )?.toBitmap(
-                            pieceWidth,
-                            pieceHeight
-                        )?.let {
-                            BitmapTool.ImageTransformer.convertBlackToColor(
-                                it,
-                                iconColor
-                            )
-                        }
-                    }
-                }
-            } ?: BitmapTool.ImageTransformer.makeRect(
-                iconColor,
+            )
+            val pieceBitmap = makePieceBitmap(
+                context,
                 pieceWidth,
-                pieceHeight
+                pieceHeight,
+                shapeStr,
+                iconType,
+                iconColorStr,
             )
             val layout = EditComponent.Template.ImageManager.AutoRndIconsManager.getLayout(
                 autoRndIconsConfigMap
@@ -1973,8 +2059,13 @@ object EditConstraintFrameMaker {
 //                    "pieceWidth: ${pieceWidth}",
 //                    "pieceHeight: ${pieceHeight}",
 //                    "times: ${times}",
-//                    "shapeType: $shapeType",
+//                    "iconType: $iconType",
+//                    "shapeStr: ${shapeStr}"
 //                ).joinToString("\n")
+//            )
+//            FileSystems.writeFromByteArray(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lpieceBitmap.png").absolutePath,
+//                BitmapTool.convertBitmapToByteArray(pieceBitmap)
 //            )
 //            val pieceRect = BitmapTool.ImageTransformer.makeRect(
 //                "#000000",
@@ -2004,7 +2095,7 @@ object EditConstraintFrameMaker {
                     CcDotArt.MistMaker.makeRndBitmap(
                         baseWidth,
                         baseHeight,
-                        bkColor,
+                        bkColorStr,
                         pieceBitmap,
                         times
                     )
@@ -2025,6 +2116,84 @@ object EditConstraintFrameMaker {
 //                BitmapTool.convertBitmapToByteArray(autoRndBitmap)
 //            )
             return autoRndIcons
+        }
+
+        private fun makePieceBitmap(
+            context: Context,
+            pieceWidth: Int,
+            pieceHeight: Int,
+            shapeStr: String,
+            iconType: EditComponent.IconType,
+            iconColorStr: String,
+        ): Bitmap {
+            return let {
+                if(
+                    File(shapeStr).isFile
+                ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
+                    Bitmap.createScaledBitmap(
+                        it,
+                        pieceWidth,
+                        pieceHeight,
+                        true,
+                    )
+                }
+                val shape = CmdClickIcons.entries.firstOrNull {
+                    it.str == shapeStr
+                } ?: CmdClickIcons.RECT
+                return@let when(iconType){
+                    EditComponent.IconType.IMAGE -> {
+                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                            shape.assetsPath
+                        )
+                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
+                            Bitmap.createScaledBitmap(
+                                it,
+                                pieceWidth,
+                                pieceHeight,
+                                true,
+                            )
+                        }
+                    }
+                    EditComponent.IconType.SVG -> {
+                        AppCompatResources.getDrawable(
+                            context,
+                            shape.id,
+                        )?.toBitmap(
+                            pieceWidth,
+                            pieceHeight
+                        )?.let convertBlack@ {
+                            val bitmap = BitmapTool.ImageTransformer.convertBlackToColor(
+                                it,
+                                iconColorStr
+                            )
+//                            FileSystems.writeFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext_shape.txt").absolutePath,
+//                                listOf(
+//                                    "shape: ${shape}",
+//                                    "pieceWidth: ${pieceWidth}",
+//                                    "pieceHeight: ${pieceHeight}",
+//                                    "iconType: $iconType",
+//                                    "shapeStr: ${shapeStr}",
+//                                    "bitmap: ${bitmap == null}"
+//                                ).joinToString("\n")
+//                            )
+//                            FileSystems.writeFromByteArray(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lbitmap_it.png").absolutePath,
+//                                BitmapTool.convertBitmapToByteArray(it)
+//                            )
+//                            FileSystems.writeFromByteArray(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.png").absolutePath,
+//                                BitmapTool.convertBitmapToByteArray(bitmap)
+//                            )
+                            bitmap
+                        }
+                    }
+                }
+            } ?: BitmapTool.ImageTransformer.makeRect(
+                iconColorStr,
+                pieceWidth,
+                pieceHeight
+            )
         }
 
         private fun makeAutoRndStrings(
@@ -2203,9 +2372,9 @@ object EditConstraintFrameMaker {
                 imagePathToIconType.first
             val iconType = withContext(Dispatchers.IO) {
                 imagePathToIconType.second.let { iconTypeStr ->
-                    EditComponent.Template.ImageManager.IconType.entries.firstOrNull {
+                    EditComponent.IconType.entries.firstOrNull {
                         it.name == iconTypeStr
-                    } ?: EditComponent.Template.ImageManager.IconType.IMAGE
+                    } ?: EditComponent.IconType.IMAGE
                 }
             }
             val assetsPath = withContext(Dispatchers.IO) {
@@ -2215,14 +2384,14 @@ object EditConstraintFrameMaker {
             }?: return null
             return withContext(Dispatchers.IO) {
                 when (iconType) {
-                    EditComponent.Template.ImageManager.IconType.IMAGE -> {
+                    EditComponent.IconType.IMAGE -> {
                         val iconFile = ExecSetToolbarButtonImage.getImageFile(
                             assetsPath
                         )
                         BitmapTool.convertFileToBitmap(iconFile.absolutePath)
                     }
 
-                    EditComponent.Template.ImageManager.IconType.SVG -> {
+                    EditComponent.IconType.SVG -> {
                         AssetsFileManager.assetsByteArray(
                             context,
                             assetsPath,

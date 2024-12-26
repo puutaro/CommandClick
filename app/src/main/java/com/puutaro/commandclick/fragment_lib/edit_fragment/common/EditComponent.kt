@@ -50,6 +50,11 @@ object EditComponent {
                 SERIF("serif", Typeface.SERIF),
         }
 
+        enum class IconType{
+                IMAGE,
+                SVG,
+        }
+
         object Template {
 
                 const val sectionSeparator = ','
@@ -330,7 +335,52 @@ object EditComponent {
                                         HEIGHT("height"),
                                         X_MULTI("xMulti"),
                                         Y_MULTI("yMulti"),
+                                        SHAPE("shape"),
+                                        COLOR("color"),
+                                        ICON_TYPE("iconType"),
+                                        LAYOUT("layout")
 
+                                }
+
+                                fun getIconType(
+                                        matrixStormConfigMap: Map<String, String>,
+                                ): IconType {
+                                        return matrixStormConfigMap.get(
+                                                MatrixStormKey.ICON_TYPE.key
+                                        )?.let {
+                                                        iconTypeStr ->
+                                                IconType.entries.firstOrNull {
+                                                        it.name == iconTypeStr
+                                                }
+                                        } ?: IconType.SVG
+                                }
+
+
+                                fun getColor(
+                                        context: Context?,
+                                        matrixStormConfigMap: Map<String, String>,
+                                        where: String,
+                                ): String? {
+                                        val colorKey = MatrixStormKey.COLOR.key
+                                        return matrixStormConfigMap.get(
+                                                colorKey
+                                        )?.let {
+                                                        colorStr ->
+                                                ColorTool.parseColorStr(
+                                                        context,
+                                                        colorStr,
+                                                        colorKey,
+                                                        where,
+                                                )
+                                        }
+                                }
+
+                                fun getShape(
+                                        matrixStormConfigMap: Map<String, String>
+                                ): String {
+                                        return matrixStormConfigMap.get(
+                                                MatrixStormKey.SHAPE.key
+                                        ) ?: CmdClickIcons.RECT.str
                                 }
 
                                 fun getWidth(
@@ -419,10 +469,10 @@ object EditComponent {
                                         RND,
                                 }
 
-                                enum class IconType {
-                                        IMAGE,
-                                        SVG
-                                }
+//                                enum class IconType {
+//                                        IMAGE,
+//                                        SVG
+//                                }
 
                                 fun getLayout (
                                         autoRndIconsConfigMap: Map<String, String>,
@@ -822,11 +872,6 @@ object EditComponent {
                                         macroStrList.getOrNull(1) ?: String(),
                                 )
                         }
-
-                        enum class IconType{
-                                IMAGE,
-                                SVG,
-                        }
                 }
 
                 object ImagePropertyManager {
@@ -851,7 +896,10 @@ object EditComponent {
                                 MARGIN_START("marginStart"),
                                 MARGIN_END("marginEnd"),
                                 VISIBLE("visible"),
-                                BLUR_MAP_CON("blurMapCon")
+                                BLUR_MAP_CON("blurMapCon"),
+                                ROTATE("rotate"),
+                                SCALE_X("scaleX"),
+                                SCALE_Y("scaleY"),
 
                         }
 

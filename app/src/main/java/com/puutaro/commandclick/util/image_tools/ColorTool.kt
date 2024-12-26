@@ -53,6 +53,12 @@ object ColorTool {
         blackRed,
     )
 
+    fun convertColorToHex(
+        colorInt: Int,
+    ): String {
+        return String.format("#%06X", (0xFFFFFF and colorInt))
+    }
+
     fun parseColorStr(
         context: Context?,
         colorStr: String,

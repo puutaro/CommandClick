@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.LogSystems
@@ -8,6 +9,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import org.jsoup.Jsoup
 import java.io.File
 
 object SettingFile {
@@ -167,13 +169,28 @@ object SettingFile {
         private enum class ImportKey(val key: String) {
             IMPORT_PATH("importPath"),
             REPLACE("replace"),
+            LOOP_VAR_NAME("loopVarName"),
             TIMES("times"),
             SEPARATOR("separator"),
             PREFIX("prefix"),
             SUFFIX("suffix"),
         }
-        private const val loopVarName = "LOOP_INDEX"
         private const val startLoopIndex = 1
+        private val alreadyUseLoopVarNameList = mutableListOf<String>()
+
+        private fun init(){
+            alreadyUseLoopVarNameList.clear()
+        }
+
+        private fun addToAlreadyUseLoopVarNameList(loopVarName: String?){
+            if(loopVarName.isNullOrEmpty()) return
+            alreadyUseLoopVarNameList.add(loopVarName)
+        }
+
+        private fun isAlreadyUseLoopVarNameList(loopVarName: String?): Boolean {
+            if(loopVarName.isNullOrEmpty()) return false
+            return alreadyUseLoopVarNameList.contains(loopVarName)
+        }
 
 
         fun import(
@@ -182,6 +199,7 @@ object SettingFile {
             fannelName: String,
             setReplaceVariableCompleteMap: Map<String, String>? = null
         ): String {
+            init()
             val settingConBeforeImport = SetReplaceVariabler.execReplaceByReplaceVariables(
                 trimImportSrcCon(settingSrcConList),
                 setReplaceVariableCompleteMap,
@@ -269,6 +287,76 @@ object SettingFile {
                 val loopTimes = getLoopTimes(
                     importMap
                 )
+                val loopVarName = getLoopVarName(
+                    importMap
+                )
+                val isLoop = loopTimes > startLoopIndex
+                if(
+                    isLoop
+                    && loopVarName.isNullOrEmpty()
+                    ){
+                    val spanTimes = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        ImportKey.TIMES.key
+                    )
+                    val spanLoopVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        ImportKey.LOOP_VAR_NAME.key
+                    )
+                    val spanImportRawSrcCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        importRawSrcCon
+                    )
+                    val errMessage =
+                        "[SETTING IMPORT] ${spanLoopVarNameKey} must specify in ${spanTimes} > ${startLoopIndex}: ${spanImportRawSrcCon}"
+                    LogSystems.broadErrLog(
+                        context,
+                        Jsoup.parse(errMessage).text(),
+                        errMessage,
+                    )
+                    return@forEach
+                }
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lloopVarName.txt").absolutePath,
+//                    listOf(
+//                        "loopVarName: ${loopVarName}",
+//                        "alreadyUseLoopVarNameList: ${alreadyUseLoopVarNameList}",
+//                        "importRawSrcCon: ${importRawSrcCon}",
+//                        "settingCon: ${settingCon}",
+//                    ).joinToString("\n\n\n\n") + "\n\n========\n\n"
+//                )
+                if(
+                    isLoop
+                    && isAlreadyUseLoopVarNameList(loopVarName)
+                ){
+                    val spanLoopVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        ImportKey.LOOP_VAR_NAME.key
+                    )
+                    val spanLoopVarName = loopVarName?.let {
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            it
+                        )
+                    } ?: String()
+                    val spanAlreadyUseLoopVarNameListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        alreadyUseLoopVarNameList.joinToString(",")
+                    )
+                    val spanImportRawSrcCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        importRawSrcCon
+                    )
+                    val errMessage =
+                        "[SETTING IMPORT] ${spanLoopVarNameKey} duplicated: ${spanLoopVarName}, spanAlreadyUseLoopVarNameListCon: ${spanAlreadyUseLoopVarNameListCon} impotCon: ${spanImportRawSrcCon}"
+                    LogSystems.broadErrLog(
+                        context,
+                        Jsoup.parse(errMessage).text(),
+                        errMessage,
+                    )
+                    return@forEach
+                }
+                addToAlreadyUseLoopVarNameList(loopVarName)
                 val separator = getSeparator(
                     importMap
                 )
@@ -288,10 +376,38 @@ object SettingFile {
                         repValMap
                     ).let { innerImportCon ->
                         (startLoopIndex..loopTimes).map { loopIndex ->
+                            if(loopTimes == startLoopIndex) {
+                                return@map innerImportCon
+                            }
+                            if(
+                                loopVarName.isNullOrEmpty()
+                            ) return@map innerImportCon
+                            if(
+                                !innerImportCon.contains("@{${loopVarName}}")
+                            ) {
+                                val spanLoopVarName =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errRedCode,
+                                        loopVarName
+                                    )
+                                val spanImportRawSrcCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                    CheckTool.errBrown,
+                                    importRawSrcCon
+                                )
+                                val errMessage =
+                                    "[SETTING IMPORT] ${ImportKey.LOOP_VAR_NAME.key}'s ${spanLoopVarName} var name is not used: importCon: ${spanImportRawSrcCon}"
+                                LogSystems.broadErrLog(
+                                    context,
+                                    Jsoup.parse(errMessage).text(),
+                                    errMessage,
+                                )
+                                return@map String()
+                            }
                             CmdClickMap.replaceByAtVar(
                                 innerImportCon,
                                 mapOf(
-                                    loopVarName to loopIndex.toString()
+                                    loopVarName to
+                                            loopIndex.toString()
                                 )
                             )
                         }.joinToString(separator).let {
@@ -359,6 +475,14 @@ object SettingFile {
             } catch (e: Exception){
                 startLoopIndex
             }
+        }
+
+        fun getLoopVarName(
+            importMap: Map<String, String>,
+        ): String? {
+            return importMap.get(
+                ImportKey.LOOP_VAR_NAME.key
+            )
         }
 
         fun getSeparator(

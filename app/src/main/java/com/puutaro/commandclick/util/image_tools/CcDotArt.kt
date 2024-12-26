@@ -55,8 +55,9 @@ object CcDotArt {
     }
 
     suspend fun makeMatrixStorm(
-        pieceWidth: Int,
-        pieceHeight: Int,
+//        pieceWidth: Int,
+//        pieceHeight: Int,
+        pieceBitmapSrc: Bitmap,
         widthMulti: Int,
         heightMulti: Int,
     ): Bitmap? {
@@ -67,11 +68,11 @@ object CcDotArt {
         return withContext(Dispatchers.IO){
             val horizonRectList = let {
                 val maxOpacity = 255
-                val pieceRectSrc = ImageTransformer.makeRect(
-                    "#000000",
-                    pieceWidth,
-                    pieceHeight,
-                )
+//                val pieceRectSrc = ImageTransformer.makeRect(
+//                    "#000000",
+//                    pieceWidth,
+//                    pieceHeight,
+//                )
                 val opacityDiff = maxOpacity / widthMulti
                 val firstOpacityInf = 230
                 val horizonRectJobList = (1..heightMulti).map { verticalOrder ->
@@ -84,7 +85,7 @@ object CcDotArt {
                         }
                         val firstOpacity = (fistLowerOpacity..maxOpacity).random()
                         var horizontalRect = ImageTransformer.ajustOpacity(
-                            pieceRectSrc,
+                            pieceBitmapSrc,
                             firstOpacity
                         )
                         (2..widthMulti).forEach { horizonOrder ->
@@ -104,7 +105,7 @@ object CcDotArt {
                                 else -> (lowerOpacity..supOpacity).random()
                             }
                             val pieceRect = ImageTransformer.ajustOpacity(
-                                pieceRectSrc,
+                                pieceBitmapSrc,
                                 curOpacity
                             )
                             horizontalRect = concatByHorizon(

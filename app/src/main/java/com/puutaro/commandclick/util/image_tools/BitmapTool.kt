@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Color.argb
 import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -31,12 +32,12 @@ import android.util.Base64
 import android.util.TypedValue
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.toColor
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -1353,6 +1354,9 @@ object BitmapTool {
             originalBitmap: Bitmap,
             colorStr: String,
         ): Bitmap {
+            if(
+                Color.parseColor(colorStr) == Color.BLACK
+            ) return originalBitmap
             val width = originalBitmap.width
             val height = originalBitmap.height
 
@@ -1365,7 +1369,8 @@ object BitmapTool {
                     val red = Color.red(pixel)
                     val green = Color.green(pixel)
                     val blue = Color.blue(pixel)
-                    if (red < 10 && green < 10 && blue < 10) {
+                    val alpha = Color.alpha(pixel)
+                    if (alpha > 0 && red < 10 && green < 10 && blue < 10) {
                         // Set the pixel to fully transparent
                         resultBitmap.setPixel(
                             x,
@@ -1374,7 +1379,7 @@ object BitmapTool {
                         )
                         continue
                     }
-                    resultBitmap.setPixel(x, y, Color.rgb(red, green, blue))
+                    resultBitmap.setPixel(x, y, argb(alpha, red, green, blue))
 
                 }
             }
