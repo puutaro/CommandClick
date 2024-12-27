@@ -22,6 +22,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForCmdIndex
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -30,6 +31,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import java.io.File
 
 
 class CommandIndexFragment: Fragment() {
@@ -127,7 +129,7 @@ class CommandIndexFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         ExtraMenuGifCreator.exit()
-        UrlImageDownloader.exit()
+//        UrlImageDownloader.exit()
         PreInstallFannel.exit()
         jsExecuteJob?.cancel()
         IndexInitHandler.exit()

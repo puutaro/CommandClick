@@ -6,9 +6,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
+import com.puutaro.commandclick.util.gz.GzTool
+import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -20,14 +24,27 @@ import java.io.File
 
 object UrlImageDownloader {
 
-    private val downloadImageUrlPrefix = "${UrlFileSystems.cmdClickAssetsRepoPrefix}/master"
-    const val ubuntuAlertGifSuffix = "ubuntu/setup_alert/ubuntuSetupAlert.gif"
-    private val downloadSuffixList = listOf(
-        ubuntuAlertGifSuffix,
-    )
-    val imageDirPrefix = File(UsePath.cmdclickFannelSystemDirPath, "images")
+    private val downloadImageUrlPrefix =
+        "${UrlFileSystems.cmdClickAssetsRepoPrefix}/master"
+    private val imageListMapLineTextUrl =
+        "${downloadImageUrlPrefix}/image_compress/tar/image_tar_list.txt"
+    private val mapListSeparator = ','
+//    private val downloadSuffixList = listOf(
+//        ubuntuAlertGifSuffix,
+//    )
+
+    private val imageDirObj = File(UsePath.cmdclickFannelSystemDirPath, "images")
+    val fannelBkDirPath = File(
+        imageDirObj.absolutePath,
+        "fannel_bk"
+    ).absolutePath
+    val ubuntuAlertGifPath = File(
+        imageDirObj.absolutePath,
+        "ubuntu/setup_alert/ubuntuSetupAlert.gif"
+    ).absolutePath
+    private val imageTempDirPath = File(imageDirObj.absolutePath, "temp").absolutePath
     private var downloadJob: Job? = null
-//    private val ubuntuSetupAlertGifPath = File(imageDirPrefix, ubuntuAlertGifSuffix)
+//    private val ubuntuSetupAlertGifPath = File(imageDirObj.absolutePath, ubuntuAlertGifSuffix)
 
     fun exit(){
         downloadJob?.cancel()
@@ -36,7 +53,7 @@ object UrlImageDownloader {
     fun save(
         cmdIndexFragment: CommandIndexFragment,
     ) {
-        exit()
+//        exit()
         val context = cmdIndexFragment.context
             ?: return
         val concurrentLimit = 5
@@ -44,18 +61,73 @@ object UrlImageDownloader {
         downloadJob = cmdIndexFragment.lifecycleScope.launch {
             cmdIndexFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
-                    val jobList = downloadSuffixList.map { imagePathSuffix ->
-                        val imageUrl = "${downloadImageUrlPrefix}/${imagePathSuffix}"
+                    FileSystems.removeAndCreateDir(
+                        imageTempDirPath
+                    )
+                }
+                val downLoadInfoMapList = withContext(Dispatchers.IO) {
+                    CurlManager.get(
+                        context,
+                        imageListMapLineTextUrl,
+                        String(),
+                        String(),
+                        2000,
+                    ).let {
+                        val isConnOk = CurlManager.isConnOk(it)
+                        if (!isConnOk) return@let emptyList()
+//                        FileSystems.writeFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "ldownlaod.txt").absolutePath,
+//                            listOf(
+//                                "imageListMapLineTextUrl: ${imageListMapLineTextUrl}",
+//                                "list: ${String(it)}"
+//                            ).joinToString("\n")
+//                        )
+                        String(it).split("\n").map { lineMapCon ->
+                            CmdClickMap.createMap(
+                                lineMapCon,
+                                mapListSeparator
+                            ).toMap()
+                        }
+                    }
+                }
+//                FileSystems.writeFile(
+//                    File(
+//                        UsePath.cmdclickDefaultAppDirPath,
+//                        "ldownlaod_downLoadMapList.txt"
+//                    ).absolutePath,
+//                    listOf(
+//                        "imageListMapLineTextUrl: ${imageListMapLineTextUrl}",
+//                        "downLoadMapList: ${downLoadInfoMapList}"
+//                    ).joinToString("\n")
+//                )
+                withContext(Dispatchers.IO) {
+                    val jobList = downLoadInfoMapList.map { downloadInfoMap ->
                         async {
+                            val relativeTarPath = InfoMapTool.getRelativeTarPath(
+                                downloadInfoMap,
+                            ) ?: return@async
+                            val relativeDirPath = InfoMapTool.getRelativeDirPath(
+                                downloadInfoMap
+                            )
+                            val urlTarSize = InfoMapTool.getTarSize(
+                                downloadInfoMap
+                            )
                             semaphore.withPermit {
                                 execSave(
                                     context,
-                                    imageUrl,
+                                    relativeTarPath,
+                                    urlTarSize,
+                                    relativeDirPath,
                                 )
                             }
                         }
                     }
                     jobList.forEach { it.await() }
+                    withContext(Dispatchers.IO) {
+                        FileSystems.removeDir(
+                            imageTempDirPath
+                        )
+                    }
                 }
             }
         }
@@ -63,22 +135,43 @@ object UrlImageDownloader {
 
     private suspend fun execSave(
         context: Context?,
-        imageUrl: String,
+        relativeTarPath: String,
+        urlTarSize: Int?,
+        relativeDirPath: String?,
     ) {
-
-        val urlImageLength = withContext(Dispatchers.IO){
-            CurlManager.getLength(
-                context,
-                imageUrl
-            )
-        }
-        val imageFile = File(
-            imageDirPrefix,
-            imageUrl.replace(downloadImageUrlPrefix, String()).removePrefix("/")
+        val imageUrl =
+            "${downloadImageUrlPrefix}/${relativeTarPath}"
+        val tarName = File(imageUrl).name
+        val infoTxtPath = InfoMapTool.makeInfoPath(
+            tarName
         )
+        val infoMap = InfoMapTool.read(
+            infoTxtPath
+        )
+        val savedTarSize = InfoMapTool.getTarSize(
+            infoMap
+        )
+        val isSaveDirPath = relativeDirPath?.let {
+            FileSystems.sortedFiles(
+                File(imageDirObj.absolutePath, relativeDirPath).absolutePath
+            ).isNotEmpty()
+        } ?: false
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "ldownlaod_${tarName}.txt").absolutePath,
+//            listOf(
+//                "imageUrl: ${imageUrl}",
+//                "imageListMapLineTextUrl: ${imageListMapLineTextUrl}",
+//                "urlTarSize: ${urlTarSize}",
+//                "savedTarSize: ${savedTarSize}",
+//                "relativeDirPath: ${relativeDirPath}",
+//                "isSaveDirPath: ${isSaveDirPath}",
+//            ).joinToString("\n")
+//        )
+        val downloadTarPath = File(imageTempDirPath, tarName).absolutePath
         if(
-            imageFile.isFile
-            && imageFile.length().toInt() == urlImageLength
+            isSaveDirPath
+            && urlTarSize == savedTarSize
+            && savedTarSize != null
         ) {
             return
         }
@@ -94,9 +187,96 @@ object UrlImageDownloader {
             it
         } ?: return
         FileSystems.writeFromByteArray(
-            imageFile.absolutePath,
+            downloadTarPath,
             byteArray
         )
-        return
+        GzTool.extractTarWithoutOwnership(
+            downloadTarPath,
+            imageDirObj.absolutePath,
+            false,
+        )
+        InfoMapTool.save(
+            infoTxtPath,
+            relativeTarPath,
+            urlTarSize
+        )
+    }
+
+    private object InfoMapTool {
+
+
+        private enum class DownloadMapListKey(val key: String) {
+            RELATIVE_DIR_PATH("relativeDirPath"),
+            RELATIVE_TAR_PATH("relativeTarPath"),
+            SIZE("size"),
+        }
+
+        fun makeInfoPath(
+            tarName: String,
+        ): String {
+            val pathSeparator = "___"
+            return File(
+                imageDirObj.absolutePath,
+                tarName.replace("/", pathSeparator)
+            ).absolutePath.let {
+                "${CcPathTool.trimAllExtend(it)}_info.txt"
+            }
+        }
+
+        fun getTarSize(
+            infoMap: Map<String, String>
+        ): Int? {
+            return try {
+                infoMap.get(
+                    DownloadMapListKey.SIZE.key
+                )?.toInt()
+            }catch(e: Exception){
+                null
+            }
+        }
+
+        fun getRelativeTarPath(
+            infoMap: Map<String, String>
+        ): String? {
+            return infoMap.get(
+                DownloadMapListKey.RELATIVE_TAR_PATH.key
+            )
+        }
+
+        fun getRelativeDirPath(
+            infoMap: Map<String, String>
+        ): String? {
+            return infoMap.get(
+                DownloadMapListKey.RELATIVE_DIR_PATH.key
+            )
+        }
+
+        fun read(
+            infoTxtPath: String,
+        ): Map<String, String> {
+            return CmdClickMap.createMap(
+                ReadText(
+                    infoTxtPath,
+                ).readText(),
+                mapListSeparator
+            ).toMap()
+        }
+
+        fun save(
+            path: String,
+            relativeTarPath: String,
+            urlTarSize: Int?,
+        ){
+            val mapCon = mapOf(
+                DownloadMapListKey.RELATIVE_TAR_PATH.key to relativeTarPath,
+                DownloadMapListKey.SIZE.key to (urlTarSize ?: 0)
+            ).map {
+                "${it.key}=${it.value}"
+            }.joinToString(mapListSeparator.toString())
+            FileSystems.writeFile(
+                path,
+                mapCon
+            )
+        }
     }
 }

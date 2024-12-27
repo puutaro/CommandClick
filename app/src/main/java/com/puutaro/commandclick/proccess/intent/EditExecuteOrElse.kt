@@ -274,10 +274,7 @@ object EditExecuteOrElse {
             )?.let {
                 val ubuntuSetupProcedureGifByteArray =
                     FileSystems.convertFileToByteArray(
-                        File(
-                            UrlImageDownloader.imageDirPrefix,
-                            UrlImageDownloader.ubuntuAlertGifSuffix
-                        ).absolutePath
+                        UrlImageDownloader.ubuntuAlertGifPath
                     )
 //                    AssetsFileManager.assetsByteArray(
 //                    context,

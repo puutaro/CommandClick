@@ -30,6 +30,7 @@ import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.UrlImageDownloader
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
@@ -1864,24 +1865,76 @@ object EditConstraintFrameMaker {
         suspend fun byImageMacro(
             imageMacro: String,
         ): Bitmap? {
-//            val escapeImage = listOf(
-//                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY,
-//                CmdClickBkImageInfo.CmdClickBkImages.RECT_OERLAY3,
-//            )
-            val cmdClickBkImageFile = when (imageMacro == ImageMacro.IMAGE_RND.name) {
-                true -> CmdClickBkImageInfo.CmdClickBkImages.entries.random().file
-                else -> CmdClickBkImageInfo.CmdClickBkImages.entries.firstOrNull {
-                    it.name == imageMacro
-                }?.file
-            }
-            if (cmdClickBkImageFile?.isFile != true) return null
+            val cmdClickBkImageFilePath = BkFilePath.get(
+                imageMacro
+            ) ?: return null
             return withContext(Dispatchers.IO) {
-                BitmapTool.convertFileToBitmap(cmdClickBkImageFile.absolutePath)?.let {
+                BitmapTool.convertFileToBitmap(cmdClickBkImageFilePath)?.let {
                     BitmapTool.ImageTransformer.cutCenter(
                         it,
                         400,
                         800
                     )
+                }
+            }
+        }
+
+        private object BkFilePath {
+
+            fun get(
+                imageMacro: String,
+            ): String? {
+                val imageRndMacro = ImageMacro.IMAGE_RND.name
+                val fannelBkDirPath = UrlImageDownloader.fannelBkDirPath
+                if (imageMacro == imageRndMacro) {
+                    val bkImageDirPath = FileSystems.showDirList(
+                        fannelBkDirPath
+                    ).random().let { bkImageDirName ->
+                        File(fannelBkDirPath, bkImageDirName).absolutePath
+                    }
+                    return getBkImageFilePathFromDirPath(
+                        bkImageDirPath,
+                    )
+                }
+                val rndSuffix = "_RND"
+                if (
+                    imageMacro.endsWith(rndSuffix)
+                ) {
+                    val bkImageDirPath = File(
+                        fannelBkDirPath,
+                        imageMacro.removeSuffix(rndSuffix)
+                    ).absolutePath
+                    return getBkImageFilePathFromDirPath(
+                        bkImageDirPath,
+                    )
+                }
+                val bkImageFileNameList = listOf(".jpeg", ".jpg", ".png").map {
+                    UsePath.compExtend(
+                        imageMacro,
+                        it
+                    )
+                }
+                return File(fannelBkDirPath).walk().firstOrNull {
+                    bkImageFileEntry ->
+                    if (
+                        !bkImageFileEntry.isFile
+                    ) return@firstOrNull false
+                    bkImageFileNameList.any {
+                            bkImageFileName ->
+                        bkImageFileEntry
+                            .absolutePath
+                            .endsWith(bkImageFileName)
+                    }
+                }?.absolutePath
+            }
+
+            private fun getBkImageFilePathFromDirPath(
+                bkImageDirPath: String,
+            ): String {
+                return FileSystems.sortedFiles(
+                    bkImageDirPath
+                ).random().let {
+                    File(bkImageDirPath, it).absolutePath
                 }
             }
         }
@@ -1986,11 +2039,6 @@ object EditConstraintFrameMaker {
                 iconType,
                 iconColorStr,
             )
-//            BitmapTool.ImageTransformer.makeRect(
-//                    "#000000",
-//                    pieceWidth,
-//                    pieceHeight,
-//                )
             return CcDotArt.makeMatrixStorm(
                 pieceBitmap,
                 widthMulti,
@@ -2066,11 +2114,6 @@ object EditConstraintFrameMaker {
 //            FileSystems.writeFromByteArray(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lpieceBitmap.png").absolutePath,
 //                BitmapTool.convertBitmapToByteArray(pieceBitmap)
-//            )
-//            val pieceRect = BitmapTool.ImageTransformer.makeRect(
-//                "#000000",
-//                pieceWidth,
-//                pieceHeight
 //            )
             val autoRndIcons = when(layout){
                 EditComponent.Template.ImageManager.AutoRndIconsManager.Layout.LEFT -> {
@@ -2352,11 +2395,6 @@ object EditConstraintFrameMaker {
 //                    "times: ${times}",
 //                ).joinToString("\n")
 //            )
-//            val pieceRect = BitmapTool.ImageTransformer.makeRect(
-//                "#000000",
-//                pieceWidth,
-//                pieceHeight
-//            )
 //            FileSystems.writeFromByteArray(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBitmap.png").absolutePath,
 //                BitmapTool.convertBitmapToByteArray(stringsBitmap)
@@ -2614,9 +2652,6 @@ object EditConstraintFrameMaker {
                             where,
                         )
                         Color.parseColor(parsedColorStr)
-//                        CmdClickColor.entries.firstOrNull {
-//                            it.str == colorStr
-//                        }
                     }
                 }
                 setFillColor(textColor ?: R.color.fill_gray)
@@ -2640,12 +2675,7 @@ object EditConstraintFrameMaker {
                 background =
                     textBkColor?.let {
                         ColorDrawable(it)
-//                        AppCompatResources.getDrawable(
-//                            textViewContext,
-//                            it.id
-//                        )
                     }
-                //            captionTextView.setTextIsSelectable(enableTextSelect)
                 val strokeColorStr = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         strokeColorKey,
@@ -2894,35 +2924,11 @@ object EditConstraintFrameMaker {
                             where,
                         )
                         Color.parseColor(parsedColorStr)
-//                        CmdClickColor.entries.firstOrNull {
-//                            it.str == colorStr
-//                        }
                     }?.let {
                         background =
                             ColorDrawable(it)
-//                            AppCompatResources.getDrawable(
-//                                textViewContext,
-//                                it.id
-//                            )
                     }
-//                    textPropertyMap?.get(
-//                        textBkColorKey,
-//                    )?.let {
-//                            colorStr ->
-//                        CmdClickColor.entries.firstOrNull {
-//                            it.str == colorStr
-//                        }
-//                    }
                 }
-//                textBkColor?.let {
-//                    background =
-//                        AppCompatResources.getDrawable(
-//                            textViewContext,
-//                            it.id
-//                        )
-//
-//                }
-                //            captionTextView.setTextIsSelectable(enableTextSelect)
                 val strokeColorStr = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         strokeColorKey,

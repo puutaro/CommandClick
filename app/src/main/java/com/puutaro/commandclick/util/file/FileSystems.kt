@@ -192,7 +192,7 @@ object FileSystems {
     ): List<String> {
         try {
             val dirfiles = File(dirPath).listFiles()
-            if(dirfiles == null) return listOf(String())
+            if(dirfiles == null) return emptyList()
             if (reverse.isEmpty()) {
                 dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_COMPARATOR)
             } else {

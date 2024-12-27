@@ -176,4 +176,16 @@ object MapListFileTool {
             "${lineMapEntry.key}=${lineMapEntry.value}"
         }.joinToString(separatorStr)
     }
+
+    fun read(
+        path: String,
+        separator: Char
+    ): List<Map<String, String>> {
+        return ReadText(path).textToList().map {
+            CmdClickMap.createMap(
+                it,
+                separator
+            ).toMap()
+        }
+    }
 }
