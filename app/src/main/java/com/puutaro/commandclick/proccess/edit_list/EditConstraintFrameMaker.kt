@@ -1887,14 +1887,19 @@ object EditConstraintFrameMaker {
                 val imageRndMacro = ImageMacro.IMAGE_RND.name
                 val fannelBkDirPath = UrlImageDownloader.fannelBkDirPath
                 if (imageMacro == imageRndMacro) {
-                    val bkImageDirPath = FileSystems.showDirList(
-                        fannelBkDirPath
-                    ).random().let { bkImageDirName ->
-                        File(fannelBkDirPath, bkImageDirName).absolutePath
-                    }
-                    return getBkImageFilePathFromDirPath(
-                        bkImageDirPath,
-                    )
+                    return File(fannelBkDirPath).walk().filter {
+                            bkImageFileEntry ->
+                        bkImageFileEntry.isFile
+                    }.shuffled().firstOrNull()?.absolutePath
+                        ?: return null
+//                    val bkImageDirPath = FileSystems.showDirList(
+//                        fannelBkDirPath
+//                    ).random().let { bkImageDirName ->
+//                        File(fannelBkDirPath, bkImageDirName).absolutePath
+//                    }
+//                    return getBkImageFilePathFromDirPath(
+//                        bkImageDirPath,
+//                    )
                 }
                 val rndSuffix = "_RND"
                 if (
