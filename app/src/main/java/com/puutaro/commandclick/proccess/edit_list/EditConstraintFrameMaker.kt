@@ -25,7 +25,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -1273,10 +1272,6 @@ object EditConstraintFrameMaker {
                                 where,
                             )
                             Color.parseColor(parsedColorStr)
-//                            makeColor(
-//                                context,
-//                                colorStr,
-//                            )
                         }
                     }
                     imageTintList = imageColor?.let {
@@ -1299,14 +1294,6 @@ object EditConstraintFrameMaker {
                     background = imageBkColor?.let {
                         ColorDrawable(imageBkColor)
                     }
-
-//                    backgroundTintList = ColorStateList.valueOf(imageBkColor)
-//                    background = imageBkColorId?.let {
-//                        AppCompatResources.getDrawable(
-//                            context,
-//                            it.id
-//                        )
-//                    }
                     val imageAlpha = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
                             imageAlphaKey,
@@ -1571,26 +1558,10 @@ object EditConstraintFrameMaker {
                         where,
                     )
                     Color.parseColor(parsedColorStr)
-//                            makeColor(
-//                                context,
-//                                colorStr,
-//                            )
                 }?.let {
                     imageTintList = ColorStateList.valueOf(it)
                 }
-//                imagePropertyMap?.get(
-//                    imageColorKey,
-//                ).let {
-//                        colorStr ->
-//                    makeColor(
-//                        context,
-//                        colorStr,
-//                    )
-//                }
             }
-//                ?.let {
-//                imageTintList = ColorStateList.valueOf(it)
-//            }
             withContext(Dispatchers.Main) {
                 imagePropertyMap?.get(
                     imageBkColorKey,
@@ -1602,10 +1573,6 @@ object EditConstraintFrameMaker {
                         where,
                     )
                     Color.parseColor(parsedColorStr)
-//                    makeColor(
-//                        context,
-//                        colorStr,
-//                    )
                 }?.let {
                     background = ColorDrawable(it)
                 }
@@ -1684,7 +1651,6 @@ object EditConstraintFrameMaker {
         if(
             imagePathList.isNullOrEmpty()
             ) return
-//        imageView.isVisible = true
         CoroutineScope(Dispatchers.Main).launch {
             val matrixStormConfigMap = withContext(Dispatchers.IO){
                 EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
@@ -1759,7 +1725,7 @@ object EditConstraintFrameMaker {
     }
 
     private enum class ImageMacro{
-        IMAGE_RND
+        WALL_DIR
     }
 
     private suspend fun execSetSingleImage(
@@ -1882,55 +1848,53 @@ object EditConstraintFrameMaker {
         private object BkFilePath {
 
             fun get(
-                imageMacro: String,
+                wallRelativePath: String,
             ): String? {
-                val imageRndMacro = ImageMacro.IMAGE_RND.name
-                val fannelBkDirPath = UrlImageDownloader.fannelBkDirPath
-                if (imageMacro == imageRndMacro) {
-                    return File(fannelBkDirPath).walk().filter {
-                            bkImageFileEntry ->
-                        bkImageFileEntry.isFile
-                    }.shuffled().firstOrNull()?.absolutePath
-                        ?: return null
-//                    val bkImageDirPath = FileSystems.showDirList(
-//                        fannelBkDirPath
-//                    ).random().let { bkImageDirName ->
-//                        File(fannelBkDirPath, bkImageDirName).absolutePath
-//                    }
-//                    return getBkImageFilePathFromDirPath(
-//                        bkImageDirPath,
-//                    )
-                }
-                val rndSuffix = "_RND"
-                if (
-                    imageMacro.endsWith(rndSuffix)
-                ) {
-                    val bkImageDirPath = File(
-                        fannelBkDirPath,
-                        imageMacro.removeSuffix(rndSuffix)
-                    ).absolutePath
-                    return getBkImageFilePathFromDirPath(
-                        bkImageDirPath,
-                    )
-                }
-                val bkImageFileNameList = listOf(".jpeg", ".jpg", ".png").map {
-                    UsePath.compExtend(
-                        imageMacro,
-                        it
-                    )
-                }
-                return File(fannelBkDirPath).walk().firstOrNull {
-                    bkImageFileEntry ->
-                    if (
-                        !bkImageFileEntry.isFile
-                    ) return@firstOrNull false
-                    bkImageFileNameList.any {
-                            bkImageFileName ->
-                        bkImageFileEntry
-                            .absolutePath
-                            .endsWith(bkImageFileName)
+                val fannelWallDirPath = UrlImageDownloader.fannelWallDirPath
+                val fannelWallDirName = File(fannelWallDirPath).name
+                if(
+                    !wallRelativePath
+                        .startsWith(fannelWallDirName)
+                ) return null
+                val wallPathObj = File(
+                    UrlImageDownloader.imageDirObj.absolutePath,
+                    wallRelativePath
+                )
+                val wallPathOrDirPath = wallPathObj.absolutePath
+                return when(true){
+                    wallPathObj.isFile -> {
+                        if(
+                            !isImageFile(wallPathOrDirPath)
+                        ) return null
+                        wallPathOrDirPath
                     }
-                }?.absolutePath
+                    else -> {
+                        File(fannelWallDirPath).walk().filter {
+                                wallImageFileEntry ->
+                            if(
+                                !wallImageFileEntry.isFile
+                            ) return@filter false
+                            val wallImageFilePath =
+                                wallImageFileEntry.absolutePath
+                            wallImageFilePath.startsWith(
+                                wallPathOrDirPath
+                            ) && isImageFile(
+                                wallImageFilePath
+                            )
+                        }.shuffled().firstOrNull()?.absolutePath
+                            ?: return null
+                    }
+                }
+            }
+
+            private fun isImageFile(
+                wallImageFilePath: String
+            ): Boolean {
+                val imageFileExtendList = listOf(".jpeg", ".jpg", ".png")
+                return imageFileExtendList.any {
+                        imageFileExtend ->
+                    wallImageFilePath.endsWith(imageFileExtend)
+                }
             }
 
             private fun getBkImageFilePathFromDirPath(

@@ -6,7 +6,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -33,10 +32,10 @@ object UrlImageDownloader {
 //        ubuntuAlertGifSuffix,
 //    )
 
-    private val imageDirObj = File(UsePath.cmdclickFannelSystemDirPath, "images")
-    val fannelBkDirPath = File(
+    val imageDirObj = File(UsePath.cmdclickFannelSystemDirPath, "images")
+    val fannelWallDirPath = File(
         imageDirObj.absolutePath,
-        "fannel_bk"
+        "WALL_DIR"
     ).absolutePath
     val ubuntuAlertGifPath = File(
         imageDirObj.absolutePath,
@@ -108,7 +107,7 @@ object UrlImageDownloader {
                             ) ?: return@async
                             val relativeDirPath = InfoMapTool.getRelativeDirPath(
                                 downloadInfoMap
-                            )
+                            ) ?: return@async
                             val urlTarSize = InfoMapTool.getTarSize(
                                 downloadInfoMap
                             )
@@ -137,13 +136,12 @@ object UrlImageDownloader {
         context: Context?,
         relativeTarPath: String,
         urlTarSize: Int?,
-        relativeDirPath: String?,
+        relativeDirPath: String,
     ) {
         val imageUrl =
             "${downloadImageUrlPrefix}/${relativeTarPath}"
-        val tarName = File(imageUrl).name
         val infoTxtPath = InfoMapTool.makeInfoPath(
-            tarName
+            relativeDirPath,
         )
         val infoMap = InfoMapTool.read(
             infoTxtPath
@@ -151,11 +149,11 @@ object UrlImageDownloader {
         val savedTarSize = InfoMapTool.getTarSize(
             infoMap
         )
-        val isSaveDirPath = relativeDirPath?.let {
+        val isSaveDirPath =
             FileSystems.sortedFiles(
                 File(imageDirObj.absolutePath, relativeDirPath).absolutePath
             ).isNotEmpty()
-        } ?: false
+        val tarName = File(imageUrl).name
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "ldownlaod_${tarName}.txt").absolutePath,
 //            listOf(
@@ -208,19 +206,21 @@ object UrlImageDownloader {
         private enum class DownloadMapListKey(val key: String) {
             RELATIVE_DIR_PATH("relativeDirPath"),
             RELATIVE_TAR_PATH("relativeTarPath"),
-            SIZE("size"),
+            TAR_SIZE("tarSize"),
         }
 
         fun makeInfoPath(
-            tarName: String,
+            relativeDirPath: String,
         ): String {
             val pathSeparator = "___"
-            return File(
+            return listOf(
                 imageDirObj.absolutePath,
-                tarName.replace("/", pathSeparator)
-            ).absolutePath.let {
-                "${CcPathTool.trimAllExtend(it)}_info.txt"
-            }
+                relativeDirPath,
+                "info.txt",
+            ).joinToString("/").replace(
+                Regex("[/]+"),
+                "/",
+            )
         }
 
         fun getTarSize(
@@ -228,7 +228,7 @@ object UrlImageDownloader {
         ): Int? {
             return try {
                 infoMap.get(
-                    DownloadMapListKey.SIZE.key
+                    DownloadMapListKey.TAR_SIZE.key
                 )?.toInt()
             }catch(e: Exception){
                 null
@@ -269,7 +269,7 @@ object UrlImageDownloader {
         ){
             val mapCon = mapOf(
                 DownloadMapListKey.RELATIVE_TAR_PATH.key to relativeTarPath,
-                DownloadMapListKey.SIZE.key to (urlTarSize ?: 0)
+                DownloadMapListKey.TAR_SIZE.key to (urlTarSize ?: 0)
             ).map {
                 "${it.key}=${it.value}"
             }.joinToString(mapListSeparator.toString())
