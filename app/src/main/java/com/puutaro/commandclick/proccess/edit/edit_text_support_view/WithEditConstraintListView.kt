@@ -25,7 +25,7 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
@@ -37,7 +37,6 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -72,6 +71,7 @@ object WithEditConstraintListView{
     private val starndardLayoutElevation = 9f
 
     enum class SceneType {
+        TITLE,
         TOOLBAR,
         FOOTER,
         BK,
@@ -102,9 +102,9 @@ object WithEditConstraintListView{
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListConfigMapSrc: Map<String, String>?,
-        editListTitleFrame: FrameLayout?,
-        editListLinearAlignTitleLayout: FrameLayout?,
-        editListFragAlignTitleLayout: FrameLayout?,
+        editListTitleConstraint: ConstraintLayout?,
+//        editListLinearAlignTitleLayout: FrameLayout?,
+//        editListFragAlignTitleLayout: FrameLayout?,
         editListRecyclerView: RecyclerView,
         editListSearchEditText: AppCompatEditText,
         editBkConstraintLayout: ConstraintLayout?,
@@ -119,6 +119,7 @@ object WithEditConstraintListView{
             ?: return
         CoroutineScope(Dispatchers.Main).launch{
             listOf(
+                editListTitleConstraint,
                 editListRecyclerView,
                 editListSearchEditText,
                 editListFooterConstraintLayout,
@@ -186,55 +187,70 @@ object WithEditConstraintListView{
                 key to value
             }
         }?.toMap()
-        CoroutineScope(Dispatchers.IO).launch{
-            val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
-            val titleSettingPath = withContext(Dispatchers.IO) {
-                editListConfigMap?.get(
-                    titleLayoutPathKey
-                )
-            } ?: String()
-            val titleSettingMap = withContext(Dispatchers.IO){
-                ListSettingVariableListMaker.makeFromSettingPath(
-                    context,
-                    titleSettingPath,
-                    fannelInfoMap,
-                    setReplaceVariableMap,
-                ).map {
-                    titleSettingMapSrc ->
-                    val titleSectionKey = titleSettingMapSrc.key
-                    val keyToSubKeyConSrc = titleSettingMapSrc.value
-                    val keyToSubKeyConWhere =
-                        "${titleLayoutPathKey} in ${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
-                            val key = SnakeCamelTool.snakeToCamel(it.key)
-                            "${key}: ${it.value}"
-                        }.joinToString(", ")}"
-                    val titleVarNameToValueMap = SettingActionManager().exec(
-                        fragment,
-                        fannelInfoMap,
-                        setReplaceVariableMap,
-                        busyboxExecutor,
-                        keyToSubKeyConSrc,
-                        keyToSubKeyConWhere
-                    )
-                    titleSectionKey to CmdClickMap.replace(
-                        keyToSubKeyConSrc,
-                        titleVarNameToValueMap
-                    )
-                }.toMap()
-            }
-            TitleImageAndViewSetter.set(
+//        CoroutineScope(Dispatchers.IO).launch{
+//            val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
+//            val titleSettingPath = withContext(Dispatchers.IO) {
+//                editListConfigMap?.get(
+//                    titleLayoutPathKey
+//                )
+//            } ?: String()
+//            val titleSettingMap = withContext(Dispatchers.IO){
+//                ListSettingVariableListMaker.makeFromSettingPath(
+//                    context,
+//                    titleSettingPath,
+//                    fannelInfoMap,
+//                    setReplaceVariableMap,
+//                ).map {
+//                    titleSettingMapSrc ->
+//                    val titleSectionKey = titleSettingMapSrc.key
+//                    val keyToSubKeyConSrc = titleSettingMapSrc.value
+//                    val keyToSubKeyConWhere =
+//                        "${titleLayoutPathKey} in ${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
+//                            val key = SnakeCamelTool.snakeToCamel(it.key)
+//                            "${key}: ${it.value}"
+//                        }.joinToString(", ")}"
+//                    val titleVarNameToValueMap = SettingActionManager().exec(
+//                        fragment,
+//                        fannelInfoMap,
+//                        setReplaceVariableMap,
+//                        busyboxExecutor,
+//                        keyToSubKeyConSrc,
+//                        keyToSubKeyConWhere
+//                    )
+//                    titleSectionKey to CmdClickMap.replace(
+//                        keyToSubKeyConSrc,
+//                        titleVarNameToValueMap
+//                    )
+//                }.toMap()
+//            }
+//            TitleImageAndViewSetter.set(
+//                fragment,
+////                editBackstackCountFrame,
+////                editBackstackCountView,
+////                editTextView,
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                busyboxExecutor,
+//                editListTitleFrame,
+//                editListLinearAlignTitleLayout,
+//                editListFragAlignTitleLayout,
+//                titleSettingMap,
+//                requestBuilderSrc
+//            )
+//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            setTitle(
                 fragment,
-//                editBackstackCountFrame,
-//                editBackstackCountView,
-//                editTextView,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                globalVarNameToValueMap,
                 busyboxExecutor,
-                editListTitleFrame,
-                editListLinearAlignTitleLayout,
-                editListFragAlignTitleLayout,
-                titleSettingMap,
-                requestBuilderSrc
+                editListRecyclerView,
+                editListTitleConstraint,
+                editListConfigMap,
+                eachLayoutIdMap,
+                requestBuilderSrc,
+                density,
             )
         }
         CoroutineScope(Dispatchers.IO).launch {
@@ -331,18 +347,18 @@ object WithEditConstraintListView{
                 null,
             )
         }
-//        CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.IO) {
-//                ItemTouchHelperCallbackForEditListAdapter.set(
-//                    fragment,
-//                    fannelInfoMap,
-//                    setReplaceVariableMap,
-//                    editListRecyclerView,
-//                    editComponentListAdapter,
-//                    layoutConfigMap
-//                )
-//            }
-//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                ItemTouchHelperCallbackForEditListAdapter.set(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    editListRecyclerView,
+                    editConstraintListAdapter,
+                    layoutConfigMap
+                )
+            }
+        }
 
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
@@ -386,33 +402,6 @@ object WithEditConstraintListView{
                 }
             }
         }
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val editListBkPairs = withContext(Dispatchers.IO) {
-//                EditListConfig.getConfigKeyConList(
-//                    editListConfigMap,
-//                    EditListConfig.EditListConfigKey.BK_LAYOUT_PATH.key,
-//                )
-//            }
-//           withContext(Dispatchers.Main){
-////                val buttonFrameLayout = layoutInflater.inflate(
-////                    R.layout.icon_caption_layout_for_edit_list,
-////                    null
-////                ) as FrameLayout?
-//                BkImageSettingsForEditList.makeBkFrame(
-//                    context,
-//                    editListBkFrame,
-//                    fannelInfoMap,
-//                    setReplaceVariableMap,
-//                    busyboxExecutor,
-//                    editListBkPairs,
-//                    requestBuilderSrc,
-//                    density,
-//                )
-//            }
-////            withContext(Dispatchers.Main) {
-////                editListBkFrame.addView(bkFrameLayout)
-////            }
-//        }
 
         val outValue = withContext(Dispatchers.IO) {
             val outValueSrc = TypedValue()
@@ -506,6 +495,7 @@ object WithEditConstraintListView{
             busyboxExecutor,
             editListRecyclerView,
             null,
+            null,
             editListFooterConstraintLayout,
             null,
             editListConfigMap,
@@ -548,13 +538,46 @@ object WithEditConstraintListView{
             busyboxExecutor,
             editListRecyclerView,
             null,
-            editListToolbarConstraintLayout,
             null,
+            null,
+            editListToolbarConstraintLayout,
             editListConfigMap,
             null,
             requestBuilderSrc,
             density,
             outValue
+        )
+    }
+
+    private suspend fun setTitle(
+        fragment: Fragment,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        globalVarNameToValueMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView,
+        editListTitleConstraintLayout: ConstraintLayout?,
+        editListConfigMap: Map<String, String>?,
+        eachLayoutIdMap: Map<String, Int>,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
+    ){
+        createViewLayout(
+            fragment,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            globalVarNameToValueMap,
+            busyboxExecutor,
+            editListRecyclerView,
+            editListTitleConstraintLayout,
+            null,
+            null,
+            null,
+            editListConfigMap,
+            eachLayoutIdMap,
+            requestBuilderSrc,
+            density,
+            null,
         )
     }
 
@@ -578,6 +601,7 @@ object WithEditConstraintListView{
             globalVarNameToValueMap,
             busyboxExecutor,
             editListRecyclerView,
+            null,
             editBkConstraintLayout,
             null,
             null,
@@ -596,6 +620,7 @@ object WithEditConstraintListView{
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
+        editListTitleConstraintLayout: ConstraintLayout?,
         editBkConstraintLayout: ConstraintLayout?,
         editListFooterConstraintLayout: ConstraintLayout?,
         editListToolbarConstraintLayout: ConstraintLayout?,
@@ -616,6 +641,7 @@ object WithEditConstraintListView{
             }.joinToString(", ")
 //        val isEditToolbar = editListToolbarConstraintLayout != null
         val sceneType = when(true){
+            (editListTitleConstraintLayout != null) -> SceneType.TITLE
             (editListFooterConstraintLayout != null) -> SceneType.FOOTER
             (editListToolbarConstraintLayout != null) -> SceneType.TOOLBAR
             (editBkConstraintLayout != null) -> SceneType.BK
@@ -623,6 +649,7 @@ object WithEditConstraintListView{
         }
         val debugWhere = sceneType.name
         val layoutKey = when(sceneType){
+            SceneType.TITLE -> EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH
             SceneType.TOOLBAR -> EditListConfig.EditListConfigKey.TOOLBAR_LAYOUT_PATH
             SceneType.FOOTER-> EditListConfig.EditListConfigKey.FOOTER_LAYOUT_PATH
             SceneType.BK -> EditListConfig.EditListConfigKey.BK_LAYOUT_PATH
@@ -669,6 +696,10 @@ object WithEditConstraintListView{
             frameMap.isEmpty()
         ){
             when(sceneType) {
+                SceneType.TITLE
+                        -> withContext(Dispatchers.Main) {
+                    editListTitleConstraintLayout?.visibility = View.GONE
+                }
                 SceneType.FOOTER
                     -> withContext(Dispatchers.Main) {
                     editListFooterConstraintLayout?.visibility = View.GONE
@@ -904,6 +935,8 @@ object WithEditConstraintListView{
                                         }
 
                                 val baseLayoutForAdd = when(sceneType){
+                                    SceneType.TITLE
+                                            -> editListTitleConstraintLayout
                                     SceneType.TOOLBAR
                                         -> editListToolbarConstraintLayout
                                     SceneType.FOOTER ->  editListFooterConstraintLayout
@@ -918,6 +951,7 @@ object WithEditConstraintListView{
                                     )
                                 }
                                 val tagIdMap = when(sceneType){
+                                    SceneType.TITLE,
                                     SceneType.TOOLBAR,
                                     SceneType.FOOTER -> tagIdMapSrc
                                     SceneType.BK -> tagIdMapSrc + (eachLayoutIdMap ?: emptyMap())
@@ -1071,7 +1105,10 @@ object WithEditConstraintListView{
                         delay(delayTime)
                     }
                     withContext(Dispatchers.Main){
-                        clickView.setBackgroundResource(outValue.resourceId)
+                        when(enableClick) {
+                            false -> clickView.setBackgroundResource(0)
+                            else -> clickView.setBackgroundResource(outValue.resourceId)
+                        }
                     }
                 }
                 if(!enableClick) return@execExecClick

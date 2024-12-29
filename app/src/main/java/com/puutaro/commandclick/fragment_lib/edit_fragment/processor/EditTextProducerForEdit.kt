@@ -104,7 +104,7 @@ object EditTextProducerForEdit {
                 }
             }
             val eachLayoutIdMap = EditComponent.Template.LayoutIdMap.makeMap(
-                binding.editListTitleFrame.id,
+                binding.editListTitleConstraintLayout.id,
                 binding.editListRecyclerView.id,
                 binding.editListSearchEditText.id,
                 binding.editListFooterConstraintLayout.id,
@@ -116,9 +116,10 @@ object EditTextProducerForEdit {
                 editFragment.setReplaceVariableMap,
                 editFragment.busyboxExecutor,
                 editFragment.editListConfigMap,
-                binding.editListTitleFrame,
-                binding.editListLinearAlignTitle as FrameLayout,
-                binding.editListFragAlignTitle as FrameLayout,
+//                binding.editListTitleFrame,
+                binding.editListTitleConstraintLayout,
+//                binding.editListLinearAlignTitle as FrameLayout,
+//                binding.editListFragAlignTitle as FrameLayout,
                 binding.editListRecyclerView,
                 binding.editListSearchEditText,
                 binding.editFragment,

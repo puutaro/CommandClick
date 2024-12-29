@@ -1193,7 +1193,10 @@ class EditConstraintListAdapter(
                     delay(delayTime)
                 }
                 withContext(Dispatchers.Main){
-                    clickView.setBackgroundResource(outValue.resourceId)
+                    when(enableClick) {
+                        false -> clickView.setBackgroundResource(0)
+                        else -> clickView.setBackgroundResource(outValue.resourceId)
+                    }
                 }
             }
             if(!enableClick) return@forEach

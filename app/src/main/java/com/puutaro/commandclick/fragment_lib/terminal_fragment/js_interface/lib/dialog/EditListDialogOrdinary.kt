@@ -78,18 +78,22 @@ class EditListDialogOrdinary(
 //        editListDialogOrdinary?.findViewById<OutlineTextView>(
 //            R.id.edit_list_dialog_title_view
 //        )
-private val editListDialogTitleFrameSrc =
-    editListDialogOrdinary?.findViewById<FrameLayout>(
-        R.id.edit_list_dialog_title_frame
-    )
-    private val editListLinearAlignTitleLayoutSrc =
-        editListDialogOrdinary?.findViewById<FrameLayout>(
-            R.id.edit_list_linear_align_title
+//    private val editListDialogTitleFrameSrc =
+//        editListDialogOrdinary?.findViewById<FrameLayout>(
+//            R.id.edit_list_dialog_title_frame
+//    )
+    private val editListDialogTitleConstraintSrc =
+        editListDialogOrdinary?.findViewById<ConstraintLayout>(
+            R.id.edit_list_dialog_title_constraint_layout
         )
-    private val editListFragAlignTitleLayoutSrc =
-        editListDialogOrdinary?.findViewById<FrameLayout>(
-            R.id.edit_list_frag_align_title
-        )
+//    private val editListLinearAlignTitleLayoutSrc =
+//        editListDialogOrdinary?.findViewById<FrameLayout>(
+//            R.id.edit_list_linear_align_title
+//        )
+//    private val editListFragAlignTitleLayoutSrc =
+//        editListDialogOrdinary?.findViewById<FrameLayout>(
+//            R.id.edit_list_frag_align_title
+//        )
     private val editListRecyclerViewSrc =
         editListDialogOrdinary?.findViewById<RecyclerView>(
             R.id.edit_list_dialog_recycler_view
@@ -154,14 +158,17 @@ private val editListDialogTitleFrameSrc =
 //        val editListTitleView =
 //            editListTitleViewSrc
 //                ?: return
-        val editListDialogTitleFrame =
-            editListDialogTitleFrameSrc
-                ?: return
-        val editListLinearAlignTitleLayout =
-            editListLinearAlignTitleLayoutSrc
-                ?: return
-        val editListFragAlignTitleLayout =
-            editListFragAlignTitleLayoutSrc
+//        val editListDialogTitleFrame =
+//            editListDialogTitleFrameSrc
+//                ?: return
+//        val editListLinearAlignTitleLayout =
+//            editListLinearAlignTitleLayoutSrc
+//                ?: return
+//        val editListFragAlignTitleLayout =
+//            editListFragAlignTitleLayoutSrc
+//                ?: return
+        val editListDialogTitleConstraint =
+            editListDialogTitleConstraintSrc
                 ?: return
         val editListRecyclerView =
             editListRecyclerViewSrc
@@ -239,7 +246,7 @@ private val editListDialogTitleFrameSrc =
 //            )
             CoroutineScope(Dispatchers.IO).launch {
                 val eachLayoutIdMap = EditComponent.Template.LayoutIdMap.makeMap(
-                    editListDialogTitleFrame.id,
+                    editListDialogTitleConstraint.id,
                     editListRecyclerView.id,
                     editListSearchEditText.id,
                     contentsLayoutForFooter?.id,
@@ -251,9 +258,9 @@ private val editListDialogTitleFrameSrc =
                     setReplaceVariableMap,
                     terminalFragment.busyboxExecutor,
                     editListConfigMap,
-                    editListDialogTitleFrame,
-                    editListLinearAlignTitleLayout,
-                    editListFragAlignTitleLayout,
+                    editListDialogTitleConstraint,
+//                    editListLinearAlignTitleLayout,
+//                    editListFragAlignTitleLayout,
                     editListRecyclerView,
                     editListSearchEditText,
                     constraintLayoutSrc,

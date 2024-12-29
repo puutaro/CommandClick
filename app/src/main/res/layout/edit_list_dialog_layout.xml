@@ -20,40 +20,50 @@
 <!--        android:backgroundTint="@color/trans"-->
 <!--        >-->
 <!--    </FrameLayout>-->
-    <FrameLayout
-        android:id="@+id/edit_list_dialog_title_frame"
+<!--    <FrameLayout-->
+<!--        android:id="@+id/edit_list_dialog_title_frame"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/edit_title_height"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        />-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_list_dialog_title_constraint_layout"
         android:layout_width="0dp"
-        android:layout_height="@dimen/edit_title_height"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@null"
+        android:backgroundTint="@null"
         />
-    <include
-        android:id="@+id/edit_list_linear_align_title"
-        layout="@layout/edit_list_linear_align_title"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/edit_title_height"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        />
-    <include
-        android:id="@+id/edit_list_frag_align_title"
-        layout="@layout/edit_list_frag_align_title"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/edit_title_height"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        />
+<!--    <include-->
+<!--        android:id="@+id/edit_list_linear_align_title"-->
+<!--        layout="@layout/edit_list_linear_align_title"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/edit_title_height"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:visibility="gone"-->
+<!--        />-->
+<!--    <include-->
+<!--        android:id="@+id/edit_list_frag_align_title"-->
+<!--        layout="@layout/edit_list_frag_align_title"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/edit_title_height"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:visibility="gone"-->
+<!--        />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/edit_list_dialog_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_list_dialog_title_constraint_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/edit_list_dialog_search_edit_text"
