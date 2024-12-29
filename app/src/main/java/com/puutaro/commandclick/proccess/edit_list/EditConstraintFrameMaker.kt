@@ -1338,7 +1338,7 @@ object EditConstraintFrameMaker {
                             } catch(e: Exception){
                                 null
                             }
-                        } ?: scaleX
+                        } ?: 1f
                     }
                     scaleX = scaleXFloat
                     val scaleYFloat = withContext(Dispatchers.IO) {
