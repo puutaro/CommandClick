@@ -331,7 +331,7 @@ class EditConstraintListAdapter(
                 .asDrawable()
                 .sizeMultiplier(0.1f)
         }
-    private val delayTime = 500L
+    private val delayTime = 1000L
     private val outValue = let {
         val outValueSrc = TypedValue()
         context?.theme?.resolveAttribute(
@@ -1031,14 +1031,11 @@ class EditConstraintListAdapter(
         editListPosition: Int,
         frameFrameLayout: MaterialCardView?,
         frameKeyPairsList: List<Pair<String, String>>,
-        isClickEnable: Boolean,
+        enableClick: Boolean,
     ){
         if (
             frameFrameLayout == null
         ) return
-        withContext(Dispatchers.IO){
-            delay(delayTime)
-        }
         val isConsec =
             withContext(Dispatchers.IO) {
                 PairListTool.getValue(
@@ -1046,24 +1043,14 @@ class EditConstraintListAdapter(
                     onConsecKey,
                 ) == switchOn
             }
-        if (
-            !isClickEnable
-        ) {
-            withContext(Dispatchers.Main) {
-                frameFrameLayout.apply {
+
+        withContext(Dispatchers.Main) {
+            frameFrameLayout.isClickable = enableClick
 //                    rippleColor =  context.getColorStateList(R.color.trans)
 //                    setBackgroundResource(0)
-                    isClickable = false
-                }
-            }
-            return
         }
+        if(!enableClick) return
         withContext(Dispatchers.Main) {
-            frameFrameLayout.apply {
-//                rippleColor =  context.getColorStateList(R.color.fill_gray)
-//                setBackgroundResource(outValue.resourceId)
-                isClickable = true
-            }
             when (isConsec) {
                 true -> with(frameFrameLayout) {
                     setOnTouchListener(android.view.View.OnTouchListener { v, event ->
@@ -1163,10 +1150,7 @@ class EditConstraintListAdapter(
         if(
             context == null
         ) return
-        withContext(Dispatchers.IO) {
-            delay(delayTime)
-        }
-        val isClickEnable =
+        val enableClick =
             EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -1201,18 +1185,18 @@ class EditConstraintListAdapter(
             ) == EditComponent.Template.switchOn
         }
         clickViewList.forEach { clickView ->
-            if (
-                !isClickEnable
-            ) {
-                withContext(Dispatchers.Main) {
-                    contentsFrameLayout.setBackgroundResource(
-                        0
-                    )
-                    contentsFrameLayout.isClickable =
-                        false
-                }
-                return@forEach
+            withContext(Dispatchers.Main) {
+                clickView.isClickable = enableClick
             }
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.IO){
+                    delay(delayTime)
+                }
+                withContext(Dispatchers.Main){
+                    clickView.setBackgroundResource(outValue.resourceId)
+                }
+            }
+            if(!enableClick) return@forEach
             withContext(Dispatchers.Main) {
                 clickView.setBackgroundResource(outValue.resourceId)
                 clickView.isClickable = true

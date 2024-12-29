@@ -59,7 +59,7 @@ import java.lang.ref.WeakReference
 
 object WithEditConstraintListView{
     
-    private val delayTime = 500L
+    private val delayTime = 1000L
     private val noIndexSign = -1
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
     private val typeSeparator = EditComponent.Template.typeSeparator
@@ -1047,13 +1047,6 @@ object WithEditConstraintListView{
         if (
             contentsKeyPairsListCon.isNullOrEmpty()
         ) return
-        withContext(Dispatchers.IO){
-            delay(delayTime)
-        }
-        val enableClick = EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
-        if (
-            !enableClick
-        ) return
         withContext(Dispatchers.IO) execExecClick@{
             val clickViewList =
                 EditComponent.Template.ClickViewManager.makeClickViewList(
@@ -1069,10 +1062,19 @@ object WithEditConstraintListView{
                     onConsecKey,
                 ) == EditComponent.Template.switchOn
             clickViewList.forEachIndexed { index, clickView ->
+                val enableClick = EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
                 withContext(Dispatchers.Main) {
-                    clickView.setBackgroundResource(outValue.resourceId)
-                    clickView.isClickable = true
+                    clickView.isClickable = enableClick
                 }
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO){
+                        delay(delayTime)
+                    }
+                    withContext(Dispatchers.Main){
+                        clickView.setBackgroundResource(outValue.resourceId)
+                    }
+                }
+                if(!enableClick) return@execExecClick
                 if (!isConsec) {
                     withContext(Dispatchers.Main) {
 //                        FileSystems.updateFile(
@@ -1209,9 +1211,6 @@ object WithEditConstraintListView{
         editListRecyclerView: RecyclerView,
         editConstraintListAdapter: EditConstraintListAdapter,
     ) {
-//        withContext(Dispatchers.IO) {
-//            delay(delayTime)
-//        }
         editConstraintListAdapter.editAdapterClickListener =
             object: EditConstraintListAdapter.OnEditAdapterClickListener {
                 override fun onEditAdapterClick(
@@ -1313,9 +1312,6 @@ object WithEditConstraintListView{
         editListRecyclerView: RecyclerView,
         editConstraintListAdapter: EditConstraintListAdapter,
     ) {
-//        withContext(Dispatchers.IO) {
-//            delay(delayTime)
-//        }
         var execTouchJob: Job? = null
         var consecutiveJob: Job? = null
         editConstraintListAdapter.editAdapterTouchUpListener = object: EditConstraintListAdapter.OnEditAdapterTouchUpListener {
