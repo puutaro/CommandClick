@@ -5,7 +5,6 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ColorForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting

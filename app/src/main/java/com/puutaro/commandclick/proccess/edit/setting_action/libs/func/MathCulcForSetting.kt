@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.func.MathCulc
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 
 
 object MathCulcForSetting {

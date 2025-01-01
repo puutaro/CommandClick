@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.common.variable.path
 
 import android.os.Environment
+import java.io.File
 
 
 object UsePath {
@@ -155,6 +156,7 @@ object UsePath {
     const val cmdclickDefaultAppDirName = "default"
     private val cmdclickDefaultAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickDefaultAppDirName"
     val cmdclickDefaultAppDirPath =  "$rootPath/$cmdclickDefaultAppRelativePath"
+    val cmdclickDefaultIDebugAppDirPath =  File(cmdclickDefaultAppDirPath, "iDebug").absolutePath
 //    const val cmdclickSystemAppDirName = "system"
 //    private val cmdclickSystemAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickSystemAppDirName"
 //    val cmdclickSystemAppDirPath =  "$rootPath/$cmdclickSystemAppRelativePath"

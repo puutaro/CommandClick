@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
+package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import java.io.File

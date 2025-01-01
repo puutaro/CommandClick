@@ -1,9 +1,9 @@
-package com.puutaro.commandclick.proccess.edit.setting_action.libs
+package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
 
 
-object SettingIfManager {
+object ImageIfManager {
 
     fun handle(
         judgeTargetStr: String,
@@ -83,14 +83,6 @@ object SettingIfManager {
                 return IfCheckErr("'if' method args not exist: name: ${spanArgName}, index: ${spanArgIndex}")
             }
         }
-//        argsNameList.forEachIndexed {
-//                index, argName ->
-//            val argPair = argsPairList.getOrNull(index)
-//                ?: return true
-//            if(
-//                argPair.first.isEmpty()
-//            ) return true
-//        }
         return null
     }
 

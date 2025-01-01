@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

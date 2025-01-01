@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForSetting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

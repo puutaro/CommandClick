@@ -26,10 +26,12 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
+import com.puutaro.commandclick.proccess.edit_list.config_settings.ImageActionForConfigCon
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.SearchBoxSettingsForEditList
@@ -37,6 +39,8 @@ import com.puutaro.commandclick.proccess.edit_list.config_settings.SettingAction
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -137,7 +141,6 @@ object WithEditConstraintListView{
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
         }
         val globalVarNameToValueMap = let {
-
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
@@ -161,6 +164,51 @@ object WithEditConstraintListView{
         }
         withContext(Dispatchers.IO) {
             SettingActionManager.Companion.BeforeActionImportMapManager.init()
+        }
+        val globalVarNameToBitmapMap = let {
+            ImageActionForConfigCon.getImageConfigCon(
+                editListConfigMapSrc,
+            ).let {
+                val imageActionManager = ImageActionManager()
+                runBlocking {
+                    val keyToSubKeyConWhere =
+                        "${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
+                            val key = SnakeCamelTool.snakeToCamel(it.key)
+                            "${key}: ${it.value}"
+                        }.joinToString(", ")}"
+                    imageActionManager.exec(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        it,
+                        keyToSubKeyConWhere,
+                    )
+                }
+            }
+        }
+        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
+        FileSystems.removeAndCreateDir(
+            imageAcTestDirPath
+        )
+        globalVarNameToBitmapMap.forEach {
+            val bitmap = it.value
+                ?: return@forEach
+            FileSystems.writeFromByteArray(
+                File(
+                    imageAcTestDirPath,
+                    "${it.key}.png"
+                ).absolutePath,
+                BitmapTool.convertBitmapToByteArray(
+                    bitmap
+                )
+            )
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                delay(1000)
+            }
+            ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "svarNameToValueMap.txt").absolutePath,

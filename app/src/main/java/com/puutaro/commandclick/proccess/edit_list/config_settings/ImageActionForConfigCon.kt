@@ -2,13 +2,12 @@ package com.puutaro.commandclick.proccess.edit_list.config_settings
 
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 
-object SettingActionForEditList {
-
-    fun getSettingConfigCon(
+object ImageActionForConfigCon {
+    fun getImageConfigCon(
         editListConfigMap: Map<String, String>?,
     ): String? {
         return editListConfigMap?.get(
-            EditListConfig.EditListConfigKey.SETTING_ACTION.key,
+            EditListConfig.EditListConfigKey.IMAGE_ACTION.key,
         )
     }
 }

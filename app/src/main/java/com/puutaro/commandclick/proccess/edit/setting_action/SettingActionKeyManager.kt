@@ -30,7 +30,7 @@ object SettingActionKeyManager {
         SETTING_VAR("sVar"),
         FUNC("func"),
         ARGS("args"),
-        RETURN("onReturn"),
+        ON_RETURN("onReturn"),
         S_IF("sIf"),
         VALUE("value"),
     }
@@ -44,22 +44,10 @@ object SettingActionKeyManager {
             REPLACE("replace"),
             S_IF("sIf"),
             ARGS(SettingSubKey.ARGS.key),
-
-            INVALID_AFTER_IN_AC_IMPORT("INVALID_AFTER_IN_AC_IMPORT"),
-            MISS_LAST_USE_VAR_KEY("MISS_LAST_USE_VAR_KEY"),
-            MISS_LAST_VAR_KEY("MISS_LAST_VAR_KEY"),
-            MISS_LAST_RETURN_KEY("MISS_LAST_RETURN_KEY"),
-            MISS_IMPORT_PATH("MISS_IMPORT_PATH"),
         }
     }
 
-    enum class VirtualSubKey(
-        val key: String
-    ){
-        ACTION_IMPORT_CON("actionImportCon"),
-        VAR_NOT_INIT("varNotInit"),
-    }
-
+    val imageVarPrefix = "#{}"
     enum class CommandMacro {
         EXIT_SIGNAL,
     }

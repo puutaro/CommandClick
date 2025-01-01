@@ -32,6 +32,16 @@ object SettingFile {
             fannelName,
             setReplaceVariableCompleteMap
         ).split("\n")
+//        if(settingConList.joinToString("\n").contains("settingAction=")) {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "settingFile_read.txt").absolutePath,
+//                listOf(
+//                    "firstSettingConList: ${firstSettingConList.joinToString("~~~")}",
+//                    "-----",
+//                    "settingConList: ${settingConList.joinToString("~~~")}"
+//                ).joinToString("\n\n\n") + "\n\n==============\n\n"
+//            )
+//        }
         return settingConFormatter(
             settingConList
         ).let {
@@ -90,7 +100,7 @@ object SettingFile {
             setReplaceVariableCompleteMap
         ).split("\n")
 //        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "layoutContents00.txt").absolutePath,
+//            File(UsePath.cmdclickDefaultAppDirPath, "readLayoutFromList00.txt").absolutePath,
 //            listOf(
 //                "firstSettingConList: ${firstSettingConList}",
 //                "-----",
@@ -369,6 +379,22 @@ object SettingFile {
                 val repValMap = getRepMap(
                     importMap
                 )
+//                if(importPath.endsWith("notAwaitAsyncVarErr.js")) {
+//                    FileSystems.updateFile(
+//                        File(
+//                            UsePath.cmdclickDefaultAppDirPath,
+//                            "setingImpotCon00.txt"
+//                        ).absolutePath,
+//                        listOf(
+//                            "importMap: ${importMap}",
+//                            "importCon: ${importPath}",
+//                            "separator: ${separator}",
+//                            "suffix: ${suffix}",
+//                            "prefix: ${prefix}",
+//                            "settingCon: ${settingCon}",
+//                        ).joinToString("\n\n") + "\n\n============\n\n"
+//                    )
+//                }
                 val importCon = when(loopTimes < startLoopIndex) {
                     true -> String()
                     else -> CmdClickMap.replaceHolderForJsAction(
@@ -411,7 +437,11 @@ object SettingFile {
                                 )
                             )
                         }.joinToString(separator).let {
-                            "${prefix}${it}${suffix}"
+                            listOf(
+                                prefix,
+                                it,
+                                suffix
+                            ).joinToString("\n")
                         }
                     }
                 }
@@ -425,6 +455,19 @@ object SettingFile {
                         fannelName,
                     )
                 }
+//                if(suffix.isNotEmpty()) {
+//                    FileSystems.updateFile(
+//                        File(
+//                            UsePath.cmdclickDefaultAppDirPath,
+//                            "setingImpotCon.txt"
+//                        ).absolutePath,
+//                        listOf(
+//                            "suffix: ${suffix}",
+//                            "importCon: ${importCon}",
+//                            "settingCon: ${settingCon}",
+//                        ).joinToString("\n\n") + "\n\n============\n\n"
+//                    )
+//                }
             }
             return settingCon
         }
