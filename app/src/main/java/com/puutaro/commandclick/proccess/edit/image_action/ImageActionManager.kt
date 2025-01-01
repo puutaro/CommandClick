@@ -14,7 +14,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -33,7 +32,6 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.io.File
 import java.lang.ref.WeakReference
-import java.time.LocalDateTime
 
 class ImageActionManager {
     companion object {
@@ -554,7 +552,7 @@ class ImageActionManager {
             ) return
             val isErr = withContext(Dispatchers.IO) {
                 val settingKeyAndAsyncVarNameToAwaitVarNameList =
-                    VarErrManager.makeSettingKeyToAsyncVarNameToAwaitList(
+                    VarErrManager.makeSettingKeyAndAsyncVarNameToAwaitVarNameList(
                         keyToSubKeyConList
                     )
                 val isAwaitNotAsyncVarErrJob = async {
@@ -1528,16 +1526,29 @@ class ImageActionManager {
                                 subKeyCon,
                                 subKeySeparator
                             )
-                            val awaitVarNameList = subKeyPairList.firstOrNull {
-                                subKeyToCon ->
-                                subKeyToCon.first ==  awaitKey
-                            }?.second?.let {
-                                ImageActionKeyManager.AwaitManager.getAwaitVarNameList(it)
-                            } ?: return@findIndexToSubKeyPairListWithAwait
-                            if(
-                                !awaitVarNameList.contains(asyncVarNameEntry)
-                            ) return@findIndexToSubKeyPairListWithAwait
-                            return@indexToSubKeyPairListWithAwait index to subKeyPairList
+                            subKeyPairList.forEach execIndexToSubKeyPairListWithAwait@ {
+                                    subKeyToCon ->
+                                if(
+                                    subKeyToCon.first != awaitKey
+                                ) return@execIndexToSubKeyPairListWithAwait
+                                val awaitVarNameList = ImageActionKeyManager.AwaitManager.getAwaitVarNameList(
+                                    subKeyToCon.second
+                                )
+                                if(
+                                    !awaitVarNameList.contains(asyncVarNameEntry)
+                                ) return@execIndexToSubKeyPairListWithAwait
+                                return@indexToSubKeyPairListWithAwait index to subKeyPairList
+                            }
+//                            val awaitVarNameList = subKeyPairList.firstOrNull {
+//                                subKeyToCon ->
+//                                subKeyToCon.first == awaitKey
+//                            }?.second?.let {
+//                                ImageActionKeyManager.AwaitManager.getAwaitVarNameList(it)
+//                            } ?: return@findIndexToSubKeyPairListWithAwait
+//                            if(
+//                                !awaitVarNameList.contains(asyncVarNameEntry)
+//                            ) return@findIndexToSubKeyPairListWithAwait
+//                            return@indexToSubKeyPairListWithAwait index to subKeyPairList
                         }
                         null
                     }
@@ -2266,7 +2277,7 @@ class ImageActionManager {
                 }
             }
 
-            fun makeSettingKeyToAsyncVarNameToAwaitList(
+            fun makeSettingKeyAndAsyncVarNameToAwaitVarNameList(
                 keyToSubKeyConList: List<Pair<String, String>>,
             ): List<Pair<String, Pair<String, List<String>?>>> {
                 val defaultReturnPair =
@@ -2300,19 +2311,26 @@ class ImageActionManager {
                     val awaitVarNameList = varNameAndSubKeyConList
                         .filterIndexed { index, s ->
                             index > 0
-                        }.joinToString(subKeySeparator.toString()).let {
+                        }.joinToString(
+                            subKeySeparator.toString()
+                        ).let {
                            CmdClickMap.createMap(
                                it,
                                subKeySeparator
-                           ).toMap().get(awaitSubKey)
-                        }?.let {
-                            ImageActionKeyManager.AwaitManager.getAwaitVarNameList(
-                                it,
-                            )
+                           ).map awaitVarNameList@ {
+                                   subKeyToCon ->
+                               if(
+                                   subKeyToCon.first != awaitSubKey
+                               ) return@awaitVarNameList emptyList()
+                               ImageActionKeyManager.AwaitManager.getAwaitVarNameList(
+                                   subKeyToCon.second,
+                               )
+                           }.flatten()
+                            //..get(awaitSubKey)
                         }
                     if(
                         !isAsyncVarName
-                        && awaitVarNameList.isNullOrEmpty()
+                        && awaitVarNameList.isEmpty()
                     ) return@map defaultReturnPair
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "iaa.txt").absolutePath,
