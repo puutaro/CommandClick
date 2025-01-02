@@ -14,6 +14,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -32,11 +33,13 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.io.File
 import java.lang.ref.WeakReference
+import java.time.LocalDateTime
 
 class ImageActionManager {
     companion object {
 
         val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
+        private const val awaitWaitTimes = 5//10
 
         object BeforeActionImportMapManager {
             private val beforeActionImportMap = mutableMapOf<String, String>()
@@ -58,10 +61,10 @@ class ImageActionManager {
             }
 
             suspend fun init() {
-                ErrLogger.AlreadyErr.init()
-//                mutex.withLock {
-//                    beforeActionImportMap.clear()
-//                }
+//                ErrLogger.AlreadyErr.init()
+                mutex.withLock {
+                    beforeActionImportMap.clear()
+                }
             }
         }
 
@@ -74,49 +77,50 @@ class ImageActionManager {
                 I_AC_VAR,
                 FUNC,
                 S_IF,
+                AWAIT,
             }
 
-            object AlreadyErr {
-                private var isAlreadyErr = false
-                private val mutex = Mutex()
-
-                suspend fun init(){
-                    mutex.withLock {
-                        isAlreadyErr = false
-                    }
-                }
-
-                suspend fun enable() {
-                    mutex.withLock {
-                        isAlreadyErr = true
-                    }
-                }
-
-                suspend fun get(): Boolean {
-                    mutex.withLock {
-                        return isAlreadyErr
-                    }
-                }
-            }
-
-//            object LogDatetime {
-//                private var beforeOutputTime = LocalDateTime.parse("2020-02-15T21:30:50")
+//            object AlreadyErr {
+//                private var isAlreadyErr = false
 //                private val mutex = Mutex()
 //
-//                suspend fun update(
-//                    datetime: LocalDateTime
-//                ) {
+//                suspend fun init(){
 //                    mutex.withLock {
-//                        beforeOutputTime = datetime
+//                        isAlreadyErr = false
 //                    }
 //                }
 //
-//                suspend fun get(): LocalDateTime {
+//                suspend fun enable() {
 //                    mutex.withLock {
-//                        return beforeOutputTime
+//                        isAlreadyErr = true
+//                    }
+//                }
+//
+//                suspend fun get(): Boolean {
+//                    mutex.withLock {
+//                        return isAlreadyErr
 //                    }
 //                }
 //            }
+
+            object LogDatetime {
+                private var beforeOutputTime = LocalDateTime.parse("2020-02-15T21:30:50")
+                private val mutex = Mutex()
+
+                suspend fun update(
+                    datetime: LocalDateTime
+                ) {
+                    mutex.withLock {
+                        beforeOutputTime = datetime
+                    }
+                }
+
+                suspend fun get(): LocalDateTime {
+                    mutex.withLock {
+                        return beforeOutputTime
+                    }
+                }
+            }
 
             suspend fun sendErrLog(
                 context: Context?,
@@ -124,24 +128,24 @@ class ImageActionManager {
                 errMessage: String,
                 keyToSubKeyConWhere: String,
             ) {
-//                val currentDatetime =
-//                    withContext(Dispatchers.IO) {
-//                        LocalDateTime.now()
-//                    }
-//                val diffSec = withContext(Dispatchers.IO) {
-//                    val beforeOutputTime = LogDatetime.get()
-//                    LocalDatetimeTool.getDurationSec(
-//                        beforeOutputTime,
-//                        currentDatetime
-//                    )
-//                }
-//                if(diffSec < durationSec) return
-                if(AlreadyErr.get()) return
+                val currentDatetime =
+                    withContext(Dispatchers.IO) {
+                        LocalDateTime.now()
+                    }
+                val diffSec = withContext(Dispatchers.IO) {
+                    val beforeOutputTime = LogDatetime.get()
+                    LocalDatetimeTool.getDurationSec(
+                        beforeOutputTime,
+                        currentDatetime
+                    )
+                }
+                if(diffSec < durationSec) return
+//                if(AlreadyErr.get()) return
                 withContext(Dispatchers.IO) {
-//                    LogDatetime.update(
-//                        currentDatetime
-//                    )
-                    AlreadyErr.enable()
+                    LogDatetime.update(
+                        currentDatetime
+                    )
+//                    AlreadyErr.enable()
                 }
                 val spanKeyToSubKeyConWhere =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -193,6 +197,7 @@ class ImageActionManager {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
@@ -218,6 +223,7 @@ class ImageActionManager {
             busyboxExecutor,
         )
         imageActionExecutor.makeResultLoopKeyToVarNameValueMap(
+            imageActionAsyncCoroutine,
             editConstraintListAdapterArg,
             keyToSubKeyConList,
             ImageActionExecutor.mapRoopKeyUnit,
@@ -532,6 +538,7 @@ class ImageActionManager {
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             editConstraintListAdapterArg: EditConstraintListAdapter?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
@@ -740,10 +747,11 @@ class ImageActionManager {
                             acIVarName.startsWith(asyncPrefix)
                                     || acIVarName.startsWith(runAsyncPrefix)
                         if(isAsync){
-                            CoroutineScope(Dispatchers.IO).launch {
+                            val asyncJob = CoroutineScope(Dispatchers.IO).launch {
                                 withContext(Dispatchers.IO) {
-                                    val job = async {
+                                    val deferred = async {
                                         makeResultLoopKeyToVarNameValueMap(
+                                            imageActionAsyncCoroutine,
                                             editConstraintListAdapterArg,
                                             importedKeyToSubKeyConList,
                                             addLoopKey(curMapLoopKey),
@@ -756,13 +764,17 @@ class ImageActionManager {
                                     loopKeyToAsyncDeferredVarNameBitmapMap.put(
                                         curMapLoopKey,
                                         acIVarName,
-                                        job
+                                        deferred
                                     )
                                 }
+                            }
+                            CoroutineScope(Dispatchers.IO).launch {
+                                    imageActionAsyncCoroutine.put(asyncJob)
                             }
                             return@forEach
                         }
                         makeResultLoopKeyToVarNameValueMap(
+                            imageActionAsyncCoroutine,
                             editConstraintListAdapterArg,
                             importedKeyToSubKeyConList,
                             addLoopKey(curMapLoopKey),
@@ -770,22 +782,22 @@ class ImageActionManager {
                             acIVarName,
                             importedVarNameToBitmapMap
                         )
-                        FileSystems.updateFile(
-                            File(
-                                UsePath.cmdclickDefaultIDebugAppDirPath,
-                                "image_acImport00_${acIVarName}.txt"
-                            ).absolutePath,
-                            listOf(
-                                "acIVarName:${acIVarName}",
-                                "topAcIVarName:${topAcIVarName}",
-                                "curMapLoopKey: ${curMapLoopKey}",
-                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
-                                    curMapLoopKey
-                                )?.map {
-                                    it.key
-                                }?.joinToString("\n")}",
-                            ).joinToString("\n")  + "\n\n========\n\n"
-                        )
+//                        FileSystems.updateFile(
+//                            File(
+//                                UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                "image_acImport00_${acIVarName}.txt"
+//                            ).absolutePath,
+//                            listOf(
+//                                "acIVarName:${acIVarName}",
+//                                "topAcIVarName:${topAcIVarName}",
+//                                "curMapLoopKey: ${curMapLoopKey}",
+//                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
+//                                    curMapLoopKey
+//                                )?.map {
+//                                    it.key
+//                                }?.joinToString("\n")}",
+//                            ).joinToString("\n")  + "\n\n========\n\n"
+//                        )
                         if (
                             topAcIVarName.isNullOrEmpty()
                         ) return@forEach
@@ -827,31 +839,31 @@ class ImageActionManager {
                                 proposalRenewalVarNameSrcMapBitmap
                             )
                         }
-                        FileSystems.updateFile(
-                            File(
-                                UsePath.cmdclickDefaultIDebugAppDirPath,
-                                "image_acImport_${acIVarName}.txt"
-                            ).absolutePath,
-                            listOf(
-                                "acIVarName:${acIVarName}",
-                                "topAcIVarName:${topAcIVarName}",
-                                "curMapLoopKey: ${curMapLoopKey}",
-                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
-                                    curMapLoopKey
-                                )?.map {
-                                    it.key
-                                }?.joinToString("\n")}",
-                                "removedLoopKey:${removedLoopKey}",
-                                "removed loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
-                                    removedLoopKey
-                                )?.map {
-                                    it.key
-                                }?.joinToString("\n")}",
-//                    "varNameToBitmap: ${varNameToBitmap.first}",
-//                    "bitmapWidth: ${varNameToBitmap.second?.width}",
-//                    "bitmapHeight: ${varNameToBitmap.second?.height}",
-                            ).joinToString("\n")  + "\n\n========\n\n"
-                        )
+//                        FileSystems.updateFile(
+//                            File(
+//                                UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                "image_acImport_${acIVarName}.txt"
+//                            ).absolutePath,
+//                            listOf(
+//                                "acIVarName:${acIVarName}",
+//                                "topAcIVarName:${topAcIVarName}",
+//                                "curMapLoopKey: ${curMapLoopKey}",
+//                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
+//                                    curMapLoopKey
+//                                )?.map {
+//                                    it.key
+//                                }?.joinToString("\n")}",
+//                                "removedLoopKey:${removedLoopKey}",
+//                                "removed loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
+//                                    removedLoopKey
+//                                )?.map {
+//                                    it.key
+//                                }?.joinToString("\n")}",
+////                    "varNameToBitmap: ${varNameToBitmap.first}",
+////                    "bitmapWidth: ${varNameToBitmap.second?.width}",
+////                    "bitmapHeight: ${varNameToBitmap.second?.height}",
+//                            ).joinToString("\n")  + "\n\n========\n\n"
+//                        )
                     }
 
                     ImageActionKeyManager.ImageActionsKey.IMAGE_VAR -> {
@@ -869,8 +881,8 @@ class ImageActionManager {
                             settingVarName.startsWith(asyncPrefix)
                                     || settingVarName.startsWith(runAsyncPrefix)
                         if(isAsync){
-                            CoroutineScope(Dispatchers.IO).launch {
-                                val job = async {
+                            val asyncJob = CoroutineScope(Dispatchers.IO).launch {
+                                val deferred = async {
                                     ImageVarExecutor().exec(
                                         fragment,
                                         mainSubKeyPairList,
@@ -890,39 +902,39 @@ class ImageActionManager {
                                 loopKeyToAsyncDeferredVarNameBitmapMap.put(
                                     curMapLoopKey,
                                     settingVarName,
-                                    job
+                                    deferred
                                 )
                                 val removedLoopKey = removeLoopKey(curMapLoopKey)
-                                FileSystems.updateFile(
-                                    File(
-                                        UsePath.cmdclickDefaultIDebugAppDirPath,
-                                        "image_async_00_${settingVarName}.txt"
-                                    ).absolutePath,
-                                    listOf(
-                                        "keyToSubKeyConList: ${keyToSubKeyConList}",
-                                        "imageVarKey: ${imageVarKey}",
-                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
-                                        "settingVarName: $settingVarName",
-                                        "isAsync: ${isAsync}",
-                                        "curMapLoopKey: ${curMapLoopKey}",
-                                        "removedLoopKey: ${removedLoopKey}",
-                                        "loopKeyToAsyncDeferredVarNameBitmapMap: ${
-                                            loopKeyToAsyncDeferredVarNameBitmapMap.getAsyncVarNameToBitmapAndExitSignal(
-                                                curMapLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")
-                                        }",
-                                        "privateLoopKeyVarNameBitmapMap: ${
-                                            privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                                curMapLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")
-                                        }",
-                                        "topAcIVarName: ${topAcIVarName}",
-                                    ).joinToString("\n")
-                                )
+//                                FileSystems.updateFile(
+//                                    File(
+//                                        UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                        "image_async_00_${settingVarName}.txt"
+//                                    ).absolutePath,
+//                                    listOf(
+//                                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                                        "imageVarKey: ${imageVarKey}",
+//                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                        "settingVarName: $settingVarName",
+//                                        "isAsync: ${isAsync}",
+//                                        "curMapLoopKey: ${curMapLoopKey}",
+//                                        "removedLoopKey: ${removedLoopKey}",
+//                                        "loopKeyToAsyncDeferredVarNameBitmapMap: ${
+//                                            loopKeyToAsyncDeferredVarNameBitmapMap.getAsyncVarNameToBitmapAndExitSignal(
+//                                                curMapLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")
+//                                        }",
+//                                        "privateLoopKeyVarNameBitmapMap: ${
+//                                            privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                                curMapLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")
+//                                        }",
+//                                        "topAcIVarName: ${topAcIVarName}",
+//                                    ).joinToString("\n")
+//                                )
                                 if (
                                     removedLoopKey == curMapLoopKey
                                 ) return@launch
@@ -940,51 +952,54 @@ class ImageActionManager {
                                 loopKeyToAsyncDeferredVarNameBitmapMap.put(
                                     removedLoopKey,
                                     topAcIVarName,
-                                    job
+                                    deferred
                                 )
-                                FileSystems.updateFile(
-                                    File(
-                                        UsePath.cmdclickDefaultIDebugAppDirPath,
-                                        "image_async_${settingVarName}.txt"
-                                    ).absolutePath,
-                                    listOf(
-                                        "keyToSubKeyConList: ${keyToSubKeyConList}",
-                                        "imageVarKey: ${imageVarKey}",
-                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
-                                        "settingVarName: $settingVarName",
-                                        "isAsync: ${isAsync}",
-                                        "curMapLoopKey: ${curMapLoopKey}",
-                                        "removedLoopKey: ${removedLoopKey}",
-                                        "loopKeyToAsyncDeferredVarNameBitmapMap: ${
-                                            loopKeyToAsyncDeferredVarNameBitmapMap.getAsyncVarNameToBitmapAndExitSignal(
-                                                curMapLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")
-                                        }",
-                                        "privateLoopKeyVarNameBitmapMap: ${
-                                            privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                                curMapLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")
-                                        }",
-                                        "loopKeyToVarNameBitmapMap: ${
-                                            loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                                curMapLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")
-                                        }",
-                                        "loopKeyToVarNameBitmapMap: ${
-                                            loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                                removedLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")
-                                        }"
-                                    ).joinToString("\n")
-                                )
+//                                FileSystems.updateFile(
+//                                    File(
+//                                        UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                        "image_async_${settingVarName}.txt"
+//                                    ).absolutePath,
+//                                    listOf(
+//                                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                                        "imageVarKey: ${imageVarKey}",
+//                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                        "settingVarName: $settingVarName",
+//                                        "isAsync: ${isAsync}",
+//                                        "curMapLoopKey: ${curMapLoopKey}",
+//                                        "removedLoopKey: ${removedLoopKey}",
+//                                        "loopKeyToAsyncDeferredVarNameBitmapMap: ${
+//                                            loopKeyToAsyncDeferredVarNameBitmapMap.getAsyncVarNameToBitmapAndExitSignal(
+//                                                curMapLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")
+//                                        }",
+//                                        "privateLoopKeyVarNameBitmapMap: ${
+//                                            privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                                curMapLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")
+//                                        }",
+//                                        "loopKeyToVarNameBitmapMap: ${
+//                                            loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                                curMapLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")
+//                                        }",
+//                                        "loopKeyToVarNameBitmapMap: ${
+//                                            loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                                removedLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")
+//                                        }"
+//                                    ).joinToString("\n")
+//                                )
+                            }
+                            CoroutineScope(Dispatchers.IO).launch {
+                                imageActionAsyncCoroutine.put(asyncJob)
                             }
                             return@forEach
                         }
@@ -1048,52 +1063,52 @@ class ImageActionManager {
                                     varNameToBitmap.second
                                 )
                             }
-                            FileSystems.updateFile(
-                                File(
-                                    UsePath.cmdclickDefaultIDebugAppDirPath,
-                                    "image_${settingVarName}.txt"
-                                ).absolutePath,
-                                listOf(
-                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
-                                    "imageVarKey: ${imageVarKey}",
-                                    "mainSubKeyPairList: ${mainSubKeyPairList}",
-                                    "settingVarName: $settingVarName",
-                                    "isAsync: ${isAsync}",
-                                    "curMapLoopKey: ${curMapLoopKey}",
-                                    "removedLoopKey: ${removedLoopKey}",
-                                    "varName: ${varNameToBitmap.first}",
-                                    "topAcIVarName: ${topAcIVarName}",
-                                    "varNameForPut: ${varNameForPut}",
-                                    "curMapLoopKey privateLoopKeyVarNameBitmapMap: ${
-                                        privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                            curMapLoopKey
-                                        )?.map {
-                                            it.key
-                                        }?.joinToString("\n")
-                                    }",
-                                    "removedLoopKey privateLoopKeyVarNameBitmapMap: ${
-                                        privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                            removedLoopKey
-                                        )?.map {
-                                            it.key
-                                        }?.joinToString("\n")
-                                    }",
-                                    "curMapLoopKey loopKeyToVarNameBitmapMap: ${
-                                        loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                            curMapLoopKey
-                                        )?.map {
-                                            it.key
-                                        }?.joinToString("\n")
-                                    }",
-                                    "removedLoopKey loopKeyToVarNameBitmapMap: ${
-                                        loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
-                                            removedLoopKey
-                                        )?.map {
-                                            it.key
-                                        }?.joinToString("\n")
-                                    }",
-                                ).joinToString("\n")
-                            )
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                    "image_${settingVarName}.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                                    "imageVarKey: ${imageVarKey}",
+//                                    "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                    "settingVarName: $settingVarName",
+//                                    "isAsync: ${isAsync}",
+//                                    "curMapLoopKey: ${curMapLoopKey}",
+//                                    "removedLoopKey: ${removedLoopKey}",
+//                                    "varName: ${varNameToBitmap.first}",
+//                                    "topAcIVarName: ${topAcIVarName}",
+//                                    "varNameForPut: ${varNameForPut}",
+//                                    "curMapLoopKey privateLoopKeyVarNameBitmapMap: ${
+//                                        privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                            curMapLoopKey
+//                                        )?.map {
+//                                            it.key
+//                                        }?.joinToString("\n")
+//                                    }",
+//                                    "removedLoopKey privateLoopKeyVarNameBitmapMap: ${
+//                                        privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                            removedLoopKey
+//                                        )?.map {
+//                                            it.key
+//                                        }?.joinToString("\n")
+//                                    }",
+//                                    "curMapLoopKey loopKeyToVarNameBitmapMap: ${
+//                                        loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                            curMapLoopKey
+//                                        )?.map {
+//                                            it.key
+//                                        }?.joinToString("\n")
+//                                    }",
+//                                    "removedLoopKey loopKeyToVarNameBitmapMap: ${
+//                                        loopKeyToVarNameBitmapMap.getAsyncVarNameToBitmap(
+//                                            removedLoopKey
+//                                        )?.map {
+//                                            it.key
+//                                        }?.joinToString("\n")
+//                                    }",
+//                                ).joinToString("\n")
+//                            )
                         }
                     }
                 }
@@ -2459,10 +2474,10 @@ class ImageActionManager {
                                     ImageActionKeyManager. ExitSignal?
                                     >?
                             >? = null
-                    for (i in 1..50) {
-                        if(
-                            ErrLogger.AlreadyErr.get()
-                        ) break
+                    for (i in 1..awaitWaitTimes) {
+//                        if(
+//                            ErrLogger.AlreadyErr.get()
+//                        ) break
                         deferredVarNameToBitmapAndExitSignal =
                             loopKeyToAsyncDeferredVarNameBitmapMap
                                 ?.getAsyncVarNameToBitmapAndExitSignal(
@@ -2475,12 +2490,50 @@ class ImageActionManager {
                         }
                         delay(100)
                     }
+                    val spanKeyToSubKeyConWhere =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errBrown,
+                            keyToSubKeyConWhere
+                        )
+                    if(
+                        deferredVarNameToBitmapAndExitSignal == null
+                        && curMapLoopKey.isNotEmpty()
+                        && awaitVarName.isNotEmpty()
+                    ) {
+                        val spanAwaitVarName =
+                            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errRedCode,
+                                awaitVarName
+                            )
+                        val spanIAcVarKeyName =
+                            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.ligthBlue,
+                                ImageActionKeyManager.ImageActionsKey.IMAGE_ACTION_VAR.key
+                            )
+                        val importPath = actionImportMap.get(
+                            ImageActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
+                        )
+                        val spanImportPath =
+                            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errRedCode,
+                                importPath ?: String()
+                            )
+                        runBlocking {
+                            ErrLogger.sendErrLog(
+                                context,
+                                ErrLogger.ImageActionErrType.AWAIT,
+                                "await var name not exist: ${spanAwaitVarName}, by import path ${spanImportPath}, setting key: ${spanIAcVarKeyName}",
+                                spanKeyToSubKeyConWhere,
+                            )
+                        }
+                        return@awaitVarNameList String() to null
+                    }
                     val varNameToBitmapAndExitSignal =
                         deferredVarNameToBitmapAndExitSignal?.await()
-//                    loopKeyToAsyncDeferredVarNameBitmapMap?.clearVarName(
-//                        curMapLoopKey,
-//                        awaitVarName,
-//                    )
+                    loopKeyToAsyncDeferredVarNameBitmapMap?.clearVarName(
+                        curMapLoopKey,
+                        awaitVarName,
+                    )
                     val varNameToBitmap = varNameToBitmapAndExitSignal?.first
                     val exitSignal = varNameToBitmapAndExitSignal?.second
                     val varName = varNameToBitmap?.first
@@ -2568,12 +2621,16 @@ class ImageActionManager {
                     importedKeyToSubKeyConList
                 )
                 val isErr = withContext(Dispatchers.IO) {
+                    val keyToSubKeyConWhereInImportPath = listOf(
+                        keyToSubKeyConWhere,
+                        "by import path $importPathSrc"
+                    ).joinToString("\n")
                     val isGlobalVarNameErrWithRunPrefixJob = async {
                         ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
                             context,
                             settingKeyToVarNameList,
                             topIAcVarName,
-                            keyToSubKeyConWhere
+                            keyToSubKeyConWhereInImportPath
                         )
                     }
                     val isGlobalVarNameMultipleExistErrWithoutRunPrefixJob = async {
@@ -2581,7 +2638,7 @@ class ImageActionManager {
                             context,
                             settingKeyToVarNameList,
                             topIAcVarName,
-                            keyToSubKeyConWhere
+                            keyToSubKeyConWhereInImportPath
                         )
                     }
                     val isGlobalVarNameNotLastErrWithoutRunPrefixJob = async {
@@ -2589,7 +2646,7 @@ class ImageActionManager {
                             context,
                             settingKeyToVarNameList,
                             topIAcVarName,
-                            keyToSubKeyConWhere
+                            keyToSubKeyConWhereInImportPath
                         )
                     }
                     isGlobalVarNameErrWithRunPrefixJob.await()
@@ -2753,36 +2810,36 @@ class ImageActionManager {
                                                 ImageActionKeyManager. ExitSignal?
                                                 >?
                                         >? = null
-                                for (i in 1..50) {
-                                    if(
-                                        ErrLogger.AlreadyErr.get()
-                                    ) break
+                                for (i in 1..awaitWaitTimes) {
+//                                    if(
+//                                        ErrLogger.AlreadyErr.get()
+//                                    ) break
                                     deferredVarNameToBitmapAndExitSignal =
                                         loopKeyToAsyncDeferredVarNameBitmapMap
                                             ?.getAsyncVarNameToBitmapAndExitSignal(
                                                 curMapLoopKey
                                             )?.get(awaitVarName)
-                                    FileSystems.updateFile(
-                                        File(
-                                            UsePath.cmdclickDefaultIDebugAppDirPath,
-                                            "image_await_${settingVarName}.txt"
-                                        ).absolutePath,
-                                        listOf(
-                                            "mainSubKeyPairList: ${mainSubKeyPairList}",
-                                            "settingVarName: $settingVarName",
-                                            "curMapLoopKey: ${curMapLoopKey}",
-                                            "awaitVarNameList: ${awaitVarNameList}",
-                                            "awaitVarName: ${awaitVarName}",
-                                            "loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
-                                                curMapLoopKey
-                                            )?.map {
-                                                it.key
-                                            }?.joinToString("\n")}"
-//                    "varNameToBitmap: ${varNameToBitmap.first}",
-//                    "bitmapWidth: ${varNameToBitmap.second?.width}",
-//                    "bitmapHeight: ${varNameToBitmap.second?.height}",
-                                        ).joinToString("\n")  + "\n\n========\n\n"
-                                    )
+//                                    FileSystems.updateFile(
+//                                        File(
+//                                            UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                            "image_await_${settingVarName}.txt"
+//                                        ).absolutePath,
+//                                        listOf(
+//                                            "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                            "settingVarName: $settingVarName",
+//                                            "curMapLoopKey: ${curMapLoopKey}",
+//                                            "awaitVarNameList: ${awaitVarNameList}",
+//                                            "awaitVarName: ${awaitVarName}",
+//                                            "loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
+//                                                curMapLoopKey
+//                                            )?.map {
+//                                                it.key
+//                                            }?.joinToString("\n")}"
+////                    "varNameToBitmap: ${varNameToBitmap.first}",
+////                    "bitmapWidth: ${varNameToBitmap.second?.width}",
+////                    "bitmapHeight: ${varNameToBitmap.second?.height}",
+//                                        ).joinToString("\n")  + "\n\n========\n\n"
+//                                    )
                                     if (
                                         deferredVarNameToBitmapAndExitSignal != null
                                     ) {
@@ -2790,12 +2847,37 @@ class ImageActionManager {
                                     }
                                     delay(100)
                                 }
+                                if(
+                                    deferredVarNameToBitmapAndExitSignal == null
+                                    && curMapLoopKey.isNotEmpty()
+                                    && awaitVarName.isNotEmpty()
+                                ) {
+                                    val spanAwaitVarName =
+                                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                            CheckTool.errRedCode,
+                                            awaitVarName
+                                        )
+                                    val spanIVarKeyName =
+                                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                            CheckTool.ligthBlue,
+                                            ImageActionKeyManager.ImageActionsKey.IMAGE_VAR.key
+                                        )
+                                    runBlocking {
+                                        ErrLogger.sendErrLog(
+                                            context,
+                                            ErrLogger.ImageActionErrType.AWAIT,
+                                            "await var name not exist: ${spanAwaitVarName}, setting key: ${spanIVarKeyName}",
+                                            keyToSubKeyConWhere,
+                                        )
+                                    }
+                                    return@awaitVarNameList
+                                }
                                 val varNameToBitmapAndExitSignal =
                                     deferredVarNameToBitmapAndExitSignal?.await()
-//                                loopKeyToAsyncDeferredVarNameBitmapMap?.clearVarName(
-//                                    curMapLoopKey,
-//                                    awaitVarName,
-//                                )
+                                loopKeyToAsyncDeferredVarNameBitmapMap?.clearVarName(
+                                    curMapLoopKey,
+                                    awaitVarName,
+                                )
                                 val varNameToBitmap = varNameToBitmapAndExitSignal?.first
                                 val exitSignal = varNameToBitmapAndExitSignal?.second
                                 val varName = varNameToBitmap?.first

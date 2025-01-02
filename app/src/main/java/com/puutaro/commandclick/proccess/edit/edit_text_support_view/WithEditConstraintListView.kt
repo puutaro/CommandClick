@@ -26,6 +26,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
@@ -105,6 +106,7 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         editListConfigMapSrc: Map<String, String>?,
         editListTitleConstraint: ConstraintLayout?,
 //        editListLinearAlignTitleLayout: FrameLayout?,
@@ -181,6 +183,7 @@ object WithEditConstraintListView{
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
+                        imageActionAsyncCoroutine,
                         it,
                         keyToSubKeyConWhere,
                     )
@@ -191,23 +194,23 @@ object WithEditConstraintListView{
         FileSystems.removeAndCreateDir(
             imageAcTestDirPath
         )
-        globalVarNameToBitmapMap.forEach {
-            val bitmap = it.value
-                ?: return@forEach
-            FileSystems.writeFromByteArray(
-                File(
-                    imageAcTestDirPath,
-                    "${it.key}.png"
-                ).absolutePath,
-                BitmapTool.convertBitmapToByteArray(
-                    bitmap
-                )
-            )
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO){
-                delay(1000)
-            }
+        FileSystems.removeAndCreateDir(
+            UsePath.cmdclickDefaultIDebugAppDirPath
+        )
+//        globalVarNameToBitmapMap.forEach {
+//            val bitmap = it.value
+//                ?: return@forEach
+//            FileSystems.writeFromByteArray(
+//                File(
+//                    imageAcTestDirPath,
+//                    "${it.key}.png"
+//                ).absolutePath,
+//                BitmapTool.convertBitmapToByteArray(
+//                    bitmap
+//                )
+//            )
+//        }
+        withContext(Dispatchers.IO) {
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }
 //        FileSystems.writeFile(

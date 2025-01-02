@@ -17,6 +17,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditConstraintListView
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -111,6 +112,8 @@ class EditListDialogOrdinary(
         constraintLayoutSrc?.findViewById<ConstraintLayout>(
             R.id.edit_list_dialog_footer_constraint_layout
         )
+
+    private val imageActionAsyncCoroutine = ImageActionAsyncCoroutine()
     init {
         editListDialogOrdinary?.setOnCancelListener {
             dismissForInner(
@@ -257,6 +260,7 @@ class EditListDialogOrdinary(
                     fannelInfoMap,
                     setReplaceVariableMap,
                     terminalFragment.busyboxExecutor,
+                    imageActionAsyncCoroutine,
                     editListConfigMap,
                     editListDialogTitleConstraint,
 //                    editListLinearAlignTitleLayout,
@@ -300,6 +304,9 @@ class EditListDialogOrdinary(
         constraintLayout: ConstraintLayout?,
         contentsLayoutForFooter: ConstraintLayout?,
     ){
+        CoroutineScope(Dispatchers.IO).launch {
+            imageActionAsyncCoroutine.clean()
+        }
         contentsLayoutForFooter?.removeAllViews()
         editListRecyclerView?.layoutManager = null
         editListRecyclerView?.adapter = null

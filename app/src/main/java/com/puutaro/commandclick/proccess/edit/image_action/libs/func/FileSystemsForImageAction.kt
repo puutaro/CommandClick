@@ -61,14 +61,14 @@ object FileSystemsForImageAction {
         }
         return when(methodNameClass){
             MethodNameClass.SAVE -> {
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultIDebugAppDirPath, "image_save.txt").absolutePath,
-                    listOf(
-                        varNameToBitmapMap.map {
-                            "${it.key} height: ${it.value?.height} width: ${it.value?.width}"
-                        }.joinToString("\n")
-                    ).joinToString("\n\n")
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultIDebugAppDirPath, "image_save.txt").absolutePath,
+//                    listOf(
+//                        varNameToBitmapMap.map {
+//                            "${it.key} height: ${it.value?.height} width: ${it.value?.width}"
+//                        }.joinToString("\n")
+//                    ).joinToString("\n\n")
+//                )
                 val savePath = argsList.get(0)
                 val bitmapKey =
                     ImageActionKeyManager.BitmapVar.convertBitmapKey(
