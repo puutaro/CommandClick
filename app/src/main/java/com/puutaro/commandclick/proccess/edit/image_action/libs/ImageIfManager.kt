@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 
 
 object ImageIfManager {
@@ -26,16 +28,26 @@ object ImageIfManager {
                     .replace(">", "＞")
                     .replace("%", "％    ")
             )
-            return null to IfCheckErr("Failure to compile 'if' method args regex: ${spanJudgeBaseRegexStr}")
+            val spanIIfKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.ligthBlue,
+                ImageActionKeyManager.ImageSubKey.I_IF.key
+            )
+            return null to IfCheckErr("Failure to compile '${spanIIfKey}' method args regex: ${spanJudgeBaseRegexStr}")
         }
         val matchTypeStr = argsPairList.get(1).second
         val matchType = JudgeType.entries.firstOrNull {
             it.str == matchTypeStr
-        } ?: return null to IfCheckErr(
-            "'if' Match type must be ${
-                JudgeType.entries.map { "'${it.str}'" }.joinToString(" or ")
-            }"
-        )
+        } ?: let {
+            val spanIIfKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.ligthBlue,
+                ImageActionKeyManager.ImageSubKey.I_IF.key
+            )
+            return null to IfCheckErr(
+                "'${spanIIfKey}' Match type must be ${
+                    JudgeType.entries.map { "'${it.str}'" }.joinToString(" or ")
+                }"
+            )
+        }
         return when(matchType){
             JudgeType.EQUAL -> {
                 judgeBaseRegex.containsMatchIn(judgeTargetStr)
@@ -65,8 +77,12 @@ object ImageIfManager {
                         CheckTool.errRedCode,
                         argsNameList.joinToString(", ")
                     )
+                    val spanIIfKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        ImageActionKeyManager.ImageSubKey.I_IF.key
+                    )
                     return IfCheckErr(
-                        "'if' method all args not exist: args list: ${spanArgsNameListCon}"
+                        "'${spanIIfKey}' method all args not exist: args list: ${spanArgsNameListCon}"
                     )
                 }
             if(
@@ -80,7 +96,11 @@ object ImageIfManager {
                     CheckTool.errRedCode,
                     (index + 1).toString()
                 )
-                return IfCheckErr("'if' method args not exist: name: ${spanArgName}, index: ${spanArgIndex}")
+                val spanIIfKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.ligthBlue,
+                    ImageActionKeyManager.ImageSubKey.I_IF.key
+                )
+                return IfCheckErr("'${spanIIfKey}' method args not exist: name: ${spanArgName}, index: ${spanArgIndex}")
             }
         }
         return null

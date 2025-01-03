@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +19,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditCon
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
@@ -113,6 +113,7 @@ class EditListDialogOrdinary(
             R.id.edit_list_dialog_footer_constraint_layout
         )
 
+    private val settingActionAsyncCoroutine = SettingActionAsyncCoroutine()
     private val imageActionAsyncCoroutine = ImageActionAsyncCoroutine()
     init {
         editListDialogOrdinary?.setOnCancelListener {
@@ -260,6 +261,7 @@ class EditListDialogOrdinary(
                     fannelInfoMap,
                     setReplaceVariableMap,
                     terminalFragment.busyboxExecutor,
+                    settingActionAsyncCoroutine,
                     imageActionAsyncCoroutine,
                     editListConfigMap,
                     editListDialogTitleConstraint,
@@ -305,6 +307,7 @@ class EditListDialogOrdinary(
         contentsLayoutForFooter: ConstraintLayout?,
     ){
         CoroutineScope(Dispatchers.IO).launch {
+            settingActionAsyncCoroutine.clean()
             imageActionAsyncCoroutine.clean()
         }
         contentsLayoutForFooter?.removeAllViews()

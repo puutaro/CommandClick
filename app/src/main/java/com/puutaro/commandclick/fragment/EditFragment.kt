@@ -32,6 +32,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonT
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.CurrentFannelConListMaker
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_list_libs.DirectoryAndCopyGetter
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -104,7 +105,7 @@ class EditFragment: Fragment() {
     var firstUpdate = false
     val alterIfShellResultMap: MutableMap<String, String> = mutableMapOf()
     val imageActionAsyncCoroutine = ImageActionAsyncCoroutine()
-
+    val settingActionAsyncCoroutine = SettingActionAsyncCoroutine()
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -379,6 +380,7 @@ class EditFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         CoroutineScope(Dispatchers.IO).launch {
+            settingActionAsyncCoroutine.clean()
             imageActionAsyncCoroutine.clean()
         }
         jsExecuteJob?.cancel()

@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 
@@ -10,8 +11,17 @@ object FileSystemsForSettingHandler {
     fun handle(
         funcName: String,
         methodNameStr: String,
-        argsPairList: List<Pair<String, String>>
-    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
+        argsPairList: List<Pair<String, String>>,
+        varNameToValueStrMap: Map<String, String?>
+    ): Pair<
+            Pair<
+                    String?,
+                    SettingActionKeyManager.ExitSignal?
+                    >?,
+            FuncCheckerForSetting2.FuncCheckErr?
+            >?
+    //Pair<String?, FuncCheckerForSetting.FuncCheckErr?>
+    {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {
@@ -23,13 +33,14 @@ object FileSystemsForSettingHandler {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+        FuncCheckerForSetting2.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.argsNameToTypeList,
-            argsPairList
+            argsPairList,
+            varNameToValueStrMap,
         )?.let {
             argsCheckErr ->
             return null to argsCheckErr
@@ -45,14 +56,30 @@ object FileSystemsForSettingHandler {
         }
         return when(methodNameClass){
             MethodNameClass.READ -> {
-                val firstArg = argsList.get(0)
-                ReadText(
-                    firstArg
-                ).readText()
+                val filePath = SettingFuncTool.getValueStrFromMapOrIt(
+                    argsList.get(0),
+                    varNameToValueStrMap,
+                ) ?: return null
+//                val valurStrKey =
+//                    ImageActionKeyManager.BitmapVar.convertBitmapKey(
+//                        argsList.get(0)
+//                    )
+//                val filePath = varNameToValueStrMap.get(valurStrKey)
+//                    ?: return null
+                Pair(
+                    ReadText(filePath).readText(),
+                    null
+                ) to null
             }
             MethodNameClass.WRITE -> {
-                val firstArg = argsList.get(0)
-                val secondArg = argsList.get(1)
+                val firstArg = SettingFuncTool.getValueStrFromMapOrIt(
+                    argsList.get(0),
+                    varNameToValueStrMap,
+                ) ?: return null
+                val secondArg = SettingFuncTool.getValueStrFromMapOrIt(
+                    argsList.get(1),
+                    varNameToValueStrMap,
+                ) ?: return null
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "setting2.txt").absolutePath,
 //                    listOf(
@@ -82,12 +109,12 @@ object FileSystemsForSettingHandler {
                 )
                 null
             }
-        } to null
+        }
     }
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
     ){
         READ("read", readArgsNameToTypeList),
         WRITE("write", writeArgsNameToTypeList),
@@ -96,13 +123,13 @@ object FileSystemsForSettingHandler {
     }
 
     private val readArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting.ArgType.PATH)
+        Pair("filePath", FuncCheckerForSetting2.ArgType.PATH)
     )
 
 
     private val writeArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting.ArgType.PATH),
-        Pair("contents", FuncCheckerForSetting.ArgType.STRING),
+        Pair("filePath", FuncCheckerForSetting2.ArgType.PATH),
+        Pair("contents", FuncCheckerForSetting2.ArgType.STRING),
     )
 
 }

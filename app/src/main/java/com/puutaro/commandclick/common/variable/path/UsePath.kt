@@ -156,6 +156,7 @@ object UsePath {
     const val cmdclickDefaultAppDirName = "default"
     private val cmdclickDefaultAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickDefaultAppDirName"
     val cmdclickDefaultAppDirPath =  "$rootPath/$cmdclickDefaultAppRelativePath"
+    val cmdclickDefaultSDebugAppDirPath =  File(cmdclickDefaultAppDirPath, "SDebug").absolutePath
     val cmdclickDefaultIDebugAppDirPath =  File(cmdclickDefaultAppDirPath, "iDebug").absolutePath
 //    const val cmdclickSystemAppDirName = "system"
 //    private val cmdclickSystemAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickSystemAppDirName"

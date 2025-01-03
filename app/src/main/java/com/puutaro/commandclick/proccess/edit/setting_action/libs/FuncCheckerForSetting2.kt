@@ -1,13 +1,12 @@
-package com.puutaro.commandclick.proccess.edit.image_action.libs
+package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
-import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
-object ImageFuncCheckerForImageSetting {
+object FuncCheckerForSetting2 {
 
     class FuncCheckErr(
         val errMessage: String
@@ -19,7 +18,7 @@ object ImageFuncCheckerForImageSetting {
         methodName: String,
         baseArgsNameToTypeList: List<Pair<String, ArgType>>?,
         argsPairList: List<Pair<String, String>>,
-        varNameToBitmapMap: Map<String, Bitmap?>?,
+        varNameToValueStrMap: Map<String, String?>?,
     ): FuncCheckErr? {
         if(
             baseArgsNameToTypeList.isNullOrEmpty()
@@ -83,7 +82,7 @@ object ImageFuncCheckerForImageSetting {
                 index,
                 userDefiniteArgStr,
                 argType,
-                varNameToBitmapMap,
+                varNameToValueStrMap,
             ).let {
                 funcCheckErr ->
                 if(
@@ -103,15 +102,30 @@ object ImageFuncCheckerForImageSetting {
             index: Int,
             argStr: String,
             argType: ArgType,
-            varNameToBitmapMap: Map<String, Bitmap?>?,
+            varNameToValueStrMap: Map<String, String?>?,
         ): FuncCheckErr? {
+            val valueStrToErr = getValueStrFromMapOrIt(
+                funcName,
+                methodName,
+                argStr,
+                argName,
+                index,
+                argType,
+                varNameToValueStrMap,
+            )
+            val funcCheckErr = valueStrToErr?.second
+            if(
+                funcCheckErr != null
+            ) return funcCheckErr
+            val argValueStr = valueStrToErr?.first
+                ?: return null
             return try {
                 when (argType) {
                     ArgType.STRING ->
                         null
                     ArgType.PATH -> {
                         if(
-                            File(argStr).isFile
+                            File(argValueStr).isFile
                         ) null
                         else launchTypeCheckErr(
                             funcName,
@@ -124,72 +138,19 @@ object ImageFuncCheckerForImageSetting {
                         )
                     }
                     ArgType.INT -> {
-                        argStr.toInt()
+                        argValueStr.toInt()
                         null
                     }
                     ArgType.FLOAT -> {
-                        argStr.toFloat()
+                        argValueStr.toFloat()
                         null
                     }
                     ArgType.LONG -> {
-                            argStr.toLong()
+                        argValueStr.toLong()
                             null
                     }
                     ArgType.BOOL -> {
-                        argStr.toBoolean()
-                        null
-                    }
-                    ArgType.BITMAP_VAR_NAME -> {
-                        ImageActionKeyManager.BitmapVar.matchBitmapVarName(argStr).let {
-                            isBitmapRegex ->
-                            if(isBitmapRegex) return@let
-                            return launchTypeCheckErr(
-                                funcName,
-                                methodName,
-                                argName,
-                                index,
-                                argType,
-                                argStr,
-                                "not bitmap str (#{(^run)a-zA-Z0-9+})"
-                            )
-                        }
-                        val bitmapKey = ImageActionKeyManager.BitmapVar.convertBitmapKey(argStr)
-                        val runPrefix = ImageActionKeyManager.VarPrefix.RUN.prefix
-                        (bitmapKey.startsWith(runPrefix)).let {
-                                isRunPrefix ->
-                            if(!isRunPrefix) return@let
-                            return launchTypeCheckErr(
-                                funcName,
-                                methodName,
-                                argName,
-                                index,
-                                argType,
-                                argStr,
-                                "disables ${runPrefix} prefix"
-                            )
-                        }
-                        (varNameToBitmapMap?.get(
-                            bitmapKey
-                        ) is Bitmap).let {
-                                isBitmap ->
-                            if(isBitmap) return@let
-//                            FileSystems.updateFile(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "iarg.txt").absolutePath,
-//                                listOf(
-//                                    "argStr: ${argStr}",
-//                                    "bitmapKey: ${bitmapKey}"
-//                                ).joinToString("\n")
-//                            )
-                            return launchTypeCheckErr(
-                                funcName,
-                                methodName,
-                                argName,
-                                index,
-                                argType,
-                                argStr,
-                                "not exist bitmap var name"
-                            )
-                        }
+                        argValueStr.toBoolean()
                         null
                     }
                 }
@@ -205,6 +166,62 @@ object ImageFuncCheckerForImageSetting {
                 )
             }
 
+        }
+
+        private fun getValueStrFromMapOrIt(
+            funcName: String,
+            methodName: String,
+            argStr: String,
+            argName: String,
+            index: Int,
+            argType: ArgType,
+            varNameToValueStrMap: Map<String, String?>?,
+        ): Pair<String?, FuncCheckErr?>? {
+            if(
+                !SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr)
+            ) return null
+//            SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr).let {
+//                    isStrVarRegex ->
+//                if(isStrVarRegex) return@let
+//            }
+            val strKey = SettingActionKeyManager.ValueStrVar.convertStrKey(argStr)
+            val runPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
+            (strKey.startsWith(runPrefix)).let {
+                    isRunPrefix ->
+                if(!isRunPrefix) return@let
+                return null to launchTypeCheckErr(
+                    funcName,
+                    methodName,
+                    argName,
+                    index,
+                    argType,
+                    argStr,
+                    "disables ${runPrefix} prefix"
+                )
+            }
+            val valueStr =
+                varNameToValueStrMap?.get(strKey)
+            if(
+                valueStr is String
+            ) return valueStr to null
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultSDebugAppDirPath, "lfuncarg.txt").absolutePath,
+//                listOf(
+//                    "argStr: ${argStr}",
+//                    "valueStr: ${valueStr}",
+//                    "varNameToValueStrMap: ${varNameToValueStrMap}",
+//                ).joinToString("\n") + "\n\n====\n\n"
+//            )
+            return null to launchTypeCheckErr(
+                    funcName,
+                    methodName,
+                    argName,
+                    index,
+                    argType,
+                    argStr,
+                    "not exist string var name"
+                )
+            }
         }
 
         private fun launchTypeCheckErr(
@@ -245,16 +262,16 @@ object ImageFuncCheckerForImageSetting {
                     FuncCheckErr(
                         "Arg ${spanArgName} not found path: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
                     )
-                ArgType.BITMAP_VAR_NAME ->
+                else -> {
+                    val errBodyMsg = bitmapErrBody.ifEmpty {
+                        "not ${spanArgType} type"
+                    }
                     FuncCheckErr(
-                        "Arg ${spanArgName} ${bitmapErrBody}: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
+                        "Arg ${spanArgName} ${errBodyMsg}: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
                     )
-                else -> FuncCheckErr(
-                    "Arg ${spanArgName} not ${spanArgType} type: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
-                )
+                }
             }
         }
-    }
 
     enum class ArgType {
         PATH,
@@ -263,6 +280,5 @@ object ImageFuncCheckerForImageSetting {
         FLOAT,
         LONG,
         BOOL,
-        BITMAP_VAR_NAME,
     }
 }

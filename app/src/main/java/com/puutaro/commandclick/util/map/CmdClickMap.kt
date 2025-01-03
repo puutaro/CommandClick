@@ -110,7 +110,7 @@ object CmdClickMap {
 
     fun replace(
         targetCon: String,
-        repMap: Map<String, String>?
+        repMap: Map<String, String?>?
     ): String {
         if(
             repMap.isNullOrEmpty()
@@ -119,7 +119,7 @@ object CmdClickMap {
         repMap.forEach {
             repCon = repCon.replace(
                 "\${${it.key}}",
-                it.value
+                it.value ?: String()
             )
         }
         return repCon

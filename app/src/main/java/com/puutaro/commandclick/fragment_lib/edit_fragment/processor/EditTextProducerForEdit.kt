@@ -115,6 +115,7 @@ object EditTextProducerForEdit {
                 editFragment.fannelInfoMap,
                 editFragment.setReplaceVariableMap,
                 editFragment.busyboxExecutor,
+                editFragment.settingActionAsyncCoroutine,
                 editFragment.imageActionAsyncCoroutine,
                 editFragment.editListConfigMap,
                 binding.editListTitleConstraintLayout,

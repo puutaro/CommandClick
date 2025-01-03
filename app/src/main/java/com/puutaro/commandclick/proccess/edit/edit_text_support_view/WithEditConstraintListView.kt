@@ -28,7 +28,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
@@ -106,6 +107,7 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         editListConfigMapSrc: Map<String, String>?,
         editListTitleConstraint: ConstraintLayout?,
@@ -140,13 +142,16 @@ object WithEditConstraintListView{
         }
         withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
-            SettingActionManager.Companion.BeforeActionImportMapManager.init()
+            SettingActionManager2.Companion.BeforeActionImportMapManager.init()
+//            FileSystems.removeAndCreateDir(
+//                UsePath.cmdclickDefaultSDebugAppDirPath
+//            )
         }
         val globalVarNameToValueMap = let {
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
-                val settingActionManager = SettingActionManager()
+                val settingActionManager = SettingActionManager2()
                 runBlocking {
                     val keyToSubKeyConWhere =
                         "${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
@@ -158,6 +163,7 @@ object WithEditConstraintListView{
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
+                        settingActionAsyncCoroutine,
                         it,
                         keyToSubKeyConWhere,
                     )
@@ -165,7 +171,20 @@ object WithEditConstraintListView{
             }
         }
         withContext(Dispatchers.IO) {
-            SettingActionManager.Companion.BeforeActionImportMapManager.init()
+            SettingActionManager2.Companion.BeforeActionImportMapManager.init()
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultSDebugAppDirPath, "sglobalVarNameToValueMap.txt").absolutePath,
+//                listOf(
+//                    "globalVarNameToValueMap: ${globalVarNameToValueMap}\n",
+//                ).joinToString("\n\n\n")
+//            )
+        }
+        return
+        withContext(Dispatchers.IO) {
+            ImageActionManager.Companion.BeforeActionImportMapManager.init()
+            FileSystems.removeAndCreateDir(
+                UsePath.cmdclickDefaultIDebugAppDirPath
+            )
         }
         val globalVarNameToBitmapMap = let {
             ImageActionForConfigCon.getImageConfigCon(
@@ -184,6 +203,7 @@ object WithEditConstraintListView{
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         imageActionAsyncCoroutine,
+                        null,
                         it,
                         keyToSubKeyConWhere,
                     )
@@ -194,33 +214,22 @@ object WithEditConstraintListView{
         FileSystems.removeAndCreateDir(
             imageAcTestDirPath
         )
-        FileSystems.removeAndCreateDir(
-            UsePath.cmdclickDefaultIDebugAppDirPath
-        )
-//        globalVarNameToBitmapMap.forEach {
-//            val bitmap = it.value
-//                ?: return@forEach
-//            FileSystems.writeFromByteArray(
-//                File(
-//                    imageAcTestDirPath,
-//                    "${it.key}.png"
-//                ).absolutePath,
-//                BitmapTool.convertBitmapToByteArray(
-//                    bitmap
-//                )
-//            )
-//        }
+        globalVarNameToBitmapMap.forEach {
+            val bitmap = it.value
+                ?: return@forEach
+            FileSystems.writeFromByteArray(
+                File(
+                    imageAcTestDirPath,
+                    "${it.key}.png"
+                ).absolutePath,
+                BitmapTool.convertBitmapToByteArray(
+                    bitmap
+                )
+            )
+        }
         withContext(Dispatchers.IO) {
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "svarNameToValueMap.txt").absolutePath,
-//            listOf(
-//                "varNameToValueMap: ${varNameToValueMap}\n",
-//                "varNameToValueMap2: ${varNameToValueMap2}\n",
-//                "varNameToValueMap3: ${varNameToValueMap3}\n",
-//            ).joinToString("\n")
-//        )
         val setReplaceVariableMap = withContext(Dispatchers.IO) {
             (setReplaceVariableMapSrc ?: emptyMap()) +
                     globalVarNameToValueMap
@@ -238,62 +247,12 @@ object WithEditConstraintListView{
                 key to value
             }
         }?.toMap()
-//        CoroutineScope(Dispatchers.IO).launch{
-//            val titleLayoutPathKey = EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH.key
-//            val titleSettingPath = withContext(Dispatchers.IO) {
-//                editListConfigMap?.get(
-//                    titleLayoutPathKey
-//                )
-//            } ?: String()
-//            val titleSettingMap = withContext(Dispatchers.IO){
-//                ListSettingVariableListMaker.makeFromSettingPath(
-//                    context,
-//                    titleSettingPath,
-//                    fannelInfoMap,
-//                    setReplaceVariableMap,
-//                ).map {
-//                    titleSettingMapSrc ->
-//                    val titleSectionKey = titleSettingMapSrc.key
-//                    val keyToSubKeyConSrc = titleSettingMapSrc.value
-//                    val keyToSubKeyConWhere =
-//                        "${titleLayoutPathKey} in ${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
-//                            val key = SnakeCamelTool.snakeToCamel(it.key)
-//                            "${key}: ${it.value}"
-//                        }.joinToString(", ")}"
-//                    val titleVarNameToValueMap = SettingActionManager().exec(
-//                        fragment,
-//                        fannelInfoMap,
-//                        setReplaceVariableMap,
-//                        busyboxExecutor,
-//                        keyToSubKeyConSrc,
-//                        keyToSubKeyConWhere
-//                    )
-//                    titleSectionKey to CmdClickMap.replace(
-//                        keyToSubKeyConSrc,
-//                        titleVarNameToValueMap
-//                    )
-//                }.toMap()
-//            }
-//            TitleImageAndViewSetter.set(
-//                fragment,
-////                editBackstackCountFrame,
-////                editBackstackCountView,
-////                editTextView,
-//                fannelInfoMap,
-//                setReplaceVariableMap,
-//                busyboxExecutor,
-//                editListTitleFrame,
-//                editListLinearAlignTitleLayout,
-//                editListFragAlignTitleLayout,
-//                titleSettingMap,
-//                requestBuilderSrc
-//            )
-//        }
         CoroutineScope(Dispatchers.IO).launch {
             setTitle(
                 fragment,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                settingActionAsyncCoroutine,
                 globalVarNameToValueMap,
                 busyboxExecutor,
                 editListRecyclerView,
@@ -309,6 +268,7 @@ object WithEditConstraintListView{
                 fragment,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                settingActionAsyncCoroutine,
                 globalVarNameToValueMap,
                 busyboxExecutor,
                 editListRecyclerView,
@@ -375,6 +335,7 @@ object WithEditConstraintListView{
                 layoutInflater,
                 fannelInfoMap,
                 setReplaceVariableMap + globalVarNameToValueMap,
+                settingActionAsyncCoroutine,
                 globalVarNameToValueMap,
                 frameMapAndFrameTagToContentsMapListToTagIdList,
                 editListConfigMap,
@@ -445,7 +406,7 @@ object WithEditConstraintListView{
 //                editListRecyclerView.scrollToPosition(0)
 //            }
             withContext(Dispatchers.IO){
-                SettingActionManager.Companion.BeforeActionImportMapManager.init()
+                SettingActionManager2.Companion.BeforeActionImportMapManager.init()
             }
             CoroutineScope(Dispatchers.Main).launch{
                 withContext(Dispatchers.IO) {
@@ -468,6 +429,7 @@ object WithEditConstraintListView{
                 fragment,
                 fannelInfoMap,
                 setReplaceVariableMap + globalVarNameToValueMap,
+                settingActionAsyncCoroutine,
                 globalVarNameToValueMap,
                 busyboxExecutor,
                 editListRecyclerView,
@@ -483,6 +445,7 @@ object WithEditConstraintListView{
                 fragment,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                settingActionAsyncCoroutine,
                 globalVarNameToValueMap,
                 busyboxExecutor,
                 editListFooterConstraintLayout,
@@ -529,6 +492,7 @@ object WithEditConstraintListView{
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>,
         busyboxExecutor: BusyboxExecutor?,
         editListFooterConstraintLayout: ConstraintLayout?,
@@ -542,6 +506,7 @@ object WithEditConstraintListView{
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
+            settingActionAsyncCoroutine,
             globalVarNameToValueMap,
             busyboxExecutor,
             editListRecyclerView,
@@ -572,6 +537,7 @@ object WithEditConstraintListView{
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
@@ -585,6 +551,7 @@ object WithEditConstraintListView{
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
+            settingActionAsyncCoroutine,
             globalVarNameToValueMap,
             busyboxExecutor,
             editListRecyclerView,
@@ -604,6 +571,7 @@ object WithEditConstraintListView{
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
@@ -617,6 +585,7 @@ object WithEditConstraintListView{
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
+            settingActionAsyncCoroutine,
             globalVarNameToValueMap,
             busyboxExecutor,
             editListRecyclerView,
@@ -636,6 +605,7 @@ object WithEditConstraintListView{
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
@@ -649,6 +619,7 @@ object WithEditConstraintListView{
             fragment,
             fannelInfoMap,
             setReplaceVariableMap,
+            settingActionAsyncCoroutine,
             globalVarNameToValueMap,
             busyboxExecutor,
             editListRecyclerView,
@@ -668,6 +639,7 @@ object WithEditConstraintListView{
         fragment: Fragment,
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
@@ -816,12 +788,13 @@ object WithEditConstraintListView{
                 if(
                     innerFrameKeyPairsConSrc.isNullOrEmpty()
                 ) return@let emptyMap()
-                val settingActionManager = SettingActionManager()
+                val settingActionManager = SettingActionManager2()
                 val varNameToValueMap = settingActionManager.exec(
                     fragment,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
+                    settingActionAsyncCoroutine,
                     innerFrameKeyPairsConSrc,
                     "frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                         editConstraintListAdapterArg = editConstraintListAdapter
@@ -890,6 +863,7 @@ object WithEditConstraintListView{
                                     fannelInfoMap,
                                     setReplaceVariableMap,
                                     busyboxExecutor,
+                                    settingActionAsyncCoroutine,
                                     editConstraintListAdapter,
                                     frameVarNameValueMap,
                                     mapListElInfoForExecContents,

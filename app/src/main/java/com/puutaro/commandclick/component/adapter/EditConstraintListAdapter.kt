@@ -26,7 +26,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
@@ -61,6 +63,7 @@ class EditConstraintListAdapter(
     private val layoutInflater: LayoutInflater,
     val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
+    private val settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
     private val globalVarNameToValueMap: Map<String, String>?,
     frameMapAndFrameTagToContentsMapListToTagIdList: Triple<
             Map<String, String>,
@@ -485,12 +488,13 @@ class EditConstraintListAdapter(
                     if(
                         innerFrameKeyPairsConSrc.isNullOrEmpty()
                     ) return@let String() to emptyMap()
-                    val settingActionManager = SettingActionManager()
+                    val settingActionManager = SettingActionManager2()
                     val varNameToValueMap = settingActionManager.exec(
                         fragment,
                         fannelInfoMap,
                         setReplaceVariableMap,
                         busyboxExecutor,
+                        settingActionAsyncCoroutine,
                         innerFrameKeyPairsConSrc,
                         totalMapListElInfo,
                         editConstraintListAdapterArg = this@EditConstraintListAdapter
@@ -647,6 +651,7 @@ class EditConstraintListAdapter(
                                         fannelInfoMap,
                                         setReplaceVariableMap,
                                         busyboxExecutor,
+                                        settingActionAsyncCoroutine,
                                         this@EditConstraintListAdapter,
                                         frameVarNameValueMap,
                                         "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",

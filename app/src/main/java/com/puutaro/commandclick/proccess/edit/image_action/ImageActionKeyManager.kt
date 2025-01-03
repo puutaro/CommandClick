@@ -29,7 +29,7 @@ object ImageActionKeyManager {
     object BitmapVar {
 
 
-        val itPronoun = "it"
+        const val itPronoun = "it"
 
         fun matchBitmapVarName(
             bitmapVarName: String,

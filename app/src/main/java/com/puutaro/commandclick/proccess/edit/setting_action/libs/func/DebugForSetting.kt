@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import android.content.Context
-import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
@@ -11,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-object ToastForSetting {
+object DebugForSetting {
 
     suspend fun handle(
         context: Context?,
@@ -63,16 +62,16 @@ object ToastForSetting {
 //                ),
 //            )
 //        )
-        withContext(Dispatchers.Main) {
+        return withContext(Dispatchers.Main) {
             when (methodNameClass) {
-                MethodNameClass.SHORT -> {
+                MethodNameClass.REFLECT -> {
                     val msg = SettingFuncTool.getValueStrFromMapOrIt(
                         argsList.get(0),
                         varNameToValueStrMap,
                     )
                     val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
 //                    FileSystems.writeFile(
-//                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "ltoast.txt").absolutePath,
+//                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "lebug_reflect.txt").absolutePath,
 //                        listOf(
 //                            "bitmapVarRegex: ${bitmapVarRegex}",
 //                            "matches: ${bitmapVarRegex.matches(argsList.get(0))}",
@@ -84,37 +83,24 @@ object ToastForSetting {
 //                            "msg: ${msg}",
 //                        ).joinToString("\n")
 //                    )
-                    ToastUtils.showShort(
-                        msg
-                    )
-
+                    Pair(msg, null) to null
                 }
-
-                MethodNameClass.LONG -> {
-                    val firstArg = argsList.get(0)
-                    ToastUtils.showLong(
-                        firstArg
-                    )
-                }
+                MethodNameClass.NULL -> null
             }
         }
-        return null
     }
 
     enum class MethodNameClass(
         val str: String,
-        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
+        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>?,
     ){
-        SHORT("short", shortArgsNameToTypeList),
-        LONG("long", longArgsNameToTypeList),
+        REFLECT("reflect", shortArgsNameToTypeList),
+        NULL("null", null)
     }
 
     private val shortArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting2.ArgType.STRING)
+        Pair("message", FuncCheckerForSetting2.ArgType.STRING),
     )
 
 
-    private val longArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting2.ArgType.STRING)
-    )
 }
