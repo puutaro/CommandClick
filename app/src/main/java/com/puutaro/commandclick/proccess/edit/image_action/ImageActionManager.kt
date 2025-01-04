@@ -14,7 +14,6 @@ import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -220,6 +219,7 @@ class ImageActionManager {
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        topLevelBitmapStrKeyList: List<String>?,
         topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
@@ -244,6 +244,7 @@ class ImageActionManager {
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
+            topLevelBitmapStrKeyList,
         )
         imageActionExecutor.makeResultLoopKeyToVarNameValueMap(
             topVarNameToVarNameBitmapMap,
@@ -523,6 +524,7 @@ class ImageActionManager {
         private val fannelInfoMap: Map<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
+        private val topLevelBitmapStrKeyList: List<String>?,
     ) {
 
         private val loopKeyToVarNameBitmapMap = LoopKeyToVarNameBitmapMap()
@@ -638,11 +640,32 @@ class ImageActionManager {
                         keyToSubKeyConWhere,
                     )
                 }
-                val isNotReplaceVarErrJob = async {
+                val settingKeyToNoRunVarNameList = VarErrManager.makeSettingKeyToNoRunVarNameList(
+                    keyToSubKeyConList
+                )
+                val isShadowTopLevelVarErrJob = async {
+                    VarErrManager.isShadowTopLevelVarErr(
+                        context,
+                        settingKeyToNoRunVarNameList,
+                        topLevelBitmapStrKeyList,
+                        keyToSubKeyConWhere,
+                    )
+                }
+                val isNotDefinitionVarErr = async {
                     VarErrManager.isNotDefinitionVarErr(
                         context,
+                        settingKeyToNoRunVarNameList,
                         keyToSubKeyConList,
                         bitmapVarKeyList,
+                        keyToSubKeyConWhere,
+                    )
+                }
+                val isNotReplaceVarErrJob = async {
+                    VarErrManager.isNotReplaceVarErr(
+                        context,
+                        keyToSubKeyConList.map {
+                            it.second
+                        }.joinToString("\n"),
                         keyToSubKeyConWhere,
                     )
                 }
@@ -673,6 +696,8 @@ class ImageActionManager {
                         || isNotAwaitAsyncVarErrOrAwaitInAsyncVarErrJob.await()
                         || isBlankIVarOrIAcVarErrJob.await()
                         || isNotUseVarErrJob.await()
+                        || isShadowTopLevelVarErrJob.await()
+                        || isNotDefinitionVarErr.await()
                         || isNotReplaceVarErrJob.await()
                         || isRunPrefixUseErrJob.await()
                         || isSameVarNameErrJob.await()
@@ -2181,15 +2206,59 @@ class ImageActionManager {
                 return true
             }
 
+            fun isShadowTopLevelVarErr(
+                context: Context?,
+                settingKeyToNoRunVarNameList: List<Pair<String, String>>,
+                topLevelBitmapStrKeyList: List<String>?,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val shadowSettingKeyToNoRunVarName = settingKeyToNoRunVarNameList.firstOrNull {
+                        settingKeyToNoRunVarName ->
+                    topLevelBitmapStrKeyList?.contains(
+                        settingKeyToNoRunVarName.second
+                    ) == true
+                }
+                if(
+                    shadowSettingKeyToNoRunVarName == null
+                ) return false
+                val spanSettingKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    shadowSettingKeyToNoRunVarName.first
+                )
+                val spanShadowTopLevelVarKey =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        shadowSettingKeyToNoRunVarName.second
+                    )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        ErrLogger.ImageActionErrType.I_VAR,
+                        "shaddow top level var: ${spanShadowTopLevelVarKey} setting key ${spanSettingKey}",
+                        keyToSubKeyConWhere,
+                    )
+                }
+//
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sisNotReplaceVarErr.txt").absolutePath,
+//                    listOf(
+//                        "settingKeyToNoRunVarNameList: ${settingKeyToNoRunVarNameList}",
+//                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                        "keyToSubKeyListConWithRemoveVar: ${keyToSubKeyListConWithRemoveVar}",
+//                        "settingKeyListConRegex: ${settingKeyListConRegex}",
+//                        "leaveVarMark: ${leaveVarMark}",
+//                    ).joinToString("\n\n") + "\n\n=============\n\n"
+//                )
+                return true
+            }
+
             fun isNotDefinitionVarErr(
                 context: Context?,
+                settingKeyToNoRunVarNameList: List<Pair<String, String>>,
                 keyToSubKeyConList: List<Pair<String, String>>,
                 bitmapVarKeyList: List<String>?,
                 keyToSubKeyConWhere: String,
             ): Boolean {
-                val settingKeyToNoRunVarNameList = makeSettingKeyToNoRunVarNameList(
-                    keyToSubKeyConList
-                )
                 val regexStrTemplate = "(#[{]%s[}])"
                 val bitmapKeyList = let {
                     val bitmapKeyListInCode = settingKeyToNoRunVarNameList.map {
@@ -2247,31 +2316,31 @@ class ImageActionManager {
                 return true
             }
 
+            fun isNotReplaceVarErr(
+                context: Context?,
+                subKeyListCon: String,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                execIsNotReplaceVarErr(
+                    context,
+                    subKeyListCon,
+                    keyToSubKeyConWhere,
+                ).let {
+                        isNotReplaceVar ->
+                    if(isNotReplaceVar) return true
+                }
+                return false
+            }
+
             private fun execIsNotReplaceVarErr(
                 context: Context?,
                 subKeyListCon: String,
                 keyToSubKeyConWhere: String,
             ): Boolean {
-                val replaceKeyToSubKeyListCon = subKeyListCon.replace(
-                    "#{${ImageActionKeyManager.BitmapVar}}",
-                    String()
-                )
-//                varNameList.forEach {
-//                        varName ->
-//                    if(
-//                        varName.startsWith(escapeRunPrefix)
-//                    ) return@forEach
-//                    val varNameWithDoll = "${'$'}{${varName}}"
-//                    replaceKeyToSubKeyListCon = replaceKeyToSubKeyListCon.replace(
-//                        varNameWithDoll,
-//                        String()
-//                    )
-//                }
-                val dolVarMarkRegex = Regex("#[{][a-zA-Z0-9_]+[}]")
-                val noReplaceVar = dolVarMarkRegex.find(replaceKeyToSubKeyListCon)?.value
+                val dolVarMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
+                val noReplaceVar = dolVarMarkRegex.find(subKeyListCon)?.value
                 if(
                     noReplaceVar.isNullOrEmpty()
-                    || noReplaceVar.startsWith("#{${escapeRunPrefix}")
                 ) return false
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sexecIsNotReplaceVarErr.txt").absolutePath,
@@ -2382,7 +2451,7 @@ class ImageActionManager {
                 }
             }
 
-            private fun makeSettingKeyToNoRunVarNameList(
+            fun makeSettingKeyToNoRunVarNameList(
                 keyToSubKeyConList: List<Pair<String, String>>,
             ): List<Pair<String, String>> {
                 val defaultReturnPair = String() to String()

@@ -1435,6 +1435,7 @@ object EditComponent {
                         busyboxExecutor: BusyboxExecutor?,
                         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
                         editConstraintListAdapter: EditConstraintListAdapter?,
+                        topLevelVarStrKeyNameList: List<String>?,
                         verticalVarNameValueMap: Map<String, String>,
                         keyToSubKeyConWhere: String,
                         linearFrameKeyPairsListConSrc: String?,
@@ -1464,6 +1465,7 @@ object EditComponent {
                                         setReplaceVariableMap,
                                         busyboxExecutor,
                                         settingActionAsyncCoroutine,
+                                        topLevelVarStrKeyNameList,
                                         CmdClickMap.replace(
                                                 linearFrameKeyPairsListConSrcWithReplace,
                                                 verticalVarNameValueMap,

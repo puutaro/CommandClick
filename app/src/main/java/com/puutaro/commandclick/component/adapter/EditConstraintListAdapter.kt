@@ -495,6 +495,9 @@ class EditConstraintListAdapter(
                         setReplaceVariableMap,
                         busyboxExecutor,
                         settingActionAsyncCoroutine,
+                        globalVarNameToValueMap?.map{
+                            it.key
+                        },
                         innerFrameKeyPairsConSrc,
                         totalMapListElInfo,
                         editConstraintListAdapterArg = this@EditConstraintListAdapter
@@ -653,6 +656,9 @@ class EditConstraintListAdapter(
                                         busyboxExecutor,
                                         settingActionAsyncCoroutine,
                                         this@EditConstraintListAdapter,
+                                        ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
+                                            it.key
+                                        },
                                         frameVarNameValueMap,
                                         "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",
                                         contentsKeyPairsListConSrc,

@@ -216,6 +216,7 @@ class SettingActionManager2 {
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        topLevelValueStrKeyList: List<String>?,
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
@@ -239,6 +240,7 @@ class SettingActionManager2 {
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
+            topLevelValueStrKeyList
         )
         settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
             settingActionAsyncCoroutine,
@@ -517,6 +519,7 @@ class SettingActionManager2 {
         private val fannelInfoMap: Map<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
+        private val topLevelValueStrKeyList: List<String>?,
     ) {
 
         private val loopKeyToVarNameValueStrMap = LoopKeyToVarNameValueStrMap()
@@ -634,9 +637,21 @@ class SettingActionManager2 {
                         keyToSubKeyConWhere,
                     )
                 }
-                val isNotReplaceVarErrJob = async {
-                    VarErrManager.isNotDifinitionVarErr(
+                val settingKeyToNoRunVarNameList = VarErrManager.makeSettingKeyToNoRunVarNameList(
+                    keyToSubKeyConList
+                )
+                val isShadowTopLevelVarErrJob = async {
+                    VarErrManager.isShadowTopLevelVarErr(
                         context,
+                        settingKeyToNoRunVarNameList,
+                        topLevelValueStrKeyList,
+                        keyToSubKeyConWhere,
+                    )
+                }
+                val isNotReplaceVarErrJob = async {
+                    VarErrManager.isNotDefinitionVarErr(
+                        context,
+                        settingKeyToNoRunVarNameList,
                         keyToSubKeyConList,
                         stringVarKeyList,
                         keyToSubKeyConWhere,
@@ -669,6 +684,7 @@ class SettingActionManager2 {
                         || isNotAwaitAsyncVarErrOrAwaitInAsyncVarErrJob.await()
                         || isBlankIVarOrIAcVarErrJob.await()
                         || isNotUseVarErrJob.await()
+                        || isShadowTopLevelVarErrJob.await()
                         || isNotReplaceVarErrJob.await()
                         || isRunPrefixUseErrJob.await()
                         || isSameVarNameErrJob.await()
@@ -2156,15 +2172,13 @@ class SettingActionManager2 {
                 return true
             }
 
-            fun isNotDifinitionVarErr(
+            fun isNotDefinitionVarErr(
                 context: Context?,
+                settingKeyToNoRunVarNameList: List<Pair<String, String>>,
                 keyToSubKeyConList: List<Pair<String, String>>,
                 stringVarKeyList: List<String>?,
                 keyToSubKeyConWhere: String,
             ): Boolean {
-                val settingKeyToNoRunVarNameList = makeSettingKeyToNoRunVarNameList(
-                    keyToSubKeyConList
-                )
                 val regexStrTemplate = "([$][{]%s[}])"
                 val stringKeyList = let {
                     val stringKeyListInCode = settingKeyToNoRunVarNameList.map {
@@ -2205,6 +2219,52 @@ class SettingActionManager2 {
                         context,
                         ErrLogger.SettingActionErrType.S_VAR,
                         "Not difinition var: ${spanLeaveVarMark}",
+                        keyToSubKeyConWhere,
+                    )
+                }
+//
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "sisNotReplaceVarErr.txt").absolutePath,
+//                    listOf(
+//                        "settingKeyToNoRunVarNameList: ${settingKeyToNoRunVarNameList}",
+//                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                        "keyToSubKeyListConWithRemoveVar: ${keyToSubKeyListConWithRemoveVar}",
+//                        "settingKeyListConRegex: ${settingKeyListConRegex}",
+//                        "leaveVarMark: ${leaveVarMark}",
+//                    ).joinToString("\n\n") + "\n\n=============\n\n"
+//                )
+                return true
+            }
+
+            fun isShadowTopLevelVarErr(
+                context: Context?,
+                settingKeyToNoRunVarNameList: List<Pair<String, String>>,
+                topLevelValueStrKeyList: List<String>?,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val shadowSettingKeyToNoRunVarName = settingKeyToNoRunVarNameList.firstOrNull {
+                    settingKeyToNoRunVarName ->
+                    topLevelValueStrKeyList?.contains(
+                        settingKeyToNoRunVarName.second
+                    ) == true
+                }
+                if(
+                    shadowSettingKeyToNoRunVarName == null
+                ) return false
+                val spanSettingKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    shadowSettingKeyToNoRunVarName.first
+                )
+                val spanShadowTopLevelVarKey =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        shadowSettingKeyToNoRunVarName.second
+                    )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        ErrLogger.SettingActionErrType.S_VAR,
+                        "shaddow top level var: ${spanShadowTopLevelVarKey} setting key ${spanSettingKey}",
                         keyToSubKeyConWhere,
                     )
                 }
@@ -2357,7 +2417,7 @@ class SettingActionManager2 {
                 }
             }
 
-            private fun makeSettingKeyToNoRunVarNameList(
+            fun makeSettingKeyToNoRunVarNameList(
                 keyToSubKeyConList: List<Pair<String, String>>,
             ): List<Pair<String, String>> {
                 val defaultReturnPair = String() to String()

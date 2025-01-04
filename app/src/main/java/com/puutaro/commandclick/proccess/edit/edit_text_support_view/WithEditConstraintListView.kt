@@ -164,6 +164,8 @@ object WithEditConstraintListView{
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         settingActionAsyncCoroutine,
+                        null,
+                        //listOf("testTopVar"),
                         it,
                         keyToSubKeyConWhere,
                     )
@@ -203,6 +205,8 @@ object WithEditConstraintListView{
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         imageActionAsyncCoroutine,
+                        null,
+//                        listOf("testTopVar"),
                         null,
                         it,
                         keyToSubKeyConWhere,
@@ -798,9 +802,12 @@ object WithEditConstraintListView{
                     setReplaceVariableMap,
                     busyboxExecutor,
                     settingActionAsyncCoroutine,
+                    globalVarNameToValueMap?.map{
+                        it.key
+                    },
                     innerFrameKeyPairsConSrc,
                     "frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
-                        editConstraintListAdapterArg = editConstraintListAdapter
+                    editConstraintListAdapterArg = editConstraintListAdapter
                 ) + (globalVarNameToValueMap ?: emptyMap())
                varNameToValueMap
             }
@@ -868,6 +875,9 @@ object WithEditConstraintListView{
                                     busyboxExecutor,
                                     settingActionAsyncCoroutine,
                                     editConstraintListAdapter,
+                                    ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
+                                        it.key
+                                    },
                                     frameVarNameValueMap,
                                     mapListElInfoForExecContents,
                                     contentsKeyPairsListConSrc,
