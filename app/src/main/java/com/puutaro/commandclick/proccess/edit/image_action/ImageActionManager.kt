@@ -660,8 +660,8 @@ class ImageActionManager {
                         keyToSubKeyConWhere,
                     )
                 }
-                val isNotReplaceVarErrJob = async {
-                    VarErrManager.isNotReplaceVarErr(
+                val isNotReplaceStringVarErrJob = async {
+                    VarErrManager.isNotReplaceStringVarErr(
                         context,
                         keyToSubKeyConList.map {
                             it.second
@@ -698,7 +698,7 @@ class ImageActionManager {
                         || isNotUseVarErrJob.await()
                         || isShadowTopLevelVarErrJob.await()
                         || isNotDefinitionVarErr.await()
-                        || isNotReplaceVarErrJob.await()
+                        || isNotReplaceStringVarErrJob.await()
                         || isRunPrefixUseErrJob.await()
                         || isSameVarNameErrJob.await()
                         || isNotExistReturnOrFuncJob.await()
@@ -2316,12 +2316,12 @@ class ImageActionManager {
                 return true
             }
 
-            fun isNotReplaceVarErr(
+            fun isNotReplaceStringVarErr(
                 context: Context?,
                 subKeyListCon: String,
                 keyToSubKeyConWhere: String,
             ): Boolean {
-                execIsNotReplaceVarErr(
+                execIsNotReplaceStringVarErr(
                     context,
                     subKeyListCon,
                     keyToSubKeyConWhere,
@@ -2332,7 +2332,7 @@ class ImageActionManager {
                 return false
             }
 
-            private fun execIsNotReplaceVarErr(
+            private fun execIsNotReplaceStringVarErr(
                 context: Context?,
                 subKeyListCon: String,
                 keyToSubKeyConWhere: String,
