@@ -179,12 +179,12 @@ object WithEditConstraintListView{
 //                ).joinToString("\n\n\n")
 //            )
         }
-        return
+
         withContext(Dispatchers.IO) {
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
-            FileSystems.removeAndCreateDir(
-                UsePath.cmdclickDefaultIDebugAppDirPath
-            )
+//            FileSystems.removeAndCreateDir(
+//                UsePath.cmdclickDefaultIDebugAppDirPath
+//            )
         }
         val globalVarNameToBitmapMap = let {
             ImageActionForConfigCon.getImageConfigCon(
@@ -210,23 +210,26 @@ object WithEditConstraintListView{
                 }
             }
         }
-        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
-        FileSystems.removeAndCreateDir(
-            imageAcTestDirPath
-        )
-        globalVarNameToBitmapMap.forEach {
-            val bitmap = it.value
-                ?: return@forEach
-            FileSystems.writeFromByteArray(
-                File(
-                    imageAcTestDirPath,
-                    "${it.key}.png"
-                ).absolutePath,
-                BitmapTool.convertBitmapToByteArray(
-                    bitmap
-                )
-            )
+        withContext(Dispatchers.IO) {
+            ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }
+//        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
+//        FileSystems.removeAndCreateDir(
+//            imageAcTestDirPath
+//        )
+//        globalVarNameToBitmapMap.forEach {
+//            val bitmap = it.value
+//                ?: return@forEach
+//            FileSystems.writeFromByteArray(
+//                File(
+//                    imageAcTestDirPath,
+//                    "${it.key}.png"
+//                ).absolutePath,
+//                BitmapTool.convertBitmapToByteArray(
+//                    bitmap
+//                )
+//            )
+//        }
         withContext(Dispatchers.IO) {
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }

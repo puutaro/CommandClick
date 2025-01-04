@@ -10,7 +10,6 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageFuncManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageIfManager
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
@@ -806,26 +805,26 @@ class ImageActionManager {
                                         val curBitmapVarKeyList = varNameToBitmapMap.map {
                                             it.key
                                         }
-                                        FileSystems.updateFile(
-                                            File(
-                                                UsePath.cmdclickDefaultIDebugAppDirPath,
-                                                "image_acync_acImport00_${acIVarName}.txt"
-                                            ).absolutePath,
-                                            listOf(
-                                                "acIVarName:${acIVarName}",
-                                                "topAcIVarName:${topAcIVarName}",
-                                                "curMapLoopKey: ${curMapLoopKey}",
-                                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
-                                                    addedLoopKey
-                                                )?.map {
-                                                    it.key
-                                                }?.joinToString("\n")}",
-                                                "curMapLoopKey: varNameToBitmapMap: ${varNameToBitmapMap.map {
-                                                    it.key
-                                                }.joinToString("\n")}",
-                                                "curMapLoopKey: curBitmapVarKeyList: ${curBitmapVarKeyList.joinToString("\n")}",
-                                            ).joinToString("\n")  + "\n\n========\n\n"
-                                        )
+//                                        FileSystems.updateFile(
+//                                            File(
+//                                                UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                                "image_acync_acImport00_${acIVarName}.txt"
+//                                            ).absolutePath,
+//                                            listOf(
+//                                                "acIVarName:${acIVarName}",
+//                                                "topAcIVarName:${topAcIVarName}",
+//                                                "curMapLoopKey: ${curMapLoopKey}",
+//                                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
+//                                                    addedLoopKey
+//                                                )?.map {
+//                                                    it.key
+//                                                }?.joinToString("\n")}",
+//                                                "curMapLoopKey: varNameToBitmapMap: ${varNameToBitmapMap.map {
+//                                                    it.key
+//                                                }.joinToString("\n")}",
+//                                                "curMapLoopKey: curBitmapVarKeyList: ${curBitmapVarKeyList.joinToString("\n")}",
+//                                            ).joinToString("\n")  + "\n\n========\n\n"
+//                                        )
                                         makeResultLoopKeyToVarNameValueMap(
                                             topVarNameToVarNameBitmapMap,
                                             imageActionAsyncCoroutine,
@@ -1364,6 +1363,59 @@ class ImageActionManager {
                 return true
             }
 
+            fun isImportShadowVarMarkErr(
+                context: Context?,
+                importPath: String,
+                importSrcConBeforeReplace: String,
+                importRepMap: Map<String, String>,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val importVarSharpMarkList = importRepMap.filter {
+                    ImageActionKeyManager.BitmapVar.matchBitmapVarName(it.value)
+                }.map {
+                    it.value
+                }
+                val importShadowVarSharpMark = importVarSharpMarkList.firstOrNull {
+                    importSrcConBeforeReplace.contains(it)
+                }
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultIDebugAppDirPath, "idebug.txt").absolutePath,
+//                    listOf(
+//                        "importPath: ${importPath}",
+//                        "importVarSharpMarkList: ${importVarSharpMarkList}",
+//                        "importShadowVarSharpMark: ${importShadowVarSharpMark}",
+//                        "importSrcConBeforeReplace: ${importSrcConBeforeReplace}",
+//                    ).joinToString("\n")
+//                )
+                if(
+                    importShadowVarSharpMark.isNullOrEmpty()
+                ) return false
+                val spanSAcVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sAcVarKeyName
+                    )
+                val spanImportShadowVar =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        importShadowVarSharpMark
+                    )
+                val spanImportPath =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        importPath
+                    )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        ErrLogger.ImageActionErrType.I_AC_VAR,
+                        "must not shadow variable in ${spanSAcVarKeyName}: importPath: ${spanImportPath}, shadowVar: ${spanImportShadowVar}",
+                        keyToSubKeyConWhere,
+                    )
+                }
+                return true
+            }
+
             fun isGlobalVarNameExistErrWithRunPrefix(
                 context: Context?,
                 settingKeyToVarNameList: List<Pair<String, String>>,
@@ -1549,10 +1601,11 @@ class ImageActionManager {
 
             }
 
-            fun isGlobalVarFuncNullResultErr(
+            fun isGlobalVarNullResultErr(
                 context: Context?,
                 varName: String,
                 returnBitmap: Bitmap?,
+                imageAcSubKey: ImageActionKeyManager.ImageSubKey,
                 keyToSubKeyConWhere: String,
             ): Boolean {
                 if(
@@ -1567,11 +1620,17 @@ class ImageActionManager {
                         CheckTool.errRedCode,
                         varName
                     )
+
+                val spanSubKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        imageAcSubKey.key
+                    )
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
                         ErrLogger.ImageActionErrType.I_VAR,
-                        "In global (uppercase), func result must be exist: ${spanVarName}",
+                        "In global (uppercase), ${spanSubKeyName} result must be exist: ${spanVarName}",
                         keyToSubKeyConWhere,
                     )
                 }
@@ -2749,40 +2808,45 @@ class ImageActionManager {
                         ImageActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
                     )
                 )
-                ImportErrManager.isCircleImportErr(
-                    context,
-                    originImportPath,
-                    importPathSrc,
-                    keyToSubKeyConWhere,
-                ).let {
-                        isCircleImportErr ->
-                    if(isCircleImportErr) return blankReturnValue
+                val isBeforeImportErr = withContext(Dispatchers.IO) {
+                    val isCircleImportErrJob = async {
+                        ImportErrManager.isCircleImportErr(
+                            context,
+                            originImportPath,
+                            importPathSrc,
+                            keyToSubKeyConWhere,
+                        )
+                    }
+                    val isNotExistJob = async {
+                        ImportErrManager.isNotExist(
+                            context,
+                            importPathSrc,
+                            keyToSubKeyConWhere
+                        )
+                    }
+                    isCircleImportErrJob.await()
+                            || isNotExistJob.await()
                 }
-                ImportErrManager.isNotExist(
-                    context,
-                    importPathSrc,
-                    keyToSubKeyConWhere
-                ).let {
-                        isNotExist ->
-                    if(isNotExist) return blankReturnValue
-                }
+                if(
+                    isBeforeImportErr
+                ) return blankReturnValue
                 val importSrcConBeforeReplace = makeActionImportSrcCon(
                     context,
                     importPathSrc,
                     fannelInfoMap,
                     setReplaceVariableMap,
                 ).replace(
-                    Regex("[${SettingActionKeyManager.landSeparator}]+$"),
+                    Regex("[${ImageActionKeyManager.landSeparator}]+$"),
                     String(),
                 )
-                val repMap = makeRepValHolderMap(
+                val importRepMap = makeRepValHolderMap(
                     actionImportMap.get(
                         ImageActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
                     )
                 )
                 val importSrcCon = CmdClickMap.replaceHolderForJsAction(
                     importSrcConBeforeReplace,
-                    repMap
+                    importRepMap
                 )
                 val importedKeyToSubKeyConList = KeyToSubKeyMapListMaker.make(importSrcCon)
                 val settingKeyToVarNameList = makeSettingKeyToVarNameList(
@@ -2793,6 +2857,15 @@ class ImageActionManager {
                         keyToSubKeyConWhere,
                         "by import path $importPathSrc"
                     ).joinToString("\n")
+                    val isImportShadowVarMarkErrJob = async {
+                        ImportErrManager.isImportShadowVarMarkErr(
+                            context,
+                            importPathSrc,
+                            importSrcConBeforeReplace,
+                            importRepMap,
+                            keyToSubKeyConWhere,
+                        )
+                    }
                     val isGlobalVarNameErrWithRunPrefixJob = async {
                         ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
                             context,
@@ -2817,7 +2890,8 @@ class ImageActionManager {
                             keyToSubKeyConWhereInImportPath
                         )
                     }
-                    isGlobalVarNameErrWithRunPrefixJob.await()
+                    isImportShadowVarMarkErrJob.await()
+                            || isGlobalVarNameErrWithRunPrefixJob.await()
                             || isGlobalVarNameMultipleExistErrWithoutRunPrefixJob.await()
                             || isGlobalVarNameNotLastErrWithoutRunPrefixJob.await()
                 }
@@ -3089,10 +3163,11 @@ class ImageActionManager {
 //                                        curMapLoopKey
 //                                    )?.get(curIVarKey)
                             }
-                            VarErrManager.isGlobalVarFuncNullResultErr(
+                            VarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
                                 returnBitmap,
+                                privateSubKeyClass,
                                 keyToSubKeyConWhere,
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
@@ -3146,26 +3221,26 @@ class ImageActionManager {
 //                                            )?.toMap()
 //                                            ?: emptyMap()) +
 //                                        mapOf(itPronoun to itPronounBitmapToExitSignal?.first)
-                            FileSystems.updateFile(
-                                File(
-                                    UsePath.cmdclickDefaultIDebugAppDirPath,
-                                    "image_func_${settingVarName}.txt"
-                                ).absolutePath,
-                                listOf(
-                                    "mainSubKeyPairList: ${mainSubKeyPairList}",
-                                    "settingVarName: $settingVarName",
-                                    "curMapLoopKey: ${curMapLoopKey}",
-                                    "varNameToBitmapMap: ${varNameToBitmapMap}",
-                                    "loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
-                                        curMapLoopKey
-                                    )?.map {
-                                        it.key
-                                    }?.joinToString("\n")}"
-//                    "varNameToBitmap: ${varNameToBitmap.first}",
-//                    "bitmapWidth: ${varNameToBitmap.second?.width}",
-//                    "bitmapHeight: ${varNameToBitmap.second?.height}",
-                                ).joinToString("\n")  + "\n\n========\n\n"
-                            )
+//                            FileSystems.updateFile(
+//                                File(
+//                                    UsePath.cmdclickDefaultIDebugAppDirPath,
+//                                    "image_func_${settingVarName}.txt"
+//                                ).absolutePath,
+//                                listOf(
+//                                    "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                    "settingVarName: $settingVarName",
+//                                    "curMapLoopKey: ${curMapLoopKey}",
+//                                    "varNameToBitmapMap: ${varNameToBitmapMap}",
+//                                    "loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameBitmapMap?.getAsyncVarNameToBitmapAndExitSignal(
+//                                        curMapLoopKey
+//                                    )?.map {
+//                                        it.key
+//                                    }?.joinToString("\n")}"
+////                    "varNameToBitmap: ${varNameToBitmap.first}",
+////                    "bitmapWidth: ${varNameToBitmap.second?.width}",
+////                    "bitmapHeight: ${varNameToBitmap.second?.height}",
+//                                ).joinToString("\n")  + "\n\n========\n\n"
+//                            )
                             val resultBitmapToExitMacroAndCheckErr = ImageFuncManager.handle(
                                 fragment,
                                 funcTypeDotMethod,
@@ -3189,10 +3264,11 @@ class ImageActionManager {
                                 return@forEach
                             }
                             val resultBitmapToExitMacro = resultBitmapToExitMacroAndCheckErr?.first
-                            VarErrManager.isGlobalVarFuncNullResultErr(
+                            VarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
                                 resultBitmapToExitMacro?.first,
+                                privateSubKeyClass,
                                 keyToSubKeyConWhere,
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
@@ -3297,7 +3373,7 @@ class ImageActionManager {
 private object KeyToSubKeyMapListMaker {
 
     private const val keySeparator = '|'
-    private val settingActionsKeyPlusList =
+    private val imageActionsKeyPlusList =
         ImageActionKeyManager.ImageActionsKey.entries.map {
             it.key
         }
@@ -3318,7 +3394,7 @@ private object KeyToSubKeyMapListMaker {
     ): List<Pair<String, String>> {
         return keyToSubKeyConList.filter {
             val mainKeyName = it.first
-            settingActionsKeyPlusList.contains(mainKeyName)
+            imageActionsKeyPlusList.contains(mainKeyName)
         }
     }
 
@@ -3330,7 +3406,7 @@ private object KeyToSubKeyMapListMaker {
             keySeparator
         ).filter {
             val mainKey = it.first
-            settingActionsKeyPlusList.contains(mainKey)
+            imageActionsKeyPlusList.contains(mainKey)
         }.map {
             val mainKey = it.first
             val subKeyAfterStr = it.second

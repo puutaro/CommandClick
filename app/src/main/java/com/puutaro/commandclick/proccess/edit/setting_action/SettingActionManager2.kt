@@ -13,7 +13,6 @@ import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -658,7 +657,7 @@ class SettingActionManager2 {
                     )
                 }
                 val isNotExistReturnOrFuncJob = async {
-                    VarErrManager.isNotExistReturnOrFunc(
+                    VarErrManager.isNotExistReturnOrFuncOrValue(
                         context,
                         keyToSubKeyConList,
                         keyToSubKeyConWhere,
@@ -732,7 +731,7 @@ class SettingActionManager2 {
 //                }
                 when (curImageActionKey) {
                     SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR -> {
-                        val importPathAndRenewalVarNameToImportConToVarNameValueStrMap =
+                        val importPathAndRenewalVarNameToImportConToVarNameValueStrMapToImportRepMap =
                             SettingImport.makeImportPathAndRenewalVarNameToImportCon(
                                 context,
                                 fannelInfoMap,
@@ -747,12 +746,12 @@ class SettingActionManager2 {
                                 keyToSubKeyConWhere
                             )
                         val importPath =
-                            importPathAndRenewalVarNameToImportConToVarNameValueStrMap.first
+                            importPathAndRenewalVarNameToImportConToVarNameValueStrMapToImportRepMap.first
                         if (
                             importPath.isEmpty()
                         ) return@forEach
                         val renewalVarNameToImportConToVarNameToValueStrMap =
-                            importPathAndRenewalVarNameToImportConToVarNameValueStrMap.second
+                            importPathAndRenewalVarNameToImportConToVarNameValueStrMapToImportRepMap.second
                         val acIVarName =
                             renewalVarNameToImportConToVarNameToValueStrMap.first
                         if (
@@ -1338,6 +1337,50 @@ class SettingActionManager2 {
                 return true
             }
 
+            fun isImportShadowVarMarkErr(
+                context: Context?,
+                importPath: String,
+                importSrcConBeforeReplace: String,
+                importRepMap: Map<String, String>,
+                keyToSubKeyConWhere: String,
+            ): Boolean {
+                val importVarDollMarkList = importRepMap.filter {
+                    SettingActionKeyManager.ValueStrVar.matchStringVarName(it.value)
+                }.map {
+                    it.value
+                }
+                val importShadowVarDollMark = importVarDollMarkList.firstOrNull {
+                    importSrcConBeforeReplace.contains(it)
+                }
+                if(
+                    importShadowVarDollMark.isNullOrEmpty()
+                ) return false
+                val spanSAcVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sAcVarKeyName
+                    )
+                val spanImportShadowVar =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        importShadowVarDollMark
+                    )
+                val spanImportPath =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        importPath
+                    )
+                runBlocking {
+                    ErrLogger.sendErrLog(
+                        context,
+                        ErrLogger.SettingActionErrType.S_AC_VAR,
+                        "must not shadow variable in ${spanSAcVarKeyName}: importPath: ${spanImportPath}, shadowVar: ${spanImportShadowVar}",
+                        keyToSubKeyConWhere,
+                    )
+                }
+                return true
+            }
+
             fun isGlobalVarNameExistErrWithRunPrefix(
                 context: Context?,
                 settingKeyToVarNameList: List<Pair<String, String>>,
@@ -1523,10 +1566,11 @@ class SettingActionManager2 {
 
             }
 
-            fun isGlobalVarFuncNullResultErr(
+            fun isGlobalVarNullResultErr(
                 context: Context?,
                 varName: String,
                 returnValueStr: String?,
+                settingSubKey: SettingActionKeyManager.SettingSubKey,
                 keyToSubKeyConWhere: String,
             ): Boolean {
                 if(
@@ -1541,11 +1585,16 @@ class SettingActionManager2 {
                         CheckTool.errRedCode,
                         varName
                     )
+                val spanSubKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        settingSubKey.key
+                    )
                 runBlocking {
                     ErrLogger.sendErrLog(
                         context,
                         ErrLogger.SettingActionErrType.S_VAR,
-                        "In global (uppercase), func result must be exist: ${spanVarName}",
+                        "In global (uppercase), ${spanSubKeyName} result must be exist: ${spanVarName}",
                         keyToSubKeyConWhere,
                     )
                 }
@@ -1930,7 +1979,7 @@ class SettingActionManager2 {
                 return false
             }
 
-            fun isNotExistReturnOrFunc(
+            fun isNotExistReturnOrFuncOrValue(
                 context: Context?,
                 keyToSubKeyConList: List<Pair<String, String>>,
                 keyToSubKeyConWhere: String,
@@ -1980,11 +2029,16 @@ class SettingActionManager2 {
                             CheckTool.ligthBlue,
                             onReturnKey
                         )
+                    val spanOnValueKey =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            valueKey
+                        )
                     runBlocking {
                         ErrLogger.sendErrLog(
                             context,
                             ErrLogger.SettingActionErrType.S_VAR,
-                            "${spanFuncKey} or ${spanOnReturnKey} sub key must use in ${spanImageVarMainKey} settingKey: subKeyCon: ${spanSubKeyCon}",
+                            "${spanFuncKey} or ${spanOnReturnKey} or ${spanOnValueKey} sub key must use in ${spanImageVarMainKey} settingKey: subKeyCon: ${spanSubKeyCon}",
                             keyToSubKeyConWhere,
                         )
                     }
@@ -2586,7 +2640,7 @@ class SettingActionManager2 {
                             String,
                             List<Pair<String, String>>,
                             Map<String, String?>,
-                            >
+                            >,
                     > {
                 val keyToSubKeyContents = listOf(
                     imageActionVarKey,
@@ -2726,12 +2780,14 @@ class SettingActionManager2 {
                     }
                 }
                 val blankReturnValueStr =
-                    String() to
+                    Pair (
+                        String(),
                             Triple(
                                 String(),
                                 emptyList<Pair<String, String>>(),
                                 emptyMap<String, String?>(),
-                            )
+                            ),
+                    )
                 val errType = isImportToErrType.second
                 if(errType != null){
                     ErrLogger.sendErrLog(
@@ -2751,23 +2807,33 @@ class SettingActionManager2 {
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
                     )
                 )
-                ImportErrManager.isCircleImportErr(
-                    context,
-                    originImportPath,
-                    importPathSrc,
-                    keyToSubKeyConWhere,
-                ).let {
-                        isCircleImportErr ->
-                    if(isCircleImportErr) return blankReturnValueStr
+                val importRepMap = makeRepValHolderMap(
+                    actionImportMap.get(
+                        SettingActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
+                    )
+                )
+                val isBeforeImportErr = withContext(Dispatchers.IO) {
+                    val isCircleImportErrJob = async {
+                        ImportErrManager.isCircleImportErr(
+                            context,
+                            originImportPath,
+                            importPathSrc,
+                            keyToSubKeyConWhere,
+                        )
+                    }
+                    val isNotExistJob = async {
+                        ImportErrManager.isNotExist(
+                            context,
+                            importPathSrc,
+                            keyToSubKeyConWhere
+                        )
+                    }
+                    isCircleImportErrJob.await()
+                            || isNotExistJob.await()
                 }
-                ImportErrManager.isNotExist(
-                    context,
-                    importPathSrc,
-                    keyToSubKeyConWhere
-                ).let {
-                        isNotExist ->
-                    if(isNotExist) return blankReturnValueStr
-                }
+                if(
+                    isBeforeImportErr
+                ) return blankReturnValueStr
                 val importSrcConBeforeReplace = makeActionImportSrcCon(
                     context,
                     importPathSrc,
@@ -2777,14 +2843,9 @@ class SettingActionManager2 {
                     Regex("[${SettingActionKeyManager.landSeparator}]+$"),
                     String(),
                 )
-                val repMap = makeRepValHolderMap(
-                    actionImportMap.get(
-                        SettingActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
-                    )
-                )
                 val importSrcCon = CmdClickMap.replaceHolderForJsAction(
                     importSrcConBeforeReplace,
-                    repMap
+                    importRepMap
                 )
                 val importedKeyToSubKeyConList = KeyToSubKeyMapListMaker.make(importSrcCon)
                 val settingKeyToVarNameList = makeSettingKeyToVarNameList(
@@ -2795,6 +2856,15 @@ class SettingActionManager2 {
                         keyToSubKeyConWhere,
                         "by import path $importPathSrc"
                     ).joinToString("\n")
+                    val isImportShadowVarMarkErrJob = async {
+                        ImportErrManager.isImportShadowVarMarkErr(
+                            context,
+                            importPathSrc,
+                            importSrcConBeforeReplace,
+                            importRepMap,
+                            keyToSubKeyConWhere,
+                        )
+                    }
                     val isGlobalVarNameErrWithRunPrefixJob = async {
                         ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
                             context,
@@ -2819,7 +2889,8 @@ class SettingActionManager2 {
                             keyToSubKeyConWhereInImportPath
                         )
                     }
-                    isGlobalVarNameErrWithRunPrefixJob.await()
+                    isImportShadowVarMarkErrJob.await()
+                            || isGlobalVarNameErrWithRunPrefixJob.await()
                             || isGlobalVarNameMultipleExistErrWithoutRunPrefixJob.await()
                             || isGlobalVarNameNotLastErrWithoutRunPrefixJob.await()
                 }
@@ -2834,10 +2905,13 @@ class SettingActionManager2 {
 //                        "importedKeyToSubKeyConList: ${importedKeyToSubKeyConList}",
 //                    ).joinToString("\n\n") + "\n\n=============\n\n"
 //                )
-                return importPathSrc to Triple(
-                    topIAcVarName,
-                    importedKeyToSubKeyConList,
-                    awaitVarNameValueStrMap
+                return Pair (
+                    importPathSrc,
+                    Triple(
+                        topIAcVarName,
+                        importedKeyToSubKeyConList,
+                        awaitVarNameValueStrMap
+                    ),
                 )
             }
 
@@ -3152,10 +3226,11 @@ class SettingActionManager2 {
 //                                        )?.get(curIVarKey)
                                 }
                             }
-                            VarErrManager.isGlobalVarFuncNullResultErr(
+                            VarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
                                 returnString,
+                                privateSubKeyClass,
                                 keyToSubKeyConWhere,
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
@@ -3220,10 +3295,11 @@ class SettingActionManager2 {
                                 return@forEach
                             }
                             val resultValueStrToExitMacro = resultValueStrToExitMacroAndCheckErr?.first
-                            VarErrManager.isGlobalVarFuncNullResultErr(
+                            VarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
                                 resultValueStrToExitMacro?.first,
+                                privateSubKeyClass,
                                 keyToSubKeyConWhere,
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
