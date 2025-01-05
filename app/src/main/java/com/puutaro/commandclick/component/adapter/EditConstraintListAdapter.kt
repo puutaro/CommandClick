@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -26,8 +27,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
@@ -64,7 +66,9 @@ class EditConstraintListAdapter(
     val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     private val settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+    private val imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
     private val globalVarNameToValueMap: Map<String, String>?,
+    private val globalVarNameToBitmapMap: Map<String, Bitmap?>,
     frameMapAndFrameTagToContentsMapListToTagIdList: Triple<
             Map<String, String>,
             Map<String, List<List<String>>>,
@@ -462,9 +466,9 @@ class EditConstraintListAdapter(
                             alreadyUseTagList.add(it)
                         }
                     }
-                    val isDuplidateTagErr = correctFrameTag.isNullOrEmpty()
+                    val isDuplicateTagErr = correctFrameTag.isNullOrEmpty()
                     if (
-                        isDuplidateTagErr
+                        isDuplicateTagErr
                     ) return@frameTagCheck true
                     false
                 }
@@ -519,7 +523,21 @@ class EditConstraintListAdapter(
                     key to it.value
                 }?.toMap() ?: emptyMap()
             }
-
+            val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
+                ImageActionManager().exec(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    imageActionAsyncCoroutine,
+                    globalVarNameToBitmapMap.map {
+                        it.key
+                    },
+                    globalVarNameToBitmapMap,
+                    frameKeyPairsCon,
+                    totalMapListElInfo,
+                )
+            }
 //            FileSystems.updateFile(
 //                File(
 //                    UsePath.cmdclickDefaultAppDirPath,
@@ -534,6 +552,7 @@ class EditConstraintListAdapter(
                     frameKeyPairsCon,
                 )
             }
+
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout_inadapter${editListPosition}.txt").absolutePath,
 //                listOf(
@@ -765,6 +784,26 @@ class EditConstraintListAdapter(
                                     }.apply {
                                         id = idInt ?: id
                                     }
+                                CoroutineScope(Dispatchers.IO).launch {
+//                                    val varNameToBitmapMapInContents =
+                                    withContext(Dispatchers.IO){
+                                        val topLevelVarNameToBitmapMap =
+                                            globalVarNameToBitmapMap + varNameToBitmapMapInFrame
+                                        ImageActionManager().exec(
+                                            fragment,
+                                            fannelInfoMap,
+                                            setReplaceVariableMap,
+                                            busyboxExecutor,
+                                            imageActionAsyncCoroutine,
+                                            topLevelVarNameToBitmapMap.map {
+                                                it.key
+                                            },
+                                            topLevelVarNameToBitmapMap,
+                                            contentsKeyPairsListCon,
+                                            "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
+                                        )
+                                    }
+                                }
                                 if (extractContentsFrameLayout == null) {
                                     withContext(Dispatchers.Main) {
                                         totalConstraintLayout?.addView(

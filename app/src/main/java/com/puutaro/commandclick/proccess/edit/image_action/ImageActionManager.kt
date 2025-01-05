@@ -256,7 +256,7 @@ class ImageActionManager {
             keyToSubKeyConWhere,
             null,
             null,
-            null,
+            topLevelBitmapStrKeyList,
         )
         return imageActionExecutor.getResultLoopKeyToVarNameValueMap()
     }
@@ -2267,15 +2267,14 @@ class ImageActionManager {
                     val plusBitmapKeyList = bitmapVarKeyList?.filter {
                         !bitmapKeyListInCode.contains(it)
                     } ?: emptyList()
-                    bitmapKeyListInCode + plusBitmapKeyList
+                    bitmapKeyListInCode +
+                            plusBitmapKeyList +
+                            listOf(ImageActionKeyManager.BitmapVar.itPronoun)
                 }
                 val settingKeyListConRegex = let {
                     bitmapKeyList.map {
                         regexStrTemplate.format(it)
-                    }.joinToString("|") +
-                            "|${regexStrTemplate.format(
-                                ImageActionKeyManager.BitmapVar.itPronoun
-                            )}"
+                    }.joinToString("|")
                 }.toRegex()
                 val keyToSubKeyListCon = makeKeyToSubKeyListCon(
                     keyToSubKeyConList,

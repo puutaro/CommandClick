@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.Editable
@@ -42,7 +43,6 @@ import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForTo
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
@@ -260,7 +260,9 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 busyboxExecutor,
                 editListRecyclerView,
                 editListTitleConstraint,
@@ -276,7 +278,9 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 busyboxExecutor,
                 editListRecyclerView,
                 editBkConstraintLayout,
@@ -343,7 +347,9 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap + globalVarNameToValueMap,
                 settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 frameMapAndFrameTagToContentsMapListToTagIdList,
                 editListConfigMap,
                 busyboxExecutor,
@@ -437,7 +443,9 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap + globalVarNameToValueMap,
                 settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 busyboxExecutor,
                 editListRecyclerView,
                 editListToolbarConstraintLayout,
@@ -453,7 +461,9 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 busyboxExecutor,
                 editListFooterConstraintLayout,
                 editListRecyclerView,
@@ -500,7 +510,9 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
         busyboxExecutor: BusyboxExecutor?,
         editListFooterConstraintLayout: ConstraintLayout?,
         editListRecyclerView: RecyclerView,
@@ -514,7 +526,9 @@ object WithEditConstraintListView{
             fannelInfoMap,
             setReplaceVariableMap,
             settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
             globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             busyboxExecutor,
             editListRecyclerView,
             null,
@@ -545,7 +559,9 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
         editListToolbarConstraintLayout: ConstraintLayout?,
@@ -559,7 +575,9 @@ object WithEditConstraintListView{
             fannelInfoMap,
             setReplaceVariableMap,
             settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
             globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             busyboxExecutor,
             editListRecyclerView,
             null,
@@ -579,7 +597,9 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
         editListTitleConstraintLayout: ConstraintLayout?,
@@ -593,7 +613,9 @@ object WithEditConstraintListView{
             fannelInfoMap,
             setReplaceVariableMap,
             settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
             globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             busyboxExecutor,
             editListRecyclerView,
             editListTitleConstraintLayout,
@@ -613,7 +635,9 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
         editBkConstraintLayout: ConstraintLayout?,
@@ -627,7 +651,9 @@ object WithEditConstraintListView{
             fannelInfoMap,
             setReplaceVariableMap,
             settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
             globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             busyboxExecutor,
             editListRecyclerView,
             null,
@@ -647,7 +673,9 @@ object WithEditConstraintListView{
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
         editListTitleConstraintLayout: ConstraintLayout?,
@@ -775,14 +803,14 @@ object WithEditConstraintListView{
             correctFrameTag?.let {
                 alreadyUseTagList.add(it)
             }
-            val isDuplidateTagErr = correctFrameTag.isNullOrEmpty()
+            val isDuplicateTagErr = correctFrameTag.isNullOrEmpty()
             if(
-                isDuplidateTagErr
+                isDuplicateTagErr
             ) return@frameTagCheck true
             false
         }
         if(isDuplicateFrameTagErr) return
-        val frameVarNameValueMap = withContext(Dispatchers.IO) {
+        val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
             val frameKeyPairsConSrc = frameMap.get(frameTag)
             EditComponent.Template.ReplaceHolder.replaceHolder(
                 frameKeyPairsConSrc,
@@ -794,7 +822,7 @@ object WithEditConstraintListView{
                     innerFrameKeyPairsConSrc ->
                 if(
                     innerFrameKeyPairsConSrc.isNullOrEmpty()
-                ) return@let emptyMap()
+                ) return@let null
                 val settingActionManager = SettingActionManager2()
                 val varNameToValueMap = settingActionManager.exec(
                     fragment,
@@ -809,9 +837,18 @@ object WithEditConstraintListView{
                     "frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                     editConstraintListAdapterArg = editConstraintListAdapter
                 ) + (globalVarNameToValueMap ?: emptyMap())
-               varNameToValueMap
+                val innerFrameKeyPairsCon = CmdClickMap.replace(
+                    innerFrameKeyPairsConSrc,
+                    varNameToValueMap
+                )
+                innerFrameKeyPairsCon to varNameToValueMap
             }
         }
+        val frameKeyPairsCon =
+            frameKeyPairsConToVarNameValueMap?.first
+                ?: String()
+        val frameVarNameValueMap =
+            frameKeyPairsConToVarNameValueMap?.second ?: emptyMap()
         val tagIdMapSrc = withContext(Dispatchers.IO){
             tagToIdListSrc?.map {
                 val key = CmdClickMap.replace(
@@ -820,6 +857,27 @@ object WithEditConstraintListView{
                 )
                 key to it.value
             }?.toMap() ?: emptyMap()
+        }
+        val varNameToBitmapMapInFrame = withContext(Dispatchers.IO) {
+            FileSystems.updateFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "lglobal_frame.txt").absolutePath,
+                listOf(
+                    "globalVarNameToBitmapMap: ${globalVarNameToBitmapMap}"
+                ).joinToString("\n")
+            )
+            ImageActionManager().exec(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                imageActionAsyncCoroutine,
+                globalVarNameToBitmapMap.map {
+                    it.key
+                },
+                globalVarNameToBitmapMap,
+                frameKeyPairsCon,
+                totalMapListElInfo,
+            )
         }
 
         val contentsChannel = Channel<
@@ -888,7 +946,7 @@ object WithEditConstraintListView{
                                 )
                             }
                         val contentsVarNameToValueMap = frameVarNameValueMap + varNameToValueMap
-                        val linearFrameKeyPairsListCon = CmdClickMap.replace(
+                        val contentsKeyPairsListCon = CmdClickMap.replace(
                             contentsKeyPairsListConSrc,
                             contentsVarNameToValueMap
                         )
@@ -904,7 +962,7 @@ object WithEditConstraintListView{
 //                        }
                         val contentsKeyPairsList = withContext(Dispatchers.IO) {
                             CmdClickMap.createMap(
-                                linearFrameKeyPairsListCon,
+                                contentsKeyPairsListCon,
                                 typeSeparator
                             )
                         }
@@ -947,10 +1005,10 @@ object WithEditConstraintListView{
                                         alreadyUseTagList.add(it)
                                     }
                                 }
-                                val isDuplidateTagErr =
+                                val isDuplicateTagErr =
                                     correctContentsTag.isNullOrEmpty()
                                 if (
-                                    isDuplidateTagErr
+                                    isDuplicateTagErr
                                 ) return@contentsTagCheck true
                                 false
                             }
@@ -961,7 +1019,7 @@ object WithEditConstraintListView{
 
                         editConstraintListAdapter?.footerKeyPairListConMap?.put(
                             execContentsTag,
-                            linearFrameKeyPairsListCon
+                            contentsKeyPairsListCon
                         )
                         val contentsFrameLayout =
                             withContext(Dispatchers.Main) setLinearFrameLayout@{
@@ -981,7 +1039,35 @@ object WithEditConstraintListView{
                                                 context
                                             )
                                         }
-
+                                CoroutineScope(Dispatchers.IO).launch {
+//                                    val varNameToBitmapMapInContents =
+                                    withContext(Dispatchers.IO){
+                                        val topLevelVarNameToBitmapMap =
+                                            globalVarNameToBitmapMap + varNameToBitmapMapInFrame
+                                        FileSystems.updateFile(
+                                            File(UsePath.cmdclickDefaultAppDirPath, "lglobal.txt").absolutePath,
+                                            listOf(
+                                                "topLevelVarNameToBitmapMap: ${topLevelVarNameToBitmapMap}"
+                                            ).joinToString("\n")
+                                        )
+                                        ImageActionManager().exec(
+                                            fragment,
+                                            fannelInfoMap,
+                                            setReplaceVariableMap,
+                                            busyboxExecutor,
+                                            imageActionAsyncCoroutine,
+                                            topLevelVarNameToBitmapMap.map {
+                                                it.key
+                                            },
+                                            topLevelVarNameToBitmapMap,
+                                            contentsKeyPairsListCon,
+                                            listOf(
+                                                "execContentsTag: ${execContentsTag}",
+                                                totalMapListElInfo
+                                            ).joinToString(", ")
+                                        )
+                                    }
+                                }
                                 val baseLayoutForAdd = when(sceneType){
                                     SceneType.TITLE
                                             -> editListTitleConstraintLayout
@@ -1034,7 +1120,7 @@ object WithEditConstraintListView{
                                 fannelInfoMap,
                                 setReplaceVariableMap,
                                 editListRecyclerView,
-                                linearFrameKeyPairsListCon,
+                                contentsKeyPairsListCon,
                                 contentsKeyPairsList,
                                 contentsFrameLayout,
                                 outValue,
