@@ -18,7 +18,6 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList.LogErrLabel
@@ -148,7 +147,7 @@ object EditComponent {
                         BK_COLOR("bkColor"),
                         VISIBLE("visible"),
                         ENABLE("enable"),
-                        ELEVATION("elevation"),
+                        LAYOUT_ELEVATION("layoutElevation"),
                         CLICK_VIEWS("clickViews"),
 
                         TOP_TO_TOP("topToTop"),

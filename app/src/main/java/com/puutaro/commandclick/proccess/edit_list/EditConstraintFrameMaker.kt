@@ -67,7 +67,7 @@ object EditConstraintFrameMaker {
     private val bkColorKey = EditComponent.Template.EditComponentKey.BK_COLOR.key
     private val layoutGravityKey = EditComponent.Template.EditComponentKey.LAYOUT_GRAVITY.key
     private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
-    private val elevationkey = EditComponent.Template.EditComponentKey.ELEVATION.key
+    private val layoutElevationKey = EditComponent.Template.EditComponentKey.LAYOUT_ELEVATION.key
     private val alphaKey = EditComponent.Template.EditComponentKey.ALPHA.key
 
     private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
@@ -827,7 +827,7 @@ object EditConstraintFrameMaker {
             val elevationFloat = withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
-                    elevationkey,
+                    layoutElevationKey,
                 )?.let {
                     try {
                         it.toFloat()
@@ -1096,7 +1096,7 @@ object EditConstraintFrameMaker {
             withContext(Dispatchers.Main) {
                 PairListTool.getValue(
                     frameKeyPairList,
-                    elevationkey,
+                    layoutElevationKey,
                 )?.let {
                     try {
                         it.toFloat()

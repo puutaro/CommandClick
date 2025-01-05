@@ -1079,12 +1079,12 @@ class EditConstraintListAdapter(
     private suspend fun frameClickHandle(
         holder: EditListViewHolder,
         editListPosition: Int,
-        frameFrameLayout: MaterialCardView?,
+        materialCardView: MaterialCardView?,
         frameKeyPairsList: List<Pair<String, String>>,
         enableClick: Boolean,
     ){
         if (
-            frameFrameLayout == null
+            materialCardView == null
         ) return
         val isConsec =
             withContext(Dispatchers.IO) {
@@ -1095,19 +1095,19 @@ class EditConstraintListAdapter(
             }
 
         withContext(Dispatchers.Main) {
-            frameFrameLayout.isClickable = enableClick
+            materialCardView.isClickable = enableClick
 //                    rippleColor =  context.getColorStateList(R.color.trans)
 //                    setBackgroundResource(0)
         }
         if(!enableClick) return
         withContext(Dispatchers.Main) {
             when (isConsec) {
-                true -> with(frameFrameLayout) {
+                true -> with(materialCardView) {
                     setOnTouchListener(android.view.View.OnTouchListener { v, event ->
                         when (event.action) {
                             android.view.MotionEvent.ACTION_DOWN -> {
                                 editAdapterTouchDownListener?.onEditAdapterTouchDown(
-                                    frameFrameLayout,
+                                    materialCardView,
                                     holder,
                                     editListPosition
                                 )
@@ -1117,7 +1117,7 @@ class EditConstraintListAdapter(
                             android.view.MotionEvent.ACTION_CANCEL,
                                 -> {
                                 editAdapterTouchUpListener?.onEditAdapterTouchUp(
-                                    frameFrameLayout,
+                                    materialCardView,
                                     holder,
                                     editListPosition
                                 )
@@ -1128,9 +1128,9 @@ class EditConstraintListAdapter(
                     })
                 }
 
-                else -> frameFrameLayout.setOnClickListener {
+                else -> materialCardView.setOnClickListener {
                     editAdapterClickListener?.onEditAdapterClick(
-                        frameFrameLayout,
+                        materialCardView,
                         holder,
                         editListPosition,
                     )
