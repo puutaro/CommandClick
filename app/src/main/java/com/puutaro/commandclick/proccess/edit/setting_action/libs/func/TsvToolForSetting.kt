@@ -1,15 +1,24 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 import com.puutaro.commandclick.util.tsv.TsvTool
 
 object TsvToolForSetting {
     fun handle(
         funcName: String,
         methodNameStr: String,
-        argsPairList: List<Pair<String, String>>
-    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
+        argsPairList: List<Pair<String, String>>,
+//        varNameToValueStrMap: Map<String, String?>,
+    ): Pair<
+            Pair<
+                    String?,
+                    SettingActionKeyManager.ExitSignal?
+                    >?,
+            FuncCheckerForSetting2.FuncCheckErr?
+            >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         }  ?: let {
@@ -21,13 +30,14 @@ object TsvToolForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+        FuncCheckerForSetting2.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.argsNameToTypeList,
-            argsPairList
+            argsPairList,
+//            varNameToValueStrMap,
         )?.let {
                 argsCheckErr ->
             return null to argsCheckErr
@@ -45,39 +55,45 @@ object TsvToolForSetting {
             MethodNameClass.GET_KEY_VALUE_FROM_FILE -> {
                 val firstArg = argsList.get(0)
                 val secondArg = argsList.get(1)
-                TsvTool.getKeyValueFromFile(
-                    firstArg,
-                    secondArg,
-                )
+                Pair(
+                    TsvTool.getKeyValueFromFile(
+                        firstArg,
+                        secondArg,
+                    ),
+                    null,
+                ) to null
             }
             MethodNameClass.GET_KEY_VALUE -> {
                 val firstArg = argsList.get(0)
                 val secondArg = argsList.get(1)
-                TsvTool.getKeyValue(
-                    firstArg,
-                    secondArg,
-                )
+                Pair(
+                    TsvTool.getKeyValue(
+                        firstArg,
+                        secondArg,
+                    ),
+                    null,
+                    ) to null
             }
-        } to null
+        }
     }
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
     ){
         GET_KEY_VALUE_FROM_FILE("getKeyValueFromFile", filePathAndKeyArgsNameToTypeList),
         GET_KEY_VALUE("getKeyValue", conAndKeyArgsNameToTypeList),
     }
 
     private val filePathAndKeyArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting.ArgType.PATH),
-        Pair("key", FuncCheckerForSetting.ArgType.STRING),
+        Pair("filePath", FuncCheckerForSetting2.ArgType.PATH),
+        Pair("key", FuncCheckerForSetting2.ArgType.STRING),
     )
 
 
     private val conAndKeyArgsNameToTypeList = listOf(
-        Pair("tsvCon", FuncCheckerForSetting.ArgType.STRING),
-        Pair("key", FuncCheckerForSetting.ArgType.STRING),
+        Pair("tsvCon", FuncCheckerForSetting2.ArgType.STRING),
+        Pair("key", FuncCheckerForSetting2.ArgType.STRING),
     )
 
 }

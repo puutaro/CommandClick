@@ -2,7 +2,9 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,7 +14,14 @@ object ColorForSetting {
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
+//        varNameToValueStrMap: Map<String, String?>
+    ): Pair<
+            Pair<
+                    String?,
+                    SettingActionKeyManager.ExitSignal?
+                    >?,
+            FuncCheckerForSetting2.FuncCheckErr?
+            >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {
@@ -24,13 +33,14 @@ object ColorForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+        FuncCheckerForSetting2.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.argsNameToTypeList,
-            argsPairList
+            argsPairList,
+//            varNameToValueStrMap,
         )?.let { argsCheckErr ->
             return null to argsCheckErr
         }
@@ -45,17 +55,20 @@ object ColorForSetting {
                 }
             }
         }
-        return settingValueStr to null
+        return Pair(
+            settingValueStr,
+            null
+        ) to null
     }
 
     enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
     ) {
         RND("rnd", rndArgsNameToTypeList),
     }
 
     private val rndArgsNameToTypeList = listOf(
-        Pair("rndMacro", FuncCheckerForSetting.ArgType.STRING),
+        Pair("rndMacro", FuncCheckerForSetting2.ArgType.STRING),
     )
 }

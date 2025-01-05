@@ -17,7 +17,7 @@ object DebugForSetting {
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-        varNameToValueStrMap: Map<String, String?>
+//        varNameToValueStrMap: Map<String, String?>,
     ): Pair<
             Pair<
                     String?,
@@ -43,7 +43,7 @@ object DebugForSetting {
             methodNameStr,
             methodNameClass.readArgsNameToTypeList,
             argsPairList,
-            varNameToValueStrMap,
+//            varNameToValueStrMap,
         )?.let {
                 argsCheckErr ->
             return null to argsCheckErr
@@ -65,11 +65,11 @@ object DebugForSetting {
         return withContext(Dispatchers.Main) {
             when (methodNameClass) {
                 MethodNameClass.REFLECT -> {
-                    val msg = SettingFuncTool.getValueStrFromMapOrIt(
-                        argsList.get(0),
-                        varNameToValueStrMap,
-                    )
-                    val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
+                    val msg = argsList.get(0)
+//                    SettingFuncTool.getValueStrFromMapOrIt(
+//                        argsList.get(0),
+//                        varNameToValueStrMap,
+//                    )
 //                    FileSystems.writeFile(
 //                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "lebug_reflect.txt").absolutePath,
 //                        listOf(

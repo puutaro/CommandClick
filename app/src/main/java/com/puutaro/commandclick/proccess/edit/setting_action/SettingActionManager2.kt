@@ -1007,7 +1007,7 @@ class SettingActionManager2 {
                         if(isAsync){
                             val asyncJob = CoroutineScope(Dispatchers.IO).launch {
                                 val deferred = async {
-                                    ImageVarExecutor().exec(
+                                    SettingVarExecutor().exec(
                                         fragment,
                                         mainSubKeyPairList,
                                         busyboxExecutor,
@@ -1109,7 +1109,7 @@ class SettingActionManager2 {
                             }
                             return@forEach
                         }
-                        ImageVarExecutor().exec(
+                        SettingVarExecutor().exec(
                             fragment,
                             mainSubKeyPairList,
                             busyboxExecutor,
@@ -2187,15 +2187,14 @@ class SettingActionManager2 {
                     val plusStringKeyList = stringVarKeyList?.filter {
                         !stringKeyListInCode.contains(it)
                     } ?: emptyList()
-                    stringKeyListInCode + plusStringKeyList
+                    stringKeyListInCode +
+                            plusStringKeyList +
+                            listOf(SettingActionKeyManager.ValueStrVar.itPronoun)
                 }
                 val settingKeyListConRegex = let {
                     stringKeyList.map {
                         regexStrTemplate.format(it)
-                    }.joinToString("|") +
-                            "|${regexStrTemplate.format(
-                                SettingActionKeyManager.ValueStrVar.itPronoun
-                            )}"
+                    }.joinToString("|")
                 }.toRegex()
                 val keyToSubKeyListCon = makeKeyToSubKeyListCon(
                     keyToSubKeyConList,
@@ -2705,7 +2704,21 @@ class SettingActionManager2 {
                 val keyToSubKeyContents = listOf(
                     imageActionVarKey,
                     keyToSubKeyCon?.second ?: String()
-                ).joinToString("=")
+                ).joinToString("=").let {
+                    val varNameToValueStrMap =
+                        makeVarNameToValueStrMap(
+                            curMapLoopKey,
+                            importedVarNameToValueStrMap,
+                            loopKeyToVarNameValueStrMapClass,
+                            privateLoopKeyVarNameValueStrMapClass,
+                            null,
+                            null,
+                        )
+                    CmdClickMap.replace(
+                        it,
+                        varNameToValueStrMap
+                    )
+                }
                 val actionImportMap = ImportMapMaker.comp(
                     keyToSubKeyContents,
                     "${imageActionVarKey}="
@@ -2816,15 +2829,6 @@ class SettingActionManager2 {
                 val isImportToErrType = when(judgeTargetStr.isEmpty()) {
                     true -> true to null
                     else -> {
-                        val varNameToValueStrMap =
-                            makeVarNameToValueStrMap(
-                                curMapLoopKey,
-                                importedVarNameToValueStrMap,
-                                loopKeyToVarNameValueStrMapClass,
-                                privateLoopKeyVarNameValueStrMapClass,
-                                null,
-                                null,
-                            )
 //                            (privateLoopKeyVarNameValueStrMapClass
 //                                .getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
 //                                ?: emptyMap()) +
@@ -2835,7 +2839,7 @@ class SettingActionManager2 {
                         SettingIfManager.handle(
                             judgeTargetStr,
                             argsPairList,
-                            varNameToValueStrMap,
+//                            varNameToValueStrMap,
                         )
                     }
                 }
@@ -3037,7 +3041,7 @@ class SettingActionManager2 {
             }
         }
 
-        private class ImageVarExecutor {
+        private class SettingVarExecutor {
 
             private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
             private val asyncRunPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
@@ -3069,8 +3073,26 @@ class SettingActionManager2 {
                 val context = fragment.context
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
+                    val varNameToValueStrMap = makeVarNameToValueStrMap(
+                        curMapLoopKey,
+                        importedVarNameToValueStrMap,
+                        loopKeyToVarNameValueStrMapClass,
+                        privateLoopKeyVarNameValueStrMapClass,
+                        null,
+                        mapOf(
+                            itPronoun to itPronounValueStrToExitSignal?.first
+                        )
+                    )
                     val mainSubKey = mainSubKeyPair.first
-                    val mainSubKeyMap = mainSubKeyPair.second
+                    val mainSubKeyMap =
+                        CmdClickMap.replace(
+                            CmdClickMap.MapToString.joinToStr(mainSubKeyPair.second),
+                            varNameToValueStrMap
+                        ).let {
+                            CmdClickMap.MapToString.strToPairList(
+                                it
+                            ).toMap()
+                        }
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "iargsPairList_${settingVarName}.txt").absolutePath,
 //                        listOf(
@@ -3102,16 +3124,16 @@ class SettingActionManager2 {
                                     mainSubKeyMap.get(mainSubKey)?.let {
                                         SettingActionKeyManager.ValueStrVar.convertStrKey(it)
                                     }
-                                val varNameToValueStrMap = makeVarNameToValueStrMap(
-                                    curMapLoopKey,
-                                    importedVarNameToValueStrMap,
-                                    loopKeyToVarNameValueStrMapClass,
-                                    privateLoopKeyVarNameValueStrMapClass,
-                                    null,
-                                    mapOf(
-                                        itPronoun to itPronounValueStrToExitSignal?.first
-                                    )
-                                )
+//                                val varNameToValueStrMap = makeVarNameToValueStrMap(
+//                                    curMapLoopKey,
+//                                    importedVarNameToValueStrMap,
+//                                    loopKeyToVarNameValueStrMapClass,
+//                                    privateLoopKeyVarNameValueStrMapClass,
+//                                    null,
+//                                    mapOf(
+//                                        itPronoun to itPronounValueStrToExitSignal?.first
+//                                    )
+//                                )
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "l_value_varNameToValueStrMap_${settingVarName}.txt").absolutePath,
 //                                    listOf(
@@ -3256,16 +3278,16 @@ class SettingActionManager2 {
                                     mainSubKeyMap.get(mainSubKey)?.let {
                                         SettingActionKeyManager.ValueStrVar.convertStrKey(it)
                                     }
-                                val varNameToValueStrMap = makeVarNameToValueStrMap(
-                                    curMapLoopKey,
-                                    importedVarNameToValueStrMap,
-                                    loopKeyToVarNameValueStrMapClass,
-                                    privateLoopKeyVarNameValueStrMapClass,
-                                    null,
-                                    mapOf(
-                                        itPronoun to itPronounValueStrToExitSignal?.first
-                                    )
-                                )
+//                                val varNameToValueStrMap = makeVarNameToValueStrMap(
+//                                    curMapLoopKey,
+//                                    importedVarNameToValueStrMap,
+//                                    loopKeyToVarNameValueStrMapClass,
+//                                    privateLoopKeyVarNameValueStrMapClass,
+//                                    null,
+//                                    mapOf(
+//                                        itPronoun to itPronounValueStrToExitSignal?.first
+//                                    )
+//                                )
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "l_onReturn_varNameToValueStrMap_${settingVarName}.txt").absolutePath,
 //                                    listOf(
@@ -3322,15 +3344,15 @@ class SettingActionManager2 {
                             ).filter {
                                 it.first.isNotEmpty()
                             }
-                            val varNameToValueStrMap =
-                                makeVarNameToValueStrMap(
-                                    curMapLoopKey,
-                                    importedVarNameToValueStrMap,
-                                    loopKeyToVarNameValueStrMapClass,
-                                    privateLoopKeyVarNameValueStrMapClass,
-                                    null,
-                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
-                                )
+//                            val varNameToValueStrMap =
+//                                makeVarNameToValueStrMap(
+//                                    curMapLoopKey,
+//                                    importedVarNameToValueStrMap,
+//                                    loopKeyToVarNameValueStrMapClass,
+//                                    privateLoopKeyVarNameValueStrMapClass,
+//                                    null,
+//                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
+//                                )
 
                             val resultValueStrToExitMacroAndCheckErr = SettingFuncManager2.handle(
                                 fragment,
@@ -3338,7 +3360,7 @@ class SettingActionManager2 {
                                 argsPairList,
                                 busyboxExecutor,
                                 editConstraintListAdapterArg,
-                                varNameToValueStrMap
+//                                varNameToValueStrMap
 //                                        (privateLoopKeyVarNameBitmapMapClass.getAsyncVarNameToBitmap(curMapLoopKey) ?: emptyMap<>()),
                             )
                             val checkErr = resultValueStrToExitMacroAndCheckErr?.second
@@ -3385,20 +3407,19 @@ class SettingActionManager2 {
                             ).filter {
                                 it.first.isNotEmpty()
                             }
-                            val varNameToValueStrMap =
-                                makeVarNameToValueStrMap(
-                                    curMapLoopKey,
-                                    importedVarNameToValueStrMap,
-                                    loopKeyToVarNameValueStrMapClass,
-                                    privateLoopKeyVarNameValueStrMapClass,
-                                    null,
-                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
-                                )
+//                            val varNameToValueStrMap =
+//                                makeVarNameToValueStrMap(
+//                                    curMapLoopKey,
+//                                    importedVarNameToValueStrMap,
+//                                    loopKeyToVarNameValueStrMapClass,
+//                                    privateLoopKeyVarNameValueStrMapClass,
+//                                    null,
+//                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
+//                                )
                             val isImportToErrType = SettingIfManager.handle(
                                 judgeTargetStr,
                                 argsPairList,
-                                varNameToValueStrMap,
-
+//                                varNameToValueStrMap,
                             )
                             val errType = isImportToErrType.second
                             if(errType != null){

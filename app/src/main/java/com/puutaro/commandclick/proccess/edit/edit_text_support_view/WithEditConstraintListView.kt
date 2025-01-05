@@ -892,6 +892,16 @@ object WithEditConstraintListView{
                             contentsKeyPairsListConSrc,
                             contentsVarNameToValueMap
                         )
+//                        if(sceneType == SceneType.BK) {
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lbk.txt").absolutePath,
+//                                listOf(
+//                                    "frameVarNameValueMap: ${frameVarNameValueMap}",
+//                                    "varNameToValueMap: ${varNameToValueMap}",
+//                                    "contentsVarNameToValueMap: ${contentsVarNameToValueMap}",
+//                                ).joinToString("\n")
+//                            )
+//                        }
                         val contentsKeyPairsList = withContext(Dispatchers.IO) {
                             CmdClickMap.createMap(
                                 linearFrameKeyPairsListCon,

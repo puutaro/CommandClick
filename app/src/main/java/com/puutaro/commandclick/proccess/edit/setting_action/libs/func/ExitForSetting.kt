@@ -3,12 +3,19 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 
 object ExitForSetting {
     fun handle(
         funcName: String,
         methodNameStr: String,
-    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
+    ): Pair<
+            Pair<
+                    String?,
+                    SettingActionKeyManager.ExitSignal?
+                    >?,
+            FuncCheckerForSetting2.FuncCheckErr?
+            >? {
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "sExitExit.txt").absolutePath,
 //            listOf(
@@ -29,9 +36,12 @@ object ExitForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        return SettingActionKeyManager.CommandMacro.EXIT_SIGNAL.name to null
+        return Pair(
+            null,
+            SettingActionKeyManager.ExitSignal.EXIT_SIGNAL
+        ) to null
     }
 
     private enum class MethodNameClass(

@@ -30,7 +30,7 @@ object SettingFuncManager2 {
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?,
         editConstraintListAdapter: EditConstraintListAdapter?,
-        varNameToBitmapMap: Map<String, String?>,
+//        varNameToValueStrMap: Map<String, String?>,
     ): Pair<
             Pair<
                     String?,
@@ -64,7 +64,7 @@ object SettingFuncManager2 {
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
-                    varNameToBitmapMap,
+//                    varNameToValueStrMap,
                 )
             FuncType.TOAST -> {
                 ToastForSetting.handle(
@@ -72,7 +72,7 @@ object SettingFuncManager2 {
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
-                    varNameToBitmapMap
+//                    varNameToValueStrMap
                 )
             }
             FuncType.DEBUG -> {
@@ -81,79 +81,89 @@ object SettingFuncManager2 {
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
-                    varNameToBitmapMap
+//                    varNameToValueStrMap
                 )
             }
-//            FuncType.EXIT ->
-//                ExitForSetting.handle(
-//                    funcTypeStr,
-//                    methodName
-//                )
-//            FuncType.PATH ->
-//                PathForSettingHandler.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList,
-//                )
-//            FuncType.LOCAL_DATETIME ->
-//                LocalDatetimeForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList
-//                )
-//            FuncType.TSV_TOOL ->
-//                TsvToolForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList
-//                )
-//            FuncType.SHELL ->
-//                ShellToolManagerForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList,
-//                    busyboxExecutor
-//                )
-//            FuncType.EDIT ->
-//                EditForSetting.handle(
-//                    fragment,
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList,
-//                    editConstraintListAdapter,
-//                )
-//            FuncType.CULC ->
-//                MathCulcForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList,
-//                )
-//            FuncType.COLOR -> {
-//                ColorForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList
-//                )
-//            }
-//            FuncType.LIST ->
-//                ListForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList
-//                )
-//            FuncType.RND ->
-//                RndForSetting.handle(
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList
-//                )
-//            FuncType.SYSTEM_INFO ->
-//                SystemInfoForSetting.handle(
-//                    fragment,
-//                    funcTypeStr,
-//                    methodName,
-//                    baseArgsPairList
-//                )
+            FuncType.EXIT ->
+                ExitForSetting.handle(
+                    funcTypeStr,
+                    methodName
+                )
+            FuncType.PATH ->
+                PathForSettingHandler.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap,
+                )
+            FuncType.LOCAL_DATETIME ->
+                LocalDatetimeForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap,
+                )
+            FuncType.TSV_TOOL ->
+                TsvToolForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap,
+                )
+            FuncType.SHELL ->
+                ShellToolManagerForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    busyboxExecutor,
+//                    varNameToValueStrMap,
+                )
+            FuncType.EDIT ->
+                EditForSetting.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    editConstraintListAdapter,
+//                    varNameToValueStrMap,
+                )
+            FuncType.CULC ->
+                MathCulcForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap,
+                )
+            FuncType.COLOR -> {
+                ColorForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap
+                )
+            }
+            FuncType.LIST ->
+                ListForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap
+                )
+            FuncType.RND ->
+                RndForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap,
+                )
+            FuncType.SYSTEM_INFO ->
+                SystemInfoForSetting.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+//                    varNameToValueStrMap,
+                )
         }
 
     }
@@ -164,17 +174,17 @@ object SettingFuncManager2 {
         FILE_SYSTEMS("fileSystems"),
         TOAST("toast"),
         DEBUG("debug"),
-//        TSV_TOOL("tsvTool"),
-//        PATH("path"),
-//        EXIT("exit"),
-//        LOCAL_DATETIME("localDatetime"),
-//        SHELL("shell"),
-//        EDIT("edit"),
-//        CULC("culc"),
-//        COLOR("color"),
-//        LIST("list"),
-//        RND("rnd"),
-//        SYSTEM_INFO("systemInfo"),
+        EXIT("exit"),
+        PATH("path"),
+        LOCAL_DATETIME("localDatetime"),
+        TSV_TOOL("tsvTool"),
+        SHELL("shell"),
+        EDIT("edit"),
+        CULC("culc"),
+        COLOR("color"),
+        LIST("list"),
+        RND("rnd"),
+        SYSTEM_INFO("systemInfo"),
     }
 
 }

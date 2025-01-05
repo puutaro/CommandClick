@@ -93,7 +93,7 @@ object SettingActionKeyManager {
         EXIT_SIGNAL,
     }
 
-    enum class CommandMacro {
-        EXIT_SIGNAL,
-    }
+//    enum class CommandMacro {
+//        EXIT_SIGNAL,
+//    }
 }

@@ -6,9 +6,9 @@ import com.puutaro.commandclick.util.LogSystems
 object QuoteTool {
 
     private val cmdClickBackspaceQuote = "cmdClickBackspaceQuote"
-    private val backSlachDoubleQuote = "\\\""
-    private val repSeparatorString = "CMDCLICK_SEPARATOR"
-    private val layoutSeparator = '廳'
+    private const val backSlachDoubleQuote = "\\\""
+    private const val repSeparatorString = "CMDCLICK_SEPARATOR"
+    private const val layoutSeparator = '廳'
     fun trimBothEdgeQuote(
         targetStr: String?,
     ): String {

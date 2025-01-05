@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 
 
 object ImageIfManager {
@@ -17,9 +16,10 @@ object ImageIfManager {
         if(
             ifCheckErr != null
         ) return null to ifCheckErr
-        val judgeBaseRegexStr = argsPairList.get(0).second
+        val baseRegexIndex = 0
+        val judgeBaseRegexStr = argsPairList.get(baseRegexIndex).second
         val judgeBaseRegex = try {
-            judgeBaseRegexStr.toRegex()
+            argsPairList.get(baseRegexIndex).second.toRegex()
         } catch (e: Exception){
             val spanJudgeBaseRegexStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errRedCode,
@@ -28,11 +28,19 @@ object ImageIfManager {
                     .replace(">", "＞")
                     .replace("%", "％    ")
             )
+            val spanArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                argsNameList.get(baseRegexIndex)
+            )
+            val spanArgIndex = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                baseRegexIndex.toString()
+            )
             val spanIIfKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.ligthBlue,
                 ImageActionKeyManager.ImageSubKey.I_IF.key
             )
-            return null to IfCheckErr("Failure to compile '${spanIIfKey}' method args regex: ${spanJudgeBaseRegexStr}")
+            return null to IfCheckErr("Failure to compile '${spanIIfKey}' method args regex: ${spanJudgeBaseRegexStr}: name: ${spanArgName}, index: ${spanArgIndex}")
         }
         val matchTypeStr = argsPairList.get(1).second
         val matchType = JudgeType.entries.firstOrNull {

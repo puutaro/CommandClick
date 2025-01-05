@@ -1,7 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.str.QuoteTool
 
@@ -13,8 +15,15 @@ object ShellToolManagerForSetting {
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-        busyboxExecutor: BusyboxExecutor?
-    ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
+        busyboxExecutor: BusyboxExecutor?,
+//        varNameToValueStrMap: Map<String, String?>,
+    ): Pair<
+            Pair<
+                    String?,
+                    SettingActionKeyManager.ExitSignal?
+                    >?,
+            FuncCheckerForSetting2.FuncCheckErr?
+            >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {
@@ -26,13 +35,14 @@ object ShellToolManagerForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+        FuncCheckerForSetting2.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.argsNameToTypeList,
-            argsPairList
+            argsPairList,
+//            varNameToValueStrMap,
         )?.let {
                 argsCheckErr ->
             return null to argsCheckErr
@@ -47,20 +57,23 @@ object ShellToolManagerForSetting {
         ).map {
             "${'$'}{b} ${it} "
         }.joinToString(cmdSeparator.toString())
-        return busyboxExecutor?.getCmdOutput(
-            cmd,
+        return Pair (
+            busyboxExecutor?.getCmdOutput(
+                cmd,
+                null
+            ),
             null
         ) to null
     }
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
     ){
         EXEC("exec", shellArgsNameToTypeList),
     }
 
     private val  shellArgsNameToTypeList = listOf(
-        Pair("cmdList", FuncCheckerForSetting.ArgType.STRING)
+        Pair("cmdList", FuncCheckerForSetting2.ArgType.STRING)
     )
 }

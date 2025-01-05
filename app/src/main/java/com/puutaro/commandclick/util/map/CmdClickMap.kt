@@ -5,6 +5,24 @@ import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.str.QuoteTool
 
 object CmdClickMap {
+
+    object MapToString {
+        private val separator = '廳'
+        fun joinToStr(mapArg: Map<String, String>): String {
+            return mapArg.entries
+                .joinToString(
+                    separator.toString()
+                )
+        }
+
+        fun strToPairList(joinedMapCon: String): List<Pair<String, String>> {
+            return createMap(
+                joinedMapCon,
+                separator
+            )
+        }
+    }
+
      fun createMap(
         mapEntryStr: String?,
         separator: Char

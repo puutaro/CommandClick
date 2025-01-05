@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object FuncCheckerForSetting2 {
@@ -18,7 +16,7 @@ object FuncCheckerForSetting2 {
         methodName: String,
         baseArgsNameToTypeList: List<Pair<String, ArgType>>?,
         argsPairList: List<Pair<String, String>>,
-        varNameToValueStrMap: Map<String, String?>?,
+//        varNameToValueStrMap: Map<String, String?>?,
     ): FuncCheckErr? {
         if(
             baseArgsNameToTypeList.isNullOrEmpty()
@@ -82,7 +80,7 @@ object FuncCheckerForSetting2 {
                 index,
                 userDefiniteArgStr,
                 argType,
-                varNameToValueStrMap,
+//                varNameToValueStrMap,
             ).let {
                 funcCheckErr ->
                 if(
@@ -102,16 +100,16 @@ object FuncCheckerForSetting2 {
             index: Int,
             argStr: String,
             argType: ArgType,
-            varNameToValueStrMap: Map<String, String?>?,
+//            varNameToValueStrMap: Map<String, String?>?,
         ): FuncCheckErr? {
-            val valueStrToErr = getValueStrFromMapOrIt(
+            val valueStrToErr = isNotExistStringVarName(
                 funcName,
                 methodName,
                 argStr,
                 argName,
                 index,
                 argType,
-                varNameToValueStrMap,
+//                varNameToValueStrMap,
             )
             val funcCheckErr = valueStrToErr?.second
             if(
@@ -168,60 +166,70 @@ object FuncCheckerForSetting2 {
 
         }
 
-        private fun getValueStrFromMapOrIt(
+        private fun isNotExistStringVarName(
             funcName: String,
             methodName: String,
             argStr: String,
             argName: String,
             index: Int,
             argType: ArgType,
-            varNameToValueStrMap: Map<String, String?>?,
+//            varNameToValueStrMap: Map<String, String?>?,
         ): Pair<String?, FuncCheckErr?>? {
             if(
                 !SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr)
-            ) return null
-//            SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr).let {
-//                    isStrVarRegex ->
-//                if(isStrVarRegex) return@let
-//            }
-            val strKey = SettingActionKeyManager.ValueStrVar.convertStrKey(argStr)
-            val runPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
-            (strKey.startsWith(runPrefix)).let {
-                    isRunPrefix ->
-                if(!isRunPrefix) return@let
-                return null to launchTypeCheckErr(
-                    funcName,
-                    methodName,
-                    argName,
-                    index,
-                    argType,
-                    argStr,
-                    "disables ${runPrefix} prefix"
-                )
-            }
-            val valueStr =
-                varNameToValueStrMap?.get(strKey)
-            if(
-                valueStr is String
-            ) return valueStr to null
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultSDebugAppDirPath, "lfuncarg.txt").absolutePath,
-//                listOf(
-//                    "argStr: ${argStr}",
-//                    "valueStr: ${valueStr}",
-//                    "varNameToValueStrMap: ${varNameToValueStrMap}",
-//                ).joinToString("\n") + "\n\n====\n\n"
-//            )
+            ) return argStr to null
             return null to launchTypeCheckErr(
-                    funcName,
-                    methodName,
-                    argName,
-                    index,
-                    argType,
-                    argStr,
-                    "not exist string var name"
-                )
-            }
+                funcName,
+                methodName,
+                argName,
+                index,
+                argType,
+                argStr,
+                "not exist string var name"
+            )
+        }
+////            SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr).let {
+////                    isStrVarRegex ->
+////                if(isStrVarRegex) return@let
+////            }
+//            val strKey = SettingActionKeyManager.ValueStrVar.convertStrKey(argStr)
+//            val runPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
+//            (strKey.startsWith(runPrefix)).let {
+//                    isRunPrefix ->
+//                if(!isRunPrefix) return@let
+//                return null to launchTypeCheckErr(
+//                    funcName,
+//                    methodName,
+//                    argName,
+//                    index,
+//                    argType,
+//                    argStr,
+//                    "disables ${runPrefix} prefix"
+//                )
+//            }
+//            val valueStr =
+//                varNameToValueStrMap?.get(strKey)
+//            if(
+//                valueStr is String
+//            ) return valueStr to null
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultSDebugAppDirPath, "lfuncarg.txt").absolutePath,
+////                listOf(
+////                    "argStr: ${argStr}",
+////                    "valueStr: ${valueStr}",
+////                    "varNameToValueStrMap: ${varNameToValueStrMap}",
+////                ).joinToString("\n") + "\n\n====\n\n"
+////            )
+//            return null to launchTypeCheckErr(
+//                    funcName,
+//                    methodName,
+//                    argName,
+//                    index,
+//                    argType,
+//                    argStr,
+//                    "not exist string var name"
+//                )
+//            }
         }
 
         private fun launchTypeCheckErr(

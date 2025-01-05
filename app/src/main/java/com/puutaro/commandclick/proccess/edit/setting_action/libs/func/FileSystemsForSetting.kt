@@ -12,7 +12,7 @@ object FileSystemsForSettingHandler {
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-        varNameToValueStrMap: Map<String, String?>
+//        varNameToValueStrMap: Map<String, String?>
     ): Pair<
             Pair<
                     String?,
@@ -40,7 +40,7 @@ object FileSystemsForSettingHandler {
             methodNameStr,
             methodNameClass.argsNameToTypeList,
             argsPairList,
-            varNameToValueStrMap,
+//            varNameToValueStrMap,
         )?.let {
             argsCheckErr ->
             return null to argsCheckErr
@@ -56,10 +56,12 @@ object FileSystemsForSettingHandler {
         }
         return when(methodNameClass){
             MethodNameClass.READ -> {
-                val filePath = SettingFuncTool.getValueStrFromMapOrIt(
-                    argsList.get(0),
-                    varNameToValueStrMap,
-                ) ?: return null
+                val filePath =
+                    argsList.get(0)
+//                SettingFuncTool.getValueStrFromMapOrIt(
+//                    argsList.get(0),
+//                    varNameToValueStrMap,
+//                ) ?: return null
 //                val valurStrKey =
 //                    ImageActionKeyManager.BitmapVar.convertBitmapKey(
 //                        argsList.get(0)
@@ -72,14 +74,16 @@ object FileSystemsForSettingHandler {
                 ) to null
             }
             MethodNameClass.WRITE -> {
-                val firstArg = SettingFuncTool.getValueStrFromMapOrIt(
-                    argsList.get(0),
-                    varNameToValueStrMap,
-                ) ?: return null
-                val secondArg = SettingFuncTool.getValueStrFromMapOrIt(
-                    argsList.get(1),
-                    varNameToValueStrMap,
-                ) ?: return null
+                val firstArg = argsList.get(0)
+//                    SettingFuncTool.getValueStrFromMapOrIt(
+//                    argsList.get(0),
+//                    varNameToValueStrMap,
+//                ) ?: return null
+                val secondArg = argsList.get(1)
+//                SettingFuncTool.getValueStrFromMapOrIt(
+//                    argsList.get(1),
+//                    varNameToValueStrMap,
+//                ) ?: return null
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "setting2.txt").absolutePath,
 //                    listOf(
