@@ -2656,6 +2656,7 @@ class SettingActionManager2 {
 
         private object SettingImport {
 
+            private val sIfKeyName = SettingActionKeyManager.SettingSubKey.S_IF.key
             private val valueSeparator = SettingActionKeyManager.valueSeparator
             private val imageActionVarKey = SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
             private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
@@ -2843,6 +2844,7 @@ class SettingActionManager2 {
 //                                        ?: emptyMap()) +
 //                                    (importedVarNameToValueStrMap ?: emptyMap())
                         SettingIfManager.handle(
+                            sIfKeyName,
                             judgeTargetStr,
                             argsPairList,
 //                            varNameToValueStrMap,
@@ -2868,9 +2870,9 @@ class SettingActionManager2 {
                     )
                     return blankReturnValueStr
                 }
-                val isImport = isImportToErrType.first
+                val isImport = isImportToErrType.first ?: false
                 if(
-                    isImport != true
+                    !isImport
                 ) return blankReturnValueStr
                 val importPathSrc = QuoteTool.trimBothEdgeQuote(
                     actionImportMap.get(
@@ -3054,6 +3056,7 @@ class SettingActionManager2 {
 
         private class SettingVarExecutor {
 
+            private val sIfKeyName = SettingActionKeyManager.SettingSubKey.S_IF.key
             private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
             private val asyncRunPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
             private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
@@ -3456,6 +3459,7 @@ class SettingActionManager2 {
 //                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
 //                                )
                             val isImportToErrType = SettingIfManager.handle(
+                                sIfKeyName,
                                 judgeTargetStr,
                                 argsPairList,
 //                                varNameToValueStrMap,
@@ -3470,12 +3474,12 @@ class SettingActionManager2 {
                                         keyToSubKeyConWhere
                                     )
                                 }
+                                itPronounValueStrToExitSignal = null
+                                isNext = false
                                 return@forEach
                             }
-                            val isImport = isImportToErrType.first
-                            isImport?.let {
-                                isNext = it
-                            }
+                            val isImport = isImportToErrType.first ?: false
+                            isNext = isImport
                         }
                     }
                     if(privateSubKeyClass != SettingActionKeyManager.SettingSubKey.S_IF){

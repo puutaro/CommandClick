@@ -7,9 +7,9 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageFuncManager
-import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageIfManager
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
@@ -2690,6 +2690,7 @@ class ImageActionManager {
 
         private object SettingImport {
 
+            private val iIfKeyName = ImageActionKeyManager.ImageSubKey.I_IF.key
             private val valueSeparator = ImageActionKeyManager.valueSeparator
             private val imageActionVarKey = ImageActionKeyManager.ImageActionsKey.IMAGE_ACTION_VAR.key
             private val escapeRunPrefix = ImageActionKeyManager.VarPrefix.RUN.prefix
@@ -2845,7 +2846,8 @@ class ImageActionManager {
                 }
                 val isImportToErrType = when(judgeTargetStr.isEmpty()) {
                     true -> true to null
-                    else -> ImageIfManager.handle(
+                    else -> SettingIfManager.handle(
+                        iIfKeyName,
                         judgeTargetStr,
                         argsPairList
                     )
@@ -2867,9 +2869,9 @@ class ImageActionManager {
                     )
                     return blankReturnValue
                 }
-                val isImport = isImportToErrType.first
+                val isImport = isImportToErrType.first ?: false
                 if(
-                    isImport != true
+                    !isImport
                 ) return blankReturnValue
                 val importPathSrc = QuoteTool.trimBothEdgeQuote(
                     actionImportMap.get(
@@ -3045,6 +3047,7 @@ class ImageActionManager {
 
         private class ImageVarExecutor {
 
+            private val iIfKeyName = ImageActionKeyManager.ImageSubKey.I_IF.key
             private val escapeRunPrefix = ImageActionKeyManager.VarPrefix.RUN.prefix
             private val asyncRunPrefix = ImageActionKeyManager.VarPrefix.RUN_ASYNC.prefix
             private val asyncPrefix = ImageActionKeyManager.VarPrefix.ASYNC.prefix
@@ -3329,6 +3332,7 @@ class ImageActionManager {
                                     )
                                 }
                                 itPronounBitmapToExitSignal = null
+                                isNext = false
                                 return@forEach
                             }
                             val resultBitmapToExitMacro = resultBitmapToExitMacroAndCheckErr?.first
@@ -3362,7 +3366,8 @@ class ImageActionManager {
                             ).filter {
                                 it.first.isNotEmpty()
                             }
-                            val isImportToErrType = ImageIfManager.handle(
+                            val isImportToErrType = SettingIfManager.handle(
+                                iIfKeyName,
                                 judgeTargetStr,
                                 argsPairList
                             )
@@ -3378,10 +3383,8 @@ class ImageActionManager {
                                 }
                                 return@forEach
                             }
-                            val isImport = isImportToErrType.first
-                            isImport?.let {
-                                isNext = it
-                            }
+                            val isImport = isImportToErrType.first ?: false
+                            isNext = isImport
                         }
                     }
                     if(privateSubKeyClass != ImageActionKeyManager.ImageSubKey.I_IF){
