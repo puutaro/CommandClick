@@ -147,7 +147,7 @@ object EditComponent {
                         BK_COLOR("bkColor"),
                         VISIBLE("visible"),
                         ENABLE("enable"),
-                        LAYOUT_ELEVATION("layoutElevation"),
+                        ELEVATION("elevation"),
                         CLICK_VIEWS("clickViews"),
 
                         TOP_TO_TOP("topToTop"),
