@@ -2704,25 +2704,25 @@ class SettingActionManager2 {
                 val keyToSubKeyContents = listOf(
                     imageActionVarKey,
                     keyToSubKeyCon?.second ?: String()
-                ).joinToString("=").let {
-                    val varNameToValueStrMap =
-                        makeVarNameToValueStrMap(
-                            curMapLoopKey,
-                            importedVarNameToValueStrMap,
-                            loopKeyToVarNameValueStrMapClass,
-                            privateLoopKeyVarNameValueStrMapClass,
-                            null,
-                            null,
-                        )
-                    CmdClickMap.replace(
-                        it,
-                        varNameToValueStrMap
+                ).joinToString("=")
+                val varNameToValueStrMap =
+                    makeVarNameToValueStrMap(
+                        curMapLoopKey,
+                        importedVarNameToValueStrMap,
+                        loopKeyToVarNameValueStrMapClass,
+                        privateLoopKeyVarNameValueStrMapClass,
+                        null,
+                        null,
                     )
-                }
-                val actionImportMap = ImportMapMaker.comp(
+                val actionImportMapBeforeReplace = ImportMapMaker.comp(
                     keyToSubKeyContents,
                     "${imageActionVarKey}="
                 )
+                val actionImportMap =
+                    CmdClickMap.MapReplacer.replaceToPairList(
+                        actionImportMapBeforeReplace,
+                        varNameToValueStrMap
+                    ).toMap()
                 val topIAcVarName = QuoteTool.trimBothEdgeQuote(
                     actionImportMap.get(
                         imageActionVarKey
@@ -2819,12 +2819,18 @@ class SettingActionManager2 {
                     )
                 )
                 val argsPairList = CmdClickMap.createMap(
-                    actionImportMap.get(
+                    actionImportMapBeforeReplace.get(
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
                     ),
                     valueSeparator
                 ).filter {
                     it.first.isNotEmpty()
+                }.map {
+                    argNameToValueStr ->
+                    argNameToValueStr.first to CmdClickMap.replace(
+                        argNameToValueStr.second,
+                        varNameToValueStrMap
+                    )
                 }
                 val isImportToErrType = when(judgeTargetStr.isEmpty()) {
                     true -> true to null
@@ -2872,10 +2878,15 @@ class SettingActionManager2 {
                     )
                 )
                 val importRepMap = makeRepValHolderMap(
-                    actionImportMap.get(
+                    actionImportMapBeforeReplace.get(
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
                     )
-                )
+                ).let {
+                    CmdClickMap.MapReplacer.replaceToPairList(
+                        it,
+                        varNameToValueStrMap
+                    ).toMap()
+                }
                 val isBeforeImportErr = withContext(Dispatchers.IO) {
                     val isCircleImportErrJob = async {
                         ImportErrManager.isCircleImportErr(
@@ -3084,15 +3095,7 @@ class SettingActionManager2 {
                         )
                     )
                     val mainSubKey = mainSubKeyPair.first
-                    val mainSubKeyMap =
-                        CmdClickMap.replace(
-                            CmdClickMap.MapToString.joinToStr(mainSubKeyPair.second),
-                            varNameToValueStrMap
-                        ).let {
-                            CmdClickMap.MapToString.strToPairList(
-                                it
-                            ).toMap()
-                        }
+                    val mainSubKeyMapSrc = mainSubKeyPair.second
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "iargsPairList_${settingVarName}.txt").absolutePath,
 //                        listOf(
@@ -3115,6 +3118,10 @@ class SettingActionManager2 {
                                 return@forEach
                             }
                             val valueString = let {
+                                val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
+                                    mainSubKeyMapSrc,
+                                    varNameToValueStrMap
+                                ).toMap()
                                 val rawValue = mainSubKeyMap.get(mainSubKey)
                                     ?: return@let null
                                 if(
@@ -3164,6 +3171,10 @@ class SettingActionManager2 {
                                 isNext = true
                                 return@forEach
                             }
+                            val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
+                                mainSubKeyMapSrc,
+                                varNameToValueStrMap
+                            ).toMap()
                             val awaitVarNameList = mainSubKeyMap.get(
                                 privateSubKeyClass.key
                             )?.let {
@@ -3269,6 +3280,10 @@ class SettingActionManager2 {
                                 return@forEach
                             }
                             val returnString = let {
+                                val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
+                                    mainSubKeyMapSrc,
+                                    varNameToValueStrMap
+                                ).toMap()
                                 val rawValue = mainSubKeyMap.get(mainSubKey)
                                     ?: return@let null
                                 if(
@@ -3334,15 +3349,27 @@ class SettingActionManager2 {
                                 isNext = true
                                 return@forEach
                             }
-                            val funcTypeDotMethod = mainSubKeyMap.get(mainSubKey)
-                                ?: return@forEach
+                            val funcTypeDotMethod = mainSubKeyMapSrc.get(mainSubKey)?.let {
+                                funcTypeDotMethodSrc ->
+                                    CmdClickMap.replace(
+                                        funcTypeDotMethodSrc,
+                                        varNameToValueStrMap,
+                                    )
+                            } ?: return@forEach
                             val argsPairList = CmdClickMap.createMap(
-                                mainSubKeyMap.get(
+                                mainSubKeyMapSrc.get(
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
                                 ),
                                 valueSeparator
                             ).filter {
                                 it.first.isNotEmpty()
+                            }.map {
+                                argNameToValueStr ->
+                                argNameToValueStr.first to
+                                        CmdClickMap.replace(
+                                            argNameToValueStr.second,
+                                            varNameToValueStrMap,
+                                        )
                             }
 //                            val varNameToValueStrMap =
 //                                makeVarNameToValueStrMap(
@@ -3397,15 +3424,27 @@ class SettingActionManager2 {
                                 isNext = true
                                 return@forEach
                             }
-                            val judgeTargetStr = mainSubKeyMap.get(mainSubKey)
-                                ?: return@forEach
+                            val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)?.let {
+                                    judgeTargetStrSrc ->
+                                CmdClickMap.replace(
+                                    judgeTargetStrSrc,
+                                    varNameToValueStrMap,
+                                )
+                            } ?: return@forEach
                             val argsPairList = CmdClickMap.createMap(
-                                mainSubKeyMap.get(
+                                mainSubKeyMapSrc.get(
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
                                 ),
                                 valueSeparator
                             ).filter {
                                 it.first.isNotEmpty()
+                            }.map {
+                                    argNameToValueStr ->
+                                argNameToValueStr.first to
+                                        CmdClickMap.replace(
+                                            argNameToValueStr.second,
+                                            varNameToValueStrMap,
+                                        )
                             }
 //                            val varNameToValueStrMap =
 //                                makeVarNameToValueStrMap(

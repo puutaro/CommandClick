@@ -6,16 +6,30 @@ import com.puutaro.commandclick.util.str.QuoteTool
 
 object CmdClickMap {
 
-    object MapToString {
-        private val separator = '廳'
-        fun joinToStr(mapArg: Map<String, String>): String {
+    object MapReplacer {
+        private const val separator = '廳'
+
+        fun replaceToPairList(
+            mainSubKeyMapSrc: Map<String, String>,
+            replaceMap: Map<String, String?>?,
+        ): Map<String, String> {
+            return replace(
+                joinToStr(mainSubKeyMapSrc),
+                replaceMap
+            ).let {
+                strToPairList(
+                    it
+                ).toMap()
+            }
+        }
+        private fun joinToStr(mapArg: Map<String, String>): String {
             return mapArg.entries
                 .joinToString(
                     separator.toString()
                 )
         }
 
-        fun strToPairList(joinedMapCon: String): List<Pair<String, String>> {
+        private fun strToPairList(joinedMapCon: String): List<Pair<String, String>> {
             return createMap(
                 joinedMapCon,
                 separator
