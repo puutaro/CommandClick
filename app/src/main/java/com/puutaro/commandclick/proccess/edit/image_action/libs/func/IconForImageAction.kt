@@ -18,7 +18,7 @@ object IconForImageAction {
     ): Pair<
             Pair<
                     Bitmap?,
-                    ImageActionKeyManager.ExitSignal?
+                    ImageActionKeyManager.BreakSignal?
                     >?,
             ImageFuncCheckerForImageSetting. FuncCheckErr?
             >? {
