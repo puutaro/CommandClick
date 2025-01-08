@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncManager2
@@ -666,7 +667,7 @@ class SettingActionManager2 {
                         keyToSubKeyConWhere,
                     )
                 }
-                val isNotReplaceVarErrJob = async {
+                val isNotDefinitionVarErr = async {
                     VarErrManager.isNotDefinitionVarErr(
                         context,
                         settingKeyToNoRunVarNameList,
@@ -687,6 +688,13 @@ class SettingActionManager2 {
                 val settingKeyToVarNameListWithIrregular = settingKeyToVarNameListForReturn.filter {
                     it.second.isNotEmpty()
                 }
+                val isIrregularVarNameErrJob = async {
+                    VarErrManager.isIrregularVarNameErr(
+                        context,
+                        settingKeyToVarNameListWithIrregular,
+                        keyToSubKeyConWhere,
+                    )
+                }
                 val settingKeyToVarNameList = filterSettingKeyToDefinitionListByValidVarDefinition(
                         settingKeyToVarNameListWithIrregular
                     )
@@ -694,13 +702,6 @@ class SettingActionManager2 {
                     VarErrManager.isSameVarNameErr(
                         context,
                         settingKeyToVarNameList,
-                        keyToSubKeyConWhere,
-                    )
-                }
-                val isIrregularVarNameErrJob = async {
-                    VarErrManager.isIrregularVarNameErr(
-                        context,
-                        settingKeyToVarNameListWithIrregular,
                         keyToSubKeyConWhere,
                     )
                 }
@@ -754,10 +755,10 @@ class SettingActionManager2 {
                         || isBlankSVarOrSAcVarErrJob.await()
                         || isNotUseVarErrJob.await()
                         || isShadowTopLevelVarErrJob.await()
-                        || isNotReplaceVarErrJob.await()
+                        || isNotDefinitionVarErr.await()
                         || isRunPrefixVarUseErrJob.await()
-                        || isSameVarNameErrJob.await()
                         || isIrregularVarNameErrJob.await()
+                        || isSameVarNameErrJob.await()
 //                        || isAsyncVarOrRunPrefixVarSpecifyErrJob.await()
                         || isNotBeforeDefinitionInReturnErrJob.await()
                         || isNotExistReturnOrFuncJob.await()
@@ -1211,38 +1212,6 @@ class SettingActionManager2 {
                                 varNameToValueStr.first,
                                 varNameToValueStr.second
                             )
-
-//                            val isGlobalForRawVar =
-//                                globalVarNameRegex.matches(varNameToValueStr.first)
-//                            val isNotRunPrefix =
-//                                !topAcSVarName.isNullOrEmpty()
-//                                        && !topAcSVarName.startsWith(escapeRunPrefix)
-//                            val isRegisterToTopForPrivate =
-//                                isGlobalForRawVar && isNotRunPrefix
-//                            val removedLoopKey =
-//                                removeLoopKey(curMapLoopKey)
-//                            if (
-//                                isRegisterToTopForPrivate
-//                                && !topAcSVarName.isNullOrEmpty()
-//                            ) {
-//                                privateLoopKeyVarNameValueStrMap.put(
-//                                    removedLoopKey,
-//                                    topAcSVarName,
-//                                    varNameToValueStr.second
-//                                )
-//                            }
-//                            val varNameForPut = topAcSVarName
-//                                ?: varNameToValueStr.first
-//                            val isGlobalRegister =
-//                                isGlobalForRawVar
-//                                        && globalVarNameRegex.matches(varNameForPut)
-//                            if (isGlobalRegister) {
-//                                loopKeyToVarNameValueStrMap.put(
-//                                    removedLoopKey,
-//                                    varNameForPut,
-//                                    varNameToValueStr.second
-//                                )
-//                            }
 //                            FileSystems.updateFile(
 //                                File(
 //                                    UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -1706,15 +1675,25 @@ class SettingActionManager2 {
 //
 //            }
 
-            fun isSettingReturnNotLastErrWithoutRunPrefix(
+            fun isGlobalVarNameNotLastErrWithoutRunPrefix(
                 context: Context?,
                 settingKeyToVarNameList: List<Pair<String, String>>,
+                keyToSubKeyConList: List<Pair<String, String>>,
                 renewalVarName: String,
                 keyToSubKeyConWhere: String
             ): Boolean {
                 if(
                     renewalVarName.startsWith(escapeRunPrefix)
                 ) return false
+                val sIfKey =
+                    SettingActionKeyManager.SettingSubKey.S_IF.key
+                val sIfKeyRegex = Regex(
+                    "[?]${sIfKey}="
+                )
+                val lastSubKeyCon = keyToSubKeyConList.lastOrNull {
+                    it.first.isNotEmpty()
+                }?.second
+                    ?: return false
                 val lastSettingKeyToSubKeyCon = settingKeyToVarNameList.lastOrNull()
                     ?: return false
                 val isSettingReturnKey =
@@ -1727,9 +1706,11 @@ class SettingActionManager2 {
                 ) || varName.startsWith(
                     asyncPrefix
                 )
+                val containIIfKey = sIfKeyRegex.containsMatchIn(lastSubKeyCon)
                 if (
                     isSettingReturnKey
                     && !isIrregularVarName
+                    && !containIIfKey
                 ) return false
                 val spanEscapeRunPrefix =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -1761,6 +1742,11 @@ class SettingActionManager2 {
                         CheckTool.errRedCode,
                         varName
                     )
+                val spanSIfKey =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        sIfKey
+                    )
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sisGlobalVarNameNotLastErrWithoutRunPrefix.txt").absolutePath,
 //                    listOf(
@@ -1772,8 +1758,8 @@ class SettingActionManager2 {
                     ErrLogger.sendErrLog(
                         context,
                         ErrLogger.SettingActionErrType.S_AC_VAR,
-                        "Without ${escapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
-                                "imported last var name must be ${spanSettingReturnKey} and var name must be prefix without ${spanEscapeRunPrefix}, ${spanAsyncPrefix}, and ${spanRunAsyncPrefix} : ${spanGlobalVarName}",
+                        "Without ${spanEscapeRunPrefix} prefix in ${spanSAdVarKeyName}, " +
+                                "imported last setting key must be ${spanSettingReturnKey} without ${spanSIfKey}: ${spanGlobalVarName}",
                         keyToSubKeyConWhere
                     )
                 }
@@ -3049,9 +3035,7 @@ class SettingActionManager2 {
                     it.first.isNotEmpty()
                             && it.second.isNotEmpty()
                 }.let {
-                    filterSettingKeyToDefinitionListByValidVarDefinition(
-                        it
-                    )
+                    filterSettingKeyToDefinitionListByValidVarDefinition(it)
                 }
             }
 
@@ -3610,9 +3594,10 @@ class SettingActionManager2 {
 //                        )
 //                    }
                     val isSettingReturnNotLastErrWithoutRunPrefixJob = async {
-                        ImportErrManager.isSettingReturnNotLastErrWithoutRunPrefix(
+                        ImportErrManager.isGlobalVarNameNotLastErrWithoutRunPrefix(
                             context,
                             settingKeyToVarNameListForReturn,
+                            importedKeyToSubKeyConList,
                             topIAcVarName,
                             keyToSubKeyConWhereInImportPath
                         )
@@ -4016,8 +4001,24 @@ class SettingActionManager2 {
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
                                 ),
                                 valueSeparator
-                            ).filter {
+                            ).let {
+                                pair ->
+//                                val quoteStr = """"aaa\"""""
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "limport.txt").absolutePath,
+//                                    listOf(
+////                                    "keyToSubKeyCon: ${keyToSubKeyCon}",
+////                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
+////                                    "subKeyCon: ${subKeyCon}",
+//                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                        "pair: ${pair}",
+//                                        "quoteStr: ${quoteStr}",
+//                                        "QuoteTool.trimBothEdgeQuote(quoteStr): ${QuoteTool.trimBothEdgeQuote(quoteStr)}"
+//                                    ).joinToString("\n") + "\n\n==========\n\n"
+//                                )
+                                pair.filter {
                                 it.first.isNotEmpty()
+                            }
                             }.map {
                                 argNameToValueStr ->
                                 argNameToValueStr.first to
@@ -4026,16 +4027,6 @@ class SettingActionManager2 {
                                             varNameToValueStrMap,
                                         )
                             }
-//                            val varNameToValueStrMap =
-//                                makeVarNameToValueStrMap(
-//                                    curMapLoopKey,
-//                                    importedVarNameToValueStrMap,
-//                                    loopKeyToVarNameValueStrMapClass,
-//                                    privateLoopKeyVarNameValueStrMapClass,
-//                                    null,
-//                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
-//                                )
-
                             val resultValueStrToExitMacroAndCheckErr = SettingFuncManager2.handle(
                                 fragment,
                                 funcTypeDotMethod,

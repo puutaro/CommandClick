@@ -3,12 +3,10 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageFuncCheckerForImageSetting
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import java.io.File
 
 object FileSystemsForImageAction {
     fun handle(
@@ -20,7 +18,7 @@ object FileSystemsForImageAction {
     ): Pair<
             Pair<
                     Bitmap?,
-                    ImageActionKeyManager.ExitSignal?
+                    ImageActionKeyManager.BreakSignal?
                     >?,
             ImageFuncCheckerForImageSetting. FuncCheckErr?
             >? {
