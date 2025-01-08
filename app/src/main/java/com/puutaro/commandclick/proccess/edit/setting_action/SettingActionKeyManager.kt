@@ -2,20 +2,17 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 object SettingActionKeyManager {
 
-    val landSeparator = ','
-    val mainKeySeparator = '|'
-    val subKeySepartor = '?'
-    val valueSeparator = '&'
+    const val landSeparator = ','
+    const val mainKeySeparator = '|'
+    const val subKeySepartor = '?'
+    const val valueSeparator = '&'
 
     enum class SettingActionsKey(
         val key: String
     ) {
-//        SETTING_ACTION("sAc"),
         SETTING_VAR("sVar"),
-//        SETTING_INNER_VAR("sInVar"),
-//        SETTING_IF("sIf"),
-//        SETTING_TSV_VARS("sTsvVars"),
         SETTING_ACTION_VAR("sAcVar"),
+        SETTING_RETURN("sReturn")
     }
 
     enum class VarPrefix(
@@ -67,7 +64,8 @@ object SettingActionKeyManager {
     enum class SettingSubKey(
         val key: String
     ) {
-        SETTING_VAR("sVar"),
+        SETTING_VAR(SettingActionsKey.SETTING_VAR.key),
+        SETTING_RETURN(SettingActionsKey.SETTING_RETURN.key),
         FUNC("func"),
         ARGS("args"),
         ON_RETURN("onReturn"),
@@ -83,14 +81,30 @@ object SettingActionKeyManager {
         ) {
             IMPORT_PATH(CommonPathKey.IMPORT_PATH.key),
             REPLACE("replace"),
-            S_IF("sIf"),
+            S_IF(SettingSubKey.S_IF.key),
             ARGS(SettingSubKey.ARGS.key),
-            AWAIT("await"),
+            AWAIT(SettingSubKey.AWAIT.key),
         }
     }
 
-    enum class ExitSignal {
+
+    object SettingReturnManager {
+
+        enum class OutputReturn {
+            OUTPUT_RETURN
+        }
+
+        enum class SettingReturnKey(
+            val key: String,
+        ) {
+            S_IF(SettingSubKey.S_IF.key),
+            ARGS(SettingSubKey.ARGS.key),
+        }
+    }
+
+    enum class BreakSignal {
         EXIT_SIGNAL,
+        RETURN_SIGNAL
     }
 
 //    enum class CommandMacro {

@@ -16,7 +16,7 @@ object FileSystemsForSettingHandler {
     ): Pair<
             Pair<
                     String?,
-                    SettingActionKeyManager.ExitSignal?
+                    SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting2.FuncCheckErr?
             >?

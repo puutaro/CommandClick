@@ -288,12 +288,16 @@ object SettingIfManager {
                         CheckTool.errRedCode,
                         regexNumKey
                     )
+                    val spanConditionsMapCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        conditionsMapCon
+                    )
                     return null to launchTypeCheckErr(
                         ifKeyName,
                         argName,
                         argIndex,
                         argStr,
-                        "${spanRegexKey} suffix must be number: ${spanRegexNumKey}, ${makeErrWhere(ifKeyName, argIndex)}"
+                        "${spanRegexKey} suffix must be number: ${spanRegexNumKey}, conditionsMapCon: ${spanConditionsMapCon}, ${makeErrWhere(ifKeyName, argIndex)}"
                     )
                 }
                 val regexStr =
@@ -305,12 +309,16 @@ object SettingIfManager {
                         CheckTool.ligthBlue,
                         regexNumKey
                     )
+                    val spanConditionsMapCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        conditionsMapCon
+                    )
                     return null to launchTypeCheckErr(
                         ifKeyName,
                         argName,
                         argIndex,
                         argStr,
-                        "${spanRegexNumKey} not exist: ${makeErrWhere(ifKeyName, argIndex)}"
+                        "${spanRegexNumKey} not exist: conditionsMapCon: ${spanConditionsMapCon} ${makeErrWhere(ifKeyName, argIndex)}"
                     )
                 }
                 val regex = try {
@@ -327,7 +335,11 @@ object SettingIfManager {
                             .replace(">", "＞")
                             .replace("%", "％    ")
                     )
-                    return null to IfCheckErr("${spanRegexNumKey} key failure to compile: ${spanJudgeBaseRegexStr}, ${makeErrWhere(ifKeyName, argIndex)}")
+                    val spanConditionsMapCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        conditionsMapCon
+                    )
+                    return null to IfCheckErr("${spanRegexNumKey} key failure to compile: ${spanJudgeBaseRegexStr}, conditionsMapCon: ${spanConditionsMapCon}, ${makeErrWhere(ifKeyName, argIndex)}")
                 }
                 val matchTypeNumKey = "${matchTypeKey}${numSuffix}"
                 val matchTypeNumValueSrc = conditionsMap.get(
@@ -338,12 +350,16 @@ object SettingIfManager {
                         CheckTool.ligthBlue,
                         matchTypeNumKey
                     )
+                    val spanConditionsMapCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        conditionsMapCon
+                    )
                     return null to launchTypeCheckErr(
                         ifKeyName,
                         argName,
                         argIndex,
                         argStr,
-                        "${spanMatchTypeNumKey} not exist: ${makeErrWhere(ifKeyName, argIndex)}"
+                        "${spanMatchTypeNumKey} not exist: conditionsMapCon: ${spanConditionsMapCon} ${makeErrWhere(ifKeyName, argIndex)}"
                     )
                 }
                 val matchTypeNumValue =
@@ -375,7 +391,11 @@ object SettingIfManager {
             if(
                 regexToMatchTypePairList.isEmpty()
             ){
-                return null to IfCheckErr("Arg empty err: ${makeErrWhere(ifKeyName, argIndex)}")
+                val spanConditionsMapCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    conditionsMapCon
+                )
+                return null to IfCheckErr("${argsNameList.get(argIndex)} arg empty err: conditionsMapCon: ${spanConditionsMapCon} ${makeErrWhere(ifKeyName, argIndex)}")
             }
             return Pair(
                 regexToMatchTypePairList,

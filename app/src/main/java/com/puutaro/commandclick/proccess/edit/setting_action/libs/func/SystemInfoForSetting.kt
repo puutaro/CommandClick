@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,7 +17,7 @@ object SystemInfoForSetting {
     ): Pair<
             Pair<
                     String?,
-                    SettingActionKeyManager.ExitSignal?
+                    SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting2.FuncCheckErr?
             >? {

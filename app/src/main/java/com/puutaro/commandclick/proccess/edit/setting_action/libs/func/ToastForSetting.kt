@@ -3,13 +3,10 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 
 object ToastForSetting {
 
@@ -22,7 +19,7 @@ object ToastForSetting {
     ): Pair<
             Pair<
                     String?,
-                    SettingActionKeyManager.ExitSignal?
+                    SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting2.FuncCheckErr?
             >? {

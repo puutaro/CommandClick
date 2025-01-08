@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -20,7 +19,7 @@ object ShellToolManagerForSetting {
     ): Pair<
             Pair<
                     String?,
-                    SettingActionKeyManager.ExitSignal?
+                    SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting2.FuncCheckErr?
             >? {

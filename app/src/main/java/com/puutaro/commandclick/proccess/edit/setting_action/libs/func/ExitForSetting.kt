@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
 
 object ExitForSetting {
@@ -12,7 +11,7 @@ object ExitForSetting {
     ): Pair<
             Pair<
                     String?,
-                    SettingActionKeyManager.ExitSignal?
+                    SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting2.FuncCheckErr?
             >? {
@@ -40,7 +39,7 @@ object ExitForSetting {
         }
         return Pair(
             null,
-            SettingActionKeyManager.ExitSignal.EXIT_SIGNAL
+            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
         ) to null
     }
 
