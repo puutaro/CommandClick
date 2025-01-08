@@ -11,11 +11,7 @@ object ImageActionKeyManager {
     ) {
         IMAGE_VAR("iVar"),
         IMAGE_ACTION_VAR("iAcVar"),
-//        ASYNC_IMAGE_VAR("asyncIvVar"),
-//        ASYNC_IMAGE_ACTION_VAR("asyncIAcVar"),
-//        ASYNC_VAR("asyncVar"),
-//        AWAIT_VAR("awaitVar"),
-//        FRONT_AWAIT_VAR("fAwaitVar"),
+        IMAGE_RETURN("iReturn"),
     }
 
     enum class VarPrefix(
@@ -68,6 +64,7 @@ object ImageActionKeyManager {
         val key: String
     ) {
         IMAGE_VAR(ImageActionsKey.IMAGE_VAR.key),
+        IMAGE_RETURN(ImageActionsKey.IMAGE_RETURN.key),
         FUNC("func"),
         ARGS("args"),
         ON_RETURN("onReturn"),
@@ -90,7 +87,22 @@ object ImageActionKeyManager {
         }
     }
 
-    enum class ExitSignal {
+    object ImageReturnManager {
+
+        enum class OutputReturn {
+            OUTPUT_RETURN
+        }
+
+        enum class ImageReturnKey(
+            val key: String,
+        ) {
+            I_IF(ImageSubKey.I_IF.key),
+            ARGS(ImageSubKey.ARGS.key),
+        }
+    }
+
+    enum class BreakSignal {
         EXIT_SIGNAL,
+        RETURN_SIGNAL,
     }
 }
