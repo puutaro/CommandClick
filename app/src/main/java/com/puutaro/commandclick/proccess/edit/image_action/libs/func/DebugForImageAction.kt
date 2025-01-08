@@ -16,7 +16,7 @@ object DebugForImageAction {
     ): Pair<
             Pair<
                     Bitmap?,
-                    ImageActionKeyManager.ExitSignal?
+                    ImageActionKeyManager.BreakSignal?
                     >?,
             ImageFuncCheckerForImageSetting. FuncCheckErr?
             >? {
