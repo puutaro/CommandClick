@@ -82,14 +82,15 @@ object ConfigFromScriptFileSetter {
             fannelInfoMap,
             setReplaceVariableMap,
             String(),
-        ).let {
-            AlterToolForSetValType.updateConfigMapByAlter(
-                editFragment.context,
-                it,
-                editFragment.busyboxExecutor,
-                setReplaceVariableMap
-            )
-        }
+        )
+//            .let {
+//            AlterToolForSetValType.updateConfigMapByAlter(
+//                editFragment.context,
+//                it,
+//                editFragment.busyboxExecutor,
+//                setReplaceVariableMap
+//            )
+//        }
 
         editFragment.enableEditExecute =
             (editFragment.editExecuteValue ==

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
-import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingFuncManager2
@@ -18,6 +17,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
+import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -2815,12 +2815,23 @@ class SettingActionManager2 {
 //                val notDefinitionStringKeyInReturn = returnUseStringKeyList.firstOrNull {
 //                    !stringKeyList.contains(it)
 //                }
-                val findVarMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
-                val leaveVarMark =
+                val findVarMarkRegex = Regex(".[$][{][a-zA-Z0-9_]+[}]")
+                val leaveVarMarkList =
                     findVarMarkRegex
-                        .find(keyToSubKeyListConWithRemoveVar)
-                        ?.value
-                        ?: return false
+                        .findAll(keyToSubKeyListConWithRemoveVar).filter {
+                            varMarkResult ->
+                            val varMark = varMarkResult.value
+                            !varMark.startsWith("\\")
+                        }.map {
+                            it.value.replace(
+                                Regex("^[^$]"),
+                                String()
+                            )
+                        }
+                if(
+                    !leaveVarMarkList.any()
+                ) return false
+//                        ?: return false
 //                    notDefinitionStringKeyInReturn
 //                        ?: findVarMarkRegex
 //                            .find(keyToSubKeyListConWithRemoveVar)
@@ -2829,7 +2840,7 @@ class SettingActionManager2 {
                 val spanLeaveVarMark =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
                         CheckTool.errRedCode,
-                        leaveVarMark
+                        leaveVarMarkList.first()
                     )
                 runBlocking {
                     ErrLogger.sendErrLog(
@@ -3449,7 +3460,12 @@ class SettingActionManager2 {
                     actionImportMap.get(
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.S_IF.key
                     )
-                )
+                ).let {
+                    CmdClickMap.replaceByBackslashToNormal(
+                        it,
+                        varNameToValueStrMap,
+                    )
+                }
                 val argsPairList = CmdClickMap.createMap(
                     actionImportMapBeforeReplace.get(
                         SettingActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
@@ -3459,7 +3475,7 @@ class SettingActionManager2 {
                     it.first.isNotEmpty()
                 }.map {
                     argNameToValueStr ->
-                    argNameToValueStr.first to CmdClickMap.replace(
+                    argNameToValueStr.first to CmdClickMap.replaceByBackslashToNormal(
                         argNameToValueStr.second,
                         varNameToValueStrMap
                     )
@@ -3762,8 +3778,9 @@ class SettingActionManager2 {
                                     mainSubKeyMapSrc,
                                     varNameToValueStrMap
                                 ).toMap()
-                                val rawValue = mainSubKeyMap.get(mainSubKey)
-                                    ?: return@let null
+                                val rawValue = mainSubKeyMap.get(mainSubKey)?.let {
+                                    BackslashTool.toNormal(it)
+                                } ?: return@let null
                                 if(
                                     !SettingActionKeyManager.ValueStrVar.matchStringVarName(rawValue)
                                 ) return@let rawValue
@@ -3771,16 +3788,6 @@ class SettingActionManager2 {
                                     mainSubKeyMap.get(mainSubKey)?.let {
                                         SettingActionKeyManager.ValueStrVar.convertStrKey(it)
                                     }
-//                                val varNameToValueStrMap = makeVarNameToValueStrMap(
-//                                    curMapLoopKey,
-//                                    importedVarNameToValueStrMap,
-//                                    loopKeyToVarNameValueStrMapClass,
-//                                    privateLoopKeyVarNameValueStrMapClass,
-//                                    null,
-//                                    mapOf(
-//                                        itPronoun to itPronounValueStrToExitSignal?.first
-//                                    )
-//                                )
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "l_value_varNameToValueStrMap_${settingVarName}.txt").absolutePath,
 //                                    listOf(
@@ -3924,8 +3931,9 @@ class SettingActionManager2 {
                                     mainSubKeyMapSrc,
                                     varNameToValueStrMap
                                 ).toMap()
-                                val rawValue = mainSubKeyMap.get(mainSubKey)
-                                    ?: return@let null
+                                val rawValue = mainSubKeyMap.get(mainSubKey)?.let {
+                                    BackslashTool.toNormal(it)
+                                } ?: return@let null
                                 if(
                                     !SettingActionKeyManager.ValueStrVar.matchStringVarName(rawValue)
                                 ) return@let rawValue
@@ -3933,16 +3941,6 @@ class SettingActionManager2 {
                                     mainSubKeyMap.get(mainSubKey)?.let {
                                         SettingActionKeyManager.ValueStrVar.convertStrKey(it)
                                     }
-//                                val varNameToValueStrMap = makeVarNameToValueStrMap(
-//                                    curMapLoopKey,
-//                                    importedVarNameToValueStrMap,
-//                                    loopKeyToVarNameValueStrMapClass,
-//                                    privateLoopKeyVarNameValueStrMapClass,
-//                                    null,
-//                                    mapOf(
-//                                        itPronoun to itPronounValueStrToExitSignal?.first
-//                                    )
-//                                )
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "l_onReturn_varNameToValueStrMap_${settingVarName}.txt").absolutePath,
 //                                    listOf(
@@ -3982,7 +3980,6 @@ class SettingActionManager2 {
                                 ),
                                 null,
                             )
-//                                    (mainSubKeyMap.get(mainSubKey) ?: String())
                         }
                         SettingActionKeyManager.SettingSubKey.FUNC -> {
                             if(!isNext) {
@@ -3991,7 +3988,7 @@ class SettingActionManager2 {
                             }
                             val funcTypeDotMethod = mainSubKeyMapSrc.get(mainSubKey)?.let {
                                 funcTypeDotMethodSrc ->
-                                    CmdClickMap.replace(
+                                    CmdClickMap.replaceByBackslashToNormal(
                                         funcTypeDotMethodSrc,
                                         varNameToValueStrMap,
                                     )
@@ -4003,30 +4000,32 @@ class SettingActionManager2 {
                                 valueSeparator
                             ).let {
                                 pair ->
-//                                val quoteStr = """"aaa\"""""
-//                                FileSystems.updateFile(
-//                                    File(UsePath.cmdclickDefaultAppDirPath, "limport.txt").absolutePath,
-//                                    listOf(
-////                                    "keyToSubKeyCon: ${keyToSubKeyCon}",
-////                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
-////                                    "subKeyCon: ${subKeyCon}",
-//                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
-//                                        "pair: ${pair}",
-//                                        "quoteStr: ${quoteStr}",
-//                                        "QuoteTool.trimBothEdgeQuote(quoteStr): ${QuoteTool.trimBothEdgeQuote(quoteStr)}"
-//                                    ).joinToString("\n") + "\n\n==========\n\n"
-//                                )
+
                                 pair.filter {
-                                it.first.isNotEmpty()
-                            }
+                                    it.first.isNotEmpty()
+                                }
                             }.map {
                                 argNameToValueStr ->
                                 argNameToValueStr.first to
-                                        CmdClickMap.replace(
+                                        CmdClickMap.replaceByBackslashToNormal(
                                             argNameToValueStr.second,
                                             varNameToValueStrMap,
                                         )
                             }
+//                            val quoteStr = """"aaa\"""""
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "limport.txt").absolutePath,
+//                                listOf(
+////                                    "keyToSubKeyCon: ${keyToSubKeyCon}",
+////                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
+////                                    "subKeyCon: ${subKeyCon}",
+//                                    "mainSubKeyPairList: ${mainSubKeyPairList}",
+//                                    "argsPairList: ${argsPairList}",
+//                                    "quoteStr: ${quoteStr}",
+//                                    "QuoteTool.trimBothEdgeQuote(quoteStr): ${QuoteTool.trimBothEdgeQuote(quoteStr)}",
+//                                    "BackslashTool.toNormal(quoteStr): ${BackslashTool.toNormal(quoteStr)}",
+//                                ).joinToString("\n") + "\n\n==========\n\n"
+//                            )
                             val resultValueStrToExitMacroAndCheckErr = SettingFuncManager2.handle(
                                 fragment,
                                 funcTypeDotMethod,
@@ -4072,7 +4071,7 @@ class SettingActionManager2 {
                             }
                             val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)?.let {
                                     judgeTargetStrSrc ->
-                                CmdClickMap.replace(
+                                CmdClickMap.replaceByBackslashToNormal(
                                     judgeTargetStrSrc,
                                     varNameToValueStrMap,
                                 )
@@ -4087,20 +4086,11 @@ class SettingActionManager2 {
                             }.map {
                                     argNameToValueStr ->
                                 argNameToValueStr.first to
-                                        CmdClickMap.replace(
+                                        CmdClickMap.replaceByBackslashToNormal(
                                             argNameToValueStr.second,
                                             varNameToValueStrMap,
                                         )
                             }
-//                            val varNameToValueStrMap =
-//                                makeVarNameToValueStrMap(
-//                                    curMapLoopKey,
-//                                    importedVarNameToValueStrMap,
-//                                    loopKeyToVarNameValueStrMapClass,
-//                                    privateLoopKeyVarNameValueStrMapClass,
-//                                    null,
-//                                    mapOf(itPronoun to itPronounValueStrToExitSignal?.first)
-//                                )
                             val isNextToErrType = SettingIfManager.handle(
                                 sIfKeyName,
                                 judgeTargetStr,
@@ -4188,7 +4178,7 @@ class SettingActionManager2 {
 //                            itPronoun to itPronounValueStrToExitSignal?.first
 //                        )
                 )
-                val valueStr = CmdClickMap.replace(
+                val valueStr = CmdClickMap.replaceByBackslashToNormal(
                     valueStrBeforeReplace,
                     varNameToValueStrMap,
                 )
@@ -4236,7 +4226,7 @@ class SettingActionManager2 {
                             }
                             val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)?.let {
                                     judgeTargetStrSrc ->
-                                CmdClickMap.replace(
+                                CmdClickMap.replaceByBackslashToNormal(
                                     judgeTargetStrSrc,
                                     varNameToValueStrMap,
                                 )
@@ -4251,7 +4241,7 @@ class SettingActionManager2 {
                             }.map {
                                     argNameToValueStr ->
                                 argNameToValueStr.first to
-                                        CmdClickMap.replace(
+                                        CmdClickMap.replaceByBackslashToNormal(
                                             argNameToValueStr.second,
                                             varNameToValueStrMap,
                                         )

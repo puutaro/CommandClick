@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.util.str
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 
 object QuoteTool {
@@ -9,6 +12,7 @@ object QuoteTool {
     private const val backSlachDoubleQuote = "\\\""
     private const val repSeparatorString = "CMDCLICK_SEPARATOR"
     private const val layoutSeparator = '廳'
+
     fun trimBothEdgeQuote(
         targetStr: String?,
     ): String {
@@ -193,8 +197,8 @@ object QuoteTool {
             targetCon,
             targetSeparator,
         ).split(
-            targetSeparatorStr,
-        ).map {
+                targetSeparatorStr,
+            ).map {
             backReplace(
                 it,
                 targetSeparator.toString()
@@ -319,8 +323,22 @@ object QuoteTool {
         if(
             targetStr.startsWith(targetQuote)
             && targetStr.endsWith(targetQuote)
-        ) return targetStr.trim(targetQuote)
+        ) return removeBothEdgeChar(
+            targetStr,
+            targetQuote
+        )
+//        targetStr.trim(targetQuote)
         return targetStr
+    }
+
+    private fun removeBothEdgeChar(
+        targetStr: String,
+        edgeChar: Char
+    ): String {
+        val edgeStr = edgeChar.toString()
+        return targetStr
+            .removePrefix(edgeStr)
+            .removeSuffix(edgeStr)
     }
 
     private fun isBothChar(

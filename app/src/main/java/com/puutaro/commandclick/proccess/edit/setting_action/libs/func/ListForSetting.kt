@@ -76,6 +76,12 @@ object ListForSetting {
                         it.trim().isNotEmpty()
                     }.takeLast(takeLastNum).joinToString(separator)
                 }
+                MethodNameClass.JOIN -> {
+                    val con = argsList.get(0)
+                    val separator = argsList.get(1)
+                    val joinStr = argsList.get(2)
+                    con.split(separator).joinToString(joinStr)
+                }
             }
         }
         return Pair(
@@ -92,6 +98,7 @@ object ListForSetting {
         SHUF("shuf", rndArgsNameToTypeList),
         TAKE("take", takeArgsNameToTypeList),
         TAKE_LAST("takeLast", takeArgsNameToTypeList),
+        JOIN("join", joinArgsNameToTypeList)
     }
 
     private val rndArgsNameToTypeList = listOf(
@@ -118,5 +125,19 @@ object ListForSetting {
             "num",
             FuncCheckerForSetting2.ArgType.INT,
             )
+    )
+    private val joinArgsNameToTypeList = listOf(
+        Pair(
+            "strs",
+            FuncCheckerForSetting2.ArgType.STRING,
+        ),
+        Pair(
+            "separator",
+            FuncCheckerForSetting2.ArgType.STRING,
+        ),
+        Pair(
+            "joinStr",
+            FuncCheckerForSetting2.ArgType.STRING,
+        )
     )
 }

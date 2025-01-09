@@ -1,8 +1,12 @@
 package com.puutaro.commandclick.util.map
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import java.io.File
 
 object CmdClickMap {
 
@@ -54,6 +58,21 @@ object CmdClickMap {
                 separator,
             )
         }
+//         FileSystems.updateFile(
+//             File(UsePath.cmdclickDefaultAppDirPath, "limport_createMap.txt").absolutePath,
+//             listOf(
+////                                    "keyToSubKeyCon: ${keyToSubKeyCon}",
+////                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
+////                                    "subKeyCon: ${subKeyCon}",
+//                 "mapEntryStrList: ${mapEntryStrList}",
+//                 "separator: ${separator}",
+//                 "makeKeyValuePairFromSeparatedString: ${mapEntryStrList.map {
+//                     CcScript.makeKeyValuePairFromSeparatedString(
+//                         it,
+//                         "="
+//                     )}}",
+//             ).joinToString("\n") + "\n\n==========\n\n"
+//         )
          return mapEntryStrList.map {
              CcScript.makeKeyValuePairFromSeparatedString(
                  it,
@@ -155,6 +174,16 @@ object CmdClickMap {
             )
         }
         return repCon
+    }
+
+    fun replaceByBackslashToNormal(
+        targetCon: String,
+        repMap: Map<String, String?>?
+    ): String {
+        return replace(
+            BackslashTool.toNormal(targetCon),
+            repMap
+        )
     }
 
     fun replaceByAtVar(

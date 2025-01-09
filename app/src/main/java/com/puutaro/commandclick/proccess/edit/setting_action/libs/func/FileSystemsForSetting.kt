@@ -132,7 +132,7 @@ object FileSystemsForSettingHandler {
 
 
     private val writeArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting2.ArgType.PATH),
+        Pair("filePath", FuncCheckerForSetting2.ArgType.STRING),
         Pair("contents", FuncCheckerForSetting2.ArgType.STRING),
     )
 

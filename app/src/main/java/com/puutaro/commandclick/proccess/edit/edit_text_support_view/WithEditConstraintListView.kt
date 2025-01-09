@@ -184,9 +184,9 @@ object WithEditConstraintListView{
 
         withContext(Dispatchers.IO) {
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
-//            FileSystems.removeAndCreateDir(
-//                UsePath.cmdclickDefaultIDebugAppDirPath
-//            )
+            FileSystems.removeAndCreateDir(
+                UsePath.cmdclickDefaultIDebugAppDirPath
+            )
         }
         val globalVarNameToBitmapMap = let {
             ImageActionForConfigCon.getImageConfigCon(
@@ -217,6 +217,7 @@ object WithEditConstraintListView{
         withContext(Dispatchers.IO) {
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }
+        return
 //        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
 //        FileSystems.removeAndCreateDir(
 //            imageAcTestDirPath
