@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 
 object ExitForSetting {
     fun handle(
@@ -13,7 +13,7 @@ object ExitForSetting {
                     String?,
                     SettingActionKeyManager.BreakSignal?
                     >?,
-            FuncCheckerForSetting2.FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "sExitExit.txt").absolutePath,
@@ -35,7 +35,7 @@ object ExitForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
         return Pair(
             null,

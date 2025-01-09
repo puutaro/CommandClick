@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import java.io.File
 
 object FuncCheckerForSetting {
@@ -14,7 +15,8 @@ object FuncCheckerForSetting {
         funcName: String,
         methodName: String,
         baseArgsNameToTypeList: List<Pair<String, ArgType>>?,
-        argsPairList: List<Pair<String, String>>
+        argsPairList: List<Pair<String, String>>,
+//        varNameToValueStrMap: Map<String, String?>?,
     ): FuncCheckErr? {
         if(
             baseArgsNameToTypeList.isNullOrEmpty()
@@ -78,6 +80,7 @@ object FuncCheckerForSetting {
                 index,
                 userDefiniteArgStr,
                 argType,
+//                varNameToValueStrMap,
             ).let {
                 funcCheckErr ->
                 if(
@@ -97,14 +100,30 @@ object FuncCheckerForSetting {
             index: Int,
             argStr: String,
             argType: ArgType,
+//            varNameToValueStrMap: Map<String, String?>?,
         ): FuncCheckErr? {
+            val valueStrToErr = isNotExistStringVarName(
+                funcName,
+                methodName,
+                argStr,
+                argName,
+                index,
+                argType,
+//                varNameToValueStrMap,
+            )
+            val funcCheckErr = valueStrToErr?.second
+            if(
+                funcCheckErr != null
+            ) return funcCheckErr
+            val argValueStr = valueStrToErr?.first
+                ?: return null
             return try {
                 when (argType) {
                     ArgType.STRING ->
                         null
                     ArgType.PATH -> {
                         if(
-                            File(argStr).isFile
+                            File(argValueStr).isFile
                         ) null
                         else launchTypeCheckErr(
                             funcName,
@@ -113,22 +132,23 @@ object FuncCheckerForSetting {
                             index,
                             argType,
                             argStr,
+                            String()
                         )
                     }
                     ArgType.INT -> {
-                        argStr.toInt()
+                        argValueStr.toInt()
                         null
                     }
                     ArgType.FLOAT -> {
-                        argStr.toFloat()
+                        argValueStr.toFloat()
                         null
                     }
                     ArgType.LONG -> {
-                            argStr.toLong()
+                        argValueStr.toLong()
                             null
                     }
                     ArgType.BOOL -> {
-                        argStr.toBoolean()
+                        argValueStr.toBoolean()
                         null
                     }
                 }
@@ -140,9 +160,76 @@ object FuncCheckerForSetting {
                     index,
                     argType,
                     argStr,
+                    String(),
                 )
             }
 
+        }
+
+        private fun isNotExistStringVarName(
+            funcName: String,
+            methodName: String,
+            argStr: String,
+            argName: String,
+            index: Int,
+            argType: ArgType,
+//            varNameToValueStrMap: Map<String, String?>?,
+        ): Pair<String?, FuncCheckErr?>? {
+            if(
+                !SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr)
+            ) return argStr to null
+            return null to launchTypeCheckErr(
+                funcName,
+                methodName,
+                argName,
+                index,
+                argType,
+                argStr,
+                "not exist string var name"
+            )
+        }
+////            SettingActionKeyManager.ValueStrVar.matchStringVarName(argStr).let {
+////                    isStrVarRegex ->
+////                if(isStrVarRegex) return@let
+////            }
+//            val strKey = SettingActionKeyManager.ValueStrVar.convertStrKey(argStr)
+//            val runPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
+//            (strKey.startsWith(runPrefix)).let {
+//                    isRunPrefix ->
+//                if(!isRunPrefix) return@let
+//                return null to launchTypeCheckErr(
+//                    funcName,
+//                    methodName,
+//                    argName,
+//                    index,
+//                    argType,
+//                    argStr,
+//                    "disables ${runPrefix} prefix"
+//                )
+//            }
+//            val valueStr =
+//                varNameToValueStrMap?.get(strKey)
+//            if(
+//                valueStr is String
+//            ) return valueStr to null
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultSDebugAppDirPath, "lfuncarg.txt").absolutePath,
+////                listOf(
+////                    "argStr: ${argStr}",
+////                    "valueStr: ${valueStr}",
+////                    "varNameToValueStrMap: ${varNameToValueStrMap}",
+////                ).joinToString("\n") + "\n\n====\n\n"
+////            )
+//            return null to launchTypeCheckErr(
+//                    funcName,
+//                    methodName,
+//                    argName,
+//                    index,
+//                    argType,
+//                    argStr,
+//                    "not exist string var name"
+//                )
+//            }
         }
 
         private fun launchTypeCheckErr(
@@ -152,6 +239,7 @@ object FuncCheckerForSetting {
             index: Int,
             argType: ArgType,
             argStr: String,
+            bitmapErrBody: String,
         ): FuncCheckErr {
             val spanFuncName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errBrown,
@@ -182,12 +270,16 @@ object FuncCheckerForSetting {
                     FuncCheckErr(
                         "Arg ${spanArgName} not found path: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
                     )
-                else -> FuncCheckErr(
-                    "Arg ${spanArgName} not ${spanArgType} type: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
-                )
+                else -> {
+                    val errBodyMsg = bitmapErrBody.ifEmpty {
+                        "not ${spanArgType} type"
+                    }
+                    FuncCheckErr(
+                        "Arg ${spanArgName} ${errBodyMsg}: ${spanArgStr}, func.method: ${spanFuncName}.${spanMethodName}, index: ${spanArgIndex}"
+                    )
+                }
             }
         }
-    }
 
     enum class ArgType {
         PATH,

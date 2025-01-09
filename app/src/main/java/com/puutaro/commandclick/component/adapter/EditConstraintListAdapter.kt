@@ -30,7 +30,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
@@ -492,7 +492,7 @@ class EditConstraintListAdapter(
                     if(
                         innerFrameKeyPairsConSrc.isNullOrEmpty()
                     ) return@let String() to emptyMap()
-                    val settingActionManager = SettingActionManager2()
+                    val settingActionManager = SettingActionManager()
                     val varNameToValueMap = settingActionManager.exec(
                         fragment,
                         fannelInfoMap,

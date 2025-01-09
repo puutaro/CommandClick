@@ -4,7 +4,7 @@ import android.content.Context
 import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -21,7 +21,7 @@ object ToastForSetting {
                     String?,
                     SettingActionKeyManager.BreakSignal?
                     >?,
-            FuncCheckerForSetting2.FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -34,9 +34,9 @@ object ToastForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting2.checkArgs(
+        FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.readArgsNameToTypeList,
@@ -101,18 +101,18 @@ object ToastForSetting {
 
     enum class MethodNameClass(
         val str: String,
-        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
+        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ){
         SHORT("short", shortArgsNameToTypeList),
         LONG("long", longArgsNameToTypeList),
     }
 
     private val shortArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting2.ArgType.STRING)
+        Pair("message", FuncCheckerForSetting.ArgType.STRING)
     )
 
 
     private val longArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting2.ArgType.STRING)
+        Pair("message", FuncCheckerForSetting.ArgType.STRING)
     )
 }

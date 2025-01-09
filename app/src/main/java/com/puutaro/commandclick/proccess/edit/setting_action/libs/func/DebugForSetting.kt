@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -20,7 +20,7 @@ object DebugForSetting {
                     String?,
                     SettingActionKeyManager.BreakSignal?
                     >?,
-            FuncCheckerForSetting2.FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -33,9 +33,9 @@ object DebugForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting2.checkArgs(
+        FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.readArgsNameToTypeList,
@@ -89,14 +89,14 @@ object DebugForSetting {
 
     enum class MethodNameClass(
         val str: String,
-        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>?,
+        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>?,
     ){
         REFLECT("reflect", shortArgsNameToTypeList),
         NULL("null", null)
     }
 
     private val shortArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting2.ArgType.STRING),
+        Pair("message", FuncCheckerForSetting.ArgType.STRING),
     )
 
 

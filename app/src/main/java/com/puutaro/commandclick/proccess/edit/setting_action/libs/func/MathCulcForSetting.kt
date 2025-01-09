@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.func.MathCulc
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 
 
 object MathCulcForSetting {
@@ -17,7 +17,7 @@ object MathCulcForSetting {
                     String?,
                     SettingActionKeyManager.BreakSignal?
                     >?,
-            FuncCheckerForSetting2.FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -30,9 +30,9 @@ object MathCulcForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting2.checkArgs(
+        FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.argsNameToTypeList,
@@ -69,7 +69,7 @@ object MathCulcForSetting {
                 CheckTool.errRedCode,
                 firstArg
             )
-            return null to FuncCheckerForSetting2.FuncCheckErr("Formula err: ${spanFuncTypeStr}.${spanMethodNameStr}, arg: ${spanFirstArgStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Formula err: ${spanFuncTypeStr}.${spanMethodNameStr}, arg: ${spanFirstArgStr}")
         }
         return Pair(
             result,
@@ -79,7 +79,7 @@ object MathCulcForSetting {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ){
         INT(
             "int",
@@ -93,7 +93,7 @@ object MathCulcForSetting {
 
     private val formulaArgsNameToTypeList =  listOf(
         Pair("formula",
-            FuncCheckerForSetting2.ArgType.STRING,
+            FuncCheckerForSetting.ArgType.STRING,
             )
     )
 }

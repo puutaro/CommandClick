@@ -30,7 +30,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.lis
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
@@ -142,7 +142,7 @@ object WithEditConstraintListView{
         }
         withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
-            SettingActionManager2.Companion.BeforeActionImportMapManager.init()
+            SettingActionManager.Companion.BeforeActionImportMapManager.init()
 //            FileSystems.removeAndCreateDir(
 //                UsePath.cmdclickDefaultSDebugAppDirPath
 //            )
@@ -151,7 +151,7 @@ object WithEditConstraintListView{
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
-                val settingActionManager = SettingActionManager2()
+                val settingActionManager = SettingActionManager()
                 runBlocking {
                     val keyToSubKeyConWhere =
                         "${CommandClickScriptVariable.EDIT_LIST_CONFIG}, ${fannelInfoMap.map {
@@ -173,7 +173,7 @@ object WithEditConstraintListView{
             }
         }
         withContext(Dispatchers.IO) {
-            SettingActionManager2.Companion.BeforeActionImportMapManager.init()
+            SettingActionManager.Companion.BeforeActionImportMapManager.init()
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultSDebugAppDirPath, "sglobalVarNameToValueMap.txt").absolutePath,
 //                listOf(
@@ -420,7 +420,7 @@ object WithEditConstraintListView{
 //                editListRecyclerView.scrollToPosition(0)
 //            }
             withContext(Dispatchers.IO){
-                SettingActionManager2.Companion.BeforeActionImportMapManager.init()
+                SettingActionManager.Companion.BeforeActionImportMapManager.init()
             }
             CoroutineScope(Dispatchers.Main).launch{
                 withContext(Dispatchers.IO) {
@@ -824,7 +824,7 @@ object WithEditConstraintListView{
                 if(
                     innerFrameKeyPairsConSrc.isNullOrEmpty()
                 ) return@let null
-                val settingActionManager = SettingActionManager2()
+                val settingActionManager = SettingActionManager()
                 val varNameToValueMap = settingActionManager.exec(
                     fragment,
                     fannelInfoMap,

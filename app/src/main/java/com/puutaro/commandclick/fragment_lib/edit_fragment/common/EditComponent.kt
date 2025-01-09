@@ -18,7 +18,7 @@ import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager2
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList.LogErrLabel
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
@@ -1457,7 +1457,7 @@ object EditComponent {
                                 if(
                                         linearFrameKeyPairsListConSrcWithReplace.isNullOrEmpty()
                                 ) return@let emptyMap()
-                                val settingActionManager = SettingActionManager2()
+                                val settingActionManager = SettingActionManager()
                                 settingActionManager.exec(
                                         fragment,
                                         fannelInfoMap,

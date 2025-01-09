@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.func.EditComponentFunc
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting2
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,7 +23,7 @@ object EditForSetting {
                     String?,
                     SettingActionKeyManager.BreakSignal?
                     >?,
-            FuncCheckerForSetting2.FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -36,9 +36,9 @@ object EditForSetting {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to FuncCheckerForSetting2.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting2.checkArgs(
+        FuncCheckerForSetting.checkArgs(
             funcName,
             methodNameStr,
             methodNameClass.argsNameToTypeList,
@@ -54,7 +54,7 @@ object EditForSetting {
             TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
                 fragment.activity
             )
-        } ?: return null to FuncCheckerForSetting2.FuncCheckErr("Cannot get terminal fragment")
+        } ?: return null to FuncCheckerForSetting.FuncCheckErr("Cannot get terminal fragment")
         val settingValueStr = withContext(Dispatchers.Main) {
             when (methodNameClass) {
                 MethodNameClass.GET_SETTING_VALUE -> {
@@ -78,13 +78,13 @@ object EditForSetting {
 
     enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting2.ArgType>>,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
     ) {
         GET_SETTING_VALUE("getSettingValue", getSettingValueArgsNameToTypeList),
     }
 
     private val getSettingValueArgsNameToTypeList = listOf(
-        Pair("targetVariableName", FuncCheckerForSetting2.ArgType.STRING),
-        Pair("srcFragment", FuncCheckerForSetting2.ArgType.STRING),
+        Pair("targetVariableName", FuncCheckerForSetting.ArgType.STRING),
+        Pair("srcFragment", FuncCheckerForSetting.ArgType.STRING),
     )
 }
